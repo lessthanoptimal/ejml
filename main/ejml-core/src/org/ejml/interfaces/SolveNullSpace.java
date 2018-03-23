@@ -16,23 +16,28 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.qr;
+package org.ejml.interfaces;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.row.linsol.GenericSolveNullSpace_DDRM;
-import org.ejml.interfaces.SolveNullSpace;
+import org.ejml.data.Matrix;
 
 /**
+ * Finds the nullspace for a matrix given the number of singular values
+ *
  * @author Peter Abeles
  */
-public class TestSolveNullSpaceQR_DDRM extends GenericSolveNullSpace_DDRM {
-    @Override
-    public SolveNullSpace<DMatrixRMaj> createSolver() {
-        return new SolveNullSpaceQR_DDRM();
-    }
+public interface SolveNullSpace<T extends Matrix> {
+    /**
+     * Finds the nullspace inside of input
+     *
+     * @param input (Input) input matrix. Maybe modified
+     * @param numberOfSingular Number of singular values in the input
+     * @param nullspace (Output) storage for null space
+     * @return true if successful or false if it failed
+     */
+    boolean process( T input , int numberOfSingular , T nullspace );
 
-    @Override
-    public void handleHardMatrix() {
-        // nope can't handle the hard case
-    }
+    /**
+     * Returns true if the input matrix is modified
+     */
+    boolean inputModified();
 }

@@ -25,14 +25,9 @@ import org.ejml.interfaces.SolveNullSpace;
 /**
  * @author Peter Abeles
  */
-public class TestSolveNullSpaceQR_DDRM extends GenericSolveNullSpace_DDRM {
+public class TestSolveNullSpaceQRP_DDRM extends GenericSolveNullSpace_DDRM {
     @Override
     public SolveNullSpace<DMatrixRMaj> createSolver() {
-        return new SolveNullSpaceQR_DDRM();
-    }
-
-    @Override
-    public void handleHardMatrix() {
-        // nope can't handle the hard case
+        return new SolveNullSpaceQRP_DDRM();
     }
 }

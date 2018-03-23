@@ -12,8 +12,9 @@ Date format: year/month/day
   * Fixed bug in concatRows and concatColumns
   * Renamed set(double) to fill(double)
   * Made set(row,col, value) generic
-- Null Space
-  * Added QR based method for finding the null space. In one test it's about 300x faster than a standard SVD
+- Created SolveNullSpace
+  * Make it easier and faster to find the null space
+  * QR, QRP, and SVD (TODO)
 
 - SimpleMatrix
  * TODO extractVector make generic

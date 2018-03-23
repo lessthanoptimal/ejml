@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -170,7 +170,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     /**
      * Sets the initial pivot ordering and compute the F-norm squared for each column
      */
-    private void setupPivotInfo() {
+    protected void setupPivotInfo() {
         for( int col = 0; col < numCols; col++ ) {
             pivots[col] = col;
             double c[] = dataQR[col];
@@ -187,7 +187,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     /**
      * Performs an efficient update of each columns' norm
      */
-    private void updateNorms( int j ) {
+    protected void updateNorms( int j ) {
         boolean foundNegative = false;
         for( int col = j; col < numCols; col++ ) {
             double e = dataQR[col][j-1];
@@ -219,7 +219,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      *
      * @param j Current column being inspected
      */
-    private void swapColumns( int j ) {
+    protected void swapColumns( int j ) {
 
         // find the column with the largest norm
         int largestIndex = j;

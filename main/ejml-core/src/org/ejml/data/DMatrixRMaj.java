@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -369,6 +369,10 @@ public class DMatrixRMaj extends DMatrix1Row {
     @Override
     public void print() {
         MatrixIO.print(System.out,this);
+    }
+
+    public void printJava( String format ) {
+        MatrixIO.printJava(System.out,this,format);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -185,7 +185,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
         for( int x = 0; x < numCols; x++ ) {
             double colQ[] = dataQR[x];
             for( int y = 0; y < numRows; y++ ) {
-                colQ[y] = A.data[y*numCols+x];
+                colQ[y] = A.data[y*A.numCols+x];
             }
         }
     }

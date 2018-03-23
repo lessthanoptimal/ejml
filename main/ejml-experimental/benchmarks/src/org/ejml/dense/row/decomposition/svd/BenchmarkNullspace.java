@@ -22,6 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.SingularOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
+import org.ejml.dense.row.linsol.qr.SolveNullSpaceQRP_DDRM;
 import org.ejml.dense.row.linsol.qr.SolveNullSpaceQR_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
@@ -43,6 +44,7 @@ public class BenchmarkNullspace {
     DMatrixRMaj nullspace = new DMatrixRMaj(9,1);
 
     SolveNullSpaceQR_DDRM solverQR = new SolveNullSpaceQR_DDRM();
+    SolveNullSpaceQRP_DDRM solverQRP = new SolveNullSpaceQRP_DDRM();
     SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(rows,9,false,true,true);
 
     public BenchmarkNullspace() {
@@ -58,8 +60,23 @@ public class BenchmarkNullspace {
     public long testQR() {
         long start = System.currentTimeMillis();
         for (int i = 0; i < numIterations; i++) {
-            A_copy.set(A);
+            if( solverQR.inputModified() )
+                A_copy.set(A);
             solverQR.process(A_copy,1,nullspace);
+        }
+//        DMatrixRMaj hrm = new DMatrixRMaj(A.numRows,1);
+//        CommonOps_DDRM.mult(A,nullspace,hrm);
+//        System.out.println("norm = "+ NormOps_DDRM.normF(hrm));
+        return System.currentTimeMillis()-start;
+    }
+
+    public long testQRP() {
+        A_copy.set(A);
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < numIterations; i++) {
+            if( solverQRP.inputModified() )
+                A_copy.set(A);
+            solverQRP.process(A_copy,1,nullspace);
         }
 //        DMatrixRMaj hrm = new DMatrixRMaj(A.numRows,1);
 //        CommonOps_DDRM.mult(A,nullspace,hrm);
@@ -83,6 +100,7 @@ public class BenchmarkNullspace {
         BenchmarkNullspace benchmark = new BenchmarkNullspace();
 
         System.out.println("QR  = "+benchmark.testQR());
+        System.out.println("QRP = "+benchmark.testQRP());
         System.out.println("SVD = "+benchmark.testSVD());
     }
 

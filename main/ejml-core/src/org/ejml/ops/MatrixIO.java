@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -227,6 +227,28 @@ public class MatrixIO {
         }
     }
 
+    public static void printJava(PrintStream out , DMatrix mat , String format ) {
+
+        String type = mat.getType().getBits() == 64 ? "double" : "float";
+
+        out.println("new "+type+"[][]{");
+
+        format += " ";
+
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            out.print("{");
+            for( int x = 0; x < mat.getNumCols(); x++ ) {
+                out.printf(format,mat.get(y,x));
+                if( x+1<mat.getNumCols())
+                    out.print(", ");
+            }
+            if( y+1 < mat.getNumRows())
+                out.println("},");
+            else
+                out.println("}};");
+        }
+    }
+
     public static void print( PrintStream out , FMatrix mat ) {
         print(out,mat,6,3);
     }
@@ -264,6 +286,28 @@ public class MatrixIO {
                 out.printf(format,mat.get(y,x));
             }
             out.println();
+        }
+    }
+
+    public static void printJava(PrintStream out , FMatrix mat , String format ) {
+
+        String type = mat.getType().getBits() == 64 ? "double" : "float";
+
+        out.println("new "+type+"[][]{");
+
+        format += " ";
+
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            out.print("{");
+            for( int x = 0; x < mat.getNumCols(); x++ ) {
+                out.printf(format,mat.get(y,x));
+                if( x+1<mat.getNumCols())
+                    out.print(", ");
+            }
+            if( y+1 < mat.getNumRows())
+                out.println("},");
+            else
+                out.println("}};");
         }
     }
 

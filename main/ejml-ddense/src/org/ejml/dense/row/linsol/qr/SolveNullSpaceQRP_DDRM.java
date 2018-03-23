@@ -20,7 +20,8 @@ package org.ejml.dense.row.linsol.qr;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderTran_DDRM;
+import org.ejml.dense.row.NormOps_DDRM;
+import org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_DDRM;
 import org.ejml.interfaces.SolveNullSpace;
 
 /**
@@ -31,8 +32,8 @@ import org.ejml.interfaces.SolveNullSpace;
  *
  * @author Peter Abeles
  */
-public class SolveNullSpaceQR_DDRM implements SolveNullSpace<DMatrixRMaj> {
-    CustomizedQR decomposition = new CustomizedQR();
+public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
+    CustomizedQRP decomposition = new CustomizedQRP();
 
     // Storage for Q matrix
     DMatrixRMaj Q = new DMatrixRMaj(1,1);
@@ -44,7 +45,6 @@ public class SolveNullSpaceQR_DDRM implements SolveNullSpace<DMatrixRMaj> {
      * @param nullspace Storage for null-space
      * @return true if successful or false if it failed
      */
-    @Override
     public boolean process(DMatrixRMaj A , int numSingularValues, DMatrixRMaj nullspace ) {
         decomposition.decompose(A);
 
@@ -62,57 +62,59 @@ public class SolveNullSpaceQR_DDRM implements SolveNullSpace<DMatrixRMaj> {
         return true;
     }
 
+    private double check(DMatrixRMaj A, DMatrixRMaj nullspace ) {
+        DMatrixRMaj r = new DMatrixRMaj(A.numRows,nullspace.numCols);
+        CommonOps_DDRM.mult(A,nullspace,r);
+
+        return NormOps_DDRM.normF(r);
+    }
+
     @Override
     public boolean inputModified() {
-        return true;
+        return decomposition.inputModified();
     }
 
     /**
      * Special/Hack version of QR decomposition to avoid copying memory and pointless transposes
      */
-    private static class CustomizedQR extends QRDecompositionHouseholderTran_DDRM {
+    private static class CustomizedQRP extends QRColPivDecompositionHouseholderColumn_DDRM {
 
-        @Override
-        public void setExpectedMaxSize( int numRows , int numCols ) {
-            this.numCols = numCols;
-            this.numRows = numRows;
-            minLength = Math.min(numCols,numRows);
-            int maxLength = Math.max(numCols,numRows);
-
-            // Don't delcare QR. It will use the input matrix for worspace
-            if( v == null ) {
-                v = new double[ maxLength ];
-                gammas = new double[ minLength ];
-            }
-
-            if( v.length < maxLength ) {
-                v = new double[ maxLength ];
-            }
-            if( gammas.length < minLength ) {
-                gammas = new double[ minLength ];
+        protected void convertToColumnMajor(DMatrixRMaj A) {
+            for( int x = 0; x < numCols; x++ ) {
+                System.arraycopy(A.data,x*A.numCols,dataQR[x],0,numRows);
             }
         }
 
         /**
-         * Modified decomposition which assumes the input is a transpose of the matrix
+         * Modified decomposition which assumes the input is a transpose of the matrix.
+         * The decomposition needs to be applied to the transpose of A not A. This will do that adjustment
+         * inplace
          */
         @Override
-        public boolean decompose( DMatrixRMaj A_tran ) {
-            // There is a "subtle" hack in the line below. Instead of passing in (cols,rows) I'm passing in
-            // (cols,cols) that's because we don't care about updating everything past the cols
-            setExpectedMaxSize(A_tran.numCols, Math.min(A_tran.numRows,A_tran.numCols));
+        public boolean decompose( DMatrixRMaj A ) {
+            // Unlike the QR decomposition the entire matrix has to be considered because any of the columns
+            // could be pivoted in
+            setExpectedMaxSize(A.numCols,A.numRows);
 
-            // use the input matrix for its workspace
-            this.QR = A_tran;
+            convertToColumnMajor(A);
 
-            error = false;
+            maxAbs = CommonOps_DDRM.elementMaxAbs(A);
+            // initialize pivot variables
+            setupPivotInfo();
 
-            for( int j = 0; j < minLength; j++ ) {
-                householder(j);
+            // go through each column and perform the decomposition
+            for (int j = 0; j < minLength; j++) {
+                if (j > 0)
+                    updateNorms(j);
+                swapColumns(j);
+                // if its degenerate stop processing
+                if (!householderPivot(j))
+                    break;
                 updateA(j);
+                rank = j + 1;
             }
 
-            return !error;
+            return true;
         }
 
     }

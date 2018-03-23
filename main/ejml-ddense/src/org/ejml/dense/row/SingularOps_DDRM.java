@@ -20,6 +20,7 @@ package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.linsol.qr.SolveNullSpaceQRP_DDRM;
 import org.ejml.dense.row.linsol.qr.SolveNullSpaceQR_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
@@ -272,6 +273,24 @@ public class SingularOps_DDRM {
      */
     public static DMatrixRMaj nullspaceQR( DMatrixRMaj A , int totalSingular ) {
         SolveNullSpaceQR_DDRM solver = new SolveNullSpaceQR_DDRM();
+
+        DMatrixRMaj nullspace = new DMatrixRMaj(1,1);
+
+        if( !solver.process(A,totalSingular,nullspace))
+            throw new RuntimeException("Solver failed. try SVD based method instead?");
+
+        return nullspace;
+    }
+
+    /**
+     * Computes the null space using QRP decomposition. This is faster than using SVD but slower than QR.
+     * Much more stable than QR though.
+     * @param A (Input) Matrix
+     * @param totalSingular Number of singular values
+     * @return Null space
+     */
+    public static DMatrixRMaj nullspaceQRP( DMatrixRMaj A , int totalSingular ) {
+        SolveNullSpaceQRP_DDRM solver = new SolveNullSpaceQRP_DDRM();
 
         DMatrixRMaj nullspace = new DMatrixRMaj(1,1);
 
