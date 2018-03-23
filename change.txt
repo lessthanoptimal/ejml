@@ -14,7 +14,7 @@ Date format: year/month/day
   * Made set(row,col, value) generic
 - Created SolveNullSpace
   * Make it easier and faster to find the null space
-  * QR, QRP, and SVD (TODO)
+  * QR, QRP, and SVD
 
 - SimpleMatrix
  * TODO extractVector make generic

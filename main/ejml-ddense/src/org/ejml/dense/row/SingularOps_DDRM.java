@@ -22,6 +22,8 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.qr.SolveNullSpaceQRP_DDRM;
 import org.ejml.dense.row.linsol.qr.SolveNullSpaceQR_DDRM;
+import org.ejml.dense.row.linsol.svd.SolveNullSpaceSvd_DDRM;
+import org.ejml.interfaces.SolveNullSpace;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 
@@ -291,6 +293,24 @@ public class SingularOps_DDRM {
      */
     public static DMatrixRMaj nullspaceQRP( DMatrixRMaj A , int totalSingular ) {
         SolveNullSpaceQRP_DDRM solver = new SolveNullSpaceQRP_DDRM();
+
+        DMatrixRMaj nullspace = new DMatrixRMaj(1,1);
+
+        if( !solver.process(A,totalSingular,nullspace))
+            throw new RuntimeException("Solver failed. try SVD based method instead?");
+
+        return nullspace;
+    }
+
+    /**
+     * Computes the null space using SVD. Slowest bust most stable way to find the solution
+     *
+     * @param A (Input) Matrix
+     * @param totalSingular Number of singular values
+     * @return Null space
+     */
+    public static DMatrixRMaj nullspaceSVD( DMatrixRMaj A , int totalSingular ) {
+        SolveNullSpace<DMatrixRMaj> solver = new SolveNullSpaceSvd_DDRM();
 
         DMatrixRMaj nullspace = new DMatrixRMaj(1,1);
 
