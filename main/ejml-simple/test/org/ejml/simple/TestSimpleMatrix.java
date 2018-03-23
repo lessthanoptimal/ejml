@@ -275,13 +275,13 @@ public class TestSimpleMatrix {
     public void invert_NaN_INFINITY() {
         SimpleMatrix a = new SimpleMatrix(3,3);
         try {
-            a.set(Double.NaN);
+            a.fill(Double.NaN);
             a.invert();
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            a.set(Double.POSITIVE_INFINITY);
+            a.fill(Double.POSITIVE_INFINITY);
             a.invert();
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -320,13 +320,13 @@ public class TestSimpleMatrix {
         SimpleMatrix a = new SimpleMatrix(3,3);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3,2, 0, 1, rand);
         try {
-            a.set(Double.NaN);
+            a.fill(Double.NaN);
             a.solve(b);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
 
         try {
-            a.set(Double.POSITIVE_INFINITY);
+            a.fill(Double.POSITIVE_INFINITY);
             a.solve(b);
             fail("Should have thrown an exception");
         } catch( RuntimeException ignore ) {}
@@ -350,7 +350,7 @@ public class TestSimpleMatrix {
     @Test
     public void set_double() {
         SimpleMatrix a = new SimpleMatrix(3,3);
-        a.set(16.0);
+        a.fill(16.0);
 
         DMatrixRMaj d = new DMatrixRMaj(3,3);
         CommonOps_DDRM.fill(d, 16.0);

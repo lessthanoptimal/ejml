@@ -33,6 +33,13 @@ import java.io.PrintStream;
  * @author Peter Abeles
  */
 public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
+
+
+    @Override
+    public void fill(DMatrixRMaj A, /**/double value) {
+        CommonOps_DDRM.fill(A, (double)value);
+    }
+
     @Override
     public void transpose(DMatrixRMaj input, DMatrixRMaj output) {
         CommonOps_DDRM.transpose(input,output);

@@ -33,7 +33,17 @@ import java.io.PrintStream;
  * @author Peter Abeles
  */
 public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCSC> {
-    
+
+    @Override
+    public void fill(DMatrixSparseCSC A, double value) {
+        if( value == 0 ) {
+            A.zero();
+        } else {
+            throw new RuntimeException("Filling every element in a sparse matrix is a bad idea in general. " +
+                    "Convert to a dense matrix first");
+        }
+    }
+
     @Override
     public void transpose(DMatrixSparseCSC input, DMatrixSparseCSC output) {
         CommonOps_DSCC.transpose(input,output,null);

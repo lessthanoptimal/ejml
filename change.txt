@@ -10,9 +10,9 @@ Date format: year/month/day
   * Removed most hard coded matrix types internally
   * Change simple matrix's constructor to take in an array to remove confusion over float and double
   * Fixed bug in concatRows and concatColumns
+  * Renamed set(double) to fill(double)
 
 - SImpleMatrix
- * TODO rename set to fill and make generic
  * TODO extractVector make generic
  * TODO diag make generic
  * TODO isIdentical move into ops

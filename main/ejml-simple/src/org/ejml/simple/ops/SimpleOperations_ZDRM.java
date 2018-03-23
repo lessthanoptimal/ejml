@@ -33,6 +33,11 @@ import java.io.PrintStream;
  */
 public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
+    public void fill(ZMatrixRMaj A, /**/double value) {
+        CommonOps_ZDRM.fill(A, (double)value,0);
+    }
+
+    @Override
     public void transpose(ZMatrixRMaj input, ZMatrixRMaj output) {
         CommonOps_ZDRM.transpose(input,output);
     }

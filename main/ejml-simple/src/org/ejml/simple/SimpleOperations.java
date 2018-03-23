@@ -29,6 +29,8 @@ import java.io.PrintStream;
  */
 public interface SimpleOperations<T extends Matrix> {
 
+    void fill( T A , double value );
+
     void transpose( T input , T output );
 
     void mult( T A , T B, T output );

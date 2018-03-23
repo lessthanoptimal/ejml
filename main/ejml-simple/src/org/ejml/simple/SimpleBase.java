@@ -444,13 +444,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @param val The value each element is set to.
      */
-    public void set( double val ) {
-        // TODO make this generic
-        if (bits() == 64) {
-            CommonOps_DDRM.fill((DMatrixRMaj)mat, val);
-        } else {
-            CommonOps_FDRM.fill((FMatrixRMaj)mat, (float)val);
-        }
+    public void fill(double val ) {
+        ops.fill(mat,val);
     }
 
     /**
@@ -459,7 +454,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @see CommonOps_DDRM#fill(DMatrixD1, double)
      */
     public void zero() {
-        set(0);
+        fill(0);
     }
 
     /**
