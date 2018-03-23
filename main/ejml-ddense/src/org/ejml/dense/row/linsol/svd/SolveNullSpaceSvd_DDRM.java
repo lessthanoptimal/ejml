@@ -33,7 +33,6 @@ public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
     SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(1,1,false,true,true);
     boolean compact = true;
 
-
     @Override
     public boolean process(DMatrixRMaj input, int numberOfSingular, DMatrixRMaj nullspace) {
         if( input.numCols > input.numRows ) {
@@ -63,5 +62,13 @@ public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
     @Override
     public boolean inputModified() {
         return svd.inputModified();
+    }
+
+    public SingularValueDecomposition_F64<DMatrixRMaj> getSvd() {
+        return svd;
+    }
+
+    public double[] getSingularValues() {
+        return svd.getSingularValues();
     }
 }
