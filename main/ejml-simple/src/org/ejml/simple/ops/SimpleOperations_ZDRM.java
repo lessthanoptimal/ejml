@@ -33,6 +33,16 @@ import java.io.PrintStream;
  */
 public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
+    public void set(ZMatrixRMaj A, int row, int column, /**/double value) {
+        A.set(row,column, (double)value, 0);
+    }
+
+    @Override
+    public void set(ZMatrixRMaj A, int row, int column, /**/double real, /**/double imaginary) {
+        A.set(row,column, (double)real, (double)imaginary);
+    }
+
+    @Override
     public void fill(ZMatrixRMaj A, /**/double value) {
         CommonOps_ZDRM.fill(A, (double)value,0);
     }

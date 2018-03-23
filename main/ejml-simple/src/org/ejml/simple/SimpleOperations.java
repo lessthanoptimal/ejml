@@ -29,6 +29,10 @@ import java.io.PrintStream;
  */
 public interface SimpleOperations<T extends Matrix> {
 
+    void set( T A , int row , int column , double value );
+
+    void set( T A , int row , int column , double real, double imaginary );
+
     void fill( T A , double value );
 
     void transpose( T input , T output );

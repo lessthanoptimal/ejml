@@ -35,6 +35,16 @@ import java.io.PrintStream;
 public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCSC> {
 
     @Override
+    public void set(DMatrixSparseCSC A, int row, int column, /**/double value) {
+        A.set(row,column, (double)value);
+    }
+
+    @Override
+    public void set(DMatrixSparseCSC A, int row, int column, /**/double real, /**/double imaginary) {
+        throw new IllegalArgumentException("Does not support imaginary values");
+    }
+
+    @Override
     public void fill(DMatrixSparseCSC A, double value) {
         if( value == 0 ) {
             A.zero();

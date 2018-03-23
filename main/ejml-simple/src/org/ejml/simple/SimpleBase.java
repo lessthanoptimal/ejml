@@ -531,7 +531,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public void reshape( int numRows , int numCols ) {
         if( mat.getType().isFixed() ) {
-            throw new IllegalArgumentException("Can't rename a fixed sized matrix");
+            throw new IllegalArgumentException("Can't reshape a fixed sized matrix");
         } else {
             ((ReshapeMatrix)mat).reshape(numRows, numCols);
         }
@@ -546,11 +546,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param value The element's new value.
      */
     public void set( int row , int col , double value ) {
-        if (bits() == 64) {
-            ((DMatrixRMaj)mat).set(row, col, value);
-        } else {
-            ((FMatrixRMaj)mat).set(row, col, (float)value);
-        }
+        ops.set(mat, row, col, value);
     }
 
     /**
@@ -560,10 +556,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param value The element's new value.
      */
     public void set( int index , double value ) {
-        if (bits() == 64) {
-            ((DMatrixRMaj)mat).set(index, value);
+        if( mat.getType() == MatrixType.DDRM ) {
+            ((DMatrixRMaj) mat).set(index, value);
+        } else if( mat.getType() == MatrixType.FDRM ) {
+            ((FMatrixRMaj) mat).set(index, (float)value);
         } else {
-            ((FMatrixRMaj)mat).set(index, (float)value);
+            throw new RuntimeException("Not supported yet for this matrix type");
         }
     }
 
@@ -575,20 +573,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param imaginary Imaginary component of assigned value
      */
     public void set( int row , int col , double real , double imaginary ) {
-        MatrixType type = mat.getType();
-
-        if( type.isReal() ) {
-            if( imaginary == 0 ) {
-                set(row,col,real);
-            } else {
-                throw new IllegalArgumentException("Cannot set an imaginary value to a real matrix");
-            }
+        if( imaginary == 0 ) {
+            set(row,col,real);
         } else {
-            if (type.getBits() == 64) {
-                ((ZMatrix)mat).set(row, col,real,imaginary);
-            } else {
-                ((CMatrix)mat).set(row, col,(float)real,(float)imaginary);
-            }
+            ops.set(mat,row,col, real, imaginary);
         }
     }
 

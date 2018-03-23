@@ -36,6 +36,16 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
 
 
     @Override
+    public void set(DMatrixRMaj A, int row, int column, /**/double value) {
+        A.set(row,column, (double)value);
+    }
+
+    @Override
+    public void set(DMatrixRMaj A, int row, int column, /**/double real, /**/double imaginary) {
+        throw new IllegalArgumentException("Does not support imaginary values");
+    }
+
+    @Override
     public void fill(DMatrixRMaj A, /**/double value) {
         CommonOps_DDRM.fill(A, (double)value);
     }
