@@ -23,8 +23,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderTran_DDRM;
 
 /**
- * <p>Uses QR decomposition to find the null space for a tall rectangular system if the number of
- * singular values is known.</p>
+ * <p>Uses QR decomposition to find the null-space for a matrix of any shape if the number of
+ * singular values is known.=</p>
  *
  * Solves for A<sup>T</sup>=QR and the last column in Q is the null space.
  *
@@ -46,10 +46,10 @@ public class SolveNullSpaceQR_DDRM {
     public boolean process(DMatrixRMaj A , int numSingularValues, DMatrixRMaj nullspace ) {
         decomposition.decompose(A);
 
-        Q.reshape(A.numCols,A.numCols);
+        Q.reshape(A.numCols,Math.min(A.numRows,A.numCols));
         decomposition.getQ(Q,true);
 
-        nullspace.reshape(Q.numCols,numSingularValues);
+        nullspace.reshape(Q.numRows,numSingularValues);
         CommonOps_DDRM.extract(Q,0,Q.numRows,Q.numCols-numSingularValues,Q.numCols,nullspace,0,0);
 
         return true;
@@ -90,7 +90,7 @@ public class SolveNullSpaceQR_DDRM {
         public boolean decompose( DMatrixRMaj A_tran ) {
             // There is a "subtle" hack in the line below. Instead of passing in (cols,rows) I'm passing in
             // (cols,cols) that's because we don't care about updating everything past the cols
-            setExpectedMaxSize(A_tran.numCols, A_tran.numCols);
+            setExpectedMaxSize(A_tran.numCols, Math.min(A_tran.numRows,A_tran.numCols));
 
             // use the input matrix for its workspace
             this.QR = A_tran;

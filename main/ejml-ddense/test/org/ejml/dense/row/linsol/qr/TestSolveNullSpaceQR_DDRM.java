@@ -95,6 +95,49 @@ public class TestSolveNullSpaceQR_DDRM {
         assertTrue(solver.process(copy,ns_length,ns));
         assertEquals(ns_length,ns.numCols);
 
+
+        // make sure it's not a trivial solution
+        for (int i = 0; i < ns_length; i++) {
+            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,ns.numCols-3+i,null);
+            assertEquals(1, NormOps_DDRM.normF(column),1e-4);
+        }
+
+        CommonOps_DDRM.mult(A,ns,r);
+        assertEquals(0,NormOps_DDRM.normF(r),1e-4);
+    }
+
+    @Test
+    public void underDetermined() {
+        SolveNullSpaceQR_DDRM solver = new SolveNullSpaceQR_DDRM();
+
+        DMatrixRMaj ns = new DMatrixRMaj(1,1);
+
+        int rows = 6;
+        int cols = 9;
+        double[] sv = new double[cols];
+        int ns_length = 3;
+
+        DMatrixRMaj r = new DMatrixRMaj(rows,ns_length);
+
+        for ( int v = 0; v < cols; v++ ) {
+            sv[v] = rand.nextDouble()*4;
+        }
+        for (int i = 0; i < ns_length; i++) {
+            sv[i] = 0;
+        }
+        DMatrixRMaj A = RandomMatrices_DDRM.singleValues(rows,cols,rand,sv);
+
+        DMatrixRMaj copy = A.copy();
+
+        assertTrue(solver.process(copy,ns_length,ns));
+        assertEquals(ns_length,ns.numCols);
+
+        // make sure it's not a trivial solution
+        for (int i = 0; i < ns_length; i++) {
+            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,ns.numCols-3+i,null);
+            assertEquals(1, NormOps_DDRM.normF(column),1e-4);
+        }
+
         CommonOps_DDRM.mult(A,ns,r);
         assertEquals(0,NormOps_DDRM.normF(r),1e-4);
     }
