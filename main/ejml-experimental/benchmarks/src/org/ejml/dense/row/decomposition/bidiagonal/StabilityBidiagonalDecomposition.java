@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -88,7 +88,7 @@ public class StabilityBidiagonalDecomposition {
             System.out.printf("Decomposition size %3d for %e singular\n",size,sv[0]);
 
 //            System.out.print("* Creating matrix ");
-            DMatrixRMaj mat = RandomMatrices_DDRM.singleValues(size,size,rand,sv);
+            DMatrixRMaj mat = RandomMatrices_DDRM.singular(size,size,rand,sv);
             CommonOps_DDRM.scale(scales[i],mat);
 //            System.out.println("  Done.");
             runAlgorithms(mat);

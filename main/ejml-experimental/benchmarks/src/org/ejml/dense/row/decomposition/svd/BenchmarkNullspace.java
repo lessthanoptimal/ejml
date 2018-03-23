@@ -51,7 +51,7 @@ public class BenchmarkNullspace {
             sv[i] = rand.nextDouble()*4;
         }
         sv[rand.nextInt(sv.length)] = 0;
-        A=RandomMatrices_DDRM.singleValues(A.numRows,A.numCols,rand,sv);
+        A=RandomMatrices_DDRM.singular(A.numRows,A.numCols,rand,sv);
         System.out.println("Finished creating random matrix");
     }
 

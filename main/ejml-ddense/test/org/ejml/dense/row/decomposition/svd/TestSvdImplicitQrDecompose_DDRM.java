@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -93,7 +93,7 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
 //                        sv[i] = rand.nextDouble()*2;
 //                    sv[0] = 0;
 
-                    A = RandomMatrices_DDRM.singleValues(numRows,numCols,rand,sv);
+                    A = RandomMatrices_DDRM.singular(numRows,numCols,rand,sv);
 //                    A = new DMatrixRMaj(numRows,numCols);
                 } else {
                     A = RandomMatrices_DDRM.rectangle(numRows,numCols,-1,1,rand);

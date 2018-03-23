@@ -40,14 +40,19 @@ public class SolveNullSpaceQR_DDRM {
      * Finds the null space of A
      * @param A (Input) Matrix. Modified
      * @param numSingularValues Number of singular values
-     * @param nullspace Storage for null space
+     * @param nullspace Storage for null-space
      * @return true if successful or false if it failed
      */
     public boolean process(DMatrixRMaj A , int numSingularValues, DMatrixRMaj nullspace ) {
         decomposition.decompose(A);
 
-        Q.reshape(A.numCols,Math.min(A.numRows,A.numCols));
-        decomposition.getQ(Q,true);
+        if( A.numRows > A.numCols ) {
+            Q.reshape(A.numCols,Math.min(A.numRows,A.numCols));
+            decomposition.getQ(Q, true);
+        } else {
+            Q.reshape(A.numCols, A.numCols);
+            decomposition.getQ(Q, false);
+        }
 
         nullspace.reshape(Q.numRows,numSingularValues);
         CommonOps_DDRM.extract(Q,0,Q.numRows,Q.numCols-numSingularValues,Q.numCols,nullspace,0,0);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -160,7 +160,7 @@ public class TestRandomMatrices_DDRM {
 
         for( int numRows = 1; numRows <= 4; numRows++ ) {
             for( int numCols = 1; numCols <= 4; numCols++ ) {
-                DMatrixRMaj A = RandomMatrices_DDRM.singleValues(numRows,numCols, rand, sv);
+                DMatrixRMaj A = RandomMatrices_DDRM.singular(numRows,numCols, rand, sv);
 
                 SingularValueDecomposition_F64<DMatrixRMaj> svd =
                         DecompositionFactory_DDRM.svd(A.numRows,A.numCols,true,true,false);
@@ -173,7 +173,7 @@ public class TestRandomMatrices_DDRM {
         }
 
         // see if it fills in zeros when it is smaller than the dimension
-        DMatrixRMaj A = RandomMatrices_DDRM.singleValues(5,5, rand, sv);
+        DMatrixRMaj A = RandomMatrices_DDRM.singular(5,5, rand, sv);
 
         SingularValueDecomposition_F64<DMatrixRMaj> svd =
                 DecompositionFactory_DDRM.svd(A.numRows, A.numCols, true, true, false);

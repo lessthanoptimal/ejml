@@ -205,8 +205,8 @@ public class RandomMatrices_DDRM {
      * @param sv Singular values of the matrix.
      * @return A new matrix with the specified singular values.
      */
-    public static DMatrixRMaj singleValues(int numRows, int numCols,
-                                           Random rand, double ...sv)
+    public static DMatrixRMaj singular(int numRows, int numCols,
+                                       Random rand, double ...sv)
     {
         DMatrixRMaj U,V,S;
 

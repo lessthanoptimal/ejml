@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -91,7 +91,7 @@ public class BenchmarkSolvePseudoInverse {
                 singularValues[j] = 10+w-j;
 
             System.out.printf("Solving A size %3d for %12d trials\n",w,trials[i]);
-            A = RandomMatrices_DDRM.singleValues(w, w, rand, singularValues);
+            A = RandomMatrices_DDRM.singular(w, w, rand, singularValues);
             B = new DMatrixRMaj(w,2);
 
             runAlgorithms(trials[i]);

@@ -53,7 +53,7 @@ public class TestSolveNullSpaceQR_DDRM {
                 }
                 sv[rand.nextInt(cols)] = 0;
 
-                DMatrixRMaj A = RandomMatrices_DDRM.singleValues(rows,cols,rand,sv);
+                DMatrixRMaj A = RandomMatrices_DDRM.singular(rows,cols,rand,sv);
 
                 DMatrixRMaj copy = A.copy();
 
@@ -88,7 +88,7 @@ public class TestSolveNullSpaceQR_DDRM {
         for (int i = 0; i < ns_length; i++) {
             sv[i] = 0;
         }
-        DMatrixRMaj A = RandomMatrices_DDRM.singleValues(rows,cols,rand,sv);
+        DMatrixRMaj A = RandomMatrices_DDRM.singular(rows,cols,rand,sv);
 
         DMatrixRMaj copy = A.copy();
 
@@ -115,17 +115,15 @@ public class TestSolveNullSpaceQR_DDRM {
         int rows = 6;
         int cols = 9;
         double[] sv = new double[cols];
-        int ns_length = 3;
+        int ns_length = cols-rows;
 
         DMatrixRMaj r = new DMatrixRMaj(rows,ns_length);
 
         for ( int v = 0; v < cols; v++ ) {
             sv[v] = rand.nextDouble()*4;
         }
-        for (int i = 0; i < ns_length; i++) {
-            sv[i] = 0;
-        }
-        DMatrixRMaj A = RandomMatrices_DDRM.singleValues(rows,cols,rand,sv);
+
+        DMatrixRMaj A = RandomMatrices_DDRM.singular(rows,cols,rand,sv);
 
         DMatrixRMaj copy = A.copy();
 
@@ -134,7 +132,7 @@ public class TestSolveNullSpaceQR_DDRM {
 
         // make sure it's not a trivial solution
         for (int i = 0; i < ns_length; i++) {
-            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,ns.numCols-3+i,null);
+            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,i,null);
             assertEquals(1, NormOps_DDRM.normF(column),1e-4);
         }
 
