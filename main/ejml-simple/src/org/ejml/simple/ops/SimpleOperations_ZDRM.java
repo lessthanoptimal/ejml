@@ -257,6 +257,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
+    public boolean isIdentical(ZMatrixRMaj A, ZMatrixRMaj B, /**/double tol) {
+        return MatrixFeatures_ZDRM.isIdentical(A, B, (double)tol);
+    }
+
+    @Override
     public void print(PrintStream out, Matrix mat) {
         MatrixIO.print(out, (ZMatrixRMaj)mat);
     }

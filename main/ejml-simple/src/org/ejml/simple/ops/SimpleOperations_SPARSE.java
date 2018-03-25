@@ -254,6 +254,11 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
     }
 
     @Override
+    public boolean isIdentical(DMatrixSparseCSC A, DMatrixSparseCSC B, double tol) {
+        return MatrixFeatures_DSCC.isEqualsSort(A, B, tol);
+    }
+
+    @Override
     public void print(PrintStream out, Matrix mat) {
         MatrixIO.print(out, (DMatrixSparseCSC)mat);
     }

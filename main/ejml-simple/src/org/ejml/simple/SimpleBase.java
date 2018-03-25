@@ -914,23 +914,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return If they are equal within tolerance of each other.
      */
     public boolean isIdentical(T a, double tol) {
-        // TODO move into ops
-        switch( getType() ) {
-            case DDRM:
-                return MatrixFeatures_DDRM.isIdentical((DMatrixRMaj)mat, (DMatrixRMaj)a.getMatrix(), tol);
-
-            case FDRM:
-                return MatrixFeatures_FDRM.isIdentical((FMatrixRMaj)mat, (FMatrixRMaj)a.getMatrix(), (float)tol);
-
-            case ZDRM:
-                return MatrixFeatures_ZDRM.isIdentical((ZMatrixRMaj)mat, (ZMatrixRMaj)a.getMatrix(), tol);
-
-            case CDRM:
-                return MatrixFeatures_CDRM.isIdentical((CMatrixRMaj)mat, (CMatrixRMaj)a.getMatrix(), (float)tol);
-
-            default:
-                throw new IllegalArgumentException("Matrix type isn't supported yet by this function");
-        }
+        return ops.isIdentical(mat,(Matrix)a,tol);
     }
 
     /**

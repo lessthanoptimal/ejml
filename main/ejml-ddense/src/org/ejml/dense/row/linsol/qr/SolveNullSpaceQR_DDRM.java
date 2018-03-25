@@ -25,7 +25,8 @@ import org.ejml.interfaces.SolveNullSpace;
 
 /**
  * <p>Uses QR decomposition to find the null-space for a matrix of any shape if the number of
- * singular values is known.=</p>
+ * singular values is known. WARNING: This only uses the first several rows in the input matrix. The rest are
+ * ignored.</p>
  *
  * Solves for A<sup>T</sup>=QR and the last column in Q is the null space.
  *

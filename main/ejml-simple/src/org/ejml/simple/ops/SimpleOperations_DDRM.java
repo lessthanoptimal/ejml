@@ -240,6 +240,11 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
+    public boolean isIdentical(DMatrixRMaj A, DMatrixRMaj B, /**/double tol) {
+        return MatrixFeatures_DDRM.isIdentical(A,B, (double)tol);
+    }
+
+    @Override
     public void print(PrintStream out, Matrix mat) {
         MatrixIO.print(out, (DMatrixRMaj)mat);
     }

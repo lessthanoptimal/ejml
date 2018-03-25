@@ -191,15 +191,15 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         boolean foundNegative = false;
         for( int col = j; col < numCols; col++ ) {
             double e = dataQR[col][j-1];
-            normsCol[col] -= e*e;
+            double v = normsCol[col] -= e*e;
 
-            if( normsCol[col] < 0 ) {
+            if( v < 0 ) {
                 foundNegative = true;
                 break;
             }
         }
 
-        // if a negative sum has been found then clearly too much precision has been last
+        // if a negative sum has been found then clearly too much precision has been lost
         // and it should recompute the column norms from scratch
         if( foundNegative ) {
             for( int col = j; col < numCols; col++ ) {

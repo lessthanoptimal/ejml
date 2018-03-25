@@ -112,5 +112,7 @@ public interface SimpleOperations<T extends Matrix> {
 
     void elementLog( T A , T output );
 
+    boolean isIdentical(T A, T B, double tol);
+
     void print(PrintStream out , Matrix mat );
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -67,6 +67,21 @@ public class MatrixFeatures_DSCC {
 
         for (int i = 0; i < a.nz_length; i++) {
             if( Math.abs(a.nz_values[i]-b.nz_values[i]) > tol )
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean isIdenticalSort(DMatrixSparseCSC a , DMatrixSparseCSC b , double tol ) {
+        if( !a.indicesSorted )
+            a.sortIndices(null);
+        if( !b.indicesSorted )
+            b.sortIndices(null);
+        if( !isSameStructure(a,b) )
+            return false;
+
+        for (int i = 0; i < a.nz_length; i++) {
+            if( !UtilEjml.isIdentical(a.nz_values[i],b.nz_values[i], tol))
                 return false;
         }
         return true;

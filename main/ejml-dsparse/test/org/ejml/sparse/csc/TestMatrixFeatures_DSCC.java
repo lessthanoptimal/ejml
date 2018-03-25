@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,8 +29,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -84,6 +83,35 @@ public class TestMatrixFeatures_DSCC {
 
         // these require sorting and this will fail if not
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void isIdenticalSort_tol() {
+        DMatrixSparseTriplet orig = new DMatrixSparseTriplet(4,5,3);
+        orig.addItem(3,1,2.5);
+        orig.addItem(2,4,2.7);
+        orig.addItem(2,2,1.5);
+
+        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+
+        orig = new DMatrixSparseTriplet(4,5,3);
+        orig.addItem(3,1,2.5);
+        orig.addItem(2,2,1.5);
+        orig.addItem(2,4,2.7);
+        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+
+        // these require sorting and this will fail if not
+        assertTrue(MatrixFeatures_DSCC.isIdenticalSort(a,b, UtilEjml.TEST_F64));
+
+        double values[] = new double[]{1.0,Double.NaN,Double.POSITIVE_INFINITY,Double.NEGATIVE_INFINITY};
+
+        for( int i = 0; i < values.length; i++ ) {
+            for( int j = 0; j < values.length; j++ ) {
+                a.set(2,2,values[i]);
+                b.set(2,2,values[j]);
+                assertEquals(i==j,MatrixFeatures_DSCC.isIdenticalSort(a,b, UtilEjml.TEST_F64));
+            }
+        }
     }
 
     @Test
