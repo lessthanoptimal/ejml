@@ -98,7 +98,6 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
 
             convertToColumnMajor(A);
 
-            maxAbs = CommonOps_DDRM.elementMaxAbs(A);
             // initialize pivot variables
             setupPivotInfo();
 
