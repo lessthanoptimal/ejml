@@ -31,6 +31,8 @@ public enum MatrixType {
     FSCC(true,false,32),
     ZSCC(false,false,64),
     CSCC(false,false,32),
+    DSDI(true,false,64),
+    FSDI(true,false,64),
     UNSPECIFIED(false,false,0);
 
     boolean fixed;
@@ -62,6 +64,8 @@ public enum MatrixType {
             return MatrixType.DSCC;
         else if( type == FMatrixSparseCSC.class )
             return MatrixType.FSCC;
+        else if( type == DMatrixDiag.class )
+            return MatrixType.DSDI;
         else
             throw new IllegalArgumentException("Unknown class");
     }

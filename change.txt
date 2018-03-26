@@ -20,6 +20,9 @@ Date format: year/month/day
  * TODO extractVector make generic
  * TODO diag make generic
  * TODO isIdentical move into ops
+- Diagonal Matrix
+ * TODO Matrix multiplication
+
 
 ----- Version 0.33
 2018/01/17
