@@ -51,9 +51,6 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     // F-norm  squared for each column
     protected double normsCol[];
 
-    // value of the maximum abs element
-    protected double maxAbs;
-
     // threshold used to determine when a column is considered to be singular
     // Threshold is relative to the maxAbs
     protected double singularThreshold = UtilEjml.EPS;
@@ -148,7 +145,6 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
 
         convertToColumnMajor(A);
 
-        maxAbs = CommonOps_DDRM.elementMaxAbs(A);
         // initialize pivot variables
         setupPivotInfo();
 
@@ -281,7 +277,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
 
             u[j] = -tau;
 
-            if( Math.abs(tau) <= singularThreshold ) {
+            if( Math.abs(tau) <= singularThreshold*max ) {
                 return false;
             }
         }

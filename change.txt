@@ -12,6 +12,8 @@ Date format: year/month/day
   * Fixed bug in concatRows and concatColumns
   * Renamed set(double) to fill(double)
   * Made set(row,col, value) generic
+- QRP
+  *  dense real version was incorrectly scaling the threshold for singularity detection
 - Created SolveNullSpace
   * Make it easier and faster to find the null space
   * QR, QRP, and SVD
