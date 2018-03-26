@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,10 @@ import java.util.List;
  */
 public class Sequence {
     // List of in sequence operations which the equation string described
-    List<Operation> operations = new ArrayList<Operation>();
+    List<Operation> operations = new ArrayList<>();
+
+    // Variable containing the output of the sequence
+    Variable output;
 
     public void addOperation( Operation operation ) {
         operations.add(operation);

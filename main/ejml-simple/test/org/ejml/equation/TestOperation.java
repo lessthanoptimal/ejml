@@ -925,7 +925,7 @@ public class TestOperation {
 
         eq.alias(b,"b");
         eq.process("c=b(1 2)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         assertTrue(found.numRows == 1 && found.numCols == 2);
         assertEquals(b.get(1), found.get(0), UtilEjml.TEST_F64);
@@ -940,7 +940,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(1:3)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         assertTrue(found.numRows == 1 && found.numCols == 3);
         for (int i = 0; i < found.numCols; i++) {
@@ -956,7 +956,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(4:)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         assertTrue(found.numRows == 1 && found.numCols == b.getNumElements()-4);
         for (int i = 0; i < found.numCols; i++) {
@@ -972,7 +972,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(:)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         assertTrue(found.numRows == 1 && found.numCols == b.getNumElements());
         for (int i = 0; i < found.numCols; i++) {
@@ -988,7 +988,7 @@ public class TestOperation {
 
         eq.alias(b,"b");
         eq.process("c=b(1 2,1 0 2)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         int rows[] = new int[]{1,2};
         int cols[] = new int[]{1,0,2};
@@ -1004,7 +1004,7 @@ public class TestOperation {
 
         eq.alias(b,"b");
         eq.process("c=b(1:2,2:3)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         int rows[] = new int[]{1,2};
         int cols[] = new int[]{2,3};
@@ -1020,7 +1020,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(2:,1:)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         int rows[] = new int[]{2};
         int cols[] = new int[]{1,2,3};
@@ -1036,7 +1036,7 @@ public class TestOperation {
 
         eq.alias(b, "b");
         eq.process("c=b(:,:)");
-        DMatrixRMaj found = eq.lookupMatrix("c");
+        DMatrixRMaj found = eq.lookupDDRM("c");
 
         int rows[] = new int[]{0,1,2};
         int cols[] = new int[]{0,1,2,3};
@@ -1253,7 +1253,7 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(3,1);
         CommonOps_DDRM.sumRows((DMatrixRMaj)a.getMatrix(),expected);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupDDRM("b"), UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1268,7 +1268,7 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(1,4);
         CommonOps_DDRM.sumCols((DMatrixRMaj)a.getMatrix(),expected);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupDDRM("b"), UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1283,7 +1283,7 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(3,1);
         CommonOps_DDRM.maxRows((DMatrixRMaj)a.getMatrix(),expected);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupDDRM("b"), UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1298,7 +1298,7 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(1,4);
         CommonOps_DDRM.maxCols((DMatrixRMaj)a.getMatrix(),expected);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupDDRM("b"), UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1313,7 +1313,7 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(3,1);
         CommonOps_DDRM.minRows((DMatrixRMaj)a.getMatrix(),expected);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupDDRM("b"), UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1328,7 +1328,7 @@ public class TestOperation {
         DMatrixRMaj expected = new DMatrixRMaj(1,4);
         CommonOps_DDRM.minCols((DMatrixRMaj)a.getMatrix(),expected);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupMatrix("b"), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,eq.lookupDDRM("b"), UtilEjml.TEST_F64));
     }
 
     @Test

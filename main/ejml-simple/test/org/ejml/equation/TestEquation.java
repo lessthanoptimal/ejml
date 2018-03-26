@@ -189,7 +189,7 @@ public class TestEquation {
         eq.alias(A, "A");
         eq.process("B=A");
 
-        DMatrixRMaj B = eq.lookupMatrix("B");
+        DMatrixRMaj B = eq.lookupDDRM("B");
         assertTrue(A.getMatrix() != B);
         assertTrue(MatrixFeatures_DDRM.isEquals((DMatrixRMaj)A.getMatrix(), B));
     }
@@ -356,7 +356,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("A=[1 2 3 4.5 6 7.7 8.8 9]");
-        DMatrixRMaj found = eq.lookupMatrix("A");
+        DMatrixRMaj found = eq.lookupDDRM("A");
 
         double[] expected = new double[]{1,2,3,4.5,6,7.7,8.8,9};
 
@@ -370,7 +370,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("A=[ 2:2:10 12 14 ]");
-        DMatrixRMaj found = eq.lookupMatrix("A");
+        DMatrixRMaj found = eq.lookupDDRM("A");
 
         assertEquals(7,found.getNumCols());
         assertEquals(1,found.getNumRows());
@@ -385,7 +385,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("A=[1 2 , 3, 4.5,-6 7]");
-        DMatrixRMaj found = eq.lookupMatrix("A");
+        DMatrixRMaj found = eq.lookupDDRM("A");
 
         double[] expected = new double[]{1,2,3,4.5,-6,7};
 
@@ -449,7 +449,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("found=[[1:4]' [2:2:8]']");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 2; x++) {
                 assertEquals(x+" "+y,(x+1)*(y+1),found.get(y,x),UtilEjml.TEST_F64);
@@ -462,7 +462,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("found=[1:4 5:1:8]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
         assertEquals(1,found.numRows());
         assertEquals(8, found.numCols());
 
@@ -476,7 +476,7 @@ public class TestEquation {
         Equation eq = new Equation();
 
         eq.process("found=[1 2 3 4 5:1:8]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("found"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
         assertEquals(1,found.numRows());
         assertEquals(8,found.numCols());
 
@@ -491,7 +491,7 @@ public class TestEquation {
 
         eq.process("a=5:1:8");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
         assertEquals(1,found.numRows());
         assertEquals(4,found.numCols());
 
@@ -507,7 +507,7 @@ public class TestEquation {
 
         eq.process("a=2 3 4 5 6");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
         assertEquals(1,found.numRows());
         assertEquals(5,found.numCols());
 
@@ -525,7 +525,7 @@ public class TestEquation {
         for( String s : tests ) {
             eq.process("a=" + s);
             eq.process("b=[a]");
-            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
             assertEquals(1, found.numRows());
             assertEquals(8, found.numCols());
 
@@ -544,7 +544,7 @@ public class TestEquation {
         for( String s : tests ) {
             eq.process("a="+s);
             eq.process("b=[a]");
-            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
             assertEquals(1, found.numRows());
             assertEquals(4, found.numCols());
 
@@ -561,7 +561,7 @@ public class TestEquation {
         // needs to realize () is not a function call
         eq.process("a=3 2 1 0 (-1) (-2)");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
         assertEquals(1,found.numRows());
         assertEquals(6,found.numCols());
 
@@ -577,7 +577,7 @@ public class TestEquation {
         // subtraction should have a higher priority than explicit list
         eq.process("a=3 2 1 5 - 3 - 2");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
         assertEquals(1,found.numRows());
         assertEquals(4,found.numCols());
 
@@ -593,7 +593,7 @@ public class TestEquation {
         // Use commas to clarify the meaning of negative
         eq.process("a=3 2 1,0,-1,0 - 2");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupMatrix("b"));
+        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
         assertEquals(1,found.numRows());
         assertEquals(6,found.numCols());
 

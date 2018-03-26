@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -65,7 +65,7 @@ public class QRExampleEquation {
             eq.process("maxV=max(abs(v))");
 
             // Note that v is lazily created above.  Need direct access to it, which is done below.
-            DMatrixRMaj v = eq.lookupMatrix("v");
+            DMatrixRMaj v = eq.lookupDDRM("v");
 
             double maxV = eq.lookupDouble("maxV");
             if( maxV > 0 && v.getNumElements() > 1 ) {

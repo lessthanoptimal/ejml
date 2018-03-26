@@ -396,8 +396,8 @@ public class Equation {
             Variable variableRight = tokensRight.getFirst().getVariable();
             if (range == null) {
                 // no range, so copy results into the entire output matrix
-                Variable output = createVariableInferred(t0, variableRight);
-                sequence.addOperation(Operation.copy(variableRight, output));
+                sequence.output = createVariableInferred(t0, variableRight);
+                sequence.addOperation(Operation.copy(variableRight, sequence.output));
             } else {
                 // a sub-matrix range is specified.  Copy into that inner part
                 if (t0.getType() == Type.WORD) {
@@ -1251,7 +1251,7 @@ public class Equation {
         return macros.get(token);
     }
 
-    public DMatrixRMaj lookupMatrix(String token) {
+    public DMatrixRMaj lookupDDRM(String token) {
         return ((VariableMatrix)variables.get(token)).matrix;
     }
 
@@ -1535,6 +1535,30 @@ public class Equation {
      */
     public void process( String equation , boolean debug ) {
         compile(equation,debug).perform();
+    }
+
+    /**
+     * Prints the results of the equation to standard out. Useful for debugging
+     */
+    public void print( String equation ) {
+        System.out.println("WARNING: Print is still in development");
+        System.out.println("         Remove warning after unit tests are created for output variable");
+
+        // first assume it's just a variable
+        Variable v = lookupVariable(equation);
+        if( v == null ) {
+            Sequence sequence = compile(equation);
+            sequence.perform();
+            v = sequence.output;
+        }
+
+        if( v instanceof VariableMatrix ) {
+            ((VariableMatrix)v).matrix.print();
+        } else if(v instanceof VariableScalar ) {
+            System.out.println("Scalar = "+((VariableScalar)v).getDouble() );
+        } else {
+            System.out.println("Add support for "+v.getClass().getSimpleName());
+        }
     }
 
     /**

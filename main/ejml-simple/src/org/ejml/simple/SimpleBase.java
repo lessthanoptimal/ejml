@@ -914,7 +914,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return If they are equal within tolerance of each other.
      */
     public boolean isIdentical(T a, double tol) {
-        return ops.isIdentical(mat,(Matrix)a,tol);
+        return ops.isIdentical(mat,a.mat,tol);
     }
 
     /**
