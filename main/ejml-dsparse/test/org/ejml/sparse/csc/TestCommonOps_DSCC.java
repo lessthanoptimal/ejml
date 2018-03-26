@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -453,6 +453,32 @@ public class TestCommonOps_DSCC {
                     assertEquals(d[row],A.get(row,col), UtilEjml.TEST_F64);
                 }
             }
+        }
+    }
+
+    @Test
+    public void extractDiag() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(3, 4, 5, 0, 1, rand);
+
+        for (int i = 0; i < 3; i++) {
+            a.set(i, i, i + 1);
+        }
+
+        DMatrixSparseCSC v = new DMatrixSparseCSC(3, 1, 3);
+        CommonOps_DSCC.extractDiag(a, v);
+        assertTrue(CommonOps_DSCC.checkStructure(v));
+
+        for (int i = 0; i < 3; i++) {
+            assertEquals(i + 1, v.get(i, 0), 1e-8);
+        }
+
+        // Row and column vectors have seperate code. Test row vector now
+        v = new DMatrixSparseCSC(1, 3, 3);
+        CommonOps_DSCC.extractDiag(a, v);
+        assertTrue(CommonOps_DSCC.checkStructure(v));
+
+        for (int i = 0; i < 3; i++) {
+            assertEquals(i + 1, v.get(0, i), 1e-8);
         }
     }
 

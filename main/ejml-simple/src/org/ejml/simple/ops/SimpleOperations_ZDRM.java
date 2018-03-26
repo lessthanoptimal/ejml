@@ -198,6 +198,21 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
+    public ZMatrixRMaj diag(ZMatrixRMaj A) {
+        ZMatrixRMaj output;
+        if (MatrixFeatures_ZDRM.isVector(A)) {
+            int N = Math.max(A.numCols,A.numRows);
+            output = new ZMatrixRMaj(N,N);
+            CommonOps_ZDRM.diag(output,N,A.data);
+        } else {
+            int N = Math.min(A.numCols,A.numRows);
+            output = new ZMatrixRMaj(N,1);
+            CommonOps_ZDRM.extractDiag(A,output);
+        }
+        return output;
+    }
+
+    @Override
     public boolean hasUncountable(ZMatrixRMaj M) {
         return MatrixFeatures_ZDRM.hasUncountable(M);
     }

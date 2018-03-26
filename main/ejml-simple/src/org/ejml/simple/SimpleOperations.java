@@ -92,6 +92,8 @@ public interface SimpleOperations<T extends Matrix> {
                   T dst ,
                   int dstY0, int dstX0 );
 
+    T diag( T A );
+
     boolean hasUncountable(T M);
 
     void changeSign( T a );

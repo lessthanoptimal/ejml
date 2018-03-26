@@ -189,6 +189,21 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
+    public DMatrixRMaj diag(DMatrixRMaj A) {
+        DMatrixRMaj output;
+        if (MatrixFeatures_DDRM.isVector(A)) {
+            int N = Math.max(A.numCols,A.numRows);
+            output = new DMatrixRMaj(N,N);
+            CommonOps_DDRM.diag(output,N,A.data);
+        } else {
+            int N = Math.min(A.numCols,A.numRows);
+            output = new DMatrixRMaj(N,1);
+            CommonOps_DDRM.extractDiag(A,output);
+        }
+        return output;
+    }
+
+    @Override
     public boolean hasUncountable(DMatrixRMaj M) {
         return MatrixFeatures_DDRM.hasUncountable(M);
     }

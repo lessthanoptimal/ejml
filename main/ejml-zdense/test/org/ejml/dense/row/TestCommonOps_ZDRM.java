@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -87,6 +87,23 @@ public class TestCommonOps_ZDRM {
                     assertEquals(0,a.imaginary,UtilEjml.TEST_F64);
                 }
             }
+        }
+    }
+
+    @Test
+    public void extractDiag() {
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(3,4, 0, 1, rand);
+
+        for( int i = 0; i < 3; i++ ) {
+            a.set(i,i,i+1,0.1);
+        }
+
+        ZMatrixRMaj v = new ZMatrixRMaj(3,1);
+        CommonOps_ZDRM.extractDiag(a, v);
+
+        for( int i = 0; i < 3; i++ ) {
+            assertEquals( i+1 , v.getReal(i) , UtilEjml.TEST_F64 );
+            assertEquals( 0.1 , v.getImag(i) , UtilEjml.TEST_F64 );
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1183,10 +1183,8 @@ public class CommonOps_DDRM {
     {
         int N = Math.min(src.numRows, src.numCols);
 
-        if( !MatrixFeatures_DDRM.isVector(dst) ) {
-            throw new MatrixDimensionException("Expected a vector for dst.");
-        } else if( dst.getNumElements() != N ) {
-            throw new MatrixDimensionException("Expected "+N+" elements in dst.");
+        if( !MatrixFeatures_DDRM.isVector(dst) || dst.numCols*dst.numCols != N ) {
+            dst.reshape(N,1);
         }
 
         for( int i = 0; i < N; i++ ) {

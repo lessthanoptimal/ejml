@@ -409,8 +409,15 @@ public class CommonOps_DSCC {
      * @return A diagonal matrix
      */
     public static DMatrixSparseCSC diag(double... values ) {
-        int N = values.length;
-        DMatrixSparseCSC A = new DMatrixSparseCSC(N,N,N);
+        return diag(new DMatrixSparseCSC(1,1,1),values.length,values);
+    }
+
+    public static DMatrixSparseCSC diag(DMatrixSparseCSC A , int length, double... values ) {
+        int N = length;
+        if( A == null )
+            A = new DMatrixSparseCSC(N,N,N);
+        else
+            A.reshape(N,N,N);
         A.nz_length = N;
 
         for (int i = 0; i < N; i++) {
@@ -420,6 +427,48 @@ public class CommonOps_DSCC {
         }
 
         return A;
+    }
+
+
+    /**
+     * <p>
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * can either be a row or column vector.
+     * <p>
+     *
+     * @param src Matrix whose diagonal elements are being extracted. Not modified.
+     * @param dst A vector the results will be written into. Modified.
+     */
+    public static void extractDiag(DMatrixSparseCSC src, DMatrixSparseCSC dst ) {
+        int N = Math.min(src.numRows, src.numCols);
+
+        if( !MatrixFeatures_DSCC.isVector(dst) ) {
+            dst.reshape(N, 1, N);
+        } else if( dst.numRows*dst.numCols != N ) {
+            dst.reshape(N,1,N);
+        } else {
+            dst.growMaxLength(N,false);
+        }
+
+        dst.nz_length = N;
+        dst.indicesSorted = true;
+
+        if( dst.numRows != 1 ) {
+            dst.col_idx[0] = 0;
+            dst.col_idx[1] = N;
+            for (int i = 0; i < N; i++) {
+                dst.nz_values[i] = src.unsafe_get(i, i);
+                dst.nz_rows[i] = i;
+            }
+        } else {
+            dst.col_idx[0] = 0;
+            for (int i = 0; i < N; i++) {
+                dst.nz_values[i] = src.unsafe_get(i, i);
+                dst.nz_rows[i] = 0;
+                dst.col_idx[i+1] = i+1;
+            }
+
+        }
     }
 
     /**

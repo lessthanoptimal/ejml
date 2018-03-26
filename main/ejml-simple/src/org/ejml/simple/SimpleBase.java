@@ -20,7 +20,9 @@ package org.ejml.simple;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
-import org.ejml.dense.row.*;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.CommonOps_FDRM;
+import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.equation.Equation;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ops.*;
@@ -846,26 +848,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T extractVector( boolean extractRow , int element )
     {
-        int length = extractRow ? mat.getNumCols() : mat.getNumRows();
-
-        T ret = extractRow ? createMatrix(1,length, mat.getType()) : createMatrix(length,1, mat.getType());
-
-        // TODO make generic
-        if( bits() == 64 ) {
-            if (extractRow) {
-                SpecializedOps_DDRM.subvector((DMatrixRMaj)mat, element, 0, length, true, 0, (DMatrixRMaj)ret.getMatrix());
-            } else {
-                SpecializedOps_DDRM.subvector((DMatrixRMaj)mat, 0, element, length, false, 0, (DMatrixRMaj)ret.getMatrix());
-            }
+        if( extractRow ) {
+            return extractMatrix(element,element+1,0,SimpleMatrix.END);
         } else {
-            if (extractRow) {
-                SpecializedOps_FDRM.subvector((FMatrixRMaj)mat, element, 0, length, true, 0, (FMatrixRMaj)ret.getMatrix());
-            } else {
-                SpecializedOps_FDRM.subvector((FMatrixRMaj)mat, 0, element, length, false, 0, (FMatrixRMaj)ret.getMatrix());
-            }
+            return extractMatrix(0,SimpleMatrix.END,element,element+1);
         }
-
-        return ret;
     }
 
     /**
@@ -878,31 +865,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T diag()
     {
-        // TODO move into ops
-        T diag;
-        if( bits() == 64 ) {
-            if (MatrixFeatures_DDRM.isVector(mat)) {
-                int N = Math.max(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,N, mat.getType());
-                CommonOps_DDRM.diag((DMatrixRMaj)diag.getMatrix(),N,((DMatrixRMaj)mat).data);
-            } else {
-                int N = Math.min(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,1, mat.getType());
-                CommonOps_DDRM.extractDiag((DMatrixRMaj)mat, (DMatrixRMaj)diag.getMatrix());
-            }
-        } else {
-            if (MatrixFeatures_FDRM.isVector(mat)) {
-                int N = Math.max(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,N, mat.getType());
-                CommonOps_FDRM.diag((FMatrixRMaj)diag.getMatrix(),N,((FMatrixRMaj)mat).data);
-            } else {
-                int N = Math.min(mat.getNumCols(),mat.getNumRows());
-                diag = createMatrix(N,1, mat.getType());
-                CommonOps_FDRM.extractDiag((FMatrixRMaj)mat, (FMatrixRMaj)diag.getMatrix());
-            }
-        }
-
-        return diag;
+        return wrapMatrix(ops.diag(mat));
     }
 
     /**

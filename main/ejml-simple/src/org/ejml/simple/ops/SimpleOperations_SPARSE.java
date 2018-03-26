@@ -204,6 +204,21 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
     }
 
     @Override
+    public DMatrixSparseCSC diag(DMatrixSparseCSC A) {
+        DMatrixSparseCSC output;
+        if (MatrixFeatures_DSCC.isVector(A)) {
+            int N = Math.max(A.numCols,A.numRows);
+            output = new DMatrixSparseCSC(N,N);
+            CommonOps_DSCC.diag(output,N,A.nz_values);
+        } else {
+            int N = Math.min(A.numCols,A.numRows);
+            output = new DMatrixSparseCSC(N,1);
+            CommonOps_DSCC.extractDiag(A,output);
+        }
+        return output;
+    }
+
+    @Override
     public boolean hasUncountable(DMatrixSparseCSC M) {
         return MatrixFeatures_DSCC.hasUncountable(M);
     }

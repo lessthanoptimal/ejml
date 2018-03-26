@@ -17,10 +17,6 @@ Date format: year/month/day
   * QR, QRP, and SVD
   * TODO Try the iterative method suggested on a page to make QR stable
 
-- SimpleMatrix
- * TODO extractVector make generic
- * TODO diag make generic
-
 ----- Version 0.33
 2018/01/17
 

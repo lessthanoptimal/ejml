@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -118,6 +118,14 @@ public class ZMatrixRMaj extends ZMatrixD1 {
         int index = row*numCols*2 + col*2;
         data[index] = real;
         data[index+1] = imaginary;
+    }
+
+    public double getReal( int element ) {
+        return data[element*2];
+    }
+
+    public double getImag( int element ) {
+        return data[element*2+1];
     }
 
     @Override

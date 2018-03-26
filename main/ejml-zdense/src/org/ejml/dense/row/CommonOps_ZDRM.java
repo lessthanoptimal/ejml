@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -96,16 +96,43 @@ public class CommonOps_ZDRM {
         if( data.length%2 == 1 )
             throw new IllegalArgumentException("must be an even number of arguments");
 
-        int N = data.length/2;
+        return diag(new ZMatrixRMaj(1,1),data.length/2,data);
+    }
 
-        ZMatrixRMaj m = new ZMatrixRMaj(N,N);
+    public static ZMatrixRMaj diag(ZMatrixRMaj output , int N, double... data ) {
+        output.reshape(N,N);
 
         int index = 0;
         for (int i = 0; i < N; i++) {
-            m.set(i,i,data[index++],data[index++]);
+            output.set(i,i,data[index++],data[index++]);
         }
 
-        return m;
+        return output;
+    }
+
+    /**
+     * <p>
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * can either be a row or column vector.
+     * <p>
+     *
+     * @param src Matrix whose diagonal elements are being extracted. Not modified.
+     * @param dst A vector the results will be written into. Modified.
+     */
+    public static void extractDiag(ZMatrixRMaj src, ZMatrixRMaj dst )
+    {
+        int N = Math.min(src.numRows, src.numCols);
+
+        // reshape if it's not the right size
+        if( !MatrixFeatures_ZDRM.isVector(dst) || dst.numCols*dst.numCols != N ) {
+            dst.reshape(N,1);
+        }
+
+        for( int i = 0; i < N; i++ ) {
+            int index = src.getIndex(i,i);
+            dst.data[i*2]   = src.data[index];
+            dst.data[i*2+1] = src.data[index+1];
+        }
     }
 
     /**
