@@ -41,7 +41,7 @@ import java.io.Serializable;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public abstract class SimpleBase <T extends SimpleBase> implements Serializable {
+public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializable {
 
     static final long serialVersionUID = 2342556642L;
 
@@ -50,6 +50,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     protected Matrix mat;
     protected SimpleOperations ops;
+
+    protected AutomaticSimpleMatrixConvert convertType = new AutomaticSimpleMatrixConvert();
 
     public SimpleBase( int numRows , int numCols ) {
         setMatrix(new DMatrixRMaj(numRows, numCols));
@@ -149,14 +151,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      *
-     * @param b A matrix that is n by bn. Not modified.
+     * @param B A matrix that is n by bn. Not modified.
      *
      * @return The results of this operation.
      */
-    public T mult( T b ) {
-        T ret = createMatrix(mat.getNumRows(),b.getMatrix().getNumCols(), mat.getType());
+    public T mult( T B ) {
+        convertType.specify(this,B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
 
-        ops.mult(mat,b.mat,ret.mat);
+        T ret = A.createMatrix(mat.getNumRows(),B.getMatrix().getNumCols(), A.getType());
+
+        A.ops.mult(A.mat,B.mat,ret.mat);
 
         return ret;
     }
@@ -174,9 +180,13 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Kronecker product between this matrix and B.
      */
     public T kron( T B ) {
-        T ret = createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols(), mat.getType());
+        convertType.specify(this,B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
 
-        ops.kron(mat,B.mat,ret.mat);
+        T ret = A.createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols(), A.getType());
+
+        A.ops.kron(A.mat,B.mat,ret.mat);
 
         return ret;
     }
@@ -192,14 +202,18 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      *
-     * @param b m by n matrix. Not modified.
+     * @param B m by n matrix. Not modified.
      *
      * @return The results of this operation.
      */
-    public T plus( T b ) {
-        T ret = createMatrix(mat.getNumRows(),mat.getNumCols(), mat.getType());
+    public T plus( T B ) {
+        convertType.specify(this,B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
 
-        ops.plus(mat,b.mat,ret.mat);
+        T ret = A.createMatrix(mat.getNumRows(),mat.getNumCols(), A.getType());
+
+        A.ops.plus(A.mat,B.mat,ret.mat);
 
         return ret;
     }
@@ -215,13 +229,17 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @see CommonOps_DDRM#subtract(DMatrixD1, DMatrixD1, DMatrixD1)
      *
-     * @param b m by n matrix. Not modified.
+     * @param B m by n matrix. Not modified.
      *
      * @return The results of this operation.
      */
-    public T minus( T b ) {
-        T ret = createLike();
-        ops.minus(mat,b.mat,ret.mat);
+    public T minus( T B ) {
+        convertType.specify(this,B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
+        T ret = A.createLike();
+
+        A.ops.minus(A.mat,B.mat,ret.mat);
         return ret;
     }
 
@@ -278,13 +296,17 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      *
      * @see CommonOps_DDRM#add( DMatrixD1, double , DMatrixD1, DMatrixD1)
      *
-     * @param b m by n matrix. Not modified.
+     * @param B m by n matrix. Not modified.
      *
      * @return A matrix that contains the results.
      */
-    public T plus( double beta , T b ) {
-        T ret = createLike();
-        ops.plus(mat,beta,b.mat,ret.mat);
+    public T plus( double beta , T B ) {
+        convertType.specify(this,B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
+
+        T ret = A.createLike();
+        A.ops.plus(A.mat,beta,B.mat,ret.mat);
         return ret;
     }
 
@@ -295,13 +317,17 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return dot product
      */
     public double dot( T v ) {
+        convertType.specify(this,v);
+        T A = convertType.convert(this);
+        v = convertType.convert(v);
+
         if( !isVector() ) {
             throw new IllegalArgumentException("'this' matrix is not a vector.");
         } else if( !v.isVector() ) {
             throw new IllegalArgumentException("'v' matrix is not a vector.");
         }
 
-        return ops.dot(mat,v.getMatrix());
+        return A.ops.dot(A.mat,v.getMatrix());
     }
 
     /**
@@ -413,11 +439,15 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T solve( T b )
     {
-        T x = createMatrix(mat.getNumCols(),b.getMatrix().getNumCols(), mat.getType());
+        convertType.specify(this,b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
 
-        if( !ops.solve(mat,x.mat,b.mat))
+        T x = A.createMatrix(mat.getNumCols(),b.getMatrix().getNumCols(), A.getType());
+
+        if( !A.ops.solve(A.mat,x.mat,b.mat))
             throw new SingularMatrixException();
-        if( ops.hasUncountable(x.mat))
+        if( A.ops.hasUncountable(x.mat))
             throw new SingularMatrixException("Solution contains uncountable numbers");
 
         return x;
@@ -431,7 +461,11 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param a The matrix whose value this matrix is being set to.
      */
     public void set( T a ) {
-        mat.set(a.getMatrix());
+        if( a.getType() == getType() )
+            mat.set(a.getMatrix());
+        else {
+            setMatrix(a.mat.copy());
+        }
     }
 
 
@@ -877,6 +911,8 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return If they are equal within tolerance of each other.
      */
     public boolean isIdentical(T a, double tol) {
+        if( a.getType() != getType() )
+            return false;
         return ops.isIdentical(mat,a.mat,tol);
     }
 
@@ -923,10 +959,20 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @param B The matrix that is being inserted.
      */
     public void insertIntoThis(int insertRow, int insertCol, T B) {
-        insert(B.mat,mat,insertRow,insertCol);
+        convertType.specify(this,B);
+        B = convertType.convert(B);
+
+        // See if this type's need to be changed or not
+        if( convertType.commonType == getType() ) {
+            insert(B.mat,mat,insertRow,insertCol);
+        } else {
+            T A = convertType.convert(this);
+            A.insert(B.mat,A.mat,insertRow,insertCol);
+            setMatrix(A.mat);
+        }
     }
 
-    private void insert( Matrix src , Matrix dst , int destY0 , int destX0 ) {
+    void insert( Matrix src , Matrix dst , int destY0 , int destX0 ) {
         ops.extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dst, destY0, destX0);
     }
 
@@ -953,6 +999,9 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return A new combined matrix.
      */
     public T combine( int insertRow, int insertCol, T B) {
+        convertType.specify(this,B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
 
         if( insertRow == SimpleMatrix.END ) {
             insertRow = mat.getNumRows();
@@ -971,10 +1020,10 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
             int M = Math.max(maxRow,mat.getNumRows());
             int N = Math.max(maxCol,mat.getNumCols());
 
-            ret = createMatrix(M,N, mat.getType());
-            ret.insertIntoThis(0,0,this);
+            ret = A.createMatrix(M,N, A.getType());
+            ret.insertIntoThis(0,0,A);
         } else {
-            ret = copy();
+            ret = A.copy();
         }
 
         ret.insertIntoThis(insertRow,insertCol,B);
@@ -1012,8 +1061,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementMult( T b )
     {
-        T c = createLike();
-        ops.elementMult(mat,b.mat,c.mat);
+        convertType.specify(this,b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
+
+        T c = A.createLike();
+        A.ops.elementMult(A.mat,b.mat,c.mat);
         return c;
     }
 
@@ -1028,8 +1081,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementDiv( T b )
     {
-        T c = createLike();
-        ops.elementDiv(mat,b.mat,c.mat);
+        convertType.specify(this,b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
+
+        T c = A.createLike();
+        A.ops.elementDiv(A.mat,b.mat,c.mat);
         return c;
     }
 
@@ -1044,8 +1101,12 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      */
     public T elementPower( T b )
     {
-        T c = createLike();
-        ops.elementPower(mat,b.mat,c.mat);
+        convertType.specify(this,b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
+
+        T c = A.createLike();
+        A.ops.elementPower(A.mat,b.mat,c.mat);
         return c;
     }
 
@@ -1326,6 +1387,7 @@ public abstract class SimpleBase <T extends SimpleBase> implements Serializable 
      * @return Resulting matrix
      */
     public T concatRows( SimpleBase ...A ) {
+        // TODO make generic
         Matrix combined;
         if( mat.getClass() == DMatrixRMaj.class ) {
             DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];

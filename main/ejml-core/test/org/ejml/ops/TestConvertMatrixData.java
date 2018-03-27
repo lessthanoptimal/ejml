@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -78,6 +79,26 @@ public class TestConvertMatrixData {
         ConvertMatrixData.convert(B,C);
 
         assertTrue(MatrixFeatures_DDF4.isIdentical(A,C, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void DDRM_ZDRM() {
+        fail("Implement");
+    }
+
+    @Test
+    public void DDRM_CDRM() {
+        fail("Implement");
+    }
+
+    @Test
+    public void FDRM_ZDRM() {
+        fail("Implement");
+    }
+
+    @Test
+    public void FDRM_CDRM() {
+        fail("Implement");
     }
 
 }

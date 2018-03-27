@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -75,4 +75,37 @@ public class ConvertMatrixData {
         dst.a31 = src.a31; dst.a32 = src.a32; dst.a33 = src.a33; dst.a34 = src.a34;
         dst.a41 = src.a41; dst.a42 = src.a42; dst.a43 = src.a43; dst.a44 = src.a44;
     }
+
+    public static void convert(DMatrixRMaj src, ZMatrixRMaj dst ) {
+        int N = src.getNumElements();
+        for (int i = 0,indexDst=0; i < N; i++) {
+            dst.data[indexDst++] = src.data[i];
+            dst.data[indexDst++] = 0;
+        }
+    }
+
+    public static void convert(DMatrixRMaj src, CMatrixRMaj dst ) {
+        int N = src.getNumElements();
+        for (int i = 0,indexDst=0; i < N; i++) {
+            dst.data[indexDst++] = (float)src.data[i];
+            dst.data[indexDst++] = 0;
+        }
+    }
+
+    public static void convert(FMatrixRMaj src, ZMatrixRMaj dst ) {
+        int N = src.getNumElements();
+        for (int i = 0,indexDst=0; i < N; i++) {
+            dst.data[indexDst++] = src.data[i];
+            dst.data[indexDst++] = 0;
+        }
+    }
+
+    public static void convert(FMatrixRMaj src, CMatrixRMaj dst ) {
+        int N = src.getNumElements();
+        for (int i = 0,indexDst=0; i < N; i++) {
+            dst.data[indexDst++] = src.data[i];
+            dst.data[indexDst++] = 0;
+        }
+    }
+
 }

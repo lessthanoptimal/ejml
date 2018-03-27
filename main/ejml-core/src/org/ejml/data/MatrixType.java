@@ -66,6 +66,37 @@ public enum MatrixType {
             throw new IllegalArgumentException("Unknown class");
     }
 
+    /**
+     * Looks up the default matrix type for the specified features
+     */
+    public static MatrixType lookup( boolean dense, boolean real, int bits ) {
+        if( dense ) {
+            if( real ) {
+                if( bits == 64 ) {
+                    return DDRM;
+                } else {
+                    return FDRM;
+                }
+            } else {
+                if( bits == 64 ) {
+                    return ZDRM;
+                } else {
+                    return CDRM;
+                }
+            }
+        } else {
+            if( real ) {
+                if( bits == 64 ) {
+                    return DSCC;
+                } else {
+                    return FSCC;
+                }
+            } else {
+                throw new IllegalArgumentException("Complex sparse not yet supported");
+            }
+        }
+    }
+
     public boolean isReal() {
         return real;
     }

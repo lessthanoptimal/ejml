@@ -12,12 +12,16 @@ Date format: year/month/day
   * Fixed bug in concatRows and concatColumns
   * Renamed set(double) to fill(double)
   * Made set(row,col, value) generic
+  * Added automatic conversion of matrix types during an operation.
+    - Very simple heuristic. Only ensures that everything is the same matrix type
 - QRP
   *  dense real version was incorrectly scaling the threshold for singularity detection
 - Created SolveNullSpace
   * Make it easier and faster to find the null space
   * QR, QRP, and SVD
   * TODO Try the iterative method suggested on a page to make QR stable
+
+- TODO SimpleMatrix.concatRows
 
 ----- Version 0.33
 2018/01/17
