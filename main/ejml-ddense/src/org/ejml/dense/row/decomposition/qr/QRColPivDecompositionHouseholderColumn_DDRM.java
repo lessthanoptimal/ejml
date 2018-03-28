@@ -58,6 +58,9 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     // the matrix's rank
     protected int rank;
 
+    // used to scale singular threshold
+    double maxValueAbs;
+
     /**
      * Configure parameters.
      *
@@ -143,6 +146,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     public boolean decompose( DMatrixRMaj A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
+        maxValueAbs = CommonOps_DDRM.elementMaxAbs(A);
         convertToColumnMajor(A);
 
         // initialize pivot variables
@@ -262,7 +266,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         // this is used to normalize the column and mitigate overflow/underflow
         final double max = QrHelperFunctions_DDRM.findMax(u, j, numRows - j);
 
-        if( max <= 0 ) {
+        if( max <= singularThreshold*maxValueAbs ) {
             return false;
         } else {
             // computes tau and normalizes u by max
@@ -276,10 +280,6 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
             tau *= max;
 
             u[j] = -tau;
-
-            if( Math.abs(tau) <= singularThreshold*max ) {
-                return false;
-            }
         }
 
         gammas[j] = gamma;
