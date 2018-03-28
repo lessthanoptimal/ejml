@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -198,16 +198,17 @@ public class CompareFixed_DDRM {
 
     private boolean handleSpecialCase( String name , Class[] typesFixed , Object[] inputsFixed, Object[] inputsCommon ) {
         if( "mult".compareTo(name) == 0 ) {
+            int offset = typesFixed[0] == double.class ? 1 : 0;
             try {
-                DMatrixFixed f = (DMatrixFixed)typesFixed[0].newInstance();
+                DMatrixFixed f = (DMatrixFixed)typesFixed[offset].newInstance();
 
                 // see if it's a vector
                 if( f.getNumCols() == 1 || f.getNumRows() == 1  ) {
                     // swap the type of vector
 
                     declareParamStandard(typesFixed,inputsFixed,inputsCommon);
-                    DMatrixRMaj a = (DMatrixRMaj)inputsCommon[0];
-                    DMatrixRMaj b = (DMatrixRMaj)inputsCommon[2];
+                    DMatrixRMaj a = (DMatrixRMaj)inputsCommon[offset];
+                    DMatrixRMaj b = (DMatrixRMaj)inputsCommon[2+offset];
 
                     a.numRows=f.getNumCols(); a.numCols=f.getNumRows();
                     b.numRows=f.getNumCols(); b.numCols=f.getNumRows();

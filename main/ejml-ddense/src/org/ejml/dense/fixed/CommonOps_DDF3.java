@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -269,6 +269,31 @@ public class CommonOps_DDF3 {
     /**
      * <p>Performs the following operation:<br>
      * <br>
+     * c = &alpha; * a * b <br>
+     * <br>
+     * c<sub>ij</sub> = &alpha; &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void mult( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 = alpha*(a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31);
+        c.a12 = alpha*(a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32);
+        c.a13 = alpha*(a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33);
+        c.a21 = alpha*(a.a21*b.a11 + a.a22*b.a21 + a.a23*b.a31);
+        c.a22 = alpha*(a.a21*b.a12 + a.a22*b.a22 + a.a23*b.a32);
+        c.a23 = alpha*(a.a21*b.a13 + a.a22*b.a23 + a.a23*b.a33);
+        c.a31 = alpha*(a.a31*b.a11 + a.a32*b.a21 + a.a33*b.a31);
+        c.a32 = alpha*(a.a31*b.a12 + a.a32*b.a22 + a.a33*b.a32);
+        c.a33 = alpha*(a.a31*b.a13 + a.a32*b.a23 + a.a33*b.a33);
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
      * c = a<sup>T</sup> * b <br>
      * <br>
      * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
@@ -288,6 +313,31 @@ public class CommonOps_DDF3 {
         c.a31 = a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31;
         c.a32 = a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32;
         c.a33 = a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c = &alpha; * a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> = &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransA( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 = alpha*(a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31);
+        c.a12 = alpha*(a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32);
+        c.a13 = alpha*(a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33);
+        c.a21 = alpha*(a.a12*b.a11 + a.a22*b.a21 + a.a32*b.a31);
+        c.a22 = alpha*(a.a12*b.a12 + a.a22*b.a22 + a.a32*b.a32);
+        c.a23 = alpha*(a.a12*b.a13 + a.a22*b.a23 + a.a32*b.a33);
+        c.a31 = alpha*(a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31);
+        c.a32 = alpha*(a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32);
+        c.a33 = alpha*(a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33);
     }
 
     /**
@@ -318,6 +368,31 @@ public class CommonOps_DDF3 {
      * <p>
      * Performs the following operation:<br>
      * <br>
+     * c = &alpha;*a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> = &alpha;*&sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransAB( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 = alpha*(a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13);
+        c.a12 = alpha*(a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23);
+        c.a13 = alpha*(a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33);
+        c.a21 = alpha*(a.a12*b.a11 + a.a22*b.a12 + a.a32*b.a13);
+        c.a22 = alpha*(a.a12*b.a21 + a.a22*b.a22 + a.a32*b.a23);
+        c.a23 = alpha*(a.a12*b.a31 + a.a22*b.a32 + a.a32*b.a33);
+        c.a31 = alpha*(a.a13*b.a11 + a.a23*b.a12 + a.a33*b.a13);
+        c.a32 = alpha*(a.a13*b.a21 + a.a23*b.a22 + a.a33*b.a23);
+        c.a33 = alpha*(a.a13*b.a31 + a.a23*b.a32 + a.a33*b.a33);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
      * c = a * b<sup>T</sup> <br>
      * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
      * </p>
@@ -336,6 +411,31 @@ public class CommonOps_DDF3 {
         c.a31 = a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13;
         c.a32 = a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23;
         c.a33 = a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = &alpha; * a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> = &alpha;*&sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multTransB( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 = alpha*(a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13);
+        c.a12 = alpha*(a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23);
+        c.a13 = alpha*(a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33);
+        c.a21 = alpha*(a.a21*b.a11 + a.a22*b.a12 + a.a23*b.a13);
+        c.a22 = alpha*(a.a21*b.a21 + a.a22*b.a22 + a.a23*b.a23);
+        c.a23 = alpha*(a.a21*b.a31 + a.a22*b.a32 + a.a23*b.a33);
+        c.a31 = alpha*(a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13);
+        c.a32 = alpha*(a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23);
+        c.a33 = alpha*(a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33);
     }
 
     /**
@@ -365,6 +465,31 @@ public class CommonOps_DDF3 {
     /**
      * <p>Performs the following operation:<br>
      * <br>
+     * c += &alpha; * a * b <br>
+     * <br>
+     * c<sub>ij</sub> += &alpha; &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 += alpha*(a.a11*b.a11 + a.a12*b.a21 + a.a13*b.a31);
+        c.a12 += alpha*(a.a11*b.a12 + a.a12*b.a22 + a.a13*b.a32);
+        c.a13 += alpha*(a.a11*b.a13 + a.a12*b.a23 + a.a13*b.a33);
+        c.a21 += alpha*(a.a21*b.a11 + a.a22*b.a21 + a.a23*b.a31);
+        c.a22 += alpha*(a.a21*b.a12 + a.a22*b.a22 + a.a23*b.a32);
+        c.a23 += alpha*(a.a21*b.a13 + a.a22*b.a23 + a.a23*b.a33);
+        c.a31 += alpha*(a.a31*b.a11 + a.a32*b.a21 + a.a33*b.a31);
+        c.a32 += alpha*(a.a31*b.a12 + a.a32*b.a22 + a.a33*b.a32);
+        c.a33 += alpha*(a.a31*b.a13 + a.a32*b.a23 + a.a33*b.a33);
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
      * c += a<sup>T</sup> * b <br>
      * <br>
      * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
@@ -384,6 +509,31 @@ public class CommonOps_DDF3 {
         c.a31 += a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31;
         c.a32 += a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32;
         c.a33 += a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>Performs the following operation:<br>
+     * <br>
+     * c += &alpha; * a<sup>T</sup> * b <br>
+     * <br>
+     * c<sub>ij</sub> += &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 += alpha*(a.a11*b.a11 + a.a21*b.a21 + a.a31*b.a31);
+        c.a12 += alpha*(a.a11*b.a12 + a.a21*b.a22 + a.a31*b.a32);
+        c.a13 += alpha*(a.a11*b.a13 + a.a21*b.a23 + a.a31*b.a33);
+        c.a21 += alpha*(a.a12*b.a11 + a.a22*b.a21 + a.a32*b.a31);
+        c.a22 += alpha*(a.a12*b.a12 + a.a22*b.a22 + a.a32*b.a32);
+        c.a23 += alpha*(a.a12*b.a13 + a.a22*b.a23 + a.a32*b.a33);
+        c.a31 += alpha*(a.a13*b.a11 + a.a23*b.a21 + a.a33*b.a31);
+        c.a32 += alpha*(a.a13*b.a12 + a.a23*b.a22 + a.a33*b.a32);
+        c.a33 += alpha*(a.a13*b.a13 + a.a23*b.a23 + a.a33*b.a33);
     }
 
     /**
@@ -414,6 +564,31 @@ public class CommonOps_DDF3 {
      * <p>
      * Performs the following operation:<br>
      * <br>
+     * c += &alpha;*a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> += &alpha;*&sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 += alpha*(a.a11*b.a11 + a.a21*b.a12 + a.a31*b.a13);
+        c.a12 += alpha*(a.a11*b.a21 + a.a21*b.a22 + a.a31*b.a23);
+        c.a13 += alpha*(a.a11*b.a31 + a.a21*b.a32 + a.a31*b.a33);
+        c.a21 += alpha*(a.a12*b.a11 + a.a22*b.a12 + a.a32*b.a13);
+        c.a22 += alpha*(a.a12*b.a21 + a.a22*b.a22 + a.a32*b.a23);
+        c.a23 += alpha*(a.a12*b.a31 + a.a22*b.a32 + a.a32*b.a33);
+        c.a31 += alpha*(a.a13*b.a11 + a.a23*b.a12 + a.a33*b.a13);
+        c.a32 += alpha*(a.a13*b.a21 + a.a23*b.a22 + a.a33*b.a23);
+        c.a33 += alpha*(a.a13*b.a31 + a.a23*b.a32 + a.a33*b.a33);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
      * c += a * b<sup>T</sup> <br>
      * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
      * </p>
@@ -432,6 +607,31 @@ public class CommonOps_DDF3 {
         c.a31 += a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13;
         c.a32 += a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23;
         c.a33 += a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33;
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c += &alpha; * a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> += &alpha;*&sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB( double alpha , DMatrix3x3 a , DMatrix3x3 b , DMatrix3x3 c) {
+        c.a11 += alpha*(a.a11*b.a11 + a.a12*b.a12 + a.a13*b.a13);
+        c.a12 += alpha*(a.a11*b.a21 + a.a12*b.a22 + a.a13*b.a23);
+        c.a13 += alpha*(a.a11*b.a31 + a.a12*b.a32 + a.a13*b.a33);
+        c.a21 += alpha*(a.a21*b.a11 + a.a22*b.a12 + a.a23*b.a13);
+        c.a22 += alpha*(a.a21*b.a21 + a.a22*b.a22 + a.a23*b.a23);
+        c.a23 += alpha*(a.a21*b.a31 + a.a22*b.a32 + a.a23*b.a33);
+        c.a31 += alpha*(a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13);
+        c.a32 += alpha*(a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23);
+        c.a33 += alpha*(a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,9 +53,13 @@ public class GenerateFixedOps extends GenerateFixed {
             for( int i = 0; i < 2; i ++ ) {
                 boolean add = i == 1;
                 mult(dimension,add);
+                multScale(dimension,add);
                 multTransA(dimension,add);
+                multTransAScale(dimension,add);
                 multTransAB(dimension,add);
+                multTransABScale(dimension,add);
                 multTransB(dimension,add);
+                multTransBScale(dimension,add);
             }
             mult_m_v_v(dimension);
             mult_v_m_v(dimension);
@@ -376,6 +380,40 @@ public class GenerateFixedOps extends GenerateFixed {
         out.print("    }\n\n");
     }
 
+    private void multScale( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAdd" : "mult";
+
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c "+plus+"= &alpha; * a * b <br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>ij</sub> "+plus+"= &alpha; &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha Scaling factor.\n" +
+                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void "+name+"( double alpha , "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+
+        for( int y = 1; y <= dimen; y++ ) {
+            for( int x = 1; x <= dimen; x++ ) {
+                out.print("        c.a"+y+""+x+" "+plus+"= alpha*(");
+                for( int k = 1; k <= dimen; k++ ) {
+                    out.print("a.a"+y+""+k+"*b.a"+k+""+x);
+                    if( k < dimen )
+                        out.print(" + ");
+                    else
+                        out.print(");\n");
+                }
+            }
+        }
+        out.print("    }\n\n");
+    }
+
     private void multTransA( int dimen , boolean add ){
         String plus = add ? "+" : "";
         String name = add ? "multAddTransA" : "multTransA";
@@ -402,6 +440,39 @@ public class GenerateFixedOps extends GenerateFixed {
                         out.print(" + ");
                     else
                         out.print(";\n");
+                }
+            }
+        }
+        out.printf("    }\n\n");
+    }
+
+    private void multTransAScale( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAddTransA" : "multTransA";
+
+        out.print("    /**\n" +
+                "     * <p>Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c " + plus + "= &alpha; * a<sup>T</sup> * b <br>\n" +
+                "     * <br>\n" +
+                "     * c<sub>ij</sub> " + plus + "= &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha Scaling factor.\n" +
+                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void " + name + "( double alpha , " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                out.print("        c.a" + y + "" + x + " " + plus + "= alpha*(");
+                for (int k = 1; k <= dimen; k++) {
+                    out.print("a.a" + k + "" + y + "*b.a" + k + "" + x);
+                    if (k < dimen)
+                        out.print(" + ");
+                    else
+                        out.print(");\n");
                 }
             }
         }
@@ -440,6 +511,39 @@ public class GenerateFixedOps extends GenerateFixed {
         out.print("    }\n\n");
     }
 
+    private void multTransABScale( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAddTransAB" : "multTransAB";
+
+        out.printf("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c " + plus + "= &alpha;*a<sup>T</sup> * b<sup>T</sup><br>\n" +
+                "     * c<sub>ij</sub> " + plus + "= &alpha;*&sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha Scaling factor.\n" +
+                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void " + name + "( double alpha , " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                out.print("        c.a" + y + "" + x + " " + plus + "= alpha*(");
+                for (int k = 1; k <= dimen; k++) {
+                    out.print("a.a" + k + "" + y + "*b.a" + x + "" + k);
+                    if (k < dimen)
+                        out.print(" + ");
+                    else
+                        out.print(");\n");
+                }
+            }
+        }
+        out.print("    }\n\n");
+    }
+
     private void multTransB( int dimen , boolean add ){
         String plus = add ? "+" : "";
         String name = add ? "multAddTransB" : "multTransB";
@@ -466,6 +570,39 @@ public class GenerateFixedOps extends GenerateFixed {
                         out.print(" + ");
                     else
                         out.print(";\n");
+                }
+            }
+        }
+        out.print("    }\n\n");
+    }
+
+    private void multTransBScale( int dimen , boolean add ){
+        String plus = add ? "+" : "";
+        String name = add ? "multAddTransB" : "multTransB";
+
+        out.print("    /**\n" +
+                "     * <p>\n" +
+                "     * Performs the following operation:<br>\n" +
+                "     * <br>\n" +
+                "     * c "+plus+"= &alpha; * a * b<sup>T</sup> <br>\n" +
+                "     * c<sub>ij</sub> "+plus+"= &alpha;*&sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}\n" +
+                "     * </p>\n" +
+                "     *\n" +
+                "     * @param alpha Scaling factor.\n" +
+                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     */\n" +
+                "    public static void " + name + "( double alpha , " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = 1; x <= dimen; x++) {
+                out.print("        c.a" + y + "" + x + " " + plus + "= alpha*(");
+                for (int k = 1; k <= dimen; k++) {
+                    out.print("a.a" + y + "" + k + "*b.a" + x + "" + k);
+                    if (k < dimen )
+                        out.print(" + ");
+                    else
+                        out.print(");\n");
                 }
             }
         }
