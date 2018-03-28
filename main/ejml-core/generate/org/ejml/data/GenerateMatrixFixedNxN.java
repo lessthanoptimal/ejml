@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -56,7 +56,7 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
                 "    }\n" +
                 "\n" +
                 "    public "+className);
-        printFunctionParam(dimen);
+        printFunctionParam(13+className.length(),dimen);
         out.print("    {\n");
         printSetFromParam(dimen, "");
         out.print("    }\n" +
@@ -64,7 +64,12 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
                 "    public " + className + "( " + className + " o ) {\n");
         printSetFromParam(dimen, "o.");
         out.print("    }\n" +
-                "\n" +
+                "\n");
+        out.print("    public void set");
+        printFunctionParam(21,dimen);
+        out.print("    {\n");
+        printSetFromParam(dimen, "");
+        out.print("    }\n\n" +
                 "    @Override\n" +
                 "    public double get(int row, int col) {\n" +
                 "        return unsafe_get(row,col);\n" +
@@ -138,12 +143,16 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
         }
     }
 
-    private void printFunctionParam( int dimen ) {
+    private void printFunctionParam( int spaces, int dimen ) {
+        String s = "";
+        for (int i = 0; i < spaces; i++) {
+            s += " ";
+        }
         for( int y = 1; y <= dimen; y++ ) {
             if( y == 1 )
                 out.print("( ");
             else
-                out.print("                       ");
+                out.print(s);
             for( int x = 1; x <= dimen; x++ ) {
                 out.print("double a"+y+""+x);
                 if( x != dimen )

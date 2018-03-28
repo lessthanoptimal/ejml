@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,6 +49,15 @@ public class DMatrix3x3 implements DMatrixFixed {
         this.a11 = o.a11; this.a12 = o.a12; this.a13 = o.a13;
         this.a21 = o.a21; this.a22 = o.a22; this.a23 = o.a23;
         this.a31 = o.a31; this.a32 = o.a32; this.a33 = o.a33;
+    }
+
+    public void set( double a11, double a12, double a13,
+                     double a21, double a22, double a23,
+                     double a31, double a32, double a33)
+    {
+        this.a11 = a11; this.a12 = a12; this.a13 = a13;
+        this.a21 = a21; this.a22 = a22; this.a23 = a23;
+        this.a31 = a31; this.a32 = a32; this.a33 = a33;
     }
 
     @Override
