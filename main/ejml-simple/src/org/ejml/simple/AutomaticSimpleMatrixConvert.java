@@ -58,7 +58,4 @@ public class AutomaticSimpleMatrixConvert {
 
         return (T)matrix.wrapMatrix(m);
     }
-    
-    
-    
 }

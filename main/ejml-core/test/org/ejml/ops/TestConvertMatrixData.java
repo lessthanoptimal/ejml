@@ -26,8 +26,8 @@ import org.ejml.dense.fixed.MatrixFeatures_DDF4;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -83,22 +83,58 @@ public class TestConvertMatrixData {
 
     @Test
     public void DDRM_ZDRM() {
-        fail("Implement");
+        DMatrixRMaj A = new DMatrixRMaj(2,2,true,1,2,3,4);
+        ZMatrixRMaj B = new ZMatrixRMaj(2,2);
+
+        ConvertMatrixData.convert(A,B);
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col),B.getReal(row,col),UtilEjml.TEST_F64);
+                assertEquals(0,B.getImag(row,col),UtilEjml.TEST_F64);
+            }
+        }
     }
 
     @Test
     public void DDRM_CDRM() {
-        fail("Implement");
+        DMatrixRMaj A = new DMatrixRMaj(2,2,true,1,2,3,4);
+        CMatrixRMaj B = new CMatrixRMaj(2,2);
+
+        ConvertMatrixData.convert(A,B);
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col),B.getReal(row,col),UtilEjml.TEST_F64);
+                assertEquals(0,B.getImag(row,col),UtilEjml.TEST_F64);
+            }
+        }
     }
 
     @Test
     public void FDRM_ZDRM() {
-        fail("Implement");
+        FMatrixRMaj A = new FMatrixRMaj(2,2,true,1,2,3,4);
+        ZMatrixRMaj B = new ZMatrixRMaj(2,2);
+
+        ConvertMatrixData.convert(A,B);
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col),B.getReal(row,col),UtilEjml.TEST_F32);
+                assertEquals(0,B.getImag(row,col),UtilEjml.TEST_F32);
+            }
+        }
     }
 
     @Test
     public void FDRM_CDRM() {
-        fail("Implement");
+        FMatrixRMaj A = new FMatrixRMaj(2,2,true,1,2,3,4);
+        CMatrixRMaj B = new CMatrixRMaj(2,2);
+
+        ConvertMatrixData.convert(A,B);
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col),B.getReal(row,col),UtilEjml.TEST_F32);
+                assertEquals(0,B.getImag(row,col),UtilEjml.TEST_F32);
+            }
+        }
     }
 
 }

@@ -18,16 +18,32 @@
 
 package org.ejml.simple;
 
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.FMatrixRMaj;
+import org.ejml.data.MatrixType;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 public class TestAutomaticSimpleMatrixConvert {
+    /**
+     * Very basic test. The inner parts are tested elsewhere.
+     */
     @Test
-    public void stuff() {
-        fail("Implement");
+    public void sanityCheck() {
+        AutomaticSimpleMatrixConvert alg = new AutomaticSimpleMatrixConvert();
+
+        SimpleMatrix a = SimpleMatrix.wrap(new DMatrixRMaj(1,1));
+        SimpleMatrix b = SimpleMatrix.wrap(new FMatrixRMaj(1,1));
+
+        alg.specify(a,b);
+
+        assertTrue(a==alg.convert(a));
+        assertFalse(b==alg.convert(b));
+        assertTrue(alg.convert(b).getType()== MatrixType.DDRM);
     }
 }
