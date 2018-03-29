@@ -18,16 +18,47 @@
 
 package org.ejml.ops;
 
+import org.ejml.data.Matrix;
+import org.ejml.data.MatrixType;
 import org.junit.Test;
 
+import static org.ejml.data.MatrixType.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
  */
 public class TestConvertMatrixType {
+
+    /**
+     * Sees if it crashed when trying to convert
+     */
     @Test
-    public void stuff() {
-        fail("Implement");
+    public void basicCheckAll() {
+        MatrixType types[] = new MatrixType[]{DDRM,FDRM,ZDRM,CDRM,DSCC,FSCC};
+
+        for( MatrixType a : types ) {
+            Matrix matA = a.create(4,6);
+
+            for( MatrixType b : types ) {
+                if( a == b )
+                    continue;
+
+                // can't convert complex to real
+                if( !a.isReal() && b.isReal() )
+                    continue;
+
+                Matrix matB = ConvertMatrixType.convert(matA,b);
+
+                if( matB == null ) {
+                    System.out.println(a+" -> "+b);
+                    fail("returned null");
+                }
+
+                assertEquals(matA.getNumRows(),matB.getNumRows());
+                assertEquals(matA.getNumCols(),matB.getNumCols());
+            }
+        }
     }
 }

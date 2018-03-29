@@ -112,4 +112,19 @@ public enum MatrixType {
     public int getBits() {
         return bits;
     }
+
+    public Matrix create( int rows , int cols ) {
+        switch( this ) {
+            case DDRM: return new DMatrixRMaj(rows,cols);
+            case FDRM: return new FMatrixRMaj(rows,cols);
+            case ZDRM: return new ZMatrixRMaj(rows,cols);
+            case CDRM: return new CMatrixRMaj(rows,cols);
+            case DSCC: return new DMatrixSparseCSC(rows,cols);
+            case FSCC: return new FMatrixSparseCSC(rows,cols);
+//            case ZSCC: return new ZMatrixSparseCSC(rows,cols);
+//            case CSCC: return new CMatrixSparseCSC(rows,cols);
+        }
+
+        throw new RuntimeException("Unknown Matrix Type "+this);
+    }
 }
