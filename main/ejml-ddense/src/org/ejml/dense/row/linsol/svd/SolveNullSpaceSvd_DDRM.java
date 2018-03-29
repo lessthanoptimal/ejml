@@ -57,7 +57,6 @@ public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
         SingularOps_DDRM.descendingOrder(null,false,singularValues,svd.numberOfSingularValues(),V,false);
 
         nullspace.reshape(V.numRows,numberOfSingular);
-        V.print();
         CommonOps_DDRM.extract(V,0,V.numRows,V.numCols-numberOfSingular,V.numCols,nullspace,0,0);
 
         return true;
