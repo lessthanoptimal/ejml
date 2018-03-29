@@ -32,7 +32,7 @@ public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
 
     boolean compact = true;
     SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(1,1,false,true,compact);
-
+    DMatrixRMaj V;
 
     @Override
     public boolean process(DMatrixRMaj input, int numberOfSingular, DMatrixRMaj nullspace) {
@@ -52,7 +52,7 @@ public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
             return false;
 
         double []singularValues = svd.getSingularValues();
-        DMatrixRMaj V = svd.getV(null,false);
+        V = svd.getV(V,false);
 
         SingularOps_DDRM.descendingOrder(null,false,singularValues,svd.numberOfSingularValues(),V,false);
 
