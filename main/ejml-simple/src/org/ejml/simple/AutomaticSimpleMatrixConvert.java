@@ -52,6 +52,12 @@ public class AutomaticSimpleMatrixConvert {
         if( matrix.getType() == commonType )
             return (T)matrix;
 
+        if( !matrix.getType().isDense() && commonType.isDense() ) {
+            System.err.println("\n***** WARNING *****\n");
+            System.err.println("Converting a sparse to dense matrix automatically.");
+            System.err.println("Current auto convert code isn't that smart and this might have been available");
+        }
+
         Matrix m= ConvertMatrixType.convert(matrix.mat,commonType);
         if( m == null )
             throw new IllegalArgumentException("Conversion from "+matrix.getType()+" to "+commonType+" not possible");

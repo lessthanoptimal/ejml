@@ -26,6 +26,116 @@ import org.ejml.data.*;
  * @author Peter Abeles
  */
 public class ConvertMatrixData {
+    /**
+     * Generic, but slow, conversion function.
+     *
+     * @param input Input matrix.
+     * @param output Output matrix.
+     */
+    public static void convert(DMatrix input , FMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.unsafe_set(i,j, (float)input.unsafe_get(i,j));
+            }
+        }
+    }
+
+    public static void convert(DMatrix input , ZMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.set(i,j, input.unsafe_get(i,j), 0);
+            }
+        }
+    }
+
+    public static void convert(DMatrix input , CMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.set(i,j, (float)input.unsafe_get(i,j), 0);
+            }
+        }
+    }
+
+    public static void convert(FMatrix input , DMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.unsafe_set(i,j, input.unsafe_get(i,j));
+            }
+        }
+    }
+
+    public static void convert(FMatrix input , ZMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.set(i,j, input.unsafe_get(i,j),0);
+            }
+        }
+    }
+
+    public static void convert(FMatrix input , CMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.set(i,j, input.unsafe_get(i,j),0);
+            }
+        }
+    }
+
+    public static void convert(ZMatrix input , CMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.set(i,j, (float)input.getReal(i,j), (float)input.getImag(i,j));
+            }
+        }
+    }
+
+    public static void convert(CMatrix input , ZMatrix output ) {
+        if( input.getNumRows() != output.getNumRows() )
+            throw new IllegalArgumentException("Number of rows do not match");
+        if( input.getNumCols() != output.getNumCols() )
+            throw new IllegalArgumentException("Number of columns do not match");
+
+        for( int i = 0; i < input.getNumRows(); i++  ) {
+            for( int j = 0; j < input.getNumCols(); j++ ) {
+                output.set(i,j, input.getReal(i,j), input.getImag(i,j));
+            }
+        }
+    }
+
     public static void convert(DMatrixRMaj src, FMatrixRMaj dst ) {
         int N = src.getNumElements();
         for (int i = 0; i < N; i++) {
