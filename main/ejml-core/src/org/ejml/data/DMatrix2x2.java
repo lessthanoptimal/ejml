@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,6 +45,13 @@ public class DMatrix2x2 implements DMatrixFixed {
     public DMatrix2x2( DMatrix2x2 o ) {
         this.a11 = o.a11; this.a12 = o.a12;
         this.a21 = o.a21; this.a22 = o.a22;
+    }
+
+    public void set( double a11, double a12,
+                     double a21, double a22)
+    {
+        this.a11 = a11; this.a12 = a12;
+        this.a21 = a21; this.a22 = a22;
     }
 
     @Override
