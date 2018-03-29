@@ -106,23 +106,23 @@ public class SingularOps_DDRM {
      * @param U Matrix. Modified.
      * @param tranU is U transposed or not.
      * @param singularValues Array of singular values. Modified.
-     * @param numSingularValues Number of elements in singularValues array
+     * @param singularLength Number of elements in singularValues array
      * @param V Matrix. Modified.
      * @param tranV is V transposed or not.
      */
     public static void descendingOrder(DMatrixRMaj U , boolean tranU ,
                                        double singularValues[] ,
-                                       int numSingularValues ,
+                                       int singularLength ,
                                        DMatrixRMaj V , boolean tranV )
     {
 //        checkSvdMatrixSize(U, tranU, W, V, tranV);
 
-        for( int i = 0; i < numSingularValues; i++ ) {
+        for( int i = 0; i < singularLength; i++ ) {
             double bigValue=-1;
             int bigIndex=-1;
 
             // find the smallest singular value in the submatrix
-            for( int j = i; j < numSingularValues; j++ ) {
+            for( int j = i; j < singularLength; j++ ) {
                 double v = singularValues[j];
 
                 if( v > bigValue ) {
