@@ -30,19 +30,22 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  */
 public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
 
-    SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(1,1,false,true,true);
     boolean compact = true;
+    SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(1,1,false,true,compact);
+
 
     @Override
     public boolean process(DMatrixRMaj input, int numberOfSingular, DMatrixRMaj nullspace) {
         if( input.numCols > input.numRows ) {
             if( compact ) {
+                svd = DecompositionFactory_DDRM.svd(1, 1, false, true, false);
                 compact = false;
-                svd = DecompositionFactory_DDRM.svd(1,1,false,true,false);
             }
-        } else if( !compact ) {
-            compact = true;
-            svd = DecompositionFactory_DDRM.svd(1,1,false,true,true);
+        } else {
+            if( !compact ) {
+                svd = DecompositionFactory_DDRM.svd(1, 1, false, true, true);
+                compact = true;
+            }
         }
 
         if( !svd.decompose(input))
@@ -51,9 +54,10 @@ public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
         double []singularValues = svd.getSingularValues();
         DMatrixRMaj V = svd.getV(null,false);
 
-        SingularOps_DDRM.descendingOrder(null,false,singularValues,numberOfSingular,V,false);
+        SingularOps_DDRM.descendingOrder(null,false,singularValues,svd.numberOfSingularValues(),V,false);
 
         nullspace.reshape(V.numRows,numberOfSingular);
+        V.print();
         CommonOps_DDRM.extract(V,0,V.numRows,V.numCols-numberOfSingular,V.numCols,nullspace,0,0);
 
         return true;
