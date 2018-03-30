@@ -1112,4 +1112,17 @@ public class TestEquation {
         assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
         assertTrue(null==t);
     }
+
+    /**
+     * Hard to test output for correctness. Basically just checsk to see if it crashes
+     */
+    @Test
+    public void print() {
+        Equation eq = new Equation();
+        eq.print("[1 2;3 4]");
+        eq.process("A=[1 2;3 4;5 6]");
+        eq.print("A");
+        eq.print("B=5");
+
+    }
 }

@@ -239,6 +239,7 @@ public class Equation {
     char storage[] = new char[1024];
 
     ManagerFunctions functions = new ManagerFunctions();
+    ManagerTempVariables managerTemp = new ManagerTempVariables();
 
     public Equation() {
         alias(Math.PI,"pi");
@@ -353,18 +354,18 @@ public class Equation {
     }
 
     public Sequence compile( String equation ) {
-        return compile(equation,false);
+        return compile(equation,true,false);
     }
 
     /**
      * Parses the equation and compiles it into a sequence which can be executed later on
      * @param equation String in simple equation format.
+     * @param assignment if true an assignment is expected and an exception if thrown if there is non
      * @param debug if true it will print out debugging information
      * @return Sequence of operations on the variables
      */
-    public Sequence compile( String equation , boolean debug ) {
+    public Sequence compile( String equation , boolean assignment, boolean debug ) {
 
-        ManagerTempVariables managerTemp = new ManagerTempVariables();
         functions.setManagerTemp(managerTemp);
 
         Sequence sequence = new Sequence();
@@ -387,42 +388,21 @@ public class Equation {
             }
 
             // Get the results variable
-            if (t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD)
-                throw new ParseError("Expected variable name first.  Not " + t0);
-
-            // see if it is assign or a range
-            List<Variable> range = parseAssignRange(sequence, tokens, t0);
-
-            TokenList.Token t1 = t0.next;
-            if (t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN)
-                throw new ParseError("Expected assignment operator next");
-
-            // Parse the right side of the equation
-            TokenList tokensRight = tokens.extractSubList(t1.next, tokens.last);
-            checkForUnknownVariables(tokensRight);
-            handleParentheses(tokensRight, sequence);
-            if( tokensRight.size() > 1 ) {
-                parseBlockNoParentheses(tokensRight, sequence, false);
-            }
-
-            // see if it needs to be parsed more
-            if (tokensRight.size() != 1)
-                throw new RuntimeException("BUG");
-            if (tokensRight.getLast().getType() != Type.VARIABLE)
-                throw new RuntimeException("BUG the last token must be a variable");
-
-            // copy the results into the output
-            Variable variableRight = tokensRight.getFirst().getVariable();
-            if (range == null) {
-                // no range, so copy results into the entire output matrix
-                sequence.output = createVariableInferred(t0, variableRight);
-                sequence.addOperation(Operation.copy(variableRight, sequence.output));
-            } else {
-                // a sub-matrix range is specified.  Copy into that inner part
-                if (t0.getType() == Type.WORD) {
-                    throw new ParseError("Can't do lazy variable initialization with submatrices. " + t0.getWord());
+            if (t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD) {
+                compileTokens(sequence,tokens);
+                // If there's no output then this is acceptable, otherwise it's assumed to be a bug
+                // If there's no output then a configuration was changed
+                Variable variable = tokens.getFirst().getVariable();
+                if( variable != null ) {
+                    if( assignment )
+                        throw new IllegalArgumentException("No assignment to an output variable could be found. Found " + t0);
+                    else {
+                        sequence.output = variable; // set this to be the output for print()
+                    }
                 }
-                sequence.addOperation(Operation.copy(variableRight, t0.getVariable(), range));
+
+            } else {
+                compileAssignment(sequence, tokens, t0);
             }
 
             if (debug) {
@@ -435,6 +415,51 @@ public class Equation {
 
         return sequence;
     }
+
+    /**
+     * An assignment is being made to some output. looks something like: A = B
+     */
+    private void compileAssignment(Sequence sequence, TokenList tokens, TokenList.Token t0) {
+        // see if it is assign or a range
+        List<Variable> range = parseAssignRange(sequence, tokens, t0);
+
+        TokenList.Token t1 = t0.next;
+        if (t1.getType() != Type.SYMBOL || t1.getSymbol() != Symbol.ASSIGN)
+            throw new ParseError("Expected assignment operator next");
+
+        // Parse the right side of the equation
+        TokenList tokensRight = tokens.extractSubList(t1.next, tokens.last);
+        compileTokens(sequence, tokensRight);
+        if (tokensRight.getLast().getType() != Type.VARIABLE)
+            throw new RuntimeException("BUG the last token must be a variable");
+
+        // copy the results into the output
+        Variable variableRight = tokensRight.getFirst().getVariable();
+        if (range == null) {
+            // no range, so copy results into the entire output matrix
+            sequence.output = createVariableInferred(t0, variableRight);
+            sequence.addOperation(Operation.copy(variableRight, sequence.output));
+        } else {
+            // a sub-matrix range is specified.  Copy into that inner part
+            if (t0.getType() == Type.WORD) {
+                throw new ParseError("Can't do lazy variable initialization with submatrices. " + t0.getWord());
+            }
+            sequence.addOperation(Operation.copy(variableRight, t0.getVariable(), range));
+        }
+    }
+
+    private void compileTokens(Sequence sequence, TokenList tokens) {
+        checkForUnknownVariables(tokens);
+        handleParentheses(tokens, sequence);
+        if( tokens.size() > 1 ) {
+            parseBlockNoParentheses(tokens, sequence, false);
+        }
+
+        // see if it needs to be parsed more
+        if (tokens.size() != 1)
+            throw new RuntimeException("BUG");
+    }
+
 
     /**
      * Parse a macro defintion.
@@ -1568,20 +1593,17 @@ public class Equation {
      * @param equation String in simple equation format
      */
     public void process( String equation , boolean debug ) {
-        compile(equation,debug).perform();
+        compile(equation,true,debug).perform();
     }
 
     /**
      * Prints the results of the equation to standard out. Useful for debugging
      */
     public void print( String equation ) {
-        System.out.println("WARNING: Print is still in development");
-        System.out.println("         Remove warning after unit tests are created for output variable");
-
         // first assume it's just a variable
         Variable v = lookupVariable(equation);
         if( v == null ) {
-            Sequence sequence = compile(equation);
+            Sequence sequence = compile(equation,false,false);
             sequence.perform();
             v = sequence.output;
         }

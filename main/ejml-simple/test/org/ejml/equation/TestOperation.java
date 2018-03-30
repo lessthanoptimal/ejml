@@ -1519,7 +1519,7 @@ public class TestOperation {
 
         for (int i = 0; i < A.numRows(); i++) {
             for (int j = 0; j < A.numCols(); j++) {
-                assertEquals(rand.nextDouble(),A.get(i,j));
+                assertEquals(rand.nextDouble(),A.get(i,j), UtilEjml.TEST_F64);
             }
         }
     }
