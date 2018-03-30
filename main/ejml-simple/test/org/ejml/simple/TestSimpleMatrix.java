@@ -869,5 +869,4 @@ public class TestSimpleMatrix {
             }
         }
     }
-
 }

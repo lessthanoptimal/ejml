@@ -21,7 +21,6 @@ package org.ejml.simple;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.dense.row.CommonOps_FDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.equation.Equation;
 import org.ejml.ops.MatrixIO;
@@ -1349,64 +1348,70 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
      * are set to zero.</p>
      *
-     * A = [ m[0] , ... , m[n-1] ]
+     * A = [ this, m[0] , ... , m[n-1] ]
      *
-     * @param A Set of matrices
+     * @param matrices Set of matrices
      * @return Resulting matrix
      */
-    public T concatColumns( SimpleBase ...A ) {
-        Matrix combined;
-        if( mat.getClass() == DMatrixRMaj.class ) {
-            DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];
-            m[0] = (DMatrixRMaj)mat;
-            for (int i = 0; i < A.length; i++) {
-                m[i+1] = A[i].getDDRM();
-            }
-            combined = CommonOps_DDRM.concatColumns(m); // TODO add to SimpleOps
-        } else if( mat.getClass() == FMatrixRMaj.class ) {
-            FMatrixRMaj m[] = new FMatrixRMaj[A.length+1];
-            m[0] = (FMatrixRMaj)mat;
-            for (int i = 0; i < A.length; i++) {
-                m[i+1] = A[i].getFDRM();
-            }
-            combined = CommonOps_FDRM.concatColumns(m);
-        } else {
-            throw new RuntimeException("Unknown matrix type");
+    public T concatColumns( SimpleBase ...matrices ) {
+        convertType.specify0(this,matrices);
+        T A = convertType.convert(this);
+
+        int numCols = A.numCols();
+        int numRows = A.numRows();
+        for (int i = 0; i < matrices.length; i++) {
+            numRows = Math.max(numRows,matrices[i].numRows());
+            numCols += matrices[i].numCols();
         }
 
-        return wrapMatrix(combined);
+        SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows,numCols));
+
+        A.ops.extract(A.mat,0,A.numRows(),0,A.numCols(),combined.mat,0,0);
+        int col = A.numCols();
+        for (int i = 0; i < matrices.length; i++) {
+            Matrix m = convertType.convert(matrices[i]).mat;
+            int cols = m.getNumCols();
+            int rows = m.getNumRows();;
+            A.ops.extract(m,0,rows,0,cols,combined.mat,0,col);
+            col += cols;
+        }
+
+        return (T)combined;
     }
 
     /**
      * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
      * are set to zero.</p>
      *
-     * A = [ m[0] ; ... ; m[n-1] ]
+     * A = [ this; m[0] ; ... ; m[n-1] ]
      *
-     * @param A Set of matrices
+     * @param matrices Set of matrices
      * @return Resulting matrix
      */
-    public T concatRows( SimpleBase ...A ) {
-        // TODO make generic
-        Matrix combined;
-        if( mat.getClass() == DMatrixRMaj.class ) {
-            DMatrixRMaj m[] = new DMatrixRMaj[A.length+1];
-            m[0] = (DMatrixRMaj)mat;
-            for (int i = 0; i < A.length; i++) {
-                m[i+1] = A[i].getDDRM();
-            }
-            combined = CommonOps_DDRM.concatRows(m);
-        } else if( mat.getClass() == FMatrixRMaj.class ) {
-            FMatrixRMaj m[] = new FMatrixRMaj[A.length+1];
-            m[0] = (FMatrixRMaj)mat;
-            for (int i = 0; i < A.length; i++) {
-                m[i+1] = A[i].getFDRM();
-            }
-            combined = CommonOps_FDRM.concatRows(m);
-        } else {
-            throw new RuntimeException("Unknown matrix type");
+    public T concatRows( SimpleBase ... matrices ) {
+        convertType.specify0(this,matrices);
+        T A = convertType.convert(this);
+
+        int numCols = A.numCols();
+        int numRows = A.numRows();
+        for (int i = 0; i < matrices.length; i++) {
+            numRows += matrices[i].numRows();
+            numCols = Math.max(numCols,matrices[i].numCols());
         }
-        return wrapMatrix(combined);
+
+        SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows,numCols));
+
+        A.ops.extract(A.mat,0,A.numRows(),0,A.numCols(),combined.mat,0,0);
+        int row = A.numRows();
+        for (int i = 0; i < matrices.length; i++) {
+            Matrix m = convertType.convert(matrices[i]).mat;
+            int cols = m.getNumCols();
+            int rows = m.getNumRows();;
+            A.ops.extract(m,0,rows,0,cols,combined.mat,row,0);
+            row += rows;
+        }
+
+        return (T)combined;
     }
 
     /**

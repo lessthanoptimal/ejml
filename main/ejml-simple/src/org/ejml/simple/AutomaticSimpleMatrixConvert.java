@@ -29,7 +29,14 @@ import org.ejml.ops.ConvertMatrixType;
  */
 public class AutomaticSimpleMatrixConvert {
     MatrixType commonType;
-    
+
+    public void specify0( SimpleBase a , SimpleBase ...inputs ) {
+        SimpleBase array[] = new SimpleBase[inputs.length+1];
+        System.arraycopy(inputs,0,array,0,inputs.length);
+        array[inputs.length] = a;
+        specify(inputs);
+    }
+
     public void specify( SimpleBase ...inputs ) {
         boolean dense=false;
         boolean real=true;

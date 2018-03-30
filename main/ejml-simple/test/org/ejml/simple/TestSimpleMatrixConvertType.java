@@ -203,4 +203,27 @@ public class TestSimpleMatrixConvertType {
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
     }
+
+    @Test
+    public void concatRows() {
+        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_FDRM.rectangle(6,5,rand));
+        SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
+
+        SimpleMatrix C = A.concatRows(B);
+        assertEquals(MatrixType.FDRM,A.getType());
+        assertEquals(MatrixType.DDRM,B.getType());
+        assertEquals(MatrixType.DDRM,C.getType());
+    }
+
+    @Test
+    public void concatColumns() {
+        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_FDRM.rectangle(6,5,rand));
+        SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
+
+        SimpleMatrix C = A.concatColumns(B);
+        assertEquals(MatrixType.FDRM,A.getType());
+        assertEquals(MatrixType.DDRM,B.getType());
+        assertEquals(MatrixType.DDRM,C.getType());
+    }
+
 }
