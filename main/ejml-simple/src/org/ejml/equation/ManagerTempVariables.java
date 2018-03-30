@@ -29,7 +29,10 @@ import java.util.Random;
 // TODO add function to purge temporary variables.  basicaly resize and redeclare their array to size 1
 public class ManagerTempVariables {
 
-    Random rand = new Random();
+    /**
+     * Set random seed to a constant value by default for repeatable results.
+     */
+    Random rand = new Random(0xDEADBEEF);
 
     public Random getRandom() {
         return rand;

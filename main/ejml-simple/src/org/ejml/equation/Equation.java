@@ -24,6 +24,7 @@ import org.ejml.simple.SimpleMatrix;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import static org.ejml.equation.TokenList.Type;
 
@@ -242,6 +243,21 @@ public class Equation {
     public Equation() {
         alias(Math.PI,"pi");
         alias(Math.E,"e");
+    }
+
+    /**
+     * Specifies the seed used in random number generators
+     * @param seed New seed for random number generator
+     */
+    public void setSeed( long seed ) {
+        functions.managerTemp.getRandom().setSeed(seed);
+    }
+
+    /**
+     * Sets the random seed using a seed based on the current time
+     */
+    public void setSeed() {
+        functions.managerTemp.rand = new Random();
     }
 
     /**
