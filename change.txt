@@ -22,6 +22,9 @@ Date format: year/month/day
   * Make it easier and faster to find the null space
   * QR, QRP, and SVD
   * TODO Try the iterative method suggested on a page to make QR stable
+- Equation
+  * Fixed bug. Can handle comma inside a brucket block that's in a function call.
+    "b=normF([[1 2],1])"
 
 - TODO SimpleMatrix.concatRows
 

@@ -486,6 +486,18 @@ public class TestEquation {
     }
 
     @Test
+    public void compile_constructMatrix_ParenSubMatrixAndComma() {
+        Equation eq = new Equation();
+
+        eq.process("b=normF([[1 2],1])");
+        double b = eq.lookupDouble("b");
+        double expected = Math.sqrt(1+4+1);
+
+        assertEquals(expected,b,UtilEjml.TEST_F64);
+
+    }
+
+    @Test
     public void compile_assign_IntSequence_Case0() {
         Equation eq = new Equation();
 

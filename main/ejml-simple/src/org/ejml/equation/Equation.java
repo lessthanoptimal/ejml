@@ -627,7 +627,9 @@ public class Equation {
     }
 
     /**
-     * Searches for commas in the set of tokens.  Used for inputs to functions
+     * Searches for commas in the set of tokens.  Used for inputs to functions.
+     *
+     * Ignore comma's which are inside a [ ] block
      *
      * @return List of output tokens between the commas
      */
@@ -636,9 +638,18 @@ public class Equation {
         List<TokenList.Token> commas = new ArrayList<TokenList.Token>();
         TokenList.Token token = tokens.first;
 
+        int numBracket = 0;
         while( token != null ) {
-            if( token.getType() == Type.SYMBOL && token.getSymbol() == Symbol.COMMA ) {
-                commas.add(token);
+            if( token.getType() == Type.SYMBOL ) {
+                switch( token.getSymbol() ) {
+                    case COMMA:
+                        if( numBracket == 0)
+                            commas.add(token);
+                    break;
+
+                    case BRACKET_LEFT: numBracket++; break;
+                    case BRACKET_RIGHT: numBracket--; break;
+                }
             }
             token = token.next;
         }
