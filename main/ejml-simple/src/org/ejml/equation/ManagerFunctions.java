@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -167,215 +167,95 @@ public class ManagerFunctions {
      * Adds built in functions
      */
     private void addBuiltIn( ) {
-        input1.put("inv",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.inv(A,manager);
-            }
-        });
-        input1.put("pinv",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.pinv(A, manager);
-            }
-        });
-        input1.put("rref",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.rref(A, manager);
-            }
-        });
-        input1.put("eye",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.eye(A, manager);
-            }
-        });
-        input1.put("det",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.det(A, manager);
-            }
-        });
-        input1.put("normF",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.normF(A, manager);
-            }
-        });
-        input1.put("sum",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.sum_one(A, manager);
-            }
-        });
-        input1.put("trace",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.trace(A, manager);
-            }
-        });
-        input1.put("diag",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.diag(A, manager);
-            }
-        });
-        input1.put("min",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.min(A, manager);
-            }
-        });
-        input1.put("max",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.max(A, manager);
-            }
-        });
-        input1.put("abs",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.abs(A, manager);
-            }
-        });
-        input1.put("sin",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.sin(A, manager);
-            }
-        });
-        input1.put("cos",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.cos(A, manager);
-            }
-        });
-        input1.put("atan",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.atan(A, manager);
-            }
-        });
-        input1.put("exp",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.exp(A, manager);
-            }
-        });
-        input1.put("log",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.log(A, manager);
-            }
-        });
-        input1.put("sqrt",new Input1() {
-            @Override
-            public Operation.Info create(Variable A, ManagerTempVariables manager) {
-                return Operation.sqrt(A, manager);
-            }
+        input1.put("inv", Operation::inv);
+        input1.put("pinv", Operation::pinv);
+        input1.put("rref", Operation::rref);
+        input1.put("eye", Operation::eye);
+        input1.put("det", Operation::det);
+        input1.put("normF", Operation::normF);
+        input1.put("sum", Operation::sum_one);
+        input1.put("trace", Operation::trace);
+        input1.put("diag", Operation::diag);
+        input1.put("min", Operation::min);
+        input1.put("max", Operation::max);
+        input1.put("abs", Operation::abs);
+        input1.put("sin", Operation::sin);
+        input1.put("cos", Operation::cos);
+        input1.put("atan", Operation::atan);
+        input1.put("exp", Operation::exp);
+        input1.put("log", Operation::log);
+        input1.put("sqrt", Operation::sqrt);
+        input1.put("rng", Operation::rng);
+
+        inputN.put("normP", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.normP(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("normP",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.normP(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("max", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
+            return Operation.max_two(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("max",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
-                return Operation.max_two(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("min", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
+            return Operation.min_two(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("min",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
-                return Operation.min_two(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("sum", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
+            return Operation.sum_two(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("sum",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("One or two inputs expected");
-                return Operation.sum_two(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("zeros", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.zeros(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("zeros",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.zeros(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("ones", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.ones(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("ones",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.ones(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("rand", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.rand(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("kron",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.kron(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("randn", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.randn(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("dot",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.dot(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("kron", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.kron(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("pow",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.pow(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("dot", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.dot(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("atan2",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.atan2(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("pow", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.pow(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("solve",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
-                return Operation.solve(inputs.get(0), inputs.get(1), manager);
-            }
+        inputN.put("atan2", (inputs, manager) -> {
+            if (inputs.size() != 2) throw new RuntimeException("Two inputs expected");
+            return Operation.atan2(inputs.get(0), inputs.get(1), manager);
         });
 
-        inputN.put("extract",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                return Operation.extract(inputs, manager);
-            }
+        inputN.put("solve", (inputs, manager) -> {
+            if( inputs.size() != 2 ) throw new RuntimeException("Two inputs expected");
+            return Operation.solve(inputs.get(0), inputs.get(1), manager);
         });
-        inputN.put("extractScalar",new InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager) {
-                if( inputs.size() != 2 && inputs.size() != 3 ) throw new RuntimeException("Two or three inputs expected");
-                return Operation.extractScalar(inputs, manager);
-            }
+
+        inputN.put("extract", Operation::extract);
+        inputN.put("extractScalar", (inputs, manager) -> {
+            if( inputs.size() != 2 && inputs.size() != 3 ) throw new RuntimeException("Two or three inputs expected");
+            return Operation.extractScalar(inputs, manager);
         });
     }
 

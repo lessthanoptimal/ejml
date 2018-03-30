@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,7 @@ import org.ejml.data.Matrix;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
@@ -1356,6 +1357,78 @@ public abstract class Operation {
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows,numCols);
                     CommonOps_DDRM.fill(output.matrix, 1);
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected two integers got "+A+" "+B);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Sets the seed for random number generator
+     */
+    public static Info rng( final Variable A , ManagerTempVariables manager) {
+
+        Info ret = new Info();
+
+        if( A instanceof VariableInteger ) {
+            ret.op = new Operation("rng") {
+                @Override
+                public void process() {
+                    int seed = ((VariableInteger)A).value;
+                    manager.getRandom().setSeed(seed);
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected one integer");
+        }
+
+        return ret;
+    }
+
+    /**
+     * Uniformly random numbers
+     */
+    public static Info rand( final Variable A , final Variable B , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            ret.op = new Operation("rand-ii") {
+                @Override
+                public void process() {
+                    int numRows = ((VariableInteger)A).value;
+                    int numCols = ((VariableInteger)B).value;
+                    output.matrix.reshape(numRows,numCols);
+                    RandomMatrices_DDRM.fillUniform(output.matrix, 0,1,manager.getRandom());
+                }
+            };
+        } else {
+            throw new RuntimeException("Expected two integers got "+A+" "+B);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Normal distrbution numbers
+     */
+    public static Info randn( final Variable A , final Variable B , ManagerTempVariables manager) {
+        Info ret = new Info();
+        final VariableMatrix output = manager.createMatrix();
+        ret.output = output;
+
+        if( A instanceof VariableInteger && B instanceof VariableInteger ) {
+            ret.op = new Operation("randn-ii") {
+                @Override
+                public void process() {
+                    int numRows = ((VariableInteger)A).value;
+                    int numCols = ((VariableInteger)B).value;
+                    output.matrix.reshape(numRows,numCols);
+                    RandomMatrices_DDRM.fillGaussian(output.matrix, 0,1,manager.getRandom());
                 }
             };
         } else {

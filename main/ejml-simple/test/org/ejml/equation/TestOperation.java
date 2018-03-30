@@ -1507,6 +1507,57 @@ public class TestOperation {
     }
 
     @Test
+    public void rng() {
+        Equation eq = new Equation();
+
+        eq.process("rng(345)");
+        eq.process("A=rand(1,2)");
+
+        Random rand = new Random(345);
+
+        SimpleMatrix A = eq.lookupSimple("A");
+
+        for (int i = 0; i < A.numRows(); i++) {
+            for (int j = 0; j < A.numCols(); j++) {
+                assertEquals(rand.nextDouble(),A.get(i,j));
+            }
+        }
+    }
+
+    @Test
+    public void rand() {
+        Equation eq = new Equation();
+
+        eq.process("A=rand(6,8)");
+
+        SimpleMatrix A = eq.lookupSimple("A");
+
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 8; j++) {
+                double v = A.get(i,j);
+                assertTrue(v >= 0 && v <= 1);
+            }
+        }
+    }
+
+    @Test
+    public void randn() {
+        Equation eq = new Equation();
+
+        eq.process("A=randn(6,8)");
+
+        SimpleMatrix A = eq.lookupSimple("A");
+
+        int total = 0;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 8; j++) {
+                total += A.get(i,j)==0 ? 1 : 0;
+            }
+        }
+        assertTrue(total < 6*8);
+    }
+
+    @Test
     public void diag_vector() {
         Equation eq = new Equation();
 

@@ -25,6 +25,9 @@ Date format: year/month/day
 - Equation
   * Fixed bug. Can handle comma inside a brucket block that's in a function call.
     "b=normF([[1 2],1])"
+  * Added random matrices and ability to specify the seed
+    rand,randn,rng
+  * Added ability to print expression's output
 
 - TODO SimpleMatrix.concatRows
 

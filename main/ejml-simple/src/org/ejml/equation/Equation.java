@@ -130,6 +130,9 @@ import static org.ejml.equation.TokenList.Type;
  * trace(A)     Trace of the matrix
  * zeros(r,c)   Matrix full of zeros with r rows and c columns.
  * ones(r,c)    Matrix full of ones with r rows and c columns.
+ * rand(r,c)    Matrix filled with i.i.d uniform numbers from 0 to 1
+ * randn(r,c)   Matrix filled with i.i.d normal distribution with mean of zero and stdev of 1
+ * rng(seed)    Specifies the random number generator's seed
  * diag(A)      If a vector then returns a square matrix with diagonal elements filled with vector
  * diag(A)      If a matrix then it returns the diagonal elements as a column vector
  * dot(A,B)     Returns the dot product of two vectors as a double.  Does not work on general matrices.
@@ -1454,6 +1457,10 @@ public class Equation {
             }
             t = t.next;
         }
+    }
+
+    public SimpleMatrix lookupSimple( String token ) {
+        return SimpleMatrix.wrap(lookupDDRM(token));
     }
 
     protected enum TokenType
