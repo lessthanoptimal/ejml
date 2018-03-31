@@ -19,6 +19,8 @@
 package org.ejml.equation;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.FMatrixRMaj;
+import org.ejml.ops.ConvertMatrixData;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
@@ -281,6 +283,12 @@ public class Equation {
         }
     }
 
+    public void alias(FMatrixRMaj variable , String name ) {
+        DMatrixRMaj f = new DMatrixRMaj(variable.numRows,variable.numCols);
+        ConvertMatrixData.convert(variable,f);
+        alias(f,name);
+    }
+
     public void alias( SimpleMatrix variable , String name ) {
         alias((Object)variable.getMatrix(),name);
     }
@@ -345,6 +353,8 @@ public class Equation {
                 alias(((Double)args[i]).doubleValue(),(String)args[i+1]);
             } else if( args[i].getClass() == DMatrixRMaj.class ) {
                 alias((DMatrixRMaj)args[i],(String)args[i+1]);
+            } else if( args[i].getClass() == FMatrixRMaj.class ) {
+                alias((FMatrixRMaj)args[i],(String)args[i+1]);
             } else if( args[i].getClass() == SimpleMatrix.class ) {
                 alias((SimpleMatrix)args[i],(String)args[i+1]);
             } else {
@@ -1308,6 +1318,13 @@ public class Equation {
 
     public DMatrixRMaj lookupDDRM(String token) {
         return ((VariableMatrix)variables.get(token)).matrix;
+    }
+
+    public FMatrixRMaj lookupFDRM(String token) {
+        DMatrixRMaj d = ((VariableMatrix)variables.get(token)).matrix;
+        FMatrixRMaj f = new FMatrixRMaj(d.numRows,d.numCols);
+        ConvertMatrixData.convert(d,f);
+        return f;
     }
 
     public int lookupInteger(String token) {
