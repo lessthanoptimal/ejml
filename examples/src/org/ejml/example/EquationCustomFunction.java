@@ -23,7 +23,6 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.equation.*;
 import org.ejml.simple.SimpleMatrix;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -38,7 +37,7 @@ public class EquationCustomFunction {
         Random rand = new Random(234);
 
         Equation eq = new Equation();
-        eq.getFunctions().add("multTransA",createMultTransA());
+        eq.getFunctions().addN("multTransA",createMultTransA());
 
         SimpleMatrix A = new SimpleMatrix(1,1); // will be resized
         SimpleMatrix B = SimpleMatrix.random_DDRM(3,4,-1,1,rand);
@@ -59,38 +58,35 @@ public class EquationCustomFunction {
      * meaningful error messages.  The output matrix should be resized to fit the inputs.
      */
     public static ManagerFunctions.InputN createMultTransA() {
-        return new ManagerFunctions.InputN() {
-            @Override
-            public Operation.Info create(List<Variable> inputs, ManagerTempVariables manager ) {
-                if( inputs.size() != 2 )
-                    throw new RuntimeException("Two inputs required");
+        return (inputs, manager) -> {
+            if( inputs.size() != 2 )
+                throw new RuntimeException("Two inputs required");
 
-                final Variable varA = inputs.get(0);
-                final Variable varB = inputs.get(1);
+            final Variable varA = inputs.get(0);
+            final Variable varB = inputs.get(1);
 
-                Operation.Info ret = new Operation.Info();
+            Operation.Info ret = new Operation.Info();
 
-                if( varA instanceof VariableMatrix && varB instanceof VariableMatrix ) {
+            if( varA instanceof VariableMatrix && varB instanceof VariableMatrix ) {
 
-                    // The output matrix or scalar variable must be created with the provided manager
-                    final VariableMatrix output = manager.createMatrix();
-                    ret.output = output;
-                    ret.op = new Operation("multTransA-mm") {
-                        @Override
-                        public void process() {
-                            DMatrixRMaj mA = ((VariableMatrix)varA).matrix;
-                            DMatrixRMaj mB = ((VariableMatrix)varB).matrix;
-                            output.matrix.reshape(mA.numCols,mB.numCols);
+                // The output matrix or scalar variable must be created with the provided manager
+                final VariableMatrix output = manager.createMatrix();
+                ret.output = output;
+                ret.op = new Operation("multTransA-mm") {
+                    @Override
+                    public void process() {
+                        DMatrixRMaj mA = ((VariableMatrix)varA).matrix;
+                        DMatrixRMaj mB = ((VariableMatrix)varB).matrix;
+                        output.matrix.reshape(mA.numCols,mB.numCols);
 
-                            CommonOps_DDRM.multTransA(mA,mB,output.matrix);
-                        }
-                    };
-                } else {
-                    throw new IllegalArgumentException("Expected both inputs to be a matrix");
-                }
-
-                return ret;
+                        CommonOps_DDRM.multTransA(mA,mB,output.matrix);
+                    }
+                };
+            } else {
+                throw new IllegalArgumentException("Expected both inputs to be a matrix");
             }
+
+            return ret;
         };
     }
 }

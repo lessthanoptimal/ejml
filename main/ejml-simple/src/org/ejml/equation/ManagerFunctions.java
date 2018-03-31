@@ -31,8 +31,8 @@ import java.util.Map;
 public class ManagerFunctions {
 
     // List of functions which take in N inputs
-    Map<String,Input1> input1 = new HashMap<String,Input1>();
-    Map<String,InputN> inputN = new HashMap<String,InputN>();
+    Map<String,Input1> input1 = new HashMap<>();
+    Map<String,InputN> inputN = new HashMap<>();
 
     // Reference to temporary variable manager
     protected ManagerTempVariables managerTemp;
@@ -150,7 +150,7 @@ public class ManagerFunctions {
      * @param name Name of function
      * @param function Function factory
      */
-    public void add( String name , Input1 function ) {
+    public void add1(String name , Input1 function ) {
        input1.put(name, function);
     }
 
@@ -159,7 +159,7 @@ public class ManagerFunctions {
      * @param name Name of function
      * @param function Function factory
      */
-    public void add( String name , InputN function ) {
+    public void addN(String name , InputN function ) {
         inputN.put(name,function);
     }
 
