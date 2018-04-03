@@ -17,7 +17,7 @@ Date format: year/month/day
 - Fixed Sized Matrices
   * Added multiplication and scale operations
 - QRP
-  *  dense real version was incorrectly scaling the threshold for singularity detection
+  * Dense real version was incorrectly scaling the threshold for singularity detection
 - Created SolveNullSpace
   * Make it easier and faster to find the null space
   * QR, QRP, and SVD
