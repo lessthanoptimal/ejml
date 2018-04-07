@@ -1,3 +1,13 @@
+plugins {
+    id "com.peterabeles.gversion" version "1.0.1"
+}
+
+gversion {
+    gversion_file_path = "main/ejml-core/src"
+    gversion_package = "org.ejml"
+    gversion_class_name = "EjmlVersion"
+}
+
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
@@ -210,6 +220,8 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 task wrapper(type: Wrapper) {
     gradleVersion = '4.3'
 }
+
+project(':main:ejml-core').compileJava.dependsOn(createVersionFile)
 
 // Disable the creation of jars for distribution.  If you don't do this it will crash
 [':main',':examples',':main:autocode'].each {String a ->

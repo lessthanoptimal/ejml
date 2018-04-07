@@ -1,4 +1,3 @@
-- Update version number in UtilEjml.VERSION
 - Update change.txt
 - Update version in build.gradle
 - Update version in readme.md (maven central)

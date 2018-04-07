@@ -30,6 +30,8 @@ Date format: year/month/day
     rand,randn,rng
   * Added ability to print expression's output
   * Added automatic conversion from FMatrixRMaj to DMatrixRMaj
+- EjmlVersion
+  * Contains version information
 
 ----- Version 0.33
 2018/01/17
