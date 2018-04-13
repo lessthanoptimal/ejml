@@ -3,7 +3,7 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.34
-2018/
+2018/04/13
 
 - SimpleMatrix
   * Added createLike()
@@ -21,7 +21,6 @@ Date format: year/month/day
 - Created SolveNullSpace
   * Make it easier and faster to find the null space
   * QR, QRP, and SVD
-  * TODO Try the iterative method suggested on a page to make QR stable
 - Equation
   * Added print() This will print to stdout the results of what's inside
   * Fixed bug. Can handle comma inside a brucket block that's in a function call.

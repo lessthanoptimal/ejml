@@ -1,11 +1,11 @@
 plugins {
-    id "com.peterabeles.gversion" version "1.0.1"
+    id "com.peterabeles.gversion" version "1.1"
 }
 
 gversion {
-    gversion_file_path = "main/ejml-core/src"
-    gversion_package = "org.ejml"
-    gversion_class_name = "EjmlVersion"
+    srcDir = "main/ejml-core/src"
+    classPackage = "org.ejml"
+    className = "EjmlVersion"
 }
 
 allprojects {
@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.ejml'
-    version = '0.34-SNAPSHOT'
+    version = '0.34'
 }
 
 subprojects {
@@ -54,16 +54,32 @@ subprojects {
             }
         }
 
+        generate {
+            java {
+                srcDir 'generate'
+            }
+            compileClasspath += sourceSets.main.runtimeClasspath
+        }
+
+        benchmark {
+            java {
+                srcDir 'benchmarks/src'
+            }
+            resources {
+                srcDir 'benchmark/resources'
+            }
+            compileClasspath += sourceSets.main.runtimeClasspath
+        }
+
         test {
             java {
                 srcDir 'test'
-                srcDir 'generate'
-                srcDir 'benchmarks/src'
                 srcDir 'benchmarks/test'
             }
             resources {
                 srcDir 'resources/test'
             }
+            compileClasspath += sourceSets.benchmark.runtimeClasspath
         }
     }
 
@@ -178,12 +194,6 @@ task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModule
     }
 }
 
-idea {
-    project {
-        languageLevel = '1.7'
-    }
-}
-
 def javadocProjects = [
         ':main:ejml-core',
         ':main:ejml-ddense',
@@ -206,7 +216,7 @@ task alljavadoc(type: Javadoc) {
     configure(options) {
         failOnError = false
         docTitle = "Efficient Java Matrix Library (EJML) v$project.version"
-        links = [ 'http://docs.oracle.com/javase/7/docs/api/' ]
+        links = [ 'http://docs.oracle.com/javase/8/docs/api/' ]
         bottom = file('docs/bottom.txt').text
     }
 }
