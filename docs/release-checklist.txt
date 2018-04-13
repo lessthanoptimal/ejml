@@ -4,13 +4,12 @@
 - Commit and tag release
 - Create zip of source and library directory
   * From a fresh checkout
-  cd ejml;git checkout SNAPSHOT;rm -rf .git;./gradlew autogenerate;cd ..;zip -r ejml.zip ejml
-  cd ejml;./gradlew createLibraryDirectory;mv libraries ..;cd ..;mv libraries ejml-v0.XX-libs;zip -r ejml-v0.XX-libs.zip ejml-v0.XX-libs
-- Create zip of source code
-- Create jar file "./gradlew createLibraryDirectory"
+  VERSION=v0.34
+  cd ejml;git checkout SNAPSHOT;./gradlew createVersionFile;./gradlew autogenerate;rm -rf .git;cd ..;zip -r ejml-$VERSION-src.zip ejml
+  cd ejml;./gradlew createLibraryDirectory;mv libraries ..;cd ..;mv libraries ejml-$VERSION-libs;zip -r ejml-$VERSION-libs.zip ejml-$VERSION-libs
 - Update documentation on website
 - Update javadoc on website
-  rm -rf build/docs/javadoc;./gradlew alljavadoc;cd build/docs/;zip -r javadoc.zip javadoc
+  cd ejml;rm -rf build/docs/javadoc;./gradlew alljavadoc;cd build/docs/;zip -r javadoc.zip javadoc
 
 -----
 Push to central:
