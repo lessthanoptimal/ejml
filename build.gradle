@@ -84,7 +84,13 @@ subprojects {
     }
 
     dependencies {
+        compile 'com.google.code.findbugs:jsr305:3.0.2' // @Nullable
+
         testCompile group: 'junit', name: 'junit', version: '4.12'
+
+        ['core','generator-annprocess'].each { String a->
+            benchmarkCompile('org.openjdk.jmh:jmh-'+a+':1.19')
+        }
     }
 
     jar {

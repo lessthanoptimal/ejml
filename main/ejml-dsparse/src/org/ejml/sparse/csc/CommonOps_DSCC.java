@@ -31,6 +31,7 @@ import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjustClear;
@@ -112,7 +113,7 @@ public class CommonOps_DSCC {
      * @param a_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void transpose(DMatrixSparseCSC a , DMatrixSparseCSC a_t , IGrowArray gw ) {
+    public static void transpose(DMatrixSparseCSC a , DMatrixSparseCSC a_t , @Nullable IGrowArray gw ) {
         if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
             throw new IllegalArgumentException("Unexpected shape for transpose matrix");
 
@@ -136,7 +137,7 @@ public class CommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                            IGrowArray gw, DGrowArray gx )
+                            @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         if( A.numRows != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
@@ -145,7 +146,7 @@ public class CommonOps_DSCC {
     }
 
     public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                            IGrowArray gw, DGrowArray gx )
+                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         if( A.numCols != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
@@ -164,7 +165,7 @@ public class CommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                                  IGrowArray gw, DGrowArray gx )
+                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         if( A.numRows != C.numRows || B.numRows != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
@@ -204,7 +205,7 @@ public class CommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           IGrowArray gw, DGrowArray gx)
+                           @Nullable IGrowArray gw, @Nullable DGrowArray gx)
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes");
@@ -396,7 +397,7 @@ public class CommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C ,
-                                    IGrowArray gw, DGrowArray gx) {
+                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         if( A.numCols != B.numCols || A.numRows != B.numRows || A.numCols != C.numCols || A.numRows != C.numRows )
             throw new IllegalArgumentException("All inputs must have the same number of rows and columns");
 
@@ -655,7 +656,8 @@ public class CommonOps_DSCC {
      * @param output (Output) Upper triangular symmetric matrix which has the permutation stored in it.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void permuteSymmetric( DMatrixSparseCSC input, int permInv[], DMatrixSparseCSC output , IGrowArray gw ) {
+    public static void permuteSymmetric( DMatrixSparseCSC input, int permInv[], DMatrixSparseCSC output ,
+                                         @Nullable IGrowArray gw ) {
         if( input.numRows != input.numCols )
             throw new IllegalArgumentException("Input must be a square matrix");
         if( input.numRows != permInv.length )
@@ -719,7 +721,7 @@ public class CommonOps_DSCC {
      * @return Combination of the two matrices
      */
     public static DMatrixSparseCSC concatRows(DMatrixSparseCSC top , DMatrixSparseCSC bottom ,
-                                              DMatrixSparseCSC out )
+                                              @Nullable DMatrixSparseCSC out )
     {
         if( top.numCols != bottom.numCols )
             throw new IllegalArgumentException("Number of columns must match");
@@ -764,7 +766,7 @@ public class CommonOps_DSCC {
      * @return Combination of the two matrices
      */
     public static DMatrixSparseCSC concatColumns(DMatrixSparseCSC left , DMatrixSparseCSC right ,
-                                                 DMatrixSparseCSC out )
+                                                 @Nullable DMatrixSparseCSC out )
     {
         if( left.numRows != right.numRows )
             throw new IllegalArgumentException("Number of rows must match");
@@ -804,7 +806,7 @@ public class CommonOps_DSCC {
      * @param out (Output, Optional) Storage for column vector
      * @return The column of A.
      */
-    public static DMatrixSparseCSC extractColumn(DMatrixSparseCSC A , int column , DMatrixSparseCSC out ) {
+    public static DMatrixSparseCSC extractColumn(DMatrixSparseCSC A , int column , @Nullable DMatrixSparseCSC out ) {
 
         if( out == null )
             out = new DMatrixSparseCSC(1,1,1);

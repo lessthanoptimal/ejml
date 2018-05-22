@@ -6,8 +6,8 @@ Date format: year/month/day
 2018
 
 - CommonOps_DSCC
-  * TODO Added multTransA(sparse,sparse,sparse)
   * TODO Added multTransA(sparse,dense,dense)
+  * TODO Added multTransB(sparse,dense,dense)
   * TODO Added extractDiag(sparse,dense)
 
 ----- Version 0.34
