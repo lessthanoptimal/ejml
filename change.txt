@@ -2,6 +2,14 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.35
+2018
+
+- CommonOps_DSCC
+  * TODO Added multTransA(sparse,sparse,sparse)
+  * TODO Added multTransA(sparse,dense,dense)
+  * TODO Added extractDiag(sparse,dense)
+
 ----- Version 0.34
 2018/04/13
 
