@@ -504,7 +504,7 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void extractDiag() {
+    public void extractDiag_S() {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(3, 4, 5, 0, 1, rand);
 
         for (int i = 0; i < 3; i++) {
@@ -519,10 +519,34 @@ public class TestCommonOps_DSCC {
             assertEquals(i + 1, v.get(i, 0), 1e-8);
         }
 
-        // Row and column vectors have seperate code. Test row vector now
+        // Row and column vectors have separate code. Test row vector now
         v = new DMatrixSparseCSC(1, 3, 3);
         CommonOps_DSCC.extractDiag(a, v);
         assertTrue(CommonOps_DSCC.checkStructure(v));
+
+        for (int i = 0; i < 3; i++) {
+            assertEquals(i + 1, v.get(0, i), 1e-8);
+        }
+    }
+
+    @Test
+    public void extractDiag_D() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(3, 4, 5, 0, 1, rand);
+
+        for (int i = 0; i < 3; i++) {
+            a.set(i, i, i + 1);
+        }
+
+        DMatrixRMaj v = new DMatrixRMaj(3, 1);
+        CommonOps_DSCC.extractDiag(a, v);
+
+        for (int i = 0; i < 3; i++) {
+            assertEquals(i + 1, v.get(i, 0), 1e-8);
+        }
+
+        // Row and column vectors have seperate code. Test row vector now
+        v = new DMatrixRMaj(1, 3);
+        CommonOps_DSCC.extractDiag(a, v);
 
         for (int i = 0; i < 3; i++) {
             assertEquals(i + 1, v.get(0, i), 1e-8);

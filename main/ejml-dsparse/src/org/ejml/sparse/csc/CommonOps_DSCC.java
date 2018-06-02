@@ -526,6 +526,27 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * <p>
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * can either be a row or column vector.
+     * <p>
+     *
+     * @param src Matrix whose diagonal elements are being extracted. Not modified.
+     * @param dst A vector the results will be written into. Modified.
+     */
+    public static void extractDiag(DMatrixSparseCSC src, DMatrixRMaj dst ) {
+        int N = Math.min(src.numRows, src.numCols);
+
+        if( dst.getNumElements() != N || !(dst.numRows==1 || dst.numCols==1) ) {
+            dst.reshape(N, 1);
+        }
+
+        for (int i = 0; i < N; i++) {
+            dst.data[i] = src.unsafe_get(i, i);
+        }
+    }
+
+    /**
      * Converts the permutation vector into a matrix. B = P*A.  B[p[i],:] = A[i,:]
      * @param p (Input) Permutation vector
      * @param inverse (Input) If it is the inverse. B[i,:] = A[p[i],:)
