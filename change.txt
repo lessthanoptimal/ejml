@@ -10,6 +10,7 @@ Date format: year/month/day
   * Added multTransB(sparse,dense,dense)
   * Added multTransAB(sparse,dense,dense)
   * Added extractDiag(sparse,dense)
+- Added LinearSolverSparseSafe
 
 ----- Version 0.34
 2018/04/13
