@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,8 +33,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -188,6 +187,21 @@ public class TestImplSparseSparseMult_DSCC {
                 assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
             }
         }
+    }
+
+    @Test
+    public void multTransA_s_d() {
+        fail("Implement");
+    }
+
+    @Test
+    public void multTransB_s_d() {
+        fail("Implement");
+    }
+
+    @Test
+    public void multTransAB_s_d() {
+        fail("Implement");
     }
 
     @Test
