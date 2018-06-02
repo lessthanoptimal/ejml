@@ -112,15 +112,22 @@ public class CommonOps_DSCC {
      * @param a Input matrix.  Not modified
      * @param a_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @return The transposed matrix
      */
-    public static void transpose(DMatrixSparseCSC a , DMatrixSparseCSC a_t , @Nullable IGrowArray gw ) {
-        if( a_t.numRows != a.numCols || a_t.numCols != a.numRows )
-            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
+    public static DMatrixSparseCSC transpose(DMatrixSparseCSC a , @Nullable DMatrixSparseCSC a_t , @Nullable IGrowArray gw ) {
 
-        a_t.growMaxLength(a.nz_length, false);
-        a_t.nz_length = a.nz_length;
+        if( a_t == null ) {
+            a_t = new DMatrixSparseCSC(a.numCols,a.numRows,a.nz_length);
+        } else {
+            if (a_t.numRows != a.numCols || a_t.numCols != a.numRows)
+                throw new IllegalArgumentException("Unexpected shape for transpose matrix");
+
+            a_t.growMaxLength(a.nz_length, false);
+            a_t.nz_length = a.nz_length;
+        }
 
         ImplCommonOps_DSCC.transpose(a, a_t, gw);
+        return a_t;
     }
 
     public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
@@ -190,6 +197,52 @@ public class CommonOps_DSCC {
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
         ImplSparseSparseMult_DSCC.mult(A,B,C);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A<sup>T</sup>*B
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param C Dense Matrix
+     */
+    public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ,
+                                  @Nullable DGrowArray gx )
+    {
+        if( A.numCols != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransA(A,B,C,gx);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A*B<sup>T</sup>
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param C Dense Matrix
+     */
+    public static void multTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    {
+        if( A.numRows != C.numRows || B.numRows != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransB(A,B,C);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A<sup>T</sup>*B<sup>T</sup>
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param C Dense Matrix
+     */
+    public static void multTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    {
+        if( A.numCols != C.numRows || B.numRows != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multTransAB(A,B,C);
     }
 
     /**

@@ -130,24 +130,48 @@ public class TestCommonOps_DSCC {
     }
 
     private void check_s_s_mult(DMatrixSparseCSC A , DMatrixSparseCSC B, DMatrixSparseCSC C, boolean exception ) {
-        try {
-            CommonOps_DSCC.mult(A,B,C,null,null);
-            assertTrue(CommonOps_DSCC.checkStructure(C));
+        DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj denseB = ConvertDMatrixStruct.convert(B,(DMatrixRMaj)null);
+        DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
 
-            if( exception )
-                fail("exception expected");
-            DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
-            DMatrixRMaj denseB = ConvertDMatrixStruct.convert(B,(DMatrixRMaj)null);
-            DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
+        DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A,null,null);
+        DMatrixSparseCSC B_t = CommonOps_DSCC.transpose(B,null,null);
 
-            CommonOps_DDRM.mult(denseA,denseB,expected);
+        DMatrixRMaj denseA_t = CommonOps_DDRM.transpose(denseA,null);
+        DMatrixRMaj denseB_t = CommonOps_DDRM.transpose(denseB,null);
 
-            DMatrixRMaj found = ConvertDMatrixStruct.convert(C,(DMatrixRMaj)null);
-            assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found, UtilEjml.TEST_F64));
+        for( int i = 0; i < 2; i++ ) {
+            boolean transA = i==1;
+            for (int j = 0; j < 2; j++) {
+                boolean transB = j==1;
 
-        } catch( RuntimeException ignore){
-            if( !exception )
-                fail("no exception expected");
+                try {
+                    if( transA ) {
+                        if( transB ) {
+                            continue;
+                        } else {
+                            CommonOps_DSCC.multTransA(A_t,B,C,null,null);
+                            CommonOps_DDRM.multTransA(denseA_t,denseB,expected);
+                        }
+                    } else if( transB ) {
+                        CommonOps_DSCC.multTransB(A,B_t,C,null,null);
+                        CommonOps_DDRM.multTransB(denseA,denseB_t,expected);
+                    } else {
+                        CommonOps_DSCC.mult(A,B,C,null,null);
+                        CommonOps_DDRM.mult(denseA,denseB,expected);
+                    }
+                    assertTrue(CommonOps_DSCC.checkStructure(C));
+
+                    if( exception )
+                        fail("exception expected");
+
+                    DMatrixRMaj found = ConvertDMatrixStruct.convert(C,(DMatrixRMaj)null);
+                    assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found, UtilEjml.TEST_F64));
+                } catch( RuntimeException ignore){
+                    if( !exception )
+                        fail("no exception expected");
+                }
+            }
         }
     }
 
@@ -172,22 +196,45 @@ public class TestCommonOps_DSCC {
                 RandomMatrices_DDRM.rectangle(6, 4, rand), true);
     }
 
-    private void check_s_d_mult(DMatrixSparseCSC A , DMatrixRMaj B, DMatrixRMaj found, boolean exception ) {
-        try {
-            CommonOps_DSCC.mult(A,B,found);
+    private void check_s_d_mult(DMatrixSparseCSC A , DMatrixRMaj B, DMatrixRMaj C, boolean exception ) {
+        DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
 
-            if( exception )
-                fail("exception expected");
-            DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
-            DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
+        DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A,null,null);
+        DMatrixRMaj B_t = CommonOps_DDRM.transpose(B,null);
+        DMatrixRMaj denseA_t = CommonOps_DDRM.transpose(denseA,null);
 
-            CommonOps_DDRM.mult(denseA,B,expected);
+        for( int i = 0; i < 2; i++ ) {
+            boolean transA = i == 1;
+            for (int j = 0; j < 2; j++) {
+                boolean transB = j == 1;
+                try {
+                    if( transA ) {
+                        if( transB ) {
+                            CommonOps_DSCC.multTransAB(A_t,B_t,C);
+                            CommonOps_DDRM.multTransAB(denseA_t,B_t,expected);
+                        } else {
+                            CommonOps_DSCC.multTransA(A_t,B,C,null);
+                            CommonOps_DDRM.multTransA(denseA_t,B,expected);
+                        }
+                    } else if( transB ) {
+                        CommonOps_DSCC.multTransB(A,B_t,C);
+                        CommonOps_DDRM.multTransB(denseA,B_t,expected);
+                    } else {
+                        CommonOps_DSCC.mult(A,B,C);
+                        CommonOps_DDRM.mult(denseA,B,expected);
+                    }
 
-            assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found, UtilEjml.TEST_F64));
+                    if (exception)
+                        fail("exception expected");
 
-        } catch( RuntimeException ignore){
-            if( !exception )
-                fail("no exception expected");
+                    assertTrue(MatrixFeatures_DDRM.isIdentical(expected, C, UtilEjml.TEST_F64));
+
+                } catch (RuntimeException ignore) {
+                    if (!exception)
+                        fail("no exception expected");
+                }
+            }
         }
     }
 

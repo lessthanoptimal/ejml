@@ -24,6 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
@@ -289,14 +290,21 @@ public class ImplSparseSparseMult_DSCC {
         }
     }
 
-    public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C , double tmp[] ) {
+    public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ,
+                                  @Nullable DGrowArray gx ) {
 
-        if( tmp.length < B.numRows )
-            throw new IllegalArgumentException("tmp array must be at least B.rows long");
+        double tmp[];
+        if( gx != null ) {
+            gx.reshape(B.numRows);
+            tmp = gx.data;
+        } else {
+            tmp = new double[B.numRows];
+        }
 
         // C(i,j) = sum_k A(k,i) * B(k,j)
-        for (int j = 0; j < C.numCols; j++) {
+        for (int j = 0; j < B.numCols; j++) {
             // copy the row in B since it will be accessed a bunch and this will reduce cache misses
+            // by doing this copy the best runtime is now N*N even if A is empty
             for (int i = 0; i < B.numRows; i++) {
                 tmp[i] = B.data[i*B.numCols+j];
             }
@@ -311,7 +319,7 @@ public class ImplSparseSparseMult_DSCC {
                     sum += A.nz_values[indexA]*tmp[rowK];
                 }
 
-                C.data[i*C.numRows+j] = sum;
+                C.data[i*C.numCols+j] = sum;
             }
         }
     }
@@ -320,15 +328,17 @@ public class ImplSparseSparseMult_DSCC {
 
         C.zero();
 
-        // C(i,j) = sum_k A(i,k) * B(j,K)
-        for (int j = 0; j < B.numCols; j++) {
+        // C(i,j) = sum_k A(i,k) * B(j,k)
+        for (int j = 0; j < B.numRows; j++) {
             for (int k = 0; k < A.numCols; k++) {
                 int idx0 = A.col_idx[k];
                 int idx1 = A.col_idx[k + 1];
 
+                // Best runtime is N*N even if A is empty because of this line
+                double b_jk = B.data[j*B.numCols+k];
                 for (int indexA = idx0; indexA < idx1; indexA++) {
                     int i = A.nz_rows[indexA];
-                    C.data[i * C.numCols + j] += A.nz_rows[indexA] * B.data[j*B.numCols+k];
+                    C.data[i * C.numCols + j] += A.nz_values[indexA] * b_jk;
                 }
             }
         }
@@ -340,7 +350,7 @@ public class ImplSparseSparseMult_DSCC {
             int idx0 = A.col_idx[i];
             int idx1 = A.col_idx[i + 1];
 
-            for (int j = 0; j < A.numRows; j++) {
+            for (int j = 0; j < B.numRows; j++) {
                 double sum = 0;
                 int indexB = j*B.numCols;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
@@ -348,7 +358,7 @@ public class ImplSparseSparseMult_DSCC {
 
                     sum += A.nz_values[indexA]*B.data[indexB+k];
                 }
-                C.data[i*A.numCols+j] = sum;
+                C.data[i*C.numCols+j] = sum;
             }
         }
     }

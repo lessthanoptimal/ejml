@@ -33,7 +33,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -191,17 +192,86 @@ public class TestImplSparseSparseMult_DSCC {
 
     @Test
     public void multTransA_s_d() {
-        fail("Implement");
+        for (int i = 0; i < 10; i++) {
+            multTransA_s_d(24);
+            multTransA_s_d(15);
+            multTransA_s_d(4);
+        }
+    }
+
+    private void multTransA_s_d(int elementsA) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6,4,elementsA,-1,1,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6,5,-1,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
+
+        ImplSparseSparseMult_DSCC.multTransA(a,b,c, null);
+
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
+
+        CommonOps_DDRM.multTransA(dense_a, b, expected_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
     }
 
     @Test
     public void multTransB_s_d() {
-        fail("Implement");
+        for (int i = 0; i < 10; i++) {
+            multTransB_s_d(24);
+            multTransB_s_d(15);
+            multTransB_s_d(4);
+        }
+    }
+
+    private void multTransB_s_d(int elementsA) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
+
+        ImplSparseSparseMult_DSCC.multTransB(a,b,c);
+
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
+
+        CommonOps_DDRM.multTransB(dense_a, b, expected_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
     }
 
     @Test
     public void multTransAB_s_d() {
-        fail("Implement");
+        for (int i = 0; i < 10; i++) {
+            multTransAB_s_d(24);
+            multTransAB_s_d(15);
+            multTransAB_s_d(4);
+        }
+    }
+
+    private void multTransAB_s_d(int elementsA) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6,4,elementsA,-1,1,rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
+
+        ImplSparseSparseMult_DSCC.multTransAB(a,b,c);
+
+        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
+        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
+
+        CommonOps_DDRM.multTransAB(dense_a, b, expected_c);
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
     }
 
     @Test
