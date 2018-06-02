@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -170,10 +170,10 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     public void ifCanNotLockThrowException() {
         LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> d = createSolver(FillReducing.NONE);
         if( canLockStructure ) {
-            d.lockStructure();
+            d.setStructureLocked(true);
         } else {
             try {
-                d.lockStructure();
+                d.setStructureLocked(true);
                 fail("RuntimeException should have been thrown");
             } catch (RuntimeException ignore) {
             }
@@ -196,7 +196,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         d.solve(B.copy(),X0);
 
         assertFalse(d.isStructureLocked());
-        d.lockStructure();
+        d.setStructureLocked(true);
         assertTrue(d.isStructureLocked());
 
         assertTrue(d.setA(A));

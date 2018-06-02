@@ -11,6 +11,8 @@ Date format: year/month/day
   * Added multTransAB(sparse,dense,dense)
   * Added extractDiag(sparse,dense)
 - Added LinearSolverSparseSafe
+- LinearSolverSparse
+  * Changed lockStructure() to setStructureLocked( boolean )
 
 ----- Version 0.34
 2018/04/13

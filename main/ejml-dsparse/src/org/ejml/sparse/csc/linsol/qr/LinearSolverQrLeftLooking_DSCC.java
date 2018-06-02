@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -63,8 +63,8 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     }
 
     @Override
-    public void lockStructure() {
-        qr.lockStructure();
+    public void setStructureLocked( boolean locked ) {
+        qr.setStructureLocked( locked );
     }
 
     @Override

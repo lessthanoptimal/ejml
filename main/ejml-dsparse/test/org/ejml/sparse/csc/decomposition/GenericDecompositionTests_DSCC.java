@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -59,13 +59,40 @@ public abstract class GenericDecompositionTests_DSCC {
     public void ifCanNotLockThrowException() {
         DecompositionSparseInterface<DMatrixSparseCSC> d = createDecomposition();
         if( canLockStructure ) {
-            d.lockStructure();
+            d.setStructureLocked(true);
         } else {
             try {
-                d.lockStructure();
+                d.setStructureLocked(true);
                 fail("RuntimeException should have been thrown");
             } catch (RuntimeException ignore) {
             }
+        }
+    }
+
+    @Test
+    public void checkUnLockStructure() {
+        if( !canLockStructure )
+            return;
+
+        DecompositionSparseInterface<DMatrixSparseCSC> d = createDecomposition();
+
+        DMatrixSparseCSC A = createMatrix(10);
+        DMatrixSparseCSC B = createMatrix(10);
+
+        assertTrue(d.decompose(A));
+        List<DMatrixSparseCSC> sol1 = decompose(d,A);
+
+        assertTrue(d.decompose(B));
+        d.setStructureLocked(true);
+        assertTrue(d.decompose(B));
+        d.setStructureLocked(false);
+        assertTrue(d.decompose(A));
+
+        List<DMatrixSparseCSC> sol2 = decompose(d,A);
+
+        // if the structure wasn't recomputed then the solution should be different or an exception thrown
+        for (int i = 0; i < sol1.size(); i++) {
+            EjmlUnitTests.assertEquals(sol1.get(i),sol2.get(i), UtilEjml.TEST_F64);
         }
     }
 
@@ -80,7 +107,7 @@ public abstract class GenericDecompositionTests_DSCC {
         List<DMatrixSparseCSC> sol0 = decompose(d,(DMatrixSparseCSC)A.copy());
 
         assertFalse(d.isStructureLocked());
-        d.lockStructure();
+        d.setStructureLocked(true);
         assertTrue(d.isStructureLocked());
 
         List<DMatrixSparseCSC> sol1 = decompose(d,A);

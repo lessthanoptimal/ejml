@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -245,9 +245,10 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public void lockStructure() {
-        throw new RuntimeException("Can't lock a LU decomposition. Pivots change depending on numerical values and not just" +
-                "the matrix's structure");
+    public void setStructureLocked( boolean locked ) {
+        if( locked )
+            throw new RuntimeException("Can't lock a LU decomposition. Pivots change depending on numerical values and not just" +
+                    "the matrix's structure");
     }
 
     @Override

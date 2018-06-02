@@ -105,8 +105,8 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     }
 
     @Override
-    public void lockStructure() {
-        alg.lockStructure();
+    public void setStructureLocked( boolean locked ) {
+        alg.setStructureLocked(locked);
     }
 
     @Override

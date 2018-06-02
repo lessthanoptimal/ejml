@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ public interface DecompositionSparseInterface<T extends Matrix> extends
      * the next matrix is saved. If a matrix has already been processed then the structure of the most recently
      * processed matrix will be saved.</p>
      */
-    void lockStructure();
+    void setStructureLocked( boolean lock );
 
     /**
      * Checks to see if the structure is locked.

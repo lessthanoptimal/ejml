@@ -206,7 +206,7 @@ public class TestLinearSolverSparseSafe {
         }
 
         @Override
-        public void lockStructure() {
+        public void setStructureLocked(boolean locked) {
 
         }
 
