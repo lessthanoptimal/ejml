@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,10 +30,17 @@ public class MatrixFeatures_DSTL {
             return false;
 
         for (int i = 0; i < a.nz_length; i++) {
-            DMatrixSparseTriplet.Element ea = a.nz_data[i];
-            DMatrixSparseTriplet.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
+            int arow = a.nz_rowcol.data[i*2];
+            int acol = a.nz_rowcol.data[i*2+1];
+            double avalue = a.nz_value.data[i];
 
-            if( eb == null || ea.value != eb.value )
+            int bindex = b.nz_index(arow, acol);
+            if( bindex < 0 )
+                return false;
+
+            double bvalue = b.nz_value.data[bindex];
+
+            if( avalue != bvalue )
                 return false;
         }
         return true;
@@ -44,10 +51,17 @@ public class MatrixFeatures_DSTL {
             return false;
 
         for (int i = 0; i < a.nz_length; i++) {
-            DMatrixSparseTriplet.Element ea = a.nz_data[i];
-            DMatrixSparseTriplet.Element eb = b.nz_data[b.nz_index(ea.row, ea.col)];
+            int arow = a.nz_rowcol.data[i*2];
+            int acol = a.nz_rowcol.data[i*2+1];
+            double avalue = a.nz_value.data[i];
 
-            if( eb == null || Math.abs(ea.value-eb.value) > tol )
+            int bindex = b.nz_index(arow, acol);
+            if( bindex < 0 )
+                return false;
+
+            double bvalue = b.nz_value.data[bindex];
+
+            if( Math.abs(avalue-bvalue) > tol )
                 return false;
         }
         return true;

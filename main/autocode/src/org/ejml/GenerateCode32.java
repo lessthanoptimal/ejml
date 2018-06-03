@@ -67,6 +67,8 @@ public class GenerateCode32 {
         suffices64.add("Features_D");
         suffices32.add("Features_F");
 
+        prefix64.add("DGrow");
+        prefix32.add("FGrow");
         prefix64.add("DMatrix");
         prefix32.add("FMatrix");
         prefix64.add("ZMatrix");
@@ -101,6 +103,7 @@ public class GenerateCode32 {
             converter.replacePattern(".getZ"+suffice, ".getC"+suffice);
         }
 
+        converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
         converter.replacePattern("DSubmatrix", "FSubmatrix");
         converter.replacePattern("DEigen", "FEigen");

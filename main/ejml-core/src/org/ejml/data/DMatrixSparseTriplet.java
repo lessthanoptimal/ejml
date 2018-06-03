@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,15 @@ package org.ejml.data;
  */
 public class DMatrixSparseTriplet implements DMatrixSparse
 {
-    public Element[] nz_data = new Element[0];
+    /**
+     * Storage for row and column coordinate for non-zero elements
+     */
+    public IGrowArray nz_rowcol = new IGrowArray();
+    /**
+     * Storage for value of a non-zero element
+     */
+    public DGrowArray nz_value = new DGrowArray();
+
     public int nz_length;
     public int numRows;
     public int numCols;
@@ -40,7 +48,8 @@ public class DMatrixSparseTriplet implements DMatrixSparse
      * @param initLength Initial maximum length of data array.
      */
     public DMatrixSparseTriplet(int numRows, int numCols, int initLength ) {
-        growData(initLength);
+        nz_rowcol.reshape(initLength*2);
+        nz_value.reshape(initLength);
         this.numRows = numRows;
         this.numCols = numCols;
     }
@@ -64,14 +73,20 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     @Override
     public void reshape(int numRows, int numCols, int arrayLength) {
         reshape(numRows, numCols);
-        growData(arrayLength);
+        nz_rowcol.reshape(arrayLength*2);
+        nz_value.reshape(arrayLength);
     }
 
     public void addItem(int row , int col , double value ) {
-        if( nz_length == nz_data.length ) {
-            growData(( nz_length *2 + 10 ));
+        if( nz_length == nz_value.data.length ) {
+            int amount = nz_length + 10;
+            nz_value.grow(amount);
+            nz_rowcol.grow(amount*2);
         }
-        nz_data[nz_length++].set(row,col, value);
+        nz_value.data[nz_length] = value;
+        nz_rowcol.data[nz_length*2] = row;
+        nz_rowcol.data[nz_length*2+1] = col;
+        nz_length += 1;
     }
 
     @Override
@@ -87,8 +102,9 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         int index = nz_index(row,col);
         if( index < 0 )
             addItem( row,col,value);
-        else
-            nz_data[index].value = value;
+        else {
+            nz_value.data[index] = value;
+        }
     }
 
     @Override
@@ -110,31 +126,18 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         if( index < 0 )
             return 0;
         else
-            return nz_data[index].value;
+            return nz_value.data[index];
     }
 
     public int nz_index(int row , int col ) {
-        for (int i = 0; i < nz_length; i++) {
-            Element e = nz_data[i];
-            if( e.row == row && e.col == col )
-                return i;
+        int end = nz_length*2;
+        for (int i = 0; i < end; i += 2) {
+            int r = nz_rowcol.data[i];
+            int c = nz_rowcol.data[i+1];
+            if( r == row && c == col )
+                return i/2;
         }
         return -1;
-    }
-
-    /**
-     * Will resize the array and keep all the old data
-     * @param max_nz_length New maximum length of data
-     */
-    public void growData( int max_nz_length ) {
-        if( nz_data.length < max_nz_length ) {
-            Element[] tmp = new Element[max_nz_length];
-            System.arraycopy(nz_data,0,tmp,0, nz_data.length);
-            for (int i = nz_data.length; i < max_nz_length; i++) {
-                tmp[i] = new Element();
-            }
-            nz_data = tmp;
-        }
     }
 
     public int getLength() {
@@ -165,22 +168,22 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     public void set(Matrix original) {
         DMatrixSparseTriplet orig = (DMatrixSparseTriplet)original;
         reshape(orig.numRows,orig.numCols);
-        growData(orig.nz_length);
-
+        this.nz_rowcol.set(orig.nz_rowcol);
+        this.nz_value.set(orig.nz_value);
         this.nz_length = orig.nz_length;
-        for (int i = 0; i < nz_length; i++) {
-            nz_data[i].set(orig.nz_data[i]);
-        }
     }
 
     @Override
     public void shrinkArrays() {
-        if( nz_length < nz_data.length ) {
-            Element tmp_data[] = new Element[nz_length];
+        if( nz_length < nz_value.length ) {
+            double vtmp[] = new double[nz_length];
+            int rctmp[] = new int[nz_length*2];
 
-            System.arraycopy(this.nz_data,0,tmp_data,0,nz_length);
+            System.arraycopy(this.nz_value.data,0,vtmp,0,vtmp.length);
+            System.arraycopy(this.nz_rowcol.data,0,rctmp,0,rctmp.length);
 
-            this.nz_data = tmp_data;
+            nz_value.data = vtmp;
+            nz_rowcol.data = rctmp;
         }
     }
 
@@ -188,12 +191,16 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     public void remove(int row, int col) {
         int where = nz_index(row,col);
         if( where >= 0 ) {
-            Element e = nz_data[where];
+
             nz_length -= 1;
             for (int i = where; i < nz_length; i++) {
-                nz_data[i] = nz_data[i+1];
+                nz_value.data[i] = nz_value.data[i+1];
             }
-            nz_data[nz_length] = e;
+            int end = nz_length*2;
+            for (int i = where*2; i < end; i += 2) {
+                nz_rowcol.data[i] = nz_rowcol.data[i+2];
+                nz_rowcol.data[i+1] = nz_rowcol.data[i+3];
+            }
         }
     }
 
@@ -215,7 +222,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
             for (int col = 0; col < numCols; col++) {
                 int index = nz_index(row,col);
                 if( index >= 0 )
-                    System.out.printf("%6.3f",nz_data[index].value);
+                    System.out.printf("%6.3f",nz_value.data[index]);
                 else
                     System.out.print("   *  ");
                 if( col != numCols-1 )
@@ -231,25 +238,10 @@ public class DMatrixSparseTriplet implements DMatrixSparse
                 +" , nz_length = "+ nz_length);
 
         for (int i = 0; i < nz_length; i++) {
-            Element e = nz_data[i];
-            System.out.printf("%d %d %f\n",e.row,e.col,e.value);
-        }
-    }
-
-    public static class Element {
-        public int row,col;
-        public double value;
-
-        public void set( int row , int col , double value ) {
-            this.row = row;
-            this.col = col;
-            this.value = value;
-        }
-
-        public void set( Element e ) {
-            row = e.row;
-            col = e.col;
-            value = e.value;
+            int row = nz_rowcol.data[i*2];
+            int col = nz_rowcol.data[i*2+1];
+            double value = nz_value.data[i];
+            System.out.printf("%d %d %f\n",row,col,value);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -47,7 +47,7 @@ public class TestMatrixFeatures_DSTL {
 
         // make it no longer exactly equal
         b.numCols -= 1;
-        b.nz_data[0].value += UtilEjml.TEST_F64*0.1;
+        b.nz_value.data[0] += UtilEjml.TEST_F64*0.1;
         assertFalse(MatrixFeatures_DSTL.isEquals(a,b));
     }
 
@@ -69,11 +69,11 @@ public class TestMatrixFeatures_DSTL {
 
         // make it no longer exactly equal, but within tolerance
         b.numCols -= 1;
-        b.nz_data[0].value += UtilEjml.TEST_F64*0.1;
+        b.nz_value.data[0] += UtilEjml.TEST_F64*0.1;
         assertTrue(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
 
         // outside of tolerance
-        b.nz_data[0].value += UtilEjml.TEST_F64*10;
+        b.nz_value.data[0] += UtilEjml.TEST_F64*10;
         assertFalse(MatrixFeatures_DSTL.isEquals(a,b, UtilEjml.TEST_F64));
     }
 }

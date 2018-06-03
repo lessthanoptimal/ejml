@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,11 +40,32 @@ public class DGrowArray {
         return length;
     }
 
+    /**
+     * Changes the array's length and doesn't attempt to preserve previous values if a new array is required
+     *
+     * @param length New array length
+     */
     public void reshape( int length ) {
         if( data.length < length ) {
             data = new double[length];
         }
         this.length = length;
+    }
+
+    /**
+     * Increases the internal array's length by the specified amount. Previous values are preserved
+     * @param amount Number of elements added to the internal array's length
+     */
+    public void grow( int amount ) {
+        double tmp[] = new double[ data.length + amount ];
+
+        System.arraycopy(data,0,tmp,0,data.length);
+        this.data = tmp;
+    }
+
+    public void set( DGrowArray original ) {
+        reshape(original.length);
+        System.arraycopy(original.data,0,data,0,original.length);
     }
 
     public double get( int index ) {

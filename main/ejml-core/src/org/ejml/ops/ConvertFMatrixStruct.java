@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -788,9 +788,11 @@ public class ConvertFMatrixStruct {
         }
 
         for (int i = 0; i < src.nz_length; i++) {
-            FMatrixSparseTriplet.Element e = src.nz_data[i];
+            int row = src.nz_rowcol.data[i*2];
+            int col = src.nz_rowcol.data[i*2+1];
+            float value = src.nz_value.data[i];
 
-            dst.unsafe_set(e.row, e.col, e.value);
+            dst.unsafe_set(row, col, value);
         }
 
         return dst;
@@ -880,7 +882,7 @@ public class ConvertFMatrixStruct {
 
         // compute the number of elements in each columns
         for (int i = 0; i < src.nz_length; i++) {
-            hist[src.nz_data[i].col]++;
+            hist[src.nz_rowcol.data[i*2+1]]++;
         }
 
         // define col_idx
@@ -888,11 +890,13 @@ public class ConvertFMatrixStruct {
 
         // now write the row indexes and the values
         for (int i = 0; i < src.nz_length; i++) {
-            FMatrixSparseTriplet.Element e = src.nz_data[i];
+            int row = src.nz_rowcol.data[i*2];
+            int col = src.nz_rowcol.data[i*2+1];
+            float value = src.nz_value.data[i];
 
-            int index = hist[e.col]++;
-            dst.nz_rows[index] = e.row;
-            dst.nz_values[index] = e.value;
+            int index = hist[col]++;
+            dst.nz_rows[index] = row;
+            dst.nz_values[index] = value;
         }
         dst.indicesSorted = false;
 

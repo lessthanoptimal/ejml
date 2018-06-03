@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,6 +46,23 @@ public class IGrowArray {
         }
         this.length = length;
     }
+
+    /**
+     * Increases the internal array's length by the specified amount. Previous values are preserved
+     * @param amount Number of elements added to the internal array's length
+     */
+    public void grow( int amount ) {
+        int tmp[] = new int[ data.length + amount ];
+
+        System.arraycopy(data,0,tmp,0,data.length);
+        this.data = tmp;
+    }
+
+    public void set( IGrowArray original ) {
+        reshape(original.length);
+        System.arraycopy(original.data,0,data,0,original.length);
+    }
+
 
     public int get( int index ) {
         if( index < 0 || index >= length )

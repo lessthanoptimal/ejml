@@ -123,8 +123,11 @@ public class MatrixIO {
 
         fileStream.println(A.getNumRows() + " " + A.getNumCols() +" "+A.nz_length+ " real");
         for (int i = 0; i < A.nz_length; i++) {
-            DMatrixSparseTriplet.Element e = A.nz_data[i];
-            fileStream.println(e.row+" "+e.col+" "+e.value);
+            int row = A.nz_rowcol.data[i*2];
+            int col = A.nz_rowcol.data[i*2+1];
+            double value = A.nz_value.data[i];
+
+            fileStream.println(row+" "+col+" "+value);
         }
         fileStream.close();
     }
@@ -144,8 +147,11 @@ public class MatrixIO {
 
         fileStream.println(A.getNumRows() + " " + A.getNumCols() +" "+A.nz_length+ " real");
         for (int i = 0; i < A.nz_length; i++) {
-            FMatrixSparseTriplet.Element e = A.nz_data[i];
-            fileStream.println(e.row+" "+e.col+" "+e.value);
+            int row = A.nz_rowcol.data[i*2];
+            int col = A.nz_rowcol.data[i*2+1];
+            float value = A.nz_value.data[i];
+
+            fileStream.println(row+" "+col+" "+value);
         }
         fileStream.close();
     }

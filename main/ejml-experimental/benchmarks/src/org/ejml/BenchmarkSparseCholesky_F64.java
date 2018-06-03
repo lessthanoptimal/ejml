@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -68,7 +68,7 @@ public class BenchmarkSparseCholesky_F64 {
         DMatrixRMaj A_dense = new DMatrixRMaj(A.numRows,A.numCols);
         ConvertDMatrixStruct.convert(A,A_dense);
 
-        System.out.printf("total non-zero elements %d, fill in %08.4f%%\n",A.nz_length,100.0*A.nz_length/(double)(A.numCols*A.numRows));
+        System.out.printf("total non-zero elements %d, fill in %8.4f%%\n",A.nz_length,100.0*A.nz_length/(double)(A.numCols*A.numRows));
         System.out.println();
 
         int trials = 3000;
