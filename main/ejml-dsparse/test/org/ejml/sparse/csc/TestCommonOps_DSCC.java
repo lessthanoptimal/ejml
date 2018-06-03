@@ -198,7 +198,7 @@ public class TestCommonOps_DSCC {
 
     private void check_s_d_mult(DMatrixSparseCSC A , DMatrixRMaj B, DMatrixRMaj C, boolean exception ) {
         DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
-        DMatrixRMaj expected = new DMatrixRMaj(A.numRows,B.numCols);
+        DMatrixRMaj expected = C.copy();
 
         DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A,null,null);
         DMatrixRMaj B_t = CommonOps_DDRM.transpose(B,null);
@@ -208,31 +208,52 @@ public class TestCommonOps_DSCC {
             boolean transA = i == 1;
             for (int j = 0; j < 2; j++) {
                 boolean transB = j == 1;
-                try {
-                    if( transA ) {
-                        if( transB ) {
-                            CommonOps_DSCC.multTransAB(A_t,B_t,C);
-                            CommonOps_DDRM.multTransAB(denseA_t,B_t,expected);
+                for( int k = 0; k < 2; k++ ) {
+                    boolean add = k == 1;
+                    try {
+                        if( add ) {
+                            if (transA) {
+                                if (transB) {
+                                    CommonOps_DSCC.multAddTransAB(A_t, B_t, C);
+                                    CommonOps_DDRM.multAddTransAB(denseA_t, B_t, expected);
+                                } else {
+                                    CommonOps_DSCC.multAddTransA(A_t, B, C, null);
+                                    CommonOps_DDRM.multAddTransA(denseA_t, B, expected);
+                                }
+                            } else if (transB) {
+                                CommonOps_DSCC.multAddTransB(A, B_t, C);
+                                CommonOps_DDRM.multAddTransB(denseA, B_t, expected);
+                            } else {
+                                CommonOps_DSCC.multAdd(A, B, C);
+                                CommonOps_DDRM.multAdd(denseA, B, expected);
+                            }
                         } else {
-                            CommonOps_DSCC.multTransA(A_t,B,C,null);
-                            CommonOps_DDRM.multTransA(denseA_t,B,expected);
+                            if (transA) {
+                                if (transB) {
+                                    CommonOps_DSCC.multTransAB(A_t, B_t, C);
+                                    CommonOps_DDRM.multTransAB(denseA_t, B_t, expected);
+                                } else {
+                                    CommonOps_DSCC.multTransA(A_t, B, C, null);
+                                    CommonOps_DDRM.multTransA(denseA_t, B, expected);
+                                }
+                            } else if (transB) {
+                                CommonOps_DSCC.multTransB(A, B_t, C);
+                                CommonOps_DDRM.multTransB(denseA, B_t, expected);
+                            } else {
+                                CommonOps_DSCC.mult(A, B, C);
+                                CommonOps_DDRM.mult(denseA, B, expected);
+                            }
                         }
-                    } else if( transB ) {
-                        CommonOps_DSCC.multTransB(A,B_t,C);
-                        CommonOps_DDRM.multTransB(denseA,B_t,expected);
-                    } else {
-                        CommonOps_DSCC.mult(A,B,C);
-                        CommonOps_DDRM.mult(denseA,B,expected);
+
+                        if (exception)
+                            fail("exception expected");
+
+                        assertTrue(MatrixFeatures_DDRM.isIdentical(expected, C, UtilEjml.TEST_F64));
+
+                    } catch (RuntimeException ignore) {
+                        if (!exception)
+                            fail("no exception expected");
                     }
-
-                    if (exception)
-                        fail("exception expected");
-
-                    assertTrue(MatrixFeatures_DDRM.isIdentical(expected, C, UtilEjml.TEST_F64));
-
-                } catch (RuntimeException ignore) {
-                    if (!exception)
-                        fail("no exception expected");
                 }
             }
         }

@@ -199,6 +199,14 @@ public class CommonOps_DSCC {
         ImplSparseSparseMult_DSCC.mult(A,B,C);
     }
 
+    public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    {
+        if( A.numRows != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multAdd(A,B,C);
+    }
+
     /**
      * Performs matrix multiplication.  C = A<sup>T</sup>*B
      *
@@ -213,6 +221,15 @@ public class CommonOps_DSCC {
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
         ImplSparseSparseMult_DSCC.multTransA(A,B,C,gx);
+    }
+
+    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ,
+                                  @Nullable DGrowArray gx )
+    {
+        if( A.numCols != C.numRows || B.numCols != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multAddTransA(A,B,C,gx);
     }
 
     /**
@@ -230,6 +247,14 @@ public class CommonOps_DSCC {
         ImplSparseSparseMult_DSCC.multTransB(A,B,C);
     }
 
+    public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    {
+        if( A.numRows != C.numRows || B.numRows != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multAddTransB(A,B,C);
+    }
+
     /**
      * Performs matrix multiplication.  C = A<sup>T</sup>*B<sup>T</sup>
      *
@@ -243,6 +268,14 @@ public class CommonOps_DSCC {
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
         ImplSparseSparseMult_DSCC.multTransAB(A,B,C);
+    }
+
+    public static void multAddTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    {
+        if( A.numCols != C.numRows || B.numRows != C.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes");
+
+        ImplSparseSparseMult_DSCC.multAddTransAB(A,B,C);
     }
 
     /**

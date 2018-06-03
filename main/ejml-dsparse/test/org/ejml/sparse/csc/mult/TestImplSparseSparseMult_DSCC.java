@@ -165,23 +165,29 @@ public class TestImplSparseSparseMult_DSCC {
     @Test
     public void mult_s_d() {
         for (int i = 0; i < 10; i++) {
-            mult_s_d(24);
-            mult_s_d(15);
-            mult_s_d(4);
+            mult_s_d(24,false);
+            mult_s_d(15,false);
+            mult_s_d(4,false);
+            mult_s_d(24,true);
+            mult_s_d(15,true);
+            mult_s_d(4,true);
         }
     }
 
-    private void mult_s_d(int elementsA) {
+    private void mult_s_d(int elementsA, boolean add ) {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6,5,-1,1,rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
-
-        ImplSparseSparseMult_DSCC.mult(a,b,c);
-
+        DMatrixRMaj expected_c = c.copy();
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
-        CommonOps_DDRM.mult(dense_a, b, expected_c);
+        if( add ) {
+            ImplSparseSparseMult_DSCC.multAdd(a, b, c);
+            CommonOps_DDRM.multAdd(dense_a, b, expected_c);
+        } else {
+            ImplSparseSparseMult_DSCC.mult(a, b, c);
+            CommonOps_DDRM.mult(dense_a, b, expected_c);
+        }
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
@@ -193,24 +199,30 @@ public class TestImplSparseSparseMult_DSCC {
     @Test
     public void multTransA_s_d() {
         for (int i = 0; i < 10; i++) {
-            multTransA_s_d(24);
-            multTransA_s_d(15);
-            multTransA_s_d(4);
+            multTransA_s_d(24,false);
+            multTransA_s_d(15,false);
+            multTransA_s_d(4,false);
+
+            multTransA_s_d(24,true);
+            multTransA_s_d(15,true);
+            multTransA_s_d(4,true);
         }
     }
 
-    private void multTransA_s_d(int elementsA) {
+    private void multTransA_s_d(int elementsA, boolean add) {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6,4,elementsA,-1,1,rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6,5,-1,1,rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
-
-        ImplSparseSparseMult_DSCC.multTransA(a,b,c, null);
-
+        DMatrixRMaj expected_c = c.copy();
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
-        CommonOps_DDRM.multTransA(dense_a, b, expected_c);
-
+        if( add ) {
+            ImplSparseSparseMult_DSCC.multAddTransA(a, b, c, null);
+            CommonOps_DDRM.multAddTransA(dense_a, b, expected_c);
+        } else {
+            ImplSparseSparseMult_DSCC.multTransA(a, b, c, null);
+            CommonOps_DDRM.multTransA(dense_a, b, expected_c);
+        }
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
                 assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
@@ -221,24 +233,30 @@ public class TestImplSparseSparseMult_DSCC {
     @Test
     public void multTransB_s_d() {
         for (int i = 0; i < 10; i++) {
-            multTransB_s_d(24);
-            multTransB_s_d(15);
-            multTransB_s_d(4);
+            multTransB_s_d(24,false);
+            multTransB_s_d(15,false);
+            multTransB_s_d(4,false);
+
+            multTransB_s_d(24,true);
+            multTransB_s_d(15,true);
+            multTransB_s_d(4,true);
         }
     }
 
-    private void multTransB_s_d(int elementsA) {
+    private void multTransB_s_d(int elementsA , boolean add ) {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4,6,elementsA,-1,1,rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
-
-        ImplSparseSparseMult_DSCC.multTransB(a,b,c);
-
+        DMatrixRMaj expected_c = c.copy();
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
-        CommonOps_DDRM.multTransB(dense_a, b, expected_c);
-
+        if( add ) {
+            ImplSparseSparseMult_DSCC.multAddTransB(a, b, c);
+            CommonOps_DDRM.multAddTransB(dense_a, b, expected_c);
+        } else {
+            ImplSparseSparseMult_DSCC.multTransB(a, b, c);
+            CommonOps_DDRM.multTransB(dense_a, b, expected_c);
+        }
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
                 assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
@@ -249,23 +267,30 @@ public class TestImplSparseSparseMult_DSCC {
     @Test
     public void multTransAB_s_d() {
         for (int i = 0; i < 10; i++) {
-            multTransAB_s_d(24);
-            multTransAB_s_d(15);
-            multTransAB_s_d(4);
+            multTransAB_s_d(24,false);
+            multTransAB_s_d(15,false);
+            multTransAB_s_d(4,false);
+
+            multTransAB_s_d(24,true);
+            multTransAB_s_d(15,true);
+            multTransAB_s_d(4,true);
         }
     }
 
-    private void multTransAB_s_d(int elementsA) {
+    private void multTransAB_s_d(int elementsA, boolean add ) {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6,4,elementsA,-1,1,rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5,6,-1,1,rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
-
-        ImplSparseSparseMult_DSCC.multTransAB(a,b,c);
-
+        DMatrixRMaj expected_c = c.copy();
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
-        DMatrixRMaj expected_c = RandomMatrices_DDRM.rectangle(4,5,-1,1,rand);
 
-        CommonOps_DDRM.multTransAB(dense_a, b, expected_c);
+        if( add ) {
+            ImplSparseSparseMult_DSCC.multAddTransAB(a, b, c);
+            CommonOps_DDRM.multAddTransAB(dense_a, b, expected_c);
+        } else {
+            ImplSparseSparseMult_DSCC.multTransAB(a, b, c);
+            CommonOps_DDRM.multTransAB(dense_a, b, expected_c);
+        }
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {

@@ -266,9 +266,11 @@ public class ImplSparseSparseMult_DSCC {
     }
 
     public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
-
         C.zero();
+        multAdd(A,B,C);
+    }
 
+    public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
         // C(i,j) = sum_k A(i,k) * B(k,j)
         for (int k = 0; k < A.numCols; k++) {
             int idx0 = A.col_idx[k  ];
@@ -324,9 +326,48 @@ public class ImplSparseSparseMult_DSCC {
         }
     }
 
+    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ,
+                                     @Nullable DGrowArray gx ) {
+
+        double tmp[];
+        if( gx != null ) {
+            gx.reshape(B.numRows);
+            tmp = gx.data;
+        } else {
+            tmp = new double[B.numRows];
+        }
+
+        // C(i,j) = sum_k A(k,i) * B(k,j)
+        for (int j = 0; j < B.numCols; j++) {
+            // copy the row in B since it will be accessed a bunch and this will reduce cache misses
+            // by doing this copy the best runtime is now N*N even if A is empty
+            for (int i = 0; i < B.numRows; i++) {
+                tmp[i] = B.data[i*B.numCols+j];
+            }
+
+            for (int i = 0; i < A.numCols; i++) {
+                int idx0 = A.col_idx[i];
+                int idx1 = A.col_idx[i + 1];
+
+                double sum = 0;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int rowK = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*tmp[rowK];
+                }
+
+                C.data[i*C.numCols+j] += sum;
+            }
+        }
+    }
+
     public static void multTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
 
         C.zero();
+        multAddTransB(A,B,C);
+    }
+
+    public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
+
 
         // C(i,j) = sum_k A(i,k) * B(j,k)
         for (int j = 0; j < B.numRows; j++) {
@@ -359,6 +400,25 @@ public class ImplSparseSparseMult_DSCC {
                     sum += A.nz_values[indexA]*B.data[indexB+k];
                 }
                 C.data[i*C.numCols+j] = sum;
+            }
+        }
+    }
+
+    public static void multAddTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(j,K)
+        for (int i = 0; i < A.numCols; i++) {
+            int idx0 = A.col_idx[i];
+            int idx1 = A.col_idx[i + 1];
+
+            for (int j = 0; j < B.numRows; j++) {
+                double sum = 0;
+                int indexB = j*B.numCols;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int k = A.nz_rows[indexA];
+
+                    sum += A.nz_values[indexA]*B.data[indexB+k];
+                }
+                C.data[i*C.numCols+j] += sum;
             }
         }
     }

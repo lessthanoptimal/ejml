@@ -6,9 +6,10 @@ Date format: year/month/day
 2018
 
 - CommonOps_DSCC
-  * Added multTransA(sparse,dense,dense)
-  * Added multTransB(sparse,dense,dense)
-  * Added multTransAB(sparse,dense,dense)
+  * Added multAdd(sparse,dense,dense)
+  * Added multTransA(sparse,dense,dense) multAddTransA(sparse,dense,dense)
+  * Added multTransB(sparse,dense,dense) multAddTransB(sparse,dense,dense)
+  * Added multTransAB(sparse,dense,dense) multAddTransAB(sparse,dense,dense)
   * Added extractDiag(sparse,dense)
 - Added LinearSolverSparseSafe
 - LinearSolverSparse
