@@ -17,6 +17,11 @@ Date format: year/month/day
 - MatrixSparseTriplet
   * No longer uses individual classes for each element and instead uses an array
   * Java bloats classes and this should result in a large reduction in memory usage
+- Sparse Solver
+  * Added functions for solving sparse matrices
+
+TODO Get QR sparse solve working
+TODO add sparse triangle solve transpose
 
 ----- Version 0.34
 2018/04/13

@@ -21,6 +21,7 @@ package org.ejml.sparse.csc.linsol.chol;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.ComputePermutation;
@@ -44,6 +45,10 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     DGrowArray gb = new DGrowArray();
     DGrowArray gx = new DGrowArray();
+    IGrowArray gw = new IGrowArray();
+
+    DMatrixSparseCSC L_tran = new DMatrixSparseCSC(1,1,1);
+    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
 
     public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , ComputePermutation<DMatrixSparseCSC> fillReduce) {
         this.cholesky = cholesky;
@@ -59,6 +64,22 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     @Override
     public double quality() {
         return TriangularSolver_DSCC.qualityTriangular(cholesky.getL());
+    }
+
+    @Override
+    public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+        IGrowArray gw1 = cholesky.getGw();
+
+        DMatrixSparseCSC L = cholesky.getL();
+        // write a sparse triangular solver for transposed L to avoid this transpose
+        L_tran.reshape(L.numRows, L.numCols, L.nz_length);
+        CommonOps_DSCC.transpose(L,L_tran,gw);
+
+        tmp.reshape(L_tran.numRows,B.numCols,1);
+        int[] Pinv = reduce.getArrayPinv();
+
+        TriangularSolver_DSCC.solve(L,true,B,tmp,Pinv,gx,gw,gw1);
+        TriangularSolver_DSCC.solve(L_tran,false,tmp,X,null,gx,gw,gw1);
     }
 
     @Override

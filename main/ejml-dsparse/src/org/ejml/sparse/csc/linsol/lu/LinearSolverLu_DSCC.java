@@ -21,6 +21,7 @@ package org.ejml.sparse.csc.linsol.lu;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
@@ -41,6 +42,9 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     private DGrowArray gx = new DGrowArray();
     private DGrowArray gb = new DGrowArray();
 
+    DMatrixSparseCSC Bp = new DMatrixSparseCSC(1,1,1);
+    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
+
     public LinearSolverLu_DSCC(LuUpLooking_DSCC decomposition) {
         this.decomposition = decomposition;
     }
@@ -53,6 +57,26 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     @Override
     public double quality() {
         return TriangularSolver_DSCC.qualityTriangular(decomposition.getU());
+    }
+
+    @Override
+    public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+
+        DMatrixSparseCSC L = decomposition.getL();
+        DMatrixSparseCSC U = decomposition.getU();
+
+        // these are row pivots
+        Bp.reshape(B.numRows,B.numCols,B.nz_length);
+        int[] Pinv = decomposition.getPinv();
+        CommonOps_DSCC.permute(Pinv,B,null,Bp);
+
+        IGrowArray gw = decomposition.getGw();
+        IGrowArray gw1 = decomposition.getGxi();
+
+        tmp.reshape(L.numRows,B.numCols,1);
+
+        TriangularSolver_DSCC.solve(L,true,Bp,tmp,null,gx,gw,gw1);
+        TriangularSolver_DSCC.solve(U,false,tmp,X,null,gx,gw,gw1);
     }
 
     @Override

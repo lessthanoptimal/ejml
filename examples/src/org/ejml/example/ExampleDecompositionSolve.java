@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -69,8 +69,8 @@ public class ExampleDecompositionSolve {
         DMatrixSparseCSC Ainv = A.createLike();
 
         // Solve for the inverse: P*I = L*U*inv(A)
-        TriangularSolver_DSCC.solve(L,true,P,tmp,null,null,null);
-        TriangularSolver_DSCC.solve(U,false,tmp,Ainv,null,null,null);
+        TriangularSolver_DSCC.solve(L,true,P,tmp,null,null,null,null);
+        TriangularSolver_DSCC.solve(U,false,tmp,Ainv,null,null,null,null);
 
         // Make sure the inverse has been found. A*inv(A) = identity should be an identity matrix
         DMatrixSparseCSC found = A.createLike();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -107,13 +108,15 @@ public class TriangularSolver_DSCC {
      * @param lower true for lower triangular and false for upper
      * @param B     (Input) Matrix.  Not modified.
      * @param X     (Output) Solution
+     * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_x   (Optional) Storage for workspace.
      * @param g_xi  (Optional) Storage for workspace.
      * @param g_w   (Optional) Storage for workspace.
      */
     public static void solve(DMatrixSparseCSC G, boolean lower,
                              DMatrixSparseCSC B, DMatrixSparseCSC X,
-                             DGrowArray g_x, IGrowArray g_xi, IGrowArray g_w)
+                             @Nullable int pinv[] ,
+                             @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
         double[] x = adjust(g_x,G.numRows);
         if( g_xi == null ) g_xi = new IGrowArray();
@@ -124,7 +127,7 @@ public class TriangularSolver_DSCC {
         X.indicesSorted = false;
 
         for (int colB = 0; colB < B.numCols; colB++) {
-            int top = solve(G,lower,B,colB, x, null,g_xi, g_w);
+            int top = solve(G,lower,B,colB, x, pinv,g_xi, g_w);
 
             int nz_count = X.numRows-top;
             if( X.nz_values.length < X.nz_length + nz_count) {
@@ -156,7 +159,8 @@ public class TriangularSolver_DSCC {
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
     public static int solve(DMatrixSparseCSC G, boolean lower,
-                            DMatrixSparseCSC B, int colB, double x[], int pinv[], IGrowArray g_xi, IGrowArray g_w) {
+                            DMatrixSparseCSC B, int colB, double x[],
+                            @Nullable int pinv[], @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w) {
         int[] xi = adjust(g_xi,G.numCols);
         int top = searchNzRowsInB(G, B, colB, pinv, xi, g_w);
 
@@ -212,7 +216,7 @@ public class TriangularSolver_DSCC {
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
     public static int searchNzRowsInB(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int pinv[],
-                                      int xi[], IGrowArray gwork) {
+                                      int xi[], @Nullable IGrowArray gwork) {
         if (xi.length < B.numRows)
             throw new IllegalArgumentException("xi must be at least this long: " + B.numRows);
 
@@ -298,7 +302,7 @@ public class TriangularSolver_DSCC {
      * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
      * @param gwork  (Optional) Internal workspace.  Can be null.
      */
-    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int parent[], IGrowArray gwork) {
+    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int parent[], @Nullable IGrowArray gwork) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -362,7 +366,7 @@ public class TriangularSolver_DSCC {
      * @param post   (Output) Postordering permutation.
      * @param gwork  (Optional) Internal workspace. Can be null
      */
-    public static void postorder(int parent[], int N, int post[], IGrowArray gwork) {
+    public static void postorder(int parent[], int N, int post[], @Nullable IGrowArray gwork) {
         if (parent.length < N)
             throw new IllegalArgumentException("parent must be at least of length N");
         if (post.length < N)

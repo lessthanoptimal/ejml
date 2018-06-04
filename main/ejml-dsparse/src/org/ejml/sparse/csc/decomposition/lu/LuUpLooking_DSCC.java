@@ -224,6 +224,14 @@ public class LuUpLooking_DSCC
         return false;
     }
 
+    public IGrowArray getGxi() {
+        return gxi;
+    }
+
+    public IGrowArray getGw() {
+        return gw;
+    }
+
     public int[] getPinv() {
         return pinv;
     }

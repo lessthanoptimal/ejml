@@ -242,6 +242,14 @@ public class QrLeftLookingDecomposition_DSCC implements
         return false;
     }
 
+    public IGrowArray getGwork() {
+        return gwork;
+    }
+
+    public DGrowArray getGx() {
+        return gx;
+    }
+
     public QrStructuralCounts_DSCC getStructure() {
         return structure;
     }

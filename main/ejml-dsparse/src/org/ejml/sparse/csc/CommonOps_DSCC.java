@@ -691,7 +691,7 @@ public class CommonOps_DSCC {
      * @param permCol (Input) Column permutation vector. Null is the same as passing in identity.
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static void permute(int permRowInv[], DMatrixSparseCSC input, int permCol[], DMatrixSparseCSC output) {
+    public static void permute(@Nullable int permRowInv[], DMatrixSparseCSC input, @Nullable int permCol[], DMatrixSparseCSC output) {
         if( permRowInv!= null && input.numRows > permRowInv.length )
             throw new IllegalArgumentException("rowInv permutation vector must have at least as many elements as input has columns");
         if( permCol != null && input.numCols > permCol.length )

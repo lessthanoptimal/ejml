@@ -66,6 +66,10 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         return RandomMatrices_DDRM.rectangle(rows,cols,rand);
     }
 
+    public DMatrixSparseCSC createSparse( int rows , int cols ) {
+        return RandomMatrices_DSCC.rectangle(rows,cols,rows*cols,rand);
+    }
+
     @Test
     public void randomSolveable() {
 
@@ -98,6 +102,40 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     if( !solver.modifiesB() ) {
                         EjmlUnitTests.assertEquals(B, B_cpy, equalityTolerance);
                     }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void randomSolveable_Sparse() {
+
+        for( FillReducing perm : permutationTests ) {
+            System.out.println("perm = "+perm);
+
+            LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
+
+            for (int N : new int[]{1, 2, 5, 10, 20}) {
+                for (int mc = 0; mc < 30; mc++) {
+                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
+                    DMatrixSparseCSC A = createA(N);
+                    DMatrixSparseCSC A_cpy = A.copy();
+                    DMatrixSparseCSC X = createSparse(A.numCols, 3);
+                    DMatrixSparseCSC foundX = createSparse(A.numCols, 3);
+                    DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows, 3,1);
+
+                    // compute the solution
+                    CommonOps_DSCC.mult(A, X, B);
+                    DMatrixSparseCSC B_cpy = B.copy();
+
+                    assertTrue(solver.setA(A));
+                    solver.solveSparse(B, foundX);
+
+                    EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
+
+                    // should never be modified
+                    EjmlUnitTests.assertEquals(A, A_cpy, equalityTolerance);
+                    EjmlUnitTests.assertEquals(B, B_cpy, equalityTolerance);
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,8 @@ import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author Peter Abeles
@@ -58,5 +60,11 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
         RandomMatrices_DSCC.ensureNotSingular(A,rand);
 
         return A;
+    }
+
+    @Ignore
+    @Test
+    public void randomSolveable_Sparse() {
+        throw new RuntimeException("Not yet supported");
     }
 }

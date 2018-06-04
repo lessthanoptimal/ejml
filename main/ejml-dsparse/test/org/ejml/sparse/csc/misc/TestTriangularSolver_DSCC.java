@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -145,7 +145,7 @@ public class TestTriangularSolver_DSCC {
                 DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 2,lengthX*2, rand);
                 DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
 
-                TriangularSolver_DSCC.solve(G,lower,b,x, null, null, null);
+                TriangularSolver_DSCC.solve(G,lower,b,x, null, null, null, null);
 
                 DMatrixSparseCSC found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);

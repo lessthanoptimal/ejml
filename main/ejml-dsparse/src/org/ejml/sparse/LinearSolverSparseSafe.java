@@ -40,7 +40,7 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     // local copies of input matrices that can be modified.
     private S A;
     private D B;
-
+    private S Bsparse;
     /**
      *
      * @param alg The solver it is wrapped around.
@@ -102,6 +102,11 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     @Override
     public <D extends DecompositionInterface> D getDecomposition() {
         return alg.getDecomposition();
+    }
+
+    @Override
+    public void solveSparse(S B, S X) {
+        alg.solveSparse(B,X);
     }
 
     @Override

@@ -206,6 +206,11 @@ public class TestLinearSolverSparseSafe {
         }
 
         @Override
+        public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+
+        }
+
+        @Override
         public void setStructureLocked(boolean locked) {
 
         }

@@ -21,6 +21,7 @@ package org.ejml.sparse.csc.linsol.qr;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
@@ -43,6 +44,10 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     private DGrowArray gb = new DGrowArray();
     private DGrowArray gbp = new DGrowArray();
     private DGrowArray gx = new DGrowArray();
+    IGrowArray gw = new IGrowArray();
+
+    DMatrixSparseCSC Bp = new DMatrixSparseCSC(1,1,1);
+    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
 
     public LinearSolverQrLeftLooking_DSCC(QrLeftLookingDecomposition_DSCC qr) {
         this.qr = qr;
@@ -60,6 +65,29 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     @Override
     public /**/double quality() {
         return TriangularSolver_DSCC.qualityTriangular(qr.getR());
+    }
+
+    @Override
+    public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+
+        throw new RuntimeException("Not yet supported. Triangular solve needs to be updated/fixed");
+//        IGrowArray gw1 = qr.getGwork();
+//
+//        DMatrixSparseCSC Q = qr.getQ(null,false);
+//        DMatrixSparseCSC R = qr.getR(null,false);
+//
+//        // TODO Apply householders instead of Q
+//        // TODO use internal R from QR
+//
+//        // these are row pivots
+//        Bp.reshape(B.numRows,B.numCols,B.nz_length);
+//        int[] Pinv = qr.getStructure().getPinv();
+//        CommonOps_DSCC.permute(Pinv,B,null,Bp);
+//
+//        tmp.reshape(Q.numRows,Bp.numCols,1);
+//        CommonOps_DSCC.mult(Q,Bp,tmp,gw,gx);
+//
+//        TriangularSolver_DSCC.solve(R,false,tmp,X,null,gx,gw,gw1);
     }
 
     @Override
