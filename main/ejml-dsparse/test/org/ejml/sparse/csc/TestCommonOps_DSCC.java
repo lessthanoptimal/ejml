@@ -217,7 +217,7 @@ public class TestCommonOps_DSCC {
                                     CommonOps_DSCC.multAddTransAB(A_t, B_t, C);
                                     CommonOps_DDRM.multAddTransAB(denseA_t, B_t, expected);
                                 } else {
-                                    CommonOps_DSCC.multAddTransA(A_t, B, C, null);
+                                    CommonOps_DSCC.multAddTransA(A_t, B, C);
                                     CommonOps_DDRM.multAddTransA(denseA_t, B, expected);
                                 }
                             } else if (transB) {
@@ -233,7 +233,7 @@ public class TestCommonOps_DSCC {
                                     CommonOps_DSCC.multTransAB(A_t, B_t, C);
                                     CommonOps_DDRM.multTransAB(denseA_t, B_t, expected);
                                 } else {
-                                    CommonOps_DSCC.multTransA(A_t, B, C, null);
+                                    CommonOps_DSCC.multTransA(A_t, B, C);
                                     CommonOps_DDRM.multTransA(denseA_t, B, expected);
                                 }
                             } else if (transB) {

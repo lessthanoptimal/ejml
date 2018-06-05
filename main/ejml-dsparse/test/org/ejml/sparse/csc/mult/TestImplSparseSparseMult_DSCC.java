@@ -217,10 +217,10 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
 
         if( add ) {
-            ImplSparseSparseMult_DSCC.multAddTransA(a, b, c, null);
+            ImplSparseSparseMult_DSCC.multAddTransA(a, b, c);
             CommonOps_DDRM.multAddTransA(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_DSCC.multTransA(a, b, c, null);
+            ImplSparseSparseMult_DSCC.multTransA(a, b, c);
             CommonOps_DDRM.multTransA(dense_a, b, expected_c);
         }
         for (int row = 0; row < c.numRows; row++) {

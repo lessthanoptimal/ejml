@@ -214,22 +214,20 @@ public class CommonOps_DSCC {
      * @param B Dense Matrix
      * @param C Dense Matrix
      */
-    public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ,
-                                  @Nullable DGrowArray gx )
+    public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numCols != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplSparseSparseMult_DSCC.multTransA(A,B,C,gx);
+        ImplSparseSparseMult_DSCC.multTransA(A,B,C);
     }
 
-    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C ,
-                                  @Nullable DGrowArray gx )
+    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numCols != C.numRows || B.numCols != C.numCols )
             throw new IllegalArgumentException("Inconsistent matrix shapes");
 
-        ImplSparseSparseMult_DSCC.multAddTransA(A,B,C,gx);
+        ImplSparseSparseMult_DSCC.multAddTransA(A,B,C);
     }
 
     /**
