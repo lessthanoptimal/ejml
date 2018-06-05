@@ -121,13 +121,14 @@ public class TriangularSolver_DSCC {
         double[] x = adjust(g_x,G.numRows);
         if( g_xi == null ) g_xi = new IGrowArray();
         int[] xi = adjust(g_xi,G.numRows);
+        int[] w = adjust(g_w,B.numRows*2, B.numRows);
 
         X.nz_length = 0;
         X.col_idx[0] = 0;
         X.indicesSorted = false;
 
         for (int colB = 0; colB < B.numCols; colB++) {
-            int top = solve(G,lower,B,colB, x, pinv,g_xi, g_w);
+            int top = solveColB(G,lower,B,colB, x, pinv,g_xi, w);
 
             int nz_count = X.numRows-top;
             if( X.nz_values.length < X.nz_length + nz_count) {
@@ -155,14 +156,13 @@ public class TriangularSolver_DSCC {
      * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_xi  (Optional) Storage for workspace. Will contain nonzero pattern.
      *              See {@link #searchNzRowsInB(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], int[])}
-     * @param g_w   (Optional) Storage for workspace.
+     * @param w     Storage for workspace. Must be of length B.numRows*2 or more. First N elements must be zero.
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
-    public static int solve(DMatrixSparseCSC G, boolean lower,
-                            DMatrixSparseCSC B, int colB, double x[],
-                            @Nullable int pinv[], @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w) {
+    public static int solveColB(DMatrixSparseCSC G, boolean lower,
+                                DMatrixSparseCSC B, int colB, double x[],
+                                @Nullable int pinv[], @Nullable IGrowArray g_xi, int []w) {
         int[] xi = adjust(g_xi,G.numCols);
-        int[] w = adjust(g_w,B.numRows*2,B.numRows);
         int top = searchNzRowsInB(G, B, colB, pinv, xi, w);
 
         // sparse clear of x
@@ -221,7 +221,7 @@ public class TriangularSolver_DSCC {
         if (xi.length < B.numRows)
             throw new IllegalArgumentException("xi must be at least this long: " + B.numRows);
         if( w.length < 2*B.numRows)
-            throw new IllegalArgumentException("w must be at least 2*B.numRows in length and first N elements must be zero");
+            throw new IllegalArgumentException("w must be at least 2*B.numRows in length and first M elements must be zero");
 
         // Here is a change from csparse. CSparse modifies G by "marking" elements in it (making them negative) then
         // undoing it. That's undesirable because most people don't read the documentation and if a matrix is used

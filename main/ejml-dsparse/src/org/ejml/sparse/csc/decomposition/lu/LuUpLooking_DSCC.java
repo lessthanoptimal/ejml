@@ -94,6 +94,8 @@ public class LuUpLooking_DSCC
         int n = A.numCols;
         int q[] = applyReduce.getArrayP();
 
+        int[] w = TriangularSolver_DSCC.adjust(gw,m*2, m);
+
         // main loop for computing L and U
         for (int k = 0; k < n; k++) {
             //--------- Triangular Solve
@@ -107,7 +109,7 @@ public class LuUpLooking_DSCC
                 U.growMaxLength(2*U.nz_values.length+n, true);
 
             int col = q != null ? q[k] : k;
-            int top = TriangularSolver_DSCC.solve(L,true,A,col,x,pinv,gxi,gw);
+            int top = TriangularSolver_DSCC.solveColB(L,true,A,col,x,pinv,gxi,w);
             int []xi = gxi.data;
 
             //--------- Find the Next Pivot. That will be the row with the largest value

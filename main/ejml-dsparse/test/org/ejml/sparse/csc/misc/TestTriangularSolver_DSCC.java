@@ -100,20 +100,23 @@ public class TestTriangularSolver_DSCC {
     }
 
     public void solve_sparseX_vector( boolean lower ) {
+        int m = 5;
+        int w[] = new int[m*2];
+
         for (int trial = 0; trial < 10; trial++) {
             for (int nz_size : new int[]{5, 8, 10, 20}) {
                 int lengthX = rand.nextInt(3)+3;
 
                 DMatrixSparseCSC G;
                 if( lower)
-                    G = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
+                    G = RandomMatrices_DSCC.triangleLower(m, 0, nz_size, -1, 1, rand);
                 else
-                    G = RandomMatrices_DSCC.triangleUpper(5, 0, nz_size, -1, 1, rand);
-                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 1,lengthX, rand);
+                    G = RandomMatrices_DSCC.triangleUpper(m, 0, nz_size, -1, 1, rand);
+                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(m, 1,lengthX, rand);
                 DMatrixRMaj x = new DMatrixRMaj(b.numRows,b.numCols);
 
-                int ret = TriangularSolver_DSCC.solve(G,lower, b,0, x.data,null, null, null);
-                assertTrue(5-lengthX >= ret);
+                int ret = TriangularSolver_DSCC.solveColB(G,lower, b,0, x.data,null, null, w);
+                assertTrue(m-lengthX >= ret);
 
                 DMatrixRMaj found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
@@ -155,10 +158,8 @@ public class TestTriangularSolver_DSCC {
         }
     }
 
-    // add back in if tall/wide support is required
-//    @Ignore
 //    @Test
-//    public void solve_sparseX_matrix_tall() {
+//    public void solve_sparseX_matrix_lower_tall() {
 //        DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(3, 0, 6, -1, 1, rand);
 //        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(1,3,3,rand);
 //
@@ -172,41 +173,49 @@ public class TestTriangularSolver_DSCC {
 //
 //        DMatrixSparseCSC found = expected.createLike();
 //
-//        TriangularSolver_DSCC.solve(G,true,B,found, null, null, null);
+//        TriangularSolver_DSCC.solve(G,true,B,found,null, null, null, null);
 //
 //        expected.print();
 //        found.print();
 //    }
+//
+//    @Test
+//    public void solve_sparseX_matrix_upper_tall() {
+//        fail("Implement");
+//    }
 
     @Test
-    public void solve_pivots_sparseX_vector() {
-        solve_pivots_sparseX_vector(true);
-        solve_pivots_sparseX_vector(false);
+    public void solveColB_pivots_sparseX_vector() {
+        solveColB_pivots_sparseX_vector(true);
+        solveColB_pivots_sparseX_vector(false);
     }
 
-    public void solve_pivots_sparseX_vector( boolean lower ) {
+    public void solveColB_pivots_sparseX_vector( boolean lower ) {
+        int m = 5;
+        int w[] = new int[m*2];
+
         for (int trial = 0; trial < 10; trial++) {
             for (int nz_size : new int[]{5, 8, 10, 20}) {
 
-                int p[] = UtilEjml.shuffled(5,rand);
+                int p[] = UtilEjml.shuffled(m,rand);
                 int pinv[] = CommonOps_DSCC.permutationInverse(p,5);
 
                 int lengthX = rand.nextInt(3)+3;
 
                 DMatrixSparseCSC G;
                 if( lower)
-                    G = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
+                    G = RandomMatrices_DSCC.triangleLower(m, 0, nz_size, -1, 1, rand);
                 else
-                    G = RandomMatrices_DSCC.triangleUpper(5, 0, nz_size, -1, 1, rand);
+                    G = RandomMatrices_DSCC.triangleUpper(m, 0, nz_size, -1, 1, rand);
 
-                DMatrixSparseCSC Gp = new DMatrixSparseCSC(5,5,0);
+                DMatrixSparseCSC Gp = new DMatrixSparseCSC(m,5,0);
                 CommonOps_DSCC.permute(null,G,p,Gp);
 
-                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 1,lengthX, rand);
+                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(m, 1,lengthX, rand);
                 DMatrixRMaj x = new DMatrixRMaj(b.numRows,b.numCols);
 
-                int ret = TriangularSolver_DSCC.solve(Gp,lower, b,0, x.data,pinv, null, null);
-                assertTrue(5-lengthX >= ret);
+                int ret = TriangularSolver_DSCC.solveColB(Gp,lower, b,0, x.data,pinv, null, w);
+                assertTrue(m-lengthX >= ret);
 
                 DMatrixRMaj found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
