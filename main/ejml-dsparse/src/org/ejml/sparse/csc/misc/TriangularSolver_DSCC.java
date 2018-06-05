@@ -154,7 +154,7 @@ public class TriangularSolver_DSCC {
      * @param x     (Output) Storage for dense solution.  length = G.numRows
      * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_xi  (Optional) Storage for workspace. Will contain nonzero pattern.
-     *              See {@link #searchNzRowsInB(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], IGrowArray)}
+     *              See {@link #searchNzRowsInB(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], int[])}
      * @param g_w   (Optional) Storage for workspace.
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
@@ -162,7 +162,8 @@ public class TriangularSolver_DSCC {
                             DMatrixSparseCSC B, int colB, double x[],
                             @Nullable int pinv[], @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w) {
         int[] xi = adjust(g_xi,G.numCols);
-        int top = searchNzRowsInB(G, B, colB, pinv, xi, g_w);
+        int[] w = adjust(g_w,B.numRows*2,B.numRows);
+        int top = searchNzRowsInB(G, B, colB, pinv, xi, w);
 
         // sparse clear of x
         for( int p = top; p < G.numCols; p++ )
@@ -212,29 +213,40 @@ public class TriangularSolver_DSCC {
      * @param colB Column in B being solved for
      * @param pinv (Input, Optional) Column pivots in G. Null if no pivots.
      * @param xi   (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
-     * @param gwork workspace array used internally. Can be null.
+     * @param w  workspace array used internally. Must have a length of B.numRows*2 or more. Assumed to be filled with 0 in first N elements.
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
     public static int searchNzRowsInB(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int pinv[],
-                                      int xi[], @Nullable IGrowArray gwork) {
+                                      int xi[], int w[]) {
         if (xi.length < B.numRows)
             throw new IllegalArgumentException("xi must be at least this long: " + B.numRows);
+        if( w.length < 2*B.numRows)
+            throw new IllegalArgumentException("w must be at least 2*B.numRows in length and first N elements must be zero");
 
-        // this is a change from csparse. CSparse marks an entry by modifying G then reverting it. This can cause
-        // weird unexplained behavior when people start using threads...
-        int[] w = adjust(gwork,B.numRows * 2,B.numRows);
+        // Here is a change from csparse. CSparse modifies G by "marking" elements in it (making them negative) then
+        // undoing it. That's undesirable because most people don't read the documentation and if a matrix is used
+        // in multiple threads it will have erratic behavor. However, by doing that they avoid an O(N) fill each iteration.
+        //
+        // Instead,the w array is filled with 0 once before this function is called. Marked nodes are then set back to
+        // 0 when it's done. Thus a one time extra cost of N is the price of not modifying G.
+        // This is much better than N*N
 
-        // use 'w' as a marker to know which rows in B have been examined.  0 = unexamined and 1 = examined
         int idx0 = B.col_idx[colB];
         int idx1 = B.col_idx[colB+1];
 
-        int top = G.numRows;
+        int N = G.numRows;
+        int top = N;
         for (int i = idx0; i < idx1; i++) {
             int rowB = B.nz_rows[i];
 
             if( w[rowB] == 0 ) {
                 top = searchNzRowsInB_DFS(rowB,G,top,pinv,xi,w);
             }
+        }
+
+        // Undo the marking only on the stack nodes
+        for (int i = top; i < N; i++) {
+            w[xi[i]] = 0;
         }
 
         return top;

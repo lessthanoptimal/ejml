@@ -111,13 +111,13 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     public void randomSolveable_Sparse() {
 
         for( FillReducing perm : permutationTests ) {
-            System.out.println("perm = "+perm);
+//            System.out.println("perm = "+perm);
 
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
 
             for (int N : new int[]{1, 2, 5, 10, 20}) {
                 for (int mc = 0; mc < 30; mc++) {
-                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
+//                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
                     DMatrixSparseCSC X = createSparse(A.numCols, 3);

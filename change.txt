@@ -19,6 +19,7 @@ Date format: year/month/day
   * Java bloats classes and this should result in a large reduction in memory usage
 - Sparse Solver
   * Added functions for solving sparse matrices
+  * Improved efficiency of Triangle solve
 
 TODO Get QR sparse solve working
 TODO add sparse triangle solve transpose
