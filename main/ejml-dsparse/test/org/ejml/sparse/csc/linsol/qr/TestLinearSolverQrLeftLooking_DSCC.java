@@ -59,10 +59,4 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
 
         return A;
     }
-
-//    @Ignore
-//    @Test
-//    public void randomSolveable_Sparse() {
-//        throw new RuntimeException("Not yet supported");
-//    }
 }

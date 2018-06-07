@@ -44,10 +44,9 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     private DGrowArray gb = new DGrowArray();
     private DGrowArray gbp = new DGrowArray();
     private DGrowArray gx = new DGrowArray();
-    IGrowArray gw = new IGrowArray();
+    private IGrowArray gw = new IGrowArray();
 
-    DMatrixSparseCSC Bp = new DMatrixSparseCSC(1,1,1);
-    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
+    private DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
 
     public LinearSolverQrLeftLooking_DSCC(QrLeftLookingDecomposition_DSCC qr) {
         this.qr = qr;
@@ -71,16 +70,31 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
         IGrowArray gw1 = qr.getGwork();
 
-        DMatrixSparseCSC Q = qr.getQ(null,false);
-        DMatrixSparseCSC R = qr.getR(null,false);
+        // Don't modify the input
+        tmp.set(B);
+        B = tmp;
+        DMatrixSparseCSC B_tmp = B.createLike();
+        DMatrixSparseCSC swap;
 
-        // TODO Apply householders instead of Q
-        // TODO use internal R from QR
+        // Apply permutation to B
+        int pinv[] = qr.getStructure().getPinv();
+        CommonOps_DSCC.permuteRowInv(pinv,B,B_tmp);
+        swap = B_tmp;
+        B_tmp = B;
+        B = swap;
 
-        tmp.reshape(Q.numRows,B.numCols,1);
-        CommonOps_DSCC.multTransA(Q,B,tmp,gw,gx);
+        // Apply house holders to B
+        DMatrixSparseCSC V = qr.getV();
+        for (int i = 0; i < n; i++) {
+            QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,qr.getBeta(i),B,B_tmp,gw,gx);
+            swap = B_tmp;
+            B_tmp = B;
+            B = swap;
+        }
 
-        TriangularSolver_DSCC.solve(R,false,tmp,X,null,gx,gw,gw1);
+        // Solve for X
+        DMatrixSparseCSC R = qr.getR();
+        TriangularSolver_DSCC.solve(R,false,B,X,null,gx,gw,gw1);
     }
 
     @Override
