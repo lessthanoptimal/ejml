@@ -42,7 +42,7 @@ public class TestCommonOps_DSCC {
     private Random rand = new Random(234);
 
     @Test
-    public void isRowOrderValid() {
+    public void checkIndicesSorted() {
         DMatrixSparseTriplet orig = new DMatrixSparseTriplet(3,5,6);
 
         orig.addItem(0,0, 5);

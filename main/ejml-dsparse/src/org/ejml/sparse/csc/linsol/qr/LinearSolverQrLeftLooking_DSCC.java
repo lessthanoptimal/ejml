@@ -69,25 +69,18 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
 
     @Override
     public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+        IGrowArray gw1 = qr.getGwork();
 
-        throw new RuntimeException("Not yet supported. Triangular solve needs to be updated/fixed");
-//        IGrowArray gw1 = qr.getGwork();
-//
-//        DMatrixSparseCSC Q = qr.getQ(null,false);
-//        DMatrixSparseCSC R = qr.getR(null,false);
-//
-//        // TODO Apply householders instead of Q
-//        // TODO use internal R from QR
-//
-//        // these are row pivots
-//        Bp.reshape(B.numRows,B.numCols,B.nz_length);
-//        int[] Pinv = qr.getStructure().getPinv();
-//        CommonOps_DSCC.permute(Pinv,B,null,Bp);
-//
-//        tmp.reshape(Q.numRows,Bp.numCols,1);
-//        CommonOps_DSCC.mult(Q,Bp,tmp,gw,gx);
-//
-//        TriangularSolver_DSCC.solve(R,false,tmp,X,null,gx,gw,gw1);
+        DMatrixSparseCSC Q = qr.getQ(null,false);
+        DMatrixSparseCSC R = qr.getR(null,false);
+
+        // TODO Apply householders instead of Q
+        // TODO use internal R from QR
+
+        tmp.reshape(Q.numRows,B.numCols,1);
+        CommonOps_DSCC.multTransA(Q,B,tmp,gw,gx);
+
+        TriangularSolver_DSCC.solve(R,false,tmp,X,null,gx,gw,gw1);
     }
 
     @Override

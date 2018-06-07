@@ -148,41 +148,114 @@ public class TestTriangularSolver_DSCC {
                 DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
 
                 TriangularSolver_DSCC.solve(G,lower,b,x, null, null, null, null);
+                assertTrue(CommonOps_DSCC.checkStructure(x));
 
                 DMatrixSparseCSC found = x.createLike();
                 CommonOps_DSCC.mult(G, x, found);
 
                 // Don't use a sparse test since the solution might contain 0 values due to cancellations
                 EjmlUnitTests.assertEquals(found,b);
+
+                //===========================================================
+                // now try it with pivots
+                int p[] = UtilEjml.shuffled(G.numRows,rand);
+                int pinv[] = CommonOps_DSCC.permutationInverse(p,p.length);
+
+                DMatrixSparseCSC Gp = G.createLike();
+                CommonOps_DSCC.permute(null,G,p,Gp);
+                CommonOps_DSCC.mult(G,x,b);
+                x = x.createLike();
+                TriangularSolver_DSCC.solve(Gp,lower,b,x,pinv, null, null, null);
+                assertTrue(CommonOps_DSCC.checkStructure(x));
+                DMatrixSparseCSC b_found = b.createLike();
+                CommonOps_DSCC.mult(G,x,b_found);
+                EjmlUnitTests.assertEquals(b_found,b);
             }
         }
     }
 
-//    @Test
-//    public void solve_sparseX_matrix_lower_tall() {
-//        DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(3, 0, 6, -1, 1, rand);
-//        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(1,3,3,rand);
-//
-//        DMatrixSparseCSC G = new DMatrixSparseCSC(4,3);
-//        CommonOps_DSCC.concatRows(L,B,G);
-//
-//        DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(3,2,8,rand);
-//        B = RandomMatrices_DSCC.rectangle(4,2,8,rand);
-//
-//        CommonOps_DSCC.mult(G,expected,B);
-//
-//        DMatrixSparseCSC found = expected.createLike();
-//
-//        TriangularSolver_DSCC.solve(G,true,B,found,null, null, null, null);
-//
-//        expected.print();
-//        found.print();
-//    }
-//
-//    @Test
-//    public void solve_sparseX_matrix_upper_tall() {
-//        fail("Implement");
-//    }
+    @Test
+    public void solve_sparseX_matrix_lower_tall() {
+        for (int i = 0; i < 40; i++) {
+            solve_sparseX_matrix_lower_tall(3,1, 2);
+            solve_sparseX_matrix_lower_tall(1,3, 3);
+            solve_sparseX_matrix_lower_tall(6,4,2);
+            solve_sparseX_matrix_lower_tall(20,30,1);
+        }
+    }
+
+    public void solve_sparseX_matrix_lower_tall(int triangle, int tall, int colB) {
+        DMatrixSparseCSC L = RandomMatrices_DSCC.triangleLower(triangle, 0, triangle*2, -1, 1, rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(tall,triangle,3,rand);
+
+        DMatrixSparseCSC G = new DMatrixSparseCSC(triangle+tall,triangle);
+        CommonOps_DSCC.concatRows(L,B,G);
+
+        DMatrixSparseCSC x_truth = RandomMatrices_DSCC.rectangle(triangle,colB,8,rand);
+        B = RandomMatrices_DSCC.rectangle(triangle+tall,colB,8,rand);
+
+        CommonOps_DSCC.mult(G,x_truth,B);
+
+        DMatrixSparseCSC x = x_truth.createLike();
+
+        TriangularSolver_DSCC.solve(G,true,B,x,null, null, null, null);
+
+        assertTrue(CommonOps_DSCC.checkStructure(x));
+
+        DMatrixSparseCSC B_found = B.createLike();
+        CommonOps_DSCC.mult(G,x,B_found);
+
+        EjmlUnitTests.assertEquals(B_found,B);
+    }
+
+    @Test
+    public void solve_sparseX_matrix_upper_tall() {
+        for (int i = 0; i < 40; i++) {
+            solve_sparseX_matrix_upper_tall(3,1,2);
+            solve_sparseX_matrix_upper_tall(1,3,3);
+            solve_sparseX_matrix_upper_tall(6,1,2);
+            solve_sparseX_matrix_upper_tall(6,4,2);
+            solve_sparseX_matrix_upper_tall(20,30,1);
+        }
+    }
+
+    public void solve_sparseX_matrix_upper_tall(int triangle, int tall, int colB) {
+        DMatrixSparseCSC R = RandomMatrices_DSCC.triangleUpper(triangle, 0, triangle*2, -1, 1, rand);
+        DMatrixSparseCSC B = new DMatrixSparseCSC(tall,triangle);
+
+        DMatrixSparseCSC G = new DMatrixSparseCSC(triangle+tall,triangle);
+        CommonOps_DSCC.concatRows(R,B,G);
+
+        int max_X = triangle*colB;
+        DMatrixSparseCSC x_truth = RandomMatrices_DSCC.rectangle(triangle,colB,Math.max(colB,max_X/2+1),rand);
+
+        B = RandomMatrices_DSCC.rectangle(triangle+tall,colB,1,rand);
+
+        CommonOps_DSCC.mult(G,x_truth,B);
+
+        DMatrixSparseCSC x = x_truth.createLike();
+
+        TriangularSolver_DSCC.solve(G,false,B,x,null, null, null, null);
+        assertTrue(CommonOps_DSCC.checkStructure(x));
+
+        DMatrixSparseCSC B_found = B.createLike();
+        CommonOps_DSCC.mult(G,x,B_found);
+
+        EjmlUnitTests.assertEquals(B_found,B);
+
+        //======================================================================
+        // now try it with pivots
+        int p[] = UtilEjml.shuffled(R.numRows,rand);
+        int pinv[] = CommonOps_DSCC.permutationInverse(p,p.length);
+
+        DMatrixSparseCSC Gp = G.createLike();
+        CommonOps_DSCC.permute(null,G,p,Gp);
+        CommonOps_DSCC.mult(G,x_truth,B);
+        TriangularSolver_DSCC.solve(Gp,false,B,x,pinv, null, null, null);
+        B_found = B.createLike();
+        CommonOps_DSCC.mult(G,x,B_found);
+        EjmlUnitTests.assertEquals(B_found,B);
+    }
 
     @Test
     public void solveColB_pivots_sparseX_vector() {
@@ -239,7 +312,7 @@ public class TestTriangularSolver_DSCC {
         int w[] = new int[B.numRows*2];
 
         // A is diagonal and B is filled in
-        int top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
 
         assertEquals(0,top);
         for (int i = 0; i < 3; i++) {
@@ -248,19 +321,19 @@ public class TestTriangularSolver_DSCC {
 
         // A is diagonal and B is empty
         B = new DMatrixSparseCSC(3,1,3);
-        top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(3,top);
 
         // A is diagonal and B has element 1 not zero
         B.set(1,0,2.0);
-        top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(2,top);
         assertEquals(1,xi[2]);
 
         // A is diagonal with one missing and B is full
         A.remove(1,1);
         B = RandomMatrices_DSCC.rectangle(3,1,3,-1,1,rand);
-        top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(0,top);
         for (int i = 0; i < 3; i++) {
             assertEquals(2-i,xi[i]);
@@ -268,7 +341,7 @@ public class TestTriangularSolver_DSCC {
 
         // A is diagonal with one missing and B is missing the same element
         B.remove(1,0);
-        top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(1,top);
         assertEquals(2,xi[1]);
         assertEquals(0,xi[2]);
@@ -278,33 +351,42 @@ public class TestTriangularSolver_DSCC {
      * A is filled in triangular
      */
     @Test
-    public void searchNzRowsInB_triangle() {
+    public void searchNzRowsInX_triangle() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.triangleLower(4,0,16, -1,1,rand);
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(4,1,4,-1,1,rand);
 
         int xi[] = new int[A.numCols];
-        int w[] = new int[B.numRows*2];
+        int w[] = new int[A.numCols*2];
 
-        int top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(0,top);
         for (int i = 0; i < 4; i++) {
             assertEquals(i,xi[i]);
+        }
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(0,w[i]);
         }
 
         // Add a hole which should be filled in
         B.remove(1,0);
-        top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(0,top);
         for (int i = 0; i < 4; i++) {
             assertEquals(i,xi[i]);
         }
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(0,w[i]);
+        }
 
         // add a hole on top.  This should not be filled in nor the one below it
         B.remove(0,0);
-        top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(2,top);
         for (int i = 0; i < 2; i++) {
             assertEquals(i+2,xi[i]);
+        }
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(0,w[i]);
         }
     }
 
@@ -312,7 +394,7 @@ public class TestTriangularSolver_DSCC {
      * hand constructed system and verify that the results are as expected
      */
     @Test
-    public void searchNzRowsInB_case0() {
+    public void searchNzRowsInX_case0() {
         DMatrixRMaj D = UtilEjml.parse_DDRM(
                      "1 0 0 0 0 " +
                         "1 1 0 0 0 "+
@@ -322,18 +404,53 @@ public class TestTriangularSolver_DSCC {
 
         DMatrixSparseCSC A = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
-        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,1,4,-1,1,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,1,5,-1,1,rand);
 
         int xi[] = new int[A.numCols];
         int w[] = new int[B.numRows*2];
 
-        int top = TriangularSolver_DSCC.searchNzRowsInB(A,B,0,null,xi,w);
+        int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(0,top);
         assertEquals(0,xi[0]); // hand traced through
         assertEquals(3,xi[1]);
         assertEquals(1,xi[2]);
         assertEquals(4,xi[3]);
         assertEquals(2,xi[4]);
+    }
+
+    /**
+     * Only the upper portion of a tall matrix A determine the non-zero pattern in X
+     */
+    @Test
+    public void searchNzRowsInX_Tall_Lower() {
+        for (int trial = 0; trial < 20; trial++) {
+            DMatrixSparseCSC A = RandomMatrices_DSCC.triangleLower(5,0,5,-1,1,rand);
+            DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,2,2,-1,1,rand);
+
+            int xi[] = new int[A.numCols];
+            int w[] = new int[A.numCols*2];
+
+            int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(0,w[j]);
+            }
+
+            DMatrixSparseCSC bottom = RandomMatrices_DSCC.rectangle(4,5,10,-1,1,rand);
+            A = CommonOps_DSCC.concatRows(A,bottom,null);
+
+            int xi2[] = new int[A.numCols];
+            int w2[] = new int[A.numCols*2];
+
+            int top2 = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi2,w2);
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(0,w[j]);
+            }
+
+            assertEquals(top,top2);
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(xi[j],xi2[j]);
+            }
+        }
     }
 
     /**

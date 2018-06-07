@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -63,7 +63,6 @@ public class TestQrLeftLookingDecomposition_DSCC extends GenericDecompositionTes
         List<DMatrixSparseCSC> list = new ArrayList<>();
         list.add( qr.getQ(null, false));
         list.add( qr.getR(null, false));
-
 
         return list;
     }

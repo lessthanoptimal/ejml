@@ -27,8 +27,6 @@ import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * @author Peter Abeles
@@ -51,7 +49,7 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
     public DMatrixSparseCSC createA(int size) {
 
         int cols = size;
-        int rows = size + rand.nextInt(4);
+        int rows = size + rand.nextInt(6);
 
         int nz = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.6,rand);
 
@@ -62,9 +60,9 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
         return A;
     }
 
-    @Ignore
-    @Test
-    public void randomSolveable_Sparse() {
-        throw new RuntimeException("Not yet supported");
-    }
+//    @Ignore
+//    @Test
+//    public void randomSolveable_Sparse() {
+//        throw new RuntimeException("Not yet supported");
+//    }
 }

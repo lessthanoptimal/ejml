@@ -111,12 +111,12 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     public void randomSolveable_Sparse() {
 
         for( FillReducing perm : permutationTests ) {
-//            System.out.println("perm = "+perm);
+            System.out.println("perm = "+perm);
 
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
 
             for (int N : new int[]{1, 2, 5, 10, 20}) {
-                for (int mc = 0; mc < 30; mc++) {
+                for (int mc = 0; mc < 20; mc++) {
 //                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
@@ -128,8 +128,11 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     CommonOps_DSCC.mult(A, X, B);
                     DMatrixSparseCSC B_cpy = B.copy();
 
+//                    System.out.println("--- A");
+//                    A.print();
                     assertTrue(solver.setA(A));
                     solver.solveSparse(B, foundX);
+                    assertTrue(CommonOps_DSCC.checkStructure(foundX));
 
                     EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
 

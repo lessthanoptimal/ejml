@@ -118,10 +118,10 @@ public class TriangularSolver_DSCC {
                              @Nullable int pinv[] ,
                              @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
-        double[] x = adjust(g_x,G.numRows);
+        double[] x = adjust(g_x,G.numRows); // Maybe this could just be
         if( g_xi == null ) g_xi = new IGrowArray();
         int[] xi = adjust(g_xi,G.numRows);
-        int[] w = adjust(g_w,B.numRows*2, B.numRows);
+        int[] w = adjust(g_w,G.numCols*2, G.numCols);
 
         X.nz_length = 0;
         X.col_idx[0] = 0;
@@ -155,30 +155,35 @@ public class TriangularSolver_DSCC {
      * @param x     (Output) Storage for dense solution.  length = G.numRows
      * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_xi  (Optional) Storage for workspace. Will contain nonzero pattern.
-     *              See {@link #searchNzRowsInB(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], int[])}
+     *              See {@link #searchNzRowsInX(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], int[])}
      * @param w     Storage for workspace. Must be of length B.numRows*2 or more. First N elements must be zero.
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
     public static int solveColB(DMatrixSparseCSC G, boolean lower,
                                 DMatrixSparseCSC B, int colB, double x[],
                                 @Nullable int pinv[], @Nullable IGrowArray g_xi, int []w) {
-        int[] xi = adjust(g_xi,B.numRows);
-        int top = searchNzRowsInB(G, B, colB, pinv, xi, w);
 
-        // sparse clear of x. G.numRows and B.numRows are the same
-        for( int p = top; p < G.numRows; p++ )
+        // NOTE x's length is the number of rows in G and not cols. This might be more than needed if a tall matrix,
+        // but a change to remove it would require more thought
+        int X_rows = G.numCols;
+        int[] xi = adjust(g_xi,X_rows);
+        int top = searchNzRowsInX(G, B, colB, pinv, xi, w);
+
+        // sparse clear of x.
+        for( int p = top; p < X_rows; p++ )
             x[xi[p]] = 0;
 
         // copy B into X
         int idxB0 = B.col_idx[colB];
         int idxB1 = B.col_idx[colB+1];
-        for( int p = idxB0; p < idxB1; p++ )
+        for( int p = idxB0; p < idxB1; p++ ) {
             x[B.nz_rows[p]] = B.nz_values[p];
+        }
 
-        for (int px = top; px < G.numRows; px++) {
+        for (int px = top; px < X_rows; px++) {
             int j = xi[px];
             int J = pinv != null ? pinv[j] : j;
-            if( J < 0 )
+            if( J < 0 || j >= X_rows )
                 continue;
             int p,q;
             if( lower ) {
@@ -212,20 +217,22 @@ public class TriangularSolver_DSCC {
      * @param B    (Input) Matrix B. Not modified.
      * @param colB Column in B being solved for
      * @param pinv (Input, Optional) Column pivots in G. Null if no pivots.
-     * @param xi   (Output) List of row indices in B which are non-zero in graph order.  Must have length B.numRows
-     * @param w  workspace array used internally. Must have a length of B.numRows*2 or more. Assumed to be filled with 0 in first N elements.
+     * @param xi   (Output) List of row indices in X which are non-zero in graph order.  Must have length  G.numCols
+     * @param w  workspace array used internally. Must have a length of G.numCols*2 or more. Assumed to be filled with 0 in first N elements.
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
-    public static int searchNzRowsInB(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int pinv[],
+    public static int searchNzRowsInX(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int pinv[],
                                       int xi[], int w[]) {
-        if (xi.length < B.numRows)
-            throw new IllegalArgumentException("xi must be at least this long: " + B.numRows);
-        if( w.length < 2*B.numRows)
-            throw new IllegalArgumentException("w must be at least 2*B.numRows in length and first M elements must be zero");
+
+        int X_rows = G.numCols;
+        if (xi.length < X_rows)
+            throw new IllegalArgumentException("xi must be at least G.numCols=" + G.numCols);
+        if( w.length < 2*X_rows)
+            throw new IllegalArgumentException("w must be at least 2*G.numCols in length (2*number of rows in X) and first N elements must be zero");
 
         // Here is a change from csparse. CSparse modifies G by "marking" elements in it (making them negative) then
         // undoing it. That's undesirable because most people don't read the documentation and if a matrix is used
-        // in multiple threads it will have erratic behavor. However, by doing that they avoid an O(N) fill each iteration.
+        // in multiple threads it will have erratic behavior. However, by doing that they avoid an O(N) fill each iteration.
         //
         // Instead,the w array is filled with 0 once before this function is called. Marked nodes are then set back to
         // 0 when it's done. Thus a one time extra cost of N is the price of not modifying G.
@@ -234,18 +241,17 @@ public class TriangularSolver_DSCC {
         int idx0 = B.col_idx[colB];
         int idx1 = B.col_idx[colB+1];
 
-        int N = G.numRows;
-        int top = N;
+        int top = X_rows;
         for (int i = idx0; i < idx1; i++) {
             int rowB = B.nz_rows[i];
 
-            if( w[rowB] == 0 ) {
-                top = searchNzRowsInB_DFS(rowB,G,top,pinv,xi,w);
+            if( rowB < X_rows  && w[rowB] == 0) {
+                top = searchNzRowsInX_DFS(rowB,G,top,pinv,xi,w);
             }
         }
 
         // Undo the marking only on the stack nodes
-        for (int i = top; i < N; i++) {
+        for (int i = top; i < X_rows; i++) {
             w[xi[i]] = 0;
         }
 
@@ -253,12 +259,18 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Given the first row in B it performs a DFS seeing which elements in 'B' will be not zero.  A row=i in 'B' will
+     * Given the first row in B it performs a DFS seeing which elements in 'X' will be not zero.  A row=i in 'X' will
      * be not zero if any element in row=(j < i) in G is not zero
+     *
+     * Tall Matrices: The non-zero pattern of X is entirely determined by the top N by N matrix,
+     * where N is the number of columns.
+     *
+     * @param xi recursion stack
+     * @param w w[N:] = pstack[:] in csparse book. w[:N] is where a row in X is marked. that is a change from csparse.
      */
-    private static int searchNzRowsInB_DFS(int rowB , DMatrixSparseCSC G , int top , int pinv[], int xi[], int w[] )
+    private static int searchNzRowsInX_DFS(int rowB , DMatrixSparseCSC G , int top , int pinv[], int xi[], int w[] )
     {
-        int N = G.numRows;
+        int N = G.numCols;  // first N elements in w is the length of X
         int head = 0; // put the selected row into the FILO stack
         xi[head] = rowB; // use the head of xi to store where the stack it's searching.  The tail is where
                          // the graph ordered list of rows in B is stored.
@@ -269,18 +281,19 @@ public class TriangularSolver_DSCC {
             if( w[G_col] == 0) {
                 w[G_col] = 1;
                 // mark which child in the loop below it's examining
-                w[N+head] = G_col_new < 0 ? 0 : G.col_idx[G_col_new];
+                w[N+head] = G_col_new < 0  || G_col_new >= N ? 0 : G.col_idx[G_col_new];
             }
 
             // See if there are any children which have yet to be examined
             boolean done = true;
 
+            // The Right side after || is used to handle tall matrices. There will be no nodes matching
             int idx0 = w[N+head];
-            int idx1 = G_col_new < 0 ? 0 : G.col_idx[G_col_new+1];
+            int idx1 = G_col_new < 0 || G_col_new >= N ? 0 : G.col_idx[G_col_new+1];
 
             for (int j = idx0; j < idx1; j++) {
                 int jrow = G.nz_rows[j];
-                if( w[jrow] == 0 ) {
+                if( jrow < N && w[jrow] == 0 ) {
                     w[N+head] = j+1; // mark that it has processed up to this point
                     xi[++head] = jrow;
                     done = false;
