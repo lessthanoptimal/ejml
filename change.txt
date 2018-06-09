@@ -25,6 +25,9 @@ Date format: year/month/day
   * Triangle sparse solve supports lower and upper tall matrices. Plus the transpose.
 - SparseMatrix
   * added reshape(rows,cols) so that you don't need to specify nz_length when it doesn't matter.
+- Improved exception messages for a few functions
+- Changing it so that the output of various functions is reshaped so that it fits the input to make
+  development less tedious
 
 ----- Version 0.34
 2018/04/13

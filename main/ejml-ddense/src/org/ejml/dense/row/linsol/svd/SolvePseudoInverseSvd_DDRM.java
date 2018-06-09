@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -122,7 +122,13 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
 
     @Override
     public /**/double quality() {
-        throw new IllegalArgumentException("Not supported by this solver.");
+        double []S = svd.getSingularValues();
+        int N = Math.min(pinv.numRows,pinv.numCols);
+        double min = S[0];
+        for (int i = 0; i < N; i++) {
+            min = Math.min(min,S[i]);
+        }
+        return min;
     }
 
     @Override

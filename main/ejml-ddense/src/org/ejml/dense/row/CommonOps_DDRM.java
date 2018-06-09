@@ -37,6 +37,8 @@ import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
 import java.util.Arrays;
 
+import static org.ejml.UtilEjml.stringShapes;
+
 /**
  * <p>
  * Common matrix operations are contained here.  Which specific underlying algorithm is used
@@ -1037,17 +1039,17 @@ public class CommonOps_DDRM {
                                 int dstY0, int dstX0 )
     {
         if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
-            throw new MatrixDimensionException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+            throw new MatrixDimensionException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows. "+stringShapes(src,dst));
         if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols() )
-            throw new MatrixDimensionException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+            throw new MatrixDimensionException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols. "+stringShapes(src,dst));
 
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
 
         if( dstY0+h > dst.getNumRows() )
-            throw new MatrixDimensionException("dst is too small in rows");
+            throw new MatrixDimensionException("dst is too small in rows. "+dst.getNumRows()+" < "+(dstY0+h));
         if( dstX0+w > dst.getNumCols() )
-            throw new MatrixDimensionException("dst is too small in columns");
+            throw new MatrixDimensionException("dst is too small in columns. "+dst.getNumCols()+" < "+(dstX0+w));
 
         // interestingly, the performance is only different for small matrices but identical for larger ones
         if( src instanceof DMatrixRMaj && dst instanceof DMatrixRMaj) {
@@ -1055,6 +1057,23 @@ public class CommonOps_DDRM {
         } else {
             ImplCommonOps_DDMA.extract(src,srcY0,srcX0,dst,dstY0,dstX0, h, w);
         }
+    }
+
+    /**
+     * Extract where the destination is reshaped to match the extracted region
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param srcX0 Start column.
+     * @param srcX1 Stop column+1.
+     * @param srcY0 Start row.
+     * @param srcY1 Stop row+1.
+     * @param dst Where the submatrix are stored.  Modified.
+     */
+    public static void extract( DMatrix src,
+                                int srcY0, int srcY1,
+                                int srcX0, int srcX1,
+                                DMatrix dst ) {
+        ((ReshapeMatrix)dst).reshape(srcY1-srcY0,srcX1-srcX0);
+        extract(src,srcY0,srcY1,srcX0,srcX1,dst,0,0);
     }
 
     /**

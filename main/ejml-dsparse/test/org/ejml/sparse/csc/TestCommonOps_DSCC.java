@@ -116,17 +116,21 @@ public class TestCommonOps_DSCC {
                 RandomMatrices_DSCC.rectangle(5, 4, 7, rand), false);
 
         check_s_s_mult(
-                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                RandomMatrices_DSCC.rectangle(5, 7, 5, rand),
                 RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
                 RandomMatrices_DSCC.rectangle(5, 5, 7, rand), true);
         check_s_s_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand), true);
+                RandomMatrices_DSCC.rectangle(5, 5, 7, rand), false);
         check_s_s_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand), true);
+                RandomMatrices_DSCC.rectangle(6, 4, 7, rand), false);
+        check_s_s_mult(
+                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
+                RandomMatrices_DSCC.rectangle(6, 4, 7, rand), false);
     }
 
     private void check_s_s_mult(DMatrixSparseCSC A , DMatrixSparseCSC B, DMatrixSparseCSC C, boolean exception ) {
@@ -284,7 +288,7 @@ public class TestCommonOps_DSCC {
         check_add(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DSCC.rectangle(5, 5, 5, rand), true);
+                RandomMatrices_DSCC.rectangle(5, 5, 5, rand), false);
         check_add(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DSCC.rectangle(4, 6, 5, rand),
@@ -292,7 +296,7 @@ public class TestCommonOps_DSCC {
         check_add(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DSCC.rectangle(4, 6, 5, rand), true);
+                RandomMatrices_DSCC.rectangle(4, 6, 5, rand), false);
 
     }
 

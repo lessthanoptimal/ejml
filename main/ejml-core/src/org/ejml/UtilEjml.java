@@ -18,10 +18,7 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.FMatrixRMaj;
-import org.ejml.data.IGrowArray;
+import org.ejml.data.*;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
@@ -268,5 +265,16 @@ public class UtilEjml {
             }
         }
         return cnt%2==0?1:-1;
+    }
+
+    public static String stringShapes(Matrix A , Matrix B , Matrix C ) {
+        return "( "+A.getNumRows()+"x"+A.getNumCols()+" ) " +
+                "( "+B.getNumRows()+"x"+B.getNumCols()+" ) " +
+                "( "+C.getNumRows()+"x"+C.getNumCols()+" )";
+    }
+
+    public static String stringShapes(Matrix A , Matrix B ) {
+        return "( "+A.getNumRows()+"x"+A.getNumCols()+" ) " +
+                "( "+B.getNumRows()+"x"+B.getNumCols()+" )";
     }
 }

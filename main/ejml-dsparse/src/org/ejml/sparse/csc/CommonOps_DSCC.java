@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.MatrixDimensionException;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
@@ -34,6 +35,7 @@ import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
+import static org.ejml.UtilEjml.stringShapes;
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjustClear;
 
 /**
@@ -146,8 +148,9 @@ public class CommonOps_DSCC {
     public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                             @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
-        if( A.numRows != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numCols != B.numRows )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numRows,B.numCols);
 
         ImplSparseSparseMult_DSCC.mult(A,B,C, gw, gx);
     }
@@ -155,8 +158,9 @@ public class CommonOps_DSCC {
     public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                                   @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
-        if( A.numCols != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numRows != B.numRows )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numCols,B.numCols);
 
         ImplSparseSparseMult_DSCC.multTransA(A,B,C,gw,gx);
     }
@@ -174,8 +178,9 @@ public class CommonOps_DSCC {
     public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
                                   @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
-        if( A.numRows != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numCols != B.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numRows,B.numRows);
 
         if( !B.isIndicesSorted() )
             B.sortIndices(null);
@@ -193,16 +198,20 @@ public class CommonOps_DSCC {
      */
     public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
-        if( A.numRows != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numCols != B.numRows )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numRows,B.numCols);
 
         ImplSparseSparseMult_DSCC.mult(A,B,C);
     }
 
+    /**
+     * <p>C = C + A*B</p>
+     */
     public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numRows != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
 
         ImplSparseSparseMult_DSCC.multAdd(A,B,C);
     }
@@ -216,16 +225,20 @@ public class CommonOps_DSCC {
      */
     public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
-        if( A.numCols != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numRows != B.numRows )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numCols,B.numCols);
 
         ImplSparseSparseMult_DSCC.multTransA(A,B,C);
     }
 
+    /**
+     * <p>C = C + A<sup>T</sup>*B</p>
+     */
     public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numCols != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
 
         ImplSparseSparseMult_DSCC.multAddTransA(A,B,C);
     }
@@ -239,16 +252,20 @@ public class CommonOps_DSCC {
      */
     public static void multTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
-        if( A.numRows != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numCols != B.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numRows,B.numRows);
 
         ImplSparseSparseMult_DSCC.multTransB(A,B,C);
     }
 
+    /**
+     * <p>C = C + A*B<sup>T</sup></p>
+     */
     public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numRows != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
 
         ImplSparseSparseMult_DSCC.multAddTransB(A,B,C);
     }
@@ -262,16 +279,21 @@ public class CommonOps_DSCC {
      */
     public static void multTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
-        if( A.numCols != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numRows != B.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numCols,B.numRows);
 
         ImplSparseSparseMult_DSCC.multTransAB(A,B,C);
     }
 
+
+    /**
+     * <p>C = C + A<sup>T</sup>*B<sup>T</sup></p>
+     */
     public static void multAddTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
     {
         if( A.numCols != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
 
         ImplSparseSparseMult_DSCC.multAddTransAB(A,B,C);
     }
@@ -322,8 +344,9 @@ public class CommonOps_DSCC {
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
                            @Nullable IGrowArray gw, @Nullable DGrowArray gx)
     {
-        if( A.numRows != B.numRows || A.numCols != B.numCols || A.numRows != C.numRows || A.numCols != C.numCols)
-            throw new IllegalArgumentException("Inconsistent matrix shapes");
+        if( A.numRows != B.numRows || A.numCols != B.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        C.reshape(A.numRows,A.numCols);
 
         ImplCommonOps_DSCC.add(alpha,A,beta,B,C, gw, gx);
     }
@@ -364,8 +387,6 @@ public class CommonOps_DSCC {
      */
     public static void scale(double scalar, DMatrixSparseCSC A, DMatrixSparseCSC B) {
         if( A != B ) {
-            if (A.numRows != B.numRows || A.numCols != B.numCols)
-                throw new IllegalArgumentException("A and B must have the same shape");
             B.copyStructure(A);
 
             for(int i = 0; i < A.nz_length; i++ ) {
@@ -386,8 +407,6 @@ public class CommonOps_DSCC {
      * @param B (Output) Matrix. Modified.
      */
     public static void divide(DMatrixSparseCSC A , double scalar , DMatrixSparseCSC B ) {
-        if( A.numRows != B.numRows || A.numCols != B.numCols )
-            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
         if( A != B ) {
             B.copyStructure(A);
 
@@ -408,8 +427,6 @@ public class CommonOps_DSCC {
      * @param B (Output) Matrix. Modified.
      */
     public static void changeSign(DMatrixSparseCSC A , DMatrixSparseCSC B ) {
-        if( A.numRows != B.numRows || A.numCols != B.numCols )
-            throw new IllegalArgumentException("Unexpected shape for transpose matrix");
         if( A != B ) {
             B.copyStructure(A);
         }
@@ -513,8 +530,9 @@ public class CommonOps_DSCC {
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C ,
                                     @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
-        if( A.numCols != B.numCols || A.numRows != B.numRows || A.numCols != C.numCols || A.numRows != C.numRows )
-            throw new IllegalArgumentException("All inputs must have the same number of rows and columns");
+        if( A.numCols != B.numCols || A.numRows != B.numRows )
+            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. "+stringShapes(A,B));
+        C.reshape(A.numRows,A.numCols);
 
         ImplCommonOps_DSCC.elementMult(A,B,C,gw,gx);
     }
@@ -648,7 +666,7 @@ public class CommonOps_DSCC {
      */
     public static void permutationVector( DMatrixSparseCSC P , int[] vector) {
         if( P.numCols != P.numRows ) {
-            throw new IllegalArgumentException("Expected a square matrix");
+            throw new MatrixDimensionException("Expected a square matrix");
         } else if( P.nz_length != P.numCols ) {
             throw new IllegalArgumentException("Expected N non-zero elements in permutation matrix");
         } else if( vector.length < P.numCols ) {
@@ -795,11 +813,9 @@ public class CommonOps_DSCC {
     public static void permuteSymmetric( DMatrixSparseCSC input, int permInv[], DMatrixSparseCSC output ,
                                          @Nullable IGrowArray gw ) {
         if( input.numRows != input.numCols )
-            throw new IllegalArgumentException("Input must be a square matrix");
+            throw new MatrixDimensionException("Input must be a square matrix. "+stringShapes(input,output));
         if( input.numRows != permInv.length )
-            throw new IllegalArgumentException("Number of column in input must match length of permInv");
-        if( input.numCols != permInv.length )
-            throw new IllegalArgumentException("Number of rows in input must match length of permInv");
+            throw new MatrixDimensionException("Number of column in input must match length of permInv");
 
         int N = input.numCols;
 
@@ -861,7 +877,7 @@ public class CommonOps_DSCC {
                                               @Nullable DMatrixSparseCSC out )
     {
         if( top.numCols != bottom.numCols )
-            throw new IllegalArgumentException("Number of columns must match");
+            throw new MatrixDimensionException("Number of columns must match. "+stringShapes(top,bottom));
         if( out == null )
             out = new DMatrixSparseCSC(0,0,0);
 
@@ -906,7 +922,7 @@ public class CommonOps_DSCC {
                                                  @Nullable DMatrixSparseCSC out )
     {
         if( left.numRows != right.numRows )
-            throw new IllegalArgumentException("Number of rows must match");
+            throw new MatrixDimensionException("Number of rows must match. "+stringShapes(left,right));
         if( out == null )
             out = new DMatrixSparseCSC(0,0,0);
 
@@ -1024,17 +1040,17 @@ public class CommonOps_DSCC {
                                DMatrixSparseCSC dst, int dstY0, int dstX0)
     {
         if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
-            throw new IllegalArgumentException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows");
+            throw new MatrixDimensionException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows. "+stringShapes(src,dst));
         if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols() )
-            throw new IllegalArgumentException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols");
+            throw new MatrixDimensionException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols. "+stringShapes(src,dst));
 
         int w = srcX1-srcX0;
         int h = srcY1-srcY0;
 
         if( dstY0+h > dst.getNumRows() )
-            throw new IllegalArgumentException("dst is too small in rows");
+            throw new IllegalArgumentException("dst is too small in rows. "+dst.getNumRows()+" < "+(dstY0+h));
         if( dstX0+w > dst.getNumCols() )
-            throw new IllegalArgumentException("dst is too small in columns");
+            throw new IllegalArgumentException("dst is too small in columns. "+dst.getNumCols()+" < "+(dstX0+w));
 
         zero(dst,dstY0,dstY0+h,dstX0,dstX0+w);
 
@@ -1197,8 +1213,7 @@ public class CommonOps_DSCC {
     public static boolean invert(DMatrixSparseCSC A, DMatrixRMaj inverse ) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix");
-        if( A.numRows != inverse.numRows || A.numCols != inverse.numCols )
-            throw new IllegalArgumentException("A and inverse must have the same shape.");
+        inverse.reshape(A.numRows,A.numCols);
 
         LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
         solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
