@@ -281,8 +281,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void zero() {
-        col_idx[0] = 0;
-//        Arrays.fill(col_idx,0,numCols+1,0);
+//        col_idx[0] = 0;
+        Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
         indicesSorted = false; // see justification in reshape
     }

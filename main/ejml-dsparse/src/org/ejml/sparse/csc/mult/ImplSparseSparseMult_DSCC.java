@@ -24,6 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
@@ -43,7 +44,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                            IGrowArray gw, DGrowArray gx )
+                            @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         double []x = adjust(gx, A.numRows);
         int []w = adjust(gw, A.numRows, A.numRows);
@@ -94,7 +95,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                  IGrowArray gw, DGrowArray gx )
+                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         double []x = adjust(gx, A.numRows);
         int []w = adjust(gw, A.numRows, A.numRows);
@@ -156,7 +157,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                  IGrowArray gw, DGrowArray gx ) {
+                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
         if( !B.isIndicesSorted() )
             throw new IllegalArgumentException("B must have its indices sorted.");
         else if( !CommonOps_DSCC.checkIndicesSorted(B)) {
@@ -418,5 +419,67 @@ public class ImplSparseSparseMult_DSCC {
         }
 
         return dot;
+    }
+
+    /**
+     * Computes the inner product of A times A and stores the results in B. The inner product is symmetric and this
+     * function will only store the lower triangle. If the full matrix is needed then.
+     *
+     * <p>B = A<sup>T</sup>*A</sup>
+     *
+     * @param A (Input) Matrix
+     * @param B (Output) Storage for output.
+     */
+    public static void innerProductLower(DMatrixSparseCSC A , DMatrixSparseCSC B ,
+                                         @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+    {
+        double []x = adjust(gx, A.numRows);
+        int []w = adjust(gw, A.numRows, A.numRows);
+
+        // no idea what a reasonable initial length for nz_length is. This was picked arbitrarily
+        B.reshape(A.numCols,A.numCols,A.nz_length/2);
+        B.indicesSorted = true;
+
+        for (int colI = 0; colI < A.numCols; colI++) {
+            int idx0 = A.col_idx[colI];
+            int idx1 = A.col_idx[colI+1];
+
+            int mark = colI + 1;
+
+            // Sparse copy into dense vector
+            for (int i = idx0; i < idx1; i++) {
+                int row = A.nz_rows[i];
+                w[row] = mark;
+                x[row] = A.nz_values[i];
+            }
+
+            // Compute dot product along each column
+            for (int colJ = colI; colJ < A.numCols; colJ++) {
+                double sum = 0;
+                idx0 = A.col_idx[colJ];
+                idx1 = A.col_idx[colJ+1];
+
+                for (int i = idx0; i < idx1; i++) {
+                    int row = A.nz_rows[i];
+                    if( w[row] == mark ) {
+                        sum += x[row]*A.nz_values[i];
+                    }
+                }
+
+                if( sum == 0 )
+                    continue;
+
+                if( B.nz_length == B.nz_values.length ) {
+                    B.growMaxLength(B.nz_length*2+1,true);
+                }
+                B.nz_values[B.nz_length] = sum;
+                B.nz_rows[B.nz_length++] = colJ;
+            }
+            B.col_idx[colI+1] = B.nz_length;
+        }
+    }
+
+    public void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B ) {
+
     }
 }

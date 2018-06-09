@@ -63,7 +63,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(rowsA,colsB,nz_c,-1,1,rand);
 
         ImplSparseSparseMult_DSCC.mult(a,b,c, null, null);
-        assertTrue(CommonOps_DSCC.checkSortedFlag(c));
+        assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
@@ -88,8 +88,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixSparseCSC c = new DMatrixSparseCSC(4,5,0);
 
         ImplSparseSparseMult_DSCC.mult(a,b,c,null,null);
-
-        assertTrue(CommonOps_DSCC.checkSortedFlag(c));
+        assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a,(DMatrixRMaj)null);
         DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
@@ -352,6 +351,40 @@ public class TestImplSparseSparseMult_DSCC {
             }
 
             assertEquals(expected,found,UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
+    public void innerProductLower() {
+        IGrowArray gw = new IGrowArray();
+        DGrowArray gx = new DGrowArray();
+
+        for (int mc = 0; mc < 50; mc++) {
+            int numRows = rand.nextInt(10)+1;
+            int numCols = rand.nextInt(10)+1;
+
+            int A_nz = RandomMatrices_DSCC.nonzero(numRows,numCols,0.1,0.9,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,A_nz,rand);
+            DMatrixSparseCSC B = new DMatrixSparseCSC(numCols,numCols);
+
+            DMatrixRMaj A_dense = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+            DMatrixRMaj B_dense = new DMatrixRMaj(numCols,numCols);
+
+            ImplSparseSparseMult_DSCC.innerProductLower(A,B,gw,gx);
+            CommonOps_DDRM.multTransA(A_dense,A_dense,B_dense);
+
+            B.print();
+            B_dense.print();
+
+            for (int row = 0; row < B.numRows; row++) {
+                for (int col = 0; col < B.numCols; col++) {
+                    if( col > row ) {
+                        assertEquals(0,B.get(row,col), UtilEjml.TEST_F64);
+                    } else {
+                        assertEquals(B_dense.get(row,col),B.get(row,col), UtilEjml.TEST_F64);
+                    }
+                }
+            }
         }
     }
 }

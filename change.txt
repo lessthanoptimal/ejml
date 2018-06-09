@@ -11,6 +11,7 @@ Date format: year/month/day
   * Added multTransB(sparse,dense,dense) multAddTransB(sparse,dense,dense)
   * Added multTransAB(sparse,dense,dense) multAddTransAB(sparse,dense,dense)
   * Added extractDiag(sparse,dense)
+  * Added innerProductLower(sparse,sparse) B = A'*A. Only lower triangle is saved in B
 - Added LinearSolverSparseSafe
 - LinearSolverSparse
   * Changed lockStructure() to setStructureLocked( boolean )
