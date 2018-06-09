@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,6 +39,16 @@ public interface DMatrixSparse extends DMatrix {
      * @param arrayLength Array length for storing non-zero elements.
      */
     void reshape( int numRows , int numCols , int arrayLength );
+
+    /**
+     * Changes the number of rows and columns in the matrix. The graph structure is flushed and the matrix will
+     * be empty/all zeros.  Similar to {@link #reshape(int, int, int)}, but the storage for non-zero elements is
+     * not changed
+     *
+     * @param numRows number of rows
+     * @param numCols number of columns
+     */
+    void reshape( int numRows , int numCols );
 
     /**
      * Reduces the size of internal data structures to their minimal size.  No information is lost bu

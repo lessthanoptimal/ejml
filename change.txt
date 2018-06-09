@@ -23,6 +23,8 @@ Date format: year/month/day
   * Added functions for solving sparse matrices
   * Improved efficiency of Triangle solve
   * Triangle sparse solve supports lower and upper tall matrices. Plus the transpose.
+- SparseMatrix
+  * added reshape(rows,cols) so that you don't need to specify nz_length when it doesn't matter.
 
 ----- Version 0.34
 2018/04/13

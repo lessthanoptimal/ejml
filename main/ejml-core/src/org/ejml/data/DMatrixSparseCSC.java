@@ -310,6 +310,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
+    public void reshape(int numRows, int numCols) {
+        reshape(numRows, numCols,0);
+    }
+
+    @Override
     public void shrinkArrays() {
         if( nz_length < nz_values.length ) {
             double tmp_values[] = new double[nz_length];
