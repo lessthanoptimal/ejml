@@ -20,8 +20,10 @@ package org.ejml.sparse.csc.misc;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
@@ -135,6 +137,10 @@ public class TestTriangularSolver_DSCC {
     }
 
     public void solve_sparseX_matrix_square( boolean lower ) {
+        DGrowArray gx = new DGrowArray();
+        IGrowArray gxi = new IGrowArray();
+        IGrowArray gw = new IGrowArray();
+
         for (int trial = 0; trial < 10; trial++) {
             for (int nz_size : new int[]{5, 8, 10, 20}) {
                 int lengthX = rand.nextInt(3)+3;
@@ -147,7 +153,7 @@ public class TestTriangularSolver_DSCC {
                 DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 2,lengthX*2, rand);
                 DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
 
-                TriangularSolver_DSCC.solve(G,lower,b,x, null, null, null, null);
+                TriangularSolver_DSCC.solve(G,lower,b,x, null, gx, gxi, gw);
                 assertTrue(CommonOps_DSCC.checkStructure(x));
 
                 DMatrixSparseCSC found = x.createLike();
@@ -165,8 +171,63 @@ public class TestTriangularSolver_DSCC {
                 CommonOps_DSCC.permute(null,G,p,Gp);
                 CommonOps_DSCC.mult(G,x,b);
                 x = x.createLike();
-                TriangularSolver_DSCC.solve(Gp,lower,b,x,pinv, null, null, null);
+                TriangularSolver_DSCC.solve(Gp,lower,b,x,pinv, gx, gxi, gw);
+                DMatrixSparseCSC b_found = b.createLike();
+                CommonOps_DSCC.mult(G,x,b_found);
+                EjmlUnitTests.assertEquals(b_found,b);
+            }
+        }
+    }
+
+    @Test
+    public void solve_sparseX_matrixTran_square() {
+        solve_sparseX_matrixTran_square(true);
+        solve_sparseX_matrixTran_square(false);
+    }
+
+    public void solve_sparseX_matrixTran_square( boolean lower ) {
+        DGrowArray gx = new DGrowArray();
+        IGrowArray gxi = new IGrowArray();
+        IGrowArray gw = new IGrowArray();
+
+        for (int trial = 0; trial < 10; trial++) {
+            for (int nz_size : new int[]{5, 8, 10, 20}) {
+//                System.out.println("NZ:"+nz_size+"   trial:"+trial);
+
+                int N = 5, Bcol = 2;
+
+                int B_nz_count = (int)(N*Bcol*(rand.nextDouble()*0.7+0.35)); // bias so it will fill up
+
+                DMatrixSparseCSC G;
+                if( lower)
+                    G = RandomMatrices_DSCC.triangleLower(N, 0, nz_size, -1, 1, rand);
+                else
+                    G = RandomMatrices_DSCC.triangleUpper(N, 0, nz_size, -1, 1, rand);
+                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(N, Bcol,B_nz_count, rand);
+                DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
+
+                DMatrixSparseCSC GT = G.createLike();
+                CommonOps_DSCC.transpose(G,GT,gw);
+
+                TriangularSolver_DSCC.solveTran(G,lower,b,x, null, gx, gxi, gw);
                 assertTrue(CommonOps_DSCC.checkStructure(x));
+
+                DMatrixSparseCSC found = x.createLike();
+                CommonOps_DSCC.mult(GT, x, found);
+
+                // Don't use a sparse test since the solution might contain 0 values due to cancellations
+                EjmlUnitTests.assertEquals(found,b);
+
+                //===========================================================
+                // now try it with pivots
+                int p[] = UtilEjml.shuffled(G.numRows,rand);
+                int pinv[] = CommonOps_DSCC.permutationInverse(p,p.length);
+
+                DMatrixSparseCSC Gp = G.createLike();
+                CommonOps_DSCC.permute(null,G,p,Gp);
+                CommonOps_DSCC.mult(G,x,b);
+                x = x.createLike();
+                TriangularSolver_DSCC.solve(Gp,lower,b,x,pinv, gx, gxi, gw);
                 DMatrixSparseCSC b_found = b.createLike();
                 CommonOps_DSCC.mult(G,x,b_found);
                 EjmlUnitTests.assertEquals(b_found,b);

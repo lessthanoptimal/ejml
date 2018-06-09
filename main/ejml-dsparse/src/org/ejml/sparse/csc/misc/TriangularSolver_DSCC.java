@@ -102,6 +102,107 @@ public class TriangularSolver_DSCC {
     }
 
     /**
+     * Solution to a sparse transposed triangular system with sparse B and sparse X
+     *
+     * <p>G<sup>T</sup>*X = B</p>
+     *
+     * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param lower true for lower triangular and false for upper
+     * @param B     (Input) Matrix.  Not modified.
+     * @param X     (Output) Solution
+     * @param pinv  (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
+     * @param g_x   (Optional) Storage for workspace.
+     * @param g_xi  (Optional) Storage for workspace.
+     * @param g_w   (Optional) Storage for workspace.
+     */
+    public static void solveTran(DMatrixSparseCSC G, boolean lower,
+                                 DMatrixSparseCSC B, DMatrixSparseCSC X,
+                                 @Nullable int pinv[] ,
+                                 @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
+    {
+        double[] x = adjust(g_x,G.numRows);
+
+        X.zero();
+        X.indicesSorted = false;
+
+        // storage for the index of non-zero rows in X
+        int[] xi = adjust(g_xi,G.numRows);
+        // Used to mark nodes as non-zero or not. Fill with zero initially
+        int[] w = adjust(g_w,G.numCols, G.numCols); // Dense fill makes adds O(N) to runtime
+
+        for (int colB = 0; colB < B.numCols; colB++) {
+            int idx0 = B.col_idx[colB];
+            int idx1 = B.col_idx[colB+1];
+
+            // Sparse copy into X and mark elements are non-zero
+            int X_nz_count = 0;
+            for (int i = idx0; i < idx1; i++) {
+                int row = B.nz_rows[i];
+                x[row] = B.nz_values[i];
+                w[row] = 1;
+                xi[X_nz_count++] = row;
+            }
+
+            if( lower ) {
+                for (int col = G.numRows - 1; col >= 0; col--) {
+                    X_nz_count = solveTranColumn(G, x, xi, w, pinv, X_nz_count, col);
+                }
+            } else {
+                for (int col = 0; col < G.numRows; col++) {
+                    X_nz_count = solveTranColumn(G, x, xi, w, pinv, X_nz_count, col);
+                }
+            }
+
+            // set everything back to zero for the next column
+            if( colB+1 < B.numCols ) {
+                for (int i = 0; i < X_nz_count; i++) {
+                    w[xi[i]] = 0;
+                }
+            }
+
+            // Copy results into X
+            if( X.nz_values.length < X.nz_length + X_nz_count) {
+                X.growMaxLength(X.nz_length*2 + X_nz_count,true);
+            }
+            for (int p = 0; p < X_nz_count; p++,X.nz_length++) {
+                X.nz_rows[X.nz_length] = xi[p];
+                X.nz_values[X.nz_length] = x[xi[p]];
+            }
+            X.col_idx[colB+1] = X.nz_length;
+        }
+    }
+
+    private static int solveTranColumn(DMatrixSparseCSC G, double[] x, int[] xi, int[] w,
+                                       @Nullable int pinv[], int x_nz_count, int col) {
+        int idxG0 = G.col_idx[col];
+        int idxG1 = G.col_idx[col+1];
+
+        int indexDiagonal=-1;
+        double total = 0;
+        for (int j = idxG0; j < idxG1; j++) {
+            int J = pinv != null ? pinv[j] : j;
+            int row = G.nz_rows[J];
+
+            if( row == col ) {
+                // order matters and this operation needs to be done last
+                indexDiagonal = j;
+            } else if( w[row] == 1 ){
+                // L'[ col , row]*x[row]
+                total += G.nz_values[J]*x[row];
+            }
+        }
+        if( w[col] == 1 ) {
+            x[col] = (x[col] - total)/G.nz_values[indexDiagonal];
+        } else if( total != 0 ){
+            // This element in B was zero. Mark it as non-zero and add to list
+            w[col] = 1;
+            x[col] = -total/G.nz_values[indexDiagonal];
+            xi[x_nz_count++] = col;
+        }
+        return x_nz_count;
+    }
+
+    /**
      * Computes the solution to the triangular system.
      *
      * @param G     (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
@@ -118,7 +219,7 @@ public class TriangularSolver_DSCC {
                              @Nullable int pinv[] ,
                              @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
-        double[] x = adjust(g_x,G.numRows); // Maybe this could just be
+        double[] x = adjust(g_x,G.numRows);
         if( g_xi == null ) g_xi = new IGrowArray();
         int[] xi = adjust(g_xi,G.numRows);
         int[] w = adjust(g_w,G.numCols*2, G.numCols);
@@ -183,7 +284,7 @@ public class TriangularSolver_DSCC {
         for (int px = top; px < X_rows; px++) {
             int j = xi[px];
             int J = pinv != null ? pinv[j] : j;
-            if( J < 0 || j >= X_rows )
+            if( J < 0 )
                 continue;
             int p,q;
             if( lower ) {
@@ -196,6 +297,9 @@ public class TriangularSolver_DSCC {
                 q = G.col_idx[J+1]-1;
             }
             for(;p<q;p++) {
+                // NOTE: This will manipulate elements in x which are already known to have a zero value
+                // I guess this is faster/easier than actively trying to avoid those elements. I don't see an obvious
+                // way to improve it
                 x[G.nz_rows[p]] -= G.nz_values[p]*x[j];
             }
         }

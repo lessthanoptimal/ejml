@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -281,7 +281,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void zero() {
-        Arrays.fill(col_idx,0,numCols+1,0);
+        col_idx[0] = 0;
+//        Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
         indicesSorted = false; // see justification in reshape
     }

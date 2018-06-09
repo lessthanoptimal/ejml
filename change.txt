@@ -20,9 +20,7 @@ Date format: year/month/day
 - Sparse Solver
   * Added functions for solving sparse matrices
   * Improved efficiency of Triangle solve
-  * Triangle solve supports lower and upper tall matrices
-
-TODO add sparse triangle solve transpose
+  * Triangle sparse solve supports lower and upper tall matrices. Plus the transpose.
 
 ----- Version 0.34
 2018/04/13
