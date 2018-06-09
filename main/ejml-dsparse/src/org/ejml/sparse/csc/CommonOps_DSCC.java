@@ -826,7 +826,8 @@ public class CommonOps_DSCC {
         }
 
         // update structure of output
-        output.colsum(w);
+        output.histogramToStructure(w);
+        System.arraycopy(output.col_idx,0,w,0,output.numCols);
 
         for (int j = 0; j < N; j++) {
             // column j of Input is row j2 of Output

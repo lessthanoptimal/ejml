@@ -20,8 +20,6 @@ package org.ejml.data;
 
 import org.ejml.ops.SortCoupledArray_F64;
 
-import java.util.Arrays;
-
 /**
  * <p>Compressed Column (CC) sparse matrix format.   Only non-zero elements are stored.</p>
  * <p>
@@ -281,8 +279,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void zero() {
-//        col_idx[0] = 0;
-        Arrays.fill(col_idx,0,numCols+1,0);
+        col_idx[0] = 0;
+//        Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
         indicesSorted = false; // see justification in reshape
     }
@@ -304,8 +302,6 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
         if( numCols+1 > col_idx.length ) {
             col_idx = new int[ numCols+1 ];
-        } else {
-            Arrays.fill(col_idx,0,numCols+1,0);
         }
     }
 
@@ -367,17 +363,16 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     /**
-     * Given the histogram of columns compute the col_idx for the matrix.  Then overwrite histogram with
-     * those values.  nz_length is automatically set and nz_values will grow if needed.
+     * Given the histogram of columns compute the col_idx for the matrix.  nz_length is automatically set and
+     * nz_values will grow if needed.
      * @param histogram histogram of column values in the sparse matrix. modified, see above.
      */
-    public void colsum(int histogram[] ) {
+    public void histogramToStructure(int histogram[] ) {
         col_idx[0] = 0;
         int index = 0;
         for (int i = 1; i <= numCols; i++) {
             col_idx[i] = index += histogram[i-1];
         }
-        System.arraycopy(col_idx,0,histogram,0,numCols); // TODO move this outside?
         nz_length = index;
         growMaxLength( nz_length , false);
         if( col_idx[numCols] != nz_length )

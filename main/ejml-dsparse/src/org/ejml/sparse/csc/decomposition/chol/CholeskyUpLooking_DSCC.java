@@ -80,7 +80,7 @@ public class CholeskyUpLooking_DSCC implements
         TriangularSolver_DSCC.postorder(parent,N,post, gw);
         columnCounter.process(A,parent,post,counts);
         L.reshape(A.numRows,A.numCols,0);
-        L.colsum(counts);
+        L.histogramToStructure(counts);
     }
 
     private void init( int N ) {

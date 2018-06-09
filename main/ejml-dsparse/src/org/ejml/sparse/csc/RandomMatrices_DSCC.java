@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -60,7 +60,7 @@ public class RandomMatrices_DSCC {
         }
 
         // define col_idx
-        ret.colsum(hist);
+        ret.histogramToStructure(hist);
 
         for (int i = 0; i < nz_total; i++) {
             int row = selected[i]%numRows;
@@ -183,7 +183,7 @@ public class RandomMatrices_DSCC {
         }
 
         // define col_idx
-        L.colsum(hist);
+        L.histogramToStructure(hist);
 
         int nz_index = 0;
         s_index = 0;

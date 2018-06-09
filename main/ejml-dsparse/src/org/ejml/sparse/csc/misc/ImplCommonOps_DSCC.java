@@ -61,7 +61,8 @@ public class ImplCommonOps_DSCC {
         }
 
         // construct col_idx in the transposed matrix
-        C.colsum(work);
+        C.histogramToStructure(work);
+        System.arraycopy(C.col_idx,0,work,0,C.numCols);
 
         // fill in the row indexes
         idx0 = A.col_idx[0];
@@ -297,7 +298,7 @@ public class ImplCommonOps_DSCC {
         }
 
         // Update the structure of B
-        B.colsum(w);
+        B.histogramToStructure(w);
 
         // Zero W again. It's being used to keep track of how many elements have been added to a column already
         Arrays.fill(w,0,N,0);

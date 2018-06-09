@@ -886,7 +886,8 @@ public class ConvertDMatrixStruct {
         }
 
         // define col_idx
-        dst.colsum(hist);
+        dst.histogramToStructure(hist);
+        System.arraycopy(dst.col_idx,0,hist,0,dst.numCols);
 
         // now write the row indexes and the values
         for (int i = 0; i < src.nz_length; i++) {
