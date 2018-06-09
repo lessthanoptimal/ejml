@@ -277,6 +277,37 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * Computes the inner product of A times A and stores the results in B. The inner product is symmetric and this
+     * function will only store the lower triangle. If the full matrix is needed then. If you need the full
+     * matrix use {@link #symmLowerToFull}.
+     *
+     * <p>B = A<sup>T</sup>*A</sup>
+     *
+     * @param A (Input) Matrix
+     * @param B (Output) Storage for output.
+     * @param gw (Optional) Workspace
+     * @param gx (Optional) Workspace
+     */
+    public static void innerProductLower(DMatrixSparseCSC A , DMatrixSparseCSC B ,
+                                         @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+    {
+        ImplSparseSparseMult_DSCC.innerProductLower(A, B, gw, gx);
+    }
+
+    /**
+     * Given a symmetric matrix, which is represented by a lower triangular matrix, convert it back into
+     * a full symmetric matrix
+     *
+     * @param A (Input) Lower triangular matrix
+     * @param B (Output) Symmetric matrix.
+     * @param gw (Optional) Workspace. Can be null.
+     */
+    public static void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable IGrowArray gw )
+    {
+        ImplCommonOps_DSCC.symmLowerToFull(A, B, gw);
+    }
+
+    /**
      * Performs matrix addition:<br>
      * C = &alpha;A + &beta;B
      *

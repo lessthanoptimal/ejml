@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.sparse.csc.misc;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -36,7 +37,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestImplCommonOps_DSCC {
 
-    Random rand = new Random(324);
+    private Random rand = new Random(324);
 
     @Test
     public void transpose() {
@@ -199,6 +200,31 @@ public class TestImplCommonOps_DSCC {
                 for (int k = 0; k < cols; k++) {
                     double val = A.get(j,k);
                     assertTrue("val = "+val,Math.abs(val) > 0.2 || val == 0);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void symmLowerToFull() {
+        IGrowArray gw = new IGrowArray();
+        int sizes[] = {1,2,5,10};
+
+        for (int i = 0; i < 20; i++) {
+            for( int N : sizes ) {
+                int nz = RandomMatrices_DSCC.nonzero(N,N/2,0.1,1.0,rand);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.triangleLower(N,0,nz,-1,1,rand);
+                DMatrixSparseCSC B = new DMatrixSparseCSC(0,0);
+
+                ImplCommonOps_DSCC.symmLowerToFull(A,B,gw);
+                assertTrue(CommonOps_DSCC.checkStructure(B));
+
+                for (int row = 0; row < N; row++) {
+                    for (int col = 0; col <= row; col++) {
+//                        System.out.println(row+" "+col);
+                        assertEquals(A.get(row,col), B.get(row,col), UtilEjml.TEST_F64);
+                        assertEquals(A.get(row,col), B.get(col,row), UtilEjml.TEST_F64);
+                    }
                 }
             }
         }

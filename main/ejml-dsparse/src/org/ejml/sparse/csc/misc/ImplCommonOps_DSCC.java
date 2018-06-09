@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
@@ -43,7 +44,7 @@ public class ImplCommonOps_DSCC {
      * @param C Storage for transposed 'a'.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , IGrowArray gw ) {
+    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , @Nullable IGrowArray gw ) {
         int []work = adjust(gw,A.numRows,A.numRows);
         C.reshape(A.numCols,A.numRows,A.nz_length);
 
@@ -90,7 +91,7 @@ public class ImplCommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                IGrowArray gw, DGrowArray gx)
+                           @Nullable IGrowArray gw, @Nullable DGrowArray gx)
     {
         double []x = adjust(gx,A.numRows);
         int []w = adjust(gw,A.numRows,A.numRows);
@@ -128,7 +129,7 @@ public class ImplCommonOps_DSCC {
      * @param gw workspace
      */
     public static void addColAppend(double alpha, DMatrixSparseCSC A, int colA, double beta, DMatrixSparseCSC B, int colB,
-                                    DMatrixSparseCSC C, IGrowArray gw)
+                                    DMatrixSparseCSC C, @Nullable IGrowArray gw)
     {
         if( A.numRows != B.numRows || A.numRows != C.numRows)
             throw new IllegalArgumentException("Number of rows in A, B, and C do not match");
@@ -174,7 +175,7 @@ public class ImplCommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                    IGrowArray gw, DGrowArray gx)
+                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx)
     {
         double []x = adjust(gx,A.numRows);
         int []w = adjust(gw,A.numRows);
@@ -258,5 +259,72 @@ public class ImplCommonOps_DSCC {
             A.col_idx[i+1] -= offset;
         }
         A.nz_length -= offset;
+    }
+
+    /**
+     * Given a symmetric matrix which is represented by a lower triangular matrix convert it back into
+     * a full symmetric matrix
+     *
+     * @param A (Input) Lower triangular matrix
+     * @param B (Output) Symmetric matrix.
+     * @param gw (Optional) Workspace. Can be null.
+     */
+    public static void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable IGrowArray gw )
+    {
+        if( A.numCols != A.numRows )
+            throw new IllegalArgumentException("Must be a lower triangular square matrix");
+
+        int N = A.numCols;
+        int w[] = adjust(gw,N,N);
+        B.reshape(N,N,A.nz_length*2);
+        B.indicesSorted = false;
+
+        //=== determine the row counts of the full matrix
+        for (int col = 0; col < N; col++) {
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col+1];
+
+            // We know the length of the lower part of this column already
+            w[col] += idx1 - idx0;
+
+            // add elements to the top of the other columns along row with index 'col'
+            for (int i = idx0; i < idx1; i++) {
+                int row = A.nz_rows[i];
+                if( row > col ) {
+                    w[row]++;
+                }
+            }
+        }
+
+        // Update the structure of B
+        B.colsum(w);
+
+        // Zero W again. It's being used to keep track of how many elements have been added to a column already
+        Arrays.fill(w,0,N,0);
+        // Fill in matrix
+        for (int col = 0; col < N; col++) {
+
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col+1];
+
+            int lengthA = idx1 - idx0;
+            int lengthB = B.col_idx[col+1] - B.col_idx[col];
+
+            // Copy the non-zero values from A into B along the columns while taking in account the upper
+            // elements already copied
+            System.arraycopy(A.nz_values,idx0,B.nz_values,B.col_idx[col]+lengthB-lengthA,lengthA);
+            System.arraycopy(A.nz_rows,idx0,B.nz_rows,B.col_idx[col]+lengthB-lengthA,lengthA);
+
+            // Copy this column into the upper portion of B
+            for (int i = idx0; i < idx1; i++) {
+                int row = A.nz_rows[i];
+                if( row > col ) {
+                    int indexB = B.col_idx[row] + w[row]++;
+                    B.nz_rows[indexB] = col;
+                    B.nz_values[indexB] = A.nz_values[i];
+                }
+            }
+        }
+
     }
 }

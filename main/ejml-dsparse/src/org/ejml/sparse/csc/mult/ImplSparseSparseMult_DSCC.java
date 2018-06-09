@@ -429,6 +429,8 @@ public class ImplSparseSparseMult_DSCC {
      *
      * @param A (Input) Matrix
      * @param B (Output) Storage for output.
+     * @param gw (Optional) Workspace
+     * @param gx (Optional) Workspace
      */
     public static void innerProductLower(DMatrixSparseCSC A , DMatrixSparseCSC B ,
                                          @Nullable IGrowArray gw, @Nullable DGrowArray gx )
@@ -477,9 +479,5 @@ public class ImplSparseSparseMult_DSCC {
             }
             B.col_idx[colI+1] = B.nz_length;
         }
-    }
-
-    public void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B ) {
-
     }
 }

@@ -371,10 +371,11 @@ public class TestImplSparseSparseMult_DSCC {
             DMatrixRMaj B_dense = new DMatrixRMaj(numCols,numCols);
 
             ImplSparseSparseMult_DSCC.innerProductLower(A,B,gw,gx);
+            assertTrue(CommonOps_DSCC.checkStructure(B));
             CommonOps_DDRM.multTransA(A_dense,A_dense,B_dense);
 
-            B.print();
-            B_dense.print();
+//            B.print();
+//            B_dense.print();
 
             for (int row = 0; row < B.numRows; row++) {
                 for (int col = 0; col < B.numCols; col++) {
