@@ -89,6 +89,20 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         nz_length += 1;
     }
 
+    public void addItemCheck(int row , int col , double value ) {
+        if( row < 0 || col < 0 || row >= numRows || col >= numCols )
+            throw new IllegalArgumentException("Out of bounds. ("+row+","+col+") "+numRows+" "+numCols);
+        if( nz_length == nz_value.data.length ) {
+            int amount = nz_length + 10;
+            nz_value.grow(amount);
+            nz_rowcol.grow(amount*2);
+        }
+        nz_value.data[nz_length] = value;
+        nz_rowcol.data[nz_length*2] = row;
+        nz_rowcol.data[nz_length*2+1] = col;
+        nz_length += 1;
+    }
+
     @Override
     public void set( int row , int col , double value ) {
         if( row < 0 || row >= numRows || col < 0 || col >= numCols )
