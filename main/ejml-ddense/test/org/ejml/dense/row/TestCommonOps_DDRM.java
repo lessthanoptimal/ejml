@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -355,6 +355,36 @@ public class TestCommonOps_DDRM {
 
         for( int i = 0; i < 20; i++ ) {
             assertEquals(c.get(i),a.get(i)/b.get(i),1e-6);
+        }
+    }
+
+    @Test
+    public void rowMult() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj found = A.copy();
+        double values[] = UtilEjml.randomVector_F64(rand, 5);
+
+        CommonOps_DDRM.rowMult(found,values);
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col)*values[row], found.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void rowDiv() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj found = A.copy();
+        double values[] = UtilEjml.randomVector_F64(rand, 5);
+
+        CommonOps_DDRM.rowDiv(found,values);
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col)/values[row], found.get(row,col), UtilEjml.TEST_F64);
+            }
         }
     }
 

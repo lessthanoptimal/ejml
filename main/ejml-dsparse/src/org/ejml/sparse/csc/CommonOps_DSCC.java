@@ -538,6 +538,71 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * Finds the maximum abs in each column of A and stores it into values
+     * @param A (Input) Matrix
+     * @param values (Output) storage for column max abs
+     */
+    public static void columnMaxAbs( DMatrixSparseCSC A , double []values ) {
+        if( values.length < A.numCols )
+            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+
+        for (int i = 0; i < A.numCols; i++) {
+            int idx0 = A.col_idx[i];
+            int idx1 = A.col_idx[i+1];
+
+            double maxabs = 0;
+            for (int j = idx0; j < idx1; j++) {
+                double v = Math.abs(A.nz_values[j]);
+                if( v > maxabs )
+                    maxabs = v;
+            }
+            values[i] = maxabs;
+        }
+    }
+
+    /**
+     * Multiply all elements of column 'i' by value[i].
+     *
+     * @param A (Input/Output) Matrix. Modified.
+     * @param values (Input) multiplication factor for each column
+     */
+    public static void columnMult( DMatrixSparseCSC A , double []values ) {
+        if( values.length < A.numCols )
+            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+
+        for (int i = 0; i < A.numCols; i++) {
+            int idx0 = A.col_idx[i];
+            int idx1 = A.col_idx[i+1];
+
+            double v = values[i];
+            for (int j = idx0; j < idx1; j++) {
+                A.nz_values[j] *= v;
+            }
+        }
+    }
+
+    /**
+     * Divides all elements of column 'i' by value[i].
+     *
+     * @param A (Input/Output) Matrix. Modified.
+     * @param values (Input) multiplication factor for each column
+     */
+    public static void columnDiv( DMatrixSparseCSC A , double []values ) {
+        if( values.length < A.numCols )
+            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+
+        for (int i = 0; i < A.numCols; i++) {
+            int idx0 = A.col_idx[i];
+            int idx1 = A.col_idx[i+1];
+
+            double v = values[i];
+            for (int j = idx0; j < idx1; j++) {
+                A.nz_values[j] /= v;
+            }
+        }
+    }
+
+    /**
      * Returns a diagonal matrix with the specified diagonal elements.
      * @param values values of diagonal elements
      * @return A diagonal matrix

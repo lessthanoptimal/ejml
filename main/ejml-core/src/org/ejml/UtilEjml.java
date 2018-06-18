@@ -267,6 +267,22 @@ public class UtilEjml {
         return cnt%2==0?1:-1;
     }
 
+    public static double[] randomVector_F64( Random rand , int length ) {
+        double d[] = new double[length];
+        for (int i = 0; i < length; i++) {
+            d[i] = rand.nextDouble();
+        }
+        return d;
+    }
+
+    public static float[] randomVector_F32( Random rand , int length ) {
+        float d[] = new float[length];
+        for (int i = 0; i < length; i++) {
+            d[i] = rand.nextFloat();
+        }
+        return d;
+    }
+
     public static String stringShapes(Matrix A , Matrix B , Matrix C ) {
         return "( "+A.getNumRows()+"x"+A.getNumCols()+" ) " +
                 "( "+B.getNumRows()+"x"+B.getNumCols()+" ) " +

@@ -1600,6 +1600,46 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * Multiplies every element in row i by value[i].
+     *
+     * @param A Matrix. Modified.
+     * @param values array. Not modified.
+     */
+    public static void rowMult(DMatrixRMaj A , double values[] ) {
+        if( values.length < A.numRows ) {
+            throw new IllegalArgumentException("Not enough elements in values.");
+        }
+
+        int index = 0;
+        for (int row = 0; row < A.numRows; row++) {
+            double v = values[row];
+            for (int col = 0; col < A.numCols; col++, index++) {
+                A.data[index] *= v;
+            }
+        }
+    }
+
+    /**
+     * Divides every element in row i by value[i].
+     *
+     * @param A Matrix. Modified.
+     * @param values array. Not modified.
+     */
+    public static void rowDiv(DMatrixRMaj A , double values[] ) {
+        if( values.length < A.numRows ) {
+            throw new IllegalArgumentException("Not enough elements in values.");
+        }
+
+        int index = 0;
+        for (int row = 0; row < A.numRows; row++) {
+            double v = values[row];
+            for (int col = 0; col < A.numCols; col++, index++) {
+                A.data[index] /= v;
+            }
+        }
+    }
+
+    /**
      * <p>
      * Computes the sum of each row in the input matrix and returns the results in a vector:<br>
      * <br>

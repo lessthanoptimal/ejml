@@ -80,7 +80,6 @@ public class TestCommonOps_DSCC {
         assertFalse(CommonOps_DSCC.checkDuplicateElements(orig));
         orig.nz_rows[1] = 2;
         assertTrue(CommonOps_DSCC.checkDuplicateElements(orig));
-
     }
 
     @Test
@@ -506,6 +505,79 @@ public class TestCommonOps_DSCC {
         }
     }
 
+    @Test
+    public void columnMaxAbs() {
+        for (int trial = 0; trial < 50; trial++) {
+//            System.out.println("------------------- Trial "+trial);
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz_a = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
+            double values[] = new double[A.numCols];
+
+            CommonOps_DSCC.columnMaxAbs(A,values);
+
+            for (int j = 0; j < cols; j++) {
+                double expected = 0;
+                for (int i = 0; i < rows; i++) {
+                    expected = Math.max(Math.abs(A.get(i,j)),expected);
+                }
+                assertEquals(expected,values[j], UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void columnMult() {
+        for (int trial = 0; trial < 50; trial++) {
+//            System.out.println("------------------- Trial "+trial);
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz_a = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
+            DMatrixSparseCSC found = A.copy();
+
+            double values[] = new double[A.numCols];
+            for (int i = 0; i < A.numCols; i++) {
+                values[i] = rand.nextDouble()+0.1;
+            }
+            CommonOps_DSCC.columnMult(found,values);
+
+            for (int j = 0; j < cols; j++) {
+                for (int i = 0; i < rows; i++) {
+                    assertEquals(A.get(i,j)*values[j], found.get(i,j), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void columnDiv() {
+        for (int trial = 0; trial < 50; trial++) {
+//            System.out.println("------------------- Trial "+trial);
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz_a = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
+            DMatrixSparseCSC found = A.copy();
+
+            double values[] = new double[A.numCols];
+            for (int i = 0; i < A.numCols; i++) {
+                values[i] = rand.nextDouble()+0.1;
+            }
+            CommonOps_DSCC.columnDiv(found,values);
+
+            for (int j = 0; j < cols; j++) {
+                for (int i = 0; i < rows; i++) {
+                    assertEquals(A.get(i,j)/values[j], found.get(i,j), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
 
     @Test
     public void diag() {
