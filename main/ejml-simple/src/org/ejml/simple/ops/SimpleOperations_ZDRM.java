@@ -26,6 +26,7 @@ import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.NormOps_ZDRM;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleOperations;
+import org.ejml.simple.UnsupportedOperation;
 
 import java.io.PrintStream;
 
@@ -76,7 +77,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void kron(ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.kron(A,B,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
@@ -92,37 +93,37 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void minus(ZMatrixRMaj A, /**/double b, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.subtract(A, (double)b, output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void plus(ZMatrixRMaj A, /**/double b, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.add(A, (double)b, output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void plus(ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.add(A, (double)beta, b, output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public /**/double dot(ZMatrixRMaj A, ZMatrixRMaj v) {
 //        return VectorVectorMult_DDRM.innerProd(A, v);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void scale(ZMatrixRMaj A, /**/double val, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.scale( (double)val, 0,A,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void divide(ZMatrixRMaj A, /**/double val, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.divide( A, (double)val,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
@@ -138,7 +139,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void pseudoInverse(ZMatrixRMaj A, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.pinv(A,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
@@ -164,7 +165,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public /**/double conditionP2(ZMatrixRMaj A) {
 //        return NormOps_ZDRM.conditionP2(A);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
@@ -175,7 +176,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public /**/double trace(ZMatrixRMaj A) {
 //        return CommonOps_ZDRM.trace(A);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
@@ -220,7 +221,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void changeSign(ZMatrixRMaj a) {
 //        CommonOps_ZDRM.changeSign(a);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
@@ -231,44 +232,44 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public /**/double elementSum(ZMatrixRMaj A) {
 //        return CommonOps_ZDRM.elementSum(A);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void elementMult(ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.elementMult(A,B,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void elementDiv(ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.elementDiv(A,B,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void elementPower(ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.elementPower(A,B,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
 
     }
 
     @Override
     public void elementPower(ZMatrixRMaj A, /**/double b, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.elementPower(A, (double)b, output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void elementExp(ZMatrixRMaj A, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.elementExp(A,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override
     public void elementLog(ZMatrixRMaj A, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.elementLog(A,output);
-        throw new RuntimeException("Unsupported");
+        throw new UnsupportedOperation();
     }
 
     @Override

@@ -29,6 +29,8 @@ Date format: year/month/day
 - Improved exception messages for a few functions
 - Changing it so that the output of various functions is reshaped so that it fits the input to make
   development less tedious
+- Fixed serialization of SimpleMatrix
+  * Thanks fa-dev1 for reporting the issue
 
 ----- Version 0.34
 2018/04/13

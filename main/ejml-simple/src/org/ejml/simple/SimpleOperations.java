@@ -22,13 +22,14 @@ import org.ejml.data.Complex_F64;
 import org.ejml.data.Matrix;
 
 import java.io.PrintStream;
+import java.io.Serializable;
 
 /**
  * High level interface for operations inside of SimpleMatrix for one matrix type.
  *
  * @author Peter Abeles
  */
-public interface SimpleOperations<T extends Matrix> {
+public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void set( T A , int row , int column , double value );
 

@@ -20,13 +20,16 @@ package org.ejml.simple;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
-import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.ops.ConvertMatrixType;
 import org.junit.Test;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -868,5 +871,49 @@ public class TestSimpleMatrix {
                 assertEquals(A.get(i,j),B.get(i-1,j), UtilEjml.TEST_F64);
             }
         }
+    }
+
+    @Test
+    public void serialization() {
+        List<Matrix> matrixTypes = new ArrayList<>();
+        matrixTypes.add( new DMatrixRMaj(2,3));
+        matrixTypes.add( new FMatrixRMaj(2,3));
+        matrixTypes.add( new ZMatrixRMaj(2,3));
+        matrixTypes.add( new CMatrixRMaj(2,3));
+        matrixTypes.add( new DMatrixSparseCSC(2,3));
+//        matrixTypes.add( new FMatrixSparseCSC(2,3));
+
+
+        DMatrixRMaj template = RandomMatrices_DDRM.rectangle(2,3,rand);
+
+        for( Matrix m : matrixTypes ) {
+            m.set(ConvertMatrixType.convert(template,m.getType()));
+
+            SimpleMatrix A = new SimpleMatrix(m);
+            try {
+                ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+                ObjectOutputStream stream = new ObjectOutputStream(byteStream);
+                stream.writeObject(A);
+                stream.flush();
+                stream.close();
+
+                ByteArrayInputStream inputByte = new ByteArrayInputStream(byteStream.toByteArray());
+                ObjectInputStream inputStream = new ObjectInputStream(inputByte);
+                SimpleMatrix B = (SimpleMatrix)inputStream.readObject();
+
+                assertTrue(A.isIdentical(B,1e-4));
+
+                // UnsupportedOperation is considered an acceptable response
+                try {
+                    assertTrue(B.plus(0.1).isIdentical(A.plus(0.1), 1e-4));
+                } catch( UnsupportedOperation | ConvertToDenseException ignore){}
+
+                byteStream.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                fail("Serialization failed");
+            }
+        }
+
     }
 }

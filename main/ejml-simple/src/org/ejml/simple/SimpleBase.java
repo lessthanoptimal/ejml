@@ -50,7 +50,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     protected Matrix mat;
     protected SimpleOperations ops;
 
-    protected AutomaticSimpleMatrixConvert convertType = new AutomaticSimpleMatrixConvert();
+    protected transient AutomaticSimpleMatrixConvert convertType = new AutomaticSimpleMatrixConvert();
 
     public SimpleBase( int numRows , int numCols ) {
         setMatrix(new DMatrixRMaj(numRows, numCols));

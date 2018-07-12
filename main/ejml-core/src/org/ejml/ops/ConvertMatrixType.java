@@ -32,6 +32,9 @@ public class ConvertMatrixType {
         switch( matrix.getType() ) {
             case DDRM: {
                 switch( desired ) {
+                    case DDRM: {
+                        m = matrix.copy();
+                    } break;
                     case FDRM: {
                         m = new FMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
                         ConvertMatrixData.convert((DMatrixRMaj) matrix, (FMatrixRMaj)m);
@@ -61,6 +64,9 @@ public class ConvertMatrixType {
 
             case FDRM: {
                 switch( desired ) {
+                    case FDRM: {
+                        m = matrix.copy();
+                    } break;
                     case DDRM: {
                         m = new DMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
                         ConvertMatrixData.convert((FMatrixRMaj) matrix, (DMatrixRMaj)m);
