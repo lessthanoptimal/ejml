@@ -335,8 +335,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
      */
     public void growMaxLength( int arrayLength , boolean preserveValue ) {
-        // don't increase the size beyound the max possible matrix size
-        arrayLength = Math.min(numRows*numCols, arrayLength);
+        // don't increase the size beyond the max possible matrix size
+        arrayLength = Math.min(Math.max(numRows*numCols,Integer.MAX_VALUE), arrayLength);
         if( arrayLength > this.nz_values.length ) {
             double[] data = new double[ arrayLength ];
             int[] row_idx = new int[ arrayLength ];
