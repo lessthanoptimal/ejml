@@ -18,8 +18,8 @@
 
 package org.ejml.equation;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.FMatrixRMaj;
+import org.ejml.data.*;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.ConvertMatrixData;
 import org.ejml.simple.SimpleMatrix;
 
@@ -289,6 +289,12 @@ public class Equation {
         alias(f,name);
     }
 
+    public void alias(DMatrixSparseCSC variable , String name ) {
+        DMatrixRMaj f = new DMatrixRMaj(variable.numRows,variable.numCols);
+        ConvertDMatrixStruct.convert(variable,f);
+        alias(f,name);
+    }
+
     public void alias( SimpleMatrix variable , String name ) {
         alias((Object)variable.getMatrix(),name);
     }
@@ -355,6 +361,8 @@ public class Equation {
                 alias((DMatrixRMaj)args[i],(String)args[i+1]);
             } else if( args[i].getClass() == FMatrixRMaj.class ) {
                 alias((FMatrixRMaj)args[i],(String)args[i+1]);
+            } else if( args[i].getClass() == DMatrixSparseCSC.class ) {
+                alias((DMatrixSparseCSC)args[i],(String)args[i+1]);
             } else if( args[i].getClass() == SimpleMatrix.class ) {
                 alias((SimpleMatrix)args[i],(String)args[i+1]);
             } else {
@@ -1335,11 +1343,20 @@ public class Equation {
         Variable v = variables.get(token);
 
         if( v instanceof VariableMatrix ) {
-            DMatrixRMaj m = ((VariableMatrix)v).matrix;
-            if( m.numCols == 1 && m.numRows == 1 ) {
-                return m.get(0,0);
-            } else {
-                throw new RuntimeException("Can only return 1x1 real matrices as doubles");
+            if( ((VariableMatrix)v).matrix instanceof DMatrix ) {
+                DMatrix m = ((VariableMatrix) v).matrix;
+                if (m.getNumCols() == 1 && m.getNumRows() == 1) {
+                    return m.get(0, 0);
+                } else {
+                    throw new RuntimeException("Can only return 1x1 real matrices as doubles");
+                }
+            } else if( ((VariableMatrix)v).matrix instanceof FMatrix) {
+//                FMatrix m = ((VariableMatrix) v).matrix;
+//                if (m.getNumCols() == 1 && m.getNumRows() == 1) {
+//                    return m.get(0, 0);
+//                } else {
+//                    throw new RuntimeException("Can only return 1x1 real matrices as doubles");
+//                }
             }
         }
         return ((VariableScalar)variables.get(token)).getDouble();
