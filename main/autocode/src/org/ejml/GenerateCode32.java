@@ -77,8 +77,8 @@ public class GenerateCode32 {
         prefix32.add("FEigen");
         prefix64.add("DSubmatrix");
         prefix32.add("FSubmatrix");
-        prefix64.add("ConvertDMatrix");
-        prefix32.add("ConvertFMatrix");
+        prefix64.add("ConvertD");
+        prefix32.add("ConvertF");
         prefix64.add("GenericTestsDMatrix");
         prefix32.add("GenericTestsFMatrix");
 
@@ -103,6 +103,7 @@ public class GenerateCode32 {
             converter.replacePattern(".getZ"+suffice, ".getC"+suffice);
         }
 
+        converter.replacePattern("ConvertD", "ConvertF");
         converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
         converter.replacePattern("DSubmatrix", "FSubmatrix");

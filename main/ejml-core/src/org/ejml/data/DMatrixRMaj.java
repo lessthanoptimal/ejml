@@ -19,6 +19,7 @@
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
+import org.ejml.ops.ConvertDArrays;
 import org.ejml.ops.MatrixIO;
 
 import java.io.ByteArrayOutputStream;
@@ -93,23 +94,8 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param data 2D array representation of the matrix. Not modified.
      */
     public DMatrixRMaj(double data[][] ) {
-        this.numRows = data.length;
-        this.numCols = data[0].length;
-
-        this.data = new double[ numRows*numCols ];
-
-        int pos = 0;
-        for( int i = 0; i < numRows; i++ ) {
-            double []row = data[i];
-
-            if( row.length != numCols ) {
-                throw new IllegalArgumentException("All rows must have the same length");
-            }
-
-            System.arraycopy(row,0,this.data,pos,numCols);
-
-            pos += numCols;
-        }
+        this(1,1);
+        set(data);
     }
 
     /**
@@ -410,5 +396,13 @@ public class DMatrixRMaj extends DMatrix1Row {
     @Override
     public MatrixType getType() {
         return MatrixType.DDRM;
+    }
+
+    /**
+     * Assigns this matrix using a 2D array representation
+     * @param input 2D array which this matrix will be set to
+     */
+    public void set( double[][]input ) {
+        ConvertDArrays.convert(input,this);
     }
 }

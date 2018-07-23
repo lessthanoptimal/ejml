@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.35
 2018
 
+- ConvertDArrays
+  * Methods for converting 2D arrays to and from EJML data types
 - CommonOps_DSCC
   * Added multAdd(sparse,dense,dense)
   * Added multTransA(sparse,dense,dense) multAddTransA(sparse,dense,dense)
