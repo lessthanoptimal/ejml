@@ -335,8 +335,12 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
      */
     public void growMaxLength( int arrayLength , boolean preserveValue ) {
-        // don't increase the size beyond the max possible matrix size
-        arrayLength = Math.min(Math.max(numRows*numCols,Integer.MAX_VALUE), arrayLength);
+        if( arrayLength < 0 )
+            throw new IllegalArgumentException("Negative array length. Overflow?");
+        // see if multiplying numRows*numCols will cause an overflow. If it won't then pick the smaller of the two
+        if( !(numRows != 0 && numCols > Long.MAX_VALUE / numRows) ) {
+            arrayLength = Math.min(numRows*numCols, arrayLength);
+        }
         if( arrayLength > this.nz_values.length ) {
             double[] data = new double[ arrayLength ];
             int[] row_idx = new int[ arrayLength ];

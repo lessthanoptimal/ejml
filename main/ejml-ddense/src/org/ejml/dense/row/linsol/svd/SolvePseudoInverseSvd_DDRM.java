@@ -125,10 +125,12 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
         double []S = svd.getSingularValues();
         int N = Math.min(pinv.numRows,pinv.numCols);
         double min = S[0];
+        double max = min;
         for (int i = 0; i < N; i++) {
             min = Math.min(min,S[i]);
+            max = Math.max(max,S[i]);
         }
-        return min;
+        return min/max;
     }
 
     @Override
