@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,12 +62,6 @@ public class MatrixVectorMult_DDRM {
      */
     public static void mult(DMatrix1Row A, DMatrixD1 B, DMatrixD1 C)
     {
-        if( C.numCols != 1 ) {
-            throw new MatrixDimensionException("C is not a column vector");
-        } else if( C.numRows != A.numRows ) {
-            throw new MatrixDimensionException("C is not the expected length");
-        }
-        
         if( B.numRows == 1 ) {
             if( A.numCols != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
@@ -79,6 +73,7 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
+        C.reshape(A.numRows,1);
 
         if( A.numCols == 0 ) {
             CommonOps_DDRM.fill(C,0);
@@ -118,12 +113,6 @@ public class MatrixVectorMult_DDRM {
      */
     public static void multAdd(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
-
-        if( C.numCols != 1 ) {
-            throw new MatrixDimensionException("C is not a column vector");
-        } else if( C.numRows != A.numRows ) {
-            throw new MatrixDimensionException("C is not the expected length");
-        }
         if( B.numRows == 1 ) {
             if( A.numCols != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
@@ -135,6 +124,7 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
+        C.reshape(A.numRows,1);
 
         if( A.numCols == 0 ) {
             return;
@@ -178,11 +168,6 @@ public class MatrixVectorMult_DDRM {
      */
     public static void multTransA_small(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
-        if( C.numCols != 1 ) {
-            throw new MatrixDimensionException("C is not a column vector");
-        } else if( C.numRows != A.numCols ) {
-            throw new MatrixDimensionException("C is not the expected length");
-        }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
@@ -194,6 +179,8 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
+
+        C.reshape(A.numCols,1);
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -219,11 +206,6 @@ public class MatrixVectorMult_DDRM {
      */
     public static void multTransA_reorder(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
-        if( C.numCols != 1 ) {
-            throw new MatrixDimensionException("C is not a column vector");
-        } else if( C.numRows != A.numCols ) {
-            throw new MatrixDimensionException("C is not the expected length");
-        }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
@@ -235,6 +217,7 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
+        C.reshape(A.numCols,1);
 
         if( A.numRows == 0 ) {
             CommonOps_DDRM.fill(C,0);
@@ -278,11 +261,6 @@ public class MatrixVectorMult_DDRM {
      */
     public static void multAddTransA_small(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
-        if( C.numCols != 1 ) {
-            throw new MatrixDimensionException("C is not a column vector");
-        } else if( C.numRows != A.numCols ) {
-            throw new MatrixDimensionException("C is not the expected length");
-        }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
@@ -294,6 +272,7 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
+        C.reshape(A.numCols,1);
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -336,9 +315,7 @@ public class MatrixVectorMult_DDRM {
             throw new MatrixDimensionException("B is not a vector");
         }
 
-        if( A.numRows == 0 ) {
-            return;
-        }
+        C.reshape(A.numCols,1);
 
         int indexA = 0;
         for( int j = 0; j < A.numRows; j++ ) {

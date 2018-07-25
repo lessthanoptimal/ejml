@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.35
 2018
 
+- Reshape output instead of exception
+  * Changed dense matrix multiply to have this behavior
 - ConvertDArrays
   * Methods for converting 2D arrays to and from EJML data types
 - CommonOps_DSCC

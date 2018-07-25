@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -74,6 +74,7 @@ public class LinearSolver_DDRB_to_DDRM implements LinearSolverDense<DMatrixRMaj>
      */
     @Override
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+        X.reshape(blockA.numCols,B.numCols);
         blockB.reshape(B.numRows,B.numCols,false);
         blockX.reshape(X.numRows,X.numCols,false);
         MatrixOps_DDRB.convert(B,blockB);

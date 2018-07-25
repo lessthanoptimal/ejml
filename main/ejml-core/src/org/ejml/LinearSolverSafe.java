@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,9 +76,6 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDe
             if( this.B == null ) {
                 this.B = (T)B.copy();
             } else {
-                if( this.B.getNumRows() != B.getNumRows() || this.B.getNumCols() != B.getNumCols() ) {
-                    this.B.reshape(A.getNumRows(),B.getNumCols());
-                }
                 this.B.set(B);
             }
             B = this.B;

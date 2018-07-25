@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -92,14 +92,10 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
     @Override
     public void solve(DMatrixRBlock B, DMatrixRBlock X) {
 
-        if( B.numCols != X.numCols )
-            throw new IllegalArgumentException("Columns of B and X do not match");
-        if( QR.numCols != X.numRows )
-            throw new IllegalArgumentException("Rows in X do not match the columns in A");
-        if( QR.numRows != B.numRows )
-            throw new IllegalArgumentException("Rows in B do not match the rows in A.");
-        if( B.blockLength != QR.blockLength || X.blockLength != QR.blockLength )
-            throw new IllegalArgumentException("All matrices must have the same block length.");
+        if( B.numRows != QR.numRows )
+            throw new IllegalArgumentException("Row of B and A do not match");
+
+        X.reshape(QR.numCols,B.numCols);
 
         // The system being solved for can be described as:
         // Q*R*X = B

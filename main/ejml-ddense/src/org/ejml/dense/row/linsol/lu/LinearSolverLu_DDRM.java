@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,15 +43,15 @@ public class LinearSolverLu_DDRM extends LinearSolverLuBase_DDRM {
 
 
     @Override
-    public void solve(DMatrixRMaj b, DMatrixRMaj x) {
-        if( b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
-            throw new IllegalArgumentException("Unexpected matrix size");
-        }
+    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+        if( B.numRows != numRows )
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
+        X.reshape(numCols,B.numCols);
 
-        int numCols = b.numCols;
+        int numCols = B.numCols;
 
-        double dataB[] = b.data;
-        double dataX[] = x.data;
+        double dataB[] = B.data;
+        double dataX[] = X.data;
 
         double []vv = decomp._getVV();
 
@@ -69,7 +69,7 @@ public class LinearSolverLu_DDRM extends LinearSolverLuBase_DDRM {
         }
 
         if( doImprove ) {
-            improveSol(b,x);
+            improveSol(B,X);
         }
     }
 }

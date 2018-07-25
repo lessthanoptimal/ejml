@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,9 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.CodeGeneratorMisc;
+import org.ejml.CodeGeneratorBase;
 
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 
 
 /**
@@ -36,25 +35,19 @@ import java.io.PrintStream;
  *
  * @author Peter Abeles
  */
-public class GeneratorMatrixMatrixMult {
+public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
-    PrintStream stream;
-
-    public GeneratorMatrixMatrixMult( String fileName ) throws FileNotFoundException {
-        stream = new PrintStream(fileName);
-    }
-
-    public void createClass() {
-        String preamble = CodeGeneratorMisc.COPYRIGHT +
-                "\n" +
-                "package org.ejml.dense.row.mult;\n" +
-                "\n" +
-                "import org.ejml.data.RowDMatrixD1;\n"+
-                "import org.ejml.ops.CommonOps;\n" +
+    @Override
+    public void generate() throws FileNotFoundException {
+        setOutputFile("MatrixMatrixMult_DDRM");
+        String preamble = 
+                "import org.ejml.MatrixDimensionException;\n" +
+                "import org.ejml.data.DMatrix1Row;\n" +
+                "import org.ejml.dense.row.CommonOps_DDRM;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
-                " * This class contains various types of matrix matrix multiplication operations for {@link RowDMatrixD1}.\n" +
+                " * This class contains various types of matrix matrix multiplication operations for {@link DMatrix1Row}.\n" +
                 " * </p>\n" +
                 " * <p>\n" +
                 " * Two algorithms that are equivalent can often have very different runtime performance.\n" +
@@ -80,40 +73,40 @@ public class GeneratorMatrixMatrixMult {
                 " * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.\n" +
                 " * </p>\n" +
                 " * \n" +
-                " * <p>\n" +
                 " * <center>******** IMPORTANT **********</center>\n" +
-                " * This class was auto generated using "+getClass().getName()+"\n" +
-                " * </p>\n" +
+                " * This class was auto generated using "+getClass().getName()+"\n"+
                 " * \n" +
                 " * @author Peter Abeles\n" +
                 " */\n"+
-                "public class MatrixMatrixMult {\n";
+                "public class "+className+" {\n";
 
-        stream.print(preamble);
+        out.print(preamble);
 
         for( int i = 0; i < 2; i++ ) {
             boolean alpha = i == 1;
             for( int j = 0; j < 2; j++ ) {
                 boolean add = j == 1;
                 printMult_reroder(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMult_small(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMult_aux(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMultTransA_reorder(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMultTransA_small(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMultTransAB(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMultTransAB_aux(alpha,add);
-                stream.print("\n");
+                out.print("\n");
                 printMultTransB(alpha,add);
-                stream.print("\n");
+                out.print("\n");
             }
         }
-        stream.print("}\n");
+        out.print("}\n");
+        out.println();
+        out.close();
     }
 
     private String makeBoundsCheck(boolean tranA, boolean tranB, String auxLength)
@@ -128,9 +121,8 @@ public class GeneratorMatrixMatrixMult {
                         "            throw new IllegalArgumentException(\"Neither 'a' or 'b' can be the same matrix as 'c'\");\n"+
                         "        else if( "+a_numCols+" != "+b_numRows+" ) {\n" +
                         "            throw new MatrixDimensionException(\"The 'a' and 'b' matrices do not have compatible dimensions\");\n" +
-                        "        } else if( "+a_numRows+" != c.numRows || "+b_numCols+" != c.numCols ) {\n" +
-                        "            throw new MatrixDimensionException(\"The results matrix does not have the desired dimensions\");\n" +
                         "        }\n" +
+                        "        c.reshape("+a_numRows+","+b_numCols+");\n"+
                         "\n";
 
         if( auxLength != null ) {
@@ -142,7 +134,7 @@ public class GeneratorMatrixMatrixMult {
 
     private String handleZeros( boolean add ) {
 
-        String fill = add ? "" : "            CommonOps.fill(c,0);\n";
+        String fill = add ? "" : "            CommonOps_DDRM.fill(c,0);\n";
 
         String ret =
                 "        if( a.numCols == 0 || a.numRows == 0 ) {\n" +
@@ -155,12 +147,12 @@ public class GeneratorMatrixMatrixMult {
     private String makeComment( String nameOp , boolean hasAlpha )
     {
         String a = hasAlpha ? "double, " : "";
-        String inputs = "("+a+" org.ejml.data.RowDMatrixD1, org.ejml.data.RowDMatrixD1, org.ejml.data.RowDMatrixD1)";
+        String inputs = "("+a+" org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)";
 
 
         String ret =
                 "    /**\n" +
-                "     * @see org.ejml.ops.CommonOps#"+nameOp+inputs+"\n" +
+                "     * @see CommonOps_DDRM#"+nameOp+inputs+"\n" +
                 "     */\n";
         return ret;
     }
@@ -189,9 +181,9 @@ public class GeneratorMatrixMatrixMult {
         if( hasAlpha ) ret += "double alpha , ";
 
         if( hasAux ) {
-            ret += "RowDMatrixD1 a , RowDMatrixD1 b , RowDMatrixD1 c , double []aux )\n";
+            ret += "DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )\n";
         } else {
-            ret += "RowDMatrixD1 a , RowDMatrixD1 b , RowDMatrixD1 c )\n";
+            ret += "DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )\n";
         }
 
         ret += "    {\n";
@@ -247,7 +239,7 @@ public class GeneratorMatrixMatrixMult {
                         "        }\n" +
                         "    }\n";
 
-        stream.print(foo);
+        out.print(foo);
     }
 
     public void printMult_small( boolean alpha , boolean add ) {
@@ -285,7 +277,7 @@ public class GeneratorMatrixMatrixMult {
                         "            aIndexStart += a.numCols;\n" +
                         "        }\n" +
                         "    }\n";
-        stream.print(foo);
+        out.print(foo);
     }
 
     public void printMult_aux( boolean alpha , boolean add ) {
@@ -319,7 +311,7 @@ public class GeneratorMatrixMatrixMult {
                         "            }\n" +
                         "        }\n" +
                         "    }\n";
-        stream.print(foo);
+        out.print(foo);
     }
 
     public void printMultTransA_reorder( boolean alpha , boolean add ) {
@@ -364,7 +356,7 @@ public class GeneratorMatrixMatrixMult {
                         "            }\n" +
                         "        }\n" +
                         "    }\n";
-        stream.print(foo);
+        out.print(foo);
     }
 
     public void printMultTransA_small( boolean alpha , boolean add ) {
@@ -403,7 +395,7 @@ public class GeneratorMatrixMatrixMult {
                         "        }\n" +
                         "    }\n";
 
-         stream.print(foo);
+         out.print(foo);
     }
 
     public void printMultTransB( boolean alpha , boolean add ) {
@@ -441,7 +433,7 @@ public class GeneratorMatrixMatrixMult {
                         "            aIndexStart += a.numCols;\n" +
                         "        }\n" +
                         "    }\n";
-        stream.print(foo);
+        out.print(foo);
     }
 
     public void printMultTransAB( boolean alpha , boolean add ) {
@@ -478,7 +470,7 @@ public class GeneratorMatrixMatrixMult {
                         "            }\n" +
                         "        }\n"+
                         "    }\n";
-        stream.print(foo);
+        out.print(foo);
     }
 
     public void printMultTransAB_aux( boolean alpha , boolean add ) {
@@ -512,12 +504,12 @@ public class GeneratorMatrixMatrixMult {
                         "            }\n" +
                         "        }\n"+
                         "    }\n";
-        stream.print(foo);
+        out.print(foo);
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        GeneratorMatrixMatrixMult gen = new GeneratorMatrixMatrixMult("MatrixMatrixMult.java");
+        GeneratorMatrixMatrixMult_DDRM gen = new GeneratorMatrixMatrixMult_DDRM();
 
-        gen.createClass();
+        gen.generate();
     }
 }

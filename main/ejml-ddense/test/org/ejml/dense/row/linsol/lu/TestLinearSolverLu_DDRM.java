@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 public class TestLinearSolverLu_DDRM extends GenericLinearSolverChecks_DDRM {
 
     public TestLinearSolverLu_DDRM() {
-        shouldWorkRectangle = false;
+        shouldWorkRectangle = true;
         shouldFailSingular = false;
     }
 

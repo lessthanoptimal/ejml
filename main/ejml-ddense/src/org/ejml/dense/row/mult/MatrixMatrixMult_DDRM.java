@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -51,24 +51,22 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * </p>
  * 
  * <center>******** IMPORTANT **********</center>
- * <p>This class was auto generated using org.ejml.dense.row.mult.GeneratorMatrixMatrixMult</p>
+ * This class was auto generated using org.ejml.dense.row.mult.GeneratorMatrixMatrixMult_DDRM
  * 
  * @author Peter Abeles
  */
-@SuppressWarnings("Duplicates")
 public class MatrixMatrixMult_DDRM {
     /**
-     * @see CommonOps_DDRM#mult( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void mult_reorder( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             CommonOps_DDRM.fill(c,0);
@@ -108,17 +106,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void mult_small( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         int aIndexStart = 0;
         int cIndex = 0;
@@ -142,17 +139,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void mult_aux( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( aux == null ) aux = new double[ b.numRows ];
 
@@ -174,17 +170,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransA( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransA_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransA_reorder( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             CommonOps_DDRM.fill(c,0);
@@ -217,17 +212,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransA( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransA_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransA_small( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         int cIndex = 0;
 
@@ -251,17 +245,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransAB( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         int cIndex = 0;
 
@@ -284,17 +277,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransAB_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void multTransAB_aux( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         if( aux == null ) aux = new double[ a.numRows ];
 
@@ -320,17 +312,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransB( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numRows);
 
         int cIndex = 0;
         int aIndexStart = 0;
@@ -354,17 +345,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAdd( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAdd_reorder( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             return;
@@ -403,17 +393,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAdd( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAdd_small( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         int aIndexStart = 0;
         int cIndex = 0;
@@ -437,17 +426,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAdd( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void multAdd_aux( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( aux == null ) aux = new double[ b.numRows ];
 
@@ -469,17 +457,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransA( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransA_reorder(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransA_reorder( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             return;
@@ -511,17 +498,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransA( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransA_small(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransA_small( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         int cIndex = 0;
 
@@ -545,17 +531,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransAB( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         int cIndex = 0;
 
@@ -578,17 +563,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransAB_aux(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void multAddTransAB_aux( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         if( aux == null ) aux = new double[ a.numRows ];
 
@@ -613,17 +597,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransB( DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransB( DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numRows);
 
         int cIndex = 0;
         int aIndexStart = 0;
@@ -647,17 +630,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#mult(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void mult_reorder( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             CommonOps_DDRM.fill(c,0);
@@ -697,17 +679,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#mult(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void mult_small( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         int aIndexStart = 0;
         int cIndex = 0;
@@ -731,17 +712,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#mult(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#mult(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void mult_aux( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( aux == null ) aux = new double[ b.numRows ];
 
@@ -763,17 +743,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransA(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransA_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransA_reorder( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             CommonOps_DDRM.fill(c,0);
@@ -806,17 +785,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransA(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransA_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransA_small( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         int cIndex = 0;
 
@@ -840,17 +818,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransAB( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         int cIndex = 0;
 
@@ -873,17 +850,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransAB_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void multTransAB_aux( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         if( aux == null ) aux = new double[ a.numRows ];
 
@@ -909,17 +885,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multTransB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multTransB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multTransB( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numRows);
 
         int cIndex = 0;
         int aIndexStart = 0;
@@ -943,17 +918,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAdd(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAdd_reorder( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             return;
@@ -992,17 +966,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAdd(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAdd_small( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         int aIndexStart = 0;
         int cIndex = 0;
@@ -1026,17 +999,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAdd(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAdd(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void multAdd_aux( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numCols);
 
         if( aux == null ) aux = new double[ b.numRows ];
 
@@ -1058,17 +1030,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransA(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransA_reorder(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransA_reorder( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         if( a.numCols == 0 || a.numRows == 0 ) {
             return;
@@ -1100,17 +1071,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransA(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransA(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransA_small(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransA_small( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numCols);
 
         int cIndex = 0;
 
@@ -1134,17 +1104,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransAB( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         int cIndex = 0;
 
@@ -1167,17 +1136,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransAB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransAB_aux(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
+    public static void multAddTransAB_aux( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c , double []aux )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numRows != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numCols,b.numRows);
 
         if( aux == null ) aux = new double[ a.numRows ];
 
@@ -1202,17 +1170,16 @@ public class MatrixMatrixMult_DDRM {
     }
 
     /**
-     * @see CommonOps_DDRM#multAddTransB(double, DMatrix1Row, DMatrix1Row, DMatrix1Row)
+     * @see CommonOps_DDRM#multAddTransB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static void multAddTransB( double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         if( a == c || b == c )
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
         else if( a.numCols != b.numCols ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
-            throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
+        c.reshape(a.numRows,b.numRows);
 
         int cIndex = 0;
         int aIndexStart = 0;
@@ -1236,3 +1203,4 @@ public class MatrixMatrixMult_DDRM {
     }
 
 }
+

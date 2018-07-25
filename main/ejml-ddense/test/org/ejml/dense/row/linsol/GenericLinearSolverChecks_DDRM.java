@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -63,25 +63,38 @@ public abstract class GenericLinearSolverChecks_DDRM {
         } catch( RuntimeException ignore ) {}
 
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,3,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10,2,rand);
-            solver.solve(b,x);
-            fail("Should have thrown an exception");
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4, 3, rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10, 2, rand);
+            solver.solve(b, x);
+            if( shouldWorkRectangle ) {
+                assertEquals(4, x.numRows);
+                assertEquals(2, x.numCols);
+            } else {
+                fail("Should have thrown an exception");
+            }
         } catch( RuntimeException ignore ) {}
-
         try {
-            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,2,rand);
-            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10,2,rand);
-            solver.solve(b,x);
-            fail("Should have thrown an exception");
+            DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5, 2, rand);
+            DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10, 2, rand);
+            solver.solve(b, x);
+            if( shouldWorkRectangle ) {
+                assertEquals(4, x.numRows);
+                assertEquals(2, x.numCols);
+            } else {
+                fail("Should have thrown an exception");
+            }
         } catch( RuntimeException ignore ) {}
-
 
         try {
             DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,2,rand);
             DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10,1,rand);
             solver.solve(b,x);
-            fail("Should have thrown an exception");
+            if( shouldWorkRectangle ) {
+                assertEquals(4, x.numRows);
+                assertEquals(1, x.numCols);
+            } else {
+                fail("Should have thrown an exception");
+            }
         } catch( RuntimeException ignore ) {}
     }
 

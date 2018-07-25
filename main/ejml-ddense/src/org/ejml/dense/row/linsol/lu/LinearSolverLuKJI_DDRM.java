@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,24 +55,25 @@ public class LinearSolverLuKJI_DDRM extends LinearSolverLuBase_DDRM {
      * It seems to have the same runtime performance as {@link #solve} and is more complicated.
      * It is being kept around to avoid future replication of work.
      *
-     * @param b A matrix that is n by m.  Not modified.
-     * @param x An n by m matrix where the solution is writen to.  Modified.
+     * @param B A matrix that is n by m.  Not modified.
+     * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(DMatrixRMaj b, DMatrixRMaj x) {
-        if( b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
+    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+        if( B.numRows != numRows) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
+        X.reshape(numCols,B.numCols);
 
-        if( b != x ) {
-            SpecializedOps_DDRM.copyChangeRow(pivot,b,x);
+        if( B != X ) {
+            SpecializedOps_DDRM.copyChangeRow(pivot,B,X);
         } else {
             throw new IllegalArgumentException("Current doesn't support using the same matrix instance");
         }
 
         // Copy right hand side with pivoting
-        int nx = b.numCols;
-        double[] dataX = x.data;
+        int nx = B.numCols;
+        double[] dataX = X.data;
 
         // Solve L*Y = B(piv,:)
         for (int k = 0; k < numCols; k++) {

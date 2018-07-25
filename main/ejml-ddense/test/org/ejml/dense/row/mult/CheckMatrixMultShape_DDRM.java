@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,8 +24,7 @@ import org.ejml.data.DMatrixRMaj;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -134,11 +133,11 @@ public class CheckMatrixMultShape_DDRM {
         //           i,j,j,k,i,k
 
         // mis matched i
-        checkNegative(func,2,4,4,3,6,3,transA,transB);
+        checkReshapeC(func,2,4,4,3,6,3,transA,transB);
         // missmatched j
         checkNegative(func,2,4,5,3,2,3,transA,transB);
         // miss matched k
-        checkNegative(func,2,4,4,7,2,3,transA,transB);
+        checkReshapeC(func,2,4,4,7,2,3,transA,transB);
     }
 
     /**
@@ -146,7 +145,7 @@ public class CheckMatrixMultShape_DDRM {
      */
     private void checkNegative(Method func,
                                int m_a , int n_a , int m_b , int n_b , int m_c , int n_c ,
-                               boolean transA, boolean transB) throws NoSuchMethodException, IllegalAccessException {
+                               boolean transA, boolean transB) throws IllegalAccessException {
         DMatrixRMaj A,B;
         DMatrixRMaj C = new DMatrixRMaj(m_c,n_c);
 
@@ -166,6 +165,35 @@ public class CheckMatrixMultShape_DDRM {
             fail("An exception should have been thrown.");
         } catch( InvocationTargetException e ) {
             assertTrue(e.getCause().getClass() == MatrixDimensionException.class );
+        }
+    }
+
+    /**
+     * The C matrix will have the incorrect size, see if it's reshaped correctly
+     */
+    private void checkReshapeC(Method func,
+                               int m_a , int n_a , int m_b , int n_b , int m_c , int n_c ,
+                               boolean transA, boolean transB) throws IllegalAccessException {
+        DMatrixRMaj A,B;
+        DMatrixRMaj C = new DMatrixRMaj(m_c,n_c);
+
+        if( transA ) {
+            A = new DMatrixRMaj(n_a,m_a);
+        } else {
+            A = new DMatrixRMaj(m_a,n_a);
+        }
+        if( transB ) {
+            B = new DMatrixRMaj(n_b,m_b);
+        } else {
+            B = new DMatrixRMaj(m_b,n_b);
+        }
+
+        try {
+            TestMatrixMatrixMult_DDRM.invoke(func, 2.0, A, B, C);
+            assertEquals(m_a,C.numRows);
+            assertEquals(n_b,C.numCols);
+        } catch( InvocationTargetException e ) {
+            fail("there should be no exception!");
         }
     }
 }

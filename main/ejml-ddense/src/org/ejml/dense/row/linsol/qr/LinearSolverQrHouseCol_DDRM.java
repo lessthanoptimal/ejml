@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -110,10 +110,9 @@ public class LinearSolverQrHouseCol_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        if( X.numRows != numCols )
+        if( B.numRows != numRows )
             throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
-        else if( B.numRows != numRows || B.numCols != X.numCols )
-            throw new IllegalArgumentException("Unexpected dimensions for B");
+        X.reshape(numCols,B.numCols);
 
         int BnumCols = B.numCols;
         

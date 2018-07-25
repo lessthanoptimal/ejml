@@ -187,16 +187,22 @@ public class TestCommonOps_DSCC {
 
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DDRM.rectangle(6, 4, rand),
-                RandomMatrices_DDRM.rectangle(5, 5, rand), true);
+                RandomMatrices_DDRM.rectangle(7, 4, rand),
+                RandomMatrices_DDRM.rectangle(5, 4, rand), true);
+
+        // Matrix C is resized
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DDRM.rectangle(6, 4, rand),
-                RandomMatrices_DDRM.rectangle(6, 4, rand), true);
+                RandomMatrices_DDRM.rectangle(5, 5, rand), false);
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DDRM.rectangle(6, 4, rand),
-                RandomMatrices_DDRM.rectangle(6, 4, rand), true);
+                RandomMatrices_DDRM.rectangle(6, 4, rand), false);
+        check_s_d_mult(
+                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                RandomMatrices_DDRM.rectangle(6, 4, rand),
+                RandomMatrices_DDRM.rectangle(6, 4, rand), false);
     }
 
     private void check_s_d_mult(DMatrixSparseCSC A , DMatrixRMaj B, DMatrixRMaj C, boolean exception ) {
