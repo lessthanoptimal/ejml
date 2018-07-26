@@ -1898,10 +1898,11 @@ public class CommonOps_DDRM {
      */
     public static void add(final DMatrixD1 a , final DMatrixD1 b , final DMatrixD1 c )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
+
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -1928,10 +1929,11 @@ public class CommonOps_DDRM {
      */
     public static void add(DMatrixD1 a , double beta , DMatrixD1 b , DMatrixD1 c )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
+
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -1959,10 +1961,11 @@ public class CommonOps_DDRM {
      */
     public static void add(double alpha , DMatrixD1 a , double beta , DMatrixD1 b , DMatrixD1 c )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
+
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -1989,11 +1992,11 @@ public class CommonOps_DDRM {
      */
     public static void add(double alpha , DMatrixD1 a , DMatrixD1 b , DMatrixD1 c )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
+        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The matrices are not all the same dimension.");
         }
 
+        c.reshape(a.numRows,a.numCols);
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
@@ -2031,9 +2034,7 @@ public class CommonOps_DDRM {
      * @param val The value that's added to each element.
      */
     public static void add(DMatrixD1 a , double val , DMatrixD1 c ) {
-        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new MatrixDimensionException("Dimensions of a and c do not match.");
-        }
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -2054,9 +2055,7 @@ public class CommonOps_DDRM {
      * @param c (Output) A matrix. Modified.
      */
     public static void subtract(DMatrixD1 a , double val , DMatrixD1 c ) {
-        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new MatrixDimensionException("Dimensions of a and c do not match.");
-        }
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -2077,9 +2076,7 @@ public class CommonOps_DDRM {
      * @param c (Output) A matrix. Modified.
      */
     public static void subtract(double val , DMatrixD1 a , DMatrixD1 c ) {
-        if( a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new MatrixDimensionException("Dimensions of a and c do not match.");
-        }
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -2130,6 +2127,7 @@ public class CommonOps_DDRM {
         if( a.numCols != b.numCols || a.numRows != b.numRows ) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
         }
+        c.reshape(a.numRows,a.numCols);
 
         final int length = a.getNumElements();
 
@@ -2172,8 +2170,7 @@ public class CommonOps_DDRM {
      */
     public static void scale(double alpha , DMatrixD1 a , DMatrixD1 b)
     {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new MatrixDimensionException("Matrices must have the same shape");
+        b.reshape(a.numRows,a.numCols);
 
         final int size = a.getNumElements();
 
@@ -2233,8 +2230,7 @@ public class CommonOps_DDRM {
      */
     public static void divide(double alpha , DMatrixD1 a , DMatrixD1 b)
     {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new MatrixDimensionException("Matrices must have the same shape");
+        b.reshape(a.numRows,a.numCols);
 
         final int size = a.getNumElements();
 
@@ -2256,8 +2252,7 @@ public class CommonOps_DDRM {
      */
     public static void divide(DMatrixD1 a , double alpha  , DMatrixD1 b)
     {
-        if( a.numRows != b.numRows || a.numCols != b.numCols )
-            throw new MatrixDimensionException("Matrices must have the same shape");
+        b.reshape(a.numRows,a.numCols);
 
         final int size = a.getNumElements();
 
@@ -2295,8 +2290,7 @@ public class CommonOps_DDRM {
      */
     public static void changeSign(DMatrixD1 input , DMatrixD1 output)
     {
-        if( input.numRows != output.numRows || input.numCols != output.numCols )
-            throw new MatrixDimensionException("Matrices must have the same shape");
+        output.reshape(input.numRows,input.numCols);
 
         final int size = input.getNumElements();
 
@@ -2347,8 +2341,8 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj rref(DMatrixRMaj A , int numUnknowns, DMatrixRMaj reduced ) {
         if( reduced == null ) {
             reduced = new DMatrixRMaj(A.numRows,A.numCols);
-        } else if( reduced.numCols != A.numCols || reduced.numRows != A.numRows )
-            throw new MatrixDimensionException("'re' must have the same shape as the original input matrix");
+        }
+        reduced.reshape(A.numRows,A.numCols);
 
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);

@@ -334,7 +334,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         if( arrayLength < 0 )
             throw new IllegalArgumentException("Negative array length. Overflow?");
         // see if multiplying numRows*numCols will cause an overflow. If it won't then pick the smaller of the two
-        if( numRows != 0 && numCols > Long.MAX_VALUE / numRows ) {
+        if( numRows != 0 && numCols <= Integer.MAX_VALUE / numRows ) {
             // save the user from themselves
             arrayLength = Math.min(numRows*numCols, arrayLength);
         }
