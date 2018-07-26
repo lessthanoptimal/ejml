@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,6 +43,29 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
     @Override
     public boolean isStructureValid(DMatrixSparse m) {
         return CommonOps_DSCC.checkStructure((DMatrixSparseCSC)m);
+    }
+
+    @Test
+    public void constructor_veryLarge() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000,1_000_000_000,4);
+
+        assertEquals(0,a.nz_length);
+        assertEquals(1_000_000_000,a.numCols);
+        assertEquals(1_000_000_000,a.numRows);
+        assertEquals(4,a.nz_values.length);
+        assertEquals(4,a.nz_rows.length);
+    }
+
+    @Test
+    public void growMaxLength_veryLarge() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000,1_000_000_000,4);
+
+        a.growMaxLength(10,false);
+        assertEquals(0,a.nz_length);
+        assertEquals(1_000_000_000,a.numCols);
+        assertEquals(1_000_000_000,a.numRows);
+        assertEquals(10,a.nz_values.length);
+        assertEquals(10,a.nz_rows.length);
     }
 
     @Test

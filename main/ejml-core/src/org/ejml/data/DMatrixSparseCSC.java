@@ -89,15 +89,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * @param arrayLength Initial maximum number of non-zero elements that can be in the matrix
      */
     public DMatrixSparseCSC(int numRows , int numCols , int arrayLength) {
-        arrayLength = Math.min(numCols*numRows, arrayLength);
-
         this.numRows = numRows;
         this.numCols = numCols;
         this.nz_length = 0;
-
-        nz_values = new double[ arrayLength ];
         col_idx = new int[ numCols+1 ];
-        nz_rows = new int[ arrayLength ];
+        growMaxLength(arrayLength,false);
     }
 
     public DMatrixSparseCSC(DMatrixSparseCSC original ) {
@@ -338,14 +334,17 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         if( arrayLength < 0 )
             throw new IllegalArgumentException("Negative array length. Overflow?");
         // see if multiplying numRows*numCols will cause an overflow. If it won't then pick the smaller of the two
-        if( !(numRows != 0 && numCols > Long.MAX_VALUE / numRows) ) {
+        if( numRows != 0 && numCols > Long.MAX_VALUE / numRows ) {
+            // save the user from themselves
             arrayLength = Math.min(numRows*numCols, arrayLength);
         }
-        if( arrayLength > this.nz_values.length ) {
+        if( nz_values == null || arrayLength > this.nz_values.length ) {
             double[] data = new double[ arrayLength ];
             int[] row_idx = new int[ arrayLength ];
 
             if( preserveValue ) {
+                if( nz_values == null )
+                    throw new IllegalArgumentException("Can't preserve values when uninitialized");
                 System.arraycopy(this.nz_values, 0, data, 0, this.nz_length);
                 System.arraycopy(this.nz_rows, 0, row_idx, 0, this.nz_length);
             }
