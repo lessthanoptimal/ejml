@@ -274,7 +274,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
     }
 
     @Override
-    public void print(PrintStream out, Matrix mat) {
-        MatrixIO.print(out, (DMatrixSparseCSC)mat);
+    public void print(PrintStream out, Matrix mat, String format ) {
+        MatrixIO.print(out, (DMatrixSparseCSC)mat, format);
     }
 }

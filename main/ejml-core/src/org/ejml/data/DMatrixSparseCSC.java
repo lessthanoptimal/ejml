@@ -136,15 +136,26 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void print() {
+        print(DEFAULT_FLOAT_FORMAT);
+    }
+
+    @Override
+    public void print( String format ) {
         System.out.println(getClass().getSimpleName()+"\nnumRows = "+numRows+" , numCols = "+numCols
                 +" , nz_length = "+ nz_length);
+
+        int length = String.format(format,-1.1123).length();
+        char []zero = new char[length];
+        Arrays.fill(zero,' ');
+        zero[length/2] = '*';
+
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
                 int index = nz_index(row,col);
                 if( index >= 0 )
-                    System.out.printf("%6.3f",get(row,col));
+                    System.out.printf(format,nz_values[index]);
                 else
-                    System.out.print("   *  ");
+                    System.out.print(zero);
                 if( col != numCols-1 )
                     System.out.print(" ");
             }

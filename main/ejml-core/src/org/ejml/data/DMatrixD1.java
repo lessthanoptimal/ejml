@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -17,6 +17,8 @@
  */
 
 package org.ejml.data;
+
+import org.ejml.ops.MatrixIO;
 
 /**
  * A generic abstract class for matrices whose data is stored in a single 1D array of doubles.  The
@@ -236,6 +238,16 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
     public DMatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
     {
         return new DMatrixIterator(this,rowMajor, minRow, minCol, maxRow, maxCol);
+    }
+
+    @Override
+    public void print() {
+        print(DEFAULT_FLOAT_FORMAT);
+    }
+
+    @Override
+    public void print( String format ) {
+        MatrixIO.print(System.out,this, format );
     }
 
     /**

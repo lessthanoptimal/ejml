@@ -260,7 +260,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
-    public void print(PrintStream out, Matrix mat) {
-        MatrixIO.print(out, (DMatrixRMaj)mat);
+    public void print(PrintStream out, Matrix mat, String format) {
+        MatrixIO.print(out, (DMatrixRMaj)mat, format);
     }
 }

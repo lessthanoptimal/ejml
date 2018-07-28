@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -138,7 +138,12 @@ public class DMatrix4 implements DMatrixFixed {
 
     @Override
     public void print() {
-        MatrixIO.print(System.out, this);
+       print(DEFAULT_FLOAT_FORMAT);
+    }
+
+    @Override
+    public void print( String format ) {
+        MatrixIO.print(System.out, this, format);
     }
 
     @Override

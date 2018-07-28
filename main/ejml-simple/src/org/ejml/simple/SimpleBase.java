@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 
+import static org.ejml.data.Matrix.DEFAULT_FLOAT_FORMAT;
+
 
 /**
  * Parent of {@link SimpleMatrix} implements all the standard matrix operations and uses
@@ -764,25 +766,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Prints the matrix to standard out.
      */
     public void print() {
-        ops.print(System.out,mat);
-    }
-
-    /**
-     * Prints the matrix to standard out with the specified precision.
-     */
-    public void print(int numChar , int precision) {
-        switch ( mat.getType() ) {
-            case DDRM:MatrixIO.print(System.out, (DMatrixRMaj)mat, numChar, precision);break;
-            case FDRM:MatrixIO.print(System.out, (FMatrixRMaj)mat, numChar, precision);break;
-            case ZDRM:MatrixIO.print(System.out, (ZMatrixRMaj)mat, numChar, precision);break;
-            case CDRM:MatrixIO.print(System.out, (CMatrixRMaj)mat, numChar, precision);break;
-            case DSCC:MatrixIO.print(System.out, (DMatrixSparseCSC)mat, numChar, precision);break;
-            case FSCC:MatrixIO.print(System.out, (FMatrixSparseCSC)mat, numChar, precision);break;
-//            case ZSCC:MatrixIO.print(System.out, (ZMatrixSparseCSC)mat, numChar, precision);break;
-//            case CSCC:MatrixIO.print(System.out, (CMatrixSparseCSC)mat, numChar, precision);break;
-            default:
-                throw new IllegalArgumentException("Unknown matrix type");
-        }
+        ops.print(System.out,mat,DEFAULT_FLOAT_FORMAT);
     }
 
     /**
@@ -792,18 +776,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * </p>
      */
     public void print( String format ) {
-        switch ( mat.getType() ) {
-            case DDRM:MatrixIO.print(System.out, (DMatrixRMaj)mat, format);break;
-            case FDRM:MatrixIO.print(System.out, (FMatrixRMaj)mat, format);break;
-            case ZDRM:MatrixIO.print(System.out, (ZMatrixRMaj)mat, format);break;
-            case CDRM:MatrixIO.print(System.out, (CMatrixRMaj)mat, format);break;
-            case DSCC:MatrixIO.print(System.out, (DMatrixSparseCSC)mat, format);break;
-            case FSCC:MatrixIO.print(System.out, (FMatrixSparseCSC)mat, format);break;
-//            case ZSCC:MatrixIO.print(System.out, (ZMatrixSparseCSC)mat, numChar, precision);break;
-//            case CSCC:MatrixIO.print(System.out, (CMatrixSparseCSC)mat, numChar, precision);break;
-            default:
-                throw new IllegalArgumentException("Unknown matrix type");
-        }
+        ops.print(System.out,mat,format);
     }
 
     /**

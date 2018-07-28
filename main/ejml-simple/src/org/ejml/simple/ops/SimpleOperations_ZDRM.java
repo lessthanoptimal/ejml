@@ -278,7 +278,7 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
-    public void print(PrintStream out, Matrix mat) {
-        MatrixIO.print(out, (ZMatrixRMaj)mat);
+    public void print(PrintStream out, Matrix mat, String format) {
+        MatrixIO.print(out, (ZMatrixRMaj)mat, format);
     }
 }

@@ -117,5 +117,5 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     boolean isIdentical(T A, T B, double tol);
 
-    void print(PrintStream out , Matrix mat );
+    void print(PrintStream out , Matrix mat , String format );
 }

@@ -18,7 +18,6 @@
 
 package org.ejml.data;
 
-import org.ejml.UtilEjml;
 import org.ejml.ops.ConvertDArrays;
 import org.ejml.ops.MatrixIO;
 
@@ -347,29 +346,8 @@ public class DMatrixRMaj extends DMatrix1Row {
         }
     }
 
-    /**
-     * Prints the value of this matrix to the screen.  For more options see
-     * {@link UtilEjml}
-     *
-     */
-    @Override
-    public void print() {
-        MatrixIO.print(System.out,this);
-    }
-
     public void printJava( String format ) {
         MatrixIO.printJava(System.out,this,format);
-    }
-
-    /**
-     * <p>
-     * Prints the value of this matrix to the screen using the same format as {@link java.io.PrintStream#printf}.
-     * </p>
-     *
-     * @param format The format which each element is printed uses.
-     */
-    public void print( String format ) {
-        MatrixIO.print(System.out,this,format);
     }
 
     /**

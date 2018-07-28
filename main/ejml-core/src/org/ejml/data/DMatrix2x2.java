@@ -134,7 +134,12 @@ public class DMatrix2x2 implements DMatrixFixed {
 
     @Override
     public void print() {
-        MatrixIO.print(System.out, this);
+       print(DEFAULT_FLOAT_FORMAT);
+    }
+
+    @Override
+    public void print( String format ) {
+        MatrixIO.print(System.out, this, format);
     }
 
     @Override

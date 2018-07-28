@@ -115,7 +115,12 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
                 "\n" +
                 "    @Override\n" +
                 "    public void print() {\n" +
-                "        MatrixIO.print(System.out, this);\n" +
+                "       print(DEFAULT_FLOAT_FORMAT);\n" +
+                "    }\n" +
+                "\n" +
+                "    @Override\n" +
+                "    public void print( String format ) {\n" +
+                "        MatrixIO.print(System.out, this, format);\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +

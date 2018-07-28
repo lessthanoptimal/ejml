@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.35
 2018
 
+- Matrix.print()
+  * New default format and added the ability change the format
 - Reshape output instead of exception
   * Changed dense matrix multiply to have this behavior
 - ConvertDArrays

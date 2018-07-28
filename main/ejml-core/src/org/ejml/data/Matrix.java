@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,6 +26,8 @@ import java.io.Serializable;
  * @author Peter Abeles
  */
 public interface Matrix extends Serializable {
+    String DEFAULT_FLOAT_FORMAT = "%11.4E";
+
     /**
      * Returns the number of rows in this matrix.
      *
@@ -56,9 +58,17 @@ public interface Matrix extends Serializable {
     void set( Matrix original );
 
     /**
-     * Prints the matrix to standard out.
+     * Prints the matrix to standard out using standard formatting. This is the same as calling print("%e")
      */
     void print();
+
+    /**
+     * Prints the matrix to standard out with the specified formatting.
+     *
+     * @see java.util.Formatter
+     * @param format printf style formatting for a float. E.g. "%f"
+     */
+    void print( String format );
 
     /**
      * Returns the type of matrix

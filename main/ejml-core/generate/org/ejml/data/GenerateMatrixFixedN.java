@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -125,7 +125,12 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
                 "\n" +
                 "    @Override\n" +
                 "    public void print() {\n" +
-                "        MatrixIO.print(System.out, this);\n" +
+                "       print(DEFAULT_FLOAT_FORMAT);\n" +
+                "    }\n" +
+                "\n" +
+                "    @Override\n" +
+                "    public void print( String format ) {\n" +
+                "        MatrixIO.print(System.out, this, format);\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
