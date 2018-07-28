@@ -141,7 +141,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void print( String format ) {
-        System.out.println(getClass().getSimpleName()+"\nnumRows = "+numRows+" , numCols = "+numCols
+        System.out.println("Type = "+getType().name()+" , rows = "+numRows+" , cols = "+numCols
                 +" , nz_length = "+ nz_length);
 
         int length = String.format(format,-1.1123).length();
@@ -165,7 +165,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void printNonZero() {
-        System.out.println(getClass().getSimpleName()+"\nnumRows = "+numRows+" , numCols = "+numCols
+        String format = "%d %d "+DEFAULT_FLOAT_FORMAT+"\n";
+        System.out.println("Type = "+getType().name()+" , rows = "+numRows+" , cols = "+numCols
                 +" , nz_length = "+ nz_length);
 
         for (int col = 0; col < numCols; col++) {
@@ -176,7 +177,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
                 int row = nz_rows[i];
                 double value = nz_values[i];
 
-                System.out.printf("%d %d %f\n",row,col,value);
+                System.out.printf(format,row,col,value);
             }
         }
     }

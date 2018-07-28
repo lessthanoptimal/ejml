@@ -31,6 +31,8 @@ public enum MatrixType {
     FSCC(true,false,32),
     ZSCC(false,false,64),
     CSCC(false,false,32),
+    DTRIPLET(false,false,64),
+    FTRIPLET(false,false,64),
     UNSPECIFIED(false,false,0);
 
     boolean fixed;

@@ -235,7 +235,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
 
     @Override
     public void print( String format ) {
-        System.out.println(getClass().getSimpleName()+"\n , numRows = "+numRows+" , numCols = "+numCols
+        System.out.println("Type = "+getClass().getSimpleName()+" , rows = "+numRows+" , cols = "+numCols
                 +" , nz_length = "+ nz_length);
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
@@ -253,7 +253,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
 
     @Override
     public void printNonZero() {
-        System.out.println(getClass().getSimpleName()+"\n , numRows = "+numRows+" , numCols = "+numCols
+        System.out.println("Type = "+getClass().getSimpleName()+" , rows = "+numRows+" , cols = "+numCols
                 +" , nz_length = "+ nz_length);
 
         for (int i = 0; i < nz_length; i++) {
@@ -266,6 +266,6 @@ public class DMatrixSparseTriplet implements DMatrixSparse
 
     @Override
     public MatrixType getType() {
-        return MatrixType.UNSPECIFIED;
+        return MatrixType.DTRIPLET;
     }
 }

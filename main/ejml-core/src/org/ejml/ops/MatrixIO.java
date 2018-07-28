@@ -219,9 +219,9 @@ public class MatrixIO {
 
     public static void print(PrintStream out , DMatrix mat , String format ) {
 
-        String type = ReshapeMatrix.class.isAssignableFrom(mat.getClass()) ? "dense64" : "dense64 fixed";
+        String type = getMatrixType(mat);
 
-        out.println("Type = "+type+" real , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
         format += " ";
 
@@ -353,9 +353,9 @@ public class MatrixIO {
 
     public static void print(PrintStream out , ZMatrix mat , String format ) {
 
-        String type = "dense64";
+        String type = getMatrixType(mat);
 
-        out.println("Type = "+type+" complex , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
         format += " ";
 
@@ -374,9 +374,9 @@ public class MatrixIO {
 
     public static void print(PrintStream out , CMatrix mat , String format ) {
 
-        String type = "dense32";
+        String type = getMatrixType(mat);
 
-        out.println("Type = "+type+" complex , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
 
         format += " ";
 
@@ -391,6 +391,16 @@ public class MatrixIO {
             }
             out.println();
         }
+    }
+
+    private static String getMatrixType( Matrix mat) {
+        String type;
+        if( mat.getType() == MatrixType.UNSPECIFIED ) {
+            type = mat.getClass().getSimpleName();
+        } else {
+            type = mat.getType().name();
+        }
+        return type;
     }
 
 //    public static void main( String []args ) {
