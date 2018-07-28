@@ -18,6 +18,7 @@ Date format: year/month/day
   * Added innerProductLower(sparse,sparse) B = A'*A. Only lower triangle is saved in B
   * Added symmLowerToFull(sparse,sparse) for converting a lower triangular matrix into a symmetric matrix
   * Added column operations
+  * Added rowMult() rowDiv()
 - Added LinearSolverSparseSafe
 - LinearSolverSparse
   * Changed lockStructure() to setStructureLocked( boolean )

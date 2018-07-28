@@ -1339,6 +1339,36 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * Multiply all elements of row 'i' by value[i].
+     *
+     * @param A (Input/Output) Matrix. Modified.
+     * @param values (Input) multiplication factors
+     */
+    public static void rowMult( DMatrixSparseCSC A , double []values ) {
+        if( values.length < A.numRows )
+            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+
+        for (int i = 0; i < A.nz_length; i++) {
+            A.nz_values[i] *= values[A.nz_rows[i]];
+        }
+    }
+
+    /**
+     * Divides all elements of row 'i' by value[i].
+     *
+     * @param A (Input/Output) Matrix. Modified.
+     * @param values (Input) division factors
+     */
+    public static void rowDiv( DMatrixSparseCSC A , double []values ) {
+        if( values.length < A.numRows )
+            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+
+        for (int i = 0; i < A.nz_length; i++) {
+            A.nz_values[i] /= values[A.nz_rows[i]];
+        }
+    }
+
+    /**
      * <p>
      * This computes the trace of the matrix:<br>
      * <br>

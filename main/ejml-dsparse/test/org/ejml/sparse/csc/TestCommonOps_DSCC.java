@@ -993,6 +993,39 @@ public class TestCommonOps_DSCC {
         }
     }
 
+    @Test
+    public void rowMult() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
+
+        double factors[] = new double[]{0.1,0.2,0.3,0.4};
+
+        DMatrixSparseCSC B = A.copy();
+        CommonOps_DSCC.rowMult(B,factors);
+
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(A.get(i,j)*factors[i],B.get(i,j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void rowDiv() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
+
+        double factors[] = new double[]{0.1,0.2,0.3,0.4};
+
+        DMatrixSparseCSC B = A.copy();
+        CommonOps_DSCC.rowDiv(B,factors);
+
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(A.get(i,j)/factors[i],B.get(i,j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+
     /**
      * A more rigorous test is done in the Impl class
      */
