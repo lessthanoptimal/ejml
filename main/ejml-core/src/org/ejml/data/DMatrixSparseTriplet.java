@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.MatrixIO;
+
 /**
  * TODO describe
  *
@@ -229,8 +231,13 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     }
 
     @Override
+    public int getNonZeroLength() {
+        return nz_length;
+    }
+
+    @Override
     public void print() {
-        print(DEFAULT_FLOAT_FORMAT);
+        print(MatrixIO.DEFAULT_FLOAT_FORMAT);
     }
 
     @Override

@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.ops.MatrixIO;
 import org.ejml.ops.SortCoupledArray_F64;
 
 import java.util.Arrays;
@@ -136,36 +137,17 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void print() {
-        print(DEFAULT_FLOAT_FORMAT);
+        print(MatrixIO.DEFAULT_FLOAT_FORMAT);
     }
 
     @Override
     public void print( String format ) {
-        System.out.println("Type = "+getType().name()+" , rows = "+numRows+" , cols = "+numCols
-                +" , nz_length = "+ nz_length);
-
-        int length = String.format(format,-1.1123).length();
-        char []zero = new char[length];
-        Arrays.fill(zero,' ');
-        zero[length/2] = '*';
-
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                int index = nz_index(row,col);
-                if( index >= 0 )
-                    System.out.printf(format,nz_values[index]);
-                else
-                    System.out.print(zero);
-                if( col != numCols-1 )
-                    System.out.print(" ");
-            }
-            System.out.println();
-        }
+        MatrixIO.print(System.out,this,format);
     }
 
     @Override
     public void printNonZero() {
-        String format = "%d %d "+DEFAULT_FLOAT_FORMAT+"\n";
+        String format = "%d %d "+ MatrixIO.DEFAULT_FLOAT_FORMAT+"\n";
         System.out.println("Type = "+getType().name()+" , rows = "+numRows+" , cols = "+numCols
                 +" , nz_length = "+ nz_length);
 
@@ -292,6 +274,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
         indicesSorted = false; // see justification in reshape
+    }
+
+    @Override
+    public int getNonZeroLength() {
+        return nz_length;
     }
 
     @Override

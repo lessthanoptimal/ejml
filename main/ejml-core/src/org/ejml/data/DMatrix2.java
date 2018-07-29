@@ -122,7 +122,7 @@ public class DMatrix2 implements DMatrixFixed {
 
     @Override
     public void print() {
-       print(DEFAULT_FLOAT_FORMAT);
+       print(MatrixIO.DEFAULT_FLOAT_FORMAT);
     }
 
     @Override

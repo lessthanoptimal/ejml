@@ -77,7 +77,6 @@ public class EquationCustomFunction {
                     public void process() {
                         DMatrixRMaj mA = ((VariableMatrix)varA).matrix;
                         DMatrixRMaj mB = ((VariableMatrix)varB).matrix;
-                        output.matrix.reshape(mA.numCols,mB.numCols);
 
                         CommonOps_DDRM.multTransA(mA,mB,output.matrix);
                     }
