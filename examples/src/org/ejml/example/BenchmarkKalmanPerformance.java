@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,15 +20,30 @@ package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.openjdk.jmh.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Compares how fast the filters all run relative to each other.
+ * Uses JMH to compare the speed of different Kalman filter implementations.
+ *
+ * <pre>
+ * Benchmark                                 Mode  Cnt     Score    Error  Units
+ * BenchmarkKalmanPerformance.equations      avgt    5  1282.423 ± 30.398  ms/op
+ * BenchmarkKalmanPerformance.operations     avgt    5  1022.874 ± 29.654  ms/op
+ * BenchmarkKalmanPerformance.simple_matrix  avgt    5  1391.853 ± 23.626  ms/op
+ * </pre>
  *
  * @author Peter Abeles
  */
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@Warmup(iterations = 5)
+@Measurement(iterations = 5)
+@State(Scope.Benchmark)
+@Fork(value=1)
 public class BenchmarkKalmanPerformance {
 
     private static final int NUM_TRIALS = 200;
@@ -37,37 +52,38 @@ public class BenchmarkKalmanPerformance {
 
     private static int measDOF = 8;
 
-    List<KalmanFilter> filters = new ArrayList<KalmanFilter>();
+    DMatrixRMaj priorX = new DMatrixRMaj(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
+    DMatrixRMaj priorP = CommonOps_DDRM.identity(9);
 
-    public void run() {
-        DMatrixRMaj priorX = new DMatrixRMaj(9,1, true, 0.5, -0.2, 0, 0, 0.2, -0.9, 0, 0.2, -0.5);
-        DMatrixRMaj priorP = CommonOps_DDRM.identity(9);
+    DMatrixRMaj trueX = new DMatrixRMaj(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
 
-        DMatrixRMaj trueX = new DMatrixRMaj(9,1, true, 0, 0, 0, 0.2, 0.2, 0.2, 0.5, 0.1, 0.6);
+    List<DMatrixRMaj> meas = createSimulatedMeas(trueX);
 
-        List<DMatrixRMaj> meas = createSimulatedMeas(trueX);
+    DMatrixRMaj F = createF(T);
+    DMatrixRMaj Q = createQ(T,0.1);
+    DMatrixRMaj H = createH();
 
-        DMatrixRMaj F = createF(T);
-        DMatrixRMaj Q = createQ(T,0.1);
-        DMatrixRMaj H = createH();
+    @Benchmark
+    public void operations() {
+        evaluate(new KalmanFilterOperations());
+    }
 
-        for(KalmanFilter f : filters ) {
+    @Benchmark
+    public void equations() {
+        evaluate(new KalmanFilterEquation());
+    }
 
-            long timeBefore = System.currentTimeMillis();
+    @Benchmark
+    public void simple_matrix() {
+        evaluate(new KalmanFilterSimple());
+    }
 
-            f.configure(F,Q,H);
+    private void evaluate(KalmanFilter f) {
+        f.configure(F,Q,H);
 
-            for( int trial = 0; trial < NUM_TRIALS; trial++ ) {
-                f.setState(priorX,priorP);
-                processMeas(f,meas);
-            }
-
-            long timeAfter = System.currentTimeMillis();
-
-            System.out.println("Filter = "+f.getClass().getSimpleName());
-            System.out.println("Elapsed time: "+(timeAfter-timeBefore));
-
-            System.gc();
+        for( int trial = 0; trial < NUM_TRIALS; trial++ ) {
+            f.setState(priorX,priorP);
+            processMeas(f,meas);
         }
     }
 
@@ -77,9 +93,6 @@ public class BenchmarkKalmanPerformance {
 
         DMatrixRMaj F = createF(T);
         DMatrixRMaj H = createH();
-
-//        UtilEjml.print(F);
-//        UtilEjml.print(H);
 
         DMatrixRMaj x_next = new DMatrixRMaj(x);
         DMatrixRMaj z = new DMatrixRMaj(H.numRows,1);
@@ -156,16 +169,5 @@ public class BenchmarkKalmanPerformance {
         }
 
         return H;
-    }
-
-    public static void main( String args[] ) {
-        BenchmarkKalmanPerformance benchmark = new BenchmarkKalmanPerformance();
-
-        benchmark.filters.add( new KalmanFilterOperations());
-        benchmark.filters.add( new KalmanFilterSimple());
-        benchmark.filters.add( new KalmanFilterEquation());
-
-
-        benchmark.run();
     }
 }
