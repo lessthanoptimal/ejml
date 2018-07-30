@@ -421,6 +421,23 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * B = scalar/A.   A and B can be the same instance. Only non-zero values are affected
+     *
+     * @param A (Input) Matrix. Not modified.
+     * @param scalar (Input) Scalar value
+     * @param B (Output) Matrix. Modified.
+     */
+    public static void divide( double scalar, DMatrixSparseCSC A , DMatrixSparseCSC B ) {
+        if( A != B ) {
+            B.copyStructure(A);
+        }
+        for (int i = 0; i < A.nz_length; i++) {
+            B.nz_values[i] = scalar / A.nz_values[i];
+        }
+    }
+
+
+    /**
      * B = -A.   Changes the sign of elements in A and stores it in B. A and B can be the same instance.
      *
      * @param A (Input) Matrix. Not modified.
@@ -561,20 +578,22 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Multiply all elements of column 'i' by value[i].
+     * Multiply all elements of column 'i' by value[i].  A[:,i] *= values[i].<br>
+     * Equivalent to A = A*diag(values)
      *
      * @param A (Input/Output) Matrix. Modified.
      * @param values (Input) multiplication factor for each column
+     * @param offset (Input) first index in values to start at
      */
-    public static void columnMult( DMatrixSparseCSC A , double []values ) {
-        if( values.length < A.numCols )
+    public static void multColumns(DMatrixSparseCSC A , double []values , int offset) {
+        if( values.length+offset < A.numCols )
             throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
 
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];
             int idx1 = A.col_idx[i+1];
 
-            double v = values[i];
+            double v = values[offset+i];
             for (int j = idx0; j < idx1; j++) {
                 A.nz_values[j] *= v;
             }
@@ -582,22 +601,84 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Divides all elements of column 'i' by value[i].
+     * Divides all elements of column 'i' by values[i]. A[:,i] /= values[i].<br>
+     * Equivalent to A = A*inv(diag(values))
      *
      * @param A (Input/Output) Matrix. Modified.
      * @param values (Input) multiplication factor for each column
+     * @param offset (Input) first index in values to start at
      */
-    public static void columnDiv( DMatrixSparseCSC A , double []values ) {
-        if( values.length < A.numCols )
+    public static void divideColumns(DMatrixSparseCSC A , double []values , int offset ) {
+        if( values.length+offset < A.numCols )
             throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
 
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];
             int idx1 = A.col_idx[i+1];
 
-            double v = values[i];
+            double v = values[offset+i];
             for (int j = idx0; j < idx1; j++) {
                 A.nz_values[j] /= v;
+            }
+        }
+    }
+
+    /**
+     * Equivalent to multiplying a matrix B by two diagonal matrices.
+     * B = A*B*C, where A=diag(a) and C=diag(c).
+     *
+     * @param diagA Array of length offsteA + B.numRows
+     * @param offsetA First index in A
+     * @param B Rectangular matrix
+     * @param diagC Array of length indexC + B.numCols
+     * @param offsetC First index in C
+     */
+    public static void multRowsCols( double []diagA , int offsetA ,
+                                     DMatrixSparseCSC B ,
+                                     double []diagC , int offsetC )
+    {
+        if( diagA.length+offsetA < B.numRows )
+            throw new IllegalArgumentException("diagA is too small.");
+        if( diagC.length+offsetC < B.numCols )
+            throw new IllegalArgumentException("diagA is too small.");
+
+        for (int i = 0; i < B.numCols; i++) {
+            int idx0 = B.col_idx[i];
+            int idx1 = B.col_idx[i+1];
+
+            double c = diagC[offsetC+i];
+            for (int j = idx0; j < idx1; j++) {
+                B.nz_values[j] *= c*diagA[offsetA+B.nz_rows[j]];
+            }
+        }
+    }
+
+    /**
+     * Equivalent to multiplying a matrix B by the inverse of two diagonal matrices.
+     * B = inv(A)*B*inv(C), where A=diag(a) and C=diag(c).
+     *
+     * @param diagA Array of length offsteA + B.numRows
+     * @param offsetA First index in A
+     * @param B Rectangular matrix
+     * @param diagC Array of length indexC + B.numCols
+     * @param offsetC First index in C
+     */
+    public static void divideRowsCols( double []diagA , int offsetA ,
+                                       DMatrixSparseCSC B ,
+                                       double []diagC , int offsetC )
+    {
+        if( diagA.length+offsetA < B.numRows )
+            throw new IllegalArgumentException("diagA is too small.");
+        if( diagC.length+offsetC < B.numCols )
+            throw new IllegalArgumentException("diagA is too small.");
+
+        for (int i = 0; i < B.numCols; i++) {
+            int idx0 = B.col_idx[i];
+            int idx1 = B.col_idx[i+1];
+
+            double c = diagC[offsetC+i];
+            for (int j = idx0; j < idx1; j++) {
+                B.nz_values[j] /= c*diagA[offsetA+B.nz_rows[j]];
             }
         }
     }
@@ -608,10 +689,22 @@ public class CommonOps_DSCC {
      * @return A diagonal matrix
      */
     public static DMatrixSparseCSC diag(double... values ) {
-        return diag(new DMatrixSparseCSC(1,1,1),values.length,values);
+        int N = values.length;
+        return diag(new DMatrixSparseCSC(N,N,N),values,0,N);
     }
 
-    public static DMatrixSparseCSC diag(DMatrixSparseCSC A , int length, double... values ) {
+
+    /**
+     * Creates a diagonal matrix from an array. Elements in the array can be offset.
+     *
+     * @param A (Optional) Storage for diagonal matrix. If null a new one will be declared.
+     * @param values First index in the diagonal matirx
+     * @param length Length of the diagonal matrix
+     * @param offset First index in values
+     * @return The diagonal matrix
+     */
+    public static DMatrixSparseCSC diag( @Nullable DMatrixSparseCSC A ,
+                                         double values[], int offset, int length) {
         int N = length;
         if( A == null )
             A = new DMatrixSparseCSC(N,N,N);
@@ -622,7 +715,7 @@ public class CommonOps_DSCC {
         for (int i = 0; i < N; i++) {
             A.col_idx[i+1] = i+1;
             A.nz_rows[i] = i;
-            A.nz_values[i] = values[i];
+            A.nz_values[i] = values[offset+i];
         }
 
         return A;
@@ -1339,32 +1432,34 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Multiply all elements of row 'i' by value[i].
+     * Multiply all elements of row 'i' by value[i]. A[i,:] *= values[i]
      *
+     * @param diag (Input) multiplication factors
+     * @param offset (Input) First index in values
      * @param A (Input/Output) Matrix. Modified.
-     * @param values (Input) multiplication factors
      */
-    public static void rowMult( DMatrixSparseCSC A , double []values ) {
-        if( values.length < A.numRows )
-            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+    public static void multRows(double[] diag, int offset, DMatrixSparseCSC A) {
+        if( diag.length < A.numRows )
+            throw new IllegalArgumentException("Array is too small. "+diag.length+" < "+A.numCols);
 
         for (int i = 0; i < A.nz_length; i++) {
-            A.nz_values[i] *= values[A.nz_rows[i]];
+            A.nz_values[i] *= diag[A.nz_rows[i+offset]];
         }
     }
 
     /**
-     * Divides all elements of row 'i' by value[i].
+     * Divides all elements of row 'i' by value[i]. A[i,:] /= values[i]
      *
+     * @param diag (Input) division factors
+     * @param offset (Input) First index in values
      * @param A (Input/Output) Matrix. Modified.
-     * @param values (Input) division factors
      */
-    public static void rowDiv( DMatrixSparseCSC A , double []values ) {
-        if( values.length < A.numRows )
-            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+    public static void divideRows(double[] diag, int offset, DMatrixSparseCSC A) {
+        if( diag.length < A.numRows )
+            throw new IllegalArgumentException("Array is too small. "+diag.length+" < "+A.numCols);
 
         for (int i = 0; i < A.nz_length; i++) {
-            A.nz_values[i] /= values[A.nz_rows[i]];
+            A.nz_values[i] /= diag[A.nz_rows[i+offset]];
         }
     }
 

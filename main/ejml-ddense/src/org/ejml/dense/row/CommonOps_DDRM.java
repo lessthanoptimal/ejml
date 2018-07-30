@@ -1602,10 +1602,10 @@ public class CommonOps_DDRM {
     /**
      * Multiplies every element in row i by value[i].
      *
-     * @param A Matrix. Modified.
      * @param values array. Not modified.
+     * @param A Matrix. Modified.
      */
-    public static void rowMult(DMatrixRMaj A , double values[] ) {
+    public static void multRows(double[] values, DMatrixRMaj A) {
         if( values.length < A.numRows ) {
             throw new IllegalArgumentException("Not enough elements in values.");
         }
@@ -1622,10 +1622,10 @@ public class CommonOps_DDRM {
     /**
      * Divides every element in row i by value[i].
      *
-     * @param A Matrix. Modified.
      * @param values array. Not modified.
+     * @param A Matrix. Modified.
      */
-    public static void rowDiv(DMatrixRMaj A , double values[] ) {
+    public static void divideRows(double[] values, DMatrixRMaj A) {
         if( values.length < A.numRows ) {
             throw new IllegalArgumentException("Not enough elements in values.");
         }
@@ -1635,6 +1635,44 @@ public class CommonOps_DDRM {
             double v = values[row];
             for (int col = 0; col < A.numCols; col++, index++) {
                 A.data[index] /= v;
+            }
+        }
+    }
+
+    /**
+     * Multiplies every element in column i by value[i].
+     *
+     * @param A Matrix. Modified.
+     * @param values array. Not modified.
+     */
+    public static void multCols(DMatrixRMaj A , double values[] ) {
+        if( values.length < A.numCols ) {
+            throw new IllegalArgumentException("Not enough elements in values.");
+        }
+
+        int index = 0;
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++, index++) {
+                A.data[index] *= values[col];
+            }
+        }
+    }
+
+    /**
+     * Divides every element in column i by value[i].
+     *
+     * @param A Matrix. Modified.
+     * @param values array. Not modified.
+     */
+    public static void divideCols(DMatrixRMaj A , double values[] ) {
+        if( values.length < A.numCols ) {
+            throw new IllegalArgumentException("Not enough elements in values.");
+        }
+
+        int index = 0;
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++, index++) {
+                A.data[index] /= values[col];
             }
         }
     }

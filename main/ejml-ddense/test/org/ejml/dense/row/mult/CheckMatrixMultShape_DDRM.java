@@ -59,6 +59,8 @@ public class CheckMatrixMultShape_DDRM {
             if( !name.contains("mult") || name.contains("Element") ||
                     name.contains("Inner") || name.contains("Outer") )
                 continue;
+            if( name.equals("multRows") || name.equals("multCols"))
+                continue;
 
             boolean transA = false;
             boolean transB = false;

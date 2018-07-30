@@ -209,7 +209,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
         if (MatrixFeatures_DSCC.isVector(A)) {
             int N = Math.max(A.numCols,A.numRows);
             output = new DMatrixSparseCSC(N,N);
-            CommonOps_DSCC.diag(output,N,A.nz_values);
+            CommonOps_DSCC.diag(output,A.nz_values,0,N);
         } else {
             int N = Math.min(A.numCols,A.numRows);
             output = new DMatrixSparseCSC(N,1);

@@ -65,6 +65,8 @@ public class TestCommonOps_DDRM {
             if( !name.contains("mult") || name.contains("Element") || 
                     name.contains("Inner") || name.contains("Outer"))
                 continue;
+            if( name.equals("multRows") || name.equals("multCols"))
+                continue;
 
             boolean hasAlpha = method.getGenericParameterTypes().length==4;
 
@@ -114,7 +116,8 @@ public class TestCommonOps_DDRM {
             if( !name.contains("mult") || name.contains("Element") ||
                     name.contains("Inner") || name.contains("Outer"))
                 continue;
-
+            if( name.equals("multRows") || name.equals("multCols"))
+                continue;
             try {
 
                 boolean failed = !checkMultMethod(method,6,0,0,5);
@@ -359,12 +362,12 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
-    public void rowMult() {
+    public void multRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj found = A.copy();
         double values[] = UtilEjml.randomVector_F64(rand, 5);
 
-        CommonOps_DDRM.rowMult(found,values);
+        CommonOps_DDRM.multRows(values, found);
 
         for (int row = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++) {
@@ -374,16 +377,46 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
-    public void rowDiv() {
+    public void divideRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj found = A.copy();
         double values[] = UtilEjml.randomVector_F64(rand, 5);
 
-        CommonOps_DDRM.rowDiv(found,values);
+        CommonOps_DDRM.divideRows(values, found);
 
         for (int row = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++) {
                 assertEquals(A.get(row,col)/values[row], found.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void multCols() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj found = A.copy();
+        double values[] = UtilEjml.randomVector_F64(rand, 5);
+
+        CommonOps_DDRM.multCols(found,values);
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col)*values[col], found.get(row,col), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void divideCols() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj found = A.copy();
+        double values[] = UtilEjml.randomVector_F64(rand, 5);
+
+        CommonOps_DDRM.divideCols(found,values);
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                assertEquals(A.get(row,col)/values[col], found.get(row,col), UtilEjml.TEST_F64);
             }
         }
     }

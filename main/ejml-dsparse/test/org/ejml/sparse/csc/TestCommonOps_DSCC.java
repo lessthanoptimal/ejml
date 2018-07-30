@@ -389,7 +389,7 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void divide() {
+    public void divide_matrix_scalar() {
         double denominator = 2.1;
 
         for( int length : new int[]{0,2,6,15,30} ) {
@@ -406,6 +406,34 @@ public class TestCommonOps_DSCC {
             DMatrixRMaj found = ConvertDMatrixStruct.convert(B,(DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
+    public void divide_scalar_matrix() {
+        double numerator = 2.1;
+
+        for( int length : new int[]{0,2,6,15,30} ) {
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,5,length,rand);
+            DMatrixSparseCSC O = A.copy();
+
+            DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows,A.numCols,0);
+
+            CommonOps_DSCC.divide(numerator,A, B);
+            assertTrue(CommonOps_DSCC.checkStructure(B));
+            CommonOps_DSCC.divide(numerator,A, A);
+            assertTrue(CommonOps_DSCC.checkStructure(A));
+
+            for (int row = 0; row < A.numRows; row++) {
+                for (int col = 0; col < A.numCols; col++) {
+                    double v = O.get(row,col);
+                    if( v == 0 )
+                        continue;
+
+                    assertEquals(numerator/v, A.get(row,col), UtilEjml.TEST_F64);
+                    assertEquals(numerator/v, B.get(row,col), UtilEjml.TEST_F64);
+                }
+            }
         }
     }
 
@@ -536,7 +564,7 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void columnMult() {
+    public void multColumns() {
         for (int trial = 0; trial < 50; trial++) {
 //            System.out.println("------------------- Trial "+trial);
             int rows = rand.nextInt(8)+1;
@@ -550,7 +578,8 @@ public class TestCommonOps_DSCC {
             for (int i = 0; i < A.numCols; i++) {
                 values[i] = rand.nextDouble()+0.1;
             }
-            CommonOps_DSCC.columnMult(found,values);
+            CommonOps_DSCC.multColumns(found,values,0);
+            assertTrue(CommonOps_DSCC.checkStructure(found));
 
             for (int j = 0; j < cols; j++) {
                 for (int i = 0; i < rows; i++) {
@@ -561,7 +590,7 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void columnDiv() {
+    public void divideColumns() {
         for (int trial = 0; trial < 50; trial++) {
 //            System.out.println("------------------- Trial "+trial);
             int rows = rand.nextInt(8)+1;
@@ -575,7 +604,8 @@ public class TestCommonOps_DSCC {
             for (int i = 0; i < A.numCols; i++) {
                 values[i] = rand.nextDouble()+0.1;
             }
-            CommonOps_DSCC.columnDiv(found,values);
+            CommonOps_DSCC.divideColumns(found,values,0);
+            assertTrue(CommonOps_DSCC.checkStructure(found));
 
             for (int j = 0; j < cols; j++) {
                 for (int i = 0; i < rows; i++) {
@@ -584,6 +614,89 @@ public class TestCommonOps_DSCC {
             }
         }
     }
+
+    @Test
+    public void multRowsCols() {
+        for (int trial = 0; trial < 50; trial++) {
+//            System.out.println("------------------- Trial "+trial);
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz_b = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+            DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(rows,cols,nz_b,rand);
+            DMatrixSparseCSC found = B.copy();
+
+            double diagA[] = new double[B.numRows];
+            for (int i = 0; i < B.numRows; i++) {
+                diagA[i] = rand.nextDouble()+0.1;
+            }
+
+            double diagC[] = new double[B.numCols];
+            for (int i = 0; i < B.numCols; i++) {
+                diagC[i] = rand.nextDouble()+0.1;
+            }
+
+
+            DMatrixSparseCSC A = CommonOps_DSCC.diag(null,diagA,0,B.numRows);
+            DMatrixSparseCSC C = CommonOps_DSCC.diag(null,diagC,0,B.numCols);
+
+            DMatrixSparseCSC AB = new DMatrixSparseCSC(1,1);
+            CommonOps_DSCC.mult(A,B,AB);
+            DMatrixSparseCSC expected = new DMatrixSparseCSC(1,1);
+            CommonOps_DSCC.mult(AB,C,expected);
+
+            CommonOps_DSCC.multRowsCols(diagA,0,found,diagC,0);
+            assertTrue(CommonOps_DSCC.checkStructure(found));
+
+            expected.sortIndices(null);
+            found.sortIndices(null);
+            assertTrue( MatrixFeatures_DSCC.isEquals(expected,found, UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
+    public void divideRowsCols() {
+        for (int trial = 0; trial < 50; trial++) {
+//            System.out.println("------------------- Trial "+trial);
+            int rows = rand.nextInt(8)+1;
+            int cols = rand.nextInt(8)+1;
+
+            int nz_b = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
+            DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(rows,cols,nz_b,rand);
+            DMatrixSparseCSC found = B.copy();
+
+            double diagA[] = new double[B.numRows];
+            for (int i = 0; i < B.numRows; i++) {
+                diagA[i] = rand.nextDouble()+0.1;
+            }
+
+            double diagC[] = new double[B.numCols];
+            for (int i = 0; i < B.numCols; i++) {
+                diagC[i] = rand.nextDouble()+0.1;
+            }
+
+
+            DMatrixSparseCSC A = CommonOps_DSCC.diag(null,diagA,0,B.numRows);
+            DMatrixSparseCSC C = CommonOps_DSCC.diag(null,diagC,0,B.numCols);
+
+            // invert the matrices
+            CommonOps_DSCC.divide(1.0,A,A);
+            CommonOps_DSCC.divide(1.0,C,C);
+
+            DMatrixSparseCSC AB = new DMatrixSparseCSC(1,1);
+            CommonOps_DSCC.mult(A,B,AB);
+            DMatrixSparseCSC expected = new DMatrixSparseCSC(1,1);
+            CommonOps_DSCC.mult(AB,C,expected);
+
+            CommonOps_DSCC.divideRowsCols(diagA,0,found,diagC,0);
+            assertTrue(CommonOps_DSCC.checkStructure(found));
+
+            expected.sortIndices(null);
+            found.sortIndices(null);
+            assertTrue( MatrixFeatures_DSCC.isEquals(expected,found, UtilEjml.TEST_F64));
+        }
+    }
+
 
     @Test
     public void diag() {
@@ -994,13 +1107,13 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void rowMult() {
+    public void multRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
 
         double factors[] = new double[]{0.1,0.2,0.3,0.4};
 
         DMatrixSparseCSC B = A.copy();
-        CommonOps_DSCC.rowMult(B,factors);
+        CommonOps_DSCC.multRows(factors, 0, B);
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {
@@ -1010,13 +1123,14 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void rowDiv() {
+    public void divideRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
 
         double factors[] = new double[]{0.1,0.2,0.3,0.4};
 
         DMatrixSparseCSC B = A.copy();
-        CommonOps_DSCC.rowDiv(B,factors);
+        CommonOps_DSCC.divideRows(factors, 0, B);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
 
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {
