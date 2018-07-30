@@ -21,6 +21,7 @@ package org.ejml.ops;
 import org.ejml.data.*;
 
 import java.io.*;
+import java.util.Arrays;
 
 
 /**
@@ -29,6 +30,8 @@ import java.io.*;
  * @author Peter Abeles
  */
 public class MatrixIO {
+
+    public static final String DEFAULT_FLOAT_FORMAT = "%11.4E";
 
     /**
      * Saves a matrix to disk using Java binary serialization.
@@ -207,8 +210,50 @@ public class MatrixIO {
         return ret;
     }
 
+    public static void print( PrintStream out , Matrix mat ) {
+        String format = DEFAULT_FLOAT_FORMAT;
+
+        switch( mat.getType() ) {
+            case DDRM:
+                print(out,(DMatrix)mat,format);
+                break;
+
+            case FDRM:
+                print(out,(FMatrix)mat,format);
+                break;
+
+            case ZDRM:
+                print(out,(ZMatrix)mat,format);
+                break;
+
+            case CDRM:
+                print(out,(CMatrix)mat,format);
+                break;
+
+            case DSCC:
+                print(out,(DMatrixSparseCSC)mat,format);
+                break;
+
+            case DTRIPLET:
+                print(out,(DMatrixSparseTriplet)mat,format);
+                break;
+
+            case FSCC:
+                print(out,(FMatrixSparseCSC)mat,format);
+                break;
+
+            case FTRIPLET:
+                print(out,(FMatrixSparseTriplet)mat,format);
+                break;
+
+            default:
+                throw new RuntimeException("Unknown type "+mat.getType());
+        }
+    }
+
+
     public static void print( PrintStream out , DMatrix mat ) {
-        print(out,mat,6,3);
+        print(out,mat,DEFAULT_FLOAT_FORMAT);
     }
 
     public static void print(PrintStream out, DMatrix mat , int numChar , int precision ) {
@@ -219,15 +264,91 @@ public class MatrixIO {
 
     public static void print(PrintStream out , DMatrix mat , String format ) {
 
-        String type = getMatrixType(mat);
-
-        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        printTypeSize(out, mat);
 
         format += " ";
 
-        for( int y = 0; y < mat.getNumRows(); y++ ) {
-            for( int x = 0; x < mat.getNumCols(); x++ ) {
-                out.printf(format,mat.get(y,x));
+        for( int row = 0; row < mat.getNumRows(); row++ ) {
+            for( int col = 0; col < mat.getNumCols(); col++ ) {
+                out.printf(format,mat.get(row,col));
+            }
+            out.println();
+        }
+    }
+
+    public static void print( PrintStream out , DMatrixSparseCSC m , String format ) {
+        printTypeSize(out,m);
+
+        int length = String.format(format,-1.1123).length();
+        char []zero = new char[length];
+        Arrays.fill(zero,' ');
+        zero[length/2] = '*';
+
+        for (int row = 0; row < m.numRows; row++) {
+            for (int col = 0; col < m.numCols; col++) {
+                int index = m.nz_index(row,col);
+                if( index >= 0 )
+                    out.printf(format,m.nz_values[index]);
+                else
+                    out.print(zero);
+                if( col != m.numCols-1 )
+                    out.print(" ");
+            }
+            out.println();
+        }
+    }
+
+    public static void print( PrintStream out , FMatrixSparseCSC m , String format ) {
+        printTypeSize(out,m);
+
+        int length = String.format(format,-1.1123).length();
+        char []zero = new char[length];
+        Arrays.fill(zero,' ');
+        zero[length/2] = '*';
+
+        for (int row = 0; row < m.numRows; row++) {
+            for (int col = 0; col < m.numCols; col++) {
+                int index = m.nz_index(row,col);
+                if( index >= 0 )
+                    out.printf(format,m.nz_values[index]);
+                else
+                    out.print(zero);
+                if( col != m.numCols-1 )
+                    out.print(" ");
+            }
+            out.println();
+        }
+    }
+
+    public static void print( PrintStream out , DMatrixSparseTriplet m , String format ) {
+        printTypeSize(out,m);
+
+        for (int row = 0; row < m.numRows; row++) {
+            for (int col = 0; col < m.numCols; col++) {
+                int index = m.nz_index(row,col);
+                if( index >= 0 )
+                    out.printf(format,m.nz_value.data[index]);
+                else
+                    out.print("   *  ");
+                if( col != m.numCols-1 )
+                    out.print(" ");
+            }
+            out.println();
+        }
+    }
+
+    public static void print( PrintStream out , FMatrixSparseTriplet m , String format ) {
+        printTypeSize(out,m);
+
+        for (int row = 0; row < m.numRows; row++) {
+            for (int col = 0; col < m.numCols; col++) {
+                int index = m.nz_index(row,col);
+                if( index >= 0 )
+                    out.printf(format,m.nz_value.data[index]);
+                else
+                    out.print("   *  ");
+                if( col != m.numCols-1 )
+                    out.print(" ");
             }
             out.println();
         }
@@ -267,15 +388,13 @@ public class MatrixIO {
 
     public static void print(PrintStream out , FMatrix mat , String format ) {
 
-        String type = mat.getClass().getSimpleName();
-
-        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        printTypeSize(out, mat);
 
         format += " ";
 
-        for( int y = 0; y < mat.getNumRows(); y++ ) {
+        for( int row = 0; row < mat.getNumRows(); row++ ) {
             for( int x = 0; x < mat.getNumCols(); x++ ) {
-                out.printf(format,mat.get(y,x));
+                out.printf(format,mat.get(row,x));
             }
             out.println();
         }
@@ -353,9 +472,7 @@ public class MatrixIO {
 
     public static void print(PrintStream out , ZMatrix mat , String format ) {
 
-        String type = getMatrixType(mat);
-
-        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        printTypeSize(out, mat);
 
         format += " ";
 
@@ -372,11 +489,19 @@ public class MatrixIO {
         }
     }
 
+    private static void printTypeSize(PrintStream out, Matrix mat) {
+        if( mat instanceof MatrixSparse ) {
+            MatrixSparse m = (MatrixSparse)mat;
+            out.println("Type = " + getMatrixType(mat) + " , rows = " + mat.getNumRows() +
+                    " , cols = " + mat.getNumCols() + " , nz_length = "+ m.getNonZeroLength());
+        } else {
+            out.println("Type = " + getMatrixType(mat) + " , rows = " + mat.getNumRows() + " , cols = " + mat.getNumCols());
+        }
+    }
+
     public static void print(PrintStream out , CMatrix mat , String format ) {
 
-        String type = getMatrixType(mat);
-
-        out.println("Type = "+type+" , numRows = "+mat.getNumRows()+" , numCols = "+mat.getNumCols());
+        printTypeSize(out, mat);
 
         format += " ";
 

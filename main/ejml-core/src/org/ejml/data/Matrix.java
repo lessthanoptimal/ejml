@@ -26,7 +26,6 @@ import java.io.Serializable;
  * @author Peter Abeles
  */
 public interface Matrix extends Serializable {
-    String DEFAULT_FLOAT_FORMAT = "%11.4E";
 
     /**
      * Returns the number of rows in this matrix.

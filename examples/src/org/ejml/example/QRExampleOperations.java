@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -60,10 +60,9 @@ public class QRExampleOperations {
 
         for( int i = 0; i < N; i++ ) {
             // reshape temporary variables
-            A_small.reshape(QR.numRows-i,QR.numCols-i,false);
-            A_mod.reshape(A_small.numRows,A_small.numCols,false);
-            v.reshape(A_small.numRows,1,false);
-            Q_k.reshape(v.getNumElements(),v.getNumElements(),false);
+            A_small.reshape(QR.numRows-i,QR.numCols-i);
+            v.reshape(A_small.numRows,1);
+            Q_k.reshape(v.getNumElements(),v.getNumElements());
 
             // use extract matrix to get the column that is to be zeroed
             CommonOps_DDRM.extract(QR,i,QR.numRows,i,i+1,v,0,0);
@@ -113,7 +112,7 @@ public class QRExampleOperations {
         DMatrixRMaj Q_k = new DMatrixRMaj(QR.numRows,QR.numRows);
         DMatrixRMaj u = new DMatrixRMaj(QR.numRows,1);
 
-        DMatrixRMaj temp = new DMatrixRMaj(QR.numRows,QR.numRows);
+        DMatrixRMaj temp = new DMatrixRMaj(1,1);
 
         int N = Math.min(QR.numCols,QR.numRows);
 

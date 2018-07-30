@@ -184,7 +184,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
 
     @Override
     public void print() {
-        print(DEFAULT_FLOAT_FORMAT);
+        print(MatrixIO.DEFAULT_FLOAT_FORMAT);
     }
 
     @Override

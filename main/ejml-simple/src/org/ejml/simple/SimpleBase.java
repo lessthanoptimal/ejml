@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 
-import static org.ejml.data.Matrix.DEFAULT_FLOAT_FORMAT;
+import static org.ejml.ops.MatrixIO.DEFAULT_FLOAT_FORMAT;
 
 
 /**
@@ -791,18 +791,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PrintStream p = new PrintStream(stream);
 
-        switch ( mat.getType() ) {
-            case DDRM:MatrixIO.print(p, (DMatrixRMaj)mat);break;
-            case FDRM:MatrixIO.print(p, (FMatrixRMaj)mat);break;
-            case ZDRM:MatrixIO.print(p, (ZMatrixRMaj)mat);break;
-            case CDRM:MatrixIO.print(p, (CMatrixRMaj)mat);break;
-            case DSCC:MatrixIO.print(p, (DMatrixSparseCSC)mat);break;
-            case FSCC:MatrixIO.print(p, (FMatrixSparseCSC)mat);break;
-//            case ZSCC:MatrixIO.print(p, (ZMatrixSparseCSC)mat, numChar, precision);break;
-//            case CSCC:MatrixIO.print(p, (CMatrixSparseCSC)mat, numChar, precision);break;
-            default:
-                throw new IllegalArgumentException("Unknown matrix type");
-        }
+        MatrixIO.print(p,mat);
 
         return stream.toString();
     }
