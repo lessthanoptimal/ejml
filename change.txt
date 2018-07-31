@@ -11,6 +11,11 @@ Date format: year/month/day
   * Changed dense matrix multiply to have this behavior
 - ConvertDArrays
   * Methods for converting 2D arrays to and from EJML data types
+- MatrixVectorMult_DSCC
+  * Added mult(Matrix,Vector,Vector)
+  * Added multAdd(Matrix,Vector,Vector)
+  * Added mult(Vector,Matrix,Vector)
+  * Added innerProduct(Vector,Matrix,Vector)
 - CommonOps_DSCC
   * Added multAdd(sparse,dense,dense)
   * Added multTransA(sparse,dense,dense) multAddTransA(sparse,dense,dense)
