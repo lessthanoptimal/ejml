@@ -121,11 +121,7 @@ public class CommonOps_DSCC {
         if( a_t == null ) {
             a_t = new DMatrixSparseCSC(a.numCols,a.numRows,a.nz_length);
         } else {
-            if (a_t.numRows != a.numCols || a_t.numCols != a.numRows)
-                throw new IllegalArgumentException("Unexpected shape for transpose matrix");
-
-            a_t.growMaxLength(a.nz_length, false);
-            a_t.nz_length = a.nz_length;
+            a_t.reshape(a.numCols,a.numRows,a.nz_length);
         }
 
         ImplCommonOps_DSCC.transpose(a, a_t, gw);
