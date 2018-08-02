@@ -7,6 +7,7 @@ Date format: year/month/day
 
 - Matrix.print()
   * New default format and added the ability change the format
+  * If format is specified as "matlab" it will print out in a format which can be pasted into Matlab
 - Reshape output instead of exception
   * Changed dense matrix multiply to have this behavior
 - ConvertDArrays

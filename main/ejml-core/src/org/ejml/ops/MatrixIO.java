@@ -256,67 +256,126 @@ public class MatrixIO {
         print(out,mat,DEFAULT_FLOAT_FORMAT);
     }
 
-    public static void print(PrintStream out, DMatrix mat , int numChar , int precision ) {
-        String format = "%"+numChar+"."+precision+"f";
-
-        print(out, mat,format);
-    }
-
+    /**
+     * Prints the matrix out in a text format. The format is specified using notation from
+     * {@link String#format(String, Object...)}. Unless the format is set to 'matlab' then it will print it out
+     * in a format that's understood by Matlab.
+     *
+     * @param out Output stream
+     * @param mat Matrix to be printed
+     * @param format printf style or 'matlab'
+     */
     public static void print(PrintStream out , DMatrix mat , String format ) {
 
-        printTypeSize(out, mat);
+        if( format.toLowerCase().equals("matlab")) {
+            printMatlab(out,mat);
+        } else {
+            printTypeSize(out, mat);
 
-        format += " ";
+            format += " ";
 
-        for( int row = 0; row < mat.getNumRows(); row++ ) {
-            for( int col = 0; col < mat.getNumCols(); col++ ) {
-                out.printf(format,mat.get(row,col));
+            for (int row = 0; row < mat.getNumRows(); row++) {
+                for (int col = 0; col < mat.getNumCols(); col++) {
+                    out.printf(format, mat.get(row, col));
+                }
+                out.println();
             }
-            out.println();
         }
     }
 
-    public static void print( PrintStream out , DMatrixSparseCSC m , String format ) {
-        printTypeSize(out,m);
+    public static void printMatlab(PrintStream out , DMatrix mat ) {
 
-        int length = String.format(format,-1.1123).length();
-        char []zero = new char[length];
-        Arrays.fill(zero,' ');
-        zero[length/2] = '*';
+        out.print("[ ");
 
-        for (int row = 0; row < m.numRows; row++) {
-            for (int col = 0; col < m.numCols; col++) {
-                int index = m.nz_index(row,col);
-                if( index >= 0 )
-                    out.printf(format,m.nz_values[index]);
-                else
-                    out.print(zero);
-                if( col != m.numCols-1 )
-                    out.print(" ");
+        for( int row = 0; row < mat.getNumRows(); row++ ) {
+            for( int col = 0; col < mat.getNumCols(); col++ ) {
+                out.printf("%.12E",mat.get(row,col));
+                if( col+1 < mat.getNumCols() ) {
+                    out.print(" , ");
+                }
             }
-            out.println();
+            if( row+1 < mat.getNumRows() )
+                out.println(" ;");
+            else
+                out.println(" ]");
+        }
+    }
+
+    public static void printMatlab(PrintStream out , FMatrix mat ) {
+
+        out.print("[ ");
+
+        for( int row = 0; row < mat.getNumRows(); row++ ) {
+            for( int col = 0; col < mat.getNumCols(); col++ ) {
+                out.printf("%.8E",mat.get(row,col));
+                if( col+1 < mat.getNumCols() ) {
+                    out.print(" , ");
+                }
+            }
+            if( row+1 < mat.getNumRows() )
+                out.println(" ;");
+            else
+                out.println(" ]");
+        }
+    }
+
+    /**
+     * Prints the matrix out in a text format. The format is specified using notation from
+     * {@link String#format(String, Object...)}. Unless the format is set to 'matlab' then it will print it out
+     * in a format that's understood by Matlab.
+     * @param out Output stream
+     * @param m Matrix to be printed
+     * @param format printf style or 'matlab'
+     */
+    public static void print( PrintStream out , DMatrixSparseCSC m , String format ) {
+        if( format.toLowerCase().equals("matlab")) {
+            printMatlab(out,m);
+        } else {
+            printTypeSize(out, m);
+
+            int length = String.format(format, -1.1123).length();
+            char[] zero = new char[length];
+            Arrays.fill(zero, ' ');
+            zero[length / 2] = '*';
+
+            for (int row = 0; row < m.numRows; row++) {
+                for (int col = 0; col < m.numCols; col++) {
+                    int index = m.nz_index(row, col);
+                    if (index >= 0)
+                        out.printf(format, m.nz_values[index]);
+                    else
+                        out.print(zero);
+                    if (col != m.numCols - 1)
+                        out.print(" ");
+                }
+                out.println();
+            }
         }
     }
 
     public static void print( PrintStream out , FMatrixSparseCSC m , String format ) {
-        printTypeSize(out,m);
+        if( format.toLowerCase().equals("matlab")) {
+            printMatlab(out,m);
+        } else {
+            printTypeSize(out, m);
 
-        int length = String.format(format,-1.1123).length();
-        char []zero = new char[length];
-        Arrays.fill(zero,' ');
-        zero[length/2] = '*';
+            int length = String.format(format, -1.1123).length();
+            char[] zero = new char[length];
+            Arrays.fill(zero, ' ');
+            zero[length / 2] = '*';
 
-        for (int row = 0; row < m.numRows; row++) {
-            for (int col = 0; col < m.numCols; col++) {
-                int index = m.nz_index(row,col);
-                if( index >= 0 )
-                    out.printf(format,m.nz_values[index]);
-                else
-                    out.print(zero);
-                if( col != m.numCols-1 )
-                    out.print(" ");
+            for (int row = 0; row < m.numRows; row++) {
+                for (int col = 0; col < m.numCols; col++) {
+                    int index = m.nz_index(row, col);
+                    if (index >= 0)
+                        out.printf(format, m.nz_values[index]);
+                    else
+                        out.print(zero);
+                    if (col != m.numCols - 1)
+                        out.print(" ");
+                }
+                out.println();
             }
-            out.println();
         }
     }
 
@@ -377,26 +436,23 @@ public class MatrixIO {
     }
 
     public static void print( PrintStream out , FMatrix mat ) {
-        print(out,mat,6,3);
-    }
-
-    public static void print(PrintStream out, FMatrix mat , int numChar , int precision ) {
-        String format = "%"+numChar+"."+precision+"f ";
-
-        print(out, mat,format);
+        print(out,mat,DEFAULT_FLOAT_FORMAT);
     }
 
     public static void print(PrintStream out , FMatrix mat , String format ) {
+        if( format.toLowerCase().equals("matlab")) {
+            printMatlab(out,mat);
+        } else {
+            printTypeSize(out, mat);
 
-        printTypeSize(out, mat);
+            format += " ";
 
-        format += " ";
-
-        for( int row = 0; row < mat.getNumRows(); row++ ) {
-            for( int x = 0; x < mat.getNumCols(); x++ ) {
-                out.printf(format,mat.get(row,x));
+            for (int row = 0; row < mat.getNumRows(); row++) {
+                for (int col = 0; col < mat.getNumCols(); col++) {
+                    out.printf(format, mat.get(row, col));
+                }
+                out.println();
             }
-            out.println();
         }
     }
 
@@ -448,26 +504,6 @@ public class MatrixIO {
             }
             out.println();
         }
-    }
-
-    public static void print( PrintStream out , ZMatrix mat ) {
-        print(out,mat,6,3);
-    }
-
-    public static void print( PrintStream out , CMatrix mat ) {
-        print(out,mat,6,3);
-    }
-
-    public static void print(PrintStream out, ZMatrix mat , int numChar , int precision ) {
-        String format = "%"+numChar+"."+precision+"f + %"+numChar+"."+precision+"fi";
-
-        print(out, mat,format);
-    }
-
-    public static void print(PrintStream out, CMatrix mat , int numChar , int precision ) {
-        String format = "%"+numChar+"."+precision+"f + %"+numChar+"."+precision+"fi";
-
-        print(out, mat,format);
     }
 
     public static void print(PrintStream out , ZMatrix mat , String format ) {
