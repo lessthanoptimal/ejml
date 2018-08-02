@@ -2591,6 +2591,20 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * output = [a , b]
+     */
+    public static void concatColumns(DMatrixRMaj a , DMatrixRMaj b , DMatrixRMaj output ) {
+        int rows = Math.max(a.numRows , b.numRows);
+        int cols = a.numCols + b.numCols;
+
+        output.reshape(rows,cols);
+        output.zero();
+
+        insert(a,output,0,0);
+        insert(b,output,0,a.numCols);
+    }
+
+    /**
      * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
      * are set to zero.</p>
      *
@@ -2599,7 +2613,7 @@ public class CommonOps_DDRM {
      * @param m Set of matrices
      * @return Resulting matrix
      */
-    public static DMatrixRMaj concatColumns( DMatrixRMaj ...m ) {
+    public static DMatrixRMaj concatColumnsMulti(DMatrixRMaj ...m ) {
         int rows = 0;
         int cols = 0;
 
@@ -2619,6 +2633,20 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * output = [a ; b]
+     */
+    public static void concatRows(DMatrixRMaj a , DMatrixRMaj b , DMatrixRMaj output ) {
+        int rows = a.numRows + b.numRows;
+        int cols = Math.max(a.numCols , b.numCols);
+
+        output.reshape(rows,cols);
+        output.zero();
+
+        insert(a,output,0,0);
+        insert(b,output,a.numRows,0);
+    }
+
+    /**
      * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
      * are set to zero.</p>
      *
@@ -2627,7 +2655,7 @@ public class CommonOps_DDRM {
      * @param m Set of matrices
      * @return Resulting matrix
      */
-    public static DMatrixRMaj concatRows( DMatrixRMaj ...m ) {
+    public static DMatrixRMaj concatRowsMulti(DMatrixRMaj ...m ) {
         int rows = 0;
         int cols = 0;
 

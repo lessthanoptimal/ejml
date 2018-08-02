@@ -1530,14 +1530,27 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void concatColumns() {
-        DMatrixRMaj a = CommonOps_DDRM.concatColumns();
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,6,rand);
+
+        DMatrixRMaj out = new DMatrixRMaj(1,1);
+        CommonOps_DDRM.concatColumns(A,B,out);
+        assertEquals(5,out.numRows);
+        assertEquals(10,out.numCols);
+        checkEquals(out,0,0,A);
+        checkEquals(out,0,4,B);
+    }
+
+    @Test
+    public void concatColumnsMulti() {
+        DMatrixRMaj a = CommonOps_DDRM.concatColumnsMulti();
         assertEquals(0,a.numRows);
         assertEquals(0,a.numCols);
 
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,6,rand);
 
-        a = CommonOps_DDRM.concatColumns(A,B);
+        a = CommonOps_DDRM.concatColumnsMulti(A,B);
         assertEquals(5,a.numRows);
         assertEquals(10,a.numCols);
         checkEquals(a,0,0,A);
@@ -1553,14 +1566,28 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void concatRows() {
-        DMatrixRMaj a = CommonOps_DDRM.concatRows();
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,6,rand);
+
+        DMatrixRMaj out = new DMatrixRMaj(1,1);
+
+        CommonOps_DDRM.concatRows(A,B,out);
+        assertEquals(8,out.numRows);
+        assertEquals(6,out.numCols);
+        checkEquals(out,0,0,A);
+        checkEquals(out,3,0,B);
+    }
+
+    @Test
+    public void concatRowsMulti() {
+        DMatrixRMaj a = CommonOps_DDRM.concatRowsMulti();
         assertEquals(0,a.numRows);
         assertEquals(0,a.numCols);
 
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,4,rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,6,rand);
 
-        a = CommonOps_DDRM.concatRows(A,B);
+        a = CommonOps_DDRM.concatRowsMulti(A,B);
         assertEquals(8,a.numRows);
         assertEquals(6,a.numCols);
         checkEquals(a,0,0,A);
