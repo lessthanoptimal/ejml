@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse;
+package org.ejml;
 
 import org.ejml.data.DMatrixSparse;
 import org.ejml.data.ReshapeMatrix;

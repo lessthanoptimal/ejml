@@ -19,6 +19,9 @@
 package org.ejml;
 
 import org.ejml.data.*;
+import org.ejml.interfaces.linsol.LinearSolver;
+import org.ejml.interfaces.linsol.LinearSolverDense;
+import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
@@ -54,6 +57,22 @@ public class UtilEjml {
     // The maximize size it will do inverse on
     public static int maxInverseSize = 5;
 
+    /**
+     * Wraps a linear solver of any type with a safe solver the ensures inputs are not modified
+     */
+    public static <S extends Matrix, D extends Matrix> LinearSolver<S,D> safe(LinearSolver<S,D> solver ) {
+         if( solver.modifiesA() || solver.modifiesB() ) {
+             if( solver instanceof LinearSolverDense ) {
+                 return new LinearSolverSafe((LinearSolverDense)solver);
+             } else if( solver instanceof LinearSolverSparse ) {
+                 return new LinearSolverSparseSafe((LinearSolverSparse)solver);
+             } else {
+                 throw new IllegalArgumentException("Unknown solver type");
+             }
+         } else {
+             return solver;
+         }
+    }
 
     public static boolean isUncountable( double val ) {
         return Double.isNaN(val) || Double.isInfinite(val);

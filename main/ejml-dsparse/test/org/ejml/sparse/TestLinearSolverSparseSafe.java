@@ -19,6 +19,7 @@
 package org.ejml.sparse;
 
 import org.ejml.LinearSolverSafe;
+import org.ejml.LinearSolverSparseSafe;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
