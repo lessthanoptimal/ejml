@@ -37,10 +37,14 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.
      */
     public static void convert(DMatrix input , DMatrix output ) {
-        if( input.getNumRows() != output.getNumRows() )
-            throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
-            throw new IllegalArgumentException("Number of columns do not match");
+        if( output instanceof ReshapeMatrix ) {
+            ((ReshapeMatrix)output).reshape(input.getNumRows(),input.getNumCols());
+        } else {
+            if (input.getNumRows() != output.getNumRows())
+                throw new IllegalArgumentException("Number of rows do not match");
+            if (input.getNumCols() != output.getNumCols())
+                throw new IllegalArgumentException("Number of columns do not match");
+        }
 
         for( int i = 0; i < input.getNumRows(); i++  ) {
             for( int j = 0; j < input.getNumCols(); j++ ) {
@@ -60,10 +64,7 @@ public class ConvertDMatrixStruct {
         if( output == null)
             output = new DMatrixRMaj(2,2);
 
-        if( input.getNumRows() != output.getNumRows() )
-            throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
-            throw new IllegalArgumentException("Number of columns do not match");
+        output.reshape(input.getNumRows(),input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -84,10 +85,7 @@ public class ConvertDMatrixStruct {
         if( output == null)
             output = new DMatrixRMaj(3,3);
 
-        if( input.getNumRows() != output.getNumRows() )
-            throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
-            throw new IllegalArgumentException("Number of columns do not match");
+        output.reshape(input.getNumRows(),input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -113,10 +111,7 @@ public class ConvertDMatrixStruct {
         if( output == null)
             output = new DMatrixRMaj(4,4);
 
-        if( input.getNumRows() != output.getNumRows() )
-            throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
-            throw new IllegalArgumentException("Number of columns do not match");
+        output.reshape(input.getNumRows(),input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -149,10 +144,7 @@ public class ConvertDMatrixStruct {
         if( output == null)
             output = new DMatrixRMaj(5,5);
 
-        if( input.getNumRows() != output.getNumRows() )
-            throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
-            throw new IllegalArgumentException("Number of columns do not match");
+        output.reshape(input.getNumRows(),input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -194,10 +186,7 @@ public class ConvertDMatrixStruct {
         if( output == null)
             output = new DMatrixRMaj(6,6);
 
-        if( input.getNumRows() != output.getNumRows() )
-            throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
-            throw new IllegalArgumentException("Number of columns do not match");
+        output.reshape(input.getNumRows(),input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -718,8 +707,7 @@ public class ConvertDMatrixStruct {
      */
     public static DMatrixRMaj convert(DMatrixRBlock src , DMatrixRMaj dst ) {
         if( dst != null ) {
-            if( dst.numRows != src.numRows || dst.numCols != src.numCols )
-                throw new IllegalArgumentException("Must be the same size.");
+            dst.reshape(src.getNumRows(),src.getNumCols());
         } else {
             dst = new DMatrixRMaj(src.numRows,src.numCols);
         }

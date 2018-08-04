@@ -74,6 +74,14 @@ public class UtilEjml {
          }
     }
 
+    public static <D extends ReshapeMatrix> LinearSolverDense<D> safe(LinearSolverDense<D> solver ) {
+        if( solver.modifiesA() || solver.modifiesB() ) {
+            return new LinearSolverSafe<>(solver);
+        } else {
+            return solver;
+        }
+    }
+
     public static boolean isUncountable( double val ) {
         return Double.isNaN(val) || Double.isInfinite(val);
     }

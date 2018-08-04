@@ -285,9 +285,8 @@ public class CommonOps_DDRM {
      */
     public static void multInner(DMatrix1Row a , DMatrix1Row c )
     {
-        if( a.numCols != c.numCols || a.numCols != c.numRows )
-            throw new MatrixDimensionException("Rows and columns of 'c' must be the same as the columns in 'a'");
-        
+        c.reshape(a.numCols,a.numCols);
+
         if( a.numCols >= EjmlParameters.MULT_INNER_SWITCH ) {
             MatrixMultProduct_DDRM.inner_small(a, c);
         } else {
@@ -312,8 +311,7 @@ public class CommonOps_DDRM {
      */
     public static void multOuter(DMatrix1Row a , DMatrix1Row c )
     {
-        if( a.numRows != c.numCols || a.numRows != c.numRows )
-            throw new MatrixDimensionException("Rows and columns of 'c' must be the same as the rows in 'a'");
+        c.reshape(a.numRows,a.numRows);
 
         MatrixMultProduct_DDRM.outer(a, c);
     }
@@ -726,6 +724,8 @@ public class CommonOps_DDRM {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert(DMatrixRMaj mat, DMatrixRMaj result ) {
+        result.reshape(mat.numRows,mat.numCols);
+
         if( mat.numCols <= UnrolledInverseFromMinor_DDRM.MAX ) {
             if( mat.numCols != mat.numRows ) {
                 throw new MatrixDimensionException("Must be a square matrix.");
