@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -433,14 +433,18 @@ public class SpecializedOps_DDRM {
      * @return Sum of elements squared.
      */
     public static double elementSumSq( DMatrixD1 m  ) {
+
+        // minimize round off error
+        double maxAbs = CommonOps_DDRM.elementMaxAbs(m);
+
         double total = 0;
         
         int N = m.getNumElements();
         for( int i = 0; i < N; i++ ) {
-            double d = m.data[i];
+            double d = m.data[i]/maxAbs;
             total += d*d;
         }
 
-        return total;
+        return maxAbs*total*maxAbs;
     }
 }
