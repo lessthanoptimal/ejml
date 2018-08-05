@@ -436,6 +436,8 @@ public class SpecializedOps_DDRM {
 
         // minimize round off error
         double maxAbs = CommonOps_DDRM.elementMaxAbs(m);
+        if( maxAbs == 0)
+            return 0;
 
         double total = 0;
         

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -289,5 +289,9 @@ public class TestSpecializedOps_DDRM {
         double found = SpecializedOps_DDRM.elementSumSq(A);
         
         assertEquals(expected,found,UtilEjml.TEST_F64);
+
+        A.zero();
+        found = SpecializedOps_DDRM.elementSumSq(A);
+        assertEquals(0.0,found,UtilEjml.TEST_F64);
     }
 }
