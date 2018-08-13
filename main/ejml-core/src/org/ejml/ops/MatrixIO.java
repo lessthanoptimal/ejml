@@ -215,7 +215,7 @@ public class MatrixIO {
 
     public static void printPretty( PrintStream out , DMatrix mat , int length ) {
         printTypeSize(out, mat);
-        DecimalFormat format = new DecimalFormat("#.##########");
+        DecimalFormat format = new DecimalFormat("#.########");
 
         final int cols = mat.getNumCols();
 
@@ -231,7 +231,7 @@ public class MatrixIO {
 
     public static void printPretty( PrintStream out , FMatrix mat  , int length ) {
         printTypeSize(out, mat);
-        DecimalFormat format = new DecimalFormat("#.##########");
+        DecimalFormat format = new DecimalFormat("#.########");
 
         final int cols = mat.getNumCols();
 
@@ -246,7 +246,7 @@ public class MatrixIO {
     }
 
     public static void printPretty( PrintStream out , DMatrixSparseCSC m , int length ) {
-        DecimalFormat format = new DecimalFormat("#.##########");
+        DecimalFormat format = new DecimalFormat("#.########");
         printTypeSize(out, m);
 
         char[] zero = new char[length];
