@@ -137,7 +137,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public void print() {
-        print(MatrixIO.DEFAULT_FLOAT_FORMAT);
+        MatrixIO.printPretty(System.out,this,MatrixIO.DEFAULT_LENGTH);
     }
 
     @Override

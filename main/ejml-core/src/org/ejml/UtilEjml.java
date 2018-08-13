@@ -24,6 +24,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -319,5 +320,24 @@ public class UtilEjml {
     public static String stringShapes(Matrix A , Matrix B ) {
         return "( "+A.getNumRows()+"x"+A.getNumCols()+" ) " +
                 "( "+B.getNumRows()+"x"+B.getNumCols()+" )";
+    }
+
+    public static String fixedFancy( double value , DecimalFormat format , int length ) {
+
+        String s = format.format(value);
+        if( value >= 0 ) // align negative and positive numbers
+            s = " " + s;
+        if( s.length() > length ) {
+            return (value>0?" ":"")+String.format("%."+(length-7)+"E",value);
+        } else if( s.length() < length ) {
+            int n = length-s.length();
+            StringBuilder b = new StringBuilder(n);
+            for (int i = 0; i < n; i++) {
+                b.append(' ');
+            }
+            return s + b.toString();
+        } else {
+            return s;
+        }
     }
 }

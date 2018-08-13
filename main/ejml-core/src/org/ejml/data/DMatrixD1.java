@@ -242,7 +242,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
 
     @Override
     public void print() {
-        print(MatrixIO.DEFAULT_FLOAT_FORMAT);
+        MatrixIO.printPretty(System.out,this,MatrixIO.DEFAULT_LENGTH);
     }
 
     @Override

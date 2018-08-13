@@ -346,10 +346,6 @@ public class DMatrixRMaj extends DMatrix1Row {
         }
     }
 
-    public void printJava( String format ) {
-        MatrixIO.printJava(System.out,this,format);
-    }
-
     /**
      * <p>
      * Converts the array into a string format for display purposes.

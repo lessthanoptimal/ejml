@@ -18,9 +18,11 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.*;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 
@@ -32,6 +34,7 @@ import java.util.Arrays;
 public class MatrixIO {
 
     public static final String DEFAULT_FLOAT_FORMAT = "%11.4E";
+    public static final int DEFAULT_LENGTH = 11; // length of pretty print
 
     /**
      * Saves a matrix to disk using Java binary serialization.
@@ -208,6 +211,60 @@ public class MatrixIO {
         fileStream.close();
 
         return ret;
+    }
+
+    public static void printPretty( PrintStream out , DMatrix mat , int length ) {
+        printTypeSize(out, mat);
+        DecimalFormat format = new DecimalFormat("#");
+
+        final int cols = mat.getNumCols();
+
+        for (int row = 0; row < mat.getNumRows(); row++) {
+            for (int col = 0; col < cols; col++) {
+                out.print(UtilEjml.fixedFancy(mat.get(row,col),format,length));
+                if( col != cols-1 )
+                    out.print(" ");
+            }
+            out.println();
+        }
+    }
+
+    public static void printPretty( PrintStream out , FMatrix mat  , int length ) {
+        printTypeSize(out, mat);
+        DecimalFormat format = new DecimalFormat("#");
+
+        final int cols = mat.getNumCols();
+
+        for (int row = 0; row < mat.getNumRows(); row++) {
+            for (int col = 0; col < cols; col++) {
+                out.print(UtilEjml.fixedFancy(mat.get(row,col),format,length));
+                if( col != cols-1 )
+                    out.print(" ");
+            }
+            out.println();
+        }
+    }
+
+    public static void printPretty( PrintStream out , DMatrixSparseCSC m , int length ) {
+        DecimalFormat format = new DecimalFormat("#");
+        printTypeSize(out, m);
+
+        char[] zero = new char[length];
+        Arrays.fill(zero, ' ');
+        zero[length / 2] = '*';
+
+        for (int row = 0; row < m.numRows; row++) {
+            for (int col = 0; col < m.numCols; col++) {
+                int index = m.nz_index(row, col);
+                if (index >= 0)
+                    out.print(UtilEjml.fixedFancy(m.nz_values[index],format,length));
+                else
+                    out.print(zero);
+                if (col != m.numCols - 1)
+                    out.print(" ");
+            }
+            out.println();
+        }
     }
 
     public static void print( PrintStream out , Matrix mat ) {
