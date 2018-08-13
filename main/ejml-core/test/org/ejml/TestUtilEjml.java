@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -111,5 +112,49 @@ public class TestUtilEjml {
             }
         }
         assertTrue(numOrdered<10);
+    }
+
+    @Test
+    public void fixedFancy() {
+        DecimalFormat format = new DecimalFormat("#");
+        assertEquals("-0         ",UtilEjml.fixedFancy(-0.0,format,11));
+        assertEquals(" 0         ",UtilEjml.fixedFancy(0.0,format,11));
+        assertEquals("-1         ",UtilEjml.fixedFancy(-1,format,11));
+        assertEquals(" 1         ",UtilEjml.fixedFancy(1,format,11));
+        assertEquals("-12        ",UtilEjml.fixedFancy(-12,format,11));
+        assertEquals(" 12        ",UtilEjml.fixedFancy(12,format,11));
+        assertEquals("-1.1234    ",UtilEjml.fixedFancy(-1.1234,format,11));
+        assertEquals(" 1.1234    ",UtilEjml.fixedFancy(1.1234,format,11));
+        assertEquals("-1234.1234 ",UtilEjml.fixedFancy(-1234.1234,format,11));
+        assertEquals(" 1234.1234 ",UtilEjml.fixedFancy(1234.1234,format,11));
+        assertEquals("-1234.12345",UtilEjml.fixedFancy(-1234.123456,format,11));
+        assertEquals(" 1234.12345",UtilEjml.fixedFancy(1234.123456,format,11));
+        assertEquals("-123456.123",UtilEjml.fixedFancy(-123456.123456,format,11));
+        assertEquals(" 123456.123",UtilEjml.fixedFancy(123456.123456,format,11));
+        assertEquals("-1.2346E+10",UtilEjml.fixedFancy(-12345678901.123456,format,11));
+        assertEquals(" 1.2346E+10",UtilEjml.fixedFancy(12345678901.123456,format,11));
+        assertEquals("-.1234     ",UtilEjml.fixedFancy(-0.1234,format,11));
+        assertEquals(" .1234     ",UtilEjml.fixedFancy(0.1234,format,11));
+        assertEquals("-.12345678 ",UtilEjml.fixedFancy(-0.12345678,format,11));
+        assertEquals(" .12345678 ",UtilEjml.fixedFancy(0.12345678,format,11));
+        assertEquals("-.123456789",UtilEjml.fixedFancy(-0.12345678901,format,11));
+        assertEquals(" .123456789",UtilEjml.fixedFancy(0.12345678901,format,11));
+        assertEquals("-.0000123  ",UtilEjml.fixedFancy(-0.0000123,format,11));
+        assertEquals(" .0000123  ",UtilEjml.fixedFancy(0.0000123,format,11));
+        assertEquals("-.000012345",UtilEjml.fixedFancy(-0.0000123456,format,11));
+        assertEquals(" .000012345",UtilEjml.fixedFancy(0.0000123456,format,11));
+        assertEquals("-1.2345E-06",UtilEjml.fixedFancy(-0.0000012345,format,11));
+        assertEquals(" 1.2345E-06",UtilEjml.fixedFancy(0.0000012345,format,11));
+        assertEquals("-1.2346E-06",UtilEjml.fixedFancy(-0.00000123456,format,11));
+        assertEquals(" 1.2346E-06",UtilEjml.fixedFancy(0.00000123456,format,11));
+        assertEquals("-1.2346E-06",UtilEjml.fixedFancy(-0.000001234567,format,11));
+        assertEquals(" 1.2346E-06",UtilEjml.fixedFancy(0.000001234567,format,11));
+        assertEquals("-1.2346E-07",UtilEjml.fixedFancy(-0.0000001234567,format,11));
+        assertEquals(" 1.2346E-07",UtilEjml.fixedFancy(0.0000001234567,format,11));
+        assertEquals("-1.235E-102",UtilEjml.fixedFancy(-1.234567E-102,format,11));
+        assertEquals(" 1.235E-102",UtilEjml.fixedFancy(1.234567E-102,format,11));
+        assertEquals("-1.235E+102",UtilEjml.fixedFancy(-1.234567E102,format,11));
+        assertEquals(" 1.235E+102",UtilEjml.fixedFancy(1.234567E102,format,11));
+
     }
 }

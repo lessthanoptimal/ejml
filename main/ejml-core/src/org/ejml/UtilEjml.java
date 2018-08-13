@@ -322,22 +322,59 @@ public class UtilEjml {
                 "( "+B.getNumRows()+"x"+B.getNumCols()+" )";
     }
 
+    /**
+     * Fixed length fancy formating. If possible decimal notation is used. If all the significant digits can't be
+     * shown then it will switch to exponential notation.  If not all the space is needed then it will be filled
+     * in to ensure it has the specified length.
+     *
+     * NOTE: Still a work in progress. Not quite there yet.
+     * @param value value being formatted
+     * @param format default format before exponential
+     * @param length Maximum number of characters it can take.
+     * @return formatted string
+     */
     public static String fixedFancy( double value , DecimalFormat format , int length ) {
 
-        String s = format.format(value);
-        if( value >= 0 ) // align negative and positive numbers
-            s = " " + s;
-        if( s.length() > length ) {
-            return (value>0?" ":"")+String.format("%."+(length-7)+"E",value);
-        } else if( s.length() < length ) {
-            int n = length-s.length();
-            StringBuilder b = new StringBuilder(n);
-            for (int i = 0; i < n; i++) {
-                b.append(' ');
-            }
-            return s + b.toString();
+        format.setMaximumFractionDigits(340);
+        String formatted;
+
+        // see if the number is negative. Including negative zero
+        boolean isNegative = Double.doubleToRawLongBits(value) < 0;
+
+        if( value == 0 ) {
+            formatted = isNegative ? "-0" : " 0";
         } else {
-            return s;
+            int digits = length-1;
+            String extraSpace = isNegative ? "":" ";
+            double vabs = Math.abs(value);
+            int a = (int) Math.floor(Math.log10(vabs));
+            if (a >= 0 && a < digits) {
+                formatted= extraSpace + format.format(value);
+                if( formatted.length() > length )
+                    formatted = formatted.substring(0,length);
+            } else if (a < 0 && digits + a > 4) {
+                formatted= extraSpace + format.format(value);
+                if( formatted.length() > length )
+                    formatted = formatted.substring(0,length);
+            } else {
+                int exp = (int)Math.log10(Math.abs(a))+1;
+                if( exp <= 2 )
+                    formatted= extraSpace + String.format("%.4E", value);
+                else if( exp <= 5 )
+                    formatted= extraSpace + String.format("%."+(6-exp)+"E", value);
+                else
+                    formatted = extraSpace + String.format("%.0E",value);
+            }
+        }
+        int n = length-formatted.length();
+        if( n > 0 ) {
+            StringBuilder builder = new StringBuilder(n);
+            for (int i = 0; i < n; i++) {
+                builder.append(' ');
+            }
+            return formatted + builder.toString();
+        } else {
+            return formatted;
         }
     }
 }
