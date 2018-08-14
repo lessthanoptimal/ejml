@@ -18,12 +18,13 @@
 
 package org.ejml.ops;
 
-import org.ejml.UtilEjml;
 import org.ejml.data.*;
 
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+
+import static org.ejml.UtilEjml.fancyStringF;
 
 
 /**
@@ -213,15 +214,15 @@ public class MatrixIO {
         return ret;
     }
 
-    public static void printPretty( PrintStream out , DMatrix mat , int length ) {
+    public static void printFancy(PrintStream out , DMatrix mat , int length ) {
         printTypeSize(out, mat);
-        DecimalFormat format = new DecimalFormat("#.########");
+        DecimalFormat format = new DecimalFormat("#");
 
         final int cols = mat.getNumCols();
 
         for (int row = 0; row < mat.getNumRows(); row++) {
             for (int col = 0; col < cols; col++) {
-                out.print(UtilEjml.fixedFancy(mat.get(row,col),format,length));
+                out.print(fancyStringF(mat.get(row,col),format,length, 4));
                 if( col != cols-1 )
                     out.print(" ");
             }
@@ -229,15 +230,15 @@ public class MatrixIO {
         }
     }
 
-    public static void printPretty( PrintStream out , FMatrix mat  , int length ) {
+    public static void printFancy(PrintStream out , FMatrix mat  , int length ) {
         printTypeSize(out, mat);
-        DecimalFormat format = new DecimalFormat("#.########");
+        DecimalFormat format = new DecimalFormat("#");
 
         final int cols = mat.getNumCols();
 
         for (int row = 0; row < mat.getNumRows(); row++) {
             for (int col = 0; col < cols; col++) {
-                out.print(UtilEjml.fixedFancy(mat.get(row,col),format,length));
+                out.print(fancyStringF(mat.get(row,col),format,length, 4));
                 if( col != cols-1 )
                     out.print(" ");
             }
@@ -245,8 +246,46 @@ public class MatrixIO {
         }
     }
 
-    public static void printPretty( PrintStream out , DMatrixSparseCSC m , int length ) {
-        DecimalFormat format = new DecimalFormat("#.########");
+    public static void printFancy(PrintStream out , ZMatrix mat , int length ) {
+        printTypeSize(out, mat);
+        DecimalFormat format = new DecimalFormat("#");
+
+        final int cols = mat.getNumCols();
+
+        Complex_F64 c = new Complex_F64();
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            for( int x = 0; x < cols; x++ ) {
+                mat.get(y,x,c);
+                out.print(fancyStringF(c.real,format,length,4)+" "+ fancyStringF(c.imaginary,format,length,4)+" ");
+                if( x < mat.getNumCols()-1 ) {
+                    out.print(" , ");
+                }
+            }
+            out.println();
+        }
+    }
+
+    public static void printFancy(PrintStream out , CMatrix mat , int length ) {
+        printTypeSize(out, mat);
+        DecimalFormat format = new DecimalFormat("#");
+
+        final int cols = mat.getNumCols();
+
+        Complex_F32 c = new Complex_F32();
+        for( int y = 0; y < mat.getNumRows(); y++ ) {
+            for( int x = 0; x < cols; x++ ) {
+                mat.get(y,x,c);
+                out.print(fancyStringF(c.real,format,length,4)+" + "+ fancyStringF(c.imaginary,format,length,4)+"i ");
+                if( x < mat.getNumCols()-1 ) {
+                    out.print(" , ");
+                }
+            }
+            out.println();
+        }
+    }
+
+    public static void printFancy(PrintStream out , DMatrixSparseCSC m , int length ) {
+        DecimalFormat format = new DecimalFormat("#");
         printTypeSize(out, m);
 
         char[] zero = new char[length];
@@ -257,7 +296,7 @@ public class MatrixIO {
             for (int col = 0; col < m.numCols; col++) {
                 int index = m.nz_index(row, col);
                 if (index >= 0)
-                    out.print(UtilEjml.fixedFancy(m.nz_values[index],format,length));
+                    out.print(fancyStringF(m.nz_values[index],format,length, 4));
                 else
                     out.print(zero);
                 if (col != m.numCols - 1)
@@ -553,7 +592,7 @@ public class MatrixIO {
                              int row0 , int row1, int col0 , int col1 ) {
         out.println("Type = submatrix , rows "+row0+" to "+row1+"  columns "+col0+" to "+col1);
 
-        format += " ";
+        format = format+" + "+format+"i";
 
         for( int y = row0; y < row1; y++ ) {
             for( int x = col0; x < col1; x++ ) {
@@ -567,7 +606,7 @@ public class MatrixIO {
 
         printTypeSize(out, mat);
 
-        format += " ";
+        format = format+" + "+format+"i";
 
         Complex_F64 c = new Complex_F64();
         for( int y = 0; y < mat.getNumRows(); y++ ) {

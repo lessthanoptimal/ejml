@@ -115,46 +115,54 @@ public class TestUtilEjml {
     }
 
     @Test
-    public void fixedFancy() {
+    public void fancyStringF() {
         DecimalFormat format = new DecimalFormat("#");
-        assertEquals("-0         ",UtilEjml.fixedFancy(-0.0,format,11));
-        assertEquals(" 0         ",UtilEjml.fixedFancy(0.0,format,11));
-        assertEquals("-1         ",UtilEjml.fixedFancy(-1,format,11));
-        assertEquals(" 1         ",UtilEjml.fixedFancy(1,format,11));
-        assertEquals("-12        ",UtilEjml.fixedFancy(-12,format,11));
-        assertEquals(" 12        ",UtilEjml.fixedFancy(12,format,11));
-        assertEquals("-1.1234    ",UtilEjml.fixedFancy(-1.1234,format,11));
-        assertEquals(" 1.1234    ",UtilEjml.fixedFancy(1.1234,format,11));
-        assertEquals("-1234.1234 ",UtilEjml.fixedFancy(-1234.1234,format,11));
-        assertEquals(" 1234.1234 ",UtilEjml.fixedFancy(1234.1234,format,11));
-        assertEquals("-1234.12345",UtilEjml.fixedFancy(-1234.123456,format,11));
-        assertEquals(" 1234.12345",UtilEjml.fixedFancy(1234.123456,format,11));
-        assertEquals("-123456.123",UtilEjml.fixedFancy(-123456.123456,format,11));
-        assertEquals(" 123456.123",UtilEjml.fixedFancy(123456.123456,format,11));
-        assertEquals("-1.2346E+10",UtilEjml.fixedFancy(-12345678901.123456,format,11));
-        assertEquals(" 1.2346E+10",UtilEjml.fixedFancy(12345678901.123456,format,11));
-        assertEquals("-.1234     ",UtilEjml.fixedFancy(-0.1234,format,11));
-        assertEquals(" .1234     ",UtilEjml.fixedFancy(0.1234,format,11));
-        assertEquals("-.12345678 ",UtilEjml.fixedFancy(-0.12345678,format,11));
-        assertEquals(" .12345678 ",UtilEjml.fixedFancy(0.12345678,format,11));
-        assertEquals("-.123456789",UtilEjml.fixedFancy(-0.12345678901,format,11));
-        assertEquals(" .123456789",UtilEjml.fixedFancy(0.12345678901,format,11));
-        assertEquals("-.0000123  ",UtilEjml.fixedFancy(-0.0000123,format,11));
-        assertEquals(" .0000123  ",UtilEjml.fixedFancy(0.0000123,format,11));
-        assertEquals("-.000012345",UtilEjml.fixedFancy(-0.0000123456,format,11));
-        assertEquals(" .000012345",UtilEjml.fixedFancy(0.0000123456,format,11));
-        assertEquals("-1.2345E-06",UtilEjml.fixedFancy(-0.0000012345,format,11));
-        assertEquals(" 1.2345E-06",UtilEjml.fixedFancy(0.0000012345,format,11));
-        assertEquals("-1.2346E-06",UtilEjml.fixedFancy(-0.00000123456,format,11));
-        assertEquals(" 1.2346E-06",UtilEjml.fixedFancy(0.00000123456,format,11));
-        assertEquals("-1.2346E-06",UtilEjml.fixedFancy(-0.000001234567,format,11));
-        assertEquals(" 1.2346E-06",UtilEjml.fixedFancy(0.000001234567,format,11));
-        assertEquals("-1.2346E-07",UtilEjml.fixedFancy(-0.0000001234567,format,11));
-        assertEquals(" 1.2346E-07",UtilEjml.fixedFancy(0.0000001234567,format,11));
-        assertEquals("-1.235E-102",UtilEjml.fixedFancy(-1.234567E-102,format,11));
-        assertEquals(" 1.235E-102",UtilEjml.fixedFancy(1.234567E-102,format,11));
-        assertEquals("-1.235E+102",UtilEjml.fixedFancy(-1.234567E102,format,11));
-        assertEquals(" 1.235E+102",UtilEjml.fixedFancy(1.234567E102,format,11));
+        assertEquals("-0         ",UtilEjml.fancyStringF(-0.0,format,11, 4));
+        assertEquals(" 0         ",UtilEjml.fancyStringF(0.0,format,11, 4));
+        assertEquals("-1         ",UtilEjml.fancyStringF(-1,format,11, 4));
+        assertEquals(" 1         ",UtilEjml.fancyStringF(1,format,11, 4));
+        assertEquals("-12        ",UtilEjml.fancyStringF(-12,format,11, 4));
+        assertEquals(" 12        ",UtilEjml.fancyStringF(12,format,11, 4));
+        assertEquals("-1.1234    ",UtilEjml.fancyStringF(-1.1234,format,11, 4));
+        assertEquals(" 1.1234    ",UtilEjml.fancyStringF(1.1234,format,11, 4));
+        assertEquals("-1234.1234 ",UtilEjml.fancyStringF(-1234.1234,format,11, 4));
+        assertEquals(" 1234.1234 ",UtilEjml.fancyStringF(1234.1234,format,11, 4));
+        assertEquals("-1234.12343",UtilEjml.fancyStringF(-1234.123433,format,11, 4)); // check rounding here
+        assertEquals(" 1234.12343",UtilEjml.fancyStringF(1234.123433,format,11, 4));
+        assertEquals("-1234.12346",UtilEjml.fancyStringF(-1234.123456,format,11, 4)); // no rounding needed
+        assertEquals(" 1234.12346",UtilEjml.fancyStringF(1234.123456,format,11, 4));
+        assertEquals("-123456.123",UtilEjml.fancyStringF(-123456.123456,format,11, 4));
+        assertEquals(" 123456.123",UtilEjml.fancyStringF(123456.123456,format,11, 4));
+        assertEquals("-1.2346E+10",UtilEjml.fancyStringF(-12345678901.123456,format,11, 4));
+        assertEquals(" 1.2346E+10",UtilEjml.fancyStringF(12345678901.123456,format,11, 4));
+        assertEquals("-.1234     ",UtilEjml.fancyStringF(-0.1234,format,11, 4));
+        assertEquals(" .1234     ",UtilEjml.fancyStringF(0.1234,format,11, 4));
+        assertEquals("-.12345678 ",UtilEjml.fancyStringF(-0.12345678,format,11, 4));
+        assertEquals(" .12345678 ",UtilEjml.fancyStringF(0.12345678,format,11, 4));
+        assertEquals("-.123456789",UtilEjml.fancyStringF(-0.12345678901,format,11, 4));
+        assertEquals(" .123456789",UtilEjml.fancyStringF(0.12345678901,format,11, 4));
+        assertEquals("-.0000123  ",UtilEjml.fancyStringF(-0.0000123,format,11, 4));
+        assertEquals(" .0000123  ",UtilEjml.fancyStringF(0.0000123,format,11, 4));
+        assertEquals("-.000012345",UtilEjml.fancyStringF(-0.0000123451,format,11, 4));
+        assertEquals(" .000012345",UtilEjml.fancyStringF(0.0000123451,format,11, 4));
+        assertEquals("-.000012346",UtilEjml.fancyStringF(-0.0000123456,format,11, 4));
+        assertEquals(" .000012346",UtilEjml.fancyStringF(0.0000123456,format,11, 4));
+        assertEquals("-.000001235",UtilEjml.fancyStringF(-0.000001234567,format,11, 3)); // see if reduction of significant digits changes output
+        assertEquals(" .000001235",UtilEjml.fancyStringF(0.000001234567,format,11, 3));
+        assertEquals("-1.2345E-06",UtilEjml.fancyStringF(-0.0000012345,format,11, 4));
+        assertEquals(" 1.2345E-06",UtilEjml.fancyStringF(0.0000012345,format,11, 4));
+        assertEquals("-1.2346E-06",UtilEjml.fancyStringF(-0.00000123456,format,11, 4));
+        assertEquals(" 1.2346E-06",UtilEjml.fancyStringF(0.00000123456,format,11, 4));
+        assertEquals("-1.235E-07 ",UtilEjml.fancyStringF(-0.0000001234567,format,11, 3));
+        assertEquals(" 1.235E-07 ",UtilEjml.fancyStringF(0.0000001234567,format,11, 3));
+        assertEquals("-1.2346E-06",UtilEjml.fancyStringF(-0.000001234567,format,11, 4));
+        assertEquals(" 1.2346E-06",UtilEjml.fancyStringF(0.000001234567,format,11, 4));
+        assertEquals("-1.2346E-07",UtilEjml.fancyStringF(-0.0000001234567,format,11, 4));
+        assertEquals(" 1.2346E-07",UtilEjml.fancyStringF(0.0000001234567,format,11, 4));
+        assertEquals("-1.235E-102",UtilEjml.fancyStringF(-1.234567E-102,format,11, 4));
+        assertEquals(" 1.235E-102",UtilEjml.fancyStringF(1.234567E-102,format,11, 4));
+        assertEquals("-1.235E+102",UtilEjml.fancyStringF(-1.234567E102,format,11, 4));
+        assertEquals(" 1.235E+102",UtilEjml.fancyStringF(1.234567E102,format,11, 4));
 
     }
 }

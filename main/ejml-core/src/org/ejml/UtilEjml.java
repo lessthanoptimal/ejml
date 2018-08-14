@@ -323,19 +323,34 @@ public class UtilEjml {
     }
 
     /**
-     * Fixed length fancy formating. If possible decimal notation is used. If all the significant digits can't be
-     * shown then it will switch to exponential notation.  If not all the space is needed then it will be filled
-     * in to ensure it has the specified length.
+     * Fixed length fancy formatting for doubles. If possible decimal notation is used. If all the significant digits
+     * can't be shown then it will switch to exponential notation.  If not all the space is needed then it will
+     * be filled in to ensure it has the specified length.
      *
-     * NOTE: Still a work in progress. Not quite there yet.
      * @param value value being formatted
      * @param format default format before exponential
      * @param length Maximum number of characters it can take.
+     * @param significant Number of significant decimal digits to show at a minimum.
      * @return formatted string
      */
-    public static String fixedFancy( double value , DecimalFormat format , int length ) {
+    public static String fancyStringF(double value, DecimalFormat format, int length, int significant) {
 
-        format.setMaximumFractionDigits(340);
+        String formatted = fancyString(value, format, length, significant);
+
+        int n = length-formatted.length();
+        if( n > 0 ) {
+            StringBuilder builder = new StringBuilder(n);
+            for (int i = 0; i < n; i++) {
+                builder.append(' ');
+            }
+            return formatted + builder.toString();
+        } else {
+            return formatted;
+        }
+    }
+
+    public static String fancyString(double value, DecimalFormat format, int length, int significant) {
+
         String formatted;
 
         // see if the number is negative. Including negative zero
@@ -349,32 +364,21 @@ public class UtilEjml {
             double vabs = Math.abs(value);
             int a = (int) Math.floor(Math.log10(vabs));
             if (a >= 0 && a < digits) {
+                format.setMaximumFractionDigits(digits-2-a);
                 formatted= extraSpace + format.format(value);
-                if( formatted.length() > length )
-                    formatted = formatted.substring(0,length);
-            } else if (a < 0 && digits + a > 4) {
+            } else if (a < 0 && digits + a > significant) {
+                format.setMaximumFractionDigits(digits-1);
                 formatted= extraSpace + format.format(value);
-                if( formatted.length() > length )
-                    formatted = formatted.substring(0,length);
             } else {
                 int exp = (int)Math.log10(Math.abs(a))+1;
-                if( exp <= 2 )
-                    formatted= extraSpace + String.format("%.4E", value);
-                else if( exp <= 5 )
-                    formatted= extraSpace + String.format("%."+(6-exp)+"E", value);
-                else
+                // see if there is room for all the requested significant digits
+                significant = Math.min(significant,digits-significant-exp);
+                if( significant > 0 ) {
+                    formatted = extraSpace + String.format("%." + significant + "E", value);
+                } else // I give up. time to break the length
                     formatted = extraSpace + String.format("%.0E",value);
             }
         }
-        int n = length-formatted.length();
-        if( n > 0 ) {
-            StringBuilder builder = new StringBuilder(n);
-            for (int i = 0; i < n; i++) {
-                builder.append(' ');
-            }
-            return formatted + builder.toString();
-        } else {
-            return formatted;
-        }
+        return formatted;
     }
 }

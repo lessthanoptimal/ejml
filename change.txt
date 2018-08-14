@@ -7,9 +7,12 @@ Date format: year/month/day
 
 - UtilEjml
   * solver = safe(solver) ensures solvers of any type don't modify their inputs
+  * printFancy() best formatter of floating point numbers to string
 - Matrix.print()
   * New default format and added the ability change the format
+  * Printing using printFancy()
   * If format is specified as "matlab" it will print out in a format which can be pasted into Matlab
+  * Fixed formatting of complex matrices
 - Reshape output instead of exception
   * Changed dense matrix multiply to have this behavior
 - ConvertDArrays
