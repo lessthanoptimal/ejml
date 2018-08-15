@@ -98,6 +98,16 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
+     * Creates a row vector the same length as this array
+     * @param data elements in vector. copied
+     */
+    public DMatrixRMaj(double data[]) {
+        this.data = data.clone();
+        this.numRows = this.data.length;
+        this.numCols = 1;
+    }
+
+    /**
      * Creates a new Matrix with the specified shape whose elements initially
      * have the value of zero.
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,11 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 
 /**
@@ -36,6 +40,32 @@ public class TestDMatrixRBlock {
         };
 
         g.allTests();
+    }
+
+    @Test
+    public void constructor_double_array() {
+        double foo[] = new double[]{1,2,3};
+
+        DMatrixRMaj m = new DMatrixRMaj(foo);
+        assertEquals(3,m.numRows);
+        assertEquals(1,m.numCols);
+        assertNotSame(foo, m.data);
+        for (int i = 0; i < foo.length; i++) {
+            assertEquals(foo[i],m.get(i), UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test
+    public void constructor_double2_array() {
+        double foo[][] = new double[][]{{1},{2},{3}};
+
+        DMatrixRMaj m = new DMatrixRMaj(foo);
+        assertEquals(3,m.numRows);
+        assertEquals(1,m.numCols);
+        assertNotSame(foo, m.data);
+        for (int i = 0; i < foo.length; i++) {
+            assertEquals(foo[i][0],m.get(i), UtilEjml.TEST_F64);
+        }
     }
 
 }
