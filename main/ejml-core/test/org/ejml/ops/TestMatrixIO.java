@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,16 +20,20 @@ package org.ejml.ops;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -91,4 +95,92 @@ public class TestMatrixIO {
         assertTrue(f.delete());
     }
 
+    @Test
+    public void print_DMatrix() {
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(bao);
+
+        DMatrixRMaj mat = new DMatrixRMaj(2,1);
+
+        mat.set(0,0,1.1);
+        mat.set(1,0,-2.2);
+
+        MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);;
+        out.flush();
+
+        String found = bao.toString();
+        String expected =
+                "Type = DDRM , rows = 2 , cols = 1\n" +
+                " 1.1000E+00 \n" +
+                "-2.2000E+00 \n";
+
+        assertEquals(expected,found);
+    }
+
+    @Test
+    public void print_ZMatrix() {
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(bao);
+
+        ZMatrixRMaj mat = new ZMatrixRMaj(2,1);
+
+        mat.set(0,0,1,1.5);
+        mat.set(1,0,2.0,-2.5);
+
+        MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);;
+        out.flush();
+
+        String found = bao.toString();
+        String expected =
+                "Type = ZDRM , rows = 2 , cols = 1\n" +
+                " 1.0000E+00 +  1.5000E+00i\n" +
+                " 2.0000E+00 + -2.5000E+00i\n";
+
+        assertEquals(expected,found);
+    }
+
+    @Test
+    public void printFancy_DMatrix() {
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(bao);
+
+        DMatrixRMaj mat = new DMatrixRMaj(2,1);
+
+        mat.set(0,0,1.1);
+        mat.set(1,0,-2.2);
+
+        MatrixIO.printFancy(out,mat,11);;
+        out.flush();
+
+        String found = bao.toString();
+        String expected =
+                "Type = DDRM , rows = 2 , cols = 1\n" +
+                " 1.1       \n" +
+                "-2.2       \n";
+
+        assertEquals(expected,found);
+    }
+
+    @Test
+    public void printFancy_ZMatrix() {
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(bao);
+
+        ZMatrixRMaj mat = new ZMatrixRMaj(2,1);
+
+        mat.set(0,0,1,1.5);
+        mat.set(1,0,2.0,-2.5);
+
+        MatrixIO.printFancy(out,mat,11);;
+        out.flush();
+
+        String found = bao.toString();
+        String expected =
+                "Type = ZDRM , rows = 2 , cols = 1\n" +
+                " 1          +  1.5i       \n" +
+                " 2          + -2.5i       \n";
+
+        assertEquals(expected,found);
+
+    }
 }

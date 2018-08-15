@@ -24,6 +24,7 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
+import static org.ejml.UtilEjml.fancyString;
 import static org.ejml.UtilEjml.fancyStringF;
 
 
@@ -250,13 +251,19 @@ public class MatrixIO {
         printTypeSize(out, mat);
         DecimalFormat format = new DecimalFormat("#");
 
+        StringBuilder builder = new StringBuilder(length);
         final int cols = mat.getNumCols();
 
         Complex_F64 c = new Complex_F64();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < cols; x++ ) {
                 mat.get(y,x,c);
-                out.print(fancyStringF(c.real,format,length,4)+" "+ fancyStringF(c.imaginary,format,length,4)+" ");
+                String real = fancyString(c.real,format,length,4);
+                String img = fancyString(c.imaginary,format,length,4);
+                real = real+padSpace(builder,length-real.length());
+                img = img+"i"+padSpace(builder,length-img.length());
+
+                out.print(real+" + "+ img);
                 if( x < mat.getNumCols()-1 ) {
                     out.print(" , ");
                 }
@@ -269,19 +276,33 @@ public class MatrixIO {
         printTypeSize(out, mat);
         DecimalFormat format = new DecimalFormat("#");
 
+        StringBuilder builder = new StringBuilder(length);
         final int cols = mat.getNumCols();
 
         Complex_F32 c = new Complex_F32();
         for( int y = 0; y < mat.getNumRows(); y++ ) {
             for( int x = 0; x < cols; x++ ) {
                 mat.get(y,x,c);
-                out.print(fancyStringF(c.real,format,length,4)+" + "+ fancyStringF(c.imaginary,format,length,4)+"i ");
+                String real = fancyString(c.real,format,length,4);
+                String img = fancyString(c.imaginary,format,length,4);
+                real = real+padSpace(builder,length-real.length());
+                img = img+padSpace(builder,length-img.length());
+
+                out.print(real+" + "+ img+"i ");
                 if( x < mat.getNumCols()-1 ) {
                     out.print(" , ");
                 }
             }
             out.println();
         }
+    }
+
+    private static String padSpace(StringBuilder builder , int length ) {
+        builder.delete(0,builder.length());
+        for (int i = 0; i < length; i++) {
+            builder.append(' ');
+        }
+        return builder.toString();
     }
 
     public static void printFancy(PrintStream out , DMatrixSparseCSC m , int length ) {
@@ -355,7 +376,7 @@ public class MatrixIO {
     /**
      * Prints the matrix out in a text format. The format is specified using notation from
      * {@link String#format(String, Object...)}. Unless the format is set to 'matlab' then it will print it out
-     * in a format that's understood by Matlab.
+     * in a format that's understood by Matlab. 'java' will print a java 2D array.
      *
      * @param out Output stream
      * @param mat Matrix to be printed
@@ -364,7 +385,9 @@ public class MatrixIO {
     public static void print(PrintStream out , DMatrix mat , String format ) {
 
         if( format.toLowerCase().equals("matlab")) {
-            printMatlab(out,mat);
+            printMatlab(out, mat);
+        } else if( format.toLowerCase().equals("java")) {
+            printJava(out,mat,format);
         } else {
             printTypeSize(out, mat);
 
@@ -537,7 +560,9 @@ public class MatrixIO {
 
     public static void print(PrintStream out , FMatrix mat , String format ) {
         if( format.toLowerCase().equals("matlab")) {
-            printMatlab(out,mat);
+            printMatlab(out, mat);
+        } else if( format.toLowerCase().equals("java")) {
+            printJava(out,mat,format);
         } else {
             printTypeSize(out, mat);
 
