@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -171,11 +171,9 @@ public class QRDecompositionHouseholder_DDRM implements QRDecomposition<DMatrixR
                 R = new DMatrixRMaj(numRows,numCols);
         } else {
             if( compact ) {
-                if( R.numCols != numCols || R.numRows != minLength )
-                    throw new IllegalArgumentException("Unexpected dimensions");
+                R.reshape(minLength,numCols);
             } else {
-                if( R.numCols != numCols || R.numRows != numRows )
-                    throw new IllegalArgumentException("Unexpected dimensions");
+                R.reshape(numRows,numCols);
             }
 
             for( int i = 0; i < R.numRows; i++ ) {

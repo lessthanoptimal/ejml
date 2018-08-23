@@ -91,19 +91,17 @@ public class TestCommonOps_DSCC {
                 RandomMatrices_DSCC.rectangle(4,5,5,rand),
                 RandomMatrices_DSCC.rectangle(5,4,7,rand),null);
 
-        try {
-            CommonOps_DSCC.transpose(
-                    RandomMatrices_DSCC.rectangle(4,5,5,rand),
-                    RandomMatrices_DSCC.rectangle(6,4,7,rand),null);
-            fail("exception expected");
-        } catch( RuntimeException ignore){}
+        {
+            DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6,4,7,rand);
+            CommonOps_DSCC.transpose(RandomMatrices_DSCC.rectangle(4,5,5,rand),b,null);
+            assertEquals(5,b.numRows);
+        }
 
-        try {
-            CommonOps_DSCC.transpose(
-                    RandomMatrices_DSCC.rectangle(4,5,5,rand),
-                    RandomMatrices_DSCC.rectangle(5,5,7,rand),null);
-            fail("exception expected");
-        } catch( RuntimeException ignore){}
+        {
+            DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5,5,7,rand);
+            CommonOps_DSCC.transpose(RandomMatrices_DSCC.rectangle(4,5,5,rand),b,null);
+            assertEquals(4,b.numCols);
+        }
 
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,9 +55,10 @@ public class UtilDecompositons_DDRM {
     public static DMatrixRMaj checkZerosLT(DMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new DMatrixRMaj(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
-        else {
+        }  else if( numRows != A.numRows || numCols != A.numCols ) {
+            A.reshape(numRows,numCols);
+            A.zero();
+        } else {
             for( int i = 0; i < A.numRows; i++ ) {
                 int index = i*A.numCols;
                 int end = index + Math.min(i,A.numCols);;

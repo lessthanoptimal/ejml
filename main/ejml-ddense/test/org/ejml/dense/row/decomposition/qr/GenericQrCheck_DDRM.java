@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,8 +30,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -147,15 +146,19 @@ public abstract class GenericQrCheck_DDRM {
         alg.getR(new DMatrixRMaj(height,width),false);
 
         // check some negative cases
-        try {
-            alg.getR(new DMatrixRMaj(height,width),true);
-            fail("Should have thrown an exception");
-        } catch( IllegalArgumentException e ) {}
+        {
+            DMatrixRMaj R = new DMatrixRMaj(height,width);
+            alg.getR(R,true);
+            assertEquals(width,R.numCols);
+            assertEquals(width,R.numRows);
+        }
 
-        try {
-            alg.getR(new DMatrixRMaj(width-1,width),false);
-            fail("Should have thrown an exception");
-        } catch( IllegalArgumentException e ) {}
+        {
+            DMatrixRMaj R = new DMatrixRMaj(width-1,width);
+            alg.getR(R,false);
+            assertEquals(width,R.numCols);
+            assertEquals(height,R.numRows);
+        }
     }
 
     /**
