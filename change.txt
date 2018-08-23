@@ -49,6 +49,8 @@ Date format: year/month/day
   development less tedious
 - Fixed serialization of SimpleMatrix
   * Thanks fa-dev1 for reporting the issue
+- Example: Improved Levenberg-Marquardt
+  * Improved the design and made it more similar to a "real" implementation
 
 ----- Version 0.34
 2018/04/13

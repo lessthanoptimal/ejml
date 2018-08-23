@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,22 +41,22 @@ public class TestLevenbergMarquardt {
      */
     @Test
     public void testNumericalJacobian() {
-        JacobianTestFunction func = new JacobianTestFunction();
-
         DMatrixRMaj param = new DMatrixRMaj(3,1, true, 2, -1, 4);
 
-        LevenbergMarquardt alg = new LevenbergMarquardt(func);
+        LevenbergMarquardt alg = new LevenbergMarquardt(1);
 
         DMatrixRMaj X = RandomMatrices_DDRM.rectangle(NUM_PTS,1,rand);
 
-        DMatrixRMaj numJacobian = new DMatrixRMaj(3,NUM_PTS);
-        DMatrixRMaj analyticalJacobian = new DMatrixRMaj(3,NUM_PTS);
+        JacobianTestFunction func = new JacobianTestFunction(X,new DMatrixRMaj(NUM_PTS,1));
 
-        alg.configure(param,X,new DMatrixRMaj(NUM_PTS,1));
-        alg.computeNumericalJacobian(param,X,numJacobian);
+        DMatrixRMaj numericalJacobian = new DMatrixRMaj(NUM_PTS,3);
+        DMatrixRMaj analyticalJacobian = new DMatrixRMaj(NUM_PTS,3);
+
+        alg.configure(func,param.getNumElements());
+        alg.computeNumericalJacobian(param,numericalJacobian);
         func.deriv(X,analyticalJacobian);
 
-        EjmlUnitTests.assertEquals(analyticalJacobian,numJacobian,1e-6);
+        EjmlUnitTests.assertEquals(analyticalJacobian,numericalJacobian,1e-6);
     }
 
     /**
@@ -76,30 +76,38 @@ public class TestLevenbergMarquardt {
      * @param numPoints How many sample points there are.
      */
     public void runTrivial( int numPoints ) {
-        JacobianTestFunction func = new JacobianTestFunction();
+        DMatrixRMaj found = new DMatrixRMaj(3,1);
+        DMatrixRMaj expected = new DMatrixRMaj(3,1, true, 10, -4, 105.2);
 
-        DMatrixRMaj paramInit = new DMatrixRMaj(3,1);
-        DMatrixRMaj param = new DMatrixRMaj(3,1, true, 2, -1, 4);
-
-        LevenbergMarquardt alg = new LevenbergMarquardt(func);
+        LevenbergMarquardt alg = new LevenbergMarquardt(1e-4);
 
         DMatrixRMaj X = RandomMatrices_DDRM.rectangle(numPoints,1,rand);
         DMatrixRMaj Y = new DMatrixRMaj(numPoints,1);
-        func.compute(param,X,Y);
+        // compute the observed output given the true praameters
+        new JacobianTestFunction(X,Y).function(expected,Y);
+        JacobianTestFunction func = new JacobianTestFunction(X,Y);
 
-        alg.optimize(paramInit,X,Y);
-
-        DMatrixRMaj foundParam = alg.getParameters();
+        alg.optimize(func,found);
 
         assertEquals(0,alg.getFinalCost(), UtilEjml.TEST_F64);
-        EjmlUnitTests.assertEquals(param,foundParam,1e-6);
+        for (int i = 0; i < expected.getNumElements(); i++) {
+            assertEquals(expected.get(i),found.get(i), Math.abs(expected.get(i))*1e-4);
+        }
     }
 
     /**
      * A very simple function to test how well the numerical jacobian is computed.
      */
-    private static class JacobianTestFunction implements LevenbergMarquardt.Function
+    private static class JacobianTestFunction implements LevenbergMarquardt.ResidualFunction
     {
+
+        DMatrixRMaj x;
+        DMatrixRMaj y;
+
+        public JacobianTestFunction(DMatrixRMaj x, DMatrixRMaj y) {
+            this.x = x;
+            this.y = y;
+        }
 
         public void deriv(DMatrixRMaj x, DMatrixRMaj deriv) {
             double dataX[] = x.data;
@@ -113,29 +121,45 @@ public class TestLevenbergMarquardt {
                 double dB = v;
                 double dC = v*v;
 
-                deriv.set(0,j,dA);
-                deriv.set(1,j,dB);
-                deriv.set(2,j,dC);
+                deriv.set(j,0,dA);
+                deriv.set(j,1,dB);
+                deriv.set(j,2,dC);
             }
 
         }
 
-        @Override
-        public void compute(DMatrixRMaj param, DMatrixRMaj x, DMatrixRMaj y) {
+        public void function( DMatrixRMaj param , DMatrixRMaj y ) {
             double a = param.data[0];
             double b = param.data[1];
             double c = param.data[2];
 
-            double dataX[] = x.data;
-            double dataY[] = y.data;
+            int length = x.numRows;
+
+            for( int i = 0; i < length; i++ ) {
+                double v = x.data[i];
+
+                y.data[i] = a + b*v + c*v*v;
+            }
+        }
+
+        @Override
+        public void compute(DMatrixRMaj param , DMatrixRMaj residual ) {
+            double a = param.data[0];
+            double b = param.data[1];
+            double c = param.data[2];
 
             int length = x.numRows;
 
             for( int i = 0; i < length; i++ ) {
-                double v = dataX[i];
+                double v = x.data[i];
 
-                dataY[i] = a + b*v + c*v*v;
+                residual.data[i] = a + b*v + c*v*v - y.data[i];
             }
+        }
+
+        @Override
+        public int numFunctions() {
+            return y.getNumElements();
         }
     }
 }
