@@ -1260,13 +1260,13 @@ public class CommonOps_ZDRM {
 
     /**
      * <p>
-     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
+     * Returns the largest absolute value of any element in the matrix.<br>
      * <br>
      * Max{ |a<sub>ij</sub>| } for all i and j<br>
      * </p>
      *
      * @param a A matrix. Not modified.
-     * @return The max abs element value of the matrix.
+     * @return The max abs element value in the matrix.
      */
     public static double elementMaxAbs( ZMatrixRMaj a ) {
         final int size = a.getDataLength();
@@ -1284,5 +1284,33 @@ public class CommonOps_ZDRM {
         }
 
         return Math.sqrt(max);
+    }
+
+    /**
+     * <p>
+     * Returns the smallest absolute value of any element in the matrix.<br>
+     * <br>
+     * Min{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @return The min abs element value in the matrix.
+     */
+    public static double elementMinAbs( ZMatrixRMaj a ) {
+        final int size = a.getDataLength();
+
+        double min = Double.MAX_VALUE;
+        for( int i = 0; i < size; i += 2 ) {
+            double real = a.data[i];
+            double imag = a.data[i+1];
+
+            double val = real*real + imag*imag;
+
+            if( val < min ) {
+                min = val;
+            }
+        }
+
+        return Math.sqrt(min);
     }
 }

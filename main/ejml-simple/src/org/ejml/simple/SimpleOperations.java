@@ -101,6 +101,8 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     double elementMaxAbs(T A);
 
+    double elementMinAbs(T A);
+
     double elementSum(T A);
 
     void elementMult( T A , T B , T output );

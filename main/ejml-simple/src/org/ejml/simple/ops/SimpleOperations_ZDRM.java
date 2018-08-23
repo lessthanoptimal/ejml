@@ -230,6 +230,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
+    public /**/double elementMinAbs(ZMatrixRMaj A) {
+        return CommonOps_ZDRM.elementMinAbs(A);
+    }
+
+    @Override
     public /**/double elementSum(ZMatrixRMaj A) {
 //        return CommonOps_ZDRM.elementSum(A);
         throw new UnsupportedOperation();

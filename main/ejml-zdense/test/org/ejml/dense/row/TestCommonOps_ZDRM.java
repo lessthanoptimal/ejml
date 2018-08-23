@@ -751,4 +751,14 @@ public class TestCommonOps_ZDRM {
         double found = CommonOps_ZDRM.elementMaxAbs(a);
         assertEquals(expected,found,UtilEjml.TEST_F64);
     }
+
+    @Test
+    public void elementMinAbs() {
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10,12,-8,-2,rand);
+        a.set(5,6,1,2);
+
+        double expected = Math.sqrt(1 + 2*2);
+        double found = CommonOps_ZDRM.elementMinAbs(a);
+        assertEquals(expected,found,UtilEjml.TEST_F64);
+    }
 }

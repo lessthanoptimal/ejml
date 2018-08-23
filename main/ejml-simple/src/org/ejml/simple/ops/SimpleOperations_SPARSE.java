@@ -234,6 +234,11 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
     }
 
     @Override
+    public /**/double elementMinAbs(DMatrixSparseCSC A) {
+        return CommonOps_DSCC.elementMinAbs(A);
+    }
+
+    @Override
     public /**/double elementSum(DMatrixSparseCSC A) {
         return CommonOps_DSCC.elementSum(A);
     }

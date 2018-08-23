@@ -596,7 +596,17 @@ public class TestSimpleMatrix {
         a.set(3,4,-5);
         a.set(4,4,4);
 
-        assertTrue(5 == a.elementMaxAbs());
+        assertEquals(5, a.elementMaxAbs(), 0.0);
+    }
+
+    @Test
+    public void elementMinAbs() {
+        SimpleMatrix a = SimpleMatrix.random_DDRM(7,5, 4, 10, rand);
+
+        a.set(3,4,-2);
+        a.set(4,4,0.5);
+
+        assertEquals(0.5, a.elementMinAbs(), 0.0);
     }
 
     @Test

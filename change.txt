@@ -47,10 +47,13 @@ Date format: year/month/day
 - Improved exception messages for a few functions
 - Changing it so that the output of various functions is reshaped so that it fits the input to make
   development less tedious
-- Fixed serialization of SimpleMatrix
-  * Thanks fa-dev1 for reporting the issue
-- Example: Improved Levenberg-Marquardt
-  * Improved the design and made it more similar to a "real" implementation
+- SimpleMatrix
+  * Fixed serialization
+    - Thanks fa-dev1 for reporting the issue
+  * Added elementMinAbs() because elementMaxAbs() was already included
+- Examples
+  * Improved Levenberg-Marquardt
+    - Made it more like a "real" implementation and cleaned up the code
 
 ----- Version 0.34
 2018/04/13

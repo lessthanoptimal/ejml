@@ -219,6 +219,11 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
+    public /**/double elementMinAbs(DMatrixRMaj A) {
+        return CommonOps_DDRM.elementMinAbs(A);
+    }
+
+    @Override
     public /**/double elementSum(DMatrixRMaj A) {
         return CommonOps_DDRM.elementSum(A);
     }

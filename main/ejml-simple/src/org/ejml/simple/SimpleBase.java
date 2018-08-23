@@ -1003,6 +1003,16 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     }
 
     /**
+     * Returns the minimum absolute value of all the elements in this matrix.
+     *
+     * @return Smallest absolute value of any element.
+     */
+    public double elementMinAbs() {
+        return ops.elementMinAbs(mat);
+    }
+
+
+    /**
      * Computes the sum of all the elements in the matrix.
      *
      * @return Sum of all the elements.
