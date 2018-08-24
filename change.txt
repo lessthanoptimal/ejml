@@ -2,6 +2,13 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.36
+2018
+
+TODO Sparse LDL
+TODO constructor size check
+TODO New implementation of symmetric eigen
+
 ----- Version 0.35
 2018/08/24
 
