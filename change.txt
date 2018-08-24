@@ -3,7 +3,7 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.35
-2018
+2018/08/26
 
 - UtilEjml
   * solver = safe(solver) ensures solvers of any type don't modify their inputs
