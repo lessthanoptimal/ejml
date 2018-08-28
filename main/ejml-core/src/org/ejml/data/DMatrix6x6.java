@@ -78,6 +78,15 @@ public class DMatrix6x6 implements DMatrixFixed {
         this.a61 = a61; this.a62 = a62; this.a63 = a63; this.a64 = a64; this.a65 = a65; this.a66 = a66;
     }
 
+    public void set( int offset , double []a ) {
+        this.a11 = a[offset + 0]; this.a12 = a[offset + 1]; this.a13 = a[offset + 2]; this.a14 = a[offset + 3]; this.a15 = a[offset + 4]; this.a16 = a[offset + 5];
+        this.a21 = a[offset + 6]; this.a22 = a[offset + 7]; this.a23 = a[offset + 8]; this.a24 = a[offset + 9]; this.a25 = a[offset + 10]; this.a26 = a[offset + 11];
+        this.a31 = a[offset + 12]; this.a32 = a[offset + 13]; this.a33 = a[offset + 14]; this.a34 = a[offset + 15]; this.a35 = a[offset + 16]; this.a36 = a[offset + 17];
+        this.a41 = a[offset + 18]; this.a42 = a[offset + 19]; this.a43 = a[offset + 20]; this.a44 = a[offset + 21]; this.a45 = a[offset + 22]; this.a46 = a[offset + 23];
+        this.a51 = a[offset + 24]; this.a52 = a[offset + 25]; this.a53 = a[offset + 26]; this.a54 = a[offset + 27]; this.a55 = a[offset + 28]; this.a56 = a[offset + 29];
+        this.a61 = a[offset + 30]; this.a62 = a[offset + 31]; this.a63 = a[offset + 32]; this.a64 = a[offset + 33]; this.a65 = a[offset + 34]; this.a66 = a[offset + 35];
+    }
+
     @Override
     public double get(int row, int col) {
         return unsafe_get(row,col);

@@ -43,6 +43,17 @@ public class DMatrix2 implements DMatrixFixed {
         this.a2 = o.a2;
     }
 
+    public void set(double a1, double a2)
+    {
+        this.a1 = a1;
+        this.a2 = a2;
+    }
+
+    public void set( int offset , double array[] ) {
+        this.a1 = array[offset+0];
+        this.a2 = array[offset+1];
+    }
+
     @Override
     public double get(int row, int col) {
         return unsafe_get(row,col);

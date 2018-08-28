@@ -25,6 +25,9 @@ For some future Release
 
 ----------------------------------------------------------
 
+- Sparse
+  - Look into supernodal methods. Apparently they are faster since they expoit dense matrix kernels
+
 - LU
   - block
 

@@ -66,6 +66,18 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
         printSetFromParam(dimen,"o.");
         out.print("    }\n" +
                 "\n" +
+                "    public void set(");
+        printFunctionParam(dimen);
+        out.print(")\n" +
+                "    {\n");
+        printSetFromParam(dimen,"");
+        out.print("    }\n\n");
+        out.print("    public void set( int offset , double array[] ) {\n");
+        for (int i = 0; i < dimen; i++) {
+            out.print("        this.a"+(i+1)+" = array[offset+"+i+"];\n");
+        }
+        out.print("    }\n");
+        out.print("\n" +
                 "    @Override\n" +
                 "    public double get(int row, int col) {\n" +
                 "        return unsafe_get(row,col);\n" +
@@ -125,7 +137,7 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
                 "\n" +
                 "    @Override\n" +
                 "    public void print() {\n" +
-                "       print(DEFAULT_FLOAT_FORMAT);\n" +
+                "       print(MatrixIO.DEFAULT_FLOAT_FORMAT);\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +

@@ -29,9 +29,9 @@ import java.io.FileNotFoundException;
  *
  * @author Peter Abeles
  */
-public class GenerateFixedOps extends GenerateFixed {
+public class GenerateCommonOps_DDF extends GenerateFixed {
 
-    public GenerateFixedOps() {
+    public GenerateCommonOps_DDF() {
         super("CommonOps_DDF");
     }
 
@@ -61,6 +61,7 @@ public class GenerateFixedOps extends GenerateFixed {
                 multTransB(dimension,add);
                 multTransBScale(dimension,add);
             }
+            multAddOuter(dimension);
             mult_m_v_v(dimension);
             mult_v_m_v(dimension);
             dot(dimension);
@@ -636,6 +637,28 @@ public class GenerateFixedOps extends GenerateFixed {
         out.printf("    }\n\n");
 
     }
+
+    private void multAddOuter( int dimen ){
+        out.print("    /**\n" +
+                "     * C = &alpha;A + &beta;u*v<sup>T</sup>\n" +
+                "     * \n" +
+                "     * @param alpha scale factor applied to A\n" +
+                "     * @param A matrix\n" +
+                "     * @param beta scale factor applies to outer product\n" +
+                "     * @param u vector\n" +
+                "     * @param v vector\n" +
+                "     * @param C Storage for solution. Can be same instance as A.\n" +
+                "     */\n" +
+                "    public static void multAddOuter( double alpha , " + nameMatrix + " A , double beta , " + nameVector + " u , " + nameVector + " v , "+nameMatrix+" C ) {\n");
+        for (int i = 1; i <= dimen; i++) {
+            for (int j = 1; j <= dimen; j++) {
+                String m = i + "" + j;
+                out.println("        C.a"+m+" = alpha*A.a"+m+" + beta*u.a"+i+"*v.a"+j+";");
+            }
+        }
+        out.printf("    }\n\n");
+    }
+
 
     private void mult_v_m_v( int dimen ){
         out.print("    /**\n" +
@@ -1522,7 +1545,7 @@ public class GenerateFixedOps extends GenerateFixed {
     }
 
     public static void main( String args[] ) throws FileNotFoundException {
-        GenerateFixedOps app = new GenerateFixedOps();
+        GenerateCommonOps_DDF app = new GenerateCommonOps_DDF();
 
         app.generate();
     }

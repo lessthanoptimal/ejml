@@ -111,6 +111,7 @@ public class GenerateCode32 {
         converter.replacePattern("ZComplex", "CComplex");
         converter.replacePattern("ZMatrix", "CMatrix");
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
+        converter.replacePattern("Features_D;", "Features_F;");
         converter.replacePattern("Features_D.", "Features_F.");
 
         converter.replacePattern("F64", "F32");

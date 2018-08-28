@@ -45,6 +45,19 @@ public class DMatrix3 implements DMatrixFixed {
         this.a3 = o.a3;
     }
 
+    public void set(double a1, double a2, double a3)
+    {
+        this.a1 = a1;
+        this.a2 = a2;
+        this.a3 = a3;
+    }
+
+    public void set( int offset , double array[] ) {
+        this.a1 = array[offset+0];
+        this.a2 = array[offset+1];
+        this.a3 = array[offset+2];
+    }
+
     @Override
     public double get(int row, int col) {
         return unsafe_get(row,col);

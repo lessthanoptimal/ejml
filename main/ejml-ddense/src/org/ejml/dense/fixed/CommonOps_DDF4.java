@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix4x4;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 4 x 4 or 4 element vectors.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateCommonOps_DDF</p>
  *
  * @author Peter Abeles
  */
@@ -786,6 +786,35 @@ public class CommonOps_DDF4 {
         c.a42 += alpha*(a.a41*b.a21 + a.a42*b.a22 + a.a43*b.a23 + a.a44*b.a24);
         c.a43 += alpha*(a.a41*b.a31 + a.a42*b.a32 + a.a43*b.a33 + a.a44*b.a34);
         c.a44 += alpha*(a.a41*b.a41 + a.a42*b.a42 + a.a43*b.a43 + a.a44*b.a44);
+    }
+
+    /**
+     * C = &alpha;A + &beta;u*v<sup>T</sup>
+     * 
+     * @param alpha scale factor applied to A
+     * @param A matrix
+     * @param beta scale factor applies to outer product
+     * @param u vector
+     * @param v vector
+     * @param C Storage for solution. Can be same instance as A.
+     */
+    public static void multAddOuter( double alpha , DMatrix4x4 A , double beta , DMatrix4 u , DMatrix4 v , DMatrix4x4 C ) {
+        C.a11 = alpha*A.a11 + beta*u.a1*v.a1;
+        C.a12 = alpha*A.a12 + beta*u.a1*v.a2;
+        C.a13 = alpha*A.a13 + beta*u.a1*v.a3;
+        C.a14 = alpha*A.a14 + beta*u.a1*v.a4;
+        C.a21 = alpha*A.a21 + beta*u.a2*v.a1;
+        C.a22 = alpha*A.a22 + beta*u.a2*v.a2;
+        C.a23 = alpha*A.a23 + beta*u.a2*v.a3;
+        C.a24 = alpha*A.a24 + beta*u.a2*v.a4;
+        C.a31 = alpha*A.a31 + beta*u.a3*v.a1;
+        C.a32 = alpha*A.a32 + beta*u.a3*v.a2;
+        C.a33 = alpha*A.a33 + beta*u.a3*v.a3;
+        C.a34 = alpha*A.a34 + beta*u.a3*v.a4;
+        C.a41 = alpha*A.a41 + beta*u.a4*v.a1;
+        C.a42 = alpha*A.a42 + beta*u.a4*v.a2;
+        C.a43 = alpha*A.a43 + beta*u.a4*v.a3;
+        C.a44 = alpha*A.a44 + beta*u.a4*v.a4;
     }
 
     /**

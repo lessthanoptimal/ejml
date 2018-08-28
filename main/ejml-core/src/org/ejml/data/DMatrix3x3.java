@@ -60,6 +60,12 @@ public class DMatrix3x3 implements DMatrixFixed {
         this.a31 = a31; this.a32 = a32; this.a33 = a33;
     }
 
+    public void set( int offset , double []a ) {
+        this.a11 = a[offset + 0]; this.a12 = a[offset + 1]; this.a13 = a[offset + 2];
+        this.a21 = a[offset + 3]; this.a22 = a[offset + 4]; this.a23 = a[offset + 5];
+        this.a31 = a[offset + 6]; this.a32 = a[offset + 7]; this.a33 = a[offset + 8];
+    }
+
     @Override
     public double get(int row, int col) {
         return unsafe_get(row,col);

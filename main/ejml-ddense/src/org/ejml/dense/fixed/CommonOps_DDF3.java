@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix3x3;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 3 x 3 or 3 element vectors.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateCommonOps_DDF</p>
  *
  * @author Peter Abeles
  */
@@ -632,6 +632,28 @@ public class CommonOps_DDF3 {
         c.a31 += alpha*(a.a31*b.a11 + a.a32*b.a12 + a.a33*b.a13);
         c.a32 += alpha*(a.a31*b.a21 + a.a32*b.a22 + a.a33*b.a23);
         c.a33 += alpha*(a.a31*b.a31 + a.a32*b.a32 + a.a33*b.a33);
+    }
+
+    /**
+     * C = &alpha;A + &beta;u*v<sup>T</sup>
+     * 
+     * @param alpha scale factor applied to A
+     * @param A matrix
+     * @param beta scale factor applies to outer product
+     * @param u vector
+     * @param v vector
+     * @param C Storage for solution. Can be same instance as A.
+     */
+    public static void multAddOuter( double alpha , DMatrix3x3 A , double beta , DMatrix3 u , DMatrix3 v , DMatrix3x3 C ) {
+        C.a11 = alpha*A.a11 + beta*u.a1*v.a1;
+        C.a12 = alpha*A.a12 + beta*u.a1*v.a2;
+        C.a13 = alpha*A.a13 + beta*u.a1*v.a3;
+        C.a21 = alpha*A.a21 + beta*u.a2*v.a1;
+        C.a22 = alpha*A.a22 + beta*u.a2*v.a2;
+        C.a23 = alpha*A.a23 + beta*u.a2*v.a3;
+        C.a31 = alpha*A.a31 + beta*u.a3*v.a1;
+        C.a32 = alpha*A.a32 + beta*u.a3*v.a2;
+        C.a33 = alpha*A.a33 + beta*u.a3*v.a3;
     }
 
     /**

@@ -69,8 +69,11 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
         printFunctionParam(21,dimen);
         out.print("    {\n");
         printSetFromParam(dimen, "");
-        out.print("    }\n\n" +
-                "    @Override\n" +
+        out.print("    }\n\n");
+        out.print("    public void set( int offset , double []a ) {\n");
+        printSetFromArray(dimen);
+        out.print("    }\n\n");
+        out.print("    @Override\n" +
                 "    public double get(int row, int col) {\n" +
                 "        return unsafe_get(row,col);\n" +
                 "    }\n" +
@@ -115,7 +118,7 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
                 "\n" +
                 "    @Override\n" +
                 "    public void print() {\n" +
-                "       print(DEFAULT_FLOAT_FORMAT);\n" +
+                "       print(MatrixIO.DEFAULT_FLOAT_FORMAT);\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
@@ -175,6 +178,16 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
             out.print("       ");
             for( int x = 1; x <= dimen; x++ ) {
                 out.print(" this.a"+y+""+x+" = "+prefix+"a"+y+""+x+";");
+            }
+            out.println();
+        }
+    }
+
+    private void printSetFromArray( int dimen) {
+        for( int y = 1; y <= dimen; y++ ) {
+            out.print("       ");
+            for( int x = 1; x <= dimen; x++ ) {
+                out.print(" this.a"+y+""+x+" = a[offset + "+((y-1)*dimen+x-1)+"];");
             }
             out.println();
         }

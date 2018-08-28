@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix2x2;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 2 x 2 or 2 element vectors.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateCommonOps_DDF</p>
  *
  * @author Peter Abeles
  */
@@ -521,6 +521,23 @@ public class CommonOps_DDF2 {
         c.a12 += alpha*(a.a11*b.a21 + a.a12*b.a22);
         c.a21 += alpha*(a.a21*b.a11 + a.a22*b.a12);
         c.a22 += alpha*(a.a21*b.a21 + a.a22*b.a22);
+    }
+
+    /**
+     * C = &alpha;A + &beta;u*v<sup>T</sup>
+     * 
+     * @param alpha scale factor applied to A
+     * @param A matrix
+     * @param beta scale factor applies to outer product
+     * @param u vector
+     * @param v vector
+     * @param C Storage for solution. Can be same instance as A.
+     */
+    public static void multAddOuter( double alpha , DMatrix2x2 A , double beta , DMatrix2 u , DMatrix2 v , DMatrix2x2 C ) {
+        C.a11 = alpha*A.a11 + beta*u.a1*v.a1;
+        C.a12 = alpha*A.a12 + beta*u.a1*v.a2;
+        C.a21 = alpha*A.a21 + beta*u.a2*v.a1;
+        C.a22 = alpha*A.a22 + beta*u.a2*v.a2;
     }
 
     /**

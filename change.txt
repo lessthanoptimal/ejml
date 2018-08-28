@@ -5,6 +5,11 @@ Date format: year/month/day
 ----- Version 0.36
 2018
 
+- Fixed Size Matrix
+  * Vector.set() for entire vector
+  * Outer vector product
+  * Assign a matrix and vector from an array
+
 TODO Sparse LDL
 TODO constructor size check
 TODO New implementation of symmetric eigen

@@ -72,6 +72,14 @@ public class DMatrix5x5 implements DMatrixFixed {
         this.a51 = a51; this.a52 = a52; this.a53 = a53; this.a54 = a54; this.a55 = a55;
     }
 
+    public void set( int offset , double []a ) {
+        this.a11 = a[offset + 0]; this.a12 = a[offset + 1]; this.a13 = a[offset + 2]; this.a14 = a[offset + 3]; this.a15 = a[offset + 4];
+        this.a21 = a[offset + 5]; this.a22 = a[offset + 6]; this.a23 = a[offset + 7]; this.a24 = a[offset + 8]; this.a25 = a[offset + 9];
+        this.a31 = a[offset + 10]; this.a32 = a[offset + 11]; this.a33 = a[offset + 12]; this.a34 = a[offset + 13]; this.a35 = a[offset + 14];
+        this.a41 = a[offset + 15]; this.a42 = a[offset + 16]; this.a43 = a[offset + 17]; this.a44 = a[offset + 18]; this.a45 = a[offset + 19];
+        this.a51 = a[offset + 20]; this.a52 = a[offset + 21]; this.a53 = a[offset + 22]; this.a54 = a[offset + 23]; this.a55 = a[offset + 24];
+    }
+
     @Override
     public double get(int row, int col) {
         return unsafe_get(row,col);

@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix5x5;
 
 /**
  * <p>Common matrix operations for fixed sized matrices which are 5 x 5 or 5 element vectors.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedOps</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateCommonOps_DDF</p>
  *
  * @author Peter Abeles
  */
@@ -983,6 +983,44 @@ public class CommonOps_DDF5 {
         c.a53 += alpha*(a.a51*b.a31 + a.a52*b.a32 + a.a53*b.a33 + a.a54*b.a34 + a.a55*b.a35);
         c.a54 += alpha*(a.a51*b.a41 + a.a52*b.a42 + a.a53*b.a43 + a.a54*b.a44 + a.a55*b.a45);
         c.a55 += alpha*(a.a51*b.a51 + a.a52*b.a52 + a.a53*b.a53 + a.a54*b.a54 + a.a55*b.a55);
+    }
+
+    /**
+     * C = &alpha;A + &beta;u*v<sup>T</sup>
+     * 
+     * @param alpha scale factor applied to A
+     * @param A matrix
+     * @param beta scale factor applies to outer product
+     * @param u vector
+     * @param v vector
+     * @param C Storage for solution. Can be same instance as A.
+     */
+    public static void multAddOuter( double alpha , DMatrix5x5 A , double beta , DMatrix5 u , DMatrix5 v , DMatrix5x5 C ) {
+        C.a11 = alpha*A.a11 + beta*u.a1*v.a1;
+        C.a12 = alpha*A.a12 + beta*u.a1*v.a2;
+        C.a13 = alpha*A.a13 + beta*u.a1*v.a3;
+        C.a14 = alpha*A.a14 + beta*u.a1*v.a4;
+        C.a15 = alpha*A.a15 + beta*u.a1*v.a5;
+        C.a21 = alpha*A.a21 + beta*u.a2*v.a1;
+        C.a22 = alpha*A.a22 + beta*u.a2*v.a2;
+        C.a23 = alpha*A.a23 + beta*u.a2*v.a3;
+        C.a24 = alpha*A.a24 + beta*u.a2*v.a4;
+        C.a25 = alpha*A.a25 + beta*u.a2*v.a5;
+        C.a31 = alpha*A.a31 + beta*u.a3*v.a1;
+        C.a32 = alpha*A.a32 + beta*u.a3*v.a2;
+        C.a33 = alpha*A.a33 + beta*u.a3*v.a3;
+        C.a34 = alpha*A.a34 + beta*u.a3*v.a4;
+        C.a35 = alpha*A.a35 + beta*u.a3*v.a5;
+        C.a41 = alpha*A.a41 + beta*u.a4*v.a1;
+        C.a42 = alpha*A.a42 + beta*u.a4*v.a2;
+        C.a43 = alpha*A.a43 + beta*u.a4*v.a3;
+        C.a44 = alpha*A.a44 + beta*u.a4*v.a4;
+        C.a45 = alpha*A.a45 + beta*u.a4*v.a5;
+        C.a51 = alpha*A.a51 + beta*u.a5*v.a1;
+        C.a52 = alpha*A.a52 + beta*u.a5*v.a2;
+        C.a53 = alpha*A.a53 + beta*u.a5*v.a3;
+        C.a54 = alpha*A.a54 + beta*u.a5*v.a4;
+        C.a55 = alpha*A.a55 + beta*u.a5*v.a5;
     }
 
     /**
