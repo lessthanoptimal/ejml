@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,10 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
+import org.ejml.equation.Equation;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Test;
@@ -36,6 +38,72 @@ import static org.junit.Assert.*;
 public class TestSingularOps_DDRM {
 
     Random rand = new Random(234234);
+
+    @Test
+    public void singularValues() {
+        for (int rows = 1; rows < 8; rows++) {
+            for (int cols = 1; cols < 8; cols++) {
+                DMatrixRMaj A = RandomMatrices_DDRM.rectangle(rows,cols,rand);
+                DMatrixRMaj A_orig = A.copy();
+
+                double found[] = SingularOps_DDRM.singularValues(A);
+
+                assertTrue( MatrixFeatures_DDRM.isIdentical(A_orig,A,0));
+
+                int N = Math.min(rows,cols);
+                assertEquals(N,found.length);
+                for (int i = 1; i < N; i++) {
+                    assertTrue(found[i-1]<found[i]);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void rank_tol() {
+        DMatrixRMaj A = CommonOps_DDRM.diag(1,1,2, 0.001 );
+        assertEquals(4,SingularOps_DDRM.rank(A,UtilEjml.EPS ));
+        assertEquals(3,SingularOps_DDRM.rank(A, 0.01 ));
+    }
+
+    @Test
+    public void rank() {
+        DMatrixRMaj A = CommonOps_DDRM.diag(1,1,2, 0.001 );
+        assertEquals(4,SingularOps_DDRM.rank(A));
+        A = CommonOps_DDRM.diag(1,1,2, (double)1e-24 );
+        assertEquals(3,SingularOps_DDRM.rank(A));
+    }
+
+    @Test
+    public void svd() {
+        for (int rows = 1; rows < 8; rows++) {
+            for (int cols = 1; cols < 8; cols++) {
+                DMatrixRMaj A = RandomMatrices_DDRM.rectangle(rows,cols,rand);
+                DMatrixRMaj A_orig = A.copy();
+
+                DMatrixRMaj U = new DMatrixRMaj(1,1);
+                DGrowArray sv = new DGrowArray();
+                DMatrixRMaj Vt = new DMatrixRMaj(1,1);
+
+                SingularOps_DDRM.svd(A,U,sv,Vt);
+
+                assertTrue( MatrixFeatures_DDRM.isIdentical(A_orig,A,0));
+
+                int N = Math.min(rows,cols);
+                assertEquals(N,sv.length);
+                for (int i = 1; i < N; i++) {
+                    assertTrue(sv.data[i-1]<sv.data[i]);
+                }
+
+                DMatrixRMaj W = CommonOps_DDRM.diag(sv.data);
+
+                DMatrixRMaj found =new Equation(U,"U",Vt,"Vt",W,"W").
+                                process("A=U*W*Vt").lookupDDRM("A");
+
+                assertTrue( MatrixFeatures_DDRM.isIdentical(A,found,UtilEjml.TEST_F64));
+            }
+        }
+    }
 
     @Test
     public void descendingOrder() {

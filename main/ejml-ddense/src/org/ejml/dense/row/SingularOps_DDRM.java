@@ -19,12 +19,17 @@
 package org.ejml.dense.row;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.dense.row.linsol.qr.SolveNullSpaceQRP_DDRM;
 import org.ejml.dense.row.linsol.qr.SolveNullSpaceQR_DDRM;
 import org.ejml.dense.row.linsol.svd.SolveNullSpaceSvd_DDRM;
 import org.ejml.interfaces.SolveNullSpace;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
 
 
 /**
@@ -33,6 +38,126 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class SingularOps_DDRM {
+
+    /**
+     * Returns a sorted array of all the singular values in A
+     * @param A Matrix. Not modified.
+     * @return singular values
+     */
+    public static double[] singularValues( DMatrixRMaj A ) {
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,true,true);
+
+        if( svd.inputModified() ) {
+            A = A.copy();
+        }
+        if( !svd.decompose(A)) {
+            throw new RuntimeException("SVD Failed!");
+        }
+
+        double sv[] = svd.getSingularValues();
+        Arrays.sort(sv,0,svd.numberOfSingularValues());
+        return sv;
+    }
+
+    /**
+     * Returns the matrix's rank
+     *
+     * @param A Matrix. Not modified.
+     * @param threshold Tolerance used to determine of a singular value is singular.
+     * @return The rank of the decomposed matrix.
+     */
+    public static int rank( DMatrixRMaj A , double threshold ) {
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,true,true);
+
+        if( svd.inputModified() ) {
+            A = A.copy();
+        }
+        if( !svd.decompose(A)) {
+            throw new RuntimeException("SVD Failed!");
+        }
+
+        double sv[] = svd.getSingularValues();
+
+        int count = 0;
+        for (int i = 0; i < sv.length; i++) {
+            if( sv[i] >= threshold ) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Returns the matrix's rank. Automatic selection of threshold
+     *
+     * @param A Matrix. Not modified.
+     * @return The rank of the decomposed matrix.
+     */
+    public static int rank( DMatrixRMaj A  ) {
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,true,true);
+
+        if( svd.inputModified() ) {
+            A = A.copy();
+        }
+        if( !svd.decompose(A)) {
+            throw new RuntimeException("SVD Failed!");
+        }
+
+        int N = svd.numberOfSingularValues();
+        double sv[] = svd.getSingularValues();
+
+        double threshold = singularThreshold(sv,N);
+        int count = 0;
+        for (int i = 0; i < sv.length; i++) {
+            if( sv[i] >= threshold ) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Computes the SVD and sorts singular values in descending order. While easier to use this can reduce performance
+     * when performed on small matrices numerous times.
+     *
+     * U*W*V<sup>T</sup> = A
+     *
+     * @param A (Input) Matrix being decomposed
+     * @param U (Output) Storage for U. If null then it's ignored.
+     * @param sv (Output) sorted list of singular values. Can be null.
+     * @param Vt (Output) Storage for transposed V. Can be null.
+     */
+    public static boolean svd(DMatrixRMaj A, @Nullable DMatrixRMaj U , DGrowArray sv , @Nullable DMatrixRMaj Vt ) {
+
+        boolean needU = U != null;
+        boolean needV = Vt != null;
+
+        SingularValueDecomposition_F64<DMatrixRMaj> svd =
+                DecompositionFactory_DDRM.svd(A.numRows,A.numCols,needU,needV,true);
+
+        if( svd.inputModified() ) {
+            A = A.copy();
+        }
+
+        if( !svd.decompose(A)) {
+            return false;
+        }
+
+        int N = Math.min(A.numCols,A.numRows);
+
+        if( needU )
+            svd.getU(U,false);
+        if( needV )
+            svd.getV(Vt,true);
+
+        sv.reshape(N);
+        System.arraycopy(svd.getSingularValues(), 0, sv.data, 0, N);
+
+        descendingOrder(U,false,sv.data,N,Vt,true);
+
+        return true;
+    }
+
 
     /**
      * <p>
@@ -118,38 +243,38 @@ public class SingularOps_DDRM {
 //        checkSvdMatrixSize(U, tranU, W, V, tranV);
 
         for( int i = 0; i < singularLength; i++ ) {
-            double bigValue=-1;
-            int bigIndex=-1;
+            double smallValue=Double.MAX_VALUE;
+            int smallindex=-1;
 
             // find the smallest singular value in the submatrix
             for( int j = i; j < singularLength; j++ ) {
                 double v = singularValues[j];
 
-                if( v > bigValue ) {
-                    bigValue = v;
-                    bigIndex = j;
+                if( v < smallValue ) {
+                    smallValue = v;
+                    smallindex = j;
                 }
             }
 
             // only swap if the current index is not the smallest
-            if( bigIndex == i)
+            if( smallindex == i)
                 continue;
 
-            if( bigIndex == -1 ) {
+            if( smallindex == -1 ) {
                 // there is at least one uncountable singular value.  just stop here
                 break;
             }
 
             double tmp = singularValues[i];
-            singularValues[i] = bigValue;
-            singularValues[bigIndex] = tmp;
+            singularValues[i] = smallValue;
+            singularValues[smallindex] = tmp;
 
             if( V != null ) {
-                swapRowOrCol(V, tranV, i, bigIndex);
+                swapRowOrCol(V, tranV, i, smallindex);
             }
 
             if( U != null ) {
-                swapRowOrCol(U, tranU, i, bigIndex);
+                swapRowOrCol(U, tranU, i, smallindex);
             }
         }
     }
@@ -395,18 +520,22 @@ public class SingularOps_DDRM {
      * @return threshold for singular values
      */
     public static double singularThreshold( SingularValueDecomposition_F64 svd ) {
-        double largest = 0;
+
         double w[]= svd.getSingularValues();
 
         int N = svd.numberOfSingularValues();
 
-        for( int j = 0; j < N; j++ ) {
+        return singularThreshold( w, N);
+    }
+
+    private static double singularThreshold( double[] w, int N) {
+        double largest = 0;
+        for(int j = 0; j < N; j++ ) {
             if( w[j] > largest)
                 largest = w[j];
         }
 
-        int M = Math.max(svd.numCols(),svd.numRows());
-        return M*largest* UtilEjml.EPS;
+        return N*largest* UtilEjml.EPS;
     }
 
     /**

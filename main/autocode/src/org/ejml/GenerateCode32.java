@@ -113,6 +113,7 @@ public class GenerateCode32 {
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
         converter.replacePattern("Features_D;", "Features_F;");
         converter.replacePattern("Features_D.", "Features_F.");
+        converter.replacePattern("lookupDDRM", "lookupFDRM");
 
         converter.replacePattern("F64", "F32");
         converter.replacePattern("random64", "random32");

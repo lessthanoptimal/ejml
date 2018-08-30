@@ -249,6 +249,18 @@ public class Equation {
     }
 
     /**
+     * Consturctor which allows you to alias variables
+     *
+     * @see #alias(Object...)
+     *
+     * @param args arguments for alias
+     */
+    public Equation(Object ...args) {
+        this();
+        alias(args);
+    }
+
+    /**
      * Specifies the seed used in random number generators
      * @param seed New seed for random number generator
      */
@@ -1617,8 +1629,9 @@ public class Equation {
      *
      * @param equation String in simple equation format
      */
-    public void process( String equation ) {
+    public Equation process( String equation ) {
         compile(equation).perform();
+        return this;
     }
 
     /**
@@ -1626,8 +1639,9 @@ public class Equation {
      *
      * @param equation String in simple equation format
      */
-    public void process( String equation , boolean debug ) {
+    public Equation process( String equation , boolean debug ) {
         compile(equation,true,debug).perform();
+        return this;
     }
 
     /**
