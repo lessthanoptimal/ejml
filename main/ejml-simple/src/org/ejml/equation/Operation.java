@@ -81,7 +81,9 @@ public abstract class Operation {
                     try {
                         CommonOps_DDRM.mult(mA.matrix, mB.matrix, output.matrix);
                     } catch( MatrixDimensionException e ) {
+                        // provide a more informative message if special case
                         checkThrow1x1AgainstNxM(mA.matrix,mB.matrix,"multiply");
+                        throw e;
                     }
                 }
             };
