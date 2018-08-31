@@ -11,8 +11,6 @@ Date format: year/month/day
   * Assign a matrix and vector from an array
 - SingularOps_DDRM
   * Simpler methods and no need to create a decomposition for basic operations
-  * Fixed an extremely old bug with ordering SVD when getting singular values in an array.
-    How did no one find this already?
 - Equations
   * You can now chain some operations
 TODO Sparse LDL

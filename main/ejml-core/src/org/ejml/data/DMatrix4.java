@@ -153,7 +153,7 @@ public class DMatrix4 implements DMatrixFixed {
 
     @Override
     public void print() {
-       print(MatrixIO.DEFAULT_FLOAT_FORMAT);
+       MatrixIO.printFancy(System.out, this, MatrixIO.DEFAULT_LENGTH);
     }
 
     @Override

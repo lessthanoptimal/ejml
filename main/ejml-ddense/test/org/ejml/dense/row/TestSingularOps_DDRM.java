@@ -92,7 +92,7 @@ public class TestSingularOps_DDRM {
                 int N = Math.min(rows,cols);
                 assertEquals(N,sv.length);
                 for (int i = 1; i < N; i++) {
-                    assertTrue(sv.data[i-1]<sv.data[i]);
+                    assertTrue(sv.data[i-1]>sv.data[i]);
                 }
 
                 DMatrixRMaj W = CommonOps_DDRM.diag(sv.data);

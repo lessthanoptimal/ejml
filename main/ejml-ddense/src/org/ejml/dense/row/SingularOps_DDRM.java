@@ -243,38 +243,38 @@ public class SingularOps_DDRM {
 //        checkSvdMatrixSize(U, tranU, W, V, tranV);
 
         for( int i = 0; i < singularLength; i++ ) {
-            double smallValue=Double.MAX_VALUE;
-            int smallindex=-1;
+            double bigValue=-1;
+            int bigIndex=-1;
 
             // find the smallest singular value in the submatrix
             for( int j = i; j < singularLength; j++ ) {
                 double v = singularValues[j];
 
-                if( v < smallValue ) {
-                    smallValue = v;
-                    smallindex = j;
+                if( v > bigValue ) {
+                    bigValue = v;
+                    bigIndex = j;
                 }
             }
 
             // only swap if the current index is not the smallest
-            if( smallindex == i)
+            if( bigIndex == i)
                 continue;
 
-            if( smallindex == -1 ) {
+            if( bigIndex == -1 ) {
                 // there is at least one uncountable singular value.  just stop here
                 break;
             }
 
             double tmp = singularValues[i];
-            singularValues[i] = smallValue;
-            singularValues[smallindex] = tmp;
+            singularValues[i] = bigValue;
+            singularValues[bigIndex] = tmp;
 
             if( V != null ) {
-                swapRowOrCol(V, tranV, i, smallindex);
+                swapRowOrCol(V, tranV, i, bigIndex);
             }
 
             if( U != null ) {
-                swapRowOrCol(U, tranU, i, smallindex);
+                swapRowOrCol(U, tranU, i, bigIndex);
             }
         }
     }

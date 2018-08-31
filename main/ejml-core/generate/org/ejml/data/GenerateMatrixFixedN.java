@@ -137,7 +137,7 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
                 "\n" +
                 "    @Override\n" +
                 "    public void print() {\n" +
-                "       print(MatrixIO.DEFAULT_FLOAT_FORMAT);\n" +
+                "       MatrixIO.printFancy(System.out, this, MatrixIO.DEFAULT_LENGTH);\n" +
                 "    }\n" +
                 "\n" +
                 "    @Override\n" +
