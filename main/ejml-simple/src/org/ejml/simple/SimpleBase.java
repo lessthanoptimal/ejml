@@ -31,8 +31,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 
-import static org.ejml.ops.MatrixIO.DEFAULT_FLOAT_FORMAT;
-
 
 /**
  * Parent of {@link SimpleMatrix} implements all the standard matrix operations and uses
@@ -766,7 +764,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Prints the matrix to standard out.
      */
     public void print() {
-        ops.print(System.out,mat,DEFAULT_FLOAT_FORMAT);
+        mat.print();
     }
 
     /**
