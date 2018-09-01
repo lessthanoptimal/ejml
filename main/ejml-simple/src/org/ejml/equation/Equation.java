@@ -365,21 +365,30 @@ public class Equation {
             throw new RuntimeException("Even number of arguments expected");
 
         for (int i = 0; i < args.length; i += 2) {
-            if( args[i].getClass() == Integer.class ) {
-                alias(((Integer)args[i]).intValue(),(String)args[i+1]);
-            } else if( args[i].getClass() == Double.class ) {
-                alias(((Double)args[i]).doubleValue(),(String)args[i+1]);
-            } else if( args[i].getClass() == DMatrixRMaj.class ) {
-                alias((DMatrixRMaj)args[i],(String)args[i+1]);
-            } else if( args[i].getClass() == FMatrixRMaj.class ) {
-                alias((FMatrixRMaj)args[i],(String)args[i+1]);
-            } else if( args[i].getClass() == DMatrixSparseCSC.class ) {
-                alias((DMatrixSparseCSC)args[i],(String)args[i+1]);
-            } else if( args[i].getClass() == SimpleMatrix.class ) {
-                alias((SimpleMatrix)args[i],(String)args[i+1]);
-            } else {
-                throw new RuntimeException("Unknown value type "+args[i]);
-            }
+            aliasGeneric( args[i], (String)args[i+1]);
+        }
+    }
+
+    /**
+     * Aliases variables with an unknown type.
+     * @param variable The variable being aliased
+     * @param name Name of the variable
+     */
+    protected void aliasGeneric( Object variable , String name ) {
+        if( variable.getClass() == Integer.class ) {
+            alias(((Integer)variable).intValue(),name);
+        } else if( variable.getClass() == Double.class ) {
+            alias(((Double)variable).doubleValue(),name);
+        } else if( variable.getClass() == DMatrixRMaj.class ) {
+            alias((DMatrixRMaj)variable,name);
+        } else if( variable.getClass() == FMatrixRMaj.class ) {
+            alias((FMatrixRMaj)variable,name);
+        } else if( variable.getClass() == DMatrixSparseCSC.class ) {
+            alias((DMatrixSparseCSC)variable,name);
+        } else if( variable.getClass() == SimpleMatrix.class ) {
+            alias((SimpleMatrix)variable,name);
+        } else {
+            throw new RuntimeException("Unknown value type "+name);
         }
     }
 
