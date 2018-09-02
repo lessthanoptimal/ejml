@@ -20,6 +20,7 @@ package org.ejml.equation;
 
 import org.ejml.data.*;
 import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.ConvertFMatrixStruct;
 import org.ejml.ops.ConvertMatrixData;
 import org.ejml.simple.SimpleMatrix;
 
@@ -386,9 +387,18 @@ public class Equation {
         } else if( variable.getClass() == DMatrixSparseCSC.class ) {
             alias((DMatrixSparseCSC)variable,name);
         } else if( variable.getClass() == SimpleMatrix.class ) {
-            alias((SimpleMatrix)variable,name);
+            alias((SimpleMatrix) variable, name);
+        } else if( variable instanceof DMatrixFixed ) {
+            DMatrixRMaj M = new DMatrixRMaj(1,1);
+            ConvertDMatrixStruct.convert((DMatrixFixed)variable,M);
+            alias(M,name);
+        } else if( variable instanceof FMatrixFixed ) {
+            FMatrixRMaj M = new FMatrixRMaj(1,1);
+            ConvertFMatrixStruct.convert((FMatrixFixed)variable,M);
+            alias(M,name);
         } else {
-            throw new RuntimeException("Unknown value type "+name);
+            throw new RuntimeException("Unknown value type of "+
+                    (variable.getClass().getSimpleName())+" for variable "+name);
         }
     }
 
