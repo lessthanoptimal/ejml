@@ -40,7 +40,8 @@ import java.util.Arrays;
 public class SingularOps_DDRM {
 
     /**
-     * Returns a sorted array of all the singular values in A
+     * Returns an array of all the singular values in A sorted in ascending order
+     *
      * @param A Matrix. Not modified.
      * @return singular values
      */
@@ -56,7 +57,39 @@ public class SingularOps_DDRM {
 
         double sv[] = svd.getSingularValues();
         Arrays.sort(sv,0,svd.numberOfSingularValues());
+
+        // change the ordering to ascending
+        for (int i = 0; i < sv.length/2; i++) {
+            double tmp = sv[i];
+            sv[i] = sv[sv.length-i-1];
+            sv[sv.length-i-1] = tmp;
+        }
+
         return sv;
+    }
+
+    /**
+     * Computes the ratio of the smallest value to the largest. Does not assume
+     * the array is sorted first
+     * @param sv array
+     * @return smallest / largest
+     */
+    public static double ratioSmallestOverLargest( double []sv ) {
+        if( sv.length == 0 )
+            return Double.NaN;
+
+        double min = sv[0];
+        double max = min;
+
+        for (int i = 1; i < sv.length; i++) {
+            double v = sv[i];
+            if( v > max )
+                max = v;
+            else if( v < min )
+                min = v;
+        }
+
+        return  min/max;
     }
 
     /**

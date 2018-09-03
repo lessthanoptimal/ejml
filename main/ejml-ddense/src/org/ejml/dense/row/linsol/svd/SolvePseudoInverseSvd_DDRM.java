@@ -154,7 +154,7 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
     }
 
     @Override
-    public SingularValueDecomposition<DMatrixRMaj> getDecomposition() {
+    public SingularValueDecomposition_F64<DMatrixRMaj> getDecomposition() {
         return svd;
     }
 
