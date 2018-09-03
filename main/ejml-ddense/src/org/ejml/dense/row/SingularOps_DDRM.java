@@ -553,22 +553,30 @@ public class SingularOps_DDRM {
      * @return threshold for singular values
      */
     public static double singularThreshold( SingularValueDecomposition_F64 svd ) {
+        return singularThreshold(svd,UtilEjml.EPS);
+    }
+
+    public static double singularThreshold( SingularValueDecomposition_F64 svd , double tolerance ) {
 
         double w[]= svd.getSingularValues();
 
         int N = svd.numberOfSingularValues();
 
-        return singularThreshold( w, N);
+        return singularThreshold( w, N, tolerance);
     }
 
     private static double singularThreshold( double[] w, int N) {
+        return singularThreshold(w, N, UtilEjml.EPS );
+    }
+
+    private static double singularThreshold( double[] w, int N , double tolerance ) {
         double largest = 0;
         for(int j = 0; j < N; j++ ) {
             if( w[j] > largest)
                 largest = w[j];
         }
 
-        return N*largest* UtilEjml.EPS;
+        return N*largest*tolerance;
     }
 
     /**
@@ -644,5 +652,4 @@ public class SingularOps_DDRM {
         }
         return ret + numCol-N;
     }
-
 }
