@@ -6,6 +6,8 @@
 #####  Project Website: http://ejml.org
 
 [![Build Status](https://travis-ci.org/lessthanoptimal/ejml.svg?branch=master)](https://travis-ci.org/lessthanoptimal/ejml)
+[![Code Quality: Java](https://img.shields.io/lgtm/grade/java/g/lessthanoptimal/ejml.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lessthanoptimal/ejml/context:java)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/lessthanoptimal/ejml.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lessthanoptimal/ejml/alerts)
 
 ## Introduction
 
