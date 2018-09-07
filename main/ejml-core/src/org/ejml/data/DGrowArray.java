@@ -74,7 +74,7 @@ public class DGrowArray {
         return data[index];
     }
 
-    public void set( int index , int value ) {
+    public void set( int index , double value ) {
         if( index< 0 || index >= length )
             throw new IllegalArgumentException("Out of bounds");
         data[index] = value;
