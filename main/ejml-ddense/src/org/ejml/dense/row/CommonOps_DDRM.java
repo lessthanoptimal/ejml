@@ -1078,6 +1078,23 @@ public class CommonOps_DDRM {
 
     /**
      * <p>
+     * Extracts a submatrix from 'src' and inserts it in a submatrix in 'dst'. Uses the shape of dst
+     * to determine the size of the matrix extracted.
+     * </p>
+     *
+     * @param src The original matrix which is to be copied.  Not modified.
+     * @param srcY0 Start row in src.
+     * @param srcX0 Start column in src.
+     * @param dst Where the matrix is extracted into.
+     */
+    public static void extract( DMatrix src,
+                                int srcY0, int srcX0,
+                                DMatrix dst ) {
+        extract(src,srcY0,srcY0+dst.getNumRows(),srcX0,srcX0+dst.getNumCols(),dst,0,0);
+    }
+
+    /**
+     * <p>
      * Creates a new matrix which is the specified submatrix of 'src'
      * </p>
      * <p>

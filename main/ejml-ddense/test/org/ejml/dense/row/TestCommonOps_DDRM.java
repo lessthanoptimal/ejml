@@ -682,6 +682,23 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
+    public void extract_no_limits() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
+        DMatrixRMaj B = new DMatrixRMaj(3,4);
+
+        CommonOps_DDRM.extract(A,1,1,B);
+
+        assertEquals(B.numRows,3);
+        assertEquals(B.numCols, 4);
+
+        for( int i = 1; i < 4; i++ ) {
+            for( int j = 1; j < 5; j++ ) {
+                assertEquals(A.get(i,j),B.get(i-1,j-1),UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
     public void extract_array_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
