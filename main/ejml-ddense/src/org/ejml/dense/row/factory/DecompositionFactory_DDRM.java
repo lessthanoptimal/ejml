@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -82,6 +82,15 @@ public class DecompositionFactory_DDRM {
     }
 
     /**
+     * Returns a {@link CholeskyDecomposition_F64} that isn't specialized for any specific matrix size.
+     * @param lower should a lower or upper triangular matrix be used. If not sure set to true.
+     * @return A new CholeskyDecomposition.
+     */
+    public static CholeskyDecomposition_F64<DMatrixRMaj> chol( boolean lower ) {
+        return chol(100,lower);
+    }
+
+    /**
      * <p>
      * Returns a {@link org.ejml.dense.row.decomposition.chol.CholeskyDecompositionLDL_DDRM} that has been optimized for the specified matrix size.
      * </p>
@@ -90,6 +99,10 @@ public class DecompositionFactory_DDRM {
      * @return CholeskyLDLDecomposition_F64
      */
     public static CholeskyLDLDecomposition_F64<DMatrixRMaj> cholLDL(int matrixSize ) {
+        return new CholeskyDecompositionLDL_DDRM();
+    }
+
+    public static CholeskyLDLDecomposition_F64<DMatrixRMaj> cholLDL() {
         return new CholeskyDecompositionLDL_DDRM();
     }
 
@@ -106,6 +119,10 @@ public class DecompositionFactory_DDRM {
         return new LUDecompositionAlt_DDRM();
     }
 
+    public static LUDecomposition_F64<DMatrixRMaj> lu() {
+        return new LUDecompositionAlt_DDRM();
+    }
+
     /**
      * <p>
      * Returns a {@link SingularValueDecomposition} that has been optimized for the specified matrix size.
@@ -117,12 +134,24 @@ public class DecompositionFactory_DDRM {
      * @param needU Should it compute the U matrix. If not sure set to true.
      * @param needV Should it compute the V matrix. If not sure set to true.
      * @param compact Should it compute the SVD in compact form.  If not sure set to false.
-     * @return
+     * @return SVD
      */
     public static SingularValueDecomposition_F64<DMatrixRMaj> svd(int numRows , int numCols ,
                                                                   boolean needU , boolean needV , boolean compact ) {
         // Don't allow the tall decomposition by default since it *might* be less stable
         return new SvdImplicitQrDecompose_DDRM(compact,needU,needV,false);
+    }
+
+    /**
+     * Returns a {@link SingularValueDecomposition} that is NOT optimized for any specified matrix size.
+     *
+     * @param needU Should it compute the U matrix. If not sure set to true.
+     * @param needV Should it compute the V matrix. If not sure set to true.
+     * @param compact Should it compute the SVD in compact form.  If not sure set to false.
+     * @return SVD
+     */
+    public static SingularValueDecomposition_F64<DMatrixRMaj> svd(boolean needU , boolean needV , boolean compact ) {
+        return svd(100,100,needU,needV,compact);
     }
 
     /**
@@ -135,6 +164,10 @@ public class DecompositionFactory_DDRM {
      * @return QRDecomposition
      */
     public static QRDecomposition<DMatrixRMaj> qr(int numRows , int numCols ) {
+        return new QRDecompositionHouseholderColumn_DDRM();
+    }
+
+    public static QRDecomposition<DMatrixRMaj> qr() {
         return new QRDecompositionHouseholderColumn_DDRM();
     }
 
@@ -151,6 +184,10 @@ public class DecompositionFactory_DDRM {
         return new QRColPivDecompositionHouseholderColumn_DDRM();
     }
 
+    public static QRPDecomposition_F64<DMatrixRMaj> qrp() {
+        return new QRColPivDecompositionHouseholderColumn_DDRM();
+    }
+
     /**
      * <p>
      * Returns an {@link EigenDecomposition} that has been optimized for the specified matrix size.
@@ -163,7 +200,11 @@ public class DecompositionFactory_DDRM {
      * @return A new EigenDecomposition
      */
     public static EigenDecomposition_F64<DMatrixRMaj> eig(int matrixSize , boolean needVectors ) {
-        return new SwitchingEigenDecomposition_DDRM(matrixSize,needVectors, UtilEjml.TEST_F64);
+        return new SwitchingEigenDecomposition_DDRM(matrixSize, needVectors, UtilEjml.TEST_F64);
+    }
+
+    public static EigenDecomposition_F64<DMatrixRMaj> eig(boolean needVectors ) {
+        return eig(100,needVectors);
     }
 
     /**
@@ -184,6 +225,10 @@ public class DecompositionFactory_DDRM {
             return new SymmetricQRAlgorithmDecomposition_DDRM(decomp,computeVectors);
         } else
             return new WatchedDoubleStepQRDecomposition_DDRM(computeVectors);
+    }
+    public static EigenDecomposition_F64<DMatrixRMaj> eig( boolean computeVectors ,
+                                                           boolean isSymmetric ) {
+        return eig(100,computeVectors,isSymmetric);
     }
 
     /**
