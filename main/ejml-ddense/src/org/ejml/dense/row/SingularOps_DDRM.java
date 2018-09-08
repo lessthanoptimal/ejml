@@ -506,14 +506,18 @@ public class SingularOps_DDRM {
 
             if( nullVector == null ) {
                 nullVector = new DMatrixRMaj(svd.numCols(),1);
+            } else {
+                nullVector.reshape(svd.numCols(),1);
             }
         } else {
-            if( A.numCols != svd.numRows() ) {
+            if (A.numCols != svd.numRows()) {
                 throw new IllegalArgumentException("Can't compute the null space using a compact SVD for a matrix of this size.");
             }
 
-            if( nullVector == null ) {
-                nullVector = new DMatrixRMaj(svd.numRows(),1);
+            if (nullVector == null) {
+                nullVector = new DMatrixRMaj(svd.numRows(), 1);
+            } else {
+                nullVector.reshape(svd.numRows(), 1);
             }
         }
 
