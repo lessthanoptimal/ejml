@@ -1,6 +1,12 @@
 - Update change.txt
 - Update version in build.gradle
 - Update version in readme.md (maven central)
+- clean and generate code:
+
+git clean -fd main/ejml-core/src main/ejml-cdense/src main/ejml-fdense/src
+./gradlew autogenerate
+
+- Rebuild and run unit tests
 - Commit and tag release
 - Create zip of source and library directory
   * From a fresh checkout

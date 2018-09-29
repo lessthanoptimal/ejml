@@ -3,7 +3,7 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.36
-2018
+2018/09/29
 
 - Fixed Size Matrix
   * Vector.set() for entire vector
@@ -15,9 +15,6 @@ Date format: year/month/day
   * You can now chain some operations
 - CommonOps_DDRM
   * New extract() where upper extents are implied
-TODO Sparse LDL
-TODO constructor size check
-TODO New implementation of symmetric eigen
 
 ----- Version 0.35
 2018/08/24

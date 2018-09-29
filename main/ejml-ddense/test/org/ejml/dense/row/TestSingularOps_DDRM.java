@@ -53,7 +53,7 @@ public class TestSingularOps_DDRM {
                 int N = Math.min(rows,cols);
                 assertEquals(N,found.length);
                 for (int i = 1; i < N; i++) {
-                    assertTrue(found[i-1]<found[i]);
+                    assertTrue(found[i-1]>found[i]);
                 }
             }
         }

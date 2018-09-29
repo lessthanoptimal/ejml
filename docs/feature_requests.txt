@@ -1,3 +1,7 @@
+TODO Sparse LDL
+TODO constructor size check
+TODO New implementation of symmetric eigen
+
 Sparse Matrix
 - TODO Add fill reduce algorithms
   * Update CommonOps.solve() to specify a reasonable general purpose algorithm
