@@ -450,7 +450,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Returns the value of the element with the largest abs()
+     * Returns the value of the element with the smallest abs()
      * @param A (Input) Matrix. Not modified.
      * @return scalar
      */
@@ -469,6 +469,11 @@ public class CommonOps_DSCC {
         return min;
     }
 
+    /**
+     * Returns the value of the element with the largest abs()
+     * @param A (Input) Matrix. Not modified.
+     * @return scalar
+     */
     public static double elementMaxAbs( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
@@ -484,6 +489,11 @@ public class CommonOps_DSCC {
         return max;
     }
 
+    /**
+     * Returns the value of the element with the minimum value
+     * @param A (Input) Matrix. Not modified.
+     * @return scalar
+     */
     public static double elementMin( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
@@ -501,6 +511,11 @@ public class CommonOps_DSCC {
         return min;
     }
 
+    /**
+     * Returns the value of the element with the largest value
+     * @param A (Input) Matrix. Not modified.
+     * @return scalar
+     */
     public static double elementMax( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
@@ -518,6 +533,12 @@ public class CommonOps_DSCC {
         return max;
     }
 
+    /**
+     * Sum of all elements
+     *
+     * @param A (Input) Matrix. Not modified.
+     * @return scalar
+     */
     public static double elementSum( DMatrixSparseCSC A ) {
         if( A.nz_length == 0)
             return 0;
@@ -537,7 +558,7 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix.
      * @param B (Input) Matrix
-     * @param C (Ouptut) Matrix.
+     * @param C (Output) Matrix. data array is grown to min(A.nz_length,B.nz_length), resulting a in a large speed boost.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */

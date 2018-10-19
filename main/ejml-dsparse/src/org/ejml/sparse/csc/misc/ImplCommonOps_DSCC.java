@@ -171,7 +171,7 @@ public class ImplCommonOps_DSCC {
      *
      * @param A (Input) Matrix
      * @param B (Input) Matrix
-     * @param C (Output) matrix.
+     * @param C (Output) Matrix.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
@@ -182,6 +182,7 @@ public class ImplCommonOps_DSCC {
         int []w = adjust(gw,A.numRows);
         Arrays.fill(w,0,A.numRows,-1); // fill with -1. This will be a value less than column
 
+        C.growMaxLength(Math.min(A.nz_length,B.nz_length),false);
         C.indicesSorted = false; // Hmm I think if B is storted then C will be sorted...
         C.nz_length = 0;
 

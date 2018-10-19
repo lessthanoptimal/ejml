@@ -1193,4 +1193,31 @@ public class TestCommonOps_DSCC {
         double found = CommonOps_DSCC.trace(A);
         assertEquals(expected,found,UtilEjml.TEST_F64);
     }
+
+    @Test
+    public void test() {
+        int n = 100_000;
+
+        DMatrixSparseTriplet triplets = new DMatrixSparseTriplet(n, n, n);
+        for (int i = 0; i < n; i++) {
+            triplets.addItem(i, i, 1);
+        }
+
+        DMatrixSparseCSC M = ConvertDMatrixStruct.convert(triplets, (DMatrixSparseCSC) null);
+        DMatrixSparseCSC MM = new DMatrixSparseCSC(n, n, 0);
+        DMatrixSparseCSC EW = new DMatrixSparseCSC(n, n, 0);
+
+        long t1 = System.currentTimeMillis();
+        ImplSparseSparseMult_DSCC.mult(M, M, MM, null, null);
+        long t2 = System.currentTimeMillis();
+        CommonOps_DSCC.elementMult(M, M, EW, null, null);
+        long t3 = System.currentTimeMillis();
+        CommonOps_DSCC.elementMult(M, M, EW, null, null);
+        long t4 = System.currentTimeMillis();
+
+        System.out.println("MM: " + (t2 - t1));
+        System.out.println("EW: " + (t3 - t2));
+        System.out.println("EW: " + (t4 - t3));
+
+    }
 }
