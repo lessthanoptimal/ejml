@@ -23,6 +23,8 @@ import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.equation.Equation;
+import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.ConvertFMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ops.*;
 
@@ -30,6 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -156,6 +160,18 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      */
     public T mult( T B ) {
         convertType.specify(this,B);
+
+        // Look to see if there is a special function for handling this case
+        if( this.mat.getType() != B.getType() ) {
+            Method m = findAlternative("mult",mat,B.mat,convertType.commonType.getClassType());
+            if( m != null ) {
+                T ret = wrapMatrix(convertType.commonType.create(1,1));
+                invoke(m,this.mat,B.mat,ret.mat);
+                return ret;
+            }
+        }
+
+        // Otherwise convert into a common matrix type if necessary
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
@@ -433,18 +449,29 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      *
      * @throws SingularMatrixException
      *
-     * @param b n by p matrix. Not modified.
+     * @param B n by p matrix. Not modified.
      * @return The solution for 'x' that is n by p.
      */
-    public T solve( T b )
+    public T solve( T B )
     {
-        convertType.specify(this,b);
+        convertType.specify(this,B);
+
+        // Look to see if there is a special function for handling this case
+        if( this.mat.getType() != B.getType() ) {
+            Method m = findAlternative("solve",mat,B.mat,convertType.commonType.getClassType());
+            if( m != null ) {
+                T ret = wrapMatrix(convertType.commonType.create(1,1));
+                invoke(m,this.mat,B.mat,ret.mat); // TODO handle boolean return from solve
+                return ret;
+            }
+        }
+
         T A = convertType.convert(this);
-        b = convertType.convert(b);
+        B = convertType.convert(B);
 
-        T x = A.createMatrix(mat.getNumCols(),b.getMatrix().getNumCols(), A.getType());
+        T x = A.createMatrix(mat.getNumCols(),B.getMatrix().getNumCols(), A.getType());
 
-        if( !A.ops.solve(A.mat,x.mat,b.mat))
+        if( !A.ops.solve(A.mat,x.mat,B.mat))
             throw new SingularMatrixException();
         if( A.ops.hasUncountable(x.mat))
             throw new SingularMatrixException("Solution contains uncountable numbers");
@@ -480,7 +507,12 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param val The value each element is set to.
      */
     public void fill(double val ) {
-        ops.fill(mat,val);
+        try {
+            ops.fill(mat, val);
+        } catch( ConvertToDenseException e) {
+            convertToDense();
+            fill(val);
+        }
     }
 
     /**
@@ -1422,5 +1454,93 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     protected void setMatrix( Matrix mat ) {
         this.mat = mat;
         this.ops = lookupOps(mat.getType());
+    }
+
+
+    Method findAlternative( String method , Object... arguments ) {
+        Method[] methods = ops.getClass().getMethods();
+        for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
+            if (!methods[methodIdx].getName().equals(method))
+                continue;
+
+            Class<?>[] paramTypes = methods[methodIdx].getParameterTypes();
+            if( paramTypes.length != arguments.length )
+                continue;
+
+            // look for an exact match only
+            boolean match = true;
+            for (int j = 0; j < paramTypes.length; j++) {
+                if( arguments[j] instanceof Class ) {
+                    if( paramTypes[j] != arguments[j]) {
+                        match = false;
+                        break;
+                    }
+                } else if( paramTypes[j] != arguments[j].getClass() ) {
+                    match = false;
+                    break;
+                }
+            }
+            if( match ) {
+                return methods[methodIdx];
+            }
+        }
+        return null;
+    }
+
+    public void invoke( Method m , Object... inputs ) {
+        try {
+            m.invoke(ops,inputs);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Switches from a dense to sparse matrix
+     */
+    public void convertToSparse() {
+        switch ( mat.getType() ) {
+            case DDRM: {
+                DMatrixSparseCSC m = new DMatrixSparseCSC(mat.getNumRows(), mat.getNumCols());
+                ConvertDMatrixStruct.convert((DMatrixRMaj) mat, m,0);
+                setMatrix(m);
+            } break;
+            case FDRM: {
+                FMatrixSparseCSC m = new FMatrixSparseCSC(mat.getNumRows(), mat.getNumCols());
+                ConvertFMatrixStruct.convert((FMatrixRMaj) mat, m,0);
+                setMatrix(m);
+            } break;
+
+            case DSCC:
+            case FSCC:
+                break;
+            default:
+                throw new RuntimeException("Conversion not supported!");
+        }
+    }
+
+    /**
+     * Switches from a sparse to dense matrix
+     */
+    public void convertToDense() {
+        switch ( mat.getType() ) {
+            case DSCC: {
+                DMatrix m = new DMatrixRMaj(mat.getNumRows(), mat.getNumCols());
+                ConvertDMatrixStruct.convert((DMatrix) mat, m);
+                setMatrix(m);
+            } break;
+            case FSCC: {
+                FMatrix m = new FMatrixRMaj(mat.getNumRows(), mat.getNumCols());
+                ConvertFMatrixStruct.convert((FMatrix) mat, m);
+                setMatrix(m);
+            } break;
+            case DDRM:
+            case FDRM:
+            case ZDRM:
+            case CDRM:
+                break;
+            default:
+                throw new RuntimeException("Not a sparse matrix!");
+        }
     }
 }

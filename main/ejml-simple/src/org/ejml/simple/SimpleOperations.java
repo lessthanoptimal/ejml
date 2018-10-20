@@ -71,8 +71,6 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     boolean solve( T A , T X , T B);
 
-    void set( T A , double val );
-
     void zero( T A );
 
     double normF( T A );

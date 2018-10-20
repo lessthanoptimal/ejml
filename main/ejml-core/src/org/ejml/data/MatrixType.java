@@ -23,32 +23,34 @@ package org.ejml.data;
  */
 public enum MatrixType {
 
-    DDRM(true,true,64),
-    FDRM(true,true,32),
-    ZDRM(false,true,64),
-    CDRM(false,true,32),
-    DSCC(true,false,64),
-    FSCC(true,false,32),
-    ZSCC(false,false,64),
-    CSCC(false,false,32),
-    DTRIPLET(false,false,64),
-    FTRIPLET(false,false,64),
-    UNSPECIFIED(false,false,0);
+    DDRM(true,true,64,DMatrixRMaj.class),
+    FDRM(true,true,32,FMatrixRMaj.class),
+    ZDRM(false,true,64,ZMatrixRMaj.class),
+    CDRM(false,true,32,CMatrixRMaj.class),
+    DSCC(true,false,64,DMatrixSparseCSC.class),
+    FSCC(true,false,32,FMatrixSparseCSC.class),
+    ZSCC(false,false,64,null),
+    CSCC(false,false,32,null),
+    DTRIPLET(false,false,64,DMatrixSparseTriplet.class),
+    FTRIPLET(false,false,64,FMatrixSparseTriplet.class),
+    UNSPECIFIED(false,false,0,null);
 
     boolean fixed;
     boolean dense;
     boolean real;
     int bits;
+    Class classType;
 
-    MatrixType(boolean real, boolean dense, int bits) {
-        this(false,real,dense,bits);
+    MatrixType(boolean real, boolean dense, int bits, Class type) {
+        this(false,real,dense,bits,type);
     }
 
-    MatrixType(boolean fixed, boolean real, boolean dense, int bits) {
+    MatrixType(boolean fixed, boolean real, boolean dense, int bits, Class type ) {
         this.real = real;
         this.fixed = fixed;
         this.dense = dense;
         this.bits = bits;
+        this.classType = type;
     }
 
     public static MatrixType lookup( Class type ) {
@@ -115,7 +117,11 @@ public enum MatrixType {
         return bits;
     }
 
-    public Matrix create( int rows , int cols ) {
+    public Class getClassType() {
+        return classType;
+    }
+
+    public Matrix create(int rows , int cols ) {
         switch( this ) {
             case DDRM: return new DMatrixRMaj(rows,cols);
             case FDRM: return new FMatrixRMaj(rows,cols);
