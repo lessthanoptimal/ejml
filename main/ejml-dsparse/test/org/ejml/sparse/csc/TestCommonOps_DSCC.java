@@ -1270,11 +1270,11 @@ public class TestCommonOps_DSCC {
     }
 
     @Test
-    public void solve() {
-        solve(5,5);
-        solve(10,5);
+    public void solve_dense() {
+        solve_dense(5,5);
+        solve_dense(10,5);
     }
-    private void solve( int m , int n ) {
+    private void solve_dense(int m , int n ) {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m,n,m*n/2,rand);
         RandomMatrices_DSCC.ensureNotSingular(A,rand);
         DMatrixRMaj X = RandomMatrices_DDRM.rectangle(n,5,rand);
@@ -1286,6 +1286,25 @@ public class TestCommonOps_DSCC {
 
         EjmlUnitTests.assertEquals(expected, X, UtilEjml.TEST_F64);
     }
+
+    @Test
+    public void solve_sparse() {
+        solve_sparse(5,5);
+        solve_sparse(10,5);
+    }
+    private void solve_sparse(int m , int n ) {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m,n,m*n/2,rand);
+        RandomMatrices_DSCC.ensureNotSingular(A,rand);
+        DMatrixSparseCSC X = RandomMatrices_DSCC.rectangle(n,5,n*5/2,rand);
+        DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(n,5,n*5/2,rand);
+        DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(m,5,m*5/2,rand);
+
+        CommonOps_DSCC.mult(A,expected,B);
+        assertTrue(CommonOps_DSCC.solve(A,B,X));
+
+        EjmlUnitTests.assertEquals(expected, X, UtilEjml.TEST_F64);
+    }
+
 
     @Test
     public void invert() {

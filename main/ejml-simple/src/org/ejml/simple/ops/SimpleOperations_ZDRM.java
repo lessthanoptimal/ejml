@@ -148,11 +148,6 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
-    public void set(ZMatrixRMaj A, /**/double val) {
-        CommonOps_ZDRM.fill(A, (double)val ,0);
-    }
-
-    @Override
     public void zero(ZMatrixRMaj A) {
         A.zero();
     }

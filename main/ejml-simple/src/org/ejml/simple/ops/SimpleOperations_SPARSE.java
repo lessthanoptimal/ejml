@@ -19,10 +19,12 @@
 package org.ejml.simple.ops;
 
 import org.ejml.data.Complex_F64;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.Matrix;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ConvertToDenseException;
+import org.ejml.simple.ConvertToImaginaryException;
 import org.ejml.simple.SimpleOperations;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
@@ -42,7 +44,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void set(DMatrixSparseCSC A, int row, int column, /**/double real, /**/double imaginary) {
-        throw new IllegalArgumentException("Does not support imaginary values");
+        throw new ConvertToImaginaryException();
     }
 
     @Override
@@ -61,8 +63,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
         if( value == 0 ) {
             A.zero();
         } else {
-            throw new RuntimeException("Filling every element in a sparse matrix is a bad idea in general. " +
-                    "Convert to a dense matrix first");
+            throw new ConvertToDenseException();
         }
     }
 
@@ -73,6 +74,10 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
+        CommonOps_DSCC.mult(A,B,output);
+    }
+
+    public void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output ) {
         CommonOps_DSCC.mult(A,B,output);
     }
 
@@ -124,7 +129,7 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public boolean invert(DMatrixSparseCSC A, DMatrixSparseCSC output) {
-        throw new RuntimeException("Unsupported");
+        return solve(A,output,CommonOps_DSCC.identity(A.numRows,A.numCols));
     }
 
     @Override
@@ -139,12 +144,11 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public boolean solve(DMatrixSparseCSC A, DMatrixSparseCSC X, DMatrixSparseCSC B) {
-        throw new RuntimeException("Unsupported");
+        return CommonOps_DSCC.solve(A, X, B);
     }
 
-    @Override
-    public void set(DMatrixSparseCSC A, /**/double val) {
-        throw new ConvertToDenseException();
+    public boolean solve(DMatrixSparseCSC A, DMatrixRMaj X, DMatrixRMaj B) {
+        return CommonOps_DSCC.solve(A, X, B);
     }
 
     @Override

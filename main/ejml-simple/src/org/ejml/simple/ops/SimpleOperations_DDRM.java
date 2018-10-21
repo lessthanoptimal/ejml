@@ -140,11 +140,6 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
-    public void set(DMatrixRMaj A, /**/double val) {
-        CommonOps_DDRM.fill(A, (double)val );
-    }
-
-    @Override
     public void zero(DMatrixRMaj A) {
         A.zero();
     }

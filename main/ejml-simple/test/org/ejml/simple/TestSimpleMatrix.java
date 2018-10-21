@@ -25,6 +25,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertMatrixType;
+import org.ejml.simple.ops.SimpleOperations_SPARSE;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
 
 import java.io.*;
@@ -924,6 +926,70 @@ public class TestSimpleMatrix {
                 fail("Serialization failed");
             }
         }
+    }
 
+    /**
+     * See if it correctly calls a specialized function that can handle different matrix types
+     */
+    @Test
+    public void mult_specialized() {
+        DMatrixSparse A = RandomMatrices_DSCC.rectangle(2,2,3,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2,3,rand);
+
+        SimpleMatrix sA = SimpleMatrix.wrap(A);
+        SimpleMatrix sB = SimpleMatrix.wrap(B);
+
+        OpsCheckSpecial ops = new OpsCheckSpecial();
+        sA.ops = ops;
+
+        sA.mult(sB);
+        assertTrue(ops.specalized);
+    }
+
+    /**
+     * See if it correctly calls a specialized function that can handle different matrix types
+     */
+    @Test
+    public void solve_specialized() {
+        DMatrixSparse A = RandomMatrices_DSCC.rectangle(2,2,3,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2,2,rand);
+
+        SimpleMatrix sA = SimpleMatrix.wrap(A);
+        SimpleMatrix sB = SimpleMatrix.wrap(B);
+
+        OpsCheckSpecial ops = new OpsCheckSpecial();
+        sA.ops = ops;
+
+        sA.solve(sB);
+        assertTrue(ops.specalized);
+    }
+
+    /**
+     * Helper used to test to see if a specialized function was called
+     */
+    public static class OpsCheckSpecial extends SimpleOperations_SPARSE {
+        public boolean specalized = false;
+
+        @Override
+        public void mult(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output) {
+            specalized = true;
+        }
+
+        @Override
+        public void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
+            fail("Shouldn't have been called");
+        }
+
+        @Override
+        public boolean solve(DMatrixSparseCSC A, DMatrixSparseCSC X, DMatrixSparseCSC B) {
+            fail("Shouldn't have been called");
+            return true;
+        }
+
+        @Override
+        public boolean solve(DMatrixSparseCSC A, DMatrixRMaj X, DMatrixRMaj B) {
+            specalized = true;
+            return true;
+        }
     }
 }

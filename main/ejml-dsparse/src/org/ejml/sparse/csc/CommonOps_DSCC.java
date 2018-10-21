@@ -1658,6 +1658,60 @@ public class CommonOps_DSCC {
 
     /**
      * <p>
+     * Solves for x in the following equation:<br>
+     * <br>
+     * A*x = b
+     * </p>
+     *
+     * <p>
+     * If the system could not be solved then false is returned.  If it returns true
+     * that just means the algorithm finished operating, but the results could still be bad
+     * because 'A' is singular or nearly singular.
+     * </p>
+     *
+     * <p>
+     * If repeat calls to solve are being made then one should consider using {@link LinearSolverFactory_DSCC}
+     * instead.
+     * </p>
+     *
+     * <p>
+     * It is ok for 'b' and 'x' to be the same matrix.
+     * </p>
+     *
+     * @param a (Input) A matrix that is m by n. Not modified.
+     * @param b (Input) A matrix that is n by k. Not modified.
+     * @param x (Output) A matrix that is m by k. Modified.
+     *
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean solve(DMatrixSparseCSC a ,
+                                DMatrixSparseCSC b ,
+                                DMatrixSparseCSC x )
+    {
+        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
+        if( a.numRows > a.numCols ) {
+            solver = LinearSolverFactory_DSCC.qr(FillReducing.NONE);// todo specify a filling that makes sense
+        } else {
+            solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
+        }
+
+        // Ensure that the input isn't modified
+        if( solver.modifiesA() )
+            a = a.copy();
+
+        if( solver.modifiesB() )
+            b = b.copy();
+
+        // decompose then solve the matrix
+        if( !solver.setA(a) )
+            return false;
+
+        solver.solveSparse(b, x);
+        return true;
+    }
+
+    /**
+     * <p>
      * Performs a matrix inversion operation that does not modify the original
      * and stores the results in another matrix.  The two matrices must have the
      * same dimension.<br>
