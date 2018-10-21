@@ -8,6 +8,7 @@ Date format: year/month/day
 - CommonOps_DSCC
   * elementMult() resizes internal data. In a test it went from 5600ms to 8ms to compute
     Thanks Gabor Szarnyas for pointing out this issue
+  * fill(), sumCol(), minCol(), maxCol(), sumRow(), minRow(), maxRow()
 
 ----- Version 0.36
 2018/09/29

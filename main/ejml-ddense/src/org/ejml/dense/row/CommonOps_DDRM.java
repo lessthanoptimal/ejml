@@ -1702,7 +1702,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input INput matrix whose rows are summed.
-     * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
+     * @param output Optional storage for output. Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj sumRows(DMatrixRMaj input , DMatrixRMaj output ) {
@@ -1733,7 +1733,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
+     * @param output Optional storage for output.  Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj minRows(DMatrixRMaj input , DMatrixRMaj output ) {
@@ -1766,7 +1766,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Must be a vector. If null a row vector is returned. Modified.
+     * @param output Optional storage for output.  Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj maxRows(DMatrixRMaj input , DMatrixRMaj output ) {
@@ -1799,8 +1799,8 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
-     * @return Vector containing the sum of each row in the input.
+     * @param output Optional storage for output. Reshaped into a row vector. Modified.
+     * @return Vector containing the sum of each column
      */
     public static DMatrixRMaj sumCols(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
@@ -1831,8 +1831,8 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
-     * @return Vector containing the sum of each row in the input.
+     * @param output Optional storage for output. Reshaped into a row vector. Modified.
+     * @return Vector containing the minimum of each column
      */
     public static DMatrixRMaj minCols(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {
@@ -1864,8 +1864,8 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Must be a vector. If null a column vector is returned. Modified.
-     * @return Vector containing the sum of each row in the input.
+     * @param output Optional storage for output. Reshaped into a row vector. Modified.
+     * @return Vector containing the maximum of each column
      */
     public static DMatrixRMaj maxCols(DMatrixRMaj input , DMatrixRMaj output ) {
         if( output == null ) {

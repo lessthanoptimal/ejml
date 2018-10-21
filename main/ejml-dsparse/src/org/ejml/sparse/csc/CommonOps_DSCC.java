@@ -1247,6 +1247,301 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * <p>
+     * Sets every element in the matrix to the specified value. This can require a very large amount of
+     * memory and might exceed the maximum array size<br>
+     * <br>
+     * A<sub>ij</sub> = value
+     * <p>
+     *
+     * @param A A matrix whose elements are about to be set. Modified.
+     * @param value The value each element will have.
+     */
+    public static void fill(DMatrixSparseCSC A , double value ) {
+        int N = A.numCols*A.numRows;
+        A.growMaxLength(N,false);
+        A.col_idx[0] = 0;
+        for (int col = 0; col < A.numCols; col++) {
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col+1] = idx0 + A.numRows;
+
+            for (int i = idx0; i < idx1; i++) {
+                A.nz_rows[i] = i-idx0;
+                A.nz_values[i] = value;
+            }
+        }
+        A.nz_length = N;
+        A.indicesSorted = true;
+    }
+
+    /**
+     * <p>
+     * Computes the sum of each column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = sum(i=1:m ; a<sub>ij</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output. Reshaped into a row vector. Modified.
+     * @return Vector containing the sum of each column
+     */
+    public static DMatrixSparseCSC sumCols(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( output == null ) {
+            output = new DMatrixSparseCSC(1,input.numCols,input.numCols);
+        } else {
+            output.reshape(1,input.numCols,input.numCols);
+        }
+
+        output.col_idx[0] = 0;
+        output.nz_length = input.numCols;
+        output.indicesSorted = true;
+
+        for (int col = 0; col < input.numCols; col++) {
+            int idx0 = input.col_idx[col];
+            int idx1 = input.col_idx[col + 1];
+
+            double sum = 0;
+            for (int i = idx0; i < idx1; i++) {
+                sum += input.nz_values[i];
+            }
+            output.nz_values[col] = sum;
+            output.nz_rows[col] = 0;
+            output.col_idx[col+1] = col+1;
+
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>
+     * Computes the minimum of each column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = min(i=1:m ; a<sub>ij</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output. Reshaped into a row vector. Modified.
+     * @return Vector containing the minimums of each column
+     */
+    public static DMatrixSparseCSC minCols(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( output == null ) {
+            output = new DMatrixSparseCSC(1,input.numCols,input.numCols);
+        } else {
+            output.reshape(1,input.numCols,input.numCols);
+        }
+
+        output.col_idx[0] = 0;
+        output.nz_length = input.numCols;
+        output.indicesSorted = true;
+
+        for (int col = 0; col < input.numCols; col++) {
+            int idx0 = input.col_idx[col];
+            int idx1 = input.col_idx[col + 1];
+
+            // take in account the zeros
+            double min = idx1-idx0 == input.numRows ? Double.MAX_VALUE : 0;
+            for (int i = idx0; i < idx1; i++) {
+                double v = input.nz_values[i];
+                if( min > v ) {
+                    min = v;
+                }
+            }
+            output.nz_values[col] = min;
+            output.nz_rows[col] = 0;
+            output.col_idx[col+1] = col+1;
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>
+     * Computes the maximums of each column in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = max(i=1:m ; a<sub>ij</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output. Reshaped into a row vector. Modified.
+     * @return Vector containing the maximums of each column
+     */
+    public static DMatrixSparseCSC maxCols(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( output == null ) {
+            output = new DMatrixSparseCSC(1,input.numCols,input.numCols);
+        } else {
+            output.reshape(1,input.numCols,input.numCols);
+        }
+
+        output.col_idx[0] = 0;
+        output.nz_length = input.numCols;
+        output.indicesSorted = true;
+
+        for (int col = 0; col < input.numCols; col++) {
+            int idx0 = input.col_idx[col];
+            int idx1 = input.col_idx[col + 1];
+
+            // take in account the zeros
+            double max = idx1-idx0 == input.numRows ? -Double.MAX_VALUE : 0;
+            for (int i = idx0; i < idx1; i++) {
+                double v = input.nz_values[i];
+                if( max < v ) {
+                    max = v;
+                }
+            }
+            output.nz_values[col] = max;
+            output.nz_rows[col] = 0;
+            output.col_idx[col+1] = col+1;
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>
+     * Computes the sum of each row in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = sum(i=1:n ; a<sub>ji</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output. Reshaped into a column vector. Modified.
+     * @return Vector containing the sum of each row
+     */
+    public static DMatrixSparseCSC sumRows(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( output == null ) {
+            output = new DMatrixSparseCSC(input.numRows,1,input.numRows);
+        } else {
+            output.reshape(input.numRows,1,input.numRows);
+        }
+
+        output.col_idx[0] = 0;
+        output.col_idx[1] = input.numRows;
+        output.nz_length = input.numRows;
+        output.indicesSorted = true;
+        Arrays.fill(output.nz_values,0,input.numRows,0);
+
+        for (int col = 0; col < input.numCols; col++) {
+            int idx0 = input.col_idx[col];
+            int idx1 = input.col_idx[col + 1];
+
+            for (int i = idx0; i < idx1; i++) {
+                output.nz_values[input.nz_rows[i]] += input.nz_values[i];
+            }
+        }
+        for (int row = 0; row < input.numRows; row++) {
+            output.nz_rows[row] = row;
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>
+     * Computes the minimum of each row in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = min(i=1:n ; a<sub>ji</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output. Reshaped into a column vector. Modified.
+     * @return Vector containing the minimum of each row
+     */
+    public static DMatrixSparseCSC minRows(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( output == null ) {
+            output = new DMatrixSparseCSC(input.numRows,1,input.numRows);
+        } else {
+            output.reshape(input.numRows,1,input.numRows);
+        }
+
+        output.col_idx[0] = 0;
+        output.col_idx[1] = input.numRows;
+        output.nz_length = input.numRows;
+        output.indicesSorted = true;
+        Arrays.fill(output.nz_values,0,input.numRows,Double.MAX_VALUE);
+        // use the nz_rows to keep track of the number of non-zero elements in each row
+        Arrays.fill(output.nz_rows,0,input.numRows,0);
+
+        for (int col = 0; col < input.numCols; col++) {
+            int idx0 = input.col_idx[col];
+            int idx1 = input.col_idx[col + 1];
+
+            for (int i = idx0; i < idx1; i++) {
+                int row = input.nz_rows[i];
+                double v = input.nz_values[i];
+                if( output.nz_values[row] > v ) {
+                    output.nz_values[row] = v;
+                }
+                output.nz_rows[row]++;
+            }
+        }
+        for (int row = 0; row < input.numRows; row++) {
+            // consider the zeros now if a row wasn't filled in all the way
+            if( output.nz_rows[row] != input.numCols ) {
+                if( output.nz_values[row] > 0 ) {
+                    output.nz_values[row] = 0;
+                }
+            }
+            output.nz_rows[row] = row;
+        }
+
+        return output;
+    }
+
+
+    /**
+     * <p>
+     * Computes the maximum of each row in the input matrix and returns the results in a vector:<br>
+     * <br>
+     * b<sub>j</sub> = max(i=1:n ; a<sub>ji</sub>)
+     * </p>
+     *
+     * @param input Input matrix
+     * @param output Optional storage for output. Reshaped into a column vector. Modified.
+     * @return Vector containing the maximum of each row
+     */
+    public static DMatrixSparseCSC maxRows(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+        if( output == null ) {
+            output = new DMatrixSparseCSC(input.numRows,1,input.numRows);
+        } else {
+            output.reshape(input.numRows,1,input.numRows);
+        }
+
+        output.col_idx[0] = 0;
+        output.col_idx[1] = input.numRows;
+        output.nz_length = input.numRows;
+        output.indicesSorted = true;
+        Arrays.fill(output.nz_values,0,input.numRows,-Double.MAX_VALUE);
+        // use the nz_rows to keep track of the number of non-zero elements in each row
+        Arrays.fill(output.nz_rows,0,input.numRows,0);
+
+        for (int col = 0; col < input.numCols; col++) {
+            int idx0 = input.col_idx[col];
+            int idx1 = input.col_idx[col + 1];
+
+            for (int i = idx0; i < idx1; i++) {
+                int row = input.nz_rows[i];
+                double v = input.nz_values[i];
+                if( output.nz_values[row] < v ) {
+                    output.nz_values[row] = v;
+                }
+                output.nz_rows[row]++;
+            }
+        }
+        for (int row = 0; row < input.numRows; row++) {
+            // consider the zeros now if a row wasn't filled in all the way
+            if( output.nz_rows[row] != input.numCols ) {
+                if( output.nz_values[row] < 0 ) {
+                    output.nz_values[row] = 0;
+                }
+            }
+            output.nz_rows[row] = row;
+        }
+
+        return output;
+    }
+
+    /**
      * Zeros an inner rectangle inside the matrix.
      *
      * @param A Matrix that is to be modified.

@@ -960,6 +960,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,15,rand);
 
         DMatrixSparseCSC B = CommonOps_DSCC.extractColumn(A,2,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
 
         for (int row = 0; row < A.numRows; row++) {
             assertEquals( A.get(row,2), B.get(row,0), UtilEjml.TEST_F64);
@@ -1002,6 +1003,235 @@ public class TestCommonOps_DSCC {
                 }
             }
         }
+    }
+
+    @Test
+    public void fill() {
+        for (int i = 0; i < 10; i++) {
+            fill(1,1);
+            fill(10,1);
+            fill(1,10);
+            fill(4,7);
+        }
+    }
+
+    public void fill( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        CommonOps_DSCC.fill(A,1.2);
+
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                assertEquals(1.2,A.get(row,col), UtilEjml.TEST_F64 );
+            }
+        }
+    }
+
+    @Test
+    public void sumCols() {
+        for (int i = 0; i < 10; i++) {
+            sumCols(1,1);
+            sumCols(10,1);
+            sumCols(1,10);
+            sumCols(4,7);
+        }
+    }
+
+    public void sumCols( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.sumCols(A,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(1,B.numRows);
+        assertEquals(numCols,B.numCols);
+
+        for (int col = 0; col < numCols; col++) {
+            double sum = 0;
+            for (int row = 0; row < numRows; row++) {
+                sum += A.get(row,col);
+            }
+            assertEquals(sum,B.get(0,col), UtilEjml.TEST_F64);
+        }
+
+        // see of it properly resets the matrix
+        DMatrixSparseCSC C = B.copy();
+        B.numRows=1;B.numCols=2;
+        CommonOps_DSCC.sumCols(A,B);
+        assertTrue( MatrixFeatures_DSCC.isEquals(C,B));
+    }
+
+    @Test
+    public void minCols() {
+        for (int i = 0; i < 10; i++) {
+            minCols(1,1);
+            minCols(10,1);
+            minCols(1,10);
+            minCols(4,7);
+        }
+    }
+
+    public void minCols( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.minCols(A,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(1,B.numRows);
+        assertEquals(numCols,B.numCols);
+
+        for (int col = 0; col < numCols; col++) {
+            double min = Double.MAX_VALUE;
+            for (int row = 0; row < numRows; row++) {
+                min = Math.min(min,A.get(row,col));
+            }
+            assertEquals(min,B.get(0,col), UtilEjml.TEST_F64);
+        }
+
+        // see of it properly resets the matrix
+        DMatrixSparseCSC C = B.copy();
+        B.numRows=1;B.numCols=2;
+        CommonOps_DSCC.minCols(A,B);
+        assertTrue( MatrixFeatures_DSCC.isEquals(C,B));
+    }
+
+    @Test
+    public void maxCols() {
+        for (int i = 0; i < 10; i++) {
+            maxCols(1,1);
+            maxCols(10,1);
+            maxCols(1,10);
+            maxCols(4,7);
+        }
+    }
+
+    public void maxCols( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.maxCols(A,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(1,B.numRows);
+        assertEquals(numCols,B.numCols);
+
+        for (int col = 0; col < numCols; col++) {
+            double max = -Double.MAX_VALUE;
+            for (int row = 0; row < numRows; row++) {
+                max = Math.max(max,A.get(row,col));
+            }
+            assertEquals(max,B.get(0,col), UtilEjml.TEST_F64);
+        }
+
+        // see of it properly resets the matrix
+        DMatrixSparseCSC C = B.copy();
+        B.numRows=1;B.numCols=2;
+        CommonOps_DSCC.maxCols(A,B);
+        assertTrue( MatrixFeatures_DSCC.isEquals(C,B));
+    }
+
+    @Test
+    public void sumRows() {
+        for (int i = 0; i < 10; i++) {
+            sumRows(1,1);
+            sumRows(10,1);
+            sumRows(1,10);
+            sumRows(4,7);
+        }
+    }
+
+    public void sumRows( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.sumRows(A,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(numRows,B.numRows);
+        assertEquals(1,B.numCols);
+
+        for (int row = 0; row < numRows; row++) {
+            double sum = 0;
+            for (int col = 0; col < numCols; col++) {
+                sum += A.get(row,col);
+            }
+            assertEquals(sum,B.get(row,0), UtilEjml.TEST_F64);
+        }
+
+        // see of it properly resets the matrix
+        DMatrixSparseCSC C = B.copy();
+        B.numRows=1;B.numCols=2;
+        CommonOps_DSCC.sumRows(A,B);
+        assertTrue( MatrixFeatures_DSCC.isEquals(C,B));
+    }
+
+    @Test
+    public void minRows() {
+        for (int i = 0; i < 10; i++) {
+            minRows(1,1);
+            minRows(10,1);
+            minRows(1,10);
+            minRows(4,7);
+            minRows(7,4);
+        }
+    }
+
+    public void minRows( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.minRows(A,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(numRows,B.numRows);
+        assertEquals(1,B.numCols);
+
+        for (int row = 0; row < numRows; row++) {
+            double min = Double.MAX_VALUE;
+            for (int col = 0; col < numCols; col++) {
+                min = Math.min(min,A.get(row,col));
+            }
+            assertEquals(min,B.get(row,0), UtilEjml.TEST_F64);
+        }
+
+        // see of it properly resets the matrix
+        DMatrixSparseCSC C = B.copy();
+        B.numRows=1;B.numCols=2;
+        CommonOps_DSCC.minRows(A,B);
+        assertTrue( MatrixFeatures_DSCC.isEquals(C,B));
+    }
+
+    @Test
+    public void maxRows() {
+        for (int i = 0; i < 10; i++) {
+            maxRows(1,1);
+            maxRows(10,1);
+            maxRows(1,10);
+            maxRows(4,7);
+            maxRows(7,4);
+        }
+    }
+
+    public void maxRows( int numRows , int numCols ) {
+        int nz_total = numRows*numCols/2;
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,nz_total,rand);
+
+        DMatrixSparseCSC B = CommonOps_DSCC.maxRows(A,null);
+        assertTrue(CommonOps_DSCC.checkStructure(B));
+        assertEquals(numRows,B.numRows);
+        assertEquals(1,B.numCols);
+
+        for (int row = 0; row < numRows; row++) {
+            double max = -Double.MAX_VALUE;
+            for (int col = 0; col < numCols; col++) {
+                max = Math.max(max,A.get(row,col));
+            }
+            assertEquals(max,B.get(row,0), UtilEjml.TEST_F64);
+        }
+
+        // see of it properly resets the matrix
+        DMatrixSparseCSC C = B.copy();
+        B.numRows=1;B.numCols=2;
+        CommonOps_DSCC.maxRows(A,B);
+        assertTrue( MatrixFeatures_DSCC.isEquals(C,B));
     }
 
     @Test
