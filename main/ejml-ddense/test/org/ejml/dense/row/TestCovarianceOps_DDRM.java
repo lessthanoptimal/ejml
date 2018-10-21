@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.junit.Test;
 
@@ -28,6 +29,15 @@ import static org.junit.Assert.assertEquals;
  * @author Peter Abeles
  */
 public class TestCovarianceOps_DDRM {
+    @Test
+    public void invert_1x1() {
+        DMatrixRMaj m = new DMatrixRMaj(1,1);
+        m.set(0,0,2);
+        DMatrixRMaj n = new DMatrixRMaj(1,1);
+        CovarianceOps_DDRM.invert(m,n);
+        assertEquals(0.5,n.get(0,0), UtilEjml.TEST_F64);
+    }
+
     @Test
     public void isValid() {
         // nothing is wrong with it

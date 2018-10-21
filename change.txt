@@ -10,6 +10,8 @@ Date format: year/month/day
     Thanks Gabor Szarnyas for pointing out this issue
   * Added fully sparse solve function
   * fill(), sumCol(), minCol(), maxCol(), sumRow(), minRow(), maxRow()
+- CovarianceOps_DDRM
+  * Bug fix with 1x1 matrices. Thanks Ciamac
 - SimpleMatrix
   * Added more support for sparse and sparse-dense functions
 
