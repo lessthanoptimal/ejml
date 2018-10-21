@@ -95,7 +95,7 @@ public class CovarianceOps_DDRM {
             if( cov.numCols >= 2 )
                 UnrolledInverseFromMinor_DDRM.inv(cov,cov_inv);
             else
-                cov_inv.data[0] = 1.0/cov_inv.data[0];
+                cov_inv.data[0] = 1.0/cov.data[0];
 
         } else {
             LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(cov.numRows);
