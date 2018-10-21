@@ -1285,16 +1285,12 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the sum of each column
      */
-    public static DMatrixSparseCSC sumCols(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+    public static DMatrixRMaj sumCols(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
         if( output == null ) {
-            output = new DMatrixSparseCSC(1,input.numCols,input.numCols);
+            output = new DMatrixRMaj(1,input.numCols);
         } else {
-            output.reshape(1,input.numCols,input.numCols);
+            output.reshape(1,input.numCols);
         }
-
-        output.col_idx[0] = 0;
-        output.nz_length = input.numCols;
-        output.indicesSorted = true;
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1304,9 +1300,7 @@ public class CommonOps_DSCC {
             for (int i = idx0; i < idx1; i++) {
                 sum += input.nz_values[i];
             }
-            output.nz_values[col] = sum;
-            output.nz_rows[col] = 0;
-            output.col_idx[col+1] = col+1;
+            output.data[col] = sum;
 
         }
 
@@ -1324,16 +1318,12 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the minimums of each column
      */
-    public static DMatrixSparseCSC minCols(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+    public static DMatrixRMaj minCols(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
         if( output == null ) {
-            output = new DMatrixSparseCSC(1,input.numCols,input.numCols);
+            output = new DMatrixRMaj(1,input.numCols);
         } else {
-            output.reshape(1,input.numCols,input.numCols);
+            output.reshape(1,input.numCols);
         }
-
-        output.col_idx[0] = 0;
-        output.nz_length = input.numCols;
-        output.indicesSorted = true;
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1347,9 +1337,7 @@ public class CommonOps_DSCC {
                     min = v;
                 }
             }
-            output.nz_values[col] = min;
-            output.nz_rows[col] = 0;
-            output.col_idx[col+1] = col+1;
+            output.data[col] = min;
         }
 
         return output;
@@ -1366,16 +1354,12 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the maximums of each column
      */
-    public static DMatrixSparseCSC maxCols(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+    public static DMatrixRMaj maxCols(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
         if( output == null ) {
-            output = new DMatrixSparseCSC(1,input.numCols,input.numCols);
+            output = new DMatrixRMaj(1,input.numCols);
         } else {
-            output.reshape(1,input.numCols,input.numCols);
+            output.reshape(1,input.numCols);
         }
-
-        output.col_idx[0] = 0;
-        output.nz_length = input.numCols;
-        output.indicesSorted = true;
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1389,9 +1373,7 @@ public class CommonOps_DSCC {
                     max = v;
                 }
             }
-            output.nz_values[col] = max;
-            output.nz_rows[col] = 0;
-            output.col_idx[col+1] = col+1;
+            output.data[col] = max;
         }
 
         return output;
@@ -1408,29 +1390,22 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a column vector. Modified.
      * @return Vector containing the sum of each row
      */
-    public static DMatrixSparseCSC sumRows(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+    public static DMatrixRMaj sumRows(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
         if( output == null ) {
-            output = new DMatrixSparseCSC(input.numRows,1,input.numRows);
+            output = new DMatrixRMaj(input.numRows,1);
         } else {
-            output.reshape(input.numRows,1,input.numRows);
+            output.reshape(input.numRows,1);
         }
 
-        output.col_idx[0] = 0;
-        output.col_idx[1] = input.numRows;
-        output.nz_length = input.numRows;
-        output.indicesSorted = true;
-        Arrays.fill(output.nz_values,0,input.numRows,0);
+        Arrays.fill(output.data,0,input.numRows,0);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
             int idx1 = input.col_idx[col + 1];
 
             for (int i = idx0; i < idx1; i++) {
-                output.nz_values[input.nz_rows[i]] += input.nz_values[i];
+                output.data[input.nz_rows[i]] += input.nz_values[i];
             }
-        }
-        for (int row = 0; row < input.numRows; row++) {
-            output.nz_rows[row] = row;
         }
 
         return output;
@@ -1445,22 +1420,24 @@ public class CommonOps_DSCC {
      *
      * @param input Input matrix
      * @param output Optional storage for output. Reshaped into a column vector. Modified.
+     * @param gw work space
      * @return Vector containing the minimum of each row
      */
-    public static DMatrixSparseCSC minRows(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+    public static DMatrixRMaj minRows(DMatrixSparseCSC input , @Nullable DMatrixRMaj output , @Nullable IGrowArray gw) {
         if( output == null ) {
-            output = new DMatrixSparseCSC(input.numRows,1,input.numRows);
+            output = new DMatrixRMaj(input.numRows,1);
         } else {
-            output.reshape(input.numRows,1,input.numRows);
+            output.reshape(input.numRows,1);
+        }
+        if( gw == null )
+            gw = new IGrowArray(input.numRows);
+        else {
+            gw.reshape(input.numRows);
+            Arrays.fill(gw.data,0,input.numRows,0);
         }
 
-        output.col_idx[0] = 0;
-        output.col_idx[1] = input.numRows;
-        output.nz_length = input.numRows;
-        output.indicesSorted = true;
-        Arrays.fill(output.nz_values,0,input.numRows,Double.MAX_VALUE);
-        // use the nz_rows to keep track of the number of non-zero elements in each row
-        Arrays.fill(output.nz_rows,0,input.numRows,0);
+        Arrays.fill(output.data,0,input.numRows,Double.MAX_VALUE);
+        Arrays.fill(gw.data,0,input.numRows,0);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1469,20 +1446,19 @@ public class CommonOps_DSCC {
             for (int i = idx0; i < idx1; i++) {
                 int row = input.nz_rows[i];
                 double v = input.nz_values[i];
-                if( output.nz_values[row] > v ) {
-                    output.nz_values[row] = v;
+                if( output.data[row] > v ) {
+                    output.data[row] = v;
                 }
-                output.nz_rows[row]++;
+                gw.data[row]++;
             }
         }
         for (int row = 0; row < input.numRows; row++) {
             // consider the zeros now if a row wasn't filled in all the way
-            if( output.nz_rows[row] != input.numCols ) {
-                if( output.nz_values[row] > 0 ) {
-                    output.nz_values[row] = 0;
+            if( gw.data[row] != input.numCols ) {
+                if( output.data[row] > 0 ) {
+                    output.data[row] = 0;
                 }
             }
-            output.nz_rows[row] = row;
         }
 
         return output;
@@ -1498,22 +1474,23 @@ public class CommonOps_DSCC {
      *
      * @param input Input matrix
      * @param output Optional storage for output. Reshaped into a column vector. Modified.
+     * @param gw work space
      * @return Vector containing the maximum of each row
      */
-    public static DMatrixSparseCSC maxRows(DMatrixSparseCSC input , DMatrixSparseCSC output ) {
+    public static DMatrixRMaj maxRows(DMatrixSparseCSC input , @Nullable DMatrixRMaj output , @Nullable IGrowArray gw) {
         if( output == null ) {
-            output = new DMatrixSparseCSC(input.numRows,1,input.numRows);
+            output = new DMatrixRMaj(input.numRows,1);
         } else {
-            output.reshape(input.numRows,1,input.numRows);
+            output.reshape(input.numRows,1);
         }
 
-        output.col_idx[0] = 0;
-        output.col_idx[1] = input.numRows;
-        output.nz_length = input.numRows;
-        output.indicesSorted = true;
-        Arrays.fill(output.nz_values,0,input.numRows,-Double.MAX_VALUE);
-        // use the nz_rows to keep track of the number of non-zero elements in each row
-        Arrays.fill(output.nz_rows,0,input.numRows,0);
+        if( gw == null )
+            gw = new IGrowArray(input.numRows);
+        else {
+            gw.reshape(input.numRows);
+            Arrays.fill(gw.data,0,input.numRows,0);
+        }
+        Arrays.fill(output.data,0,input.numRows,-Double.MAX_VALUE);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1522,20 +1499,19 @@ public class CommonOps_DSCC {
             for (int i = idx0; i < idx1; i++) {
                 int row = input.nz_rows[i];
                 double v = input.nz_values[i];
-                if( output.nz_values[row] < v ) {
-                    output.nz_values[row] = v;
+                if( output.data[row] < v ) {
+                    output.data[row] = v;
                 }
-                output.nz_rows[row]++;
+                gw.data[row]++;
             }
         }
         for (int row = 0; row < input.numRows; row++) {
             // consider the zeros now if a row wasn't filled in all the way
-            if( output.nz_rows[row] != input.numCols ) {
-                if( output.nz_values[row] < 0 ) {
-                    output.nz_values[row] = 0;
+            if( gw.data[row] != input.numCols ) {
+                if( output.data[row] < 0 ) {
+                    output.data[row] = 0;
                 }
             }
-            output.nz_rows[row] = row;
         }
 
         return output;
