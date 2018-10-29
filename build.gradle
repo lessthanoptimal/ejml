@@ -234,7 +234,8 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3'
+    distributionType = Wrapper.DistributionType.BIN
+    gradleVersion = '4.10.2'
 }
 
 project(':main:ejml-core').compileJava.dependsOn(createVersionFile)
