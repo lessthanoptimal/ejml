@@ -70,6 +70,8 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 invert(dimension);
                 det(dimension);
             }
+            cholL(dimension);
+            cholU(dimension);
             trace(dimension);
             diag(dimension);
             elementMax(dimension);
@@ -110,7 +112,9 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
 
         setClassNames(dimen);
 
-        out.print("import org.ejml.data."+nameVector+";\n" +
+        out.print(
+                "import org.ejml.UtilEjml;\n" +
+                "import org.ejml.data."+nameVector+";\n" +
                 "import org.ejml.data."+nameMatrix+";\n" +
                 "\n" +
                 "/**\n" +
@@ -783,49 +787,74 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
         out.print("    }\n\n");
     }
 
-    private void chol( int dimen ){
+    private void cholL(int N ){
         out.print("    /**\n" +
-                "     * Performs a lower Cholesky decomposition of matrix 'a'. Scaling is applied to improve\n" +
-                "     * stability against overflow and underflow.\n" +
+                "     * Performs a lower Cholesky decomposition of matrix 'A' and stores result in A.\n" +
                 "     *\n" +
-                "     * @param A Input matrix. Not modified.\n" +
-                "     * @param L Inverted output matrix.  Modified.\n" +
+                "     * @param A (Input) SPD Matrix. (Output) lower cholesky.\n"+
                 "     * @return true if it was successful or false if it failed.  Not always reliable.\n" +
                 "     */\n" +
-                "    public static boolean chol( "+nameMatrix+" A , "+nameMatrix+" L ) {\n" +
-                "\n" +
-                "        double scale = 1.0/elementMaxAbs(A);\n" +
+                "    public static boolean cholL( "+nameMatrix+" A ) {\n" +
                 "\n");
 
-        int matrix[] = new int[dimen*dimen];
-        int index = 0;
-        for (int y = 1; y <= dimen; y++) {
-            for (int x = y; x <= dimen; x++, index++) {
-                matrix[index] = index;
-                String coor = y + "" + x;
-                out.print("        double a" + coor + " = a.a" + coor + "*scale;\n");
+        for( int i = 1; i <= N; i++ ) {
+            for( int j = 1; j <= N; j++ ) {
+                if( j > i ) {
+                    out.print("        A."+el(i,j)+" = 0;\n");
+                } else if( i == j ) {
+                    out.print("        A."+el(i,i)+" = Math.sqrt(A."+el(i,i));
+                    for (int k = 1; k < j; k++) {
+                        out.print("-A."+el(i,k)+"*A."+el(i,k));
+                    }
+                    out.println(");");
+                } else {
+                    out.print("        A." + el(i,j) + " = (A."+el(i,j));
+                    for (int k = 1; k < j; k++) {
+                        out.print("-A."+el(i,k)+"*A."+el(j,k));
+                    }
+                    out.println(")/A."+el(j,j)+";");
+                }
             }
         }
-        out.println();
-
-        try {
-            GenerateInverseFromMinor gen = new GenerateInverseFromMinor(false);
-            gen.printMinors(matrix, dimen, out);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        out.println();
-
-        for (int y = 1; y <= dimen; y++) {
-            for( int x = 1; x <= dimen; x++ ) {
-                String coor0 = y+""+x;
-                String coor1 = x+""+y;
-                out.print("        inv.a"+coor0+" = m"+coor1+"/det;\n");
-            }
-        }
-        out.println();
-        out.print("        return !Double.isNaN(det) && !Double.isInfinite(det);\n");
+        out.println("        return !UtilEjml.isUncountable(A."+el(N,N)+");");
         out.print("    }\n\n");
+    }
+
+    private void cholU(int N ){
+        out.print("    /**\n" +
+                "     * Performs an upper Cholesky decomposition of matrix 'A' and stores result in A.\n" +
+                "     *\n" +
+                "     * @param A (Input) SPD Matrix. (Output) upper cholesky.\n"+
+                "     * @return true if it was successful or false if it failed.  Not always reliable.\n" +
+                "     */\n" +
+                "    public static boolean cholU( "+nameMatrix+" A ) {\n" +
+                "\n");
+
+        for( int j = 1; j <= N; j++ ) {
+            for( int i = 1; i <= N; i++ ) {
+                if( j < i ) {
+                    out.println("        A." + el(i,j) + " = 0;");
+                } else if( i == j ) {
+                    out.print("        A." + el(i,i) + " = Math.sqrt(A."+el(i,i));
+                    for (int k = 1; k < i; k++) {
+                        out.print("-A."+el(k,i)+"*A."+el(k,i));
+                    }
+                    out.println(");");
+                } else {
+                    out.print("        A." + el(i,j)+ " = (A."+el(i,j));
+                    for (int k = 1; k < i; k++) {
+                        out.print("-A."+el(k,i)+"*A."+el(k,j));
+                    }
+                    out.println(")/A."+el(i,i)+";");
+                }
+            }
+        }
+        out.println("        return !UtilEjml.isUncountable(A."+el(N,N)+");");
+        out.print("    }\n\n");
+    }
+
+    private static String el( int row , int col ) {
+        return "a"+row+""+col;
     }
 
     private void trace(int dimen) {

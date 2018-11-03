@@ -18,6 +18,7 @@
 
 package org.ejml.dense.fixed;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix5;
 import org.ejml.data.DMatrix5x5;
 
@@ -1240,6 +1241,78 @@ public class CommonOps_DDF5 {
         ret += mat.a15 * ( + a11*( + a22*(a33*a44 - a34*a43) - a23*(a32*a44 - a34*a42) + a24*(a32*a43 - a33*a42)) - a12*( + a21*(a33*a44 - a34*a43) - a23*(a31*a44 - a34*a41) + a24*(a31*a43 - a33*a41)) + a13*( + a21*(a32*a44 - a34*a42) - a22*(a31*a44 - a34*a41) + a24*(a31*a42 - a32*a41)) - a14*( + a21*(a32*a43 - a33*a42) - a22*(a31*a43 - a33*a41) + a23*(a31*a42 - a32*a41)));
 
         return ret;
+    }
+
+    /**
+     * Performs a lower Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) lower cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholL( DMatrix5x5 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a12 = 0;
+        A.a13 = 0;
+        A.a14 = 0;
+        A.a15 = 0;
+        A.a21 = (A.a21)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a21*A.a21);
+        A.a23 = 0;
+        A.a24 = 0;
+        A.a25 = 0;
+        A.a31 = (A.a31)/A.a11;
+        A.a32 = (A.a32-A.a31*A.a21)/A.a22;
+        A.a33 = Math.sqrt(A.a33-A.a31*A.a31-A.a32*A.a32);
+        A.a34 = 0;
+        A.a35 = 0;
+        A.a41 = (A.a41)/A.a11;
+        A.a42 = (A.a42-A.a41*A.a21)/A.a22;
+        A.a43 = (A.a43-A.a41*A.a31-A.a42*A.a32)/A.a33;
+        A.a44 = Math.sqrt(A.a44-A.a41*A.a41-A.a42*A.a42-A.a43*A.a43);
+        A.a45 = 0;
+        A.a51 = (A.a51)/A.a11;
+        A.a52 = (A.a52-A.a51*A.a21)/A.a22;
+        A.a53 = (A.a53-A.a51*A.a31-A.a52*A.a32)/A.a33;
+        A.a54 = (A.a54-A.a51*A.a41-A.a52*A.a42-A.a53*A.a43)/A.a44;
+        A.a55 = Math.sqrt(A.a55-A.a51*A.a51-A.a52*A.a52-A.a53*A.a53-A.a54*A.a54);
+        return !UtilEjml.isUncountable(A.a55);
+    }
+
+    /**
+     * Performs an upper Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) upper cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholU( DMatrix5x5 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a21 = 0;
+        A.a31 = 0;
+        A.a41 = 0;
+        A.a51 = 0;
+        A.a12 = (A.a12)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a12*A.a12);
+        A.a32 = 0;
+        A.a42 = 0;
+        A.a52 = 0;
+        A.a13 = (A.a13)/A.a11;
+        A.a23 = (A.a23-A.a12*A.a13)/A.a22;
+        A.a33 = Math.sqrt(A.a33-A.a13*A.a13-A.a23*A.a23);
+        A.a43 = 0;
+        A.a53 = 0;
+        A.a14 = (A.a14)/A.a11;
+        A.a24 = (A.a24-A.a12*A.a14)/A.a22;
+        A.a34 = (A.a34-A.a13*A.a14-A.a23*A.a24)/A.a33;
+        A.a44 = Math.sqrt(A.a44-A.a14*A.a14-A.a24*A.a24-A.a34*A.a34);
+        A.a54 = 0;
+        A.a15 = (A.a15)/A.a11;
+        A.a25 = (A.a25-A.a12*A.a15)/A.a22;
+        A.a35 = (A.a35-A.a13*A.a15-A.a23*A.a25)/A.a33;
+        A.a45 = (A.a45-A.a14*A.a15-A.a24*A.a25-A.a34*A.a35)/A.a44;
+        A.a55 = Math.sqrt(A.a55-A.a15*A.a15-A.a25*A.a25-A.a35*A.a35-A.a45*A.a45);
+        return !UtilEjml.isUncountable(A.a55);
     }
 
     /**

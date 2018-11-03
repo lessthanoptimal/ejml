@@ -18,6 +18,7 @@
 
 package org.ejml.dense.fixed;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix2;
 import org.ejml.data.DMatrix2x2;
 
@@ -645,6 +646,36 @@ public class CommonOps_DDF2 {
     public static double det( DMatrix2x2 mat ) {
 
         return mat.a11*mat.a22 - mat.a12*mat.a21;
+    }
+
+    /**
+     * Performs a lower Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) lower cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholL( DMatrix2x2 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a12 = 0;
+        A.a21 = (A.a21)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a21*A.a21);
+        return !UtilEjml.isUncountable(A.a22);
+    }
+
+    /**
+     * Performs an upper Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) upper cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholU( DMatrix2x2 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a21 = 0;
+        A.a12 = (A.a12)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a12*A.a12);
+        return !UtilEjml.isUncountable(A.a22);
     }
 
     /**

@@ -22,15 +22,20 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixFixed;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
+import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.MatrixFeatures_D;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Abeles
@@ -50,7 +55,61 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
         if( N > UtilEjml.maxInverseSize ) {
             numExpected -= 2;
         }
-        compareToCommonOps(numExpected,2);
+        compareToCommonOps(numExpected,4);
+    }
+
+    @Test
+    public void cholesky_lower() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        CholeskyDecomposition_F64<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(true);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(N, rand);
+
+        assertTrue(chol.decompose(A.copy()));
+        DMatrixRMaj expected = chol.getT(null);
+
+        Method[] methods = classFixed.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            if( !methods[i].getName().equals("cholL"))
+                continue;
+            Class<?> parameters[] = methods[i].getParameterTypes();
+            DMatrixFixed _A = (DMatrixFixed)parameters[0].newInstance();
+
+            ConvertDMatrixStruct.convert(A,_A);
+            Object[] inputsFixed = new Object[1];
+            inputsFixed[0] = _A;
+
+            methods[i].invoke(null,inputsFixed);
+            ConvertDMatrixStruct.convert(_A,A);
+            assertTrue(MatrixFeatures_DDRM.isIdentical(expected,A, UtilEjml.TEST_F64 ));
+            return;
+        }
+        fail("No match found");
+    }
+
+    @Test
+    public void cholesky_upper() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        CholeskyDecomposition_F64<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(false);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(N, rand);
+
+        assertTrue(chol.decompose(A.copy()));
+        DMatrixRMaj expected = chol.getT(null);
+
+        Method[] methods = classFixed.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            if( !methods[i].getName().equals("cholU"))
+                continue;
+            Class<?> parameters[] = methods[i].getParameterTypes();
+            DMatrixFixed _A = (DMatrixFixed)parameters[0].newInstance();
+
+            ConvertDMatrixStruct.convert(A,_A);
+            Object[] inputsFixed = new Object[1];
+            inputsFixed[0] = _A;
+
+            methods[i].invoke(null,inputsFixed);
+            ConvertDMatrixStruct.convert(_A,A);
+            assertTrue(MatrixFeatures_DDRM.isIdentical(expected,A, UtilEjml.TEST_F64 ));
+            return;
+        }
+        fail("No match found");
     }
 
     @Test

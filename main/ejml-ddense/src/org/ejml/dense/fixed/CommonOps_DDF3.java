@@ -18,6 +18,7 @@
 
 package org.ejml.dense.fixed;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
 
@@ -783,6 +784,46 @@ public class CommonOps_DDF3 {
         double c = mat.a13*(mat.a21*mat.a32 - mat.a31*mat.a22);
 
         return a-b+c;
+    }
+
+    /**
+     * Performs a lower Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) lower cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholL( DMatrix3x3 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a12 = 0;
+        A.a13 = 0;
+        A.a21 = (A.a21)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a21*A.a21);
+        A.a23 = 0;
+        A.a31 = (A.a31)/A.a11;
+        A.a32 = (A.a32-A.a31*A.a21)/A.a22;
+        A.a33 = Math.sqrt(A.a33-A.a31*A.a31-A.a32*A.a32);
+        return !UtilEjml.isUncountable(A.a33);
+    }
+
+    /**
+     * Performs an upper Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) upper cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholU( DMatrix3x3 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a21 = 0;
+        A.a31 = 0;
+        A.a12 = (A.a12)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a12*A.a12);
+        A.a32 = 0;
+        A.a13 = (A.a13)/A.a11;
+        A.a23 = (A.a23-A.a12*A.a13)/A.a22;
+        A.a33 = Math.sqrt(A.a33-A.a13*A.a13-A.a23*A.a23);
+        return !UtilEjml.isUncountable(A.a33);
     }
 
     /**

@@ -18,6 +18,7 @@
 
 package org.ejml.dense.fixed;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrix4x4;
 
@@ -989,6 +990,60 @@ public class CommonOps_DDF4 {
         ret -= mat.a14 * ( + a11*(a22*a33 - a23*a32) - a12*(a21*a33 - a23*a31) + a13*(a21*a32 - a22*a31));
 
         return ret;
+    }
+
+    /**
+     * Performs a lower Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) lower cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholL( DMatrix4x4 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a12 = 0;
+        A.a13 = 0;
+        A.a14 = 0;
+        A.a21 = (A.a21)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a21*A.a21);
+        A.a23 = 0;
+        A.a24 = 0;
+        A.a31 = (A.a31)/A.a11;
+        A.a32 = (A.a32-A.a31*A.a21)/A.a22;
+        A.a33 = Math.sqrt(A.a33-A.a31*A.a31-A.a32*A.a32);
+        A.a34 = 0;
+        A.a41 = (A.a41)/A.a11;
+        A.a42 = (A.a42-A.a41*A.a21)/A.a22;
+        A.a43 = (A.a43-A.a41*A.a31-A.a42*A.a32)/A.a33;
+        A.a44 = Math.sqrt(A.a44-A.a41*A.a41-A.a42*A.a42-A.a43*A.a43);
+        return !UtilEjml.isUncountable(A.a44);
+    }
+
+    /**
+     * Performs an upper Cholesky decomposition of matrix 'A' and stores result in A.
+     *
+     * @param A (Input) SPD Matrix. (Output) upper cholesky.
+     * @return true if it was successful or false if it failed.  Not always reliable.
+     */
+    public static boolean cholU( DMatrix4x4 A ) {
+
+        A.a11 = Math.sqrt(A.a11);
+        A.a21 = 0;
+        A.a31 = 0;
+        A.a41 = 0;
+        A.a12 = (A.a12)/A.a11;
+        A.a22 = Math.sqrt(A.a22-A.a12*A.a12);
+        A.a32 = 0;
+        A.a42 = 0;
+        A.a13 = (A.a13)/A.a11;
+        A.a23 = (A.a23-A.a12*A.a13)/A.a22;
+        A.a33 = Math.sqrt(A.a33-A.a13*A.a13-A.a23*A.a23);
+        A.a43 = 0;
+        A.a14 = (A.a14)/A.a11;
+        A.a24 = (A.a24-A.a12*A.a14)/A.a22;
+        A.a34 = (A.a34-A.a13*A.a14-A.a23*A.a24)/A.a33;
+        A.a44 = Math.sqrt(A.a44-A.a14*A.a14-A.a24*A.a24-A.a34*A.a34);
+        return !UtilEjml.isUncountable(A.a44);
     }
 
     /**
