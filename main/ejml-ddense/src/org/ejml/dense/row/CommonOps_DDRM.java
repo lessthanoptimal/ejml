@@ -1305,6 +1305,35 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * Removes columns from the matrix.
+     *
+     * @param A Matrix. Modified
+     * @param col0 First column
+     * @param col1 Last column, inclusive.
+     */
+    public static void removeColumns( DMatrixRMaj A , int col0 , int col1 )
+    {
+        if( col1 < col0 ) {
+            throw new IllegalArgumentException("col1 must be >= col0");
+        } else if( col0 >= A.numCols || col1 >= A.numCols ) {
+            throw new IllegalArgumentException("Columns which are to be removed must be in bounds");
+        }
+
+        int step = col1-col0+1;
+        int offset = 0;
+        for (int row = 0, idx=0; row < A.numRows; row++) {
+            for (int i = 0; i < col0; i++,idx++) {
+                A.data[idx] = A.data[idx+offset];
+            }
+            offset += step;
+            for (int i = col1+1; i < A.numCols; i++,idx++) {
+                A.data[idx] = A.data[idx+offset];
+            }
+        }
+        A.numCols -= step;
+    }
+
+    /**
      * Inserts matrix 'src' into matrix 'dest' with the (0,0) of src at (row,col) in dest.
      * This is equivalent to calling extract(src,0,src.numRows,0,src.numCols,dest,destY0,destX0).
      *

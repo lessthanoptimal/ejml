@@ -821,6 +821,27 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
+    public void removeColumns() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,6, 0, 1, rand);
+
+        DMatrixRMaj B = A.copy();
+        CommonOps_DDRM.removeColumns(B,3,4);
+
+        assertEquals(B.numRows, A.numRows);
+        assertEquals(B.numCols, A.numCols-2);
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++) {
+                if( col < 3 ){
+                    assertEquals(A.get(row,col), B.get(row,col), UtilEjml.TEST_F64);
+                } else if( col > 4 ) {
+                    assertEquals(A.get(row,col), B.get(row,col-2), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
+
+    @Test
     public void insert() {
         DMatrixRMaj A = new DMatrixRMaj(5,5);
         for( int i = 0; i < A.numRows; i++ ) {

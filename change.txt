@@ -16,6 +16,7 @@ Date format: year/month/day
   * Added more support for sparse and sparse-dense functions
 - CommonOps_DDRM
   * invertSPD()
+  * removeColumns()
 - Created
   * UnrolledCholesky
 
