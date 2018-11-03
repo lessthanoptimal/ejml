@@ -14,6 +14,10 @@ Date format: year/month/day
   * Bug fix with 1x1 matrices. Thanks Ciamac
 - SimpleMatrix
   * Added more support for sparse and sparse-dense functions
+- CommonOps_DDRM
+  * invertSPD()
+- Created
+  * UnrolledCholesky
 
 ----- Version 0.36
 2018/09/29

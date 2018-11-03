@@ -145,6 +145,51 @@ public class SpecializedOps_DDRM {
     }
 
     /**
+     * Performs L = L*L<sup>T</sup>
+     */
+    public static void multLowerTranB( DMatrixRMaj mat ) {
+        int m = mat.numCols;
+        double[] L = mat.data;
+        for( int i = 0; i < m; i++ ) {
+            for( int j = m-1; j >= i; j-- ) {
+                double val = 0;
+                for( int k = 0; k <= i; k++ ) {
+                    val += L[ i*m + k] * L[ j*m + k ];
+                }
+                L[ i*m + j ] = val;
+            }
+        }
+        // copy the results into the lower portion
+        for( int i = 0; i < m; i++ ) {
+            for (int j = 0; j < i; j++) {
+                L[i*m+j] = L[j*m+i];
+            }
+        }
+    }
+    /**
+     * Performs L = L<sup>T</sup>*L
+     */
+    public static void multLowerTranA( DMatrixRMaj mat ) {
+        int m = mat.numCols;
+        double[] L = mat.data;
+        for( int i = 0; i < m; i++ ) {
+            for( int j = m-1; j >= i; j-- ) {
+                double val = 0;
+                for (int k = j; k < m; k++) {
+                    val += L[ k*m + i] * L[ k*m + j ];
+                }
+                L[ i*m + j ] = val;
+            }
+        }
+        // copy the results into the lower portion
+        for( int i = 0; i < m; i++ ) {
+            for (int j = 0; j < i; j++) {
+                L[i*m+j] = L[j*m+i];
+            }
+        }
+    }
+
+    /**
      * <p>
      * Computes the F norm of the difference between the two Matrices:<br>
      * <br>

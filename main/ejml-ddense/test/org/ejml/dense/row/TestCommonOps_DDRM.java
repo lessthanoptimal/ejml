@@ -504,6 +504,21 @@ public class TestCommonOps_DDRM {
         }
     }
 
+    @Test
+    public void invertSPD() {
+        for( int i = 1; i <= 20; i++ ) {
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(i,rand);
+
+            DMatrixRMaj invA = A.createLike();
+
+            CommonOps_DDRM.invertSPD(A,invA);
+
+            DMatrixRMaj I = A.createLike();
+            CommonOps_DDRM.multTransB(A,invA,I);
+            assertTrue(MatrixFeatures_DDRM.isIdentity(I, UtilEjml.TEST_F64));
+        }
+    }
+
     /**
      * Checked against by computing a solution to the linear system then
      * seeing if the solution produces the expected output

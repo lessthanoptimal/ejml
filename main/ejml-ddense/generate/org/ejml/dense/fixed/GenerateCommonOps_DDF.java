@@ -781,7 +781,51 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
         out.println();
         out.print("        return !Double.isNaN(det) && !Double.isInfinite(det);\n");
         out.print("    }\n\n");
+    }
 
+    private void chol( int dimen ){
+        out.print("    /**\n" +
+                "     * Performs a lower Cholesky decomposition of matrix 'a'. Scaling is applied to improve\n" +
+                "     * stability against overflow and underflow.\n" +
+                "     *\n" +
+                "     * @param A Input matrix. Not modified.\n" +
+                "     * @param L Inverted output matrix.  Modified.\n" +
+                "     * @return true if it was successful or false if it failed.  Not always reliable.\n" +
+                "     */\n" +
+                "    public static boolean chol( "+nameMatrix+" A , "+nameMatrix+" L ) {\n" +
+                "\n" +
+                "        double scale = 1.0/elementMaxAbs(A);\n" +
+                "\n");
+
+        int matrix[] = new int[dimen*dimen];
+        int index = 0;
+        for (int y = 1; y <= dimen; y++) {
+            for (int x = y; x <= dimen; x++, index++) {
+                matrix[index] = index;
+                String coor = y + "" + x;
+                out.print("        double a" + coor + " = a.a" + coor + "*scale;\n");
+            }
+        }
+        out.println();
+
+        try {
+            GenerateInverseFromMinor gen = new GenerateInverseFromMinor(false);
+            gen.printMinors(matrix, dimen, out);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        out.println();
+
+        for (int y = 1; y <= dimen; y++) {
+            for( int x = 1; x <= dimen; x++ ) {
+                String coor0 = y+""+x;
+                String coor1 = x+""+y;
+                out.print("        inv.a"+coor0+" = m"+coor1+"/det;\n");
+            }
+        }
+        out.println();
+        out.print("        return !Double.isNaN(det) && !Double.isInfinite(det);\n");
+        out.print("    }\n\n");
     }
 
     private void trace(int dimen) {

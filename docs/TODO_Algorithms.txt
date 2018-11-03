@@ -6,7 +6,6 @@
 
 -------------------
 
-- Add to CommonOps invertSPD()
 - Unroll symmetric inverse by minor
 - Unroll multiplication for square matrices
 - Make QrUpdate more friendly and accessible

@@ -23,6 +23,7 @@ import org.ejml.LinearSolverSafe;
 import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
+import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.linsol.lu.LinearSolverLu_DDRM;
@@ -746,6 +747,43 @@ public class CommonOps_DDRM {
                 return false;
             solver.invert(result);
         }
+        return true;
+    }
+
+    /**
+     * Matrix inverse for symmetric positive definite matrices. For small matrices an unrolled
+     * cholesky is used. Otherwise a standard decomposition.
+     *
+     * @see UnrolledCholesky_DDRM
+     * @see LinearSolverFactory_DDRM#chol(int)
+     *
+     * @param mat (Input) SPD matrix
+     * @param result (Output) Inverted matrix.
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean invertSPD(DMatrixRMaj mat, DMatrixRMaj result ) {
+        if( mat.numRows != mat.numCols )
+            throw new IllegalArgumentException("Must be a square matrix");
+        result.reshape(mat.numRows,mat.numRows);
+
+        if( mat.numRows <= UnrolledCholesky_DDRM.MAX ) {
+            // L*L' = A
+            if( !UnrolledCholesky_DDRM.lower(mat,result) )
+                return false;
+            // L = inv(L)
+            TriangularSolver_DDRM.invertLower(result.data,result.numCols);
+            // inv(A) = inv(L)*inv(L')
+            SpecializedOps_DDRM.multLowerTranA(result);
+        } else {
+            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.chol(mat.numCols);
+            if( solver.modifiesA() )
+                mat = mat.copy();
+
+            if( !solver.setA(mat))
+                return false;
+            solver.invert(result);
+        }
+
         return true;
     }
 

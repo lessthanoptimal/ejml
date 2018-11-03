@@ -111,6 +111,36 @@ public class TestSpecializedOps_DDRM {
     }
 
     @Test
+    public void multLowerTranB() {
+        for( int m = 1; m <= 10; m++ ) {
+            DMatrixRMaj L = RandomMatrices_DDRM.triangularUpper(m,0,-1,1,rand);
+            CommonOps_DDRM.transpose(L);
+
+            DMatrixRMaj expected = new DMatrixRMaj(m,m);
+            CommonOps_DDRM.multTransB(L,L,expected);
+
+            SpecializedOps_DDRM.multLowerTranB(L);
+
+            assertTrue(MatrixFeatures_DDRM.isIdentical(expected,L,UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
+    public void multLowerTranA() {
+        for( int m = 1; m <= 10; m++ ) {
+            DMatrixRMaj L = RandomMatrices_DDRM.triangularUpper(m,0,-1,1,rand);
+            CommonOps_DDRM.transpose(L);
+
+            DMatrixRMaj expected = new DMatrixRMaj(m,m);
+            CommonOps_DDRM.multTransA(L,L,expected);
+
+            SpecializedOps_DDRM.multLowerTranA(L);
+
+            assertTrue(MatrixFeatures_DDRM.isIdentical(expected,L,UtilEjml.TEST_F64));
+        }
+    }
+
+    @Test
     public void diffNormF() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(3,2,rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(3,2,rand);
