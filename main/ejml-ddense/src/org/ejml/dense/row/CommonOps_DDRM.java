@@ -26,6 +26,7 @@ import org.ejml.data.*;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
+import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
 import org.ejml.dense.row.linsol.lu.LinearSolverLu_DDRM;
 import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_DDRM;
 import org.ejml.dense.row.misc.*;
@@ -536,6 +537,8 @@ public class CommonOps_DDRM {
      */
     public static boolean solve(DMatrixRMaj a , DMatrixRMaj b , DMatrixRMaj x )
     {
+        x.reshape(a.numCols,b.numCols);
+
         LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.general(a.numRows,a.numCols);
 
         // make sure the inputs 'a' and 'b' are not modified
@@ -545,6 +548,57 @@ public class CommonOps_DDRM {
             return false;
 
         solver.solve(b, x);
+        return true;
+    }
+
+    /**
+     * <p>
+     * Linear solver for systems which are symmetric positive definite.<br>
+     * A*x = b
+     * </p>
+     *
+     * @see UnrolledCholesky_DDRM
+     * @see LinearSolverFactory_DDRM
+     *
+     * @param A A matrix that is n by n and SPD. Not modified.
+     * @param b A matrix that is n by k. Not modified.
+     * @param x A matrix that is n by k. Modified.
+     * @return true if it could invert the matrix false if it could not.
+     */
+    public static boolean solveSPD( DMatrixRMaj A , DMatrixRMaj b , DMatrixRMaj x )
+    {
+        if( A.numRows != A.numCols )
+            throw new IllegalArgumentException("Must be a square matrix");
+
+        x.reshape(A.numCols,b.numCols);
+
+        if( A.numRows <= UnrolledCholesky_DDRM.MAX ) {
+            DMatrixRMaj L = A.createLike();
+
+            // L*L' = A
+            if( !UnrolledCholesky_DDRM.lower(A,L) )
+                return false;
+
+            // if only one column then a faster method can be used
+            if( x.numCols == 1 ) {
+                x.set(b);
+                TriangularSolver_DDRM.solveL(L.data,x.data,L.numCols);
+                TriangularSolver_DDRM.solveTranL(L.data,x.data,L.numCols);
+            } else {
+                double vv[] = new double[A.numCols];
+                LinearSolverChol_DDRM.solveLower(L, b, x, vv);
+            }
+        } else {
+            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.chol(A.numCols);
+            solver = new LinearSolverSafe<>(solver);
+
+            if( !solver.setA(A) )
+                return false;
+
+            solver.solve(b, x);
+            return true;
+        }
+
         return true;
     }
 
@@ -772,7 +826,7 @@ public class CommonOps_DDRM {
                 return false;
             // L = inv(L)
             TriangularSolver_DDRM.invertLower(result.data,result.numCols);
-            // inv(A) = inv(L)*inv(L')
+            // inv(A) = inv(L')*inv(L)
             SpecializedOps_DDRM.multLowerTranA(result);
         } else {
             LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.chol(mat.numCols);

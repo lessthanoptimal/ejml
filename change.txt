@@ -15,7 +15,7 @@ Date format: year/month/day
 - SimpleMatrix
   * Added more support for sparse and sparse-dense functions
 - CommonOps_DDRM
-  * invertSPD()
+  * invertSPD(), solveSPD()
   * removeColumns()
 - Created
   * UnrolledCholesky

@@ -439,6 +439,26 @@ public class TestCommonOps_DDRM {
     }
 
     @Test
+    public void solveSPD() {
+        for( int N = 1; N <= 20; N++ ) {
+            DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(N,rand);
+
+            for (int j = 1; j <= 2; j++) {
+//                System.out.println(N+" "+j);
+                DMatrixRMaj X = RandomMatrices_DDRM.rectangle(N,j,rand);
+                DMatrixRMaj B = X.createLike();
+                CommonOps_DDRM.mult(A,X,B);
+
+                DMatrixRMaj found = X.createLike();
+
+                assertTrue(CommonOps_DDRM.solveSPD(A,B,found));
+
+                assertTrue(MatrixFeatures_DDRM.isIdentical(X,found, UtilEjml.TEST_F64));
+            }
+        }
+    }
+
+    @Test
     public void transpose_inplace() {
         DMatrixRMaj mat = new DMatrixRMaj(3,3, true, 0, 1, 2, 3, 4, 5, 6, 7, 8);
         DMatrixRMaj matTran = new DMatrixRMaj(3,3);

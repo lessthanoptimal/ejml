@@ -84,31 +84,25 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
         }
         X.reshape(n,B.numCols);
 
-        int numCols = B.numCols;
-
-        double dataB[] = B.data;
-        double dataX[] = X.data;
-
         if(decomposer.isLower()) {
-            for( int j = 0; j < numCols; j++ ) {
-                for( int i = 0; i < n; i++ ) vv[i] = dataB[i*numCols+j];
-                solveInternalL();
-                for( int i = 0; i < n; i++ ) dataX[i*numCols+j] = vv[i];
-            }
+            solveLower(A,B,X,vv);
         } else {
             throw new RuntimeException("Implement");
         }
     }
 
-    /**
-     * Used internally to find the solution to a single column vector.
-     */
-    private void solveInternalL() {
-        // solve L*y=b storing y in x
-        TriangularSolver_DDRM.solveL(t,vv,n);
+    public static void solveLower(DMatrixRMaj L , DMatrixRMaj B , DMatrixRMaj X , double vv[] ) {
+        final int numCols = B.numCols;
+        final int N = L.numCols;
+        for( int j = 0; j < numCols; j++ ) {
+            for( int i = 0; i < N; i++ ) vv[i] = B.data[i*numCols+j];
+            // solve L*y=b storing y in x
+            TriangularSolver_DDRM.solveL(L.data,vv,N);
 
-        // solve L^T*x=y
-        TriangularSolver_DDRM.solveTranL(t,vv,n);
+            // solve L^T*x=y
+            TriangularSolver_DDRM.solveTranL(L.data,vv,N);
+            for( int i = 0; i < N; i++ ) X.data[i*numCols+j] = vv[i];
+        }
     }
 
     /**
