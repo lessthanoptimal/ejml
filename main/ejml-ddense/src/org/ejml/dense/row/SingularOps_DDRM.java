@@ -656,4 +656,32 @@ public class SingularOps_DDRM {
         }
         return ret + numCol-N;
     }
+
+    /**
+     * Returns the matrix's nullity
+     *
+     * @param A Matrix. Not modified.
+     * @param threshold Tolerance used to determine of a singular value is singular.
+     * @return nullity
+     */
+    public static int nullity( DMatrixRMaj A , double threshold ) {
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,true,true);
+
+        if( svd.inputModified() ) {
+            A = A.copy();
+        }
+        if( !svd.decompose(A)) {
+            throw new RuntimeException("SVD Failed!");
+        }
+
+        double sv[] = svd.getSingularValues();
+
+        int count = 0;
+        for (int i = 0; i < sv.length; i++) {
+            if( sv[i] <= threshold ) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
