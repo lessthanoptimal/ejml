@@ -3,7 +3,7 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.37
-2018
+2018/11/11
 
 - CommonOps_DSCC
   * elementMult() resizes internal data. In a test it went from 5600ms to 8ms to compute
@@ -17,8 +17,9 @@ Date format: year/month/day
 - CommonOps_DDRM
   * invertSPD(), solveSPD()
   * removeColumns()
-- Created
-  * UnrolledCholesky
+- UnrolledCholesky
+  * Fixed sized matrices
+  * Dense row major
 
 ----- Version 0.36
 2018/09/29
