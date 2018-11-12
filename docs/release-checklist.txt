@@ -10,7 +10,7 @@ git clean -fd main/ejml-core/src main/ejml-cdense/src main/ejml-fdense/src
 - Commit and tag release
 - Create zip of source and library directory
   * From a fresh checkout
-  VERSION=v0.34
+  VERSION=v0.37
   cd ejml;git checkout SNAPSHOT;./gradlew createVersionFile;./gradlew autogenerate;rm -rf .git;cd ..;zip -r ejml-$VERSION-src.zip ejml
   cd ejml;./gradlew createLibraryDirectory;mv libraries ..;cd ..;mv libraries ejml-$VERSION-libs;zip -r ejml-$VERSION-libs.zip ejml-$VERSION-libs
 - Update documentation on website
@@ -28,7 +28,7 @@ Push to central:
   * double check the files
   * click release button
 
-Not working?  Is ~/.gradle/gradle.properties been setup?
+Not working?  Has ~/.gradle/gradle.properties been setup?
 
 ---------
 Once a year:
