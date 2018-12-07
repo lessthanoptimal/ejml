@@ -2,6 +2,13 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.37.1
+2018/
+
+- Equations
+  * Fixed bug with "a = b' - c"
+
+
 ----- Version 0.37
 2018/11/11
 

@@ -873,9 +873,15 @@ public class Equation {
         parseCombineIntegerLists(tokens);
 
         if( !insideMatrixConstructor ) {
-            if (tokens.size() > 1)
+            if (tokens.size() > 1) {
+                System.err.println("Remaining tokens: "+tokens.size);
+                TokenList.Token t = tokens.first;
+                while( t != null ) {
+                    System.err.println("  "+t);
+                    t = t.next;
+                }
                 throw new RuntimeException("BUG in parser.  There should only be a single token left");
-
+            }
             return tokens.first;
         } else {
             return null;
@@ -1185,6 +1191,9 @@ public class Equation {
             escape:
             if( token.getSymbol() == Symbol.MINUS ) {
                 if( token.previous != null && token.previous.getType() != Type.SYMBOL)
+                    break escape;
+                if( token.previous != null && token.previous.getType() == Type.SYMBOL &&
+                        (token.previous.symbol == Symbol.TRANSPOSE))
                     break escape;
                 if( token.next == null || token.next.getType() == Type.SYMBOL)
                     break escape;

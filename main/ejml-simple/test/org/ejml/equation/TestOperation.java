@@ -1083,6 +1083,24 @@ public class TestOperation {
         assertTrue(a.transpose().isIdentical(b, UtilEjml.TEST_F64));
     }
 
+    /**
+     * This was causing an exception to be thrown because minus was handled
+     * incorrectly after transpose
+     */
+    @Test
+    public void transpose_then_subtract() {
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3,3,-1,1,rand);
+        SimpleMatrix c = SimpleMatrix.random_DDRM(3,3,-1,1,rand);
+
+        Equation eq = new Equation(a,"a",c,"c");
+        eq.process("z = a' - c");
+
+        SimpleMatrix z = eq.lookupSimple("z");
+
+        SimpleMatrix expected = a.transpose().minus(c);
+        assertTrue(expected.isIdentical(z, UtilEjml.TEST_F64));
+    }
+
     @Test
     public void inv_matrix() {
         Equation eq = new Equation();
