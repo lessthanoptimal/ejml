@@ -1029,7 +1029,7 @@ public class TestCommonOps_DDRM {
 
         CommonOps_DDRM.scale(s, mat);
 
-        assertEquals(d[0]*s,mat.get(0,0),UtilEjml.TEST_F64);
+        assertEquals(d[0] * s, mat.get(0, 0), UtilEjml.TEST_F64);
         assertEquals(d[1] * s, mat.get(0, 1), UtilEjml.TEST_F64);
         assertEquals(d[2] * s, mat.get(1, 0), UtilEjml.TEST_F64);
         assertEquals(d[3] * s, mat.get(1, 1), UtilEjml.TEST_F64);
@@ -1054,6 +1054,51 @@ public class TestCommonOps_DDRM {
         assertEquals(d[2]*s,r.get(1,0),UtilEjml.TEST_F64);
         assertEquals(d[3]*s,r.get(1,1),UtilEjml.TEST_F64);
     }
+
+    @Test
+    public void scaleRow() {
+        double scale = 1.5;
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,3,rand);
+        DMatrixRMaj B = A.copy();
+
+        for (int row = 0; row < A.numRows; row++) {
+            A = B.copy();
+            CommonOps_DDRM.scaleRow(scale,A,row);
+            for (int i = 0; i < A.numRows; i++) {
+                for (int j = 0; j < A.numCols; j++) {
+                    if( i == row ) {
+                        assertEquals(B.get(i,j)*scale,A.get(i,j), UtilEjml.TEST_F64);
+                    } else {
+                        assertEquals(B.get(i,j),A.get(i,j), UtilEjml.TEST_F64);
+
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void scaleCol() {
+        double scale = 1.5;
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,3,rand);
+        DMatrixRMaj B = A.copy();
+
+        for (int col = 0; col < A.numCols; col++) {
+            A = B.copy();
+            CommonOps_DDRM.scaleCol(scale,A,col);
+            for (int i = 0; i < A.numRows; i++) {
+                for (int j = 0; j < A.numCols; j++) {
+                    if( j == col ) {
+                        assertEquals(B.get(i,j)*scale,A.get(i,j), UtilEjml.TEST_F64);
+                    } else {
+                        assertEquals(B.get(i,j),A.get(i,j), UtilEjml.TEST_F64);
+
+                    }
+                }
+            }
+        }
+    }
+
 
     @Test
     public void div_scalar_mat() {

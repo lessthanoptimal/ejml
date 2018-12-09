@@ -2356,6 +2356,34 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * In-place scaling of a row in A
+     *
+     * @param alpha scale factor
+     * @param A matrix
+     * @param row which row in A
+     */
+    public static void scaleRow( double alpha , DMatrixRMaj A , int row ) {
+        int idx = row*A.numCols;
+        for (int col = 0; col < A.numCols; col++) {
+            A.data[idx++] *= alpha;
+        }
+    }
+
+    /**
+     * In-place scaling of a column in A
+     *
+     * @param alpha scale factor
+     * @param A matrix
+     * @param col which row in A
+     */
+    public static void scaleCol( double alpha , DMatrixRMaj A , int col ) {
+        int idx = col;
+        for (int row = 0; row < A.numRows; row++, idx += A.numCols) {
+            A.data[idx] *= alpha;
+        }
+    }
+
+    /**
      * <p>
      * Performs an in-place element by element scalar division with the scalar on top.<br>
      * <br>
