@@ -9,6 +9,7 @@ Date format: year/month/day
   * Fixed bug with "a = b' - c"
 - CommonOps_DDRM
   * scaleRow() and scaleCol()
+- Added FancyPrint class
 
 ----- Version 0.37
 2018/11/11
