@@ -1,5 +1,5 @@
 plugins {
-    id "com.peterabeles.gversion" version "1.3.0"
+    id "com.peterabeles.gversion" version "1.4.1"
 }
 
 gversion {
@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.ejml'
-    version = '0.37.1'
+    version = '0.38-SNAPSHOT'
 }
 
 subprojects {

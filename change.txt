@@ -2,6 +2,12 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.38
+2019
+
+- Examples
+  * Added sparse performance tips
+
 ----- Version 0.37.1
 2018/12/25
 

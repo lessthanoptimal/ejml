@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,6 +44,9 @@ public class ExampleSparseMatrix {
         Random rand = new Random(234);
 
         // easy to work with sparse format, but hard to do computations with
+        // NOTE: It is very important to you set 'initLength' to the actual number of elements in the final array
+        //       If you don't it will be forced to thrash memory as it grows its internal data structures.
+        //       Failure to heed this advice will make construction of large matrices 4x slower and use 2x more memory
         DMatrixSparseTriplet work = new DMatrixSparseTriplet(5,4,5);
         work.addItem(0,1,1.2);
         work.addItem(3,0,3);
