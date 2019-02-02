@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -775,12 +775,18 @@ public class ConvertDMatrixStruct {
             dst.zero();
         }
 
-        for (int i = 0; i < src.nz_length; i++) {
-            int row = src.nz_rowcol.data[i*2];
-            int col = src.nz_rowcol.data[i*2+1];
-            double value = src.nz_value.data[i];
+        for (int blockIdx = 0; blockIdx < src.blockSize; blockIdx++) {
+            int[] blockRC = src.nz_rowcol.getBlock(blockIdx);
+            double[] blockV = src.nz_value.getBlock(blockIdx);
 
-            dst.unsafe_set(row, col, value);
+            int N =src.nz_rowcol.getBlockLength(blockIdx);
+            for (int i = 0; i < N; ) {
+                double value = blockV[i/2];
+                int row = blockRC[i++];
+                int col = blockRC[i++];
+
+                dst.unsafe_set(row, col, value);
+            }
         }
 
         return dst;
@@ -869,8 +875,12 @@ public class ConvertDMatrixStruct {
             throw new IllegalArgumentException("Length of hist must be at least numCols");
 
         // compute the number of elements in each columns
-        for (int i = 0; i < src.nz_length; i++) {
-            hist[src.nz_rowcol.data[i*2+1]]++;
+        for (int blockIdx = 0; blockIdx < src.blockSize; blockIdx++) {
+            int[] blockRC = src.nz_rowcol.getBlock(blockIdx);
+            final int N =src.nz_rowcol.getBlockLength(blockIdx);
+            for (int i = 1; i < N; i += 2) {
+                hist[blockRC[i]]++;
+            }
         }
 
         // define col_idx
@@ -878,15 +888,22 @@ public class ConvertDMatrixStruct {
         System.arraycopy(dst.col_idx,0,hist,0,dst.numCols);
 
         // now write the row indexes and the values
-        for (int i = 0; i < src.nz_length; i++) {
-            int row = src.nz_rowcol.data[i*2];
-            int col = src.nz_rowcol.data[i*2+1];
-            double value = src.nz_value.data[i];
+        for (int blockIdx = 0; blockIdx < src.blockSize; blockIdx++) {
+            int[] blockRC = src.nz_rowcol.getBlock(blockIdx);
+            double[] blockV = src.nz_value.getBlock(blockIdx);
 
-            int index = hist[col]++;
-            dst.nz_rows[index] = row;
-            dst.nz_values[index] = value;
+            final int N =src.nz_rowcol.getBlockLength(blockIdx);
+            for (int i = 0; i < N; ) {
+                double value = blockV[i/2];
+                int row = blockRC[i++];
+                int col = blockRC[i++];
+
+                int index = hist[col]++;
+                dst.nz_rows[index] = row;
+                dst.nz_values[index] = value;
+            }
         }
+
         dst.indicesSorted = false;
 
         return dst;

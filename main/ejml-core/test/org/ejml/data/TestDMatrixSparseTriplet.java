@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,8 +34,10 @@ public class TestDMatrixSparseTriplet extends GenericTestsDMatrixSparse {
         DMatrixSparseTriplet m = new DMatrixSparseTriplet(1,1,10);
 
         assertEquals(0,m.getLength());
-        assertEquals(10,m.nz_value.data.length);
-        assertEquals(20,m.nz_rowcol.data.length);
+        assertEquals(0,m.nz_value.length);
+        assertEquals(0,m.nz_rowcol.length);
+        assertTrue(m.nz_value.computeAllocated() >= 10);
+        assertTrue(m.nz_rowcol.computeAllocated() >= 10);
     }
 
     @Test
@@ -63,9 +65,11 @@ public class TestDMatrixSparseTriplet extends GenericTestsDMatrixSparse {
     }
 
     private void check(DMatrixSparseTriplet m , int index , int row , int col , double value ) {
-        assertEquals(row,m.nz_rowcol.data[index*2]);
-        assertEquals(col,m.nz_rowcol.data[index*2+1]);
-        assertEquals(value,m.nz_value.data[index], UtilEjml.TEST_F64);
+        DMatrixSparseTriplet.Triplet v = new DMatrixSparseTriplet.Triplet();
+        m.get(index,v);
+        assertEquals(row,v.row);
+        assertEquals(col,v.col);
+        assertEquals(value,v.value, UtilEjml.TEST_F64);
     }
 
     @Test

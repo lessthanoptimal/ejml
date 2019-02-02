@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -130,13 +130,20 @@ public class MatrixIO {
         PrintStream fileStream = new PrintStream(fileName);
 
         fileStream.println(A.getNumRows() + " " + A.getNumCols() +" "+A.nz_length+ " real");
-        for (int i = 0; i < A.nz_length; i++) {
-            int row = A.nz_rowcol.data[i*2];
-            int col = A.nz_rowcol.data[i*2+1];
-            double value = A.nz_value.data[i];
+        for (int blockIdx = 0; blockIdx < A.blockSize; blockIdx++) {
+            int[] blockRC = A.nz_rowcol.getBlock(blockIdx);
+            double[] blockV = A.nz_value.getBlock(blockIdx);
 
-            fileStream.println(row+" "+col+" "+value);
+            final int N =A.nz_rowcol.getBlockLength(blockIdx);
+            for (int i = 0; i < N; ) {
+                double value = blockV[i/2];
+                int row = blockRC[i++];
+                int col = blockRC[i++];
+
+                fileStream.println(row+" "+col+" "+value);
+            }
         }
+
         fileStream.close();
     }
 

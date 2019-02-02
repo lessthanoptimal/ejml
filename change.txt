@@ -7,6 +7,8 @@ Date format: year/month/day
 
 - Examples
   * Added sparse performance tips
+- Sparse Triplet
+  * Changed internal data structure to use a block array, removing need to copy memory when adding elements
 
 ----- Version 0.37.1
 2018/12/25

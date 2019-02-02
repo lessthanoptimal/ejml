@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,20 +29,27 @@ public class MatrixFeatures_DSTL {
         if( !isSameShape(a,b) )
             return false;
 
-        for (int i = 0; i < a.nz_length; i++) {
-            int arow = a.nz_rowcol.data[i*2];
-            int acol = a.nz_rowcol.data[i*2+1];
-            double avalue = a.nz_value.data[i];
+        for (int blockIdx = 0; blockIdx < a.blockSize; blockIdx++) {
+            int[] blockRC = a.nz_rowcol.getBlock(blockIdx);
+            double[] blockV = a.nz_value.getBlock(blockIdx);
 
-            int bindex = b.nz_index(arow, acol);
-            if( bindex < 0 )
-                return false;
+            final int N =a.nz_rowcol.getBlockLength(blockIdx);
+            for (int i = 0; i < N; ) {
+                double avalue = blockV[i/2];
+                int arow = blockRC[i++];
+                int acol = blockRC[i++];
 
-            double bvalue = b.nz_value.data[bindex];
+                int bindex = b.nz_index(arow, acol);
+                if( bindex < 0 )
+                    return false;
 
-            if( avalue != bvalue )
-                return false;
+                double bvalue = b.nz_value.get(bindex);
+
+                if( avalue != bvalue )
+                    return false;
+            }
         }
+
         return true;
     }
 
@@ -50,20 +57,27 @@ public class MatrixFeatures_DSTL {
         if( !isSameShape(a,b) )
             return false;
 
-        for (int i = 0; i < a.nz_length; i++) {
-            int arow = a.nz_rowcol.data[i*2];
-            int acol = a.nz_rowcol.data[i*2+1];
-            double avalue = a.nz_value.data[i];
+        for (int blockIdx = 0; blockIdx < a.blockSize; blockIdx++) {
+            int[] blockRC = a.nz_rowcol.getBlock(blockIdx);
+            double[] blockV = a.nz_value.getBlock(blockIdx);
 
-            int bindex = b.nz_index(arow, acol);
-            if( bindex < 0 )
-                return false;
+            final int N =a.nz_rowcol.getBlockLength(blockIdx);
+            for (int i = 0; i < N; ) {
+                double avalue = blockV[i/2];
+                int arow = blockRC[i++];
+                int acol = blockRC[i++];
 
-            double bvalue = b.nz_value.data[bindex];
+                int bindex = b.nz_index(arow, acol);
+                if( bindex < 0 )
+                    return false;
 
-            if( Math.abs(avalue-bvalue) > tol )
-                return false;
+                double bvalue = b.nz_value.get(bindex);
+
+                if( Math.abs(avalue-bvalue) > tol )
+                    return false;
+            }
         }
+
         return true;
     }
 

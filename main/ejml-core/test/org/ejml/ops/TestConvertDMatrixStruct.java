@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -218,7 +218,7 @@ public class TestConvertDMatrixStruct {
                 if( a.get(row,col) == 0.0 ) {
                     assertTrue( -1 == index );
                 } else {
-                    assertEquals( a.get(row,col), b.nz_value.data[index], UtilEjml.TEST_F64);
+                    assertEquals( a.get(row,col), b.nz_value.get(index), UtilEjml.TEST_F64);
                 }
             }
         }
@@ -257,7 +257,7 @@ public class TestConvertDMatrixStruct {
                 if( a.get(row,col) == 0.0 ) {
                     assertTrue( -1 == index );
                 } else {
-                    assertEquals( a.get(row,col), b.nz_value.data[index], UtilEjml.TEST_F64);
+                    assertEquals( a.get(row,col), b.nz_value.get(index), UtilEjml.TEST_F64);
                 }
             }
         }
@@ -351,12 +351,11 @@ public class TestConvertDMatrixStruct {
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
         assertEquals(a.nz_length, b.nz_length);
-        for (int i = 0; i < a.nz_length; i++) {
-            int row = a.nz_rowcol.data[i*2];
-            int col = a.nz_rowcol.data[i*2+1];
-            double value = a.nz_value.data[i];
 
-            assertEquals(value, b.get(row, col), UtilEjml.TEST_F64);
+        DMatrixSparseTriplet.Triplet v = new DMatrixSparseTriplet.Triplet();
+        for (int i = 0; i < a.nz_length; i++) {
+            a.get(i,v);
+            assertEquals(v.value, b.get(v.row, v.col), UtilEjml.TEST_F64);
         }
         assertTrue(CommonOps_DSCC.checkSortedFlag(b));
 
