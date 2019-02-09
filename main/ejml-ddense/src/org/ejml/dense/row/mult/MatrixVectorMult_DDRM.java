@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -324,5 +324,37 @@ public class MatrixVectorMult_DDRM {
                 C.plus( i , A.get(indexA++) * B_val );
             }
         }
+    }
+
+    /**
+     * scalar = A<sup>T</sup>*B*C
+     *
+     * @param a (Input) vector
+     * @param offsetA  Input) first index in vector a
+     * @param B (Input) Matrix
+     * @param c (Output) vector
+     * @param offsetC (Output) first index in vector c
+     */
+    public static double innerProduct( double a[] , int offsetA ,
+                                       DMatrix1Row B ,
+                                       double c[] , int offsetC )
+    {
+        if( a.length-offsetA < B.numRows)
+            throw new IllegalArgumentException("Length of 'a' isn't long enough");
+        if( c.length-offsetC < B.numCols)
+            throw new IllegalArgumentException("Length of 'c' isn't long enough");
+
+        int cols = B.numCols;
+        double output = 0;
+
+        for (int k = 0; k < B.numCols; k++) {
+            double sum = 0;
+            for (int i = 0; i < B.numRows; i++) {
+                sum += a[offsetA+i]*B.data[k+i*cols];
+            }
+            output += sum*c[offsetC+k];
+        }
+
+        return output;
     }
 }

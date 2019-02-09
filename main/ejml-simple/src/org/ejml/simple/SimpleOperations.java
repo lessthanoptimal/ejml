@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,6 +45,8 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void mult( T A , T B, T output );
 
+    void multTransA(T A , T B, T output );
+
     void kron( T A , T B , T output );
 
     void plus( T A , T B , T output);
@@ -56,6 +58,8 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     void plus( T A , double b , T output);
 
     void plus( T A , double beta , T b, T output );
+
+    void plus( double alpha , T A , double beta , T b, T output );
 
     double dot(T A , T v );
 

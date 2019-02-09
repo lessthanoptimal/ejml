@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -75,7 +75,7 @@ public class TestMatrixMultProduct_DDRM {
     @Test
     public void inner_reorder_upper() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
-        DMatrixRMaj found = new DMatrixRMaj(10,10);
+        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10,10,rand);
         DMatrixRMaj expected = new DMatrixRMaj(10,10);
 
         MatrixMatrixMult_DDRM.multTransA_reorder(A,A,expected);
@@ -84,6 +84,23 @@ public class TestMatrixMultProduct_DDRM {
         // only check the upper triangle
         for( int i = 0; i < found.numRows; i++ ) {
             for( int j = i; j < found.numCols; j++ ) {
+                assertEquals(expected.get(i,j),found.get(i,j),UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void inner_reorder_lower() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
+        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10,10,rand);
+        DMatrixRMaj expected = new DMatrixRMaj(10,10);
+
+        MatrixMatrixMult_DDRM.multTransA_reorder(A,A,expected);
+        MatrixMultProduct_DDRM.inner_reorder_lower(A, found);
+
+        // only check the upper triangle
+        for( int i = 0; i < found.numRows; i++ ) {
+            for( int j = 0; j <= i; j++ ) {
                 assertEquals(expected.get(i,j),found.get(i,j),UtilEjml.TEST_F64);
             }
         }

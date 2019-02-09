@@ -7,6 +7,14 @@ Date format: year/month/day
 
 - Examples
   * Added sparse performance tips
+- SimpleOperations
+  * Added multTransA
+  * Added another variant of plus
+- Created SimpleSparseOperations
+  * Operations specific to sparse matrices
+- CommonOps_DDRM
+  * Added symmLowerToFull and symmUpperToFull
+  * Added divideRowsCols
 
 ----- Version 0.37.1
 2018/12/25

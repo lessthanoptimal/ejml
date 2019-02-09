@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -94,7 +94,7 @@ public class LuUpLooking_DSCC
         int n = A.numCols;
         int q[] = applyReduce.getArrayP();
 
-        int[] w = TriangularSolver_DSCC.adjust(gw,m*2, m);
+        int[] w = UtilEjml.adjust(gw,m*2, m);
 
         // main loop for computing L and U
         for (int k = 0; k < n; k++) {

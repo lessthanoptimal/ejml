@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -75,6 +75,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
+    public void multTransA(ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output) {
+        CommonOps_ZDRM.multTransA(A,B,output);
+    }
+
+    @Override
     public void kron(ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.kron(A,B,output);
         throw new UnsupportedOperation();
@@ -105,6 +110,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void plus(ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b, ZMatrixRMaj output) {
 //        CommonOps_ZDRM.add(A, (double)beta, b, output);
+        throw new UnsupportedOperation();
+    }
+
+    @Override
+    public void plus( /**/double alpha, ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b, ZMatrixRMaj output) {
         throw new UnsupportedOperation();
     }
 

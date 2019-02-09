@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -135,6 +135,30 @@ public class TestMatrixVectorMult_DDRM {
     public void checkZeroRowsColumns() throws InvocationTargetException, IllegalAccessException {
         checkZeros(5,0);
         checkZeros(0,5);
+    }
+
+    @Test
+    public void innerProduct() {
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,1,rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,5,rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5,1,rand);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(5,1);
+        CommonOps_DDRM.multTransA(a,B,tmp);
+        double expected = VectorVectorMult_DDRM.innerProd(tmp,c);
+        double found = MatrixVectorMult_DDRM.innerProduct(a.data,0,B,c.data,0);
+        assertEquals(expected,found, UtilEjml.TEST_F64);
+
+        // now have offsets
+        int offsetA = 1;
+        int offsetC = 2;
+        double[] _a = new double[10];
+        double[] _c = new double[10];
+        System.arraycopy(a.data,0,_a,offsetA,5);
+        System.arraycopy(c.data,0,_c,offsetC,5);
+
+        found = MatrixVectorMult_DDRM.innerProduct(_a,offsetA,B,_c,offsetC);
+        assertEquals(expected,found, UtilEjml.TEST_F64);
     }
 
     /**

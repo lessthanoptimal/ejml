@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,8 @@ import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
+import static org.ejml.UtilEjml.adjustClear;
 import static org.ejml.UtilEjml.stringShapes;
-import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjustClear;
 
 /**
  * @author Peter Abeles

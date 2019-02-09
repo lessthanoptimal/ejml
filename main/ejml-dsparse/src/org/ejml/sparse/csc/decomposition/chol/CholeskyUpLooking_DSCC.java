@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
-import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
+import static org.ejml.UtilEjml.adjust;
 
 /**
  * Performs a Cholesky decomposition using an up looking algorthm on a {@link DMatrixSparseCSC}.

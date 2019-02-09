@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ import org.ejml.sparse.csc.decomposition.qr.QrHelperFunctions_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
-import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
+import static org.ejml.UtilEjml.adjust;
 
 /**
  * Sparse linear solver implemented using {@link QrLeftLookingDecomposition_DSCC}.

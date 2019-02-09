@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -380,5 +380,33 @@ public class UtilEjml {
             }
         }
         return formatted;
+    }
+
+    /**
+     * Resizes the array to ensure that it is at least of length desired and returns its internal array
+     */
+    public static int[] adjust(IGrowArray gwork, int desired) {
+        if (gwork == null) gwork = new IGrowArray();
+        gwork.reshape(desired);
+        return gwork.data;
+    }
+
+    public static int[] adjust(IGrowArray gwork, int desired, int zeroToM) {
+       int[] w = adjust(gwork,desired);
+       Arrays.fill(w,0,zeroToM,0);
+       return w;
+    }
+
+    public static int[] adjustClear(IGrowArray gwork, int desired) {
+        return adjust(gwork,desired,desired);
+    }
+
+    /**
+     * Resizes the array to ensure that it is at least of length desired and returns its internal array
+     */
+    public static double[] adjust(DGrowArray gwork, int desired) {
+        if (gwork == null) gwork = new DGrowArray();
+        gwork.reshape(desired);
+        return gwork.data;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
-import static org.ejml.sparse.csc.misc.TriangularSolver_DSCC.adjust;
+import static org.ejml.UtilEjml.adjust;
 
 /**
  * Linear solver using a sparse Cholesky decomposition.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -419,6 +419,45 @@ public class TestCommonOps_DDRM {
                 assertEquals(A.get(row,col)/values[col], found.get(row,col), UtilEjml.TEST_F64);
             }
         }
+    }
+
+    @Test
+    public void divideRowsCols() {
+        int rows = 5;
+        int cols = 7;
+
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(rows,cols,rand);
+        DMatrixRMaj found = B.copy();
+
+        double[] diagA = new double[B.numRows];
+        for (int i = 0; i < B.numRows; i++) {
+            diagA[i] = rand.nextDouble()+0.1;
+        }
+
+        double[] diagC = new double[B.numCols];
+        for (int i = 0; i < B.numCols; i++) {
+            diagC[i] = rand.nextDouble()+0.1;
+        }
+
+        DMatrixRMaj A = CommonOps_DDRM.diag(diagA);
+        DMatrixRMaj C = CommonOps_DDRM.diag(diagC);
+
+        // invert the matrices
+        for (int i = 0; i < A.numRows; i++) {
+            A.set(i,i, 1.0/A.get(i,i));
+        }
+        for (int i = 0; i < C.numCols; i++) {
+            C.set(i,i, 1.0/C.get(i,i));
+        }
+
+        DMatrixRMaj AB = new DMatrixRMaj(1,1);
+        CommonOps_DDRM.mult(A,B,AB);
+        DMatrixRMaj expected = new DMatrixRMaj(1,1);
+        CommonOps_DDRM.mult(AB,C,expected);
+
+        CommonOps_DDRM.divideRowsCols(diagA,0,found,diagC,0);
+
+        assertTrue( MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
     }
 
     @Test
@@ -1723,6 +1762,32 @@ public class TestCommonOps_DDRM {
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {
                 assertEquals(A.get(i,j),B.get(pinv[i],j),UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void symmLowerToFull() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5,rand);
+        DMatrixRMaj O = A.copy();
+
+        CommonOps_DDRM.symmLowerToFull(A);
+        for (int i = 0; i < 5; i++) {
+            for (int j = i+1; j < 5; j++) {
+                assertEquals(O.get(j,i),A.get(i,j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
+    public void symmUpperToFull() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5,rand);
+        DMatrixRMaj O = A.copy();
+
+        CommonOps_DDRM.symmUpperToFull(A);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < i; j++) {
+                assertEquals(O.get(j,i),A.get(i,j), UtilEjml.TEST_F64);
             }
         }
     }

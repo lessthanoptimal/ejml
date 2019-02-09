@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1816,6 +1816,39 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * Equivalent to multiplying a matrix B by the inverse of two diagonal matrices.
+     * B = inv(A)*B*inv(C), where A=diag(a) and C=diag(c).
+     *
+     * @param diagA Array of length offsteA + B.numRows
+     * @param offsetA First index in A
+     * @param B Rectangular matrix
+     * @param diagC Array of length indexC + B.numCols
+     * @param offsetC First index in C
+     */
+    public static void divideRowsCols( double []diagA , int offsetA ,
+                                       DMatrixRMaj B ,
+                                       double []diagC , int offsetC )
+    {
+        if( diagA.length-offsetA < B.numRows ) {
+            throw new IllegalArgumentException("Not enough elements in diagA.");
+        }
+        if( diagC.length-offsetC < B.numCols ) {
+            throw new IllegalArgumentException("Not enough elements in diagC.");
+        }
+
+        final int rows = B.numRows;
+        final int cols = B.numCols;
+
+        int index = 0;
+        for (int row = 0; row < rows; row++) {
+            double va = diagA[offsetA+row];
+            for (int col = 0; col < cols; col++, index++) {
+                B.data[index] /= va*diagC[offsetC+col];
+            }
+        }
+    }
+
+    /**
      * <p>
      * Computes the sum of each row in the input matrix and returns the results in a vector:<br>
      * <br>
@@ -2861,5 +2894,45 @@ public class CommonOps_DDRM {
             System.arraycopy(input.data,row*m,output.data,pinv[row]*m,m);
         }
         return output;
+    }
+
+    /**
+     * Given a symmetric matrix which is represented by a lower triangular matrix convert it back into
+     * a full symmetric matrix.
+     *
+     * @param A (Input) Lower triangular matrix (Output) symmetric matrix
+     */
+    public static void symmLowerToFull( DMatrixRMaj A )
+    {
+        if( A.numRows != A.numCols )
+            throw new MatrixDimensionException("Must be a square matrix");
+
+        final int cols = A.numCols;
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = row+1; col < cols; col++) {
+                A.data[row*cols+col] = A.data[col*cols+row];
+            }
+        }
+    }
+
+    /**
+     * Given a symmetric matrix which is represented by a lower triangular matrix convert it back into
+     * a full symmetric matrix.
+     *
+     * @param A (Input) Lower triangular matrix (Output) symmetric matrix
+     */
+    public static void symmUpperToFull( DMatrixRMaj A )
+    {
+        if( A.numRows != A.numCols )
+            throw new MatrixDimensionException("Must be a square matrix");
+
+        final int cols = A.numCols;
+
+        for (int row = 0; row < A.numRows; row++) {
+            for (int col = 0; col <= row; col++) {
+                A.data[row*cols+col] = A.data[col*cols+row];
+            }
+        }
     }
 }

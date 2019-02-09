@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,13 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 /**
  * @author Peter Abeles
@@ -120,15 +120,15 @@ public class TriangularSolver_DSCC {
                                  @Nullable int pinv[] ,
                                  @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
-        double[] x = adjust(g_x,G.numRows);
+        double[] x = UtilEjml.adjust(g_x,G.numRows);
 
         X.zero();
         X.indicesSorted = false;
 
         // storage for the index of non-zero rows in X
-        int[] xi = adjust(g_xi,G.numRows);
+        int[] xi = UtilEjml.adjust(g_xi,G.numRows);
         // Used to mark nodes as non-zero or not. Fill with zero initially
-        int[] w = adjust(g_w,G.numCols, G.numCols); // Dense fill makes adds O(N) to runtime
+        int[] w = UtilEjml.adjust(g_w,G.numCols, G.numCols); // Dense fill makes adds O(N) to runtime
 
         for (int colB = 0; colB < B.numCols; colB++) {
             int idx0 = B.col_idx[colB];
@@ -219,10 +219,10 @@ public class TriangularSolver_DSCC {
                              @Nullable int pinv[] ,
                              @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
-        double[] x = adjust(g_x,G.numRows);
+        double[] x = UtilEjml.adjust(g_x,G.numRows);
         if( g_xi == null ) g_xi = new IGrowArray();
-        int[] xi = adjust(g_xi,G.numRows);
-        int[] w = adjust(g_w,G.numCols*2, G.numCols);
+        int[] xi = UtilEjml.adjust(g_xi,G.numRows);
+        int[] w = UtilEjml.adjust(g_w,G.numCols*2, G.numCols);
 
         X.nz_length = 0;
         X.col_idx[0] = 0;
@@ -267,7 +267,7 @@ public class TriangularSolver_DSCC {
         // NOTE x's length is the number of rows in G and not cols. This might be more than needed if a tall matrix,
         // but a change to remove it would require more thought
         int X_rows = G.numCols;
-        int[] xi = adjust(g_xi,X_rows);
+        int[] xi = UtilEjml.adjust(g_xi,X_rows);
         int top = searchNzRowsInX(G, B, colB, pinv, xi, w);
 
         // sparse clear of x.
@@ -438,7 +438,7 @@ public class TriangularSolver_DSCC {
         if (parent.length < n)
             throw new IllegalArgumentException("parent must be of length N");
 
-        int[] work = adjust(gwork, n + (ata ? m : 0));
+        int[] work = UtilEjml.adjust(gwork, n + (ata ? m : 0));
 
         int ancestor = 0; // reference to index in work array
         int previous = n; // reference to index in work array
@@ -501,7 +501,7 @@ public class TriangularSolver_DSCC {
         if (post.length < N)
             throw new IllegalArgumentException("post must be at least of length N");
 
-        int[] w = adjust(gwork, 3*N);
+        int[] w = UtilEjml.adjust(gwork, 3*N);
 
         // w[0] to w[N-1] is initialized to the youngest child of node 'j'
         // w[N] to w[2N-1] is initialized to the second youngest child of node 'j'
@@ -601,34 +601,6 @@ public class TriangularSolver_DSCC {
         }
         w[k] = -w[k]-2;
         return top;
-    }
-
-    /**
-     * Resizes the array to ensure that it is at least of length desired and returns its internal array
-     */
-    public static int[] adjust(IGrowArray gwork, int desired) {
-        if (gwork == null) gwork = new IGrowArray();
-        gwork.reshape(desired);
-        return gwork.data;
-    }
-
-    public static int[] adjust(IGrowArray gwork, int desired, int zeroToM) {
-       int[] w = adjust(gwork,desired);
-       Arrays.fill(w,0,zeroToM,0);
-       return w;
-    }
-
-    public static int[] adjustClear(IGrowArray gwork, int desired) {
-        return adjust(gwork,desired,desired);
-    }
-
-    /**
-     * Resizes the array to ensure that it is at least of length desired and returns its internal array
-     */
-    public static double[] adjust(DGrowArray gwork, int desired) {
-        if (gwork == null) gwork = new DGrowArray();
-        gwork.reshape(desired);
-        return gwork.data;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.dense.row.mult;
 
 import org.ejml.data.DMatrix1Row;
+
+import java.util.Arrays;
 
 /**
  * <p>
@@ -143,6 +145,37 @@ public class MatrixMultProduct_DDRM {
                 valAi = a.data[indexB];
                 for( int j = i; j < a.numCols; j++ ) {
                     c.data[indexC++] +=  valAi*a.data[indexB++];
+                }
+            }
+        }
+    }
+
+    /**
+     * Computes the inner product of A times A and stores the results in B. The inner product is symmetric and this
+     * function will only store the lower triangle. The value of the upper triangular matrix is undefined.
+     *
+     * <p>B = A<sup>T</sup>*A</sup>
+     *
+     * @param A (Input) Matrix
+     * @param B (Output) Storage for output.
+     */
+    public static void inner_reorder_lower(DMatrix1Row A , DMatrix1Row B )
+    {
+        final int cols = A.numCols;
+        B.reshape(cols,cols);
+
+        Arrays.fill(B.data,0);
+        for (int i = 0; i <cols; i++) {
+            for (int j = 0; j <=i; j++) {
+                B.data[i*cols+j] += A.data[i]*A.data[j];
+            }
+
+            for (int k = 1; k < A.numRows; k++) {
+                int indexRow = k*cols;
+                double valI = A.data[i+indexRow];
+                int indexB = i*cols;
+                for (int j = 0; j <= i; j++) {
+                    B.data[indexB++] += valI*A.data[indexRow++];
                 }
             }
         }

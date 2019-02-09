@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -75,6 +75,11 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
+    public void multTransA(DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output) {
+        CommonOps_DDRM.multTransA(A,B,output);
+    }
+
+    @Override
     public void kron(DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output) {
         CommonOps_DDRM.kron(A,B,output);
     }
@@ -102,6 +107,11 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     @Override
     public void plus(DMatrixRMaj A, /**/double beta, DMatrixRMaj b, DMatrixRMaj output) {
         CommonOps_DDRM.add(A, (double)beta, b, output);
+    }
+
+    @Override
+    public void plus( /**/double alpha, DMatrixRMaj A, /**/double beta, DMatrixRMaj b, DMatrixRMaj output) {
+        CommonOps_DDRM.add( (double)alpha, A, (double)beta,b,output);
     }
 
     @Override

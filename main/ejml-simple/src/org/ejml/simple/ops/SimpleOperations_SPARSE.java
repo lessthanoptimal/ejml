@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,11 @@
 
 package org.ejml.simple.ops;
 
-import org.ejml.data.Complex_F64;
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.Matrix;
+import org.ejml.data.*;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ConvertToDenseException;
 import org.ejml.simple.ConvertToImaginaryException;
-import org.ejml.simple.SimpleOperations;
+import org.ejml.simple.SimpleSparseOperations;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
@@ -35,7 +32,11 @@ import java.io.PrintStream;
 /**
  * @author Peter Abeles
  */
-public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCSC> {
+public class SimpleOperations_SPARSE implements SimpleSparseOperations<DMatrixSparseCSC,DMatrixRMaj> {
+
+    // Workspace variables
+    public transient IGrowArray gw = new IGrowArray();
+    public transient DGrowArray gx = new DGrowArray();
 
     @Override
     public void set(DMatrixSparseCSC A, int row, int column, /**/double value) {
@@ -69,12 +70,27 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void transpose(DMatrixSparseCSC input, DMatrixSparseCSC output) {
-        CommonOps_DSCC.transpose(input,output,null);
+        CommonOps_DSCC.transpose(input,output,gw);
     }
 
     @Override
     public void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
         CommonOps_DSCC.mult(A,B,output);
+    }
+
+    @Override
+    public void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
+        CommonOps_DSCC.multTransA(A,B,output,gw,gx);
+    }
+
+    @Override
+    public void extractDiag(DMatrixSparseCSC input, DMatrixRMaj output) {
+        CommonOps_DSCC.extractDiag(input,output);
+    }
+
+    @Override
+    public void multTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output) {
+        CommonOps_DSCC.multTransA(A,B,output);
     }
 
     public void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output ) {
@@ -109,12 +125,17 @@ public class SimpleOperations_SPARSE implements SimpleOperations<DMatrixSparseCS
 
     @Override
     public void plus(DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output) {
-        CommonOps_DSCC.add(1, A, (double)beta, b, output,null,null);
+        CommonOps_DSCC.add(1, A, (double)beta, b, output,gw,gx);
+    }
+
+    @Override
+    public void plus( /**/double alpha, DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output) {
+        CommonOps_DSCC.add( (double)alpha, A, (double)beta, b, output,gw,gx);
     }
 
     @Override
     public /**/double dot(DMatrixSparseCSC A, DMatrixSparseCSC v) {
-        return CommonOps_DSCC.dotInnerColumns(A,0, v,0,null,null);
+        return CommonOps_DSCC.dotInnerColumns(A,0, v,0,gw,gx);
     }
 
     @Override
