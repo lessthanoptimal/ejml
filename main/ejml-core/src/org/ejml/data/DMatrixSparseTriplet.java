@@ -108,8 +108,8 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     public void addItem(int row , int col , double value ) {
         if( nz_length == nz_value.data.length ) {
             int amount = nz_length + 10;
-            nz_value.grow(amount);
-            nz_rowcol.grow(amount*2);
+            nz_value.growInternal(amount);
+            nz_rowcol.growInternal(amount*2);
         }
         nz_value.data[nz_length] = value;
         nz_rowcol.data[nz_length*2] = row;
@@ -132,8 +132,8 @@ public class DMatrixSparseTriplet implements DMatrixSparse
             throw new IllegalArgumentException("Out of bounds. ("+row+","+col+") "+numRows+" "+numCols);
         if( nz_length == nz_value.data.length ) {
             int amount = nz_length + 10;
-            nz_value.grow(amount);
-            nz_rowcol.grow(amount*2);
+            nz_value.growInternal(amount);
+            nz_rowcol.growInternal(amount*2);
         }
         nz_value.data[nz_length] = value;
         nz_rowcol.data[nz_length*2] = row;

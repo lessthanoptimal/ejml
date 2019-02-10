@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,6 +46,21 @@ public class TestDGrowArray {
         array.reshape(5);
         assertEquals(10,array.data.length);
         assertEquals(5,array.length());
+    }
+
+    @Test
+    public void growInternal() {
+        DGrowArray array = new DGrowArray();
+        array.reshape(10);
+        for (int i = 0; i < array.length; i++) {
+            array.data[i] = i;
+        }
+        int expected = array.data.length+4;
+        array.growInternal(4);
+        assertEquals(expected,array.data.length);
+        for (int i = 0; i < array.length; i++) {
+            assertEquals(i, array.get(i), UtilEjml.TEST_F64);
+        }
     }
 
     @Test

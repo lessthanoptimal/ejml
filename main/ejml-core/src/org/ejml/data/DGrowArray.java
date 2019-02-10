@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,10 +53,16 @@ public class DGrowArray {
     }
 
     /**
-     * Increases the internal array's length by the specified amount. Previous values are preserved
+     * Increases the internal array's length by the specified amount. Previous values are preserved.
+     * The length value is not modified since this does not change the 'meaning' of the array, just
+     * increases the amount of data which can be stored in it.
+     *
+     * this.data = new data_type[ data.length + amount ]
+     *
+     *
      * @param amount Number of elements added to the internal array's length
      */
-    public void grow( int amount ) {
+    public void growInternal(int amount ) {
         double tmp[] = new double[ data.length + amount ];
 
         System.arraycopy(data,0,tmp,0,data.length);
