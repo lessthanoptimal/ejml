@@ -1766,6 +1766,36 @@ public class TestCommonOps_DDRM {
         }
     }
 
+
+    @Test
+    public void abs_one() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4, -1, 1,rand);
+        DMatrixRMaj C = A.copy();
+
+        CommonOps_DDRM.abs(A);
+
+        for (int i = 0; i < C.numRows; i++) {
+            for (int j = 0; j < C.numCols; j++) {
+                assertEquals(A.get(i,j), Math.abs(C.get(i, j)),0);
+            }
+        }
+    }
+
+    @Test
+    public void abs_two() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,-1,1,rand);
+        DMatrixRMaj C = new DMatrixRMaj(5,4);
+
+        CommonOps_DDRM.abs(A, C);
+
+        for (int i = 0; i < C.numRows; i++) {
+            for (int j = 0; j < C.numCols; j++) {
+                assertEquals(C.get(i,j), Math.abs(C.get(i, j)),0);
+            }
+        }
+    }
+
+
     @Test
     public void symmLowerToFull() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5,rand);
