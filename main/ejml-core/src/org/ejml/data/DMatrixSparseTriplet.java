@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,11 @@ package org.ejml.data;
 import org.ejml.ops.MatrixIO;
 
 /**
- * TODO describe
+ * A sparse matrix format that is designed to act as an intermediate step for other matrix types. Constructing
+ * {@link DMatrixSparseCSC} from scratch is difficult, but if a triplet is first defined then it is much easier.
+ * Inside this class elements are stored in an unsorted list. Adding an element to the list with {@link #addItem(int, int, double)}
+ * is an O(1) operation but reading a specific element is O(N) operation, making it impractical for operations like
+ * matrix multiplications.
  *
  * @author Peter Abeles
  */
@@ -36,8 +40,18 @@ public class DMatrixSparseTriplet implements DMatrixSparse
      */
     public DGrowArray nz_value = new DGrowArray();
 
+    /**
+     * Number of non-zero elements in this matrix
+     */
     public int nz_length;
+
+    /**
+     * Number of rows in the matrix
+     */
     public int numRows;
+    /**
+     * Number of columns in the matrix
+     */
     public int numCols;
 
     public DMatrixSparseTriplet() {
@@ -79,6 +93,18 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         nz_value.reshape(arrayLength);
     }
 
+    /**
+     * <p>Adds a triplet of (row,vol,value) to the end of the list. This is the preferred way to add elements
+     * into this array type as it has a runtime complexity of O(1).</p>
+     *
+     * One potential problem with using this function instead of {@link #set(int, int, double)} is that it does
+     * not check to see if a (row,col) has already been assigned a value. If a (row,col) is defined multiple times
+     * how this is handled is not defined.
+     *
+     * @param row Row the element belongs in
+     * @param col Column the element belongs in
+     * @param value The value of the element
+     */
     public void addItem(int row , int col , double value ) {
         if( nz_length == nz_value.data.length ) {
             int amount = nz_length + 10;
@@ -91,6 +117,16 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         nz_length += 1;
     }
 
+    /**
+     * Adds a triplet of (row,vol,value) to the end of the list and performs a bounds check to make
+     * sure it is a legal value.
+     *
+     * @See #addItem(int, int, double)
+     *
+     * @param row Row the element belongs in
+     * @param col Column the element belongs in
+     * @param value The value of the element
+     */
     public void addItemCheck(int row , int col , double value ) {
         if( row < 0 || col < 0 || row >= numRows || col >= numCols )
             throw new IllegalArgumentException("Out of bounds. ("+row+","+col+") "+numRows+" "+numCols);
@@ -105,6 +141,16 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         nz_length += 1;
     }
 
+    /**
+     * Sets the element's value at (row,col). It first checks to see if the element already has a value and if it
+     * does that value is changed. As a result this operation is O(N), where N is the number of elements in the matrix.
+     *
+     * @see #addItem(int, int, double) For a faster but less "safe" alternative
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @param value value of element.
+     */
     @Override
     public void set( int row , int col , double value ) {
         if( row < 0 || row >= numRows || col < 0 || col >= numCols )
@@ -113,6 +159,13 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         unsafe_set(row,col,value);
     }
 
+    /**
+     * Same as {@link #set(int, int, double)} but does not check to see if row and column are within bounds.
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @param value value of element.
+     */
     @Override
     public void unsafe_set(int row, int col, double value) {
         int index = nz_index(row,col);
@@ -128,6 +181,14 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         return nz_length;
     }
 
+    /**
+     * Searches the list to see if the element at (row,col) has been assigned. The worst case runtime for this
+     * operation is O(N), where N is the number of elements in the matrix.
+     *
+     * @param row Matrix element's row index..
+     * @param col Matrix element's column index.
+     * @return Value at (row,col)
+     */
     @Override
     public double get( int row , int col ) {
         if( row < 0 || row >= numRows || col < 0 || col >= numCols )
