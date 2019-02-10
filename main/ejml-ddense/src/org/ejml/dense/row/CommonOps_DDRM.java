@@ -2862,4 +2862,41 @@ public class CommonOps_DDRM {
         }
         return output;
     }
+
+    /**
+     * <p>Performs absolute value of a matrix:<br>
+     * <br>
+     * c = abs(a)<br>
+     * c<sub>ij</sub> = abs(a<sub>ij</sub>)
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param c A matrix. Modified.
+     */
+    public static void abs(DMatrixD1 a , DMatrixD1 c ) {
+        c.reshape(a.numRows,a.numCols);
+
+        final int length = a.getNumElements();
+
+        for ( int i = 0; i < length; i++ ) {
+            c.data[i] = Math.abs(a.data[i]);
+        }
+    }
+
+    /**
+     * <p>Performs absolute value of a matrix:<br>
+     * <br>
+     * a = abs(a)<br>
+     * a<sub>ij</sub> = abs(a<sub>ij</sub>)
+     * </p>
+     *
+     * @param a A matrix. Modified.
+     */
+    public static void abs(DMatrixD1 a ) {
+        final int length = a.getNumElements();
+
+        for ( int i = 0; i < length; i++ ) {
+            a.data[i] = Math.abs(a.data[i]);
+        }
+    }
 }
