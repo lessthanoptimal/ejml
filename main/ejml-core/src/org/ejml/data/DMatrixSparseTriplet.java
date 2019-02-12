@@ -147,7 +147,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
      *
      * @see #addItem(int, int, double) For a faster but less "safe" alternative
      *
-     * @param row Matrix element's row index..
+     * @param row Matrix element's row index.
      * @param col Matrix element's column index.
      * @param value value of element.
      */
@@ -162,7 +162,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     /**
      * Same as {@link #set(int, int, double)} but does not check to see if row and column are within bounds.
      *
-     * @param row Matrix element's row index..
+     * @param row Matrix element's row index.
      * @param col Matrix element's column index.
      * @param value value of element.
      */
@@ -185,7 +185,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
      * Searches the list to see if the element at (row,col) has been assigned. The worst case runtime for this
      * operation is O(N), where N is the number of elements in the matrix.
      *
-     * @param row Matrix element's row index..
+     * @param row Matrix element's row index.
      * @param col Matrix element's column index.
      * @return Value at (row,col)
      */
