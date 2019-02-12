@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -65,8 +65,9 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
                 "    public "+className+"("+className+" o) {\n");
         printSetFromParam(dimen,"o.");
         out.print("    }\n" +
-                "\n" +
-                "    public void set(");
+                "\n");
+        printZero(dimen);
+        out.print("    public void set(");
         printFunctionParam(dimen);
         out.print(")\n" +
                 "    {\n");
@@ -219,6 +220,16 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
                 out.print("        } else if( w == "+i+" ) {\n");
             out.print("            a"+(i+1)+" = val;\n");
         }
+    }
+
+    private void printZero( int dimen ) {
+        out.print(
+                "    @Override\n" +
+                "    public void zero() {\n");
+        for( int y = 1; y <= dimen; y++ ) {
+            out.println("        a"+y+" = 0.0;");
+        }
+        out.print("    }\n\n");
     }
 
     public static void main( String args[] ) throws FileNotFoundException {

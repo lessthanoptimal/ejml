@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.data;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 
 /**
@@ -65,6 +66,11 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
         } else {
             throw new IllegalArgumentException("Requested number of columns is too great.");
         }
+    }
+
+    @Override
+    public void zero() {
+        Arrays.fill(data, 0, getNumElements(), 0.0);
     }
 
     @Override

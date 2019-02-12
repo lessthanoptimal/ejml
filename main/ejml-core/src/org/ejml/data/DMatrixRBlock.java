@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.data;
 
 import org.ejml.EjmlParameters;
+
+import java.util.Arrays;
 
 
 /**
@@ -143,6 +145,11 @@ public class DMatrixRBlock extends DMatrixD1 {
     @Override
     public int getNumCols() {
         return numCols;
+    }
+
+    @Override
+    public void zero() {
+        Arrays.fill(data, 0, getNumElements(), 0.0);
     }
 
     @Override

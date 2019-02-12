@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,6 +40,11 @@ public interface Matrix extends Serializable {
      * @return Number of columns.
      */
     int getNumCols();
+
+    /**
+     * Sets all values inside the matrix to zero
+     */
+    void zero();
 
     /**
      * Creates an exact copy of the matrix

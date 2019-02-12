@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,6 +49,16 @@ public class DMatrix6 implements DMatrixFixed {
         this.a4 = o.a4;
         this.a5 = o.a5;
         this.a6 = o.a6;
+    }
+
+    @Override
+    public void zero() {
+        a1 = 0.0;
+        a2 = 0.0;
+        a3 = 0.0;
+        a4 = 0.0;
+        a5 = 0.0;
+        a6 = 0.0;
     }
 
     public void set(double a1, double a2, double a3, double a4, double a5, double a6)

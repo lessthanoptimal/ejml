@@ -18,6 +18,7 @@ Date format: year/month/day
   * Added abs() Thanks Víctor Fernández for the pull request
 - GrowArray
   * Clarified meaning of grow() by renaming it growInternal() Thanks Florian Enner for pointing out the problem
+- Added Matrix.zero() so that all matrices now implement zero()
 
 ----- Version 0.37.1
 2018/12/25
