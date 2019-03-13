@@ -91,6 +91,7 @@ subprojects {
         ['core','generator-annprocess'].each { String a->
             benchmarkCompile('org.openjdk.jmh:jmh-'+a+':1.19')
         }
+        generateCompile project(':main:autocode')
     }
 
     jar {
