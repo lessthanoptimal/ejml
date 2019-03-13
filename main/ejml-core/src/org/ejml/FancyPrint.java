@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,6 +53,13 @@ public class FancyPrint {
      */
     public String s(double value ) {
         return UtilEjml.fancyString(value,format,length,significant);
+    }
+
+    /**
+     * Fancy print without a space added to positive numbers
+     */
+    public String p(double value ) {
+        return UtilEjml.fancyString(value,format,false,length,significant);
     }
 
 }

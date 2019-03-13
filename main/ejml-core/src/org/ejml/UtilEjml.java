@@ -351,16 +351,21 @@ public class UtilEjml {
 
     public static String fancyString(double value, DecimalFormat format, int length, int significant) {
 
+        return fancyString(value,format,true,length,significant);
+    }
+
+    public static String fancyString(double value, DecimalFormat format, boolean hasSpace , int length, int significant) {
+
         String formatted;
 
         // see if the number is negative. Including negative zero
         boolean isNegative = Double.doubleToRawLongBits(value) < 0;
 
         if( value == 0 ) {
-            formatted = isNegative ? "-0" : " 0";
+            formatted = isNegative ? "-0" : hasSpace ? " 0": "0";
         } else {
             int digits = length-1;
-            String extraSpace = isNegative ? "":" ";
+            String extraSpace = isNegative ? "": hasSpace ? " ": "";
             double vabs = Math.abs(value);
             int a = (int) Math.floor(Math.log10(vabs));
             if (a >= 0 && a < digits) {
