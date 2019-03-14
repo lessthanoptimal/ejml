@@ -44,7 +44,7 @@ EJML is in Maven central repository and can easily be added to Gradle, Maven, an
 ```
 <groupId>org.ejml</groupId>
 <artifactId>ejml-all</artifactId>
-<version>0.37.1</version>
+<version>0.38</version>
 ```
 
 This will add the entire library.  Alternatively, you can include the required modules individually:
