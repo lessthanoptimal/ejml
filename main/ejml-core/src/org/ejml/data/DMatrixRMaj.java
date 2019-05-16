@@ -98,7 +98,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Creates a row vector the same length as this array
+     * Creates a column vector the same length as this array
      * @param data elements in vector. copied
      */
     public DMatrixRMaj(double data[]) {
