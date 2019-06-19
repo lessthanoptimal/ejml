@@ -45,7 +45,7 @@ public class LinearSolverLu_DDRM extends LinearSolverLuBase_DDRM {
     @Override
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
         if( B.numRows != numRows )
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numRows);
         X.reshape(numCols,B.numCols);
 
         int numCols = B.numCols;
