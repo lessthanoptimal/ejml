@@ -137,7 +137,7 @@ Description:
   'B' for binary
 <structure> is the name the internal data structure.
 
-Matrix Suffix   Abreviation   Description
+Matrix Suffix   Abbreviation   Description
 =========================================================================
    RMaj            RM         dense row-major
    RBlock          RB         dense block row-major
