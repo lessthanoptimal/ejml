@@ -2,6 +2,11 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.39
+2019/
+
+- Fixed deserialization issue with SimpleMatrix. Thanks AngledLuffa for the bug report!
+
 ----- Version 0.38
 2019/03/13
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -895,7 +895,6 @@ public class TestSimpleMatrix {
         matrixTypes.add( new DMatrixSparseCSC(2,3));
 //        matrixTypes.add( new FMatrixSparseCSC(2,3));
 
-
         DMatrixRMaj template = RandomMatrices_DDRM.rectangle(2,3,rand);
 
         for( Matrix m : matrixTypes ) {
@@ -914,6 +913,10 @@ public class TestSimpleMatrix {
                 SimpleMatrix B = (SimpleMatrix)inputStream.readObject();
 
                 assertTrue(A.isIdentical(B,1e-4));
+                assertNotNull(B.convertType);
+
+                // If properly constructed this shouldn't fail
+                B.mult(A.transpose());
 
                 // UnsupportedOperation is considered an acceptable response
                 try {
@@ -926,6 +929,11 @@ public class TestSimpleMatrix {
                 fail("Serialization failed");
             }
         }
+    }
+
+    @Test
+    public void serialization2() {
+
     }
 
     /**

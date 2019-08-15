@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -61,6 +61,12 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     }
 
     protected SimpleBase() {
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        convertType = new AutomaticSimpleMatrixConvert();
     }
 
     /**
@@ -1254,7 +1260,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @throws java.io.IOException
      */
     public void saveToFileBinary( String fileName )
-        throws IOException
+            throws IOException
     {
         MatrixIO.saveBin((DMatrixRMaj)mat, fileName);
     }
@@ -1323,7 +1329,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     /**
      * Returns true of the specified matrix element is valid element inside this matrix.
-     * 
+     *
      * @param row Row index.
      * @param col Column index.
      * @return true if it is a valid element in the matrix.
