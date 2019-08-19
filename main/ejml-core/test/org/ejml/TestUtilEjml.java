@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,8 +25,7 @@ import org.junit.Test;
 import java.text.DecimalFormat;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -88,6 +87,34 @@ public class TestUtilEjml {
         assertEquals(1.682750  , m.get(0,1) , UtilEjml.TEST_F64);
         assertEquals(0         , m.get(1,0) , UtilEjml.TEST_F64);
         assertEquals(-1.880739 , m.get(1,1) , UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void checkTooLarge() {
+        UtilEjml.checkTooLarge(0,0);
+        UtilEjml.checkTooLarge(1000,100);
+
+        try {
+            UtilEjml.checkTooLarge(Integer.MAX_VALUE,600);
+            fail("Exception should have been thrown");
+        } catch( IllegalArgumentException ignore){}
+    }
+
+    @Test
+    public void checkTooLargeComplex() {
+        UtilEjml.checkTooLargeComplex(0,0);
+        UtilEjml.checkTooLargeComplex(1000,100);
+        UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2,1);
+
+        try {
+            UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2,2);
+            fail("Exception should have been thrown");
+        } catch( IllegalArgumentException ignore){}
+
+        try {
+            UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE,600);
+            fail("Exception should have been thrown");
+        } catch( IllegalArgumentException ignore){}
     }
 
     @Test

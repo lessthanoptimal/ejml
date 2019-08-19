@@ -83,6 +83,16 @@ public class UtilEjml {
         }
     }
 
+    public static void checkTooLarge( int rows , int cols ) {
+        if( (rows*cols) != ((long)rows*cols))
+            throw new IllegalArgumentException("Matrix size exceeds the size of an integer");
+    }
+
+    public static void checkTooLargeComplex( int rows , int cols ) {
+        if( (2*rows*cols) != ((long)rows*cols*2))
+            throw new IllegalArgumentException("Matrix size exceeds the size of an integer");
+    }
+
     public static boolean isUncountable( double val ) {
         return Double.isNaN(val) || Double.isInfinite(val);
     }

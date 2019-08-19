@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.ejml.ops.MatrixIO;
 
 import java.util.Arrays;
@@ -41,9 +42,10 @@ public class ZMatrixRMaj extends ZMatrixD1 {
      * @param data 2D array representation of the matrix. Not modified.
      */
     public ZMatrixRMaj(double data[][] ) {
-
         this.numRows = data.length;
         this.numCols = data[0].length/2;
+
+        UtilEjml.checkTooLargeComplex(numRows,numCols);
 
         this.data = new double[ numRows * numCols * 2 ];
 
@@ -84,6 +86,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
      * @param numCols number of columns
      */
     public ZMatrixRMaj(int numRows, int numCols) {
+        UtilEjml.checkTooLargeComplex(numRows,numCols);
         this.numRows = numRows;
         this.numCols = numCols;
         this.data = new double[numRows*numCols*2];
@@ -96,6 +99,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
 
     @Override
     public void reshape( int numRows , int numCols ) {
+        UtilEjml.checkTooLargeComplex(numRows,numCols);
         int newLength = numRows*numCols*2;
 
         if( newLength > data.length ) {

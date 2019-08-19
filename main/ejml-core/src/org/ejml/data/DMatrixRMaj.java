@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.ejml.ops.ConvertDArrays;
 import org.ejml.ops.MatrixIO;
 
@@ -74,6 +75,7 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param data The formatted 1D array. Not modified.
      */
     public DMatrixRMaj(int numRows, int numCols, boolean rowMajor, double... data) {
+        UtilEjml.checkTooLarge(numRows,numCols);
         final int length = numRows * numCols;
         this.data = new double[ length ];
 
@@ -115,6 +117,7 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param numCols The number of columns in the matrix.
      */
     public DMatrixRMaj(int numRows  , int numCols ) {
+        UtilEjml.checkTooLarge(numRows,numCols);
         data = new double[ numRows * numCols ];
 
         this.numRows = numRows;
@@ -173,6 +176,7 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @return A matrix which references the provided data internally.
      */
     public static DMatrixRMaj wrap(int numRows , int numCols , double []data ) {
+        UtilEjml.checkTooLarge(numRows,numCols);
         DMatrixRMaj s = new DMatrixRMaj();
         s.data = data;
         s.numRows = numRows;
@@ -183,6 +187,7 @@ public class DMatrixRMaj extends DMatrix1Row {
 
     @Override
     public void reshape(int numRows, int numCols, boolean saveValues) {
+        UtilEjml.checkTooLarge(numRows,numCols);
         if( data.length < numRows * numCols ) {
             double []d = new double[ numRows*numCols ];
 

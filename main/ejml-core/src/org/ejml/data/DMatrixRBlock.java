@@ -19,6 +19,7 @@
 package org.ejml.data;
 
 import org.ejml.EjmlParameters;
+import org.ejml.UtilEjml;
 
 import java.util.Arrays;
 
@@ -33,6 +34,7 @@ public class DMatrixRBlock extends DMatrixD1 {
 
     public DMatrixRBlock(int numRows , int numCols , int blockLength)
     {
+        UtilEjml.checkTooLarge(numRows,numCols);
         this.data = new double[ numRows * numCols ];
         this.blockLength = blockLength;
         this.numRows = numRows;
@@ -78,6 +80,7 @@ public class DMatrixRBlock extends DMatrixD1 {
     @Override
     public void reshape(int numRows, int numCols, boolean saveValues)
     {
+        UtilEjml.checkTooLarge(numRows,numCols);
         if( numRows*numCols <= data.length  ) {
             this.numRows = numRows;
             this.numCols = numCols;
