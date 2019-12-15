@@ -23,6 +23,7 @@ import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.ConvertFMatrixStruct;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -250,6 +251,12 @@ public class UtilEjml {
         return ConvertDMatrixStruct.convert(tmp,(DMatrixSparseCSC)null, 0);
     }
 
+    public static FMatrixSparseCSC parse_FSCC(String s, int numColumns) {
+        FMatrixRMaj tmp = parse_FDRM(s,numColumns);
+
+        return ConvertFMatrixStruct.convert(tmp,(FMatrixSparseCSC)null, 0);
+    }
+
     public static int[] shuffled( int N , Random rand ) {
         return shuffled(N,N,rand);
     }
@@ -421,6 +428,15 @@ public class UtilEjml {
      */
     public static double[] adjust(DGrowArray gwork, int desired) {
         if (gwork == null) gwork = new DGrowArray();
+        gwork.reshape(desired);
+        return gwork.data;
+    }
+
+    /**
+     * Resizes the array to ensure that it is at least of length desired and returns its internal array
+     */
+    public static float[] adjust(FGrowArray gwork, int desired) {
+        if (gwork == null) gwork = new FGrowArray();
         gwork.reshape(desired);
         return gwork.data;
     }

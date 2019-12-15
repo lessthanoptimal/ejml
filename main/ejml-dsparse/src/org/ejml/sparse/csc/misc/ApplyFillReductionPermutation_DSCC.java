@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
  *
  * @author Peter Abeles
  */
-public class ApplyFillReductionPermutation {
+public class ApplyFillReductionPermutation_DSCC {
     // fill reduction permutation
     private ComputePermutation<DMatrixSparseCSC> fillReduce;
 
@@ -42,8 +42,8 @@ public class ApplyFillReductionPermutation {
 
     boolean symmetric;
 
-    public ApplyFillReductionPermutation(ComputePermutation<DMatrixSparseCSC> fillReduce,
-                                         boolean symmetric ) {
+    public ApplyFillReductionPermutation_DSCC(ComputePermutation<DMatrixSparseCSC> fillReduce,
+                                              boolean symmetric ) {
         this.fillReduce = fillReduce;
         this.symmetric = symmetric;
     }

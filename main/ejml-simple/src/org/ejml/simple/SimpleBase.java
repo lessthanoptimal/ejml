@@ -125,7 +125,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
             case FDRM: return new SimpleOperations_FDRM();
             case ZDRM: return new SimpleOperations_ZDRM();
             case CDRM: return new SimpleOperations_CDRM();
-            case DSCC: return new SimpleOperations_SPARSE();
+            case DSCC: return new SimpleOperations_DSCC();
+            case FSCC: return new SimpleOperations_FSCC();
         }
         throw new RuntimeException("Unknown Matrix Type. "+type);
     }

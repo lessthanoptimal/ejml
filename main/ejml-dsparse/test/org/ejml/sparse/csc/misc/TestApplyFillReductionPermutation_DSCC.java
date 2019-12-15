@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,24 +16,27 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse;
+package org.ejml.sparse.csc.misc;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
- * Different types of fill in reducing techniques that can be selected
- *
  * @author Peter Abeles
  */
-public enum FillReducing {
-    /**
-     * No fill reduction permutation will be applied
-     */
-    NONE,
-    /**
-     * TESTING ONLY. Completely random permutation
-     */
-    RANDOM,
-    /**
-     * TESTING ONLY. Doesn't change the input.
-     */
-    IDENTITY
+public class TestApplyFillReductionPermutation_DSCC {
+    @Ignore
+    @Test
+    public void symmetric() {
+        fail("implement");
+    }
+
+    @Ignore
+    @Test
+    public void non_symmetric() {
+        fail("implement");
+    }
+
 }

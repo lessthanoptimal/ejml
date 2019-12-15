@@ -1,5 +1,5 @@
 plugins {
-    id "com.peterabeles.gversion" version "1.5.2"
+    id "com.peterabeles.gversion" version "1.6.2"
 }
 
 gversion {
@@ -234,9 +234,9 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
     from files(javadocProjects.collect { project(it).sourceSets.main.output })
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
     distributionType = Wrapper.DistributionType.BIN
-    gradleVersion = '4.10.2'
+    gradleVersion = '5.6.4'
 }
 
 project(':main:ejml-core').compileJava.dependsOn(createVersionFile)

@@ -32,7 +32,7 @@ import java.io.PrintStream;
 /**
  * @author Peter Abeles
  */
-public class SimpleOperations_SPARSE implements SimpleSparseOperations<DMatrixSparseCSC,DMatrixRMaj> {
+public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSparseCSC,DMatrixRMaj> {
 
     // Workspace variables
     public transient IGrowArray gw = new IGrowArray();
@@ -49,18 +49,18 @@ public class SimpleOperations_SPARSE implements SimpleSparseOperations<DMatrixSp
     }
 
     @Override
-    public double get(DMatrixSparseCSC A, int row, int column) {
+    public /**/double get(DMatrixSparseCSC A, int row, int column) {
         return A.get(row,column);
     }
 
     @Override
-    public void get(DMatrixSparseCSC A, int row, int column, Complex_F64 value) {
+    public void get(DMatrixSparseCSC A, int row, int column, /**/Complex_F64 value) {
         value.real = A.get(row,column);
         value.imaginary = 0;
     }
 
     @Override
-    public void fill(DMatrixSparseCSC A, double value) {
+    public void fill(DMatrixSparseCSC A, /**/double value) {
         if( value == 0 ) {
             A.zero();
         } else {
@@ -299,8 +299,8 @@ public class SimpleOperations_SPARSE implements SimpleSparseOperations<DMatrixSp
     }
 
     @Override
-    public boolean isIdentical(DMatrixSparseCSC A, DMatrixSparseCSC B, double tol) {
-        return MatrixFeatures_DSCC.isEqualsSort(A, B, tol);
+    public boolean isIdentical(DMatrixSparseCSC A, DMatrixSparseCSC B, /**/double tol) {
+        return MatrixFeatures_DSCC.isEqualsSort(A, B, (double)tol);
     }
 
     @Override

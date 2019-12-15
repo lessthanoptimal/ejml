@@ -55,7 +55,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         return TriangularSolver_DSCC.qualityTriangular(decomposition.getU());
     }
 

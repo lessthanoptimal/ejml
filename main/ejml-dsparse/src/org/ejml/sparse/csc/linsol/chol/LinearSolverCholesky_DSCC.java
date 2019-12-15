@@ -27,7 +27,7 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
-import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 import static org.ejml.UtilEjml.adjust;
@@ -41,7 +41,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     CholeskyUpLooking_DSCC cholesky;
 
-    ApplyFillReductionPermutation reduce;
+    ApplyFillReductionPermutation_DSCC reduce;
 
     DGrowArray gb = new DGrowArray();
     DGrowArray gx = new DGrowArray();
@@ -51,7 +51,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , ComputePermutation<DMatrixSparseCSC> fillReduce) {
         this.cholesky = cholesky;
-        this.reduce = new ApplyFillReductionPermutation(fillReduce,true);
+        this.reduce = new ApplyFillReductionPermutation_DSCC(fillReduce,true);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     }
 
     @Override
-    public double quality() {
+    public /**/double quality() {
         return TriangularSolver_DSCC.qualityTriangular(cholesky.getL());
     }
 

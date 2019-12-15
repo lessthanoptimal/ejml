@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -69,6 +69,8 @@ public class GenerateCode32 {
 
         prefix64.add("DGrow");
         prefix32.add("FGrow");
+        prefix64.add("DScalar");
+        prefix32.add("FScalar");
         prefix64.add("DMatrix");
         prefix32.add("FMatrix");
         prefix64.add("ZMatrix");
@@ -103,6 +105,7 @@ public class GenerateCode32 {
             converter.replacePattern(".getZ"+suffice, ".getC"+suffice);
         }
 
+        converter.replacePattern("DScalar", "FScalar");
         converter.replacePattern("ConvertD", "ConvertF");
         converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
@@ -139,7 +142,8 @@ public class GenerateCode32 {
 
     public void process( File inputDirectory , File outputDirectory ) {
         if( !inputDirectory.isDirectory() ) {
-            throw new IllegalArgumentException( "Input isn't a directory" );
+            System.err.println( "Input isn't a directory. "+inputDirectory );
+            return;
         }
         if( !outputDirectory.exists() ) {
             if( !outputDirectory.mkdirs() ) {
@@ -266,7 +270,7 @@ public class GenerateCode32 {
         }
 
         // remove any previously generated code
-        for( String module : new String[]{"dense"}) {
+        for( String module : new String[]{"dense","sparse"}) {
             recursiveDelete(new File(path,"main/ejml-f"+module+"/src"), true);
             recursiveDelete(new File(path,"main/ejml-c"+module+"/src"), true);
             recursiveDelete(new File(path,"main/ejml-f"+module+"/test"), true);

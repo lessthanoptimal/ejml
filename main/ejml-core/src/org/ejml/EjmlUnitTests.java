@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -177,6 +177,34 @@ public class EjmlUnitTests {
         }
     }
 
+
+    /**
+     * Assert equals with a relative error
+     */
+    public static void assertRelativeEquals(FMatrix A , FMatrix B , double tol ) {
+        assertShape(A,B);
+
+        for( int i = 0; i < A.getNumRows(); i++ ){
+            for( int j = 0; j < A.getNumCols(); j++ ) {
+                float valA = A.get(i,j);
+                float valB = B.get(i,j);
+
+                if( (Float.isNaN(valA) != Float.isNaN(valB)) ||
+                        (Double.isInfinite(valA) != Double.isInfinite(valB))) {
+                    throw new AssertionError("At ("+i+","+j+") A = "+valA+" B = "+valB);
+                }
+                float max = Math.max(Math.abs(valA), Math.abs(valB));
+                float error = Math.abs(valA - valB) / max;
+                if( error > tol ) {
+                    System.out.println("------------  A  -----------");
+                    A.print();
+                    System.out.println("\n------------  B  -----------");
+                    B.print();
+                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
+                }
+            }
+        }
+    }
     public static void assertEquals(FMatrix A , FMatrix B , float tol ) {
         assertShape(A,B);
 

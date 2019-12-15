@@ -25,7 +25,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertMatrixType;
-import org.ejml.simple.ops.SimpleOperations_SPARSE;
+import org.ejml.simple.ops.SimpleOperations_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.Test;
 
@@ -975,7 +975,7 @@ public class TestSimpleMatrix {
     /**
      * Helper used to test to see if a specialized function was called
      */
-    public static class OpsCheckSpecial extends SimpleOperations_SPARSE {
+    public static class OpsCheckSpecial extends SimpleOperations_DSCC {
         public boolean specalized = false;
 
         @Override

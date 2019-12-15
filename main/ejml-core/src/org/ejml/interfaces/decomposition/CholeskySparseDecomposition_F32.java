@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,27 +16,25 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc.misc;
+package org.ejml.interfaces.decomposition;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
+import org.ejml.data.Complex_F32;
+import org.ejml.data.Matrix;
 
 /**
+ * <p>
+ * Implementation of {@link CholeskySparseDecomposition} for 32-bit floats.
+ * </p>
+ *
  * @author Peter Abeles
  */
-public class TestApplyFillReductionPermutation {
-    @Ignore
-    @Test
-    public void symmetric() {
-        fail("implement");
-    }
-
-    @Ignore
-    @Test
-    public void non_symmetric() {
-        fail("implement");
-    }
-
+public interface CholeskySparseDecomposition_F32<MatrixType extends Matrix>
+        extends CholeskySparseDecomposition<MatrixType>
+{
+    /**
+     * Computes the matrix's determinant using the decomposition.
+     *
+     * @return The determinant.
+     */
+    Complex_F32 computeDeterminant();
 }

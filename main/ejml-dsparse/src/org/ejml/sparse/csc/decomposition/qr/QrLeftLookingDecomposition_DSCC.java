@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 import org.ejml.interfaces.decomposition.QRSparseDecomposition;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class QrLeftLookingDecomposition_DSCC implements
 {
     // shape of matrix and m2 includes fictitious rows
     int m,n,m2;
-    ApplyFillReductionPermutation applyReduce;
+    ApplyFillReductionPermutation_DSCC applyReduce;
 
     // storage for Householder vectors
     DMatrixSparseCSC V = new DMatrixSparseCSC(1,1,0);
@@ -70,7 +70,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     private boolean locked = false;
 
     public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
-        this.applyReduce = new ApplyFillReductionPermutation(permutation,false);
+        this.applyReduce = new ApplyFillReductionPermutation_DSCC(permutation,false);
 
         // use the same work space to reduce the overall memory foot print
         this.structure.setGwork(gwork);

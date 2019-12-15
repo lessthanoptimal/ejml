@@ -25,7 +25,7 @@ import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 import static org.ejml.UtilEjml.permutationSign;
@@ -40,7 +40,7 @@ import static org.ejml.UtilEjml.permutationSign;
 public class LuUpLooking_DSCC
     implements LUSparseDecomposition_F64<DMatrixSparseCSC>
 {
-    private ApplyFillReductionPermutation applyReduce;
+    private ApplyFillReductionPermutation_DSCC applyReduce;
 
     // storage for LU decomposition
     private DMatrixSparseCSC L = new DMatrixSparseCSC(0,0,0);
@@ -58,7 +58,7 @@ public class LuUpLooking_DSCC
     private boolean singular;
 
     public LuUpLooking_DSCC(ComputePermutation<DMatrixSparseCSC> reduceFill) {
-        this.applyReduce = new ApplyFillReductionPermutation(reduceFill,false);
+        this.applyReduce = new ApplyFillReductionPermutation_DSCC(reduceFill,false);
     }
 
     @Override

@@ -16,35 +16,21 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc;
+package org.ejml.interfaces.decomposition;
 
-import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.Complex_F32;
+import org.ejml.data.Matrix;
 
 /**
+ * Implementation of {@link LUSparseDecomposition} for 32-bit numbers
+ *
  * @author Peter Abeles
  */
-public class NormOps_DSCC {
-
-    public static double fastNormF(DMatrixSparseCSC A ) {
-        double total = 0;
-
-        for (int i = 0; i < A.nz_length; i++) {
-            double x = A.nz_values[i];
-            total += x*x;
-        }
-
-        return Math.sqrt(total);
-    }
-
-    public static double normF(DMatrixSparseCSC A ) {
-        double total = 0;
-        double max = CommonOps_DSCC.elementMaxAbs(A);
-
-        for (int i = 0; i < A.nz_length; i++) {
-            double x = A.nz_values[i]/max;
-            total += x*x;
-        }
-
-        return max * Math.sqrt(total);
-    }
+public interface LUSparseDecomposition_F32<T extends Matrix> extends LUSparseDecomposition<T> {
+    /**
+     * Computes the matrix's determinant using the LU decomposition.
+     *
+     * @return The determinant.
+     */
+    Complex_F32 computeDeterminant();
 }
