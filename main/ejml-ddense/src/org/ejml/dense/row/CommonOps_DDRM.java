@@ -1949,7 +1949,7 @@ public class CommonOps_DDRM {
      * <p>
      * Computes the sum of each column in the input matrix and returns the results in a vector:<br>
      * <br>
-     * b<sub>j</sub> = min(i=1:m ; a<sub>ij</sub>)
+     * b<sub>j</sub> = sum(i=1:m ; a<sub>ij</sub>)
      * </p>
      *
      * @param input Input matrix
