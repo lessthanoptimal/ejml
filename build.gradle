@@ -18,16 +18,20 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'osgi'
     apply plugin: 'maven'
     apply plugin: 'signing'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 
-    // Enable incremental compile. Should make single file changes faster
-    tasks.withType(JavaCompile) {
+    compileJava {
+        // Should make single file changes faster
         options.incremental = true
+        // Output byte code compatible with Java 8
+        options.compilerArgs += ["--release", "8"]
+//        options.compilerArgs += '--enable-preview'
     }
 
     test {
@@ -92,14 +96,6 @@ subprojects {
             benchmarkCompile('org.openjdk.jmh:jmh-'+a+':1.19')
         }
         generateCompile project(':main:autocode')
-    }
-
-    jar {
-        manifest { // the manifest of the default jar is of type OsgiManifest
-            instruction 'Bundle-Vendor', 'EJML'
-//            instruction 'Bundle-Description', 'EJML'
-            instruction 'Bundle-DocURL', 'http://ejml.org/'
-        }
     }
 
     javadoc.failOnError = false
@@ -236,7 +232,7 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 
 wrapper {
     distributionType = Wrapper.DistributionType.BIN
-    gradleVersion = '5.6.4'
+    gradleVersion = '6.2.2'
 }
 
 project(':main:ejml-core').compileJava.dependsOn(createVersionFile)
