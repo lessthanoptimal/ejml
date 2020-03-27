@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -144,7 +144,9 @@ public class EjmlUnitTests {
 
                 assertTrue(!Double.isNaN(valA) && !Double.isNaN(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 assertTrue(!Double.isInfinite(valA) && !Double.isInfinite(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
-                assertTrue(Math.abs( valA-valB) <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+
+                double error = Math.abs( valA-valB);
+                assertTrue(error <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB+" error = "+error+" tol = "+tol);
             }
         }
     }
@@ -171,7 +173,7 @@ public class EjmlUnitTests {
                     A.print();
                     System.out.println("\n------------  B  -----------");
                     B.print();
-                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
+                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error+" tol = "+tol);
                 }
             }
         }
@@ -200,7 +202,7 @@ public class EjmlUnitTests {
                     A.print();
                     System.out.println("\n------------  B  -----------");
                     B.print();
-                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + "   error = " + error);
+                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error+" tol = "+tol);
                 }
             }
         }
@@ -215,7 +217,9 @@ public class EjmlUnitTests {
 
                 assertTrue(!Float.isNaN(valA) && !Float.isNaN(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
                 assertTrue(!Float.isInfinite(valA) && !Float.isInfinite(valB) ,"At ("+i+","+j+") A = "+valA+" B = "+valB);
-                assertTrue(Math.abs( valA-valB) <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB);
+
+                float error = Math.abs( valA-valB);
+                assertTrue(error <= tol,"At ("+i+","+j+") A = "+valA+" B = "+valB+" error = "+error+" tol = "+tol);
             }
         }
     }
