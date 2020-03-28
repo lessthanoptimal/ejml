@@ -108,11 +108,7 @@ public class TestTriangularSolver_DSCC {
                 int maxSize = m*m;
                 int nz_size_G = m;
                 while( nz_size_G < maxSize ) {
-                    DMatrixSparseCSC G;
-                    if( lower)
-                        G = RandomMatrices_DSCC.triangleLower(m, 0, nz_size_G, -1, 1, rand);
-                    else
-                        G = RandomMatrices_DSCC.triangleUpper(m, 0, nz_size_G, -1, 1, rand);
+                    DMatrixSparseCSC G = createTriangular(lower,m, nz_size_G);
 
                     int lengthX = rand.nextInt(m/2+1)+m/2;
                     DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(m, 1,lengthX, rand);
@@ -125,19 +121,25 @@ public class TestTriangularSolver_DSCC {
                     CommonOps_DSCC.mult(G, x, found);
 
                     DMatrixRMaj expected = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
-                    if( !MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64) ) {
-                        for (int i = 0; i < m; i++) {
-                            double error = Math.abs(found.get(i)-expected.get(i));
-                            if( error > UtilEjml.TEST_F64*100 ) {
-                                System.out.println("error["+i+"] = "+error+"  "+expected.get(i));
-                            }
-                        }
-                    }
-                    assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64*100));
+                    assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64));
                     nz_size_G = (int)(nz_size_G*1.5);
                 }
             }
         }
+    }
+
+    private DMatrixSparseCSC createTriangular( boolean lower , int rows , int nz_size ) {
+        DMatrixSparseCSC T;
+        if( lower)
+            T = RandomMatrices_DSCC.triangleLower(rows, 0, nz_size, -1, 1, rand);
+        else
+            T = RandomMatrices_DSCC.triangleUpper(rows, 0, nz_size, -1, 1, rand);
+
+        // make sure the diagonal elements are close to one so that the system is stable
+        for (int row = 0; row < rows; row++) {
+            T.set(row,row, 1.0 + (double) (rand.nextGaussian() * 0.001) );
+        }
+        return T;
     }
 
     @Test
@@ -156,11 +158,7 @@ public class TestTriangularSolver_DSCC {
             for (int nz_size : new int[]{5, 8, 10, 20}) {
                 int lengthX = rand.nextInt(3)+3;
 
-                DMatrixSparseCSC G;
-                if( lower)
-                    G = RandomMatrices_DSCC.triangleLower(5, 0, nz_size, -1, 1, rand);
-                else
-                    G = RandomMatrices_DSCC.triangleUpper(5, 0, nz_size, -1, 1, rand);
+                DMatrixSparseCSC G = createTriangular(lower,5, nz_size);
                 DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(5, 2,lengthX*2, rand);
                 DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
 
@@ -209,11 +207,7 @@ public class TestTriangularSolver_DSCC {
 
                 int B_nz_count = (int)(N*Bcol*(rand.nextDouble()*0.7+0.35)); // bias so it will fill up
 
-                DMatrixSparseCSC G;
-                if( lower)
-                    G = RandomMatrices_DSCC.triangleLower(N, 0, nz_size, -1, 1, rand);
-                else
-                    G = RandomMatrices_DSCC.triangleUpper(N, 0, nz_size, -1, 1, rand);
+                DMatrixSparseCSC G = createTriangular(lower,N, nz_size);
                 DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(N, Bcol,B_nz_count, rand);
                 DMatrixSparseCSC x = new DMatrixSparseCSC(b.numRows,b.numCols,1);
 
@@ -347,11 +341,7 @@ public class TestTriangularSolver_DSCC {
 
                 int lengthX = rand.nextInt(3)+3;
 
-                DMatrixSparseCSC G;
-                if( lower)
-                    G = RandomMatrices_DSCC.triangleLower(m, 0, nz_size, -1, 1, rand);
-                else
-                    G = RandomMatrices_DSCC.triangleUpper(m, 0, nz_size, -1, 1, rand);
+                DMatrixSparseCSC G = createTriangular(lower,m, nz_size);
 
                 DMatrixSparseCSC Gp = new DMatrixSparseCSC(m,5,0);
                 CommonOps_DSCC.permute(null,G,p,Gp);

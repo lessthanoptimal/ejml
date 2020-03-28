@@ -88,7 +88,7 @@ public class TestTriangularSolver_DDRM {
         DMatrixRMaj L = RandomMatrices_DDRM.triangularLower(size,0,-1,1,rand);
         // make the diagonal elements close to 1 so that the system is easily solvable
         for (int i = 0; i < size; i++) {
-            L.set(i,i,1.0+rand.nextGaussian()*0.001);
+            L.set(i,i,1.0 + (double)(rand.nextGaussian()*0.001));
         }
         return L;
     }
@@ -97,7 +97,7 @@ public class TestTriangularSolver_DDRM {
         DMatrixRMaj L = RandomMatrices_DDRM.triangularUpper(size,0,-1,1,rand);
         // make the diagonal elements close to 1 so that the system is easily solvable
         for (int i = 0; i < size; i++) {
-            L.set(i,i,1.0+rand.nextGaussian()*0.001);
+            L.set(i,i,1.0 + (double)(rand.nextGaussian()*0.001));
         }
         return L;
     }

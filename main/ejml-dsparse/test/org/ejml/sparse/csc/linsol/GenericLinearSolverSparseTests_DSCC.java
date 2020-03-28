@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -83,18 +83,17 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 //                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
+                    DMatrixRMaj B = create(A.numRows, 3);
                     DMatrixRMaj X = create(A.numCols, 3);
-                    DMatrixRMaj foundX = create(A.numCols, 3);
-                    DMatrixRMaj B = new DMatrixRMaj(A.numRows, 3);
+                    DMatrixRMaj foundB = create(A.numCols, 3);
 
-                    // compute the solution
-                    CommonOps_DSCC.mult(A, X, B);
                     DMatrixRMaj B_cpy = B.copy();
 
                     assertTrue(solver.setA(A));
-                    solver.solve(B, foundX);
+                    solver.solve(B, X);
+                    CommonOps_DSCC.mult(A, X, foundB);
 
-                    EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
+                    EjmlUnitTests.assertRelativeEquals(B_cpy, foundB, equalityTolerance);
 
                     if( !solver.modifiesA() ) {
                         EjmlUnitTests.assertEquals(A, A_cpy, equalityTolerance);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,7 +49,7 @@ public class UtilEjml {
     public static float F_PId2 = (float)(Math.PI/2.0);
 
     // tolerances for unit tests
-    public static float TEST_F32 = 1e-4f;
+    public static float TEST_F32 = 5e-4f;
     public static double TEST_F64 = 1e-8;
     public static float TESTP_F32 = 1e-6f;
     public static double TESTP_F64 = 1e-12;

@@ -154,26 +154,32 @@ public class EjmlUnitTests {
     /**
      * Assert equals with a relative error
      */
-    public static void assertRelativeEquals(DMatrix A , DMatrix B , double tol ) {
-        assertShape(A,B);
+    public static void assertRelativeEquals(DMatrix expected , DMatrix found , double tol ) {
+        assertShape(expected,found);
 
-        for( int i = 0; i < A.getNumRows(); i++ ){
-            for( int j = 0; j < A.getNumCols(); j++ ) {
-                double valA = A.get(i,j);
-                double valB = B.get(i,j);
+        for( int i = 0; i < expected.getNumRows(); i++ ){
+            for( int j = 0; j < expected.getNumCols(); j++ ) {
+                double expecEl = expected.get(i,j);
+                double foundEl = found.get(i,j);
 
-                if( (Double.isNaN(valA) != Double.isNaN(valB)) ||
-                        (Double.isInfinite(valA) != Double.isInfinite(valB))) {
-                    throw new AssertionError("At ("+i+","+j+") A = "+valA+" B = "+valB);
+                if( (Double.isNaN(expecEl) != Double.isNaN(foundEl)) ||
+                        (Double.isInfinite(expecEl) != Double.isInfinite(foundEl))) {
+                    throw new AssertionError("At ("+i+","+j+") A = "+expecEl+" B = "+foundEl);
                 }
-                double max = Math.max(Math.abs(valA), Math.abs(valB));
-                double error = Math.abs(valA - valB) / max;
+                double error = Math.abs(expecEl - foundEl);
+                // if it expected a perfect zero there is no scale information so use an implicit scale of 1
+                if( expecEl != 0.0 ) {
+                    double max = Math.max(Math.abs(expecEl), Math.abs(foundEl));
+                    error /= max;
+                }
                 if( error > tol ) {
-                    System.out.println("------------  A  -----------");
-                    A.print();
-                    System.out.println("\n------------  B  -----------");
-                    B.print();
-                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error+" tol = "+tol);
+                    if( expected.getNumRows() <= 10 ) {
+                        System.out.println("------------  A  -----------");
+                        expected.print();
+                        System.out.println("\n------------  B  -----------");
+                        found.print();
+                    }
+                    throw new AssertionError("At (" + i + "," + j + ") expected = " + expecEl + " found = " + foundEl + " error = " + error+" tol = "+tol);
                 }
             }
         }
@@ -183,26 +189,32 @@ public class EjmlUnitTests {
     /**
      * Assert equals with a relative error
      */
-    public static void assertRelativeEquals(FMatrix A , FMatrix B , double tol ) {
-        assertShape(A,B);
+    public static void assertRelativeEquals(FMatrix expected , FMatrix found , double tol ) {
+        assertShape(expected,found);
 
-        for( int i = 0; i < A.getNumRows(); i++ ){
-            for( int j = 0; j < A.getNumCols(); j++ ) {
-                float valA = A.get(i,j);
-                float valB = B.get(i,j);
+        for( int i = 0; i < expected.getNumRows(); i++ ){
+            for( int j = 0; j < expected.getNumCols(); j++ ) {
+                float expecEl = expected.get(i,j);
+                float foundEl = found.get(i,j);
 
-                if( (Float.isNaN(valA) != Float.isNaN(valB)) ||
-                        (Double.isInfinite(valA) != Double.isInfinite(valB))) {
-                    throw new AssertionError("At ("+i+","+j+") A = "+valA+" B = "+valB);
+                if( (Float.isNaN(expecEl) != Float.isNaN(foundEl)) ||
+                        (Double.isInfinite(expecEl) != Double.isInfinite(foundEl))) {
+                    throw new AssertionError("At ("+i+","+j+") A = "+expecEl+" B = "+foundEl);
                 }
-                float max = Math.max(Math.abs(valA), Math.abs(valB));
-                float error = Math.abs(valA - valB) / max;
+                float error = Math.abs(expecEl - foundEl);
+                // if it expected a perfect zero there is no scale information so use an implicit scale of 1
+                if( expecEl != 0.0 ) {
+                    float max = Math.max(Math.abs(expecEl), Math.abs(foundEl));
+                    error /= max;
+                }
                 if( error > tol ) {
-                    System.out.println("------------  A  -----------");
-                    A.print();
-                    System.out.println("\n------------  B  -----------");
-                    B.print();
-                    throw new AssertionError("At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error+" tol = "+tol);
+                    if( expected.getNumRows() <= 10 ) {
+                        System.out.println("------------  A  -----------");
+                        expected.print();
+                        System.out.println("\n------------  B  -----------");
+                        found.print();
+                    }
+                    throw new AssertionError("At (" + i + "," + j + ") expected = " + expecEl + " found = " + foundEl + " error = " + error+" tol = "+tol);
                 }
             }
         }

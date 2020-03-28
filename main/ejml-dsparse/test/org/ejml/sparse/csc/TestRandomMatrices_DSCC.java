@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -64,7 +64,6 @@ public class TestRandomMatrices_DSCC {
 
     @Test
     public void createLowerTriangular() {
-
         DMatrixSparseCSC L;
         for (int trial = 0; trial < 20; trial++) {
             for( int length : new int[]{0,2,6,12,20} ) {
@@ -72,17 +71,15 @@ public class TestRandomMatrices_DSCC {
 
                 assertEquals(Math.max(6,length),L.nz_length);
                 assertTrue(CommonOps_DSCC.checkStructure(L));
-                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, 0.0 ));
 
                 L = RandomMatrices_DSCC.triangleLower(6, 1, length,-1,1, rand);
-//                L.print();
                 assertEquals(Math.max(5,length),L.nz_length);
                 assertTrue(CommonOps_DSCC.checkStructure(L));
-                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, 0.0 ));
 
                 assertFalse(CommonOps_DSCC.checkDuplicateElements(L));
             }
-
         }
     }
 

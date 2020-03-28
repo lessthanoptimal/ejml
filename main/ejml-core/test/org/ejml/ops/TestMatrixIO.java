@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -108,7 +108,8 @@ public class TestMatrixIO {
         MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);;
         out.flush();
 
-        String found = bao.toString();
+        // On windows \r is added to the string
+        String found = bao.toString().replace("\r","");
         String expected =
                 "Type = DDRM , rows = 2 , cols = 1\n" +
                 " 1.1000E+00 \n" +
@@ -130,7 +131,8 @@ public class TestMatrixIO {
         MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);;
         out.flush();
 
-        String found = bao.toString();
+        // On windows \r is added to the string
+        String found = bao.toString().replace("\r","");
         String expected =
                 "Type = ZDRM , rows = 2 , cols = 1\n" +
                 " 1.0000E+00 +  1.5000E+00i\n" +
@@ -152,7 +154,8 @@ public class TestMatrixIO {
         MatrixIO.printFancy(out,mat,11);;
         out.flush();
 
-        String found = bao.toString();
+        // On windows \r is added to the string
+        String found = bao.toString().replace("\r","");
         String expected =
                 "Type = DDRM , rows = 2 , cols = 1\n" +
                 " 1.1       \n" +
@@ -174,7 +177,8 @@ public class TestMatrixIO {
         MatrixIO.printFancy(out,mat,11);;
         out.flush();
 
-        String found = bao.toString();
+        // On windows \r is added to the string
+        String found = bao.toString().replace("\r","");
         String expected =
                 "Type = ZDRM , rows = 2 , cols = 1\n" +
                 " 1          +  1.5i       \n" +
