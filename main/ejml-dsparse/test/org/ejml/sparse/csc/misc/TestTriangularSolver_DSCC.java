@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -102,29 +102,40 @@ public class TestTriangularSolver_DSCC {
     }
 
     public void solve_sparseX_vector( boolean lower ) {
-        int m = 5;
-        int w[] = new int[m*2];
-
         for (int trial = 0; trial < 10; trial++) {
-            for (int nz_size : new int[]{5, 8, 10, 20}) {
-                int lengthX = rand.nextInt(3)+3;
+            for( int m : new int[]{1,2,5,10,20,50}) {
+                int[] w = new int[m*2];
+                int maxSize = m*m;
+                int nz_size_G = m;
+                while( nz_size_G < maxSize ) {
+                    DMatrixSparseCSC G;
+                    if( lower)
+                        G = RandomMatrices_DSCC.triangleLower(m, 0, nz_size_G, -1, 1, rand);
+                    else
+                        G = RandomMatrices_DSCC.triangleUpper(m, 0, nz_size_G, -1, 1, rand);
 
-                DMatrixSparseCSC G;
-                if( lower)
-                    G = RandomMatrices_DSCC.triangleLower(m, 0, nz_size, -1, 1, rand);
-                else
-                    G = RandomMatrices_DSCC.triangleUpper(m, 0, nz_size, -1, 1, rand);
-                DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(m, 1,lengthX, rand);
-                DMatrixRMaj x = new DMatrixRMaj(b.numRows,b.numCols);
+                    int lengthX = rand.nextInt(m/2+1)+m/2;
+                    DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(m, 1,lengthX, rand);
+                    DMatrixRMaj x = new DMatrixRMaj(b.numRows,b.numCols);
 
-                int ret = TriangularSolver_DSCC.solveColB(G,lower, b,0, x.data,null, null, w);
-                assertTrue(m-lengthX >= ret);
+                    int ret = TriangularSolver_DSCC.solveColB(G,lower, b,0, x.data,null, null, w);
+                    assertTrue(m-lengthX >= ret);
 
-                DMatrixRMaj found = x.createLike();
-                CommonOps_DSCC.mult(G, x, found);
+                    DMatrixRMaj found = x.createLike();
+                    CommonOps_DSCC.mult(G, x, found);
 
-                DMatrixRMaj expected = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
-                assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64));
+                    DMatrixRMaj expected = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+                    if( !MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64) ) {
+                        for (int i = 0; i < m; i++) {
+                            double error = Math.abs(found.get(i)-expected.get(i));
+                            if( error > UtilEjml.TEST_F64*100 ) {
+                                System.out.println("error["+i+"] = "+error+"  "+expected.get(i));
+                            }
+                        }
+                    }
+                    assertTrue(MatrixFeatures_DDRM.isEquals(found, expected, UtilEjml.TEST_F64*100));
+                    nz_size_G = (int)(nz_size_G*1.5);
+                }
             }
         }
     }

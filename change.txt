@@ -8,6 +8,7 @@ Date format: year/month/day
 - Fixed deserialization issue with SimpleMatrix. Thanks AngledLuffa for the bug report!
 - Added sanity checks to matrix size. Thanks LsKoder for the suggestion!
 - Added support for sparse float matrices FSCC
+- Fixed bug with DSCC.multAddColA() where col_idx wasn't filled out all the way if there were zero columns
 
 ----- Version 0.38
 2019/03/13

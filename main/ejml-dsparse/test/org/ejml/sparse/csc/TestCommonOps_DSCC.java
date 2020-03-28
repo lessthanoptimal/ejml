@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -107,27 +107,30 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void mult_s_s_shapes() {
-        check_s_s_mult(
-                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(5, 4, 7, rand), false);
+        // multiple trials to test more sparse structures
+        for (int trial = 0; trial < 50; trial++) {
+            check_s_s_mult(
+                    RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
+                    RandomMatrices_DSCC.rectangle(5, 4, 7, rand), false);
 
-        check_s_s_mult(
-                RandomMatrices_DSCC.rectangle(5, 7, 5, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(5, 5, 7, rand), true);
-        check_s_s_mult(
-                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(5, 5, 7, rand), false);
-        check_s_s_mult(
-                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand), false);
-        check_s_s_mult(
-                RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
-                RandomMatrices_DSCC.rectangle(6, 4, 7, rand), false);
+            check_s_s_mult(
+                    RandomMatrices_DSCC.rectangle(5, 7, 5, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
+                    RandomMatrices_DSCC.rectangle(5, 5, 7, rand), true);
+            check_s_s_mult(
+                    RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
+                    RandomMatrices_DSCC.rectangle(5, 5, 7, rand), false);
+            check_s_s_mult(
+                    RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand), false);
+            check_s_s_mult(
+                    RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand),
+                    RandomMatrices_DSCC.rectangle(6, 4, 7, rand), false);
+        }
     }
 
     private void check_s_s_mult(DMatrixSparseCSC A , DMatrixSparseCSC B, DMatrixSparseCSC C, boolean exception ) {
@@ -264,6 +267,23 @@ public class TestCommonOps_DSCC {
                 }
             }
         }
+    }
+
+    /**
+     * See if it adds correctly when the last column is empty. This was a bug once.
+     */
+    @Test
+    public void add_empty_columns() {
+        DMatrixSparseTriplet trip_A = new DMatrixSparseTriplet(5,6,6);
+        DMatrixSparseTriplet trip_B = new DMatrixSparseTriplet(5,6,6);
+        for (int i = 0; i < 5; i++) {
+            trip_A.set(i,i,1.0);
+            trip_B.set(Math.min(4,i+1),i,1.0);
+        }
+        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(trip_A,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC B = ConvertDMatrixStruct.convert(trip_B,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC C = new DMatrixSparseCSC(1,1);
+        check_add(A,B,C,false);
     }
 
     @Test

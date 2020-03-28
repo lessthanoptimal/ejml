@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,7 +41,7 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void invert_inplace() {
-        DMatrixRMaj L = createRandomLowerTriangular();
+        DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj L_inv = L.copy();
 
@@ -56,7 +56,7 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void invert() {
-        DMatrixRMaj L = createRandomLowerTriangular();
+        DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj L_inv = L.copy();
 
@@ -71,24 +71,26 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void solveL_vector() {
-        DMatrixRMaj L = createRandomLowerTriangular();
+        for( int m : new int[]{1,2,5,10,20,50}) {
+            DMatrixRMaj L = createRandomLowerTriangular(m);
 
-        DMatrixRMaj L_inv = L.copy();
-        UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
+            DMatrixRMaj L_inv = L.copy();
+            UnrolledInverseFromMinor_DDRM.inv(L_inv, L_inv);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,1,rand);
-        DMatrixRMaj found = B.copy();
+            DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m, 1, rand);
+            DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(m, 1, rand);
+            DMatrixRMaj found = B.copy();
 
-        TriangularSolver_DDRM.solveL(L.data,found.data,3);
-        CommonOps_DDRM.mult(L_inv,B,expected);
+            TriangularSolver_DDRM.solveL(L.data, found.data, m);
+            CommonOps_DDRM.mult(L_inv, B, expected);
 
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found,UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
+        }
     }
 
-    private DMatrixRMaj createRandomLowerTriangular() {
-        DMatrixRMaj L = RandomMatrices_DDRM.rectangle(3,3,rand);
+    private DMatrixRMaj createRandomLowerTriangular(int size) {
+        DMatrixRMaj L = RandomMatrices_DDRM.rectangle(size,size,rand);
         for( int i = 0; i < L.numRows; i++ ) {
             for( int j = i+1; j < L.numCols; j++ ) {
                 L.set(i,j,0);
@@ -99,7 +101,7 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void solveL_matrix() {
-        DMatrixRMaj L = createRandomLowerTriangular();
+        DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj L_inv = L.copy();
         UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
@@ -116,7 +118,7 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void solveTranL() {
-        DMatrixRMaj L = createRandomLowerTriangular();
+        DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,1,rand);

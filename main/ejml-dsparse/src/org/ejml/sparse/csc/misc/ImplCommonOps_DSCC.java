@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -114,6 +114,7 @@ public class ImplCommonOps_DSCC {
                 C.nz_values[i] = x[C.nz_rows[i]];
             }
         }
+        C.col_idx[A.numCols] = C.nz_length;
     }
 
     /**
