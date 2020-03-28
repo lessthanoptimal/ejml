@@ -16,6 +16,20 @@
  * limitations under the License.
  */
 
-include 'main:ejml-core','main:ejml-experimental','main:ejml-ddense','main:ejml-zdense',
-        'main:ejml-simple','examples',"main:ejml-all",'main:ejml-fdense','main:ejml-cdense','main:autocode',
-        'main:ejml-dsparse','main:ejml-fsparse','main:ejml-kotlin'
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
+}
+
+dependencies {
+    api project(':main:ejml-all')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
