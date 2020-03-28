@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,6 +37,27 @@ public class MatrixIO {
 
     public static final String DEFAULT_FLOAT_FORMAT = "%11.4E";
     public static final int DEFAULT_LENGTH = 11; // length of pretty print
+
+    /**
+     * Converts a text string in matlab format into a DDRM matrix
+     */
+    public static DMatrixRMaj matlabToDDRM( String text ) {
+        // String all white space and the two [ ] characters
+        text = text.replaceAll("(\\s+|\\[|\\])","");
+        String[] stringRows = text.split(";");
+        String[] words = stringRows[0].split(",");
+        DMatrixRMaj output = new DMatrixRMaj(stringRows.length, words.length);
+        for (int row = 0; row < output.numRows; row++) {
+            words = stringRows[row].split(",");
+            if( words.length != output.numCols )
+                throw new IllegalArgumentException("Inconsistent column lengths. "+output.numCols+" "+words.length);
+            for (int col = 0; col < output.numCols; col++) {
+                double value = Double.parseDouble(words[col]);
+                output.set(row,col,value);
+            }
+        }
+        return output;
+    }
 
     /**
      * Saves a matrix to disk using Java binary serialization.

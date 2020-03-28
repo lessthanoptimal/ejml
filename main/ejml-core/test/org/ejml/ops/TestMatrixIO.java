@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.data.ZMatrixRMaj;
@@ -43,6 +44,27 @@ import static org.junit.Assert.assertTrue;
 public class TestMatrixIO {
 
     Random rand = new Random(23424);
+
+    @Test
+    public void matlabToDDRM() {
+        DMatrixRMaj expected = new DMatrixRMaj(
+                new double[][]
+                {{6.00574613E-01 , 6.67556524E-01 , 7.30378628E-02},
+                {2.99795449E-01 , 4.73318875E-01 , 1.65661752E-01},
+                {1.80909991E-01 , 7.69749224E-01 , 2.40941823E-01},
+                {3.18407416E-02 , 8.92113388E-01 , 2.63832986E-01},
+                {6.72024488E-03 , 2.19532549E-01 , 9.71588373E-01}});
+
+        String text =
+                "[ 6.00574613E-01 , 6.67556524E-01 , 7.30378628E-02 ;\n" +
+                "2.99795449E-01 , 4.73318875E-01 , 1.65661752E-01 ;\n" +
+                "1.80909991E-01 , 7.69749224E-01 , 2.40941823E-01 ;\n" +
+                "3.18407416E-02 , 8.92113388E-01 , 2.63832986E-01 ;\n" +
+                "6.72024488E-03 , 2.19532549E-01 , 9.71588373E-01 ]";
+
+        DMatrixRMaj found = MatrixIO.matlabToDDRM(text);
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
+    }
 
     @Test
     public void load_save_binary() throws IOException {
