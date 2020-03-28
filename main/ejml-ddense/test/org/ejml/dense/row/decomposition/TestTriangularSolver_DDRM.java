@@ -36,8 +36,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestTriangularSolver_DDRM {
 
-    Random rand = new Random(0xff);
-
+    private Random rand = new Random(0xff);
 
     @Test
     public void invert_inplace() {
@@ -74,46 +73,49 @@ public class TestTriangularSolver_DDRM {
         for( int m : new int[]{1,2,5,10,20,50}) {
             DMatrixRMaj L = createRandomLowerTriangular(m);
 
-            DMatrixRMaj L_inv = L.copy();
-            UnrolledInverseFromMinor_DDRM.inv(L_inv, L_inv);
-
             DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m, 1, rand);
-            DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(m, 1, rand);
-            DMatrixRMaj found = B.copy();
+            DMatrixRMaj X = B.copy();
+            DMatrixRMaj found = RandomMatrices_DDRM.rectangle(m, 1, rand);
 
-            TriangularSolver_DDRM.solveL(L.data, found.data, m);
-            CommonOps_DDRM.mult(L_inv, B, expected);
+            TriangularSolver_DDRM.solveL(L.data, X.data, m);
+            CommonOps_DDRM.mult(L, X, found);
 
-
-            assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(B, found, UtilEjml.TEST_F64));
         }
     }
 
     private DMatrixRMaj createRandomLowerTriangular(int size) {
-        DMatrixRMaj L = RandomMatrices_DDRM.rectangle(size,size,rand);
-        for( int i = 0; i < L.numRows; i++ ) {
-            for( int j = i+1; j < L.numCols; j++ ) {
-                L.set(i,j,0);
-            }
+        DMatrixRMaj L = RandomMatrices_DDRM.triangularLower(size,0,-1,1,rand);
+        // make the diagonal elements close to 1 so that the system is easily solvable
+        for (int i = 0; i < size; i++) {
+            L.set(i,i,1.0+rand.nextGaussian()*0.001);
+        }
+        return L;
+    }
+
+    private DMatrixRMaj createRandomUpperTriangular(int size) {
+        DMatrixRMaj L = RandomMatrices_DDRM.triangularUpper(size,0,-1,1,rand);
+        // make the diagonal elements close to 1 so that the system is easily solvable
+        for (int i = 0; i < size; i++) {
+            L.set(i,i,1.0+rand.nextGaussian()*0.001);
         }
         return L;
     }
 
     @Test
     public void solveL_matrix() {
-        DMatrixRMaj L = createRandomLowerTriangular(3);
+        for( int m : new int[]{1,2,5,10,20,50}) {
+            DMatrixRMaj L = createRandomLowerTriangular(m);
 
-        DMatrixRMaj L_inv = L.copy();
-        UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
+            DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m, 4, rand);
+            DMatrixRMaj X = B.copy();
+            DMatrixRMaj found = RandomMatrices_DDRM.rectangle(m, 4, rand);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,4,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,4,rand);
-        DMatrixRMaj found = B.copy();
+            TriangularSolver_DDRM.solveL(L.data, X.data, m, 4);
+            CommonOps_DDRM.mult(L, X, found);
 
-        TriangularSolver_DDRM.solveL(L.data,found.data,3,4);
-        CommonOps_DDRM.mult(L_inv,B,expected);
-
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found,UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(B, found, UtilEjml.TEST_F64));
+        }
     }
 
     @Test
@@ -136,24 +138,18 @@ public class TestTriangularSolver_DDRM {
 
     @Test
     public void solveU() {
-        DMatrixRMaj U = RandomMatrices_DDRM.rectangle(3,3,rand);
-        for( int i = 0; i < U.numRows; i++ ) {
-            for( int j = 0; j < i; j++ ) {
-                U.set(i,j,0);
-            }
+        for( int m : new int[]{1,2,5,10,20,50}) {
+            DMatrixRMaj U = createRandomUpperTriangular(m);
+
+            DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m, 1, rand);
+            DMatrixRMaj X = B.copy();
+            DMatrixRMaj found = RandomMatrices_DDRM.rectangle(m, 1, rand);
+
+            TriangularSolver_DDRM.solveU(U.data, X.data, m);
+            CommonOps_DDRM.mult(U, X, found);
+
+            assertTrue(MatrixFeatures_DDRM.isIdentical(B, found, UtilEjml.TEST_F64));
         }
-
-        DMatrixRMaj U_inv = U.copy();
-        UnrolledInverseFromMinor_DDRM.inv(U_inv,U_inv);
-
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,1,rand);
-        DMatrixRMaj found = B.copy();
-
-        TriangularSolver_DDRM.solveU(U.data,found.data,3);
-        CommonOps_DDRM.mult(U_inv,B,expected);
-
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found,UtilEjml.TEST_F64));
     }
 
     @Test

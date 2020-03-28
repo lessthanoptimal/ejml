@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -390,6 +390,24 @@ public class TestRandomMatrices_DDRM {
             DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(10,hess,-1,1,rand);
 
             assertTrue(MatrixFeatures_DDRM.isUpperTriangle(A,hess,UtilEjml.TEST_F64));
+
+            // quick sanity check to make sure it could be proper
+            assertTrue(A.get(hess,0) != 0 );
+
+            // see if it has the expected range of elements
+            double min = CommonOps_DDRM.elementMin(A);
+            double max = CommonOps_DDRM.elementMax(A);
+
+            assertTrue(min < 0 && min >= -1);
+            assertTrue(max > 0 && max <= 1);
+        }
+    }
+
+    @Test
+    public void triangularLower() {
+        for( int hess = 0; hess < 3; hess++ ) {
+            DMatrixRMaj A = RandomMatrices_DDRM.triangularLower(10,hess,-1,1,rand);
+            assertTrue(MatrixFeatures_DDRM.isLowerTriangle(A,hess,UtilEjml.TEST_F64));
 
             // quick sanity check to make sure it could be proper
             assertTrue(A.get(hess,0) != 0 );

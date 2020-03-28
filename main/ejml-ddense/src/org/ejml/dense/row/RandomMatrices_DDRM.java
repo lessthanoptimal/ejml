@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -525,6 +525,36 @@ public class RandomMatrices_DDRM {
                 A.set(i,j, rand.nextDouble()*range+min);
             }
 
+        }
+
+        return A;
+    }
+
+    /**
+     * Creates a lower triangular matrix whose values are selected from a uniform distribution.  If hessenberg
+     * is greater than zero then a hessenberg matrix of the specified degree is created instead.
+     *
+     * @param dimen Number of rows and columns in the matrix..
+     * @param hessenberg 0 for triangular matrix and &gt; 0 for hessenberg matrix.
+     * @param min minimum value an element can be.
+     * @param max maximum value an element can be.
+     * @param rand random number generator used.
+     * @return The randomly generated matrix.
+     */
+    public static DMatrixRMaj triangularLower(int dimen , int hessenberg , double min , double max , Random rand )
+    {
+        if( hessenberg < 0 )
+            throw new RuntimeException("hessenberg must be more than or equal to 0");
+
+        double range = max-min;
+
+        DMatrixRMaj A = new DMatrixRMaj(dimen,dimen);
+
+        for( int i = 0; i < dimen; i++ ) {
+            int end = Math.min(dimen,i+hessenberg+1);
+            for( int j = 0; j < end; j++ ) {
+                A.set(i,j, rand.nextDouble()*range+min);
+            }
         }
 
         return A;
