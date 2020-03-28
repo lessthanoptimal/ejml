@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1610,6 +1610,7 @@ public class CommonOps_DSCC {
                                 DMatrixRMaj b ,
                                 DMatrixRMaj x )
     {
+        x.reshape(a.numCols,b.numCols);
         LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
         if( a.numRows > a.numCols ) {
             solver = LinearSolverFactory_DSCC.qr(FillReducing.NONE);// todo specify a filling that makes sense
@@ -1664,6 +1665,7 @@ public class CommonOps_DSCC {
                                 DMatrixSparseCSC b ,
                                 DMatrixSparseCSC x )
     {
+        x.reshape(a.numCols,b.numCols);
         LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
         if( a.numRows > a.numCols ) {
             solver = LinearSolverFactory_DSCC.qr(FillReducing.NONE);// todo specify a filling that makes sense

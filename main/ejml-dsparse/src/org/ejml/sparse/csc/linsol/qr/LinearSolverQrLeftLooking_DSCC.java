@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -111,12 +111,12 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
         double[] b = adjust(gb,B.numRows);
         double[] bp = adjust(gbp,B.numRows);
-        double[] x = adjust(gx,X.numRows);
+        double[] x = adjust(gx,n);
 
-        int pinv[] = qr.getStructure().getPinv();
+        int[] pinv = qr.getStructure().getPinv();
 
         // process each column in X and B individually
-        for (int colX = 0; colX < X.numCols; colX++) {
+        for (int colX = 0; colX < B.numCols; colX++) {
             int index = colX;
             for( int i = 0; i < B.numRows; i++ , index += X.numCols ) b[i] = B.data[index];
 

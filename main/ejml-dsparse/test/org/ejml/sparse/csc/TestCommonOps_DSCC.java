@@ -1291,7 +1291,7 @@ public class TestCommonOps_DSCC {
     private void solve_dense(int m , int n ) {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m,n,m*n/2,rand);
         RandomMatrices_DSCC.ensureNotSingular(A,rand);
-        DMatrixRMaj X = RandomMatrices_DDRM.rectangle(n,5,rand);
+        DMatrixRMaj X = new DMatrixRMaj(1,1); // arbitrary size
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(n,5,rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m,5,rand);
 
@@ -1309,7 +1309,7 @@ public class TestCommonOps_DSCC {
     private void solve_sparse(int m , int n ) {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m,n,m*n/2,rand);
         RandomMatrices_DSCC.ensureNotSingular(A,rand);
-        DMatrixSparseCSC X = RandomMatrices_DSCC.rectangle(n,5,n*5/2,rand);
+        DMatrixSparseCSC X = new DMatrixSparseCSC(1,1,1);
         DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(n,5,n*5/2,rand);
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(m,5,m*5/2,rand);
 
