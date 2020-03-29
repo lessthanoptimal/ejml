@@ -35,8 +35,12 @@ import static org.ejml.UtilEjml.fancyStringF;
  */
 public class MatrixIO {
 
+    /** Default printf float format */
     public static final String DEFAULT_FLOAT_FORMAT = "%11.4E";
-    public static final int DEFAULT_LENGTH = 11; // length of pretty print
+    /** Number of digits in pretty format */
+    public static final int DEFAULT_LENGTH = 11;
+    /** Specified the printf format used when printing out in Matlab format */
+    public static String MATLAB_FORMAT = "%.8E";
 
     /**
      * Converts a text string in matlab format into a DDRM matrix
@@ -447,7 +451,7 @@ public class MatrixIO {
 
         for( int row = 0; row < mat.getNumRows(); row++ ) {
             for( int col = 0; col < mat.getNumCols(); col++ ) {
-                out.printf("%.8E",mat.get(row,col));
+                out.printf(MATLAB_FORMAT,mat.get(row,col));
                 if( col+1 < mat.getNumCols() ) {
                     out.print(" , ");
                 }

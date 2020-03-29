@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,6 +37,7 @@ import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.stringShapes;
@@ -2525,15 +2526,21 @@ public class CommonOps_DDRM {
      *
      * @param input A matrix. Modified.
      */
-    public static void changeSign(DMatrixD1 input , DMatrixD1 output)
+    public static <T extends DMatrixD1> T changeSign(T input , @Nullable T output)
     {
-        output.reshape(input.numRows,input.numCols);
+        if( output == null ) {
+            output = input.createLike();
+        } else {
+            output.reshape(input.numRows, input.numCols);
+        }
 
         final int size = input.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
             output.data[i] = -input.data[i];
         }
+
+        return output;
     }
 
     /**

@@ -23,8 +23,11 @@ import org.ejml.data.DMatrixSparseCSC
 import org.ejml.data.FMatrixRMaj
 import org.ejml.data.FMatrixSparseCSC
 import org.ejml.dense.row.CommonOps_DDRM
+import org.ejml.dense.row.CommonOps_FDRM
 import org.ejml.dense.row.NormOps_DDRM
+import org.ejml.dense.row.NormOps_FDRM
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM
+import org.ejml.dense.row.factory.DecompositionFactory_FDRM
 import org.ejml.ops.ConvertDMatrixStruct
 import org.ejml.ops.ConvertFMatrixStruct
 import org.ejml.ops.ConvertMatrixData
@@ -64,6 +67,12 @@ operator fun DMatrixRMaj.minus(a : DMatrixRMaj) : DMatrixRMaj {
 
 operator fun DMatrixRMaj.minusAssign(a : DMatrixRMaj) {CommonOps_DDRM.subtract(this,a, this)}
 
+operator fun DMatrixRMaj.unaryMinus() : DMatrixRMaj {
+    val output = DMatrixRMaj(1,1)
+    CommonOps_DDRM.changeSign(this,output)
+    return output
+}
+
 operator fun DMatrixRMaj.minus(a : Double) : DMatrixRMaj {
     val out = DMatrixRMaj(1,1);
     CommonOps_DDRM.subtract(this,a, out)
@@ -72,15 +81,20 @@ operator fun DMatrixRMaj.minus(a : Double) : DMatrixRMaj {
 
 operator fun DMatrixRMaj.minusAssign(a : Double) {CommonOps_DDRM.subtract(this,a, this)}
 
-fun DMatrixRMaj.transpose() : DMatrixRMaj {
-    return CommonOps_DDRM.transpose(this,DMatrixRMaj(1,1))
+operator fun DMatrixRMaj.rem(a : DMatrixRMaj) : DMatrixRMaj {
+    val out = DMatrixRMaj(1,1);
+    CommonOps_DDRM.solve(this,a, out)
+    return out
 }
+
+fun DMatrixRMaj.transpose() : DMatrixRMaj = CommonOps_DDRM.transpose(this,DMatrixRMaj(1,1))
+
 fun DMatrixRMaj.diag() : DMatrixRMaj {
     val output = DMatrixRMaj(1,1)
     CommonOps_DDRM.extractDiag(this,output)
     return output
 }
-fun DMatrixRMaj.trace() : Double {return CommonOps_DDRM.trace(this)}
+fun DMatrixRMaj.trace() : Double = CommonOps_DDRM.trace(this)
 
 fun DMatrixRMaj.svd( compact : Boolean = false ) : Triple<DMatrixRMaj,DMatrixRMaj,DMatrixRMaj> {
     val decomposition = DecompositionFactory_DDRM.svd(true,true,compact)
@@ -106,15 +120,13 @@ fun DMatrixRMaj.solveSPD(B : DMatrixRMaj) : DMatrixRMaj {
     return X
 }
 
-fun DMatrixRMaj.normF() : Double {return NormOps_DDRM.normF(this)}
-fun DMatrixRMaj.normP( p : Double ) : Double {return NormOps_DDRM.normP(this,p)}
-fun DMatrixRMaj.normP1() : Double {return NormOps_DDRM.normP1(this)}
-fun DMatrixRMaj.normP2() : Double {return NormOps_DDRM.normP2(this)}
-fun DMatrixRMaj.normPInf() : Double {return NormOps_DDRM.normPInf(this)}
+fun DMatrixRMaj.normF() : Double = NormOps_DDRM.normF(this)
+fun DMatrixRMaj.normP( p : Double ) : Double = NormOps_DDRM.normP(this,p)
+fun DMatrixRMaj.normP1() : Double = NormOps_DDRM.normP1(this)
+fun DMatrixRMaj.normP2() : Double = NormOps_DDRM.normP2(this)
+fun DMatrixRMaj.normPInf() : Double = NormOps_DDRM.normPInf(this)
 
-fun String.toDDRM() : DMatrixRMaj {
-    return MatrixIO.matlabToDDRM(this)
-}
+fun String.toDDRM() : DMatrixRMaj = MatrixIO.matlabToDDRM(this)
 
 fun DMatrixRMaj.toDSCC() : DMatrixSparseCSC {
     val output = DMatrixSparseCSC(this.numRows,this.numCols)
@@ -129,10 +141,104 @@ fun DMatrixRMaj.toFDRM() : FMatrixRMaj {
 
 //----------------------- FDRM ------------------------------------------------------
 
+operator fun FMatrixRMaj.times(a : FMatrixRMaj) : FMatrixRMaj {
+    val out = FMatrixRMaj(1,1);
+    CommonOps_FDRM.mult(this,a, out)
+    return out
+}
+
+operator fun FMatrixRMaj.plus(a : FMatrixRMaj) : FMatrixRMaj {
+    val out = FMatrixRMaj(1,1);
+    CommonOps_FDRM.add(this,a, out)
+    return out
+}
+
+operator fun FMatrixRMaj.plusAssign(a : FMatrixRMaj) {CommonOps_FDRM.add(this,a, this)}
+
+operator fun FMatrixRMaj.plus(a : Float) : FMatrixRMaj {
+    val out = FMatrixRMaj(1,1);
+    CommonOps_FDRM.add(this,a, out)
+    return out
+}
+operator fun FMatrixRMaj.plusAssign(a : Float) {CommonOps_FDRM.add(this,a, this)}
+
+operator fun FMatrixRMaj.minus(a : FMatrixRMaj) : FMatrixRMaj {
+    val out = FMatrixRMaj(1,1);
+    CommonOps_FDRM.subtract(this,a, out)
+    return out
+}
+
+operator fun FMatrixRMaj.minusAssign(a : FMatrixRMaj) {CommonOps_FDRM.subtract(this,a, this)}
+
+operator fun FMatrixRMaj.minus(a : Float) : FMatrixRMaj {
+    val out = FMatrixRMaj(1,1);
+    CommonOps_FDRM.subtract(this,a, out)
+    return out
+}
+
+operator fun FMatrixRMaj.minusAssign(a : Float) {CommonOps_FDRM.subtract(this,a, this)}
+
+fun FMatrixRMaj.transpose() : FMatrixRMaj {
+    return CommonOps_FDRM.transpose(this,FMatrixRMaj(1,1))
+}
+fun FMatrixRMaj.diag() : FMatrixRMaj {
+    val output = FMatrixRMaj(1,1)
+    CommonOps_FDRM.extractDiag(this,output)
+    return output
+}
+fun FMatrixRMaj.trace() : Float {return CommonOps_FDRM.trace(this)}
+
+fun FMatrixRMaj.svd( compact : Boolean = false ) : Triple<FMatrixRMaj,FMatrixRMaj,FMatrixRMaj> {
+    val decomposition = DecompositionFactory_FDRM.svd(true,true,compact)
+    return Triple(
+            decomposition.getU(null,false),
+            decomposition.getW(null),
+            decomposition.getV(null,false))
+}
+
+fun FMatrixRMaj.solve(B : FMatrixRMaj) : FMatrixRMaj {
+    val X = FMatrixRMaj(1,1)
+    if( !CommonOps_FDRM.solve(this,B,X) ) {
+        throw RuntimeException("Failed to solve")
+    }
+    return X
+}
+
+fun FMatrixRMaj.solveSPD(B : FMatrixRMaj) : FMatrixRMaj {
+    val X = FMatrixRMaj(1,1)
+    if( !CommonOps_FDRM.solveSPD(this,B,X) ) {
+        throw RuntimeException("Failed to solve")
+    }
+    return X
+}
+
+fun FMatrixRMaj.normF() : Float {return NormOps_FDRM.normF(this)}
+fun FMatrixRMaj.normP( p : Float ) : Float {return NormOps_FDRM.normP(this,p)}
+fun FMatrixRMaj.normP1() : Float {return NormOps_FDRM.normP1(this)}
+fun FMatrixRMaj.normP2() : Float {return NormOps_FDRM.normP2(this)}
+fun FMatrixRMaj.normPInf() : Float {return NormOps_FDRM.normPInf(this)}
+
+fun FMatrixRMaj.toFSCC() : FMatrixSparseCSC {
+    val output = FMatrixSparseCSC(this.numRows,this.numCols)
+    ConvertFMatrixStruct.convert(this,output)
+    return output
+}
+fun FMatrixRMaj.toDDRM() : DMatrixRMaj {
+    val output = DMatrixRMaj(this.numRows,this.numCols)
+    ConvertMatrixData.convert(this,output)
+    return output
+}
+
 //----------------------- DSCC ------------------------------------------------------
 
 operator fun DMatrixSparseCSC.times(a : DMatrixSparseCSC) : DMatrixSparseCSC {
     val out = DMatrixSparseCSC(1,1)
+    CommonOps_DSCC.mult(this,a, out)
+    return out
+}
+
+operator fun DMatrixSparseCSC.times(a : DMatrixRMaj) : DMatrixRMaj {
+    val out = DMatrixRMaj(1,1)
     CommonOps_DSCC.mult(this,a, out)
     return out
 }
@@ -177,7 +283,7 @@ fun DMatrixSparseCSC.trace() : Double {return CommonOps_DSCC.trace(this)}
 
 fun DMatrixSparseCSC.normF() : Double {return NormOps_DSCC.normF(this)}
 
-fun DMatrixSparseCSC.toDDRM() : DMatrixRMaj {
+fun DMatrixSparseCSC.toFDRM() : DMatrixRMaj {
     val output = DMatrixRMaj(this.numRows,this.numCols)
     ConvertDMatrixStruct.convert(this,output)
     return output
@@ -193,6 +299,12 @@ fun DMatrixSparseCSC.toFSCC() : FMatrixSparseCSC {
 
 operator fun FMatrixSparseCSC.times(a : FMatrixSparseCSC) : FMatrixSparseCSC {
     val out = FMatrixSparseCSC(1,1)
+    CommonOps_FSCC.mult(this,a, out)
+    return out
+}
+
+operator fun FMatrixSparseCSC.times(a : FMatrixRMaj) : FMatrixRMaj {
+    val out = FMatrixRMaj(1,1)
     CommonOps_FSCC.mult(this,a, out)
     return out
 }
@@ -237,7 +349,7 @@ fun FMatrixSparseCSC.trace() : Float {return CommonOps_FSCC.trace(this)}
 
 fun FMatrixSparseCSC.normF() : Float {return NormOps_FSCC.normF(this)}
 
-fun FMatrixSparseCSC.toDDRM() : FMatrixRMaj {
+fun FMatrixSparseCSC.toFDRM() : FMatrixRMaj {
     val output = FMatrixRMaj(this.numRows,this.numCols)
     ConvertFMatrixStruct.convert(this,output)
     return output
