@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,7 +41,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
      * </p>
      * @param data 2D array representation of the matrix. Not modified.
      */
-    public ZMatrixRMaj(double data[][] ) {
+    public ZMatrixRMaj(double[][] data ) {
         this.numRows = data.length;
         this.numCols = data[0].length/2;
 
@@ -241,8 +241,13 @@ public class ZMatrixRMaj extends ZMatrixD1 {
     }
 
     @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new ZMatrixRMaj(numRows,numCols);
+    public ZMatrixRMaj createLike() {
+        return new ZMatrixRMaj(numRows,numCols);
+    }
+
+    @Override
+    public ZMatrixRMaj create(int numRows, int numCols) {
+        return new ZMatrixRMaj(numRows,numCols);
     }
 
     @Override

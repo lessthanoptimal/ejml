@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,7 +42,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */
-    public double nz_values[];
+    public double[] nz_values;
     /**
      * Length of data. Number of non-zero values in the matrix
      */
@@ -274,6 +274,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         Arrays.fill(col_idx,0,numCols+1,0);
         nz_length = 0;
         indicesSorted = false; // see justification in reshape
+    }
+
+    @Override
+    public DMatrixSparseCSC create(int numRows, int numCols) {
+        return new DMatrixSparseCSC(numRows,numCols);
     }
 
     @Override

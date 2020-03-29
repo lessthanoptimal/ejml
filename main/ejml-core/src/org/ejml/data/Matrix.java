@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,6 +55,11 @@ public interface Matrix extends Serializable {
      * Creates a new matrix with the same shape as this matrix
      */
     <T extends Matrix> T createLike();
+
+    /**
+     * Creates a new matrix of the same type with the specified shape
+     */
+    <T extends Matrix> T create( int numRows , int numCols );
 
     /**
      * Sets this matrix to be identical to the 'original' matrix passed in.

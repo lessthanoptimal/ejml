@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,5 +24,10 @@ package org.ejml.data;
  * @author Peter Abeles
  */
 public interface DMatrixFixed extends DMatrix {
-
+    @Override
+    default <T extends Matrix> T create(int numRows, int numCols) {
+        if( numRows == getNumRows() && numCols == getNumCols() )
+            return createLike();
+        throw new RuntimeException("Fixed sized matrices can't be used to create matrices of arbitrary shape");
+    }
 }

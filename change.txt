@@ -12,6 +12,7 @@ Date format: year/month/day
 - Added RandomMatrices_DDRM.triangularLower()
 - Can parse Matlab formatted text matrices
 - Preview of Kotlin extensions support
+- Added a Matrix.create(rows,cols) function
 
 ----- Version 0.38
 2019/03/13

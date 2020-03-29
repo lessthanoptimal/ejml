@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -239,6 +239,11 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     @Override
     public <T extends Matrix> T createLike() {
         return (T)new DMatrixSparseTriplet(numRows,numCols, nz_length);
+    }
+
+    @Override
+    public <T extends Matrix> T create(int numRows, int numCols) {
+        return (T)new DMatrixSparseTriplet(numRows,numCols,1);
     }
 
     @Override

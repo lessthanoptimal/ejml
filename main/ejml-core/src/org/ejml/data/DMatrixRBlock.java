@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -157,6 +157,11 @@ public class DMatrixRBlock extends DMatrixD1 {
 
     @Override
     public <T extends Matrix> T createLike() {
+        return (T)new DMatrixRBlock(numRows,numCols);
+    }
+
+    @Override
+    public <T extends Matrix> T create(int numRows, int numCols) {
         return (T)new DMatrixRBlock(numRows,numCols);
     }
 

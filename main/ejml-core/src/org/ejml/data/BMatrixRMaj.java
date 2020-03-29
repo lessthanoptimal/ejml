@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ public class BMatrixRMaj implements ReshapeMatrix {
     /**
      * 1D row-major array for storing theboolean matrix
      */
-    public boolean data[];
+    public boolean[] data;
     /**
      * Number of rows in the matrix.
      */
@@ -171,8 +171,13 @@ public class BMatrixRMaj implements ReshapeMatrix {
     }
 
     @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new BMatrixRMaj(numRows,numCols);
+    public BMatrixRMaj createLike() {
+        return new BMatrixRMaj(numRows,numCols);
+    }
+
+    @Override
+    public BMatrixRMaj create(int numRows, int numCols) {
+        return new BMatrixRMaj(numRows,numCols);
     }
 
     @Override

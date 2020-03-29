@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -379,8 +379,13 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new DMatrixRMaj(numRows,numCols);
+    public DMatrixRMaj createLike() {
+        return new DMatrixRMaj(numRows,numCols);
+    }
+
+    @Override
+    public DMatrixRMaj create(int numRows, int numCols) {
+        return new DMatrixRMaj(numRows,numCols);
     }
 
     @Override
