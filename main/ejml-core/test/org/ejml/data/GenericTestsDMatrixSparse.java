@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.data;
 import org.ejml.UtilEjml;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -177,6 +178,30 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
         assertEquals(0,m.getNumElements());
         assertEquals(2,m.getNumRows());
         assertEquals(4,m.getNumCols());
+    }
+
+    @Test
+    public void iterator() {
+        DMatrixSparse m = createSparse(3,4);
+        assertFalse( m.createCoordinateIterator().hasNext() );
+
+        m.set(0,2,3.0);
+        m.set(2,3,2.0);
+
+        Iterator<DMatrixSparse.CoordinateRealValue> iter = m.createCoordinateIterator();
+        int[] matched = new int[2];
+        while( iter.hasNext() ) {
+            DMatrixSparse.CoordinateRealValue value = iter.next();
+            if( value.row == 0 && value.col == 2 && value.value == 3.0 ) {
+                matched[0]++;
+            } else if( value.row == 2 && value.col == 3 && value.value == 2.0 ) {
+                matched[1]++;
+            } else {
+                fail("Unexpected value");
+            }
+        }
+        assertEquals(1,matched[0]);
+        assertEquals(1,matched[1]);
     }
 
 }

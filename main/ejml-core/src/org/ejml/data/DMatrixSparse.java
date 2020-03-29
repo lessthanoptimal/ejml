@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,8 @@
 
 package org.ejml.data;
 
+import java.util.Iterator;
+
 /**
  * High level interface for sparse matrices double types.
  *
@@ -25,4 +27,21 @@ package org.ejml.data;
  */
 public interface DMatrixSparse extends DMatrix, MatrixSparse {
 
+    /**
+     * Creates an iterator which will go through each non-zero value in the sparse matrix. Order is not defined
+     * and is implementation specific
+     *
+     * @return Iterator
+     */
+    Iterator<CoordinateRealValue> createCoordinateIterator();
+
+    /**
+     * Value of an element in a sparse matrix
+     */
+    class CoordinateRealValue {
+        /** The coordinate */
+        public int row,col;
+        /** The value of the coordinate */
+        public double value;
+    }
 }

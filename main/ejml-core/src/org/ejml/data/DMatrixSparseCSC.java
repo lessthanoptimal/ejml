@@ -22,6 +22,7 @@ import org.ejml.ops.MatrixIO;
 import org.ejml.ops.SortCoupledArray_F64;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * <p>Compressed Column (CC) sparse matrix format.   Only non-zero elements are stored.</p>
@@ -431,5 +432,40 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     @Override
     public MatrixType getType() {
         return MatrixType.DSCC;
+    }
+
+    @Override
+    public Iterator<CoordinateRealValue> createCoordinateIterator() {
+        return new Iterator<>() {
+            CoordinateRealValue coordinate = new CoordinateRealValue();
+            int nz_index = 0; // the index of the non-zero value and row
+            int column = 0; // which column it's in
+
+            {
+                incrementColumn();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return nz_index < nz_length;
+            }
+
+            @Override
+            public CoordinateRealValue next() {
+                coordinate.row = nz_rows[nz_index];
+                coordinate.col = column;
+                coordinate.value = nz_values[nz_index];
+                nz_index++;
+                incrementColumn();
+                return coordinate;
+            }
+
+            private void incrementColumn() {
+                while(column+1<=numCols && nz_index >= col_idx[column+1]) {
+                    column++;
+                }
+            }
+        };
+
     }
 }

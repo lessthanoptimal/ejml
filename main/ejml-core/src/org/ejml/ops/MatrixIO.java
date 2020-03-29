@@ -18,11 +18,13 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlVersion;
 import org.ejml.data.*;
 
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static org.ejml.UtilEjml.fancyString;
 import static org.ejml.UtilEjml.fancyStringF;
@@ -59,6 +61,187 @@ public class MatrixIO {
                 double value = Double.parseDouble(words[col]);
                 output.set(row,col,value);
             }
+        }
+        return output;
+    }
+
+    /**
+     * Writes a stream using the Matrix Market Coordinate format.
+     *
+     * https://math.nist.gov/MatrixMarket/formats.html
+     *
+     * @param matrix The matrix to be written
+     * @param floatFormat The format used by printf. "%.4e" is suggested
+     * @param writer The writer
+     */
+    public static void saveMatrixMarketD( DMatrixSparse matrix , String floatFormat, Writer writer )
+    {
+        PrintWriter out = new PrintWriter(writer);
+        out.println("% Matrix Market Coordinate file written by EJML "+EjmlVersion.VERSION);
+        out.println("% printf format used '"+floatFormat+"'");
+        out.printf("%9d %9d %9d\n",matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
+
+        String lineFormat = "%9d %9d "+floatFormat+"\n";
+
+        Iterator<DMatrixSparse.CoordinateRealValue> iter = matrix.createCoordinateIterator();
+        while( iter.hasNext() ) {
+            DMatrixSparse.CoordinateRealValue val = iter.next();
+            // matrix market is 1 indexed
+            out.printf(lineFormat,val.row+1,val.col+1,val.value);
+        }
+        out.flush();
+    }
+
+    /**
+     * Writes a stream using the Matrix Market Coordinate format.
+     *
+     * https://math.nist.gov/MatrixMarket/formats.html
+     *
+     * @param matrix The matrix to be written
+     * @param floatFormat The format used by printf. "%.4e" is suggested
+     * @param writer The writer
+     */
+    public static void saveMatrixMarketF( FMatrixSparse matrix , String floatFormat, Writer writer )
+    {
+        PrintWriter out = new PrintWriter(writer);
+        out.println("% Matrix Market Coordinate file written by EJML "+EjmlVersion.VERSION);
+        out.println("% printf format used '"+floatFormat+"'");
+        out.printf("%9d %9d %9d\n",matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
+
+        String lineFormat = "%9d %9d "+floatFormat+"\n";
+
+        Iterator<FMatrixSparse.CoordinateRealValue> iter = matrix.createCoordinateIterator();
+        while( iter.hasNext() ) {
+            FMatrixSparse.CoordinateRealValue val = iter.next();
+            // matrix market is 1 indexed
+            out.printf(lineFormat,val.row+1,val.col+1,val.value);
+        }
+        out.flush();
+    }
+
+    /**
+     * Reads a stream in Matrix Market Coordinate format
+     *
+     * https://math.nist.gov/MatrixMarket/formats.html
+     *
+     * @param reader Input reader
+     * @return Matrix in triplet format
+     */
+    public static DMatrixSparseTriplet loadMatrixMarketD( Reader reader )
+    {
+        DMatrixSparseTriplet output = new DMatrixSparseTriplet();
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        try {
+            boolean hasHeader = false;
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                if( line.length() == 0 || line.charAt(0) == '%') {
+                    line = bufferedReader.readLine();
+                    continue;
+                }
+                String[] words = line.trim().split("\\s+");
+                if( words.length != 3 )
+                    throw new IOException("Unexpected number of words: "+words.length);
+                if( hasHeader ) {
+                    int row = Integer.parseInt(words[0])-1;
+                    int col = Integer.parseInt(words[1])-1;
+                    double value = Double.parseDouble(words[2]);
+                    output.addItem(row,col,value);
+                } else {
+                    int rows = Integer.parseInt(words[0]);
+                    int cols = Integer.parseInt(words[1]);
+                    int nz_length = Integer.parseInt(words[2]);
+                    output.reshape(rows,cols,nz_length);
+                    hasHeader = true;
+                }
+                line = bufferedReader.readLine();
+            }
+        } catch( IOException e ) {
+            throw new RuntimeException(e);
+        }
+        return output;
+    }
+
+    /**
+     * Reads a stream in Matrix Market Coordinate format
+     *
+     * https://math.nist.gov/MatrixMarket/formats.html
+     *
+     * @param reader Input reader
+     * @return Matrix in triplet format
+     */
+    public static FMatrixSparseTriplet loadMatrixMarketF( Reader reader )
+    {
+        FMatrixSparseTriplet output = new FMatrixSparseTriplet();
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        try {
+            boolean hasHeader = false;
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                if( line.length() == 0 || line.charAt(0) == '%') {
+                    line = bufferedReader.readLine();
+                    continue;
+                }
+                String[] words = line.trim().split("\\s+");
+                if( words.length != 3 )
+                    throw new IOException("Unexpected number of words: "+words.length);
+                if( hasHeader ) {
+                    int row = Integer.parseInt(words[0])-1;
+                    int col = Integer.parseInt(words[1])-1;
+                    float value = Float.parseFloat(words[2]);
+                    output.addItem(row,col,value);
+                } else {
+                    int rows = Integer.parseInt(words[0]);
+                    int cols = Integer.parseInt(words[1]);
+                    int nz_length = Integer.parseInt(words[2]);
+                    output.reshape(rows,cols,nz_length);
+                    hasHeader = true;
+                }
+                line = bufferedReader.readLine();
+            }
+        } catch( IOException e ) {
+            throw new RuntimeException(e);
+        }
+        return output;
+    }
+
+    /**
+     * Reads a stream in Matrix Market Coordinate format
+     *
+     * https://math.nist.gov/MatrixMarket/formats.html
+     *
+     * @param streamIn Input stream
+     * @return Matrix in triplet format
+     */
+    public static FMatrixSparseTriplet loadMatrixMarketF( InputStream streamIn )
+    {
+        FMatrixSparseTriplet output = new FMatrixSparseTriplet();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(streamIn));
+        try {
+            boolean hasHeader = false;
+            String line = reader.readLine();
+            while (line != null) {
+                if( line.length() == 0 || line.charAt(0) == '%')
+                    continue;
+                String[] words = line.trim().split("\\s");
+                if( words.length != 3 )
+                    throw new IOException("Unexpected number of words: "+words.length);
+                if( hasHeader ) {
+                    int row = Integer.parseInt(words[0]);
+                    int col = Integer.parseInt(words[1]);
+                    float value = Float.parseFloat(words[2]);
+                    output.addItem(row,col,value);
+                } else {
+                    int rows = Integer.parseInt(words[0]);
+                    int cols = Integer.parseInt(words[1]);
+                    int nz_length = Integer.parseInt(words[2]);
+                    output.reshape(rows,cols,nz_length);
+                    hasHeader = true;
+                }
+                line = reader.readLine();
+            }
+        } catch( IOException e ) {
+            throw new RuntimeException(e);
         }
         return output;
     }

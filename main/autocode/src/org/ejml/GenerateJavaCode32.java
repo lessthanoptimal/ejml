@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ import java.util.List;
  * Applications which will auto generate 32F code from 64F inside the core module
  * @author Peter Abeles
  */
-public class GenerateCode32 {
+public class GenerateJavaCode32 {
 
     private ConvertFile32From64 converter;
 
@@ -42,13 +42,7 @@ public class GenerateCode32 {
     // file name keyword black list - ignore files with these names
     List<String> blacklist = new ArrayList<>();
 
-    public GenerateCode32() {
-
-        // TODO remove once F32 sparse code is generated
-        blacklist.add("TestDMatrixSparseCSC");
-        blacklist.add("TestConvertDMatrixStruct");
-        blacklist.add("TestDEigenSparseCSC");
-        blacklist.add("TestConvertDMatrixStruct");
+    public GenerateJavaCode32() {
 
         String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6","TRIPLET"};
 
@@ -264,7 +258,7 @@ public class GenerateCode32 {
                 "main/ejml-experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
         };
 
-        GenerateCode32 app = new GenerateCode32();
+        GenerateJavaCode32 app = new GenerateJavaCode32();
         for( String dir : coreDir ) {
             app.process(new File(path,dir) );
         }
@@ -277,9 +271,13 @@ public class GenerateCode32 {
             recursiveDelete(new File(path,"main/ejml-c"+module+"/test"), true);
 
             app.process(new File(path,"main/ejml-d"+module+"/src"), new File(path,"main/ejml-f"+module+"/src") );
-            app.process(new File(path,"main/ejml-z"+module+"/src"), new File(path,"main/ejml-c"+module+"/src") );
             app.process(new File(path,"main/ejml-d"+module+"/test"), new File(path,"main/ejml-f"+module+"/test") );
-            app.process(new File(path,"main/ejml-z"+module+"/test"), new File(path,"main/ejml-c"+module+"/test") );
+
+            // sparse complex doesn't exist yet
+            if( module.equals("dense")) {
+                app.process(new File(path, "main/ejml-z" + module + "/src"), new File(path, "main/ejml-c" + module + "/src"));
+                app.process(new File(path,"main/ejml-z"+module+"/test"), new File(path,"main/ejml-c"+module+"/test") );
+            }
         }
     }
 }

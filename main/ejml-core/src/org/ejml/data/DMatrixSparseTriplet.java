@@ -20,6 +20,8 @@ package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
 
+import java.util.Iterator;
+
 /**
  * A sparse matrix format that is designed to act as an intermediate step for other matrix types. Constructing
  * {@link DMatrixSparseCSC} from scratch is difficult, but if a triplet is first defined then it is much easier.
@@ -340,5 +342,26 @@ public class DMatrixSparseTriplet implements DMatrixSparse
     @Override
     public MatrixType getType() {
         return MatrixType.DTRIPLET;
+    }
+
+    @Override
+    public Iterator<CoordinateRealValue> createCoordinateIterator() {
+        return new Iterator<>() {
+            CoordinateRealValue coordinate = new CoordinateRealValue();
+            int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index < nz_length;
+            }
+
+            @Override
+            public CoordinateRealValue next() {
+                coordinate.row = nz_rowcol.data[index*2];
+                coordinate.col = nz_rowcol.data[index*2+1];
+                coordinate.value = nz_value.data[index];
+                index++;
+                return coordinate;
+            }
+        };
     }
 }

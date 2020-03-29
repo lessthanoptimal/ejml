@@ -18,9 +18,11 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.data.FMatrixSparseTriplet;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -28,10 +30,7 @@ import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -64,6 +63,34 @@ public class TestMatrixIO {
 
         DMatrixRMaj found = MatrixIO.matlabToDDRM(text);
         assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void load_save_matrix_market_F64() {
+        DMatrixSparseTriplet original = new DMatrixSparseTriplet(3,4,5);
+        original.set(1,1,1.5);
+        original.set(2,3,2.5);
+
+        Writer output = new StringWriter();
+        MatrixIO.saveMatrixMarketD(original,"%.22f",output);
+        Reader input = new CharArrayReader(output.toString().toCharArray());
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketD(input);
+
+        EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void load_save_matrix_market_F32() {
+        FMatrixSparseTriplet original = new FMatrixSparseTriplet(3,4,5);
+        original.set(1,1,1.5f);
+        original.set(2,3,2.5f);
+
+        Writer output = new StringWriter();
+        MatrixIO.saveMatrixMarketF(original,"%.22f",output);
+        Reader input = new CharArrayReader(output.toString().toCharArray());
+        FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketF(input);
+
+        EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
     }
 
     @Test
