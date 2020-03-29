@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
 public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTests_DSCC {
 
     public TestLinearSolverCholesky_DSCC() {
-        equalityTolerance = UtilEjml.TEST_F64*10;
+        equalityTolerance = UtilEjml.TEST_F64;
         canHandleWide = false;
         canHandleTall = false;
         canDecomposeZeros = false;
@@ -54,7 +54,7 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
     @Override
     public DMatrixSparseCSC createA(int N) {
 
-        int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
+        int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+N);
 
         return RandomMatrices_DSCC.symmetricPosDef(N,nz,rand);
     }

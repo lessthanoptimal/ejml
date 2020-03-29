@@ -93,7 +93,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     solver.solve(B, X);
                     CommonOps_DSCC.mult(A, X, foundB);
 
-                    EjmlUnitTests.assertRelativeEquals(B_cpy, foundB, equalityTolerance);
+                    EjmlUnitTests.assertEquals(B_cpy, foundB, equalityTolerance);
 
                     if( !solver.modifiesA() ) {
                         EjmlUnitTests.assertEquals(A, A_cpy, equalityTolerance);
@@ -133,7 +133,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     solver.solveSparse(B, foundX);
                     assertTrue(CommonOps_DSCC.checkStructure(foundX));
 
-                    EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
+                    EjmlUnitTests.assertEquals(X, foundX, equalityTolerance);
 
                     // should never be modified
                     EjmlUnitTests.assertEquals(A, A_cpy, equalityTolerance);

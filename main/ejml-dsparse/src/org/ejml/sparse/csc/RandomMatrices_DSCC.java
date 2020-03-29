@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -253,14 +253,13 @@ er      * @param minFill minimum fill fraction
     public static DMatrixSparseCSC symmetricPosDef( int width , int nz_total , Random rand ) {
         DMatrixSparseCSC A = rectangle(width,width,nz_total,rand);
 
-        // to ensure it's SPD assign non-zero values to all the diagonal elements
+        // Ensure that it doesn't have small singular values by setting the diagonal elements to be close to one
         for (int i = 0; i < width; i++) {
-            A.set(i,i,Math.max(0.5,rand.nextDouble()));
+            A.set(i,i,1.0 + (double)(rand.nextGaussian()*0.001));
         }
 
         DMatrixSparseCSC spd = new DMatrixSparseCSC(width,width,0);
         CommonOps_DSCC.multTransB(A,A,spd,null,null);
-
 
         return spd;
     }
