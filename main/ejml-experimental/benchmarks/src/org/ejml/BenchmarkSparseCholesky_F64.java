@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -64,7 +64,7 @@ public class BenchmarkSparseCholesky_F64 {
     public static void main(String[] args) {
         Random rand = new Random(234);
 
-        DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(1000,200,rand);
+        DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(1000,0.75,rand);
         DMatrixRMaj A_dense = new DMatrixRMaj(A.numRows,A.numCols);
         ConvertDMatrixStruct.convert(A,A_dense);
 

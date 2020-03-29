@@ -83,10 +83,12 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 //                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
-                    DMatrixRMaj B = create(A.numRows, 3);
                     DMatrixRMaj X = create(A.numCols, 3);
-                    DMatrixRMaj foundB = create(A.numCols, 3);
+                    DMatrixRMaj B = new DMatrixRMaj(1,1);
 
+                    // create B from X so that there is a valid solution in the tall case
+                    CommonOps_DSCC.mult(A,X,B);
+                    DMatrixRMaj foundB = B.createLike();
                     DMatrixRMaj B_cpy = B.copy();
 
                     assertTrue(solver.setA(A));
@@ -120,8 +122,8 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
                     DMatrixSparseCSC X = createSparse(A.numCols, 3);
-                    DMatrixSparseCSC foundX = createSparse(A.numCols, 3);
-                    DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows, 3,1);
+                    DMatrixSparseCSC B = new DMatrixSparseCSC(1,1,1);
+                    DMatrixSparseCSC foundX = X.createLike();
 
                     // compute the solution
                     CommonOps_DSCC.mult(A, X, B);
@@ -152,7 +154,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 
         LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(FillReducing.NONE);
 
-        assertTrue(canDecomposeZeros == solver.setA(A));
+        assertEquals(canDecomposeZeros, solver.setA(A));
     }
 
     /**

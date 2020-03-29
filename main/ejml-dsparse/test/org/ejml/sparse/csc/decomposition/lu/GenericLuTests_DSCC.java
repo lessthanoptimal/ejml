@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
 
     @Override
     public DMatrixSparseCSC createMatrix(int N) {
-        return RandomMatrices_DSCC.symmetricPosDef(N,N/3+1,rand);
+        return RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
     }
 
     @Override

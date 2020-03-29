@@ -100,11 +100,9 @@ public class TestRandomMatrices_DSCC {
 
     @Test
     public void symmetricPosDef() {
-
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
-                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N,  nz,rand);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
 

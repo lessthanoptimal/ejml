@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,7 +46,7 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
 
     @Override
     public DMatrixSparseCSC createMatrix(int N) {
-        return RandomMatrices_DSCC.symmetricPosDef(N,N/3+1,rand);
+        return RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
     }
 
     @Override
@@ -122,8 +122,7 @@ public abstract class GenericCholeskyTests_DSCC extends GenericDecompositionTest
 
         for (int width = 1; width <= 10; width++) {
             for (int mc = 0; mc < 30; mc++) {
-                int nz = (int)(width*width*(rand.nextDouble()*0.5+0.02));
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(width,nz,rand);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(width,0.25,rand);
 
                 double before = NormOps_DSCC.fastNormF(A);
 

@@ -8,6 +8,11 @@ Date format: year/month/day
 - Fixed deserialization issue with SimpleMatrix. Thanks AngledLuffa for the bug report!
 - Added sanity checks to matrix size. Thanks LsKoder for the suggestion!
 - Added support for sparse float matrices FSCC
+  * NOTE: It appears that the current solves based on DSparase in less numerically stable solution than their
+    dense counter parts. More analysis is needed.
+  * DXSparse of EJML produce similar results for double precision and doesn't look like DXSparse
+    support single precision making it hard to compare. Matlab doesn't support single precision.
+  * Unit tests were modified to ensure more numerically stable matrices were passed in
 - Fixed bug with DSCC.multAddColA() where col_idx wasn't filled out all the way if there were zero columns
 - Added RandomMatrices_DDRM.triangularLower()
 - Can parse Matlab formatted text matrices

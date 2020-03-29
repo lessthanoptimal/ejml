@@ -19,8 +19,10 @@
 package org.ejml.sparse.csc;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
@@ -244,24 +246,36 @@ er      * @param minFill minimum fill fraction
     }
 
     /**
-     * Creates a random symmetric positive definite matrix.
+     * Creates a random symmetric positive definite matrix with zero values.
+     *
      * @param width number of columns and rows
-     * @param nz_total Used to adjust number of non-zero values. Exact amount in final matrix will be more than this.
+     * @param probabilityZero How likely a value is of being zero. 0 = no zeros. 1.0 = all zeros
      * @param rand random number generator
      * @return Random matrix
      */
-    public static DMatrixSparseCSC symmetricPosDef( int width , int nz_total , Random rand ) {
-        DMatrixSparseCSC A = rectangle(width,width,nz_total,rand);
+    public static DMatrixSparseCSC symmetricPosDef( int width , double probabilityZero , Random rand ) {
+        if( probabilityZero < 0 || probabilityZero > 1.0 )
+            throw new IllegalArgumentException("Invalid value for probabilityZero");
 
-        // Ensure that it doesn't have small singular values by setting the diagonal elements to be close to one
-        for (int i = 0; i < width; i++) {
-            A.set(i,i,1.0 + (double)(rand.nextGaussian()*0.001));
+        // This is not formally proven to work.  It just seems to work.
+        DMatrixRMaj a = new DMatrixRMaj(width,1);
+        DMatrixRMaj b = new DMatrixRMaj(width,width);
+
+        for( int i = 1; i < width; i++ ) {
+            if( rand.nextDouble() >= probabilityZero)
+                a.set(i,0,rand.nextDouble()*2-1.0);
         }
 
-        DMatrixSparseCSC spd = new DMatrixSparseCSC(width,width,0);
-        CommonOps_DSCC.multTransB(A,A,spd,null,null);
+        CommonOps_DDRM.multTransB(a,a,b);
 
-        return spd;
+        for( int i = 0; i < width; i++ ) {
+            b.add(i,i,1.0 + (double)(rand.nextDouble()*0.1) );
+        }
+
+        DMatrixSparseCSC out = new DMatrixSparseCSC(width, width,width);
+        ConvertDMatrixStruct.convert(b,out, UtilEjml.TEST_F64);
+
+        return out;
     }
 
     /**

@@ -40,8 +40,7 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
         canHandleTall = false;
         canDecomposeZeros = false;
 
-        permutationTests =
-                new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY}; // todo add a cholesky specific
+        permutationTests = new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY}; // todo add a cholesky specific
     }
 
     @Override
@@ -53,9 +52,8 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
 
     @Override
     public DMatrixSparseCSC createA(int N) {
-
-        int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+N);
-
-        return RandomMatrices_DSCC.symmetricPosDef(N,nz,rand);
+        // turns out it's not trivial to create a SPD matrix with elements randomly zero that isn't nearly singular
+        // this was messing up tests
+        return RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
     }
 }

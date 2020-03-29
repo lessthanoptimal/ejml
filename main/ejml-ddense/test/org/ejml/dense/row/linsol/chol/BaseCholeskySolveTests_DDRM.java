@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,15 +38,6 @@ import static org.junit.Assert.*;
 public abstract class BaseCholeskySolveTests_DDRM {
 
     Random rand = new Random(0x45);
-
-    public void standardTests() {
-
-        solve_dimensionCheck();
-        testSolve();
-        testInvert();
-        testQuality();
-        testQuality_scale();
-    }
 
     public abstract LinearSolverDense<DMatrixRMaj> createSolver();
 
@@ -169,5 +160,40 @@ public abstract class BaseCholeskySolveTests_DDRM {
         double qualityB = (double)solver.quality();
 
         assertEquals(qualityB,qualityA, UtilEjml.TEST_F64);
+    }
+
+    public DMatrixRMaj createA( int size ) {
+        return RandomMatrices_DDRM.symmetricPosDef(size,rand);
+    }
+
+    @Test
+    public void randomSolveable() {
+        LinearSolverDense<DMatrixRMaj> solver = createSolver();
+
+            for (int N : new int[]{1, 2, 5, 10, 20}) {
+                for (int mc = 0; mc < 30; mc++) {
+//                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
+                    DMatrixRMaj A = createA(N);
+                    DMatrixRMaj A_cpy = A.copy();
+                    DMatrixRMaj B = new DMatrixRMaj(A.numRows, 3);
+                    DMatrixRMaj X = new DMatrixRMaj(A.numCols, 3);
+                    DMatrixRMaj foundB = new DMatrixRMaj(A.numCols, 3);
+
+                    DMatrixRMaj B_cpy = B.copy();
+
+                    assertTrue(solver.setA(A));
+                    solver.solve(B, X);
+                    CommonOps_DDRM.mult(A, X, foundB);
+
+                    EjmlUnitTests.assertEquals(B_cpy, foundB, UtilEjml.TEST_F64);
+
+                    if( !solver.modifiesA() ) {
+                        EjmlUnitTests.assertEquals(A, A_cpy, UtilEjml.TEST_F64);
+                    }
+                    if( !solver.modifiesB() ) {
+                        EjmlUnitTests.assertEquals(B, B_cpy, UtilEjml.TEST_F64);
+                    }
+                }
+            }
     }
 }
