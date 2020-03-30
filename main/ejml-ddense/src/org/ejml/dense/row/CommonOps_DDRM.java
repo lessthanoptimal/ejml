@@ -75,6 +75,9 @@ public class CommonOps_DDRM {
      */
     public static void mult(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         if( b.numCols == 1 ) {
             MatrixVectorMult_DDRM.mult(a, b, c);
         } else if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -99,6 +102,9 @@ public class CommonOps_DDRM {
      */
     public static void mult(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
             MatrixMatrixMult_DDRM.mult_reorder(alpha, a, b, c);
@@ -121,6 +127,9 @@ public class CommonOps_DDRM {
      */
     public static void multTransA(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         if( b.numCols == 1 ) {
             // todo check a.numCols == 1 and do inner product?
             // there are significantly faster algorithms when dealing with vectors
@@ -152,6 +161,9 @@ public class CommonOps_DDRM {
      */
     public static void multTransA(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -175,6 +187,9 @@ public class CommonOps_DDRM {
      */
     public static void multTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         if( b.numRows == 1 ) {
             MatrixVectorMult_DDRM.mult(a, b, c);
         } else {
@@ -197,6 +212,9 @@ public class CommonOps_DDRM {
      */
     public static void multTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         // TODO add a matrix vectory multiply here
         MatrixMatrixMult_DDRM.multTransB(alpha,a,b,c);
     }
@@ -215,6 +233,9 @@ public class CommonOps_DDRM {
      */
     public static void multTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         if( b.numRows == 1) {
             // there are significantly faster algorithms when dealing with vectors
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
@@ -244,6 +265,9 @@ public class CommonOps_DDRM {
      */
     public static void multTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
+
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
             MatrixMatrixMult_DDRM.multTransAB_aux(alpha, a, b, c, null);

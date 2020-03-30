@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -204,6 +204,7 @@ public class CommonOps_DDF2 {
         if( input == null )
             input = new DMatrix2x2();
 
+        UtilEjml.checkSameInstance(input,output);
         output.a11 = input.a11;
         output.a12 = input.a21;
         output.a21 = input.a12;
@@ -222,9 +223,11 @@ public class CommonOps_DDF2 {
      *
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void mult( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = a.a11*b.a11 + a.a12*b.a21;
         c.a12 = a.a11*b.a12 + a.a12*b.a22;
         c.a21 = a.a21*b.a11 + a.a22*b.a21;
@@ -240,11 +243,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void mult( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = alpha*(a.a11*b.a11 + a.a12*b.a21);
         c.a12 = alpha*(a.a11*b.a12 + a.a12*b.a22);
         c.a21 = alpha*(a.a21*b.a11 + a.a22*b.a21);
@@ -259,11 +264,13 @@ public class CommonOps_DDF2 {
      * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multTransA( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = a.a11*b.a11 + a.a21*b.a21;
         c.a12 = a.a11*b.a12 + a.a21*b.a22;
         c.a21 = a.a12*b.a11 + a.a22*b.a21;
@@ -279,11 +286,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multTransA( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = alpha*(a.a11*b.a11 + a.a21*b.a21);
         c.a12 = alpha*(a.a11*b.a12 + a.a21*b.a22);
         c.a21 = alpha*(a.a12*b.a11 + a.a22*b.a21);
@@ -298,11 +307,13 @@ public class CommonOps_DDF2 {
      * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multTransAB( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = a.a11*b.a11 + a.a21*b.a12;
         c.a12 = a.a11*b.a21 + a.a21*b.a22;
         c.a21 = a.a12*b.a11 + a.a22*b.a12;
@@ -318,11 +329,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multTransAB( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = alpha*(a.a11*b.a11 + a.a21*b.a12);
         c.a12 = alpha*(a.a11*b.a21 + a.a21*b.a22);
         c.a21 = alpha*(a.a12*b.a11 + a.a22*b.a12);
@@ -337,11 +350,13 @@ public class CommonOps_DDF2 {
      * c<sub>ij</sub> = &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multTransB( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = a.a11*b.a11 + a.a12*b.a12;
         c.a12 = a.a11*b.a21 + a.a12*b.a22;
         c.a21 = a.a21*b.a11 + a.a22*b.a12;
@@ -357,11 +372,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multTransB( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 = alpha*(a.a11*b.a11 + a.a12*b.a12);
         c.a12 = alpha*(a.a11*b.a21 + a.a12*b.a22);
         c.a21 = alpha*(a.a21*b.a11 + a.a22*b.a12);
@@ -378,9 +395,11 @@ public class CommonOps_DDF2 {
      *
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAdd( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += a.a11*b.a11 + a.a12*b.a21;
         c.a12 += a.a11*b.a12 + a.a12*b.a22;
         c.a21 += a.a21*b.a11 + a.a22*b.a21;
@@ -396,11 +415,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAdd( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += alpha*(a.a11*b.a11 + a.a12*b.a21);
         c.a12 += alpha*(a.a11*b.a12 + a.a12*b.a22);
         c.a21 += alpha*(a.a21*b.a11 + a.a22*b.a21);
@@ -415,11 +436,13 @@ public class CommonOps_DDF2 {
      * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAddTransA( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += a.a11*b.a11 + a.a21*b.a21;
         c.a12 += a.a11*b.a12 + a.a21*b.a22;
         c.a21 += a.a12*b.a11 + a.a22*b.a21;
@@ -435,11 +458,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAddTransA( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += alpha*(a.a11*b.a11 + a.a21*b.a21);
         c.a12 += alpha*(a.a11*b.a12 + a.a21*b.a22);
         c.a21 += alpha*(a.a12*b.a11 + a.a22*b.a21);
@@ -454,11 +479,13 @@ public class CommonOps_DDF2 {
      * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAddTransAB( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += a.a11*b.a11 + a.a21*b.a12;
         c.a12 += a.a11*b.a21 + a.a21*b.a22;
         c.a21 += a.a12*b.a11 + a.a22*b.a12;
@@ -474,11 +501,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAddTransAB( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += alpha*(a.a11*b.a11 + a.a21*b.a12);
         c.a12 += alpha*(a.a11*b.a21 + a.a21*b.a22);
         c.a21 += alpha*(a.a12*b.a11 + a.a22*b.a12);
@@ -493,11 +522,13 @@ public class CommonOps_DDF2 {
      * c<sub>ij</sub> += &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
      * </p>
      *
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAddTransB( DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += a.a11*b.a11 + a.a12*b.a12;
         c.a12 += a.a11*b.a21 + a.a12*b.a22;
         c.a21 += a.a21*b.a11 + a.a22*b.a12;
@@ -513,11 +544,13 @@ public class CommonOps_DDF2 {
      * </p>
      *
      * @param alpha Scaling factor.
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param a (Input) The left matrix in the multiplication operation. Not modified.
+     * @param b (Input) The right matrix in the multiplication operation. Not modified.
+     * @param c (Output) Where the results of the operation are stored. Modified.
      */
     public static void multAddTransB( double alpha , DMatrix2x2 a , DMatrix2x2 b , DMatrix2x2 c) {
+        UtilEjml.checkSameInstance(a,c);
+        UtilEjml.checkSameInstance(b,c);
         c.a11 += alpha*(a.a11*b.a11 + a.a12*b.a12);
         c.a12 += alpha*(a.a11*b.a21 + a.a12*b.a22);
         c.a21 += alpha*(a.a21*b.a11 + a.a22*b.a12);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -339,6 +339,7 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "    public static " + nameMatrix + " transpose( " + nameMatrix + " input , " + nameMatrix + " output ) {\n" +
                 "        if( input == null )\n" +
                 "            input = new " + nameMatrix + "();\n\n");
+        out.print( "        UtilEjml.checkSameInstance(input,output);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 String f = +y + "" + x;
@@ -366,9 +367,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     *\n" +
                 "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
                 "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void "+name+"( "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+
+        out.print(
+                "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
 
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
@@ -398,11 +403,14 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param alpha Scaling factor.\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void "+name+"( double alpha , "+nameMatrix+" a , "+nameMatrix+" b , "+nameMatrix+" c) {\n");
+
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                   "        UtilEjml.checkSameInstance(b,c);\n");
 
         for( int y = 1; y <= dimen; y++ ) {
             for( int x = 1; x <= dimen; x++ ) {
@@ -431,11 +439,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * c<sub>ij</sub> " + plus + "= &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 out.print("        c.a" + y + "" + x + " " + plus + "= ");
@@ -464,11 +474,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param alpha Scaling factor.\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( double alpha , " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 out.print("        c.a" + y + "" + x + " " + plus + "= alpha*(");
@@ -496,11 +508,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * c<sub>ij</sub> " + plus + "= &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 out.print("        c.a" + y + "" + x + " " + plus + "= ");
@@ -529,11 +543,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param alpha Scaling factor.\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( double alpha , " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 out.print("        c.a" + y + "" + x + " " + plus + "= alpha*(");
@@ -561,11 +577,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * c<sub>ij</sub> "+plus+"= &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}\n" +
                 "     * </p>\n" +
                 "     *\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 out.print("        c.a" + y + "" + x + " " + plus + "= ");
@@ -594,11 +612,13 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     * </p>\n" +
                 "     *\n" +
                 "     * @param alpha Scaling factor.\n" +
-                "     * @param a The left matrix in the multiplication operation. Not modified.\n" +
-                "     * @param b The right matrix in the multiplication operation. Not modified.\n" +
-                "     * @param c Where the results of the operation are stored. Modified.\n" +
+                "     * @param a (Input) The left matrix in the multiplication operation. Not modified.\n" +
+                "     * @param b (Input) The right matrix in the multiplication operation. Not modified.\n" +
+                "     * @param c (Output) Where the results of the operation are stored. Modified.\n" +
                 "     */\n" +
                 "    public static void " + name + "( double alpha , " + nameMatrix + " a , " + nameMatrix + " b , " + nameMatrix + " c) {\n");
+        out.print( "        UtilEjml.checkSameInstance(a,c);\n" +
+                "        UtilEjml.checkSameInstance(b,c);\n");
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++) {
                 out.print("        c.a" + y + "" + x + " " + plus + "= alpha*(");

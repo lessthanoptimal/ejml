@@ -59,6 +59,27 @@ public class UtilEjml {
     // The maximize size it will do inverse on
     public static int maxInverseSize = 5;
 
+    public static void checkSameInstance( Object a , Object b ) {
+        if( a == b )
+            throw new IllegalArgumentException("Can't pass in the same instance");
+    }
+
+    public static void checkSameShape( Matrix a , Matrix b , boolean allowedSameInstance ) {
+        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
+            throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
+        }
+        if( !allowedSameInstance && a == b )
+            throw new IllegalArgumentException("Must not be the same instance");
+    }
+    public static void checkSameShape( Matrix a , Matrix b , Matrix c ) {
+        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
+            throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
+        }
+        if( a.getNumRows() != b.getNumRows() || c.getNumCols() != c.getNumCols() ) {
+            throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+c.getNumRows()+"x"+c.getNumCols());
+        }
+    }
+
     /**
      * Wraps a linear solver of any type with a safe solver the ensures inputs are not modified
      */
