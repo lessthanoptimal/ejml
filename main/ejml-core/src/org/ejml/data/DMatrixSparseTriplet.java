@@ -346,7 +346,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
 
     @Override
     public Iterator<CoordinateRealValue> createCoordinateIterator() {
-        return new Iterator<>() {
+        return new Iterator<CoordinateRealValue>() {
             CoordinateRealValue coordinate = new CoordinateRealValue();
             int index = 0;
             @Override
