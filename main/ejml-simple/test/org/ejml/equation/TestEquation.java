@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,12 +22,13 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.simple.SimpleMatrix;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static org.ejml.equation.TokenList.Type;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
@@ -99,9 +100,9 @@ public class TestEquation {
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 6; x++) {
                 if( x < 5 && y >= 2 && y <= 3 ) {
-                    assertTrue(A.get(y,x) == B.get(y-2,x));
+                    assertEquals(A.get(y, x), B.get(y - 2, x));
                 } else {
-                    assertTrue(x+" "+y,A.get(y,x) == A_orig.get(y,x));
+                    assertEquals(A.get(y, x), A_orig.get(y, x), x + " " + y);
                 }
             }
         }
@@ -124,9 +125,9 @@ public class TestEquation {
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 5; x++) {
                 if( y >= 2 ) {
-                    assertTrue(A.get(y,x) == B.get(y-2,x));
+                    assertEquals(A.get(y, x), B.get(y - 2, x));
                 } else {
-                    assertTrue(x+" "+y,A.get(y,x) == A_orig.get(y,x));
+                    assertEquals(A.get(y, x), A_orig.get(y, x), x + " " + y);
                 }
             }
         }
@@ -190,16 +191,18 @@ public class TestEquation {
         eq.process("B=A");
 
         DMatrixRMaj B = eq.lookupDDRM("B");
-        assertTrue(A.getMatrix() != B);
+        assertNotSame(A.getMatrix(), B);
         assertTrue(MatrixFeatures_DDRM.isEquals((DMatrixRMaj)A.getMatrix(), B));
     }
 
     /**
      * Place an unknown variable on the right and see if it blows up
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void assign_lazy_right() {
-        new Equation().process("B=A");
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            new Equation().process("B=A");
+        });
     }
 
     /**
@@ -439,7 +442,7 @@ public class TestEquation {
         int index = 1;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 3; y++) {
-                assertEquals(x+" "+y,found.get(y,x),index++,UtilEjml.TEST_F64);
+                assertEquals(found.get(y,x),index++,UtilEjml.TEST_F64,x+" "+y);
             }
         }
     }
@@ -452,7 +455,7 @@ public class TestEquation {
         SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 2; x++) {
-                assertEquals(x+" "+y,(x+1)*(y+1),found.get(y,x),UtilEjml.TEST_F64);
+                assertEquals((x+1)*(y+1),found.get(y,x),UtilEjml.TEST_F64,x+" "+y);
             }
         }
     }
@@ -773,7 +776,7 @@ public class TestEquation {
         eq.handleParentheses(tokens,sequence);
         assertEquals(0,sequence.operations.size());
         assertEquals(1,tokens.size);
-        assertTrue(tokens.first.getType() == Type.VARIABLE);
+        assertSame(tokens.first.getType(), Type.VARIABLE);
 
         // pointless
         sequence = new Sequence();
@@ -782,7 +785,7 @@ public class TestEquation {
         eq.handleParentheses(tokens,sequence);
         assertEquals(2,sequence.operations.size());
         assertEquals(1,tokens.size);
-        assertTrue(tokens.first.getType() == Type.VARIABLE);
+        assertSame(tokens.first.getType(), Type.VARIABLE);
     }
 
     @Test
@@ -814,8 +817,8 @@ public class TestEquation {
 
         assertEquals(2,sequence.operations.size());
         assertEquals(5,tokens.size);
-        assertTrue(tokens.last.getType() == Type.VARIABLE);
-        assertTrue(Symbol.MINUS == tokens.last.previous.getSymbol());
+        assertSame(tokens.last.getType(), Type.VARIABLE);
+        assertSame(Symbol.MINUS, tokens.last.previous.getSymbol());
 
         tokens = eq.extractTokens("B+B*B*A-B",managerTemp);
         eq.insertFunctionsAndVariables(tokens);
@@ -825,9 +828,9 @@ public class TestEquation {
 
         assertEquals(2,sequence.operations.size());
         assertEquals(5, tokens.size);
-        assertTrue(tokens.last.getType() == Type.VARIABLE);
-        assertTrue(Symbol.TIMES == tokens.last.previous.getSymbol());
-        assertTrue(Symbol.TIMES == tokens.first.next.next.next.getSymbol());
+        assertSame(tokens.last.getType(), Type.VARIABLE);
+        assertSame(Symbol.TIMES, tokens.last.previous.getSymbol());
+        assertSame(Symbol.TIMES, tokens.first.next.next.next.getSymbol());
     }
 
     @Test
@@ -848,10 +851,10 @@ public class TestEquation {
         Sequence sequence = new Sequence();
 
         TokenList.Token found = eq.createOp(t0,t1,t2,tokens,sequence);
-        assertTrue(found.getType() == Type.VARIABLE);
+        assertSame(found.getType(), Type.VARIABLE);
         assertEquals(3, tokens.size);
-        assertTrue(Symbol.ASSIGN == tokens.first.next.getSymbol());
-        assertTrue(found==tokens.last);
+        assertSame(Symbol.ASSIGN, tokens.first.next.getSymbol());
+        assertSame(found, tokens.last);
         assertEquals(1, sequence.operations.size());
     }
 
@@ -863,7 +866,7 @@ public class TestEquation {
 
         eq.lookupVariable("A");
         eq.lookupVariable("BSD");
-        assertTrue(null == eq.lookupVariable("dDD"));
+        assertNull(eq.lookupVariable("dDD"));
     }
 
     @Test
@@ -875,23 +878,23 @@ public class TestEquation {
 
         TokenList.Token t = list.getFirst();
 
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.PLUS==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("BSD")); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.PAREN_LEFT==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.PLUS==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("BSD")); t = t.next;
-        assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("BSD")); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
+        assertEquals("BSD", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
+        assertEquals("BSD", t.word); t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals("BSD", t.word); t = t.next;
     }
 
     @Test
@@ -903,15 +906,15 @@ public class TestEquation {
 
         TokenList.Token t = list.getFirst();
 
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.PAREN_LEFT==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.ELEMENT_TIMES==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.ELEMENT_DIVIDE==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("BSD")); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.ELEMENT_TIMES, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
+        assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol()); t = t.next;
+        assertEquals("BSD", t.word); t = t.next;
     }
 
     @Test
@@ -923,16 +926,16 @@ public class TestEquation {
 
         TokenList.Token t = list.getFirst();
 
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.TIMES == t.getSymbol()); t = t.next;
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
         assertEquals(2, ((VariableInteger) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.PLUS == t.getSymbol()); t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
         assertEquals(345, ((VariableInteger) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.PLUS==t.getSymbol()); t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
         assertEquals(56, ((VariableInteger) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("BSD")); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals("BSD", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
         assertEquals(934, ((VariableInteger) t.getVariable()).value); t = t.next;
     }
 
@@ -945,18 +948,18 @@ public class TestEquation {
 
         TokenList.Token t = list.getFirst();
 
-        assertTrue(t.word.equals("A")); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(2 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.PLUS==t.getSymbol()); t = t.next;
-        assertTrue(345.034 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.PLUS==t.getSymbol()); t = t.next;
-        assertTrue(0.123 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(t.word.equals("BSD")); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(5.1 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next == null);
+        assertEquals("A", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals(2, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
+        assertEquals(345.034, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
+        assertEquals(0.123, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals("BSD", t.word); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals(5.1, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
     }
 
     /**
@@ -969,58 +972,58 @@ public class TestEquation {
 
         TokenList list = eq.extractTokens("- 1.2",managerTemp);
         TokenList.Token t = list.getFirst();
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("-1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertEquals(-1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("2.1-1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("2.1 -1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("2.1 - -1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals(-1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("inv(2.1) -1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(t.word.equals("inv")); t = t.next;
-        assertTrue(Symbol.PAREN_LEFT==t.getSymbol()); t = t.next;
-        assertTrue(2.1 == ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertEquals("inv", t.word); t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
+        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("= -1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
-        assertTrue(-1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
+        assertEquals(-1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
 
         list = eq.extractTokens("= - 1.2",managerTemp);
         t = list.getFirst();
-        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.MINUS==t.getSymbol()); t = t.next;
-        assertTrue(1.2 == ((VariableDouble) t.getVariable()).value);
-        assertTrue(t.next==null);
+        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
+        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertNull(t.next);
     }
 
     @Test
@@ -1039,16 +1042,16 @@ public class TestEquation {
 
         TokenList.Token t = list.getFirst();
 
-        assertTrue(v0==t.getVariable()); t = t.next;
-        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
-        assertTrue(Type.FUNCTION==t.getType()); t = t.next;
-        assertTrue(Symbol.PAREN_LEFT==t.getSymbol()); t = t.next;
-        assertTrue(v0==t.getVariable()); t = t.next;
-        assertTrue(Symbol.ELEMENT_TIMES==t.getSymbol()); t = t.next;
-        assertTrue(v0==t.getVariable()); t = t.next;
-        assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.ELEMENT_DIVIDE==t.getSymbol()); t = t.next;
-        assertTrue(v1==t.getVariable()); t = t.next;
+        assertSame(v0, t.getVariable()); t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
+        assertSame(Type.FUNCTION, t.getType()); t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
+        assertSame(v0, t.getVariable()); t = t.next;
+        assertSame(Symbol.ELEMENT_TIMES, t.getSymbol()); t = t.next;
+        assertSame(v0, t.getVariable()); t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
+        assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol()); t = t.next;
+        assertSame(v1, t.getVariable()); t = t.next;
     }
 
     @Test
@@ -1101,16 +1104,16 @@ public class TestEquation {
 
         TokenList.Token t = tokens.getFirst();
 
-        assertTrue(t.word.equals("H")); t = t.next;
-        assertTrue(Symbol.ASSIGN==t.getSymbol()); t = t.next;
-        assertTrue(((VariableInteger)t.variable).value==3); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(Symbol.PAREN_LEFT==t.getSymbol()); t = t.next;
-        assertTrue(((VariableInteger)t.variable).value==1); t = t.next;
-        assertTrue(Symbol.TIMES==t.getSymbol()); t = t.next;
-        assertTrue(((VariableInteger)t.variable).value==2); t = t.next;
-        assertTrue(Symbol.PAREN_RIGHT==t.getSymbol()); t = t.next;
-        assertTrue(null==t);
+        assertEquals("H", t.word); t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
+        assertEquals(3, ((VariableInteger) t.variable).value); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
+        assertEquals(1, ((VariableInteger) t.variable).value); t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals(2, ((VariableInteger) t.variable).value); t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
+        assertNull(t);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,14 +25,14 @@ import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.ops.ComplexMath_F64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -108,7 +108,7 @@ public class TestMatrixMatrixMult_ZDRM {
 
                     invoke(method,realAlpha,imgAlpha,A,B,C);
 
-                    assertTrue(i+" "+j+" "+k, MatrixFeatures_ZDRM.isEquals(expected,C, UtilEjml.TEST_F64));
+                    assertTrue(MatrixFeatures_ZDRM.isEquals(expected,C, UtilEjml.TEST_F64),i+" "+j+" "+k);
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,11 +25,11 @@ import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -51,7 +51,7 @@ public abstract class GenericQrCheck_ZDRM {
 
         boolean modified = !MatrixFeatures_ZDRM.isEquals(A,A_orig);
 
-        assertTrue(modified + " " + alg.inputModified(), alg.inputModified() == modified);
+        assertEquals(alg.inputModified(), modified, modified + " " + alg.inputModified());
     }
 
     /**

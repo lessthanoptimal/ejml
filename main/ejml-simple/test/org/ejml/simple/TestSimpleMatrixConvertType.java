@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,12 +24,12 @@ import org.ejml.data.FMatrixRMaj;
 import org.ejml.data.MatrixType;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.RandomMatrices_FDRM;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Tests which make sure simple matrix correctly can convert between different matrix types.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,11 +22,11 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.simple.SimpleMatrix;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -203,7 +203,7 @@ public class TestVectorOps_DDRB {
                 }
             } else {
                 for( int j = 0; j < modMatrix.numCols; j++ ) {
-                    assertEquals(i+" "+j, untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_F64);
+                    assertEquals(untouched.get(i,j), modMatrix.get(i,j),UtilEjml.TEST_F64,i+" "+j);
                 }
             }
         }

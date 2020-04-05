@@ -30,9 +30,9 @@ import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.lu.LuUpLooking_DSCC;
 import org.ejml.sparse.csc.factory.FillReductionFactory_DSCC;
 import org.ejml.sparse.csc.linsol.GenericLinearSolverSparseTests_DSCC;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles

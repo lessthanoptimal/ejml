@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,12 +29,12 @@ import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderTran_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
 import org.ejml.simple.SimpleMatrix;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -107,7 +107,7 @@ public class TestBlockHouseHolder_DDRB {
                 SimpleMatrix V = A.extractMatrix(0,A.numRows(),j,j+1);
                 SimpleMatrix expected = V.minus(U.mult(U.transpose().mult(V)).scale(gamma));
 
-                assertEquals(i+" "+j,expected.get(i,0),Ab.get(i,j),UtilEjml.TEST_F64);
+                assertEquals(expected.get(i,0),Ab.get(i,j),UtilEjml.TEST_F64,i+" "+j);
             }
         }
     }

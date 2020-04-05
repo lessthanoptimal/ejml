@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.dense.row.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixRMaj;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**

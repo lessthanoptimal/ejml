@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,12 +29,12 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles
@@ -73,7 +73,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+                assertEquals(dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64,row+" "+col);
             }
         }
     }
@@ -98,7 +98,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+                assertEquals(dense_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64,row+" "+col);
             }
         }
     }
@@ -190,7 +190,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+                assertEquals(expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64,row+" "+col);
             }
         }
     }
@@ -224,7 +224,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+                assertEquals(expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64,row+" "+col);
             }
         }
     }
@@ -258,7 +258,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+                assertEquals(expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64,row+" "+col);
             }
         }
     }
@@ -293,7 +293,7 @@ public class TestImplSparseSparseMult_DSCC {
 
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
-                assertEquals(row+" "+col,expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64);
+                assertEquals(expected_c.get(row,col), c.get(row,col), UtilEjml.TEST_F64,row+" "+col);
             }
         }
     }

@@ -31,12 +31,12 @@ import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.GenericDecompositionTests_DSCC;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
@@ -220,7 +220,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         }
     }
 
-//    @Ignore
+//    @Disabled
 //    @Test
 //    public void testTall() {
 //        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,4,10,rand);
@@ -231,7 +231,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
 //        checkSolution(A,alg);
 //    }
 //
-//    @Ignore
+//    @Disabled
 //    @Test
 //    public void testFat() {
 //        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,10,rand);

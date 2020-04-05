@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,10 +25,10 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverDense;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.checkModifiedInput;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**

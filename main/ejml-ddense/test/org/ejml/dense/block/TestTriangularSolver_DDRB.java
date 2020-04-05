@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,11 +25,11 @@ import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -181,8 +181,8 @@ public class TestTriangularSolver_DDRB {
         // Y is overwritten with the solution
         TriangularSolver_DDRB.solve(r,upper,new DSubmatrixD1(T2,0,size,0,size),new DSubmatrixD1(Y),transT);
 
-        assertTrue( "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols,
-                MatrixOps_DDRB.isEquals(B,Y, UtilEjml.TEST_F64_SQ));
+        assertTrue(MatrixOps_DDRB.isEquals(B,Y, UtilEjml.TEST_F64_SQ),
+                "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols);
     }
 
 

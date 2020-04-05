@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,12 +21,12 @@ package org.ejml.dense.row;
 import org.ejml.UtilEjml;
 import org.ejml.data.BMatrixRMaj;
 import org.ejml.data.DMatrixRMaj;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static org.ejml.UtilEjml.parse_DDRM;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -228,7 +228,7 @@ public class TestMatrixFeatures_DDRM {
                 // make the bottom triangle not the same
                 b.set(m-1,0,0);
 
-                assertTrue("m = "+m+" n = "+n, MatrixFeatures_DDRM.isEqualsTriangle(a,b, true, UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_DDRM.isEqualsTriangle(a,b, true, UtilEjml.TEST_F64),"m = "+m+" n = "+n);
                 assertFalse(MatrixFeatures_DDRM.isEqualsTriangle(a,b, false, UtilEjml.TEST_F64));
 
                 // make the upper triangle not the same

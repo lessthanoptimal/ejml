@@ -28,11 +28,11 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
@@ -1362,7 +1362,7 @@ public class TestCommonOps_DSCC {
         for (int j = 0; j < A.numRows; j++) {
             for (int k = 0; k < A.numRows; k++) {
                 double val = B.get(j,k);
-                assertTrue("val = "+val,Math.abs(val) > 0.01 || val == 0);
+                assertTrue(Math.abs(val) > 0.01 || val == 0,"val = "+val);
             }
         }
     }
@@ -1413,7 +1413,7 @@ public class TestCommonOps_DSCC {
         for (int j = 0; j < A.numRows; j++) {
             for (int k = 0; k < A.numRows; k++) {
                 double val = A.get(j,k);
-                assertTrue("val = "+val,Math.abs(val) > 0.01 || val == 0);
+                assertTrue(Math.abs(val) > 0.01 || val == 0,"val = "+val);
             }
         }
     }

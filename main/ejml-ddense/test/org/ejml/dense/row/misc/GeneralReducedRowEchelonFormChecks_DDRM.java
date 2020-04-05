@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,11 +23,12 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Generalized checks for Gauss-Jordan implementations
@@ -153,12 +154,12 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM {
 
                     for( int i = 0; i < A.numRows; i++ ) {
                         if( i == row ) continue;
-                        assertTrue("Column should be all zeros, except at the leading",0==A.get(i,col));
+                        assertEquals(0, A.get(i, col), "Column should be all zeros, except at the leading");
                     }
 
                     break;
                 } else {
-                    assertEquals("Should be all zeros before the leading 1", 0, val, UtilEjml.TEST_F64);
+                    assertEquals(0, val, UtilEjml.TEST_F64,"Should be all zeros before the leading 1");
                 }
             }
         }

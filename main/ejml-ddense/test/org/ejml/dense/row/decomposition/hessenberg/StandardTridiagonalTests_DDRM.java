@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,13 +24,13 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.safeDecomposition;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -60,8 +60,8 @@ public abstract class StandardTridiagonalTests_DDRM {
 
             SimpleMatrix A_found = Q.mult(T).mult(Q.transpose());
 
-            assertTrue("width = "+width, MatrixFeatures_DDRM.isIdentical(
-                    (DMatrixRMaj)A.getMatrix(),(DMatrixRMaj)A_found.getMatrix(),UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(A.getMatrix(), A_found.getMatrix(),UtilEjml.TEST_F64),
+                    "width = "+width);
         }
     }
 

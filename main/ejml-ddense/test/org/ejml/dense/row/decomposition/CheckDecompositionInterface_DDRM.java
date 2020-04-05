@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,8 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -58,6 +59,6 @@ public class CheckDecompositionInterface_DDRM {
 
         boolean modified = !MatrixFeatures_DDRM.isEquals(A,A_orig);
 
-        assertTrue(modified+" "+decomp.inputModified(),decomp.inputModified()==modified);
+        assertEquals(decomp.inputModified(), modified, modified + " " + decomp.inputModified());
     }
 }

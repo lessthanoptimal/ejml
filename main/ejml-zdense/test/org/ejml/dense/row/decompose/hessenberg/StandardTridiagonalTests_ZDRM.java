@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,13 +25,13 @@ import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static org.ejml.dense.row.decompose.CheckDecompositionInterface_ZDRM.safeDecomposition;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -65,7 +65,7 @@ public abstract class StandardTridiagonalTests_ZDRM {
             CommonOps_ZDRM.mult(Q,T,tmp);
             CommonOps_ZDRM.multTransB(tmp,Q,A_found);
 
-            assertTrue("width = "+width, MatrixFeatures_ZDRM.isIdentical(A,A_found,UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_ZDRM.isIdentical(A,A_found,UtilEjml.TEST_F64),"width = "+width);
         }
     }
 
