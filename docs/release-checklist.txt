@@ -4,6 +4,7 @@
 - Update example code on website
   git diff --name-status TAG_NAME examples
 - clean and generate code:
+  cd main;git clean -cf;cd ..
 
 git clean -fd main/ejml-core/src main/ejml-cdense/src main/ejml-fdense/src
 ./gradlew autogenerate
@@ -18,13 +19,12 @@ git clean -fd main/ejml-core/src main/ejml-cdense/src main/ejml-fdense/src
 - Update javadoc on website
   cd ejml;rm -rf build/docs/javadoc;./gradlew alljavadoc;cd build/docs/;zip -r javadoc.zip javadoc
 
-
 -----
 Push to central:
 
-- Edit gradle.properties and turn off parallel build
-- Edit build.gradle and uncomment archives javadocJar
-- ./gradlew clean;./gradlew autogenerate;./gradlew uploadArchives
+- Do a clean build and upload to Sonatype
+  cd main/ejml-fdense/;git clean -fd;cd ../ejml-fsparse;git clean -fd;cd ../ejml-cdense;git clean -fd;cd ../..
+  ./gradlew clean;./gradlew autogenerate;./gradlew assemble;./gradlew uploadArchives -Dorg.gradle.parallel=false
 - Then go to the website  https://oss.sonatype.org/
   * click close button
   * double check the files

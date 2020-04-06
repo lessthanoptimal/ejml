@@ -19,6 +19,7 @@
 package org.ejml;
 
 import com.peterabeles.auto64fto32f.ConvertFile32From64;
+import com.peterabeles.auto64fto32f.Language;
 
 import java.io.File;
 
@@ -26,10 +27,10 @@ import java.io.File;
  * Applications which will auto generate 32F code from 64F inside the core module
  * @author Peter Abeles
  */
-public class GenerateJavaCode32 extends GenerateCode32 {
+public class GenerateKotlinCode32 extends GenerateCode32{
 
-    public GenerateJavaCode32() {
-        super("java");
+    public GenerateKotlinCode32() {
+        super("kt");
 
         String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6","TRIPLET"};
 
@@ -71,10 +72,9 @@ public class GenerateJavaCode32 extends GenerateCode32 {
             prefix32.add("Test"+prefix32.get(i));
         }
 
-        converter = new ConvertFile32From64(false);
+        converter = new ConvertFile32From64(Language.KOTLIN,false);
 
         converter.replacePattern("DoubleStep", "FIXED_STEP");
-        converter.replacePattern("double", "float");
         converter.replacePattern("Double", "Float");
 
         for( String suffice : sufficeRoot) {
@@ -97,7 +97,7 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         converter.replacePattern("ZSubmatrix", "CSubmatrix");
         converter.replacePattern("Features_D;", "Features_F;");
         converter.replacePattern("Features_D.", "Features_F.");
-        converter.replacePattern("lookupDDRM", "lookupFDRM");
+        converter.replacePattern("DDRM", "FDRM");
 
         converter.replacePattern("F64", "F32");
         converter.replacePattern("random64", "random32");
@@ -105,51 +105,20 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         converter.replacePattern("UtilEjml.PI", "UtilEjml.F_PI");
         converter.replacePattern("UtilEjml.EPS", "UtilEjml.F_EPS");
 
-        converter.replaceStartsWith("Math.sqrt", "(float)Math.sqrt");
-        converter.replaceStartsWith("Math.pow", "(float)Math.pow");
-        converter.replaceStartsWith("Math.sin", "(float)Math.sin");
-        converter.replaceStartsWith("Math.cos", "(float)Math.cos");
-        converter.replaceStartsWith("Math.tan", "(float)Math.tan");
-        converter.replaceStartsWith("Math.atan", "(float)Math.atan");
-        converter.replaceStartsWith("Math.log", "(float)Math.log");
-        converter.replaceStartsWith("Math.exp", "(float)Math.exp");
-
         converter.replacePatternAfter("FIXED_STEP", "DoubleStep");
     }
 
-    public static void main(String[] args ) {
+    public static void main(String args[] ) {
         String path = findPathToProjectRoot();
         System.out.println("Path to project root: "+path);
 
-        String coreDir[] = new String[]{
-                "main/ejml-simple/src/org/ejml/simple/ops",
-                "main/ejml-core/src/org/ejml/data",
-                "main/ejml-core/test/org/ejml/data",
-                "main/ejml-core/src/org/ejml/ops",
-                "main/ejml-core/test/org/ejml/ops",
-                "main/ejml-experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
+        String[] coreDir = new String[]{
+                "main/ejml-kotlin/src"
         };
 
-        GenerateJavaCode32 app = new GenerateJavaCode32();
+        GenerateKotlinCode32 app = new GenerateKotlinCode32();
         for( String dir : coreDir ) {
             app.process(new File(path,dir) );
-        }
-
-        // remove any previously generated code
-        for( String module : new String[]{"dense","sparse"}) {
-            recursiveDelete(new File(path,"main/ejml-f"+module+"/src"), true);
-            recursiveDelete(new File(path,"main/ejml-c"+module+"/src"), true);
-            recursiveDelete(new File(path,"main/ejml-f"+module+"/test"), true);
-            recursiveDelete(new File(path,"main/ejml-c"+module+"/test"), true);
-
-            app.process(new File(path,"main/ejml-d"+module+"/src"), new File(path,"main/ejml-f"+module+"/src") );
-            app.process(new File(path,"main/ejml-d"+module+"/test"), new File(path,"main/ejml-f"+module+"/test") );
-
-            // sparse complex doesn't exist yet
-            if( module.equals("dense")) {
-                app.process(new File(path, "main/ejml-z" + module + "/src"), new File(path, "main/ejml-c" + module + "/src"));
-                app.process(new File(path,"main/ejml-z"+module+"/test"), new File(path,"main/ejml-c"+module+"/test") );
-            }
         }
     }
 }

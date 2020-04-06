@@ -66,6 +66,27 @@ public class MatrixIO {
     }
 
     /**
+     * Converts a text string in matlab format into a DDRM matrix
+     */
+    public static FMatrixRMaj matlabToFDRM( String text ) {
+        // String all white space and the two [ ] characters
+        text = text.replaceAll("(\\s+|\\[|\\])","");
+        String[] stringRows = text.split(";");
+        String[] words = stringRows[0].split(",");
+        FMatrixRMaj output = new FMatrixRMaj(stringRows.length, words.length);
+        for (int row = 0; row < output.numRows; row++) {
+            words = stringRows[row].split(",");
+            if( words.length != output.numCols )
+                throw new IllegalArgumentException("Inconsistent column lengths. "+output.numCols+" "+words.length);
+            for (int col = 0; col < output.numCols; col++) {
+                float value = Float.parseFloat(words[col]);
+                output.set(row,col,value);
+            }
+        }
+        return output;
+    }
+
+    /**
      * Writes a stream using the Matrix Market Coordinate format.
      *
      * https://math.nist.gov/MatrixMarket/formats.html

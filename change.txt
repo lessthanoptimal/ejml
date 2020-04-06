@@ -3,22 +3,29 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.39
-2020/
+2020/04/06
 
 - Fixed deserialization issue with SimpleMatrix. Thanks AngledLuffa for the bug report!
 - Added sanity checks to matrix size. Thanks LsKoder for the suggestion!
 - Added support for sparse float matrices FSCC
-  * NOTE: It appears that the current solves based on DSparase in less numerically stable solution than their
+  * It appears that the current solvers in EJML based on DSparse are less numerically stable than their
     dense counter parts. More analysis is needed.
-  * DXSparse of EJML produce similar results for double precision and doesn't look like DXSparse
+  * DXSparse and EJML produce similar results for double precision and doesn't look like DXSparse
     support single precision making it hard to compare. Matlab doesn't support single precision.
   * Unit tests were modified to ensure more numerically stable matrices were passed in
 - Fixed bug with DSCC.multAddColA() where col_idx wasn't filled out all the way if there were zero columns
 - Added RandomMatrices_DDRM.triangularLower()
-- Can parse Matlab formatted text matrices
 - Preview of Kotlin extensions support
 - Added a Matrix.create(rows,cols) function
-- Can read and write matrix market file format
+- Added sanity checks to some functions which ensures the same variable isn't passed in twice
+  * Thanks for 4kills for the implicit assumption
+- MatrixIO
+  * Can read and write Matrix Market file format
+    https://math.nist.gov/MatrixMarket/formats.html
+  * Can parse Matlab formatted text matrix output
+- Build
+  * Uses Gradle 6.3
+  * Requires Java 11 to build but outputs Java 8 byte code
 
 ----- Version 0.38
 2019/03/13

@@ -1,5 +1,5 @@
 plugins {
-    id "com.peterabeles.gversion" version "1.6.2"
+    id "com.peterabeles.gversion" version "1.7.0"
 }
 
 gversion {
@@ -13,7 +13,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.ejml'
-    version = '0.39-SNAPSHOT'
+    version = '0.39'
 }
 
 subprojects {
@@ -114,8 +114,10 @@ subprojects {
 
     artifacts {
         archives sourcesJar
-//        archives javadocJar // uncomment for release
     }
+
+    // Force uploadArchives to fail if trying to upload a stable release and git is dirty
+    uploadArchives.dependsOn failDirtyNotSnapshot
 
     // if Maven central isn't setup in gradle.properties skip all of this
     if( project.hasProperty('ossrhUsername') ) {
@@ -124,6 +126,9 @@ subprojects {
         }
 
         uploadArchives {
+            artifacts {
+                archives javadocJar
+            }
             repositories {
                 mavenDeployer {
                     beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -172,11 +177,12 @@ subprojects {
 
 def allModules = [
         ':main:ejml-core',
+        ':main:ejml-cdense',
         ':main:ejml-ddense',
+        ':main:ejml-dsparse',
         ':main:ejml-dsparse',
         ':main:ejml-fdense',
         ':main:ejml-zdense',
-        ':main:ejml-cdense',
         ':main:ejml-simple',
         ':main:ejml-experimental',
 ]
@@ -223,6 +229,7 @@ def javadocProjects = [
         ':main:ejml-ddense',
         ':main:ejml-dsparse',
         ':main:ejml-fdense',
+        ':main:ejml-fsparse',
         ':main:ejml-zdense',
         ':main:ejml-cdense',
         ':main:ejml-simple'
@@ -237,6 +244,12 @@ task alljavadoc(type: Javadoc) {
 
     // Hack for Java 8u121 and beyond. Comment out if running an earlier version of Java
     options.addBooleanOption("-allow-script-in-comments", true)
+    // Fixed the undefined search problem
+    options.addBooleanOption("-no-module-directories", true)
+
+    // Add a list of uses of a class to javadoc
+    options.use = true
+
     configure(options) {
         failOnError = false
         docTitle = "Efficient Java Matrix Library (EJML) v$project.version"
