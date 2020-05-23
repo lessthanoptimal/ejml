@@ -266,7 +266,7 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 
 wrapper {
     distributionType = Wrapper.DistributionType.BIN
-    gradleVersion = '6.3'
+    gradleVersion = '6.4.1'
 }
 
 project(':main:ejml-core').compileJava.dependsOn(createVersionFile)
