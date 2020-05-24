@@ -49,28 +49,18 @@ subprojects {
 
     sourceSets {
         main {
-            java {
-                srcDir 'src'
-            }
-            resources {
-                srcDir 'resources/src'
-            }
+            java { srcDir 'src' }
+            resources { srcDir 'resources/src' }
         }
 
         generate {
-            java {
-                srcDir 'generate'
-            }
+            java { srcDir 'generate' }
             compileClasspath += sourceSets.main.runtimeClasspath
         }
 
         benchmark {
-            java {
-                srcDir 'benchmarks/src'
-            }
-            resources {
-                srcDir 'benchmark/resources'
-            }
+            java { srcDir 'benchmarks/src' }
+            resources { srcDir 'benchmark/resources' }
             compileClasspath += sourceSets.main.runtimeClasspath
         }
 
@@ -97,8 +87,13 @@ subprojects {
         }
         generateCompile project(':main:autocode')
 
-        // needed to use Java 11 with 8 byte code
-        annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:0.2.0'
+        // needed to use Java 11+ syntax with Java 1.8 byte code
+        annotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.2.0'){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
+        annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
+        annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
     }
 
     javadoc.failOnError = false
