@@ -254,9 +254,11 @@ task alljavadoc(type: Javadoc) {
 }
 
 task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJava" }) {
-    baseName = 'EJML'
+    archiveFile.set(file("ejml-v${project.version}.jar"))
 
-    from files(javadocProjects.collect { project(it).sourceSets.main.output })
+    from files(javadocProjects.collect { project(it).sourceSets.main.output.classesDirs }) {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
 }
 
 wrapper {

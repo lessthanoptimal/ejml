@@ -2,6 +2,11 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.40
+2020/
+
+- Fixed build task oneJarBin. Thanks liuyang0717 for the bug report
+
 ----- Version 0.39
 2020/04/06
 
