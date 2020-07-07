@@ -1821,4 +1821,17 @@ public class TestCommonOps_DDRM {
             }
         }
     }
+
+    @Test
+    public void applyFunc() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixRMaj B = A.copy();
+        CommonOps_DDRM.apply(A, (double x) -> 2*x+1, B);
+
+        assertEquals(A.data.length, B.data.length);
+
+        for(int i = 0; i < A.data.length; i++) {
+            assertEquals(B.data[i], A.data[i] * 2 + 1);
+        }
+    }
 }

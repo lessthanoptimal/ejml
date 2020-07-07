@@ -36,6 +36,7 @@ import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
+import org.ejml.ops.DoubleUnaryOperator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -3002,5 +3003,28 @@ public class CommonOps_DDRM {
                 A.data[row*cols+col] = A.data[col*cols+row];
             }
         }
+    }
+
+    /**
+     * This applies a given unary function on every value stored in the matrix
+     *
+     * @param input  (Input) input matrix. Not modified
+     * @param func   Unary function accepting a double
+     * @param output (Input/Output) Matrix. Modified.
+     */
+    public static void apply(DMatrixRMaj input, DoubleUnaryOperator func, DMatrixRMaj output) {
+        if (output == null) {
+            output = input.createLike();
+        } else if (input != output) {
+            output.reshape(input.numRows, input.numCols);
+        }
+
+        for (int i = 0; i < input.data.length; i++) {
+            output.data[i] = func.apply(input.data[i]);
+        }
+    }
+
+    public static void apply(DMatrixRMaj input, DoubleUnaryOperator func) {
+        apply(input, func, input);
     }
 }
