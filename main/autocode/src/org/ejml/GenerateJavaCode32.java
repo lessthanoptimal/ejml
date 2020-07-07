@@ -50,6 +50,8 @@ public class GenerateJavaCode32 extends GenerateCode32 {
 
         prefix64.add("DGrow");
         prefix32.add("FGrow");
+        prefix64.add("DoubleUnary");
+        prefix32.add("FloatUnary");
         prefix64.add("DScalar");
         prefix32.add("FScalar");
         prefix64.add("DMatrix");

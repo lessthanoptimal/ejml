@@ -31,6 +31,7 @@ import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
+import org.ejml.ops.DoubleUnaryOperator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -1834,6 +1835,29 @@ public class CommonOps_DSCC {
         }
 
         return output;
+    }
+
+    /**
+     * This applies a given unary function on every value stored in the matrix
+     *
+     * @param input  (Input) input matrix. Not modified
+     * @param func   Unary function accepting a double
+     * @param output (Input/Output) Matrix. Modified.
+     */
+    public static void apply(DMatrixSparseCSC input, DoubleUnaryOperator func, DMatrixSparseCSC output) {
+        if (output == null) {
+            output = input.createLike();
+        } else if (input != output) {
+            output.copyStructure(input);
+        }
+
+        for (int i = 0; i < input.nz_values.length; i++) {
+            output.nz_values[i] = func.apply(input.nz_values[i]);
+        }
+    }
+
+    public static void apply(DMatrixSparseCSC input, DoubleUnaryOperator func) {
+        apply(input, func, input);
     }
 }
 

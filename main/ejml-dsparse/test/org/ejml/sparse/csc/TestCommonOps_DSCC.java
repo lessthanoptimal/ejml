@@ -1456,4 +1456,17 @@ public class TestCommonOps_DSCC {
         double found = CommonOps_DSCC.trace(A);
         assertEquals(expected,found,UtilEjml.TEST_F64);
     }
+
+    @Test
+    public void applyFunc() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+        DMatrixSparseCSC B = A.copy();
+        CommonOps_DSCC.apply(A, (double x) -> 2*x+1, B);
+
+        assertEquals(A.nz_length, B.nz_length);
+
+        for(int i = 0; i < A.nz_values.length; i++) {
+            assertEquals(B.nz_values[i], A.nz_values[i] * 2 + 1);
+        }
+    }
 }
