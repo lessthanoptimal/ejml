@@ -1744,7 +1744,7 @@ public class CommonOps_DDRM {
     /**
      * <p>
      * Element-wise exp operation  <br>
-     * c<sub>ij</sub> = Math.log(a<sub>ij</sub>)
+     * c<sub>ij</sub> = Math.exp(a<sub>ij</sub>)
      * <p>
      *
      * @param A input
