@@ -29,8 +29,11 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.DoubleStream;
 
+import static org.ejml.UtilEjml.checkSameShape;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -1826,12 +1829,11 @@ public class TestCommonOps_DDRM {
     public void applyFunc() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10, 10, rand);
         DMatrixRMaj B = A.copy();
-        CommonOps_DDRM.apply(A, (double x) -> 2*x+1, B);
+        CommonOps_DDRM.apply(A, (double x) -> 2 * x + 1, B);
 
-        assertEquals(A.data.length, B.data.length);
+        double[] expectedResult = DoubleStream.of(A.data).map(x -> 2 * x + 1).toArray();
 
-        for(int i = 0; i < A.data.length; i++) {
-            assertEquals(B.data[i], A.data[i] * 2 + 1);
-        }
+        checkSameShape(A, B, false);
+        assertTrue(Arrays.equals(expectedResult, B.data));
     }
 }

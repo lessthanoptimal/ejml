@@ -30,7 +30,9 @@ import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.DoubleStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1461,12 +1463,12 @@ public class TestCommonOps_DSCC {
     public void applyFunc() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
         DMatrixSparseCSC B = A.copy();
-        CommonOps_DSCC.apply(A, (double x) -> 2*x+1, B);
+        CommonOps_DSCC.apply(A, x -> 2 * x + 1, B);
 
-        assertEquals(A.nz_length, B.nz_length);
+        double[] expectedResult = DoubleStream.of(A.nz_values).map(x -> 2 * x + 1).toArray();
 
-        for(int i = 0; i < A.nz_values.length; i++) {
-            assertEquals(B.nz_values[i], A.nz_values[i] * 2 + 1);
-        }
+        assertTrue(Arrays.equals(A.col_idx, B.col_idx));
+        assertTrue(Arrays.equals(A.nz_rows, B.nz_rows));
+        assertTrue(Arrays.equals(expectedResult, B.nz_values));
     }
 }
