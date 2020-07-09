@@ -1471,4 +1471,42 @@ public class TestCommonOps_DSCC {
         assertTrue(Arrays.equals(A.nz_rows, B.nz_rows));
         assertTrue(Arrays.equals(expectedResult, B.nz_values));
     }
+
+    @Test
+    public void reduceScalar() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+        double result = CommonOps_DSCC.reduceScalar(A, 0, (acc, x) -> acc + x);
+
+        double expectedResult = DoubleStream.of(A.nz_values).reduce(0, (acc, x) -> acc + x);
+
+        assertTrue(expectedResult == result);
+    }
+
+    @Test
+    public void reduceColumnWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+
+        DMatrixRMaj result = CommonOps_DSCC.reduceColumnWise(A, 0, (acc, x) -> acc + x, null);
+
+        for (int i = 0; i < A.numCols; i++) {
+            DMatrixSparseCSC colVector = CommonOps_DSCC.extractColumn(A, i, null);
+            double expected = Arrays.stream(colVector.nz_values).reduce(0, (acc, x) -> acc + x);
+            assertEquals(expected, result.get(i));
+        }
+    }
+
+    @Test
+    public void reduceRowWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+
+        DMatrixRMaj result = CommonOps_DSCC.reduceRowWise(A, 0, (acc, x) -> acc + x, null);
+
+        for (int i = 0; i < A.numCols; i++) {
+            DMatrixSparseCSC A_trans = CommonOps_DSCC.transpose(A, null, null);
+            // as A_t[i,:]  == A[:,i]
+            DMatrixSparseCSC rowVector = CommonOps_DSCC.extractColumn(A_trans, i, null);
+            double expected = Arrays.stream(rowVector.nz_values).reduce(0, (acc, x) -> acc + x);
+            assertEquals(expected, result.get(i));
+        }
+    }
 }
