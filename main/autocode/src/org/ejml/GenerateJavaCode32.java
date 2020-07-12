@@ -54,6 +54,14 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         prefix32.add("FUnary");
         prefix64.add("DBinary");
         prefix32.add("FBinary");
+        prefix64.add("DoubleMonoid");
+        prefix32.add("FloatMonoid");
+        prefix64.add("DoubleSemiRing");
+        prefix32.add("FloatSemiRing");
+        prefix64.add("PreDefinedDoubleMonoids");
+        prefix32.add("PreDefinedFloatMonoids");
+        prefix64.add("PreDefinedDoubleSemiRings");
+        prefix32.add("PreDefinedFloatSemiRings");
         prefix64.add("DScalar");
         prefix32.add("FScalar");
         prefix64.add("DMatrix");
@@ -93,6 +101,8 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         converter.replacePattern("DScalar", "FScalar");
         converter.replacePattern("DUnary", "FUnary");
         converter.replacePattern("DBinary", "FBinary");
+        converter.replacePattern("DMonoid", "FMonoid");
+        converter.replacePattern("DSemiRing", "FSemiRing");
         converter.replacePattern("ConvertD", "ConvertF");
         converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
