@@ -31,7 +31,6 @@ public final class PreDefinedDoubleMonoids {
     public static final DoubleMonoid PLUS = new DoubleMonoid(0, Double::sum);
     public static final DoubleMonoid TIMES = new DoubleMonoid(1, (a, b) -> a * b);
 
-    // TODO: performance incr. worth not using safe Math.min/max?
     public final static DoubleMonoid MIN = new DoubleMonoid(Double.MAX_VALUE, (a, b) -> (a <= b) ? a : b);
     public final static DoubleMonoid MAX = new DoubleMonoid(Double.MIN_VALUE, (a, b) -> (a >= b) ? a : b);
 }
