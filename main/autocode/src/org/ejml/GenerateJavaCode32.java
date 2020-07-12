@@ -54,6 +54,12 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         prefix32.add("FloatUnary");
         prefix64.add("DoubleBinary");
         prefix32.add("FloatBinary");
+        prefix64.add("DoubleMonoid");
+        prefix32.add("FloatMonoid");
+        prefix64.add("DoubleSemiRing");
+        prefix32.add("FloatSemiRing");
+        prefix64.add("PreDefinedDoubleMonoids");
+        prefix32.add("PreDefinedFloatMonoids");
         prefix64.add("DScalar");
         prefix32.add("FScalar");
         prefix64.add("DMatrix");
