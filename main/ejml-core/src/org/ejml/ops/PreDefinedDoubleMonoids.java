@@ -19,9 +19,10 @@
 package org.ejml.ops;
 
 public final class PreDefinedDoubleMonoids {
-    public static final DoubleMonoid AND = new DoubleMonoid(1, (a, b) -> (a != 0 || b != 0) ? 0 : 1);
-    public static final DoubleMonoid OR = new DoubleMonoid(0, (a, b) -> (a != 0 && b != 0) ? 0 : 1);
-    public static final DoubleMonoid XOR = new DoubleMonoid(0, (a, b) -> ((a == 0 || b == 0) && (a == 1 || b == 1)) ? 0 : 1);
+    public static final DoubleMonoid AND = new DoubleMonoid(1, (a, b) -> (a == 0 || b == 0) ? 0 : 1);
+    public static final DoubleMonoid OR = new DoubleMonoid(0, (a, b) -> (a != 0 || b != 0) ? 1 : 0);
+    public static final DoubleMonoid XOR = new DoubleMonoid(0, (a, b) -> ((a == 0 && b == 0) || (a != 0 && b != 0)) ? 0 : 1);
+    public static final DoubleMonoid XNOR = new DoubleMonoid(0, (a, b) -> ((a == 0 && b == 0) || (a != 0 && b != 0)) ? 1 : 0);
 
     public static final DoubleMonoid PLUS = new DoubleMonoid(0, Double::sum);
     public static final DoubleMonoid MULT = new DoubleMonoid(1, (a, b) -> a * b);
