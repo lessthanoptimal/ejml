@@ -52,6 +52,6 @@ public class TestAlgebraicStructures {
 
 
         assertEquals(63, PreDefinedDoubleMonoids.PLUS.func.apply(43, 20));
-        assertEquals(860, PreDefinedDoubleMonoids.MULT.func.apply(43, 20));
+        assertEquals(860, PreDefinedDoubleMonoids.TIMES.func.apply(43, 20));
     }
 }
