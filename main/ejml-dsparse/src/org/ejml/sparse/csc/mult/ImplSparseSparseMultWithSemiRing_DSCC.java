@@ -124,7 +124,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
                 int idxA0 = A.col_idx[colA];
                 int idxA1 = A.col_idx[colA + 1];
 
-                double sum = 0;
+                double sum = semiRing.add.id;
                 for (int ai = idxA0; ai < idxA1; ai++) {
                     int rowA = A.nz_rows[ai];
                     if (w[rowA] == bj) {
@@ -132,7 +132,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
                     }
                 }
 
-                if (sum != 0) {
+                if (sum != semiRing.add.id) {
                     if (C.nz_length == C.nz_values.length) {
                         C.growMaxLength(C.nz_length * 2 + 1, true);
                     }
@@ -232,7 +232,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
     }
 
     public static void mult(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
-        C.zero();
+        C.fill(semiRing.add.id);
         multAdd(A, B, C, semiRing);
     }
 
@@ -267,7 +267,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
                 int idx0 = A.col_idx[i];
                 int idx1 = A.col_idx[i + 1];
 
-                double sum = 0;
+                double sum = semiRing.add.id;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
                     int rowK = A.nz_rows[indexA];
                     sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(A.nz_values[indexA], B.data[rowK * B.numCols + j]));
@@ -286,7 +286,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
                 int idx0 = A.col_idx[i];
                 int idx1 = A.col_idx[i + 1];
 
-                double sum = 0;
+                double sum = semiRing.add.id;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
                     int rowK = A.nz_rows[indexA];
                     sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(A.nz_values[indexA], B.data[rowK * B.numCols + j]));

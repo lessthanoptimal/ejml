@@ -334,6 +334,13 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
+     * Sets all elements equal to the specified value.
+     */
+    public void fill(double value) {
+        Arrays.fill(data, 0, getNumElements(), value);
+    }
+
+    /**
      * Creates and returns a matrix which is idential to this one.
      *
      * @return A new identical matrix.
