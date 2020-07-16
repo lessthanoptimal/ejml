@@ -7,8 +7,13 @@ apply plugin: 'me.champeau.gradle.jmh'
 dependencies {
     compile project(':main:ejml-all')
 
-    jmh group: 'org.openjdk.jmh',      name: 'jmh-core',         version: 1.19
-    jmh group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: 1.19
+    ['core','generator-annprocess'].each { String a->
+        jmh compile('org.openjdk.jmh:jmh-'+a+':1.19')
+    }
+}
+
+jmh {
+    //jvmArgsAppend = ["-XX:+UseSuperWord"]
 }
 
 idea {

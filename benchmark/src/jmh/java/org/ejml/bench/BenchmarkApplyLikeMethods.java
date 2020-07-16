@@ -32,7 +32,6 @@ import java.util.stream.IntStream;
  * Uses JMH to compare the speed of apply vs different hard-coded version.
  * .. basically does inlining work and thus vectorization still apply?
  *
- *
  * @author Florentin Doerre
  */
 @BenchmarkMode(Mode.AverageTime)
@@ -42,7 +41,7 @@ import java.util.stream.IntStream;
 @State(Scope.Benchmark)
 // TODO: this as a abstract class and have another benchmarks with jvmArgs="-XX:-UseSuperWord"
 // TODO: verify these arguments are respected
-@Fork(value = 1, warmups = 3, jvmArgs= "-XX:+UseSuperWord")
+@Fork(value = 1, warmups = 3, jvmArgs = "-XX:+UseSuperWord")
 public class BenchmarkApplyLikeMethods {
 
     IntStream dimensions = IntStream.of(100_000, 1_000_000, 10_000_000);
@@ -51,7 +50,7 @@ public class BenchmarkApplyLikeMethods {
         dimensions.forEach(i -> put(i, RandomMatrices_DSCC.rectangle(i, i, i / 10, new Random(42))));
     }};
 
-    @Param({"100_000", "1_000_000", "10_000_000"})
+    @Param({"100000", "1000000", "10000000"})
     private int dim;
 
     @Benchmark
