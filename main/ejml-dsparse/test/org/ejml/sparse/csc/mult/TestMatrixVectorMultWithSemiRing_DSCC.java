@@ -43,10 +43,10 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
         inputMatrix.set(1, 4, 1);
         inputMatrix.set(1, 6, 1);
         inputMatrix.set(2, 5, 1);
-        inputMatrix.set(3, 0, .2);
-        inputMatrix.set(3, 2, .4);
+        inputMatrix.set(3, 0, 0.2);
+        inputMatrix.set(3, 2, 0.4);
         inputMatrix.set(4, 5, 1);
-        inputMatrix.set(5, 2, .5);
+        inputMatrix.set(5, 2, 0.5);
         inputMatrix.set(6, 2, 1);
         inputMatrix.set(6, 3, 1);
         inputMatrix.set(6, 4, 1);
@@ -115,7 +115,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     private static Stream<Arguments> matrixVectorMultSources() {
         return Stream.of(
-                Arguments.of("Plus, Times", PreDefinedDoubleSemiRings.PLUS_TIMES, new double[]{.5, .6, 0, 0, 0, 0, 1.1}),
+                Arguments.of("Plus, Times", PreDefinedDoubleSemiRings.PLUS_TIMES, new double[]{0.5, 0.6, 0, 0, 0, 0, 1.1}),
                 Arguments.of("OR, AND", PreDefinedDoubleSemiRings.OR_AND, new double[]{1, 1, 0, 0, 0, 0, 1}),
                 Arguments.of("MIN, PLUS", PreDefinedDoubleSemiRings.MIN_PLUS,
                         new double[]{1.5, 1.6, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, 1.5})
