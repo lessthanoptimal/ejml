@@ -1852,7 +1852,7 @@ public class CommonOps_DSCC {
             output.copyStructure(input);
         }
 
-        for (int i = 0; i < input.nz_values.length; i++) {
+        for (int i = 0; i < input.nz_length; i++) {
             output.nz_values[i] = func.apply(input.nz_values[i]);
         }
     }
@@ -1871,7 +1871,7 @@ public class CommonOps_DSCC {
     public static double reduceScalar(DMatrixSparseCSC input, double initValue, DoubleBinaryOperator func) {
         double result = initValue;
 
-        for (int i = 0; i < input.nz_values.length; i++) {
+        for (int i = 0; i < input.nz_length; i++) {
             result = func.apply(result, input.nz_values[i]);
         }
 
