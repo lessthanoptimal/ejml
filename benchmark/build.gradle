@@ -1,0 +1,18 @@
+plugins {
+    id "me.champeau.gradle.jmh" version "0.5.0"
+}
+
+apply plugin: 'me.champeau.gradle.jmh'
+
+dependencies {
+    compile project(':main:ejml-all')
+
+    jmh group: 'org.openjdk.jmh',      name: 'jmh-core',         version: 1.19
+    jmh group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: 1.19
+}
+
+idea {
+    module {
+        name = "EJML Benchmarks"
+    }
+}
