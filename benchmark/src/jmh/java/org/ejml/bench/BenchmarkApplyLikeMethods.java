@@ -39,9 +39,7 @@ import java.util.stream.IntStream;
 @Warmup(iterations = 5)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-// TODO: this as a abstract class and have another benchmarks with jvmArgs="-XX:-UseSuperWord"
-// TODO: verify these arguments are respected
-@Fork(value = 1, warmups = 3, jvmArgs = "-XX:+UseSuperWord")
+@Fork(value = 1, warmups = 3)
 public class BenchmarkApplyLikeMethods {
 
     IntStream dimensions = IntStream.of(100_000, 1_000_000, 10_000_000);

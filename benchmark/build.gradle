@@ -13,7 +13,8 @@ dependencies {
 }
 
 jmh {
-    //jvmArgsAppend = ["-XX:+UseSuperWord"]
+    duplicateClassesStrategy = 'warn'
+    jvmArgs = ["-Xmx4048m", "-XX:+UseSuperWord"]
 }
 
 idea {
