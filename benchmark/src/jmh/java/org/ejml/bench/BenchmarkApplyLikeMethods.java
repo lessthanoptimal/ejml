@@ -22,64 +22,71 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.openjdk.jmh.annotations.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 /**
  * Uses JMH to compare the speed of apply vs different hard-coded version.
  * .. basically does inlining work and thus vectorization still apply?
  *
+ *  (with +UseSuperWord)
+ *  Benchmark                                   (dimension)  (sparsity)  Mode  Cnt  Score   Error  Units
+ *  BenchmarkApplyLikeMethods.applyAdd               100000         0.1  avgt    5  0.006 ± 0.004  ms/op
+ *  BenchmarkApplyLikeMethods.applyAddAndScale       100000         0.1  avgt    5  0.014 ± 0.020  ms/op
+ *  BenchmarkApplyLikeMethods.applyDivide            100000         0.1  avgt    5  0.012 ± 0.007  ms/op
+ *  BenchmarkApplyLikeMethods.applyScale             100000         0.1  avgt    5  0.007 ± 0.001  ms/op
+ *  BenchmarkApplyLikeMethods.divide                 100000         0.1  avgt    5  0.010 ± 0.021  ms/op
+ *  BenchmarkApplyLikeMethods.scale                  100000         0.1  avgt    5  0.003 ± 0.001  ms/op
  * @author Florentin Doerre
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 5)
+@Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value = 1, warmups = 3)
+@Fork(value = 1, warmups = 2)
 public class BenchmarkApplyLikeMethods {
 
-    IntStream dimensions = IntStream.of(100_000, 1_000_000, 10_000_000);
+    DMatrixSparseCSC matrix;
 
-    Map<Integer, DMatrixSparseCSC> matrices = new HashMap<>() {{
-        dimensions.forEach(i -> put(i, RandomMatrices_DSCC.rectangle(i, i, i / 10, new Random(42))));
-    }};
+    @Param({"100000"})
+    private int dimension;
 
-    @Param({"100000", "1000000", "10000000"})
-    private int dim;
+    @Param({"0.1"})
+    private float sparsity;
+
+    @Setup(Level.Invocation)
+    public void setup() {
+        matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, Math.round(dimension * sparsity), new Random(42));
+    }
 
     @Benchmark
     public void applyAdd() {
-        CommonOps_DSCC.apply(matrices.get(dim), (x) -> x + 10);
+        CommonOps_DSCC.apply(matrix, (x) -> x + 10);
     }
 
     @Benchmark
     public void applyScale() {
-        CommonOps_DSCC.apply(matrices.get(dim), (x) -> x * 10);
+        CommonOps_DSCC.apply(matrix, (x) -> x * 10);
     }
 
     @Benchmark
     public void applyDivide() {
-        CommonOps_DSCC.apply(matrices.get(dim), (x) -> 10 / x);
+        CommonOps_DSCC.apply(matrix, (x) -> 10 / x);
     }
 
     @Benchmark
     public void applyAddAndScale() {
-        CommonOps_DSCC.apply(matrices.get(dim), (x) -> 10 / x + 12);
+        CommonOps_DSCC.apply(matrix, (x) -> 10 / x + 12);
     }
 
     @Benchmark
     public void scale() {
-        DMatrixSparseCSC dMatrixSparseCSC = matrices.get(dim);
-        CommonOps_DSCC.scale(10, dMatrixSparseCSC, dMatrixSparseCSC);
+        CommonOps_DSCC.scale(10, matrix, matrix);
     }
 
     @Benchmark
     public void divide() {
-        DMatrixSparseCSC dMatrixSparseCSC = matrices.get(dim);
-        CommonOps_DSCC.divide(10, dMatrixSparseCSC, dMatrixSparseCSC);
+        CommonOps_DSCC.divide(10, matrix, matrix);
     }
 }

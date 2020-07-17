@@ -14,7 +14,7 @@ dependencies {
 
 jmh {
     duplicateClassesStrategy = 'warn'
-    jvmArgs = ["-Xmx4048m", "-XX:+UseSuperWord"]
+    jvmArgs = ["-Xms1024M", "-Xmx8092m", "-XX:+UseSuperWord"]
 }
 
 idea {
