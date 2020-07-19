@@ -12,6 +12,7 @@ dependencies {
     }
 }
 
+// ! need to run jmh task with --no-daemon
 jmh {
     duplicateClassesStrategy = 'warn'
     jvmArgs = ["-Xms1024M", "-Xmx8092m", "-XX:+UseSuperWord"]

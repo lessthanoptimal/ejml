@@ -29,14 +29,6 @@ import java.util.concurrent.TimeUnit;
  * Uses JMH to compare the speed of apply vs different hard-coded version.
  * .. basically does inlining work and thus vectorization still apply?
  *
- *  (with +UseSuperWord)
- *  Benchmark                                   (dimension)  (sparsity)  Mode  Cnt  Score   Error  Units
- *  BenchmarkApplyLikeMethods.applyAdd               100000         0.1  avgt    5  0.006 ± 0.004  ms/op
- *  BenchmarkApplyLikeMethods.applyAddAndScale       100000         0.1  avgt    5  0.014 ± 0.020  ms/op
- *  BenchmarkApplyLikeMethods.applyDivide            100000         0.1  avgt    5  0.012 ± 0.007  ms/op
- *  BenchmarkApplyLikeMethods.applyScale             100000         0.1  avgt    5  0.007 ± 0.001  ms/op
- *  BenchmarkApplyLikeMethods.divide                 100000         0.1  avgt    5  0.010 ± 0.021  ms/op
- *  BenchmarkApplyLikeMethods.scale                  100000         0.1  avgt    5  0.003 ± 0.001  ms/op
  * @author Florentin Doerre
  */
 @BenchmarkMode(Mode.AverageTime)
@@ -52,12 +44,12 @@ public class BenchmarkApplyLikeMethods {
     @Param({"100000"})
     private int dimension;
 
-    @Param({"0.1"})
-    private float sparsity;
+    @Param({"10000000"})
+    private int elementCount;
 
     @Setup(Level.Invocation)
     public void setup() {
-        matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, Math.round(dimension * sparsity), new Random(42));
+        matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
     }
 
     @Benchmark

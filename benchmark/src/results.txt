@@ -1,0 +1,18 @@
+ (with +UseSuperWord)
+ Benchmark                                   (dimension)  (elementCount)  Mode  Cnt   Score   Error  Units
+ BenchmarkApplyLikeMethods.applyAdd               100000        10000000  avgt    5   8.864 ± 0.288  ms/op
+ BenchmarkApplyLikeMethods.applyAddAndScale       100000        10000000  avgt    5  26.111 ± 0.087  ms/op
+ BenchmarkApplyLikeMethods.applyDivide            100000        10000000  avgt    5  24.116 ± 0.311  ms/op
+ BenchmarkApplyLikeMethods.applyScale             100000        10000000  avgt    5   8.879 ± 0.843  ms/op
+ BenchmarkApplyLikeMethods.divide                 100000        10000000  avgt    5  24.385 ± 0.519  ms/op
+ BenchmarkApplyLikeMethods.scale                  100000        10000000  avgt    5   8.746 ± 0.568  ms/op
+
+
+ (with -UseSuperWord)
+ Benchmark                                   (dimension)  (elementCount)  Mode  Cnt   Score   Error  Units
+ BenchmarkApplyLikeMethods.applyAdd               100000        10000000  avgt    5   9.607 ± 0.624  ms/op
+ BenchmarkApplyLikeMethods.applyAddAndScale       100000        10000000  avgt    5  47.414 ± 0.279  ms/op
+ BenchmarkApplyLikeMethods.applyDivide            100000        10000000  avgt    5  47.012 ± 0.215  ms/op
+ BenchmarkApplyLikeMethods.applyScale             100000        10000000  avgt    5   9.615 ± 0.648  ms/op
+ BenchmarkApplyLikeMethods.divide                 100000        10000000  avgt    5  47.054 ± 0.329  ms/op
+ BenchmarkApplyLikeMethods.scale                  100000        10000000  avgt    5   9.667 ± 0.130  ms/op
