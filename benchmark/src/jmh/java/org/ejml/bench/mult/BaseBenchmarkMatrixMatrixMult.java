@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ejml.bench;
+package org.ejml.bench.mult;
 
+import org.ejml.bench.BaseBenchmark;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.openjdk.jmh.annotations.*;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -34,18 +35,28 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 1, warmups = 2)
-public abstract class BaseBenchmark {
+public class BaseBenchmarkMatrixMatrixMult {
+    protected DMatrixSparseCSC otherMatrix;
+    protected DMatrixSparseCSC result;
 
     protected DMatrixSparseCSC matrix;
 
     @Param({"100000"})
     private int dimension;
 
-    @Param({"10000000"})
+    // not 10^7 as out of java heap space was insufficient
+    @Param({"200000"})
     private int elementCount;
 
     @Setup(Level.Invocation)
     public void setup() {
         matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
+        otherMatrix = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(9000));
+        result = new DMatrixSparseCSC(matrix.numRows, matrix.numCols);
+    }
+
+    @TearDown
+    public void tearDown() {
+        result.zero();
     }
 }

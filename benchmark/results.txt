@@ -35,3 +35,35 @@ BenchmarkReduceScalarWiseLikeMethods.reduceScalarMinAbs           100000        
 BenchmarkReduceScalarWiseLikeMethods.elementMinAbs                100000        10000000  avgt    5   9.126 ± 0.624  ms/op
 BenchmarkReduceScalarWiseLikeMethods.reduceScalarSum              100000        10000000  avgt    5  10.962 ± 0.095  ms/op
 BenchmarkReduceScalarWiseLikeMethods.elementSum                   100000        10000000  avgt    5  11.000 ± 0.060  ms/op
+
+
+## matrixVectorMult
+
+(with +UseSuperWord)
+Benchmark                                            (dimension)  (elementCount)   (semiRing)  Mode  Cnt   Score    Error  Units
+BenchmarkMatrixVectorMult.matrixVector                    100000        10000000          N/A  avgt    5  43.746 ±  0.912  ms/op
+BenchmarkMatrixVectorMultWithSemiRings.matrixVector       100000        10000000  Plus, Times  avgt    5  47.432 ± 20.671  ms/op
+BenchmarkMatrixVectorMultWithSemiRings.matrixVector       100000        10000000      Or, And  avgt    5  46.301 ±  3.316  ms/op
+BenchmarkMatrixVectorMultWithSemiRings.matrixVector       100000        10000000     Min, Max  avgt    5  78.262 ±  6.178  ms/op
+BenchmarkMatrixVectorMult.vectorMatrix                    100000        10000000          N/A  avgt    5  35.204 ±  0.787  ms/op
+BenchmarkMatrixVectorMultWithSemiRings.vectorMatrix       100000        10000000  Plus, Times  avgt    5  35.056 ±  1.062  ms/op
+BenchmarkMatrixVectorMultWithSemiRings.vectorMatrix       100000        10000000      Or, And  avgt    5  26.796 ±  0.653  ms/op
+BenchmarkMatrixVectorMultWithSemiRings.vectorMatrix       100000        10000000     Min, Max  avgt    5  87.027 ±  0.976  ms/op
+
+
+## matrixMatrixMult
+.. errors are huge here -> no conclusion can be drawn?!
+
+(with +UseSuperWord)
+Benchmark                                           (dimension)  (elementCount)   (semiRing)  Mode  Cnt   Score   Error  Units
+BenchmarkMatrixMatrixMult.matrixMatrix                   100000          100000          N/A  avgt    5  10.120 ± 3.521  ms/op
+BenchmarkMatrixMatrixMultWithSemiRing.matrixMatrix       100000          100000  Plus, Times  avgt    5  11.472 ± 3.956  ms/op
+BenchmarkMatrixMatrixMultWithSemiRing.matrixMatrix       100000          100000      Or, And  avgt    5  11.628 ± 3.322  ms/op
+BenchmarkMatrixMatrixMultWithSemiRing.matrixMatrix       100000          100000     Min, Max  avgt    5  11.968 ± 1.843  ms/op
+
+(with +UseSuperWord, doubled elements and forceGC between iterations)
+Benchmark                                           (dimension)  (elementCount)   (semiRing)  Mode  Cnt   Score    Error  Units
+BenchmarkMatrixMatrixMult.matrixMatrix                   100000          200000          N/A  avgt    5  24.422 ±  5.266  ms/op
+BenchmarkMatrixMatrixMultWithSemiRing.matrixMatrix       100000          200000  Plus, Times  avgt    5  26.554 ± 14.542  ms/op
+BenchmarkMatrixMatrixMultWithSemiRing.matrixMatrix       100000          200000      Or, And  avgt    5  25.356 ±  7.291  ms/op
+BenchmarkMatrixMatrixMultWithSemiRing.matrixMatrix       100000          200000     Min, Max  avgt    5  25.865 ±  6.862  ms/op

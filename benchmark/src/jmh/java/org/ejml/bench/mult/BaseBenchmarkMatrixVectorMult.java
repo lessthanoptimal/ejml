@@ -15,37 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ejml.bench;
+package org.ejml.bench.mult;
 
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.openjdk.jmh.annotations.*;
+import org.ejml.bench.BaseBenchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Setup;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 
 /**
  * @author Florentin Doerre
  */
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 5)
-@State(Scope.Benchmark)
-@Fork(value = 1, warmups = 2)
-public abstract class BaseBenchmark {
+public class BaseBenchmarkMatrixVectorMult extends BaseBenchmark {
+    protected double[] inputVector;
+    protected double[] output;
 
-    protected DMatrixSparseCSC matrix;
-
-    @Param({"100000"})
-    private int dimension;
-
-    @Param({"10000000"})
-    private int elementCount;
-
+    @Override
     @Setup(Level.Invocation)
     public void setup() {
-        matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
+        super.setup();
+        inputVector = new double[matrix.numRows];
+        output = new double[matrix.numRows];
+        // fast init and actual values are not relevant for the benchmark
+        Arrays.fill(output, 22);
     }
 }

@@ -15,37 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ejml.bench;
+package org.ejml.bench.mult;
 
-import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.openjdk.jmh.annotations.*;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.infra.Blackhole;
 
 /**
+ * Uses JMH to compare the speed of reduceColumnWise vs different hard-coded version.
+ * .. basically does inlining work and thus vectorization still apply?
+ *
  * @author Florentin Doerre
  */
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 5)
-@State(Scope.Benchmark)
-@Fork(value = 1, warmups = 2)
-public abstract class BaseBenchmark {
+public class BenchmarkMatrixMatrixMult extends BaseBenchmarkMatrixMatrixMult {
 
-    protected DMatrixSparseCSC matrix;
-
-    @Param({"100000"})
-    private int dimension;
-
-    @Param({"10000000"})
-    private int elementCount;
-
-    @Setup(Level.Invocation)
-    public void setup() {
-        matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
+    @Benchmark
+    public void matrixMatrix(Blackhole bh) {
+        CommonOps_DSCC.mult(matrix, otherMatrix, result);
+        bh.consume(result);
     }
 }
