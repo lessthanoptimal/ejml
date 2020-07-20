@@ -39,4 +39,14 @@ public final class PreDefinedDoubleSemiRings {
     public static final DoubleSemiRing AND_OR = new DoubleSemiRing(AND, OR);
     public static final DoubleSemiRing XOR_AND = new DoubleSemiRing(XOR, AND);
     public static final DoubleSemiRing XNOR_OR = new DoubleSemiRing(XNOR, OR);
+
+    // only private as they have no identity element, hence can only be used for add
+    private static final DoubleMonoid FIRST = new DoubleMonoid(Double.NaN, (x, y) -> x);
+    private static final DoubleMonoid SECOND = new DoubleMonoid(Double.NaN, (x, y) -> y);
+
+    // semi-rings with no multiplicative annihilator
+    public static final DoubleSemiRing MIN_FIRST = new DoubleSemiRing(MIN, FIRST);
+    public static final DoubleSemiRing MIN_SECOND = new DoubleSemiRing(MIN, SECOND);
+    public static final DoubleSemiRing MAX_FIRST = new DoubleSemiRing(MAX, FIRST);
+    public static final DoubleSemiRing MAX_SECOND = new DoubleSemiRing(MAX, SECOND);
 }
