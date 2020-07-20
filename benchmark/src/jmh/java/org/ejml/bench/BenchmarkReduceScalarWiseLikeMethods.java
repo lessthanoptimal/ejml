@@ -17,49 +17,45 @@
  */
 package org.ejml.bench;
 
-import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.openjdk.jmh.annotations.*;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.infra.Blackhole;
 
 /**
- * Uses JMH to compare the speed of apply vs different hard-coded version.
+ * Uses JMH to compare the speed of scalar reduce vs different hard-coded version.
  * .. basically does inlining work and thus vectorization still apply?
  *
  * @author Florentin Doerre
  */
-public class BenchmarkApplyLikeMethods extends BaseBenchmark {
+public class BenchmarkReduceScalarWiseLikeMethods extends BaseBenchmark {
 
     @Benchmark
-    public void applyAdd() {
-        CommonOps_DSCC.apply(matrix, (x) -> x + 10);
+    public void reduceScalarSum(Blackhole bh) {
+        bh.consume(CommonOps_DSCC.reduceScalar(matrix, 0, (x, y) -> x + y));
     }
 
     @Benchmark
-    public void applyScale() {
-        CommonOps_DSCC.apply(matrix, (x) -> x * 10);
+    public void elementSum(Blackhole bh) {
+        bh.consume(CommonOps_DSCC.elementSum(matrix));
     }
 
     @Benchmark
-    public void applyDivide() {
-        CommonOps_DSCC.apply(matrix, (x) -> 10 / x);
+    public void reduceScalarMin(Blackhole bh) {
+        bh.consume(CommonOps_DSCC.reduceScalar(matrix, Double.MIN_VALUE, (x, y) -> (x <= y) ? x : y));
     }
 
     @Benchmark
-    public void applyAddAndScale() {
-        CommonOps_DSCC.apply(matrix, (x) -> 10 / x + 12);
+    public void elementMin(Blackhole bh) {
+        bh.consume(CommonOps_DSCC.elementMin(matrix));
     }
 
     @Benchmark
-    public void scale() {
-        CommonOps_DSCC.scale(10, matrix, matrix);
+    public void reduceScalarMinAbs(Blackhole bh) {
+        bh.consume(CommonOps_DSCC.reduceScalar(matrix, 0, (x, y) -> (x <= Math.abs(y)) ? x : y));
     }
 
     @Benchmark
-    public void divide() {
-        CommonOps_DSCC.divide(10, matrix, matrix);
+    public void elementMinAbs(Blackhole bh) {
+        bh.consume(CommonOps_DSCC.elementMinAbs(matrix));
     }
 }

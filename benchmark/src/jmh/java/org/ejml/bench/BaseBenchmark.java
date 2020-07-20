@@ -26,40 +26,26 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Uses JMH to compare the speed of apply vs different hard-coded version.
- * .. basically does inlining work and thus vectorization still apply?
- *
  * @author Florentin Doerre
  */
-public class BenchmarkApplyLikeMethods extends BaseBenchmark {
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@Warmup(iterations = 2)
+@Measurement(iterations = 5)
+@State(Scope.Benchmark)
+@Fork(value = 1, warmups = 2)
+public abstract class BaseBenchmark {
 
-    @Benchmark
-    public void applyAdd() {
-        CommonOps_DSCC.apply(matrix, (x) -> x + 10);
-    }
+    DMatrixSparseCSC matrix;
 
-    @Benchmark
-    public void applyScale() {
-        CommonOps_DSCC.apply(matrix, (x) -> x * 10);
-    }
+    @Param({"100000"})
+    private int dimension;
 
-    @Benchmark
-    public void applyDivide() {
-        CommonOps_DSCC.apply(matrix, (x) -> 10 / x);
-    }
+    @Param({"10000000"})
+    private int elementCount;
 
-    @Benchmark
-    public void applyAddAndScale() {
-        CommonOps_DSCC.apply(matrix, (x) -> 10 / x + 12);
-    }
-
-    @Benchmark
-    public void scale() {
-        CommonOps_DSCC.scale(10, matrix, matrix);
-    }
-
-    @Benchmark
-    public void divide() {
-        CommonOps_DSCC.divide(10, matrix, matrix);
+    @Setup(Level.Invocation)
+    public void setup() {
+        matrix = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
     }
 }
