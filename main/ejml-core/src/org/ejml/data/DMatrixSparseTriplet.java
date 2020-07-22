@@ -199,11 +199,37 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         return unsafe_get(row,col);
     }
 
+    /**
+     * Searches the list to see if the element at (row,col) has been assigned. The worst case runtime for this
+     * operation is O(N), where N is the number of elements in the matrix.
+     *
+     * @param row           Matrix element's row index.
+     * @param col           Matrix element's column index.
+     * @param fallBackValue Value to return, if the element is not assigned
+     * @return Value at (row,col) or the fallBackValue, if the element is not assigned.
+     */
+    @Override
+    public double get(int row, int col, double fallBackValue) {
+        if (row < 0 || row >= numRows || col < 0 || col >= numCols)
+            throw new IllegalArgumentException("Outside of matrix bounds");
+
+        return unsafe_get(row, col, fallBackValue);
+    }
+
     @Override
     public double unsafe_get(int row, int col) {
         int index = nz_index(row,col);
         if( index < 0 )
             return 0;
+        else
+            return nz_value.data[index];
+    }
+
+    @Override
+    public double unsafe_get(int row, int col, double fallBackValue) {
+        int index = nz_index(row,col);
+        if( index < 0 )
+            return fallBackValue;
         else
             return nz_value.data[index];
     }

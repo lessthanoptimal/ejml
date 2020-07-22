@@ -179,11 +179,27 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
+    public double get(int row, int col, double fallBackValue) {
+        if( row < 0 || row >= numRows || col < 0 || col >= numCols )
+            throw new IllegalArgumentException("Outside of matrix bounds");
+
+        return unsafe_get(row,col, fallBackValue);
+    }
+
+    @Override
     public double unsafe_get(int row, int col) {
         int index = nz_index(row,col);
         if( index >= 0 )
             return nz_values[index];
         return 0;
+    }
+
+    @Override
+    public double unsafe_get(int row, int col, double fallBackValue) {
+        int index = nz_index(row,col);
+        if( index >= 0 )
+            return nz_values[index];
+        return fallBackValue;
     }
 
     /**

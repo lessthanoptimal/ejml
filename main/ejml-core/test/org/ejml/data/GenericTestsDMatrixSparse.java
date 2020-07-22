@@ -122,6 +122,28 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix
     }
 
     @Test
+    public void get_with_fallBackValue() {
+        DMatrixSparseTriplet tmp = new DMatrixSparseTriplet(3,4,1);
+        tmp.addItem(1,2,5);
+
+        DMatrixSparse m = createSparse(tmp);
+
+        m.set(1,2, 5);
+
+        double fallBackValue = 42;
+
+        for (int row = 0; row < m.getNumRows(); row++) {
+            for (int col = 0; col < m.getNumCols(); col++) {
+                double found = m.get(row,col, fallBackValue);
+                if( row == 1 && col == 2)
+                    assertEquals(5, found, UtilEjml.TEST_F64);
+                else
+                    assertEquals(fallBackValue, found, UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test
     public void remove_case0() {
         DMatrixSparse m = (DMatrixSparse)createMatrix(3,4);
         DMatrixSparse c = m.copy();
