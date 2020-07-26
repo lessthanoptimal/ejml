@@ -56,7 +56,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void checkAllMatrixMults() {
         int numChecked = 0;
-        Method methods[] = CommonOps_DDRM.class.getMethods();
+        Method[] methods = CommonOps_DDRM.class.getMethods();
 
         boolean oneFailed = false;
 
@@ -107,7 +107,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void checkAllMatrixMult_Zeros() {
         int numChecked = 0;
-        Method methods[] = CommonOps_DDRM.class.getMethods();
+        Method[] methods = CommonOps_DDRM.class.getMethods();
 
         boolean oneFailed = false;
 
@@ -367,7 +367,7 @@ public class TestCommonOps_DDRM {
     public void multRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj found = A.copy();
-        double values[] = UtilEjml.randomVector_F64(rand, 5);
+        double[] values = UtilEjml.randomVector_F64(rand, 5);
 
         CommonOps_DDRM.multRows(values, found);
 
@@ -382,7 +382,7 @@ public class TestCommonOps_DDRM {
     public void divideRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj found = A.copy();
-        double values[] = UtilEjml.randomVector_F64(rand, 5);
+        double[] values = UtilEjml.randomVector_F64(rand, 5);
 
         CommonOps_DDRM.divideRows(values, found);
 
@@ -397,7 +397,7 @@ public class TestCommonOps_DDRM {
     public void multCols() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj found = A.copy();
-        double values[] = UtilEjml.randomVector_F64(rand, 5);
+        double[] values = UtilEjml.randomVector_F64(rand, 5);
 
         CommonOps_DDRM.multCols(found,values);
 
@@ -412,7 +412,7 @@ public class TestCommonOps_DDRM {
     public void divideCols() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj found = A.copy();
-        double values[] = UtilEjml.randomVector_F64(rand, 5);
+        double[] values = UtilEjml.randomVector_F64(rand, 5);
 
         CommonOps_DDRM.divideCols(found,values);
 
@@ -572,7 +572,7 @@ public class TestCommonOps_DDRM {
 
             DMatrixRMaj invA = A.createLike();
 
-            CommonOps_DDRM.invertSPD(A,invA);
+            assertTrue(CommonOps_DDRM.invertSPD(A,invA));
 
             DMatrixRMaj I = A.createLike();
             CommonOps_DDRM.multTransB(A,invA,I);
@@ -617,7 +617,7 @@ public class TestCommonOps_DDRM {
     public void columnsToVectors() {
         DMatrixRMaj M = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
-        DMatrixRMaj v[] = CommonOps_DDRM.columnsToVector(M, null);
+        DMatrixRMaj[] v = CommonOps_DDRM.columnsToVector(M, null);
 
         assertEquals(M.numCols,v.length);
 
@@ -778,11 +778,11 @@ public class TestCommonOps_DDRM {
     public void extract_array_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
-        int rows[] = new int[6];
+        int[] rows = new int[6];
         rows[0] = 2;
         rows[1] = 4;
 
-        int cols[] = new int[4];
+        int[] cols = new int[4];
         cols[0] = 1;
         DMatrixRMaj B = new DMatrixRMaj(2,1);
         CommonOps_DDRM.extract(A,rows,2,cols,1,B);
@@ -801,7 +801,7 @@ public class TestCommonOps_DDRM {
     public void extract_array_one() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5, 0, 1, rand);
 
-        int indexes[] = new int[6];
+        int[] indexes = new int[6];
         indexes[0] = 2;
         indexes[1] = 4;
 
@@ -820,11 +820,11 @@ public class TestCommonOps_DDRM {
     public void insert_array_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2,1, 0, 1, rand);
 
-        int rows[] = new int[6];
+        int[] rows = new int[6];
         rows[0] = 2;
         rows[1] = 4;
 
-        int cols[] = new int[4];
+        int[] cols = new int[4];
         cols[0] = 1;
         DMatrixRMaj B = new DMatrixRMaj(5,5);
         CommonOps_DDRM.insert(A, B, rows, 2, cols, 1);
@@ -1065,7 +1065,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void scale() {
         double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
 
         CommonOps_DDRM.scale(s, mat);
@@ -1079,7 +1079,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void scale_two_input() {
         double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
         DMatrixRMaj r = new DMatrixRMaj(2,2, true, d);
 
@@ -1144,7 +1144,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void div_scalar_mat() {
         double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
 
         CommonOps_DDRM.divide(s, mat);
@@ -1158,7 +1158,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void div_mat_scalar() {
         double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
 
         CommonOps_DDRM.divide(mat, s);
@@ -1172,7 +1172,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void div_mat_scalar_out() {
         double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
         DMatrixRMaj r = new DMatrixRMaj(2,2, true, d);
 
@@ -1192,7 +1192,7 @@ public class TestCommonOps_DDRM {
     @Test
     public void div_scalar_mat_out() {
         double s = 2.5;
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
         DMatrixRMaj r = new DMatrixRMaj(2,2, true, d);
 
@@ -1235,7 +1235,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void fill_dense() {
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
 
         CommonOps_DDRM.fill(mat, 1);
@@ -1259,7 +1259,7 @@ public class TestCommonOps_DDRM {
 
     @Test
     public void zero() {
-        double d[] = new double[]{10,12.5,-2,5.5};
+        double[] d = new double[]{10,12.5,-2,5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2,2, true, d);
 
         mat.zero();
@@ -1757,7 +1757,7 @@ public class TestCommonOps_DDRM {
     public void permuteRowInv() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj B = new DMatrixRMaj(5,4);
-        int pinv[] = new int[]{2,1,3,4,0};
+        int[] pinv = new int[]{2,1,3,4,0};
 
         CommonOps_DDRM.permuteRowInv(pinv,A,B);
 

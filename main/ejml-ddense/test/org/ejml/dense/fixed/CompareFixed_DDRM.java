@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("rawtypes")
 public class CompareFixed_DDRM {
     Random rand = new Random(234);
 
@@ -133,6 +134,10 @@ public class CompareFixed_DDRM {
                 DMatrix.class.isAssignableFrom(returnCommon) )
             return true;
 
+        // some "common" functions return the output as a convenience. Assume this to be the case
+        if( returnFixed.getSimpleName().equals("void") && DMatrix.class.isAssignableFrom(returnCommon))
+            return true;
+
         return false;
     }
 
@@ -149,7 +154,11 @@ public class CompareFixed_DDRM {
                 Object retFixed = fixed.invoke(null,inputsFixed);
                 Object retCommon = common.invoke(null,inputsCommon);
 
-                if( !checkEquivalent(retFixed,retCommon) )
+                // If "common" returns the output matrix don't require the "fixed" implement to also
+                boolean ignoreReturn = retFixed == null
+                        && retCommon != null && DMatrix.class.isAssignableFrom(retCommon.getClass());
+
+                if( !ignoreReturn && !checkEquivalent(retFixed,retCommon) )
                     return false;
 
                 for( int i = 0; i < inputsFixed.length; i++ ) {
@@ -175,9 +184,7 @@ public class CompareFixed_DDRM {
                 DMatrixFixed f = null;
                 try {
                     f = (DMatrixFixed)typesFixed[i].newInstance();
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
 

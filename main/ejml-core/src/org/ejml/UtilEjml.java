@@ -25,6 +25,7 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.ConvertFMatrixStruct;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -64,16 +65,89 @@ public class UtilEjml {
             throw new IllegalArgumentException("Can't pass in the same instance");
     }
 
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param a (Input/Output) matrix which is to be checked. Can be null.
+     * @param rows Desired number of rows
+     * @param cols Desired number of cols
+     * @return modified matrix or new matrix
+     */
+    public static DMatrixRMaj reshapeOrDeclare(@Nullable DMatrixRMaj a , int rows, int cols ) {
+        if( a == null )
+            return new DMatrixRMaj(rows,cols);
+        else if( a.numRows != rows || a.numCols != cols )
+            a.reshape(rows,cols);
+        return a;
+    }
+
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param a (Input/Output) matrix which is to be checked. Can be null.
+     * @param rows Desired number of rows
+     * @param cols Desired number of cols
+     * @return modified matrix or new matrix
+     */
+    public static FMatrixRMaj reshapeOrDeclare(@Nullable FMatrixRMaj a , int rows, int cols ) {
+        if( a == null )
+            return new FMatrixRMaj(rows,cols);
+        else if( a.numRows != rows || a.numCols != cols )
+            a.reshape(rows,cols);
+        return a;
+    }
+
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param a (Input/Output) matrix which is to be checked. Can be null.
+     * @param rows Desired number of rows
+     * @param cols Desired number of cols
+     * @return modified matrix or new matrix
+     */
+    public static BMatrixRMaj reshapeOrDeclare(@Nullable BMatrixRMaj a , int rows, int cols ) {
+        if( a == null )
+            return new BMatrixRMaj(rows,cols);
+        else if( a.numRows != rows || a.numCols != cols )
+            a.reshape(rows,cols);
+        return a;
+    }
+
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param target (Input/Output) matrix which is to be checked. Can be null.
+     * @param reference (Input) Refernece matrix who's shape will be matched
+     * @return modified matrix or new matrix
+     */
+    public static <T extends ReshapeMatrix> T reshapeOrDeclare(@Nullable T target , T reference ) {
+        if( target == null )
+            return reference.createLike();
+        else if( target.getNumRows() != reference.getNumRows() || target.getNumCols() != reference.getNumCols() )
+            target.reshape(reference.getNumRows(),reference.getNumCols());
+        return target;
+    }
+
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param target (Input/Output) matrix which is to be checked. Can be null.
+     * @param reference (Input) Refernece matrix who's shape will be matched
+     * @return modified matrix or new matrix
+     */
+    public static <T extends ReshapeMatrix> T reshapeOrDeclare(@Nullable T target , T reference, int rows, int cols ) {
+        if( target == null )
+            return reference.createLike();
+        else if( target.getNumRows() != rows || target.getNumCols() != cols )
+            target.reshape(rows,cols);
+        return target;
+    }
+
     public static void checkSameShape( Matrix a , Matrix b , boolean allowedSameInstance ) {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
-            throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
+            throw new MatrixDimensionException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
         }
         if( !allowedSameInstance && a == b )
             throw new IllegalArgumentException("Must not be the same instance");
     }
     public static void checkSameShape( Matrix a , Matrix b , Matrix c ) {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
-            throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
+            throw new MatrixDimensionException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
         }
         if( a.getNumRows() != b.getNumRows() || c.getNumCols() != c.getNumCols() ) {
             throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+c.getNumRows()+"x"+c.getNumCols());

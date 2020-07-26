@@ -6,6 +6,9 @@ Date format: year/month/day
 2020/
 
 - Fixed build task oneJarBin. Thanks liuyang0717 for the bug report
+- Added reduce operations for sparse matrices. Thanks Florentin Dörre for the donation
+- CommonOps_DDRM and CommonOps_DSCC
+  * Updating functions to return output if null and use common input sanity check functions
 
 ----- Version 0.39
 2020/04/06

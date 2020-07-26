@@ -27,18 +27,17 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.DBinaryOperator;
+import org.ejml.ops.DUnaryOperator;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
-import org.ejml.ops.DUnaryOperator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-import static org.ejml.UtilEjml.adjustClear;
-import static org.ejml.UtilEjml.stringShapes;
+import static org.ejml.UtilEjml.*;
 
 /**
  * @author Peter Abeles
@@ -130,8 +129,8 @@ public class CommonOps_DSCC {
         return a_t;
     }
 
-    public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ) {
-        mult(A,B,C,null,null);
+    public static DMatrixSparseCSC mult(DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable DMatrixSparseCSC output ) {
+        return mult(A,B,output,null,null);
     }
 
     /**
@@ -139,28 +138,32 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Not modified.
-     * @param C (Output) Storage for results.  Data length is increased if increased if insufficient.
+     * @param output (Output) Storage for results.  Data length is increased if increased if insufficient.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void mult(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                            @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+    public static DMatrixSparseCSC mult(DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable DMatrixSparseCSC output ,
+                                        @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         if( A.numCols != B.numRows )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numRows,B.numCols);
+        output = reshapeOrDeclare(output,A,A.numRows,B.numCols);
 
-        ImplSparseSparseMult_DSCC.mult(A,B,C, gw, gx);
+        ImplSparseSparseMult_DSCC.mult(A,B,output, gw, gx);
+
+        return output;
     }
 
-    public static void multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+    public static DMatrixSparseCSC multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable DMatrixSparseCSC output ,
+                                              @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         if( A.numRows != B.numRows )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numCols,B.numCols);
+        output = reshapeOrDeclare(output,A,A.numCols,B.numCols);
 
-        ImplSparseSparseMult_DSCC.multTransA(A,B,C,gw,gx);
+        ImplSparseSparseMult_DSCC.multTransA(A,B,output,gw,gx);
+
+        return output;
     }
 
     /**
@@ -169,21 +172,24 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Value not modified but indicies will be sorted if not sorted already.
-     * @param C (Output) Storage for results.  Data length is increased if increased if insufficient.
+     * @param output (Output) Storage for results.  Data length is increased if increased if insufficient.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B , DMatrixSparseCSC C ,
-                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+    public static DMatrixSparseCSC multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B ,
+                                              @Nullable DMatrixSparseCSC output ,
+                                              @Nullable IGrowArray gw, @Nullable DGrowArray gx )
     {
         if( A.numCols != B.numCols )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numRows,B.numRows);
+        output = reshapeOrDeclare(output,A,A.numRows,B.numRows);
 
         if( !B.isIndicesSorted() )
             B.sortIndices(null);
 
-        ImplSparseSparseMult_DSCC.multTransB(A,B,C,gw,gx);
+        ImplSparseSparseMult_DSCC.multTransB(A,B,output,gw,gx);
+
+        return output;
     }
 
 
@@ -192,26 +198,28 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param C Dense Matrix
+     * @param output Dense Matrix
      */
-    public static void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static DMatrixRMaj mult(DMatrixSparseCSC A , DMatrixRMaj B , @Nullable DMatrixRMaj output )
     {
         if( A.numCols != B.numRows )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numRows,B.numCols);
+        output = reshapeOrDeclare(output,A.numRows,B.numCols);
 
-        ImplSparseSparseMult_DSCC.mult(A,B,C);
+        ImplSparseSparseMult_DSCC.mult(A,B,output);
+
+        return output;
     }
 
     /**
      * <p>C = C + A*B</p>
      */
-    public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
-        if( A.numRows != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
+        if( A.numRows != output.numRows || B.numCols != output.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
-        ImplSparseSparseMult_DSCC.multAdd(A,B,C);
+        ImplSparseSparseMult_DSCC.multAdd(A,B,output);
     }
 
     /**
@@ -219,26 +227,29 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param C Dense Matrix
+     * @param output Dense Matrix
      */
-    public static void multTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static DMatrixRMaj multTransA(DMatrixSparseCSC A , DMatrixRMaj B , @Nullable DMatrixRMaj output )
     {
         if( A.numRows != B.numRows )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numCols,B.numCols);
 
-        ImplSparseSparseMult_DSCC.multTransA(A,B,C);
+        output = reshapeOrDeclare(output,A.numCols,B.numCols);
+
+        ImplSparseSparseMult_DSCC.multTransA(A,B,output);
+
+        return output;
     }
 
     /**
      * <p>C = C + A<sup>T</sup>*B</p>
      */
-    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
-        if( A.numCols != C.numRows || B.numCols != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
+        if( A.numCols != output.numRows || B.numCols != output.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
-        ImplSparseSparseMult_DSCC.multAddTransA(A,B,C);
+        ImplSparseSparseMult_DSCC.multAddTransA(A,B,output);
     }
 
     /**
@@ -246,26 +257,28 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param C Dense Matrix
+     * @param output Dense Matrix
      */
-    public static void multTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static DMatrixRMaj multTransB(DMatrixSparseCSC A , DMatrixRMaj B , @Nullable DMatrixRMaj output )
     {
         if( A.numCols != B.numCols )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numRows,B.numRows);
+        output = reshapeOrDeclare(output,A.numRows,B.numRows);
 
-        ImplSparseSparseMult_DSCC.multTransB(A,B,C);
+        ImplSparseSparseMult_DSCC.multTransB(A,B,output);
+
+        return output;
     }
 
     /**
      * <p>C = C + A*B<sup>T</sup></p>
      */
-    public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
-        if( A.numRows != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
+        if( A.numRows != output.numRows || B.numRows != output.numCols )
+            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
-        ImplSparseSparseMult_DSCC.multAddTransB(A,B,C);
+        ImplSparseSparseMult_DSCC.multAddTransB(A,B,output);
     }
 
     /**
@@ -273,15 +286,17 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param C Dense Matrix
+     * @param output Dense Matrix
      */
-    public static void multTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static DMatrixRMaj multTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
         if( A.numRows != B.numCols )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numCols,B.numRows);
+        output = reshapeOrDeclare(output,A.numCols,B.numRows);
 
-        ImplSparseSparseMult_DSCC.multTransAB(A,B,C);
+        ImplSparseSparseMult_DSCC.multTransAB(A,B,output);
+
+        return output;
     }
 
 
@@ -1867,9 +1882,12 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * This accumulates the matrix values to a scalar value
+     * This accumulates the matrix values to a scalar value.
      *
-     * a = ⊕A. Where ⊕ is specified via the `func` parameter
+     * <pre>
+     * result = initialValue
+     * for all (i,j) result = func( result, A[i,j] )
+     * </pre>
      *
      * @param input (Input) input matrix. Not modified
      * @param initValue initial value for accumulator
@@ -1893,7 +1911,12 @@ public class CommonOps_DSCC {
     /**
      * This accumulates the values per column to a scalar value
      *
-     *  a[i] = ⊕A[;i]. Where ⊕ is specified via the `func` parameter
+     * <pre>
+     * for each column `j`,
+     *   result = initialValue
+     *   for each row 'i' result = func( result, A[i,j] )
+     *   output[j] = result
+     * </pre>
      *
      * @param input     (Input) input matrix. Not modified
      * @param initValue initial value for accumulator
@@ -1927,11 +1950,16 @@ public class CommonOps_DSCC {
     /**
      * This accumulates the values per row to a scalar value
      *
-     * a[i] = ⊕A[i;]. Where ⊕ is specified via the `func` parameter
+     * <pre>
+     * for each column `j`,
+     *   result = initialValue
+     *   for each row 'i' result = func( result, A[i,j] )
+     *   output[j] = result
+     * </pre>
      *
      * @param input     (Input) input matrix. Not modified
      * @param initValue initial value for accumulator
-     * @param func      Accumulator function defining "+" for accumulator +=  cellValue
+     * @param func      Accumulator function defining "+" for accumulator += cellValue
      * @param output    output (Output) Vector, where result can be stored in
      * @return a row-vector, where v[i] == values of row i reduced to scalar based on `func`
      */

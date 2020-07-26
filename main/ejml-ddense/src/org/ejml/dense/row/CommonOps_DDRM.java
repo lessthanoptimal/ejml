@@ -41,7 +41,7 @@ import org.ejml.ops.DUnaryOperator;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-import static org.ejml.UtilEjml.stringShapes;
+import static org.ejml.UtilEjml.*;
 
 /**
  * <p>
@@ -72,20 +72,23 @@ public class CommonOps_DDRM {
      *
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void mult(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T mult(T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numRows,b.numCols);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         if( b.numCols == 1 ) {
-            MatrixVectorMult_DDRM.mult(a, b, c);
+            MatrixVectorMult_DDRM.mult(a, b, output);
         } else if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult_DDRM.mult_reorder(a,b,c);
+            MatrixMatrixMult_DDRM.mult_reorder(a,b,output);
         } else {
-            MatrixMatrixMult_DDRM.mult_small(a,b,c);
+            MatrixMatrixMult_DDRM.mult_small(a,b,output);
         }
+
+        return output;
     }
 
     /**
@@ -99,19 +102,22 @@ public class CommonOps_DDRM {
      * @param alpha Scaling factor.
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void mult(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T mult(double alpha , T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numRows,b.numCols);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         // TODO add a matrix vectory multiply here
         if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult_DDRM.mult_reorder(alpha, a, b, c);
+            MatrixMatrixMult_DDRM.mult_reorder(alpha, a, b, output);
         } else {
-            MatrixMatrixMult_DDRM.mult_small(alpha,a,b,c);
+            MatrixMatrixMult_DDRM.mult_small(alpha,a,b,output);
         }
+
+        return output;
     }
 
     /**
@@ -124,27 +130,30 @@ public class CommonOps_DDRM {
      *
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multTransA(T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numCols,b.numCols);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         if( b.numCols == 1 ) {
             // todo check a.numCols == 1 and do inner product?
             // there are significantly faster algorithms when dealing with vectors
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-                MatrixVectorMult_DDRM.multTransA_reorder(a,b,c);
+                MatrixVectorMult_DDRM.multTransA_reorder(a,b,output);
             } else {
-                MatrixVectorMult_DDRM.multTransA_small(a,b,c);
+                MatrixVectorMult_DDRM.multTransA_small(a,b,output);
             }
         } else if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH  ) {
-            MatrixMatrixMult_DDRM.multTransA_reorder(a, b, c);
+            MatrixMatrixMult_DDRM.multTransA_reorder(a, b, output);
         } else {
-            MatrixMatrixMult_DDRM.multTransA_small(a, b, c);
+            MatrixMatrixMult_DDRM.multTransA_small(a, b, output);
         }
+
+        return output;
     }
 
     /**
@@ -158,20 +167,23 @@ public class CommonOps_DDRM {
      * @param alpha Scaling factor.
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multTransA(double alpha , T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numCols,b.numCols);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ||
                 b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult_DDRM.multTransA_reorder(alpha, a, b, c);
+            MatrixMatrixMult_DDRM.multTransA_reorder(alpha, a, b, output);
         } else {
-            MatrixMatrixMult_DDRM.multTransA_small(alpha, a, b, c);
+            MatrixMatrixMult_DDRM.multTransA_small(alpha, a, b, output);
         }
+
+        return output;
     }
 
     /**
@@ -184,18 +196,21 @@ public class CommonOps_DDRM {
      *
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multTransB(T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numRows,b.numRows);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         if( b.numRows == 1 ) {
-            MatrixVectorMult_DDRM.mult(a, b, c);
+            MatrixVectorMult_DDRM.mult(a, b, output);
         } else {
-            MatrixMatrixMult_DDRM.multTransB(a, b, c);
+            MatrixMatrixMult_DDRM.multTransB(a, b, output);
         }
+
+        return output;
     }
 
     /**
@@ -209,15 +224,18 @@ public class CommonOps_DDRM {
      * @param alpha Scaling factor.
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multTransB(double alpha , T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numRows,b.numRows);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         // TODO add a matrix vectory multiply here
-        MatrixMatrixMult_DDRM.multTransB(alpha,a,b,c);
+        MatrixMatrixMult_DDRM.multTransB(alpha,a,b,output);
+
+        return output;
     }
 
     /**
@@ -230,25 +248,28 @@ public class CommonOps_DDRM {
      *
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multTransAB(T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numCols,b.numRows);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         if( b.numRows == 1) {
             // there are significantly faster algorithms when dealing with vectors
             if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-                MatrixVectorMult_DDRM.multTransA_reorder(a,b,c);
+                MatrixVectorMult_DDRM.multTransA_reorder(a,b,output);
             } else {
-                MatrixVectorMult_DDRM.multTransA_small(a,b,c);
+                MatrixVectorMult_DDRM.multTransA_small(a,b,output);
             }
         } else if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
-            MatrixMatrixMult_DDRM.multTransAB_aux(a, b, c, null);
+            MatrixMatrixMult_DDRM.multTransAB_aux(a, b, output, null);
         } else {
-            MatrixMatrixMult_DDRM.multTransAB(a, b, c);
+            MatrixMatrixMult_DDRM.multTransAB(a, b, output);
         }
+
+        return output;
     }
 
     /**
@@ -262,19 +283,22 @@ public class CommonOps_DDRM {
      * @param alpha Scaling factor.
      * @param a The left matrix in the multiplication operation. Not modified.
      * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multTransAB(double alpha , T a , T b , @Nullable T output )
     {
-        UtilEjml.checkSameInstance(a,c);
-        UtilEjml.checkSameInstance(b,c);
+        output = reshapeOrDeclare(output,a,a.numCols,b.numRows);
+        UtilEjml.checkSameInstance(a,output);
+        UtilEjml.checkSameInstance(b,output);
 
         // TODO add a matrix vectory multiply here
         if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
-            MatrixMatrixMult_DDRM.multTransAB_aux(alpha, a, b, c, null);
+            MatrixMatrixMult_DDRM.multTransAB_aux(alpha, a, b, output, null);
         } else {
-            MatrixMatrixMult_DDRM.multTransAB(alpha, a, b, c);
+            MatrixMatrixMult_DDRM.multTransAB(alpha, a, b, output);
         }
+
+        return output;
     }
 
     /**
@@ -309,17 +333,18 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param a The matrix being multiplied. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multInner(DMatrix1Row a , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multInner(T a , @Nullable T output )
     {
-        c.reshape(a.numCols,a.numCols);
+        output = reshapeOrDeclare(output,a,a.numCols, a.numCols);
 
         if( a.numCols >= EjmlParameters.MULT_INNER_SWITCH ) {
-            MatrixMultProduct_DDRM.inner_small(a, c);
+            MatrixMultProduct_DDRM.inner_small(a, output);
         } else {
-            MatrixMultProduct_DDRM.inner_reorder(a, c);
+            MatrixMultProduct_DDRM.inner_reorder(a, output);
         }
+        return output;
     }
 
     /**
@@ -335,13 +360,13 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param a The matrix being multiplied. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void multOuter(DMatrix1Row a , DMatrix1Row c )
+    public static <T extends DMatrix1Row> T multOuter(T a , @Nullable T output )
     {
-        c.reshape(a.numRows,a.numRows);
-
-        MatrixMultProduct_DDRM.outer(a, c);
+        output = reshapeOrDeclare(output,a,a.numRows,a.numRows);
+        MatrixMultProduct_DDRM.outer(a, output);
+        return output;
     }
 
     /**
@@ -611,7 +636,7 @@ public class CommonOps_DDRM {
                 TriangularSolver_DDRM.solveL(L.data,x.data,L.numCols);
                 TriangularSolver_DDRM.solveTranL(L.data,x.data,L.numCols);
             } else {
-                double vv[] = new double[A.numCols];
+                double[] vv = new double[A.numCols];
                 LinearSolverChol_DDRM.solveLower(L, b, x, vv);
             }
         } else {
@@ -661,15 +686,9 @@ public class CommonOps_DDRM {
      * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static DMatrixRMaj transpose(DMatrixRMaj A, DMatrixRMaj A_tran)
+    public static DMatrixRMaj transpose(DMatrixRMaj A, @Nullable DMatrixRMaj A_tran)
     {
-        if( A_tran == null ) {
-            A_tran = new DMatrixRMaj(A.numCols,A.numRows);
-        } else {
-            if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows ) {
-                throw new MatrixDimensionException("Incompatible matrix dimensions");
-            }
-        }
+        A_tran = reshapeOrDeclare(A_tran, A.numCols, A.numRows);
 
         if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH &&
                 A.numCols > EjmlParameters.TRANSPOSE_SWITCH )
@@ -1259,9 +1278,9 @@ public class CommonOps_DDRM {
      * @param colsSize maximum element in column array
      * @param dst output matrix.  Must be correct shape.
      */
-    public static void extract( DMatrixRMaj src,
-                                int rows[] , int rowsSize ,
-                                int cols[] , int colsSize , DMatrixRMaj dst ) {
+    public static void extract(DMatrixRMaj src,
+                               int[] rows, int rowsSize ,
+                               int[] cols, int colsSize , DMatrixRMaj dst ) {
         if( rowsSize != dst.numRows || colsSize != dst.numCols )
             throw new MatrixDimensionException("Unexpected number of rows and/or columns in dst matrix");
 
@@ -1282,7 +1301,7 @@ public class CommonOps_DDRM {
      * @param length maximum element in row array
      * @param dst output matrix.  Must be a vector of the correct length.
      */
-    public static void extract(DMatrixRMaj src, int indexes[] , int length , DMatrixRMaj dst ) {
+    public static void extract(DMatrixRMaj src, int[] indexes, int length , DMatrixRMaj dst ) {
         if( !MatrixFeatures_DDRM.isVector(dst))
             throw new MatrixDimensionException("Dst must be a vector");
         if( length != dst.getNumElements())
@@ -1308,10 +1327,10 @@ public class CommonOps_DDRM {
      * @param cols array of column indexes
      * @param colsSize maximum element in column array
      */
-    public static void insert( DMatrixRMaj src ,
-                               DMatrixRMaj dst ,
-                                int rows[] , int rowsSize ,
-                                int cols[] , int colsSize ) {
+    public static void insert(DMatrixRMaj src ,
+                              DMatrixRMaj dst ,
+                              int[] rows, int rowsSize ,
+                              int[] cols, int colsSize ) {
         if( rowsSize != src.numRows || colsSize != src.numCols )
             throw new MatrixDimensionException("Unexpected number of rows and/or columns in dst matrix");
 
@@ -1527,19 +1546,17 @@ public class CommonOps_DDRM {
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
      * </p>
-     * @param a The left matrix in the multiplication operation. Modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param A The left matrix in the multiplication operation. Modified.
+     * @param B The right matrix in the multiplication operation. Not modified.
      */
-    public static void elementMult(DMatrixD1 a , DMatrixD1 b )
+    public static void elementMult(DMatrixD1 A , DMatrixD1 B )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
+        checkSameShape(A,B,true);
 
-        int length = a.getNumElements();
+        int length = A.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            a.times(i, b.get(i));
+            A.times(i, B.get(i));
         }
     }
 
@@ -1548,22 +1565,22 @@ public class CommonOps_DDRM {
      * <br>
      * c<sub>ij</sub> = a<sub>ij</sub> * b<sub>ij</sub> <br>
      * </p>
-     * @param a The left matrix in the multiplication operation. Not modified.
-     * @param b The right matrix in the multiplication operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param A The left matrix in the multiplication operation. Not modified.
+     * @param B The right matrix in the multiplication operation. Not modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementMult(DMatrixD1 a , DMatrixD1 b , DMatrixD1 c )
+    public static <T extends DMatrixD1> T elementMult(T A , T B , @Nullable T output )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
+        checkSameShape(A,B,true);
+        output = reshapeOrDeclare(output,A);
 
-        int length = a.getNumElements();
+        int length = A.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set(i, a.get(i) * b.get(i));
+            output.set(i, A.get(i) * B.get(i));
         }
+
+        return output;
     }
 
     /**
@@ -1571,19 +1588,17 @@ public class CommonOps_DDRM {
      * <br>
      * a<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
      * </p>
-     * @param a The left matrix in the division operation. Modified.
-     * @param b The right matrix in the division operation. Not modified.
+     * @param A The left matrix in the division operation. Modified.
+     * @param B The right matrix in the division operation. Not modified.
      */
-    public static void elementDiv(DMatrixD1 a , DMatrixD1 b )
+    public static void elementDiv(DMatrixD1 A , DMatrixD1 B )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
+        checkSameShape(A,B,true);
 
-        int length = a.getNumElements();
+        int length = A.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            a.div(i, b.get(i));
+            A.div(i, B.get(i));
         }
     }
 
@@ -1592,22 +1607,22 @@ public class CommonOps_DDRM {
      * <br>
      * c<sub>ij</sub> = a<sub>ij</sub> / b<sub>ij</sub> <br>
      * </p>
-     * @param a The left matrix in the division operation. Not modified.
-     * @param b The right matrix in the division operation. Not modified.
-     * @param c Where the results of the operation are stored. Modified.
+     * @param A The left matrix in the division operation. Not modified.
+     * @param B The right matrix in the division operation. Not modified.
+     * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDiv(DMatrixD1 a , DMatrixD1 b , DMatrixD1 c )
+    public static <T extends DMatrixD1> T elementDiv(T A , T B , @Nullable T output )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numRows != c.numRows || a.numCols != c.numCols ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
+        checkSameShape(A,B,true);
+        output = reshapeOrDeclare(output,A);
 
-        int length = a.getNumElements();
+        int length = A.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set(i, a.get(i) / b.get(i));
+            output.set(i, A.get(i) / B.get(i));
         }
+
+        return output;
     }
 
     /**
@@ -1662,19 +1677,18 @@ public class CommonOps_DDRM {
      *
      * @param A left side
      * @param B right side
-     * @param C output (modified)
+     * @param output output (modified)
      */
-    public static void elementPower(DMatrixD1 A , DMatrixD1 B , DMatrixD1 C ) {
-
-        if( A.numRows != B.numRows || A.numRows != C.numRows ||
-                A.numCols != B.numCols || A.numCols != C.numCols ) {
-            throw new MatrixDimensionException("All matrices must be the same shape");
-        }
+    public static <T extends DMatrixD1> T elementPower(T A , T B , @Nullable T output ) {
+        checkSameShape(A,B,true);
+        output = reshapeOrDeclare(output,A);
 
         int size = A.getNumElements();
         for( int i = 0; i < size; i++ ) {
-            C.data[i] = Math.pow(A.data[i], B.data[i]);
+            output.data[i] = Math.pow(A.data[i], B.data[i]);
         }
+
+        return output;
     }
 
     /**
@@ -1685,18 +1699,18 @@ public class CommonOps_DDRM {
      *
      * @param a left scalar
      * @param B right side
-     * @param C output (modified)
+     * @param output output (modified)
      */
-    public static void elementPower(double a , DMatrixD1 B , DMatrixD1 C ) {
-
-        if( B.numRows != C.numRows || B.numCols != C.numCols ) {
-            throw new MatrixDimensionException("All matrices must be the same shape");
-        }
+    public static <T extends DMatrixD1> T elementPower(double a , T B , @Nullable T output )
+    {
+        output = reshapeOrDeclare(output,B);
 
         int size = B.getNumElements();
         for( int i = 0; i < size; i++ ) {
-            C.data[i] = Math.pow(a, B.data[i]);
+            output.data[i] = Math.pow(a, B.data[i]);
         }
+
+        return output;
     }
 
     /**
@@ -1707,18 +1721,17 @@ public class CommonOps_DDRM {
      *
      * @param A left side
      * @param b right scalar
-     * @param C output (modified)
+     * @param output output (modified)
      */
-    public static void elementPower(DMatrixD1 A , double b, DMatrixD1 C ) {
-
-        if( A.numRows != C.numRows || A.numCols != C.numCols ) {
-            throw new MatrixDimensionException("All matrices must be the same shape");
-        }
+    public static <T extends DMatrixD1> T elementPower(T A , double b, @Nullable T output ) {
+        output = reshapeOrDeclare(output,A);
 
         int size = A.getNumElements();
         for( int i = 0; i < size; i++ ) {
-            C.data[i] = Math.pow(A.data[i], b);
+            output.data[i] = Math.pow(A.data[i], b);
         }
+
+        return output;
     }
 
     /**
@@ -1727,19 +1740,20 @@ public class CommonOps_DDRM {
      * c<sub>ij</sub> = Math.log(a<sub>ij</sub>)
      * <p>
      *
-     * @param A input
-     * @param C output (modified)
+     * @param A (input) A matrix
+     * @param output (input/output) Storage for results. can be null. (modified)
+     * @return The results
      */
-    public static void elementLog(DMatrixD1 A , DMatrixD1 C ) {
-
-        if( A.numCols != C.numCols || A.numRows != C.numRows ) {
-            throw new MatrixDimensionException("All matrices must be the same shape");
-        }
+    public static <T extends DMatrixD1> T elementLog(T A , @Nullable T output )
+    {
+        output = reshapeOrDeclare(output,A);
 
         int size = A.getNumElements();
         for( int i = 0; i < size; i++ ) {
-            C.data[i] = Math.log(A.data[i]);
+            output.data[i] = Math.log(A.data[i]);
         }
+
+        return output;
     }
 
     /**
@@ -1748,19 +1762,19 @@ public class CommonOps_DDRM {
      * c<sub>ij</sub> = Math.exp(a<sub>ij</sub>)
      * <p>
      *
-     * @param A input
-     * @param C output (modified)
+     * @param A (input) A matrix
+     * @param output (input/output) Storage for results. can be null. (modified)
+     * @return The results
      */
-    public static void elementExp(DMatrixD1 A , DMatrixD1 C ) {
-
-        if( A.numCols != C.numCols || A.numRows != C.numRows ) {
-            throw new MatrixDimensionException("All matrices must be the same shape");
-        }
+    public static <T extends DMatrixD1> T elementExp(T A , @Nullable T output ) {
+        output = reshapeOrDeclare(output,A);
 
         int size = A.getNumElements();
         for( int i = 0; i < size; i++ ) {
-            C.data[i] = Math.exp(A.data[i]);
+            output.data[i] = Math.exp(A.data[i]);
         }
+
+        return output;
     }
 
     /**
@@ -1809,7 +1823,7 @@ public class CommonOps_DDRM {
      * @param A Matrix. Modified.
      * @param values array. Not modified.
      */
-    public static void multCols(DMatrixRMaj A , double values[] ) {
+    public static void multCols(DMatrixRMaj A , double[] values) {
         if( values.length < A.numCols ) {
             throw new IllegalArgumentException("Not enough elements in values.");
         }
@@ -1828,7 +1842,7 @@ public class CommonOps_DDRM {
      * @param A Matrix. Modified.
      * @param values array. Not modified.
      */
-    public static void divideCols(DMatrixRMaj A , double values[] ) {
+    public static void divideCols(DMatrixRMaj A , double[] values) {
         if( values.length < A.numCols ) {
             throw new IllegalArgumentException("Not enough elements in values.");
         }
@@ -1886,11 +1900,7 @@ public class CommonOps_DDRM {
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj sumRows(DMatrixRMaj input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,1);
-        } else {
-            output.reshape(input.numRows,1);
-        }
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, 1);
 
         for( int row = 0; row < input.numRows; row++ ) {
             double total = 0;
@@ -1917,11 +1927,7 @@ public class CommonOps_DDRM {
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj minRows(DMatrixRMaj input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,1);
-        } else {
-            output.reshape(input.numRows,1);
-        }
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, 1);
 
         for( int row = 0; row < input.numRows; row++ ) {
             double min = Double.MAX_VALUE;
@@ -1950,11 +1956,7 @@ public class CommonOps_DDRM {
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj maxRows(DMatrixRMaj input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,1);
-        } else {
-            output.reshape(input.numRows,1);
-        }
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, 1);
 
         for( int row = 0; row < input.numRows; row++ ) {
             double max = -Double.MAX_VALUE;
@@ -1983,11 +1985,7 @@ public class CommonOps_DDRM {
      * @return Vector containing the sum of each column
      */
     public static DMatrixRMaj sumCols(DMatrixRMaj input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(1,input.numCols);
-        } else {
-            output.reshape(1,input.numCols);
-        }
+        output = UtilEjml.reshapeOrDeclare(output, 1, input.numCols);
 
         for( int cols = 0; cols < input.numCols; cols++ ) {
             double total = 0;
@@ -2015,11 +2013,8 @@ public class CommonOps_DDRM {
      * @return Vector containing the minimum of each column
      */
     public static DMatrixRMaj minCols(DMatrixRMaj input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(1,input.numCols);
-        } else {
-            output.reshape(1,input.numCols);
-        }
+        output = UtilEjml.reshapeOrDeclare(output, 1, input.numCols);
+
         for( int cols = 0; cols < input.numCols; cols++ ) {
             double minimum = Double.MAX_VALUE;
 
@@ -2047,12 +2042,9 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the maximum of each column
      */
-    public static DMatrixRMaj maxCols(DMatrixRMaj input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(1,input.numCols);
-        } else {
-            output.reshape(1,input.numCols);
-        }
+    public static DMatrixRMaj maxCols(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, 1, input.numCols);
+
         for( int cols = 0; cols < input.numCols; cols++ ) {
             double maximum = -Double.MAX_VALUE;
 
@@ -2076,14 +2068,12 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = a<sub>ij</sub> + b<sub>ij</sub> <br>
      * </p>
      *
-     * @param a A Matrix. Modified.
-     * @param b A Matrix. Not modified.
+     * @param a (input/output) A Matrix. Modified.
+     * @param b (input) A Matrix. Not modified.
      */
     public static void addEquals(DMatrixD1 a , DMatrixD1 b )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
+        UtilEjml.checkSameShape(a,b, true);
 
         final int length = a.getNumElements();
 
@@ -2095,19 +2085,17 @@ public class CommonOps_DDRM {
     /**
      * <p>Performs the following operation:<br>
      * <br>
-     * a = a +  &beta; * b  <br>
+     * a = a + &beta; * b  <br>
      * a<sub>ij</sub> = a<sub>ij</sub> + &beta; * b<sub>ij</sub>
      * </p>
      *
      * @param beta The number that matrix 'b' is multiplied by.
-     * @param a A Matrix. Modified.
-     * @param b A Matrix. Not modified.
+     * @param a (input/output) A Matrix. Modified.
+     * @param b (input) A Matrix. Not modified.
      */
     public static void addEquals(DMatrixD1 a , double beta, DMatrixD1 b )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
+        UtilEjml.checkSameShape(a,b, true);
 
         final int length = a.getNumElements();
 
@@ -2129,21 +2117,21 @@ public class CommonOps_DDRM {
      *
      * @param a A Matrix. Not modified.
      * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
+     * @param output (output) A Matrix where the results are stored. Can be null. Modified.
+     * @return The results.
      */
-    public static void add(final DMatrixD1 a , final DMatrixD1 b , final DMatrixD1 c )
+    public static <T extends DMatrixD1> T add(final T a , final T b , @Nullable T output )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The matrices are not all the same dimension.");
-        }
-
-        c.reshape(a.numRows,a.numCols);
+        UtilEjml.checkSameShape(a,b, true);
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set(i, a.get(i) + b.get(i));
+            output.set(i, a.get(i) + b.get(i));
         }
+
+        return output;
     }
 
     /**
@@ -2160,21 +2148,21 @@ public class CommonOps_DDRM {
      * @param a A Matrix. Not modified.
      * @param beta Scaling factor for matrix b.
      * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
+     * @param output (output) A Matrix where the results are stored. Can be null. Modified.
+     * @return The results.
      */
-    public static void add(DMatrixD1 a , double beta , DMatrixD1 b , DMatrixD1 c )
+    public static <T extends DMatrixD1> T add(T a , double beta , T b , @Nullable T output )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The matrices are not all the same dimension.");
-        }
-
-        c.reshape(a.numRows,a.numCols);
+        UtilEjml.checkSameShape(a,b, true);
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set(i, a.get(i) + beta * b.get(i));
+            output.set(i, a.get(i) + beta * b.get(i));
         }
+
+        return output;
     }
 
     /**
@@ -2192,21 +2180,21 @@ public class CommonOps_DDRM {
      * @param a A Matrix. Not modified.
      * @param beta A scaling factor for matrix b.
      * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
+     * @param output (output) A Matrix where the results are stored. Can be null. Modified.
+     * @return The results.
      */
-    public static void add(double alpha , DMatrixD1 a , double beta , DMatrixD1 b , DMatrixD1 c )
+    public static <T extends DMatrixD1> T add(double alpha , T a , double beta , T b , @Nullable T output )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The matrices are not all the same dimension.");
-        }
-
-        c.reshape(a.numRows,a.numCols);
+        UtilEjml.checkSameShape(a,b, true);
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set(i, alpha * a.get(i) + beta * b.get(i));
+            output.set(i, alpha * a.get(i) + beta * b.get(i));
         }
+
+        return output;
     }
 
     /**
@@ -2223,20 +2211,21 @@ public class CommonOps_DDRM {
      * @param alpha A scaling factor for matrix a.
      * @param a A Matrix. Not modified.
      * @param b A Matrix. Not modified.
-     * @param c A Matrix where the results are stored. Modified.
+     * @param output (output) A Matrix where the results are stored. Can be null. Modified.
+     * @return The results.
      */
-    public static void add(double alpha , DMatrixD1 a , DMatrixD1 b , DMatrixD1 c )
+    public static <T extends DMatrixD1> T add(double alpha , T a , T b , T output )
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The matrices are not all the same dimension.");
-        }
+        UtilEjml.checkSameShape(a,b, true);
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
-        c.reshape(a.numRows,a.numCols);
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.set(i, alpha * a.get(i) + b.get(i));
+            output.set(i, alpha * a.get(i) + b.get(i));
         }
+
+        return output;
     }
 
     /**
@@ -2265,17 +2254,20 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param a A matrix. Not modified.
-     * @param c A matrix. Modified.
      * @param val The value that's added to each element.
+     * @param output (output) Storage for results. Can be null. Modified.
+     * @return The resulting matrix
      */
-    public static void add(DMatrixD1 a , double val , DMatrixD1 c ) {
-        c.reshape(a.numRows,a.numCols);
+    public static <T extends DMatrixD1> T add( T a , double val , T output ) {
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.data[i] = a.data[i] + val;
+            output.data[i] = a.data[i] + val;
         }
+
+        return output;
     }
 
     /**
@@ -2287,16 +2279,19 @@ public class CommonOps_DDRM {
      *
      * @param a (input) A matrix. Not modified.
      * @param val (input) The value that's subtracted to each element.
-     * @param c (Output) A matrix. Modified.
+     * @param output (output) Storage for results. Can be null. Modified.
+     * @return The resulting matrix
      */
-    public static void subtract(DMatrixD1 a , double val , DMatrixD1 c ) {
-        c.reshape(a.numRows,a.numCols);
+    public static <T extends DMatrixD1> T subtract(T a , double val , @Nullable T output ) {
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.data[i] = a.data[i] - val;
+            output.data[i] = a.data[i] - val;
         }
+
+        return output;
     }
 
     /**
@@ -2308,16 +2303,19 @@ public class CommonOps_DDRM {
      *
      * @param val (input) The value that's subtracted to each element.
      * @param a (input) A matrix. Not modified.
-     * @param c (Output) A matrix. Modified.
+     * @param output (output) Storage for results. Can be null. Modified.
+     * @return The resulting matrix
      */
-    public static void subtract(double val , DMatrixD1 a , DMatrixD1 c ) {
-        c.reshape(a.numRows,a.numCols);
+    public static <T extends DMatrixD1> T subtract(double val , T a , @Nullable T output ) {
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.data[i] = val - a.data[i];
+            output.data[i] = val - a.data[i];
         }
+
+        return output;
     }
 
     /**
@@ -2327,15 +2325,12 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = a<sub>ij</sub> - b<sub>ij</sub>
      * </p>
      *
-     * @param a A Matrix. Modified.
-     * @param b A Matrix. Not modified.
+     * @param a (input) A Matrix. Modified.
+     * @param b (input) A Matrix. Not modified.
      */
     public static void subtractEquals(DMatrixD1 a, DMatrixD1 b)
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
-
+        UtilEjml.checkSameShape(a,b,true);
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
@@ -2353,22 +2348,23 @@ public class CommonOps_DDRM {
      * Matrix C can be the same instance as Matrix A and/or B.
      * </p>
      *
-     * @param a A Matrix. Not modified.
-     * @param b A Matrix. Not modified.
-     * @param c A Matrix. Modified.
+     * @param a (input) A Matrix. Not modified.
+     * @param b (input) A Matrix. Not modified.
+     * @param output (output) A Matrix. Can be null. Modified.
+     * @return The resulting matrix
      */
-    public static void subtract(DMatrixD1 a, DMatrixD1 b, DMatrixD1 c)
+    public static <T extends DMatrixD1> T subtract(T a, T b, @Nullable T output)
     {
-        if( a.numCols != b.numCols || a.numRows != b.numRows ) {
-            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        }
-        c.reshape(a.numRows,a.numCols);
+        UtilEjml.checkSameShape(a,b,true);
+        output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
 
         for( int i = 0; i < length; i++ ) {
-            c.data[i] = a.data[i] - b.data[i];
+            output.data[i] = a.data[i] - b.data[i];
         }
+
+        return output;
     }
 
     /**
@@ -2449,7 +2445,7 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = &alpha;/a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix whose elements are divide the scalar.  Modified.
+     * @param a (input/output) The matrix whose elements are divide the scalar.  Modified.
      * @param alpha top value in division
      */
     public static void divide( double alpha , DMatrixD1 a )
@@ -2468,7 +2464,7 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
      * </p>
      *
-     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param a (input/output) The matrix whose elements are to be divided.  Modified.
      * @param alpha the amount each element is divided by.
      */
     public static void divide(DMatrixD1 a , double alpha)
@@ -2488,18 +2484,21 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param alpha The numerator.
-     * @param a The matrix whose elements are the divisor.  Not modified.
-     * @param b Where the results are stored. Modified.
+     * @param input The matrix whose elements are the divisor.  Not modified.
+     * @param output Where the results are stored. Modified. Can be null.
+     * @return The resulting matrix
      */
-    public static void divide(double alpha , DMatrixD1 a , DMatrixD1 b)
+    public static <T extends DMatrixD1> T divide(double alpha , T input , T output)
     {
-        b.reshape(a.numRows,a.numCols);
+        output = UtilEjml.reshapeOrDeclare(output, input);
 
-        final int size = a.getNumElements();
+        final int size = input.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            b.data[i] = alpha/a.data[i];
+            output.data[i] = alpha/input.data[i];
         }
+
+        return output;
     }
 
     /**
@@ -2509,19 +2508,22 @@ public class CommonOps_DDRM {
      * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;
      * </p>
      *
-     * @param a The matrix whose elements are to be divided.  Not modified.
+     * @param input The matrix whose elements are to be divided.  Not modified.
      * @param alpha the amount each element is divided by.
-     * @param b Where the results are stored. Modified.
+     * @param output Where the results are stored. Modified. Can be null.
+     * @return The resulting matrix
      */
-    public static void divide(DMatrixD1 a , double alpha  , DMatrixD1 b)
+    public static <T extends DMatrixD1> T divide(T input , double alpha  , @Nullable T output)
     {
-        b.reshape(a.numRows,a.numCols);
+        output = UtilEjml.reshapeOrDeclare(output, input);
 
-        final int size = a.getNumElements();
+        final int size = input.getNumElements();
 
         for( int i = 0; i < size; i++ ) {
-            b.data[i] = a.data[i]/alpha;
+            output.data[i] = input.data[i]/alpha;
         }
+
+        return output;
     }
 
     /**
@@ -2553,11 +2555,7 @@ public class CommonOps_DDRM {
      */
     public static <T extends DMatrixD1> T changeSign(T input , @Nullable T output)
     {
-        if( output == null ) {
-            output = input.createLike();
-        } else {
-            output.reshape(input.numRows, input.numCols);
-        }
+        output = UtilEjml.reshapeOrDeclare(output, input);
 
         final int size = input.getNumElements();
 
@@ -2608,10 +2606,7 @@ public class CommonOps_DDRM {
      * @return Reduced echelon form of A
      */
     public static DMatrixRMaj rref(DMatrixRMaj A , int numUnknowns, DMatrixRMaj reduced ) {
-        if( reduced == null ) {
-            reduced = new DMatrixRMaj(A.numRows,A.numCols);
-        }
-        reduced.reshape(A.numRows,A.numCols);
+        reduced = UtilEjml.reshapeOrDeclare(reduced,A);
 
         if( numUnknowns <= 0 )
             numUnknowns = Math.min(A.numCols,A.numRows);
@@ -2635,11 +2630,7 @@ public class CommonOps_DDRM {
      */
     public static BMatrixRMaj elementLessThan(DMatrixRMaj A , double value , BMatrixRMaj output )
     {
-        if( output == null ) {
-            output = new BMatrixRMaj(A.numRows,A.numCols);
-        }
-
-        output.reshape(A.numRows, A.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,A.numRows, A.numCols);
 
         int N = A.getNumElements();
 
@@ -2660,11 +2651,7 @@ public class CommonOps_DDRM {
      */
     public static BMatrixRMaj elementLessThanOrEqual(DMatrixRMaj A , double value , BMatrixRMaj output )
     {
-        if( output == null ) {
-            output = new BMatrixRMaj(A.numRows,A.numCols);
-        }
-
-        output.reshape(A.numRows, A.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,A.numRows, A.numCols);
 
         int N = A.getNumElements();
 
@@ -2685,11 +2672,7 @@ public class CommonOps_DDRM {
      */
     public static BMatrixRMaj elementMoreThan(DMatrixRMaj A , double value , BMatrixRMaj output )
     {
-        if( output == null ) {
-            output = new BMatrixRMaj(A.numRows,A.numCols);
-        }
-
-        output.reshape(A.numRows, A.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,A.numRows, A.numCols);
 
         int N = A.getNumElements();
 
@@ -2710,11 +2693,7 @@ public class CommonOps_DDRM {
      */
     public static BMatrixRMaj elementMoreThanOrEqual(DMatrixRMaj A , double value , BMatrixRMaj output )
     {
-        if( output == null ) {
-            output = new BMatrixRMaj(A.numRows,A.numCols);
-        }
-
-        output.reshape(A.numRows, A.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,A.numRows, A.numCols);
 
         int N = A.getNumElements();
 
@@ -2735,11 +2714,7 @@ public class CommonOps_DDRM {
      */
     public static BMatrixRMaj elementLessThan(DMatrixRMaj A , DMatrixRMaj B , BMatrixRMaj output )
     {
-        if( output == null ) {
-            output = new BMatrixRMaj(A.numRows,A.numCols);
-        }
-
-        output.reshape(A.numRows, A.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,A.numRows, A.numCols);
 
         int N = A.getNumElements();
 
@@ -2760,11 +2735,7 @@ public class CommonOps_DDRM {
      */
     public static BMatrixRMaj elementLessThanOrEqual(DMatrixRMaj A , DMatrixRMaj B , BMatrixRMaj output )
     {
-        if( output == null ) {
-            output = new BMatrixRMaj(A.numRows,A.numCols);
-        }
-
-        output.reshape(A.numRows, A.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,A.numRows, A.numCols);
 
         int N = A.getNumElements();
 
@@ -2784,8 +2755,8 @@ public class CommonOps_DDRM {
      * @return Row vector with marked elements
      */
     public static DMatrixRMaj elements(DMatrixRMaj A , BMatrixRMaj marked , DMatrixRMaj output ) {
-        if( A.numRows != marked.numRows || A.numCols != marked.numCols )
-            throw new MatrixDimensionException("Input matrices must have the same shape");
+        checkSameShape(A,marked,false);
+
         if( output == null )
             output = new DMatrixRMaj(1,1);
 
@@ -2913,13 +2884,11 @@ public class CommonOps_DDRM {
      * @param input (Input) Matrix which is to be permuted
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static DMatrixRMaj permuteRowInv( int pinv[] , DMatrixRMaj input , DMatrixRMaj output ) {
+    public static DMatrixRMaj permuteRowInv(int[] pinv, DMatrixRMaj input , DMatrixRMaj output ) {
         if( input.numRows > pinv.length )
             throw new MatrixDimensionException("permutation vector must have at least as many elements as input has rows");
 
-        if( output == null )
-            output = new DMatrixRMaj(1,1);
-        output.reshape(input.numRows,input.numCols);
+        output = UtilEjml.reshapeOrDeclare(output,input.numRows, input.numCols);
 
         int m = input.numCols;
         for (int row = 0; row < input.numRows; row++) {
@@ -3008,19 +2977,19 @@ public class CommonOps_DDRM {
     /**
      * This applies a given unary function on every value stored in the matrix
      *
-     * B = f(A).   A and B can be the same instance.
+     * <pre>
+     * output[i,j] = func(input[i,j])
+     * </pre>
+     *
+     * A and B can be the same instance.
      *
      * @param input  (Input) input matrix. Not modified
      * @param func   Unary function accepting a double
-     * @param output (Output) Matrix. Modified.
+     * @param output (Output) Matrix. Can be same instance as A. Modified.
      * @return The output matrix
      */
     public static DMatrixRMaj apply(DMatrixRMaj input, DUnaryOperator func, @Nullable DMatrixRMaj output) {
-        if (output == null) {
-            output = input.createLike();
-        } else if (input != output) {
-            output.reshape(input.numRows, input.numCols);
-        }
+        output = UtilEjml.reshapeOrDeclare(output,input.numRows, input.numCols);
 
         for (int i = 0; i < input.data.length; i++) {
             output.data[i] = func.apply(input.data[i]);

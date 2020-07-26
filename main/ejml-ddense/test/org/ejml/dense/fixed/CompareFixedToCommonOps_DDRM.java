@@ -70,7 +70,7 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
         for (int i = 0; i < methods.length; i++) {
             if( !methods[i].getName().equals("cholL"))
                 continue;
-            Class<?> parameters[] = methods[i].getParameterTypes();
+            Class<?>[] parameters = methods[i].getParameterTypes();
             DMatrixFixed _A = (DMatrixFixed)parameters[0].newInstance();
 
             ConvertDMatrixStruct.convert(A,_A);
@@ -97,7 +97,7 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
         for (int i = 0; i < methods.length; i++) {
             if( !methods[i].getName().equals("cholU"))
                 continue;
-            Class<?> parameters[] = methods[i].getParameterTypes();
+            Class<?>[] parameters = methods[i].getParameterTypes();
             DMatrixFixed _A = (DMatrixFixed)parameters[0].newInstance();
 
             ConvertDMatrixStruct.convert(A,_A);
@@ -135,7 +135,7 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
 
         DMatrixFixed _C;
         try {
-            Class<?> parameters[] = match.getParameterTypes();
+            Class<?>[] parameters = match.getParameterTypes();
             DMatrixFixed _A = (DMatrixFixed)parameters[1].newInstance();
             DMatrixFixed _u = (DMatrixFixed)parameters[3].newInstance();
             DMatrixFixed _v = (DMatrixFixed)parameters[4].newInstance();
