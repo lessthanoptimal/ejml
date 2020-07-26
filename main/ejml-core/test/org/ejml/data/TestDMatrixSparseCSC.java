@@ -50,8 +50,8 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000,100_000_000,4);
 
         assertEquals(0,a.nz_length);
-        assertEquals(1_000_000_000,a.numCols);
-        assertEquals(100_000_000,a.numRows);
+        assertEquals(1_000_000_000,a.numRows);
+        assertEquals(100_000_000,a.numCols);
         assertEquals(4,a.nz_values.length);
         assertEquals(4,a.nz_rows.length);
     }
@@ -62,8 +62,8 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
 
         a.growMaxLength(10,false);
         assertEquals(0,a.nz_length);
-        assertEquals(1_000_000_000,a.numCols);
-        assertEquals(100_000_000,a.numRows);
+        assertEquals(1_000_000_000,a.numRows);
+        assertEquals(100_000_000,a.numCols);
         assertEquals(10,a.nz_values.length);
         assertEquals(10,a.nz_rows.length);
     }
