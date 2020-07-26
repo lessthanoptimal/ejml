@@ -30,6 +30,7 @@ import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -1455,5 +1456,68 @@ public class TestCommonOps_DSCC {
 
         double found = CommonOps_DSCC.trace(A);
         assertEquals(expected,found,UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void applyFunc() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+        DMatrixSparseCSC B = A.copy();
+        CommonOps_DSCC.apply(A, x -> 2 * x + 1, B);
+
+        double[] expectedResult = new double[A.nz_length];
+        for (int i = 0; i < A.nz_length; i++) {
+            expectedResult[i] = A.nz_values[i] * 2 + 1;
+        }
+
+        assertTrue(Arrays.equals(A.col_idx, B.col_idx));
+        assertTrue(Arrays.equals(A.nz_rows, B.nz_rows));
+        assertTrue(Arrays.equals(expectedResult, B.nz_values));
+    }
+
+    @Test
+    public void reduceScalar() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+        double result = CommonOps_DSCC.reduceScalar(A, 0, (acc, x) -> acc + x);
+
+        double expectedResult = 0;
+        for (int i = 0; i < A.getNumElements(); i++) {
+            expectedResult += A.nz_values[i];
+        }
+
+        assertTrue(expectedResult == result);
+    }
+
+    @Test
+    public void reduceColumnWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+
+        DMatrixRMaj result = CommonOps_DSCC.reduceColumnWise(A, 0, (acc, x) -> acc + x, null);
+
+        for (int i = 0; i < A.numCols; i++) {
+            DMatrixSparseCSC colVector = CommonOps_DSCC.extractColumn(A, i, null);
+            double expected = 0;
+            for (int j = 0; j < colVector.nz_length; j++) {
+                expected += colVector.nz_values[j];
+            }
+            assertEquals(expected, result.get(i));
+        }
+    }
+
+    @Test
+    public void reduceRowWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+
+        DMatrixRMaj result = CommonOps_DSCC.reduceRowWise(A, 0, (acc, x) -> acc + x, null);
+
+        for (int i = 0; i < A.numCols; i++) {
+            DMatrixSparseCSC A_trans = CommonOps_DSCC.transpose(A, null, null);
+            // as A_t[i,:]  == A[:,i]
+            DMatrixSparseCSC rowVector = CommonOps_DSCC.extractColumn(A_trans, i, null);
+            double expected = 0;
+            for (int j = 0; j < rowVector.nz_length; j++) {
+                expected += rowVector.nz_values[j];
+            }
+            assertEquals(expected, result.get(i));
+        }
     }
 }

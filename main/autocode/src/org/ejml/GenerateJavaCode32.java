@@ -50,6 +50,10 @@ public class GenerateJavaCode32 extends GenerateCode32 {
 
         prefix64.add("DGrow");
         prefix32.add("FGrow");
+        prefix64.add("DUnary");
+        prefix32.add("FUnary");
+        prefix64.add("DBinary");
+        prefix32.add("FBinary");
         prefix64.add("DScalar");
         prefix32.add("FScalar");
         prefix64.add("DMatrix");
@@ -87,6 +91,8 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         }
 
         converter.replacePattern("DScalar", "FScalar");
+        converter.replacePattern("DUnary", "FUnary");
+        converter.replacePattern("DBinary", "FBinary");
         converter.replacePattern("ConvertD", "ConvertF");
         converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
