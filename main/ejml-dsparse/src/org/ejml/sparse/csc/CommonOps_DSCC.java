@@ -352,24 +352,26 @@ public class CommonOps_DSCC {
 
     /**
      * Performs matrix addition:<br>
-     * C = &alpha;A + &beta;B
-     *
-     * @param alpha scalar value multiplied against A
+     * output = &alpha;A + &beta;B
+     *  @param alpha scalar value multiplied against A
      * @param A Matrix
      * @param beta scalar value multiplied against B
      * @param B Matrix
-     * @param C Output matrix.
+     * @param output Output matrix.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @return
      */
-    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           @Nullable IGrowArray gw, @Nullable DGrowArray gx)
+    public static DMatrixSparseCSC add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output,
+                                       @Nullable IGrowArray gw, @Nullable DGrowArray gx)
     {
         if( A.numRows != B.numRows || A.numCols != B.numCols )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        C.reshape(A.numRows,A.numCols);
+        output = reshapeOrDeclare(output, A, A.numRows,A.numCols);
 
-        ImplCommonOps_DSCC.add(alpha,A,beta,B,C, gw, gx);
+        ImplCommonOps_DSCC.add(alpha,A,beta,B,output, gw, gx);
+
+        return output;
     }
 
     public static DMatrixSparseCSC identity(int length ) {
@@ -578,22 +580,23 @@ public class CommonOps_DSCC {
 
     /**
      * Performs an element-wise multiplication.<br>
-     * C[i,j] = A[i,j]*B[i,j]<br>
+     * output[i,j] = A[i,j]*B[i,j]<br>
      * All matrices must have the same shape.
-     *
-     * @param A (Input) Matrix.
+     *  @param A (Input) Matrix.
      * @param B (Input) Matrix
-     * @param C (Output) Matrix. data array is grown to min(A.nz_length,B.nz_length), resulting a in a large speed boost.
+     * @param output (Output) Matrix. data array is grown to min(A.nz_length,B.nz_length), resulting a in a large speed boost.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C ,
-                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
+    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output ,
+                                               @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         if( A.numCols != B.numCols || A.numRows != B.numRows )
             throw new MatrixDimensionException("All inputs must have the same number of rows and columns. "+stringShapes(A,B));
-        C.reshape(A.numRows,A.numCols);
+        output = reshapeOrDeclare(output, A, A.numRows,A.numCols);
 
-        ImplCommonOps_DSCC.elementMult(A,B,C,gw,gx);
+        ImplCommonOps_DSCC.elementMult(A,B,output,gw,gx);
+
+        return output;
     }
 
     /**
