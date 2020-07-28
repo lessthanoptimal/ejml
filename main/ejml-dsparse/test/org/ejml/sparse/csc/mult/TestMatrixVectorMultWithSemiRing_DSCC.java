@@ -19,8 +19,8 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.ops.DoubleSemiRing;
-import org.ejml.ops.PreDefinedDoubleSemiRings;
+import org.ejml.ops.DSemiRing;
+import org.ejml.ops.DSemiRings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -55,7 +55,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("vectorMatrixMultSources")
-    public void mult_v_A(String desc, DoubleSemiRing semiRing, double[] expected) {
+    public void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following outgoing edges of source nodes
         double v[] = new double[7];
         Arrays.fill(v, semiRing.add.id);
@@ -77,7 +77,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("matrixVectorMultSources")
-    public void mult_A_v(String desc, DoubleSemiRing semiRing, double[] expected) {
+    public void mult_A_v(String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following incoming edges of source nodes
         double v[] = new double[7];
         Arrays.fill(v, semiRing.add.id);
@@ -99,25 +99,25 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     private static Stream<Arguments> vectorMatrixMultSources() {
         return Stream.of(
-                Arguments.of("Plus, Times", PreDefinedDoubleSemiRings.PLUS_TIMES, new double[]{0.1, 0, 0.5, 0, 0, 0, 0}),
-                Arguments.of("OR, AND", PreDefinedDoubleSemiRings.OR_AND, new double[]{1, 0, 1, 0, 0, 0, 0}),
-                Arguments.of("MIN, PLUS", PreDefinedDoubleSemiRings.MIN_PLUS,
+                Arguments.of("Plus, Times", DSemiRings.PLUS_TIMES, new double[]{0.1, 0, 0.5, 0, 0, 0, 0}),
+                Arguments.of("OR, AND", DSemiRings.OR_AND, new double[]{1, 0, 1, 0, 0, 0, 0}),
+                Arguments.of("MIN, PLUS", DSemiRings.MIN_PLUS,
                         new double[]{0.7, Double.MAX_VALUE, 0.9, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE}),
 // This only works on sparse input vectors (here resulting in 1.0 instead of Double.MIN_Value as max(1.0, Double.MIN_VALUE) = 1.0)
 //                Arguments.of("MAX, PLUS", PreDefinedDoubleSemiRings.MAX_PLUS,
 //                        new double[]{0.7, Double.MIN_VALUE, 1.1, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE}),
-                Arguments.of("MIN, TIMES", PreDefinedDoubleSemiRings.MIN_TIMES,
+                Arguments.of("MIN, TIMES", DSemiRings.MIN_TIMES,
                         new double[]{0.1, Double.MAX_VALUE, 0.2, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE}),
-                Arguments.of("MAX, MIN", PreDefinedDoubleSemiRings.MAX_MIN,
+                Arguments.of("MAX, MIN", DSemiRings.MAX_MIN,
                         new double[]{0.2, Double.MIN_VALUE, 0.5, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE})
         );
     }
 
     private static Stream<Arguments> matrixVectorMultSources() {
         return Stream.of(
-                Arguments.of("Plus, Times", PreDefinedDoubleSemiRings.PLUS_TIMES, new double[]{0.5, 0.6, 0, 0, 0, 0, 1.1}),
-                Arguments.of("OR, AND", PreDefinedDoubleSemiRings.OR_AND, new double[]{1, 1, 0, 0, 0, 0, 1}),
-                Arguments.of("MIN, PLUS", PreDefinedDoubleSemiRings.MIN_PLUS,
+                Arguments.of("Plus, Times", DSemiRings.PLUS_TIMES, new double[]{0.5, 0.6, 0, 0, 0, 0, 1.1}),
+                Arguments.of("OR, AND", DSemiRings.OR_AND, new double[]{1, 1, 0, 0, 0, 0, 1}),
+                Arguments.of("MIN, PLUS", DSemiRings.MIN_PLUS,
                         new double[]{1.5, 1.6, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, 1.5})
         );
     }

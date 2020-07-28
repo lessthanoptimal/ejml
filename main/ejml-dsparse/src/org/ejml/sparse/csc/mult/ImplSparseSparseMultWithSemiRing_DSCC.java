@@ -22,7 +22,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
-import org.ejml.ops.DoubleSemiRing;
+import org.ejml.ops.DSemiRing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
 import javax.annotation.Nullable;
@@ -43,7 +43,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DoubleSemiRing semiRing,
+    public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                             @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
@@ -93,7 +93,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DoubleSemiRing semiRing,
+    public static void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                                   @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
@@ -154,7 +154,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DoubleSemiRing semiRing,
+    public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                                   @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         if (!B.isIndicesSorted())
             throw new IllegalArgumentException("B must have its indices sorted.");
@@ -208,7 +208,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
     public static void multAddColA(DMatrixSparseCSC A, int colA,
                                    double alpha,
                                    DMatrixSparseCSC C, int mark,
-                                   DoubleSemiRing semiRing,
+                                   DSemiRing semiRing,
                                    double x[], int w[]) {
         int idxA0 = A.col_idx[colA];
         int idxA1 = A.col_idx[colA + 1];
@@ -231,12 +231,12 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
         }
     }
 
-    public static void mult(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void mult(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
         C.fill(semiRing.add.id);
         multAdd(A, B, C, semiRing);
     }
 
-    public static void multAdd(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multAdd(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
         // C(i,j) = sum_k A(i,k) * B(k,j)
         for (int k = 0; k < A.numCols; k++) {
             int idx0 = A.col_idx[k];
@@ -258,7 +258,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
         }
     }
 
-    public static void multTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
 
         // C(i,j) = sum_k A(k,i) * B(k,j)
         for (int j = 0; j < B.numCols; j++) {
@@ -278,7 +278,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
         }
     }
 
-    public static void multAddTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multAddTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
         for (int j = 0; j < B.numCols; j++) {
 
@@ -297,12 +297,12 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
         }
     }
 
-    public static void multTransB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multTransB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
         C.zero();
         multAddTransB(A, B, C, semiRing);
     }
 
-    public static void multAddTransB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multAddTransB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
 
         // C(i,j) = sum_k A(i,k) * B(j,k)
         for (int k = 0; k < A.numCols; k++) {
@@ -323,12 +323,12 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
         }
     }
 
-    public static void multTransAB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multTransAB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
         C.zero();
         multAddTransAB(A, B, C, semiRing);
     }
 
-    public static void multAddTransAB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DoubleSemiRing semiRing) {
+    public static void multAddTransAB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
         // C(i,j) = sum_k A(k,i) * B(j,K)
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];

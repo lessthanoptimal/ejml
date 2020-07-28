@@ -21,7 +21,7 @@ package org.ejml.sparse.csc.misc;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
-import org.ejml.ops.DoubleSemiRing;
+import org.ejml.ops.DSemiRing;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DoubleSemiRing semiRing,
+    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                            @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
@@ -81,7 +81,7 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param gw   workspace
      */
     public static void addColAppend(DMatrixSparseCSC A, int colA, DMatrixSparseCSC B, int colB,
-                                    DMatrixSparseCSC C, DoubleSemiRing semiRing, @Nullable IGrowArray gw) {
+                                    DMatrixSparseCSC C, DSemiRing semiRing, @Nullable IGrowArray gw) {
         if (A.numRows != B.numRows || A.numRows != C.numRows)
             throw new IllegalArgumentException("Number of rows in A, B, and C do not match");
 
@@ -125,7 +125,7 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DoubleSemiRing semiRing,
+    public static void elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows);

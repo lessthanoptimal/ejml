@@ -21,37 +21,37 @@ package org.ejml.ops;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestAlgebraicStructures {
 
     @Test
     public void testPreDefinedMonoids() {
-        assertEquals(0, PreDefinedDoubleMonoids.AND.func.apply(20, 0));
-        assertEquals(0, PreDefinedDoubleMonoids.AND.func.apply(0, 20));
-        assertEquals(0, PreDefinedDoubleMonoids.AND.func.apply(0, 0));
-        assertEquals(1, PreDefinedDoubleMonoids.AND.func.apply(43, 20));
+        assertEquals(0, DMonoids.AND.func.apply(20, 0));
+        assertEquals(0, DMonoids.AND.func.apply(0, 20));
+        assertEquals(0, DMonoids.AND.func.apply(0, 0));
+        assertEquals(1, DMonoids.AND.func.apply(43, 20));
 
-        assertEquals(1, PreDefinedDoubleMonoids.OR.func.apply(43, 20));
-        assertEquals(1, PreDefinedDoubleMonoids.OR.func.apply(0, 20));
-        assertEquals(1, PreDefinedDoubleMonoids.OR.func.apply(43, 0));
-        assertEquals(0, PreDefinedDoubleMonoids.OR.func.apply(0, 0));
+        assertEquals(1, DMonoids.OR.func.apply(43, 20));
+        assertEquals(1, DMonoids.OR.func.apply(0, 20));
+        assertEquals(1, DMonoids.OR.func.apply(43, 0));
+        assertEquals(0, DMonoids.OR.func.apply(0, 0));
 
-        assertEquals(0, PreDefinedDoubleMonoids.XOR.func.apply(43, 20));
-        assertEquals(1, PreDefinedDoubleMonoids.XOR.func.apply(0, 20));
-        assertEquals(1, PreDefinedDoubleMonoids.XOR.func.apply(43, 0));
-        assertEquals(0, PreDefinedDoubleMonoids.XOR.func.apply(0, 0));
+        assertEquals(0, DMonoids.XOR.func.apply(43, 20));
+        assertEquals(1, DMonoids.XOR.func.apply(0, 20));
+        assertEquals(1, DMonoids.XOR.func.apply(43, 0));
+        assertEquals(0, DMonoids.XOR.func.apply(0, 0));
 
-        assertEquals(1, PreDefinedDoubleMonoids.XNOR.func.apply(43, 20));
-        assertEquals(0, PreDefinedDoubleMonoids.XNOR.func.apply(0, 20));
-        assertEquals(0, PreDefinedDoubleMonoids.XNOR.func.apply(43, 0));
-        assertEquals(1, PreDefinedDoubleMonoids.XNOR.func.apply(0, 0));
+        assertEquals(1, DMonoids.XNOR.func.apply(43, 20));
+        assertEquals(0, DMonoids.XNOR.func.apply(0, 20));
+        assertEquals(0, DMonoids.XNOR.func.apply(43, 0));
+        assertEquals(1, DMonoids.XNOR.func.apply(0, 0));
 
-        assertEquals(43, PreDefinedDoubleMonoids.MAX.func.apply(43, 20));
-        assertEquals(20, PreDefinedDoubleMonoids.MIN.func.apply(43, 20));
+        assertEquals(43, DMonoids.MAX.func.apply(43, 20));
+        assertEquals(20, DMonoids.MIN.func.apply(43, 20));
 
 
-        assertEquals(63, PreDefinedDoubleMonoids.PLUS.func.apply(43, 20));
-        assertEquals(860, PreDefinedDoubleMonoids.TIMES.func.apply(43, 20));
+        assertEquals(63, DMonoids.PLUS.func.apply(43, 20));
+        assertEquals(860, DMonoids.TIMES.func.apply(43, 20));
     }
 }
