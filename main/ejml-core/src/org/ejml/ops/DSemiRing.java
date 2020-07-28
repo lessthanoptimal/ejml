@@ -18,17 +18,12 @@
 
 package org.ejml.ops;
 
-public class DoubleMonoid {
-    // possible re-interpreting 0
-    public final double id;
-    public final DoubleBinaryOperator func;
+public class DSemiRing {
+    public final DMonoid add;
+    public final DMonoid mult;
 
-    DoubleMonoid(double id, DoubleBinaryOperator func) {
-        this.id = id;
-        this.func = func;
-    }
-
-    DoubleMonoid(DoubleBinaryOperator func) {
-        this(0, func);
+    DSemiRing(DMonoid add, DMonoid mult) {
+        this.add = add;
+        this.mult = mult;
     }
 }

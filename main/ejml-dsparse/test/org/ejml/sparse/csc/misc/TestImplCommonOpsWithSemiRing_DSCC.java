@@ -18,26 +18,14 @@
 
 package org.ejml.sparse.csc.misc;
 
-import org.apache.commons.math3.util.Pair;
-import org.ejml.EjmlUnitTests;
-import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixSparse;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.IGrowArray;
-import org.ejml.ops.DoubleSemiRing;
-import org.ejml.ops.PreDefinedDoubleSemiRings;
-import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.MatrixFeatures_DSCC;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.junit.jupiter.api.Test;
+import org.ejml.ops.DSemiRing;
+import org.ejml.ops.DSemiRings;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +35,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("elementWiseAddSource")
-    public void add(DoubleSemiRing semiRing, double[] expected) {
+    public void add(DSemiRing semiRing, double[] expected) {
         // == graph unions
         DMatrixSparseCSC a = new DMatrixSparseCSC(3, 3);
         DMatrixSparseCSC b = a.copy();
@@ -68,7 +56,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("elementWiseMultSource")
-    public void testelementWiseMult(DoubleSemiRing semiRing, double[] expected) {
+    public void testelementWiseMult(DSemiRing semiRing, double[] expected) {
         // == graph intersection
         DMatrixSparseCSC matrix = new DMatrixSparseCSC(3, 3, 4);
         matrix.set(1, 1, 4);
@@ -93,18 +81,18 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
     private static Stream<Arguments> elementWiseAddSource() {
         return Stream.of(
-                Arguments.of(PreDefinedDoubleSemiRings.PLUS_TIMES, new double[]{4, 5}),
-                Arguments.of(PreDefinedDoubleSemiRings.MIN_MAX, new double[]{4, 2}),
-                Arguments.of(PreDefinedDoubleSemiRings.OR_AND, new double[]{1, 1})
+                Arguments.of(DSemiRings.PLUS_TIMES, new double[]{4, 5}),
+                Arguments.of(DSemiRings.MIN_MAX, new double[]{4, 2}),
+                Arguments.of(DSemiRings.OR_AND, new double[]{1, 1})
         );
     }
 
     private static Stream<Arguments> elementWiseMultSource() {
         return Stream.of(
-                Arguments.of(PreDefinedDoubleSemiRings.PLUS_TIMES, new double[]{12, -2}),
-                Arguments.of(PreDefinedDoubleSemiRings.PLUS_MIN, new double[]{3, -2}),
-                Arguments.of(PreDefinedDoubleSemiRings.MIN_MAX, new double[]{4, 1}),
-                Arguments.of(PreDefinedDoubleSemiRings.OR_AND, new double[]{1, 1})
+                Arguments.of(DSemiRings.PLUS_TIMES, new double[]{12, -2}),
+                Arguments.of(DSemiRings.PLUS_MIN, new double[]{3, -2}),
+                Arguments.of(DSemiRings.MIN_MAX, new double[]{4, 1}),
+                Arguments.of(DSemiRings.OR_AND, new double[]{1, 1})
         );
     }
 }
