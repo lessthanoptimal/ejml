@@ -112,6 +112,36 @@ public class UtilEjml {
 
     /**
      * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param a (Input/Output) matrix which is to be checked. Can be null.
+     * @param rows Desired number of rows
+     * @param cols Desired number of cols
+     * @return modified matrix or new matrix
+     */
+    public static DMatrixSparseCSC reshapeOrDeclare(@Nullable DMatrixSparseCSC a , int rows, int cols ) {
+        if( a == null )
+            return new DMatrixSparseCSC(rows,cols);
+        else if( a.numRows != rows || a.numCols != cols )
+            a.reshape(rows,cols);
+        return a;
+    }
+
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
+     * @param a (Input/Output) matrix which is to be checked. Can be null.
+     * @param rows Desired number of rows
+     * @param cols Desired number of cols
+     * @return modified matrix or new matrix
+     */
+    public static FMatrixSparseCSC reshapeOrDeclare(@Nullable FMatrixSparseCSC a , int rows, int cols ) {
+        if( a == null )
+            return new FMatrixSparseCSC(rows,cols);
+        else if( a.numRows != rows || a.numCols != cols )
+            a.reshape(rows,cols);
+        return a;
+    }
+
+    /**
+     * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
      * @param target (Input/Output) matrix which is to be checked. Can be null.
      * @param reference (Input) Refernece matrix who's shape will be matched
      * @return modified matrix or new matrix

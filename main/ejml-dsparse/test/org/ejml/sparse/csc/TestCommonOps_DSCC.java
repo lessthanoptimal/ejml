@@ -20,6 +20,7 @@ package org.ejml.sparse.csc;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
 
+import static org.ejml.EjmlUnitTests.assertShape;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -178,6 +180,19 @@ public class TestCommonOps_DSCC {
                 }
             }
         }
+    }
+
+    @Test
+    public void test_null_version() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(2, 4);
+        DMatrixSparseCSC B = new DMatrixSparseCSC(4, 2);
+
+        DMatrixSparseCSC prevCreated = new DMatrixSparseCSC(10, 10);
+
+        DMatrixSparseCSC result = CommonOps_DSCC.mult(A, B, null);
+        DMatrixSparseCSC otherResult = CommonOps_DSCC.mult(A, B, prevCreated);
+
+        assertShape(result, otherResult);
     }
 
     @Test

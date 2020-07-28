@@ -147,7 +147,7 @@ public class CommonOps_DSCC {
     {
         if( A.numCols != B.numRows )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A,A.numRows,B.numCols);
+        output = reshapeOrDeclare(output, A.numRows,B.numCols);
 
         ImplSparseSparseMult_DSCC.mult(A,B,output, gw, gx);
 
@@ -159,7 +159,7 @@ public class CommonOps_DSCC {
     {
         if( A.numRows != B.numRows )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A,A.numCols,B.numCols);
+        output = reshapeOrDeclare(output, A.numCols,B.numCols);
 
         ImplSparseSparseMult_DSCC.multTransA(A,B,output,gw,gx);
 
@@ -182,7 +182,7 @@ public class CommonOps_DSCC {
     {
         if( A.numCols != B.numCols )
             throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A,A.numRows,B.numRows);
+        output = reshapeOrDeclare(output, A.numRows, B.numRows);
 
         if( !B.isIndicesSorted() )
             B.sortIndices(null);
