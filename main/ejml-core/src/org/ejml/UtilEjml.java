@@ -132,7 +132,7 @@ public class UtilEjml {
      */
     public static <T extends ReshapeMatrix> T reshapeOrDeclare(@Nullable T target , T reference, int rows, int cols ) {
         if( target == null )
-            return reference.createLike();
+            return reference.create(rows,cols);
         else if( target.getNumRows() != rows || target.getNumCols() != cols )
             target.reshape(rows,cols);
         return target;
