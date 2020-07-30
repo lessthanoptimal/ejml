@@ -521,14 +521,7 @@ public class CommonOps_DDRM {
      */
     public static void multAddTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
-        if( b.numRows == 1 ) {
-            // there are significantly faster algorithms when dealing with vectors
-            if( a.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
-                MatrixVectorMult_DDRM.multAddTransA_reorder(a,b,c);
-            } else {
-                MatrixVectorMult_DDRM.multAddTransA_small(a,b,c);
-            }
-        } else if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
+        if( a.numCols >= EjmlParameters.MULT_TRANAB_COLUMN_SWITCH ) {
             MatrixMatrixMult_DDRM.multAddTransAB_aux(a,b,c,null);
         } else {
             MatrixMatrixMult_DDRM.multAddTransAB(a,b,c);

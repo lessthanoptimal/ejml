@@ -216,8 +216,10 @@ public class CommonOps_DSCC {
      */
     public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
+        if( A.numCols != B.numRows )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
         if( A.numRows != output.numRows || B.numCols != output.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
         ImplSparseSparseMult_DSCC.multAdd(A,B,output);
     }
@@ -246,8 +248,10 @@ public class CommonOps_DSCC {
      */
     public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
+        if( A.numRows != B.numRows )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
         if( A.numCols != output.numRows || B.numCols != output.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
         ImplSparseSparseMult_DSCC.multAddTransA(A,B,output);
     }
@@ -275,8 +279,10 @@ public class CommonOps_DSCC {
      */
     public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
+        if( A.numCols != B.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
         if( A.numRows != output.numRows || B.numRows != output.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
         ImplSparseSparseMult_DSCC.multAddTransB(A,B,output);
     }
@@ -303,12 +309,14 @@ public class CommonOps_DSCC {
     /**
      * <p>C = C + A<sup>T</sup>*B<sup>T</sup></p>
      */
-    public static void multAddTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj C )
+    public static void multAddTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
     {
-        if( A.numCols != C.numRows || B.numRows != C.numCols )
-            throw new IllegalArgumentException("Inconsistent matrix shapes. "+stringShapes(A,B,C));
+        if( A.numRows != B.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+        if( A.numCols != output.numRows || B.numRows != output.numCols )
+            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
 
-        ImplSparseSparseMult_DSCC.multAddTransAB(A,B,C);
+        ImplSparseSparseMult_DSCC.multAddTransAB(A,B,output);
     }
 
     /**

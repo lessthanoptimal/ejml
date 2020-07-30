@@ -16,15 +16,18 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.mult;
+package org.ejml.sparse.csc.mult;
 
 import org.ejml.MatrixDimensionException;
-import org.ejml.UtilEjml;
+import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparseCSC;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static org.ejml.UtilEjml.hasNullableArgument;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -36,13 +39,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Peter Abeles
  */
 @SuppressWarnings("rawtypes")
-public class CheckMatrixMultShape_DDRM {
+public class CheckMatrixMultShape_DSCC {
 
-    // TODO merge with CheckMatrixMultShape_DSCC - Need to mess with project dependencies to do that
+    // TODO merge with CheckMatrixMultShape_DDRM - Need to mess with project dependencies to do that
 
     Class theClass;
 
-    public CheckMatrixMultShape_DDRM(Class theClass ) {
+    public CheckMatrixMultShape_DSCC(Class theClass ) {
         this.theClass = theClass;
     }
 
@@ -61,7 +64,7 @@ public class CheckMatrixMultShape_DDRM {
             if( !name.contains("mult") || name.contains("Element") ||
                     name.contains("Inner") || name.contains("Outer") )
                 continue;
-            if( name.equals("multRows") || name.equals("multCols"))
+            if( name.equals("multRows") || name.equals("multCols") || name.equals("multColumns") || name.equals("multRowsCols"))
                 continue;
 
             boolean transA = false;
@@ -110,35 +113,34 @@ public class CheckMatrixMultShape_DDRM {
      */
     private void checkPositive(Method func, boolean transA, boolean transB ,
                                int m , int n , int o ) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        DMatrixRMaj A,B;
-        DMatrixRMaj C = new DMatrixRMaj(m,o);
+        DMatrix A,B;
+        DMatrix C = createMatrix(getMatrixType(func,2),m,o);
 
         if( transA ) {
-            A = new DMatrixRMaj(n,m);
+            A = createMatrix(getMatrixType(func,0),n,m);
         } else {
-            A = new DMatrixRMaj(m,n);
+            A = createMatrix(getMatrixType(func,0),m,n);
         }
         if( transB ) {
-            B = new DMatrixRMaj(o,n);
+            B = createMatrix(getMatrixType(func,1),o,n);
         } else {
-            B = new DMatrixRMaj(n,o);
+            B = createMatrix(getMatrixType(func,1),n,o);
         }
 
-        TestMatrixMatrixMult_DDRM.invoke(func, 2.0, A, B, C);
+        invoke(func, 2.0, A, B, C);
 
-        if( UtilEjml.hasNullableArgument(func) ) {
-            DMatrixRMaj ret = TestMatrixMatrixMult_DDRM.invoke(func, 2.0, A, B, null);
+        if( hasNullableArgument(func) ) {
+            DMatrix ret = invoke(func, 2.0, A, B, null);
             assertNotNull(ret);
-            assertEquals(ret.numRows,C.numRows);
-            assertEquals(ret.numCols,C.numCols);
+            assertEquals(ret.getNumRows(),C.getNumRows());
+            assertEquals(ret.getNumCols(),C.getNumCols());
         }
     }
 
     /**
      * See if the function throws an exception when it is given bad inputs
      */
-    private void checkNegative(Method func, boolean transA, boolean transB) throws IllegalAccessException {
-
+    private void checkNegative(Method func, boolean transA, boolean transB) throws NoSuchMethodException, IllegalAccessException {
         // don't reshape if it adds since C is also an input
         boolean reshape = !func.getName().contains("Add");
 
@@ -166,23 +168,22 @@ public class CheckMatrixMultShape_DDRM {
     private void checkNegative(Method func,
                                int m_a , int n_a , int m_b , int n_b , int m_c , int n_c ,
                                boolean transA, boolean transB) throws IllegalAccessException {
-        DMatrixRMaj A,B;
-        DMatrixRMaj C = new DMatrixRMaj(m_c,n_c);
+        DMatrix A,B;
+        DMatrix C = createMatrix(getMatrixType(func,2),m_c,n_c);
 
         if( transA ) {
-            A = new DMatrixRMaj(n_a,m_a);
+            A = createMatrix(getMatrixType(func,0),n_a,m_a);
         } else {
-            A = new DMatrixRMaj(m_a,n_a);
+            A = createMatrix(getMatrixType(func,0),m_a,n_a);
         }
         if( transB ) {
-            B = new DMatrixRMaj(n_b,m_b);
+            B = createMatrix(getMatrixType(func,1),n_b,m_b);
         } else {
-            B = new DMatrixRMaj(m_b,n_b);
+            B = createMatrix(getMatrixType(func,1),m_b,n_b);
         }
-
         try {
-            TestMatrixMatrixMult_DDRM.invoke(func, 2.0, A, B, C);
-            fail("An exception should have been thrown.");
+            invoke(func, 2.0, A, B, C);
+            fail("An exception should have been thrown. name="+func.getName());
         } catch( InvocationTargetException e ) {
             assertSame(e.getCause().getClass(), MatrixDimensionException.class);
         }
@@ -194,27 +195,82 @@ public class CheckMatrixMultShape_DDRM {
     private void checkReshapeC(Method func,
                                int m_a , int n_a , int m_b , int n_b , int m_c , int n_c ,
                                boolean transA, boolean transB) throws IllegalAccessException {
-        DMatrixRMaj A,B;
-        DMatrixRMaj C = new DMatrixRMaj(m_c,n_c);
+        DMatrix A,B;
+        DMatrix C = createMatrix(getMatrixType(func,2),m_c,n_c);
 
         if( transA ) {
-            A = new DMatrixRMaj(n_a,m_a);
+            A = createMatrix(getMatrixType(func,0),n_a,m_a);
         } else {
-            A = new DMatrixRMaj(m_a,n_a);
+            A = createMatrix(getMatrixType(func,0),m_a,n_a);
         }
         if( transB ) {
-            B = new DMatrixRMaj(n_b,m_b);
+            B = createMatrix(getMatrixType(func,1),n_b,m_b);
         } else {
-            B = new DMatrixRMaj(m_b,n_b);
+            B = createMatrix(getMatrixType(func,1),m_b,n_b);
         }
 
         try {
-            TestMatrixMatrixMult_DDRM.invoke(func, 2.0, A, B, C);
-            assertEquals(m_a,C.numRows);
-            assertEquals(n_b,C.numCols);
+            invoke(func, 2.0, A, B, C);
+            assertEquals(m_a,C.getNumRows());
+            assertEquals(n_b,C.getNumCols());
         } catch( InvocationTargetException e ) {
-            fail("there should be no exception!");
+            e.printStackTrace();
+            fail("there should be no exception! ("+A.getNumRows()+"x"+A.getNumCols()+") ("+B.getNumRows()+"x"+B.getNumCols()+")");
         }
     }
 
+    public static Class getMatrixType( Method func , int index ) {
+        Class<?>[] parameters = func.getParameterTypes();
+        if( parameters[0] == double.class ) {
+            return parameters[index+1];
+        } else {
+            return parameters[index];
+        }
+    }
+
+    public static DMatrix invoke(Method func,
+                                 double alpha,
+                                 DMatrix a, DMatrix b, DMatrix c)
+            throws IllegalAccessException, InvocationTargetException {
+
+        Object[] arguments = new Object[func.getParameterTypes().length];
+        Object ret;
+        if( func.getParameterTypes().length == 3 ) {
+            arguments[0] = a;
+            arguments[1] = b;
+            arguments[2] = c;
+        } else {
+            if( func.getParameterTypes()[0] == double.class ) {
+                arguments[0] = alpha;
+                arguments[1] = a;
+                arguments[2] = b;
+                arguments[3] = c;
+            } else {
+                arguments[0] = a;
+                arguments[1] = b;
+                arguments[2] = c;
+            }
+        }
+
+        try {
+            ret = func.invoke(null, arguments);
+        } catch( IllegalArgumentException e ) {
+            for( Class pc : func.getParameterTypes() ) {
+                System.out.println(pc.getName());
+            }
+            throw e;
+        }
+
+        if( ret instanceof DMatrix )
+            return (DMatrix)ret;
+        return null;
+    }
+
+    public static DMatrix createMatrix( Class type , int rows , int cols ) {
+        if( type == DMatrixSparseCSC.class )
+            return new DMatrixSparseCSC(rows,cols);
+        else if( type == DMatrixRMaj.class )
+            return new DMatrixRMaj(rows,cols);
+        throw new RuntimeException("Unknown matrix type: "+type.getSimpleName());
+    }
 }

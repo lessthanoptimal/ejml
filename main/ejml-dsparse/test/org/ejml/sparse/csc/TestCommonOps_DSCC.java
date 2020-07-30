@@ -27,6 +27,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.sparse.csc.mult.CheckMatrixMultShape_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class TestCommonOps_DSCC {
 
-    private Random rand = new Random(234);
+    private final Random rand = new Random(234);
+
+    @Test
+    void checkShape() {
+        CheckMatrixMultShape_DSCC checkShape = new CheckMatrixMultShape_DSCC(CommonOps_DSCC.class);
+        checkShape.checkAll();
+    }
 
     @Test
     public void checkIndicesSorted() {

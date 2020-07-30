@@ -26,6 +26,8 @@ import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.ConvertFMatrixStruct;
 
 import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -534,5 +536,17 @@ public class UtilEjml {
         if (gwork == null) gwork = new FGrowArray();
         gwork.reshape(desired);
         return gwork.data;
+    }
+
+    public static boolean hasNullableArgument(Method func) {
+        Annotation[][] annotations = func.getParameterAnnotations();
+        if( annotations.length == 0)
+            return false;
+        Annotation[] lastArray = annotations[annotations.length-1];
+        if( lastArray.length == 0)
+            return false;
+
+        Annotation last = lastArray[lastArray.length-1];
+        return last.toString().contains("Nullable");
     }
 }

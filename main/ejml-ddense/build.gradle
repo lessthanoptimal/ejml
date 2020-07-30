@@ -1,5 +1,7 @@
 dependencies {
     compile project(':main:ejml-core')
+    generateCompile project(':main:ejml-core').sourceSets.generate.output
+    generateCompile project(':main:ejml-core')
     testCompile project(':main:ejml-experimental')
     testCompile project(':main:ejml-core').sourceSets.test.output
 }

@@ -58,7 +58,7 @@ subprojects {
 
         generate {
             java { srcDir 'generate' }
-            compileClasspath += sourceSets.main.runtimeClasspath
+//            compileClasspath += sourceSets.main.runtimeClasspath
         }
 
         benchmark {

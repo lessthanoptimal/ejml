@@ -124,7 +124,8 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
-        C.reshape(A.numRows,1);
+        if( A.numRows != C.getNumElements() )
+            throw new MatrixDimensionException("C is not compatible with A");
 
         if( A.numCols == 0 ) {
             return;
@@ -272,7 +273,8 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
-        C.reshape(A.numCols,1);
+        if( A.numCols != C.getNumElements() )
+            throw new MatrixDimensionException("C is not compatible with A");
 
         int cIndex = 0;
         for( int i = 0; i < A.numCols; i++ ) {
@@ -298,11 +300,6 @@ public class MatrixVectorMult_DDRM {
      */
     public static void multAddTransA_reorder(DMatrix1Row A , DMatrixD1 B , DMatrixD1 C )
     {
-        if( C.numCols != 1 ) {
-            throw new MatrixDimensionException("C is not a column vector");
-        } else if( C.numRows != A.numCols ) {
-            throw new MatrixDimensionException("C is not the expected length");
-        }
         if( B.numRows == 1 ) {
             if( A.numRows != B.numCols ) {
                 throw new MatrixDimensionException("A and B are not compatible");
@@ -314,8 +311,8 @@ public class MatrixVectorMult_DDRM {
         } else {
             throw new MatrixDimensionException("B is not a vector");
         }
-
-        C.reshape(A.numCols,1);
+        if( A.numCols != C.getNumElements() )
+            throw new MatrixDimensionException("C is not compatible with A");
 
         int indexA = 0;
         for( int j = 0; j < A.numRows; j++ ) {

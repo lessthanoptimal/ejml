@@ -27,7 +27,7 @@ package org.ejml;
 public class CodeGeneratorMisc {
 
     public final static String COPYRIGHT = "/*\n" +
-            " * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.\n" +
+            " * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.\n" +
             " *\n" +
             " * This file is part of Efficient Java Matrix Library (EJML).\n" +
             " *\n" +
