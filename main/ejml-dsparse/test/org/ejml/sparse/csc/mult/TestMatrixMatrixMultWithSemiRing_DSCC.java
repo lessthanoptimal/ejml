@@ -18,19 +18,22 @@
 
 package org.ejml.sparse.csc.mult;
 
+import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.ops.DSemiRing;
 import org.ejml.ops.DSemiRings;
 import org.ejml.sparse.csc.CommonOpsWithSemiRing_DSCC;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Random;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestMatrixMatrixMultWithSemiRing_DSCC {
     DMatrixSparseCSC inputMatrix;
@@ -68,6 +71,50 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
         assertEquals(expected[1], found.get(0, 2));
     }
 
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("sparseMatrixSources")
+    public void mult_AT_B(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+        DSemiRing semiRing = DSemiRings.PLUS_TIMES;
+
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.multTransA(matrix, otherMatrix, null, semiRing, null, null);
+        DMatrixSparseCSC expected = CommonOps_DSCC.multTransA(matrix, otherMatrix, null, null, null);
+
+        EjmlUnitTests.assertEquals(expected, found);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("sparseMatrixSources")
+    public void mult_A_BT(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+        DSemiRing semiRing = DSemiRings.PLUS_TIMES;
+
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.multTransB(matrix, otherMatrix, null, semiRing, null, null);
+        DMatrixSparseCSC expected = CommonOps_DSCC.multTransB(matrix, otherMatrix, null, null, null);
+
+        EjmlUnitTests.assertEquals(expected, found);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("sparseMatrixSources")
+    public void elementMult(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+        DSemiRing semiRing = DSemiRings.PLUS_TIMES;
+
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, null, semiRing, null, null);
+        DMatrixSparseCSC expected = CommonOps_DSCC.elementMult(matrix, otherMatrix, null, null, null);
+
+        EjmlUnitTests.assertEquals(expected, found);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("sparseMatrixSources")
+    public void add(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+        DSemiRing semiRing = DSemiRings.PLUS_TIMES;
+
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.add(1, matrix, 1, otherMatrix, null, semiRing, null, null);
+        DMatrixSparseCSC expected = CommonOps_DSCC.add(1, matrix, 1, otherMatrix, null, null, null);
+
+        EjmlUnitTests.assertEquals(expected, found);
+    }
+
     private static Stream<Arguments> sparseVectorMatrixMultSources() {
         return Stream.of(
                 // expected entries for (0, 0) and (0, 2)
@@ -77,6 +124,18 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
                 Arguments.of("MAX, PLUS", DSemiRings.MAX_PLUS, new double[]{0.7, 1.1}),
                 Arguments.of("MIN, TIMES", DSemiRings.MIN_TIMES, new double[]{0.1, 0.2}),
                 Arguments.of("MAX, MIN", DSemiRings.MAX_MIN, new double[]{0.2, 0.5})
+        );
+    }
+
+    private static Stream<Arguments> sparseMatrixSources() {
+        Random rand = new Random(42);
+        DMatrixSparseCSC sparseMatrix = RandomMatrices_DSCC.rectangle(10, 10, 15, rand);
+        DMatrixSparseCSC denseMatrix = RandomMatrices_DSCC.rectangle(10, 10, 90, rand);
+        return Stream.of(
+                Arguments.of("Both really sparse", sparseMatrix, sparseMatrix),
+                Arguments.of("Sparse, dense", sparseMatrix, denseMatrix),
+                Arguments.of("dense, sparse", denseMatrix, sparseMatrix),
+                Arguments.of("dense, dense", denseMatrix, denseMatrix)
         );
     }
 }
