@@ -25,7 +25,6 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.ConvertFMatrixStruct;
 
-import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -74,7 +73,7 @@ public class UtilEjml {
      * @param cols Desired number of cols
      * @return modified matrix or new matrix
      */
-    public static DMatrixRMaj reshapeOrDeclare(@Nullable DMatrixRMaj a , int rows, int cols ) {
+    public static DMatrixRMaj reshapeOrDeclare(DMatrixRMaj a , int rows, int cols ) {
         if( a == null )
             return new DMatrixRMaj(rows,cols);
         else if( a.numRows != rows || a.numCols != cols )
@@ -89,7 +88,7 @@ public class UtilEjml {
      * @param cols Desired number of cols
      * @return modified matrix or new matrix
      */
-    public static FMatrixRMaj reshapeOrDeclare(@Nullable FMatrixRMaj a , int rows, int cols ) {
+    public static FMatrixRMaj reshapeOrDeclare(FMatrixRMaj a , int rows, int cols ) {
         if( a == null )
             return new FMatrixRMaj(rows,cols);
         else if( a.numRows != rows || a.numCols != cols )
@@ -104,7 +103,7 @@ public class UtilEjml {
      * @param cols Desired number of cols
      * @return modified matrix or new matrix
      */
-    public static BMatrixRMaj reshapeOrDeclare(@Nullable BMatrixRMaj a , int rows, int cols ) {
+    public static BMatrixRMaj reshapeOrDeclare(BMatrixRMaj a , int rows, int cols ) {
         if( a == null )
             return new BMatrixRMaj(rows,cols);
         else if( a.numRows != rows || a.numCols != cols )
@@ -118,7 +117,7 @@ public class UtilEjml {
      * @param reference (Input) Refernece matrix who's shape will be matched
      * @return modified matrix or new matrix
      */
-    public static <T extends ReshapeMatrix> T reshapeOrDeclare(@Nullable T target , T reference ) {
+    public static <T extends ReshapeMatrix> T reshapeOrDeclare(T target , T reference ) {
         if( target == null )
             return reference.createLike();
         else if( target.getNumRows() != reference.getNumRows() || target.getNumCols() != reference.getNumCols() )
@@ -132,7 +131,7 @@ public class UtilEjml {
      * @param reference (Input) Refernece matrix who's shape will be matched
      * @return modified matrix or new matrix
      */
-    public static <T extends ReshapeMatrix> T reshapeOrDeclare(@Nullable T target , T reference, int rows, int cols ) {
+    public static <T extends ReshapeMatrix> T reshapeOrDeclare(T target , T reference, int rows, int cols ) {
         if( target == null )
             return reference.create(rows,cols);
         else if( target.getNumRows() != rows || target.getNumCols() != cols )

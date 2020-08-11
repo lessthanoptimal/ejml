@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;
@@ -44,7 +43,7 @@ public class ImplCommonOps_DSCC {
      * @param C Storage for transposed 'a'.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , @Nullable IGrowArray gw ) {
+    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , IGrowArray gw ) {
         int []work = adjust(gw,A.numRows,A.numRows);
         C.reshape(A.numCols,A.numRows,A.nz_length);
 
@@ -92,7 +91,7 @@ public class ImplCommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           @Nullable IGrowArray gw, @Nullable DGrowArray gx)
+                           IGrowArray gw, DGrowArray gx)
     {
         double []x = adjust(gx,A.numRows);
         int []w = adjust(gw,A.numRows,A.numRows);
@@ -131,7 +130,7 @@ public class ImplCommonOps_DSCC {
      * @param gw workspace
      */
     public static void addColAppend(double alpha, DMatrixSparseCSC A, int colA, double beta, DMatrixSparseCSC B, int colB,
-                                    DMatrixSparseCSC C, @Nullable IGrowArray gw)
+                                    DMatrixSparseCSC C, IGrowArray gw)
     {
         if( A.numRows != B.numRows || A.numRows != C.numRows)
             throw new IllegalArgumentException("Number of rows in A, B, and C do not match");
@@ -177,7 +176,7 @@ public class ImplCommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx)
+                                    IGrowArray gw, DGrowArray gx)
     {
         double []x = adjust(gx,A.numRows);
         int []w = adjust(gw,A.numRows);
@@ -272,7 +271,7 @@ public class ImplCommonOps_DSCC {
      * @param B (Output) Symmetric matrix.
      * @param gw (Optional) Workspace. Can be null.
      */
-    public static void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable IGrowArray gw )
+    public static void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B , IGrowArray gw )
     {
         if( A.numCols != A.numRows )
             throw new IllegalArgumentException("Must be a lower triangular square matrix");

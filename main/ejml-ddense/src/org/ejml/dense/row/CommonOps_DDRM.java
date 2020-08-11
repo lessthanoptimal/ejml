@@ -38,7 +38,6 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 import org.ejml.ops.DUnaryOperator;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.*;
@@ -74,7 +73,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T mult(T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T mult(T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numRows,b.numCols);
         UtilEjml.checkSameInstance(a,output);
@@ -104,7 +103,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T mult(double alpha , T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T mult(double alpha , T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numRows,b.numCols);
         UtilEjml.checkSameInstance(a,output);
@@ -132,7 +131,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransA(T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T multTransA(T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numCols,b.numCols);
         UtilEjml.checkSameInstance(a,output);
@@ -169,7 +168,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransA(double alpha , T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T multTransA(double alpha , T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numCols,b.numCols);
         UtilEjml.checkSameInstance(a,output);
@@ -198,7 +197,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransB(T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T multTransB(T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numRows,b.numRows);
         UtilEjml.checkSameInstance(a,output);
@@ -226,7 +225,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransB(double alpha , T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T multTransB(double alpha , T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numRows,b.numRows);
         UtilEjml.checkSameInstance(a,output);
@@ -250,7 +249,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransAB(T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T multTransAB(T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numCols,b.numRows);
         UtilEjml.checkSameInstance(a,output);
@@ -285,7 +284,7 @@ public class CommonOps_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransAB(double alpha , T a , T b , @Nullable T output )
+    public static <T extends DMatrix1Row> T multTransAB(double alpha , T a , T b , T output )
     {
         output = reshapeOrDeclare(output,a,a.numCols,b.numRows);
         UtilEjml.checkSameInstance(a,output);
@@ -335,7 +334,7 @@ public class CommonOps_DDRM {
      * @param a The matrix being multiplied. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multInner(T a , @Nullable T output )
+    public static <T extends DMatrix1Row> T multInner(T a , T output )
     {
         output = reshapeOrDeclare(output,a,a.numCols, a.numCols);
 
@@ -362,7 +361,7 @@ public class CommonOps_DDRM {
      * @param a The matrix being multiplied. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multOuter(T a , @Nullable T output )
+    public static <T extends DMatrix1Row> T multOuter(T a , T output )
     {
         output = reshapeOrDeclare(output,a,a.numRows,a.numRows);
         MatrixMultProduct_DDRM.outer(a, output);
@@ -679,7 +678,7 @@ public class CommonOps_DDRM {
      * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static DMatrixRMaj transpose(DMatrixRMaj A, @Nullable DMatrixRMaj A_tran)
+    public static DMatrixRMaj transpose(DMatrixRMaj A, DMatrixRMaj A_tran)
     {
         A_tran = reshapeOrDeclare(A_tran, A.numCols, A.numRows);
 
@@ -1562,7 +1561,7 @@ public class CommonOps_DDRM {
      * @param B The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrixD1> T elementMult(T A , T B , @Nullable T output )
+    public static <T extends DMatrixD1> T elementMult(T A , T B , T output )
     {
         checkSameShape(A,B,true);
         output = reshapeOrDeclare(output,A);
@@ -1604,7 +1603,7 @@ public class CommonOps_DDRM {
      * @param B The right matrix in the division operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrixD1> T elementDiv(T A , T B , @Nullable T output )
+    public static <T extends DMatrixD1> T elementDiv(T A , T B , T output )
     {
         checkSameShape(A,B,true);
         output = reshapeOrDeclare(output,A);
@@ -1672,7 +1671,7 @@ public class CommonOps_DDRM {
      * @param B right side
      * @param output output (modified)
      */
-    public static <T extends DMatrixD1> T elementPower(T A , T B , @Nullable T output ) {
+    public static <T extends DMatrixD1> T elementPower(T A , T B , T output ) {
         checkSameShape(A,B,true);
         output = reshapeOrDeclare(output,A);
 
@@ -1694,7 +1693,7 @@ public class CommonOps_DDRM {
      * @param B right side
      * @param output output (modified)
      */
-    public static <T extends DMatrixD1> T elementPower(double a , T B , @Nullable T output )
+    public static <T extends DMatrixD1> T elementPower(double a , T B , T output )
     {
         output = reshapeOrDeclare(output,B);
 
@@ -1716,7 +1715,7 @@ public class CommonOps_DDRM {
      * @param b right scalar
      * @param output output (modified)
      */
-    public static <T extends DMatrixD1> T elementPower(T A , double b, @Nullable T output ) {
+    public static <T extends DMatrixD1> T elementPower(T A , double b, T output ) {
         output = reshapeOrDeclare(output,A);
 
         int size = A.getNumElements();
@@ -1737,7 +1736,7 @@ public class CommonOps_DDRM {
      * @param output (input/output) Storage for results. can be null. (modified)
      * @return The results
      */
-    public static <T extends DMatrixD1> T elementLog(T A , @Nullable T output )
+    public static <T extends DMatrixD1> T elementLog(T A , T output )
     {
         output = reshapeOrDeclare(output,A);
 
@@ -1759,7 +1758,7 @@ public class CommonOps_DDRM {
      * @param output (input/output) Storage for results. can be null. (modified)
      * @return The results
      */
-    public static <T extends DMatrixD1> T elementExp(T A , @Nullable T output ) {
+    public static <T extends DMatrixD1> T elementExp(T A , T output ) {
         output = reshapeOrDeclare(output,A);
 
         int size = A.getNumElements();
@@ -2035,7 +2034,7 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the maximum of each column
      */
-    public static DMatrixRMaj maxCols(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj maxCols(DMatrixRMaj input , DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, 1, input.numCols);
 
         for( int cols = 0; cols < input.numCols; cols++ ) {
@@ -2113,7 +2112,7 @@ public class CommonOps_DDRM {
      * @param output (output) A Matrix where the results are stored. Can be null. Modified.
      * @return The results.
      */
-    public static <T extends DMatrixD1> T add(final T a , final T b , @Nullable T output )
+    public static <T extends DMatrixD1> T add(final T a , final T b , T output )
     {
         UtilEjml.checkSameShape(a,b, true);
         output = UtilEjml.reshapeOrDeclare(output, a);
@@ -2144,7 +2143,7 @@ public class CommonOps_DDRM {
      * @param output (output) A Matrix where the results are stored. Can be null. Modified.
      * @return The results.
      */
-    public static <T extends DMatrixD1> T add(T a , double beta , T b , @Nullable T output )
+    public static <T extends DMatrixD1> T add(T a , double beta , T b , T output )
     {
         UtilEjml.checkSameShape(a,b, true);
         output = UtilEjml.reshapeOrDeclare(output, a);
@@ -2176,7 +2175,7 @@ public class CommonOps_DDRM {
      * @param output (output) A Matrix where the results are stored. Can be null. Modified.
      * @return The results.
      */
-    public static <T extends DMatrixD1> T add(double alpha , T a , double beta , T b , @Nullable T output )
+    public static <T extends DMatrixD1> T add(double alpha , T a , double beta , T b , T output )
     {
         UtilEjml.checkSameShape(a,b, true);
         output = UtilEjml.reshapeOrDeclare(output, a);
@@ -2275,7 +2274,7 @@ public class CommonOps_DDRM {
      * @param output (output) Storage for results. Can be null. Modified.
      * @return The resulting matrix
      */
-    public static <T extends DMatrixD1> T subtract(T a , double val , @Nullable T output ) {
+    public static <T extends DMatrixD1> T subtract(T a , double val , T output ) {
         output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
@@ -2299,7 +2298,7 @@ public class CommonOps_DDRM {
      * @param output (output) Storage for results. Can be null. Modified.
      * @return The resulting matrix
      */
-    public static <T extends DMatrixD1> T subtract(double val , T a , @Nullable T output ) {
+    public static <T extends DMatrixD1> T subtract(double val , T a , T output ) {
         output = UtilEjml.reshapeOrDeclare(output, a);
 
         final int length = a.getNumElements();
@@ -2346,7 +2345,7 @@ public class CommonOps_DDRM {
      * @param output (output) A Matrix. Can be null. Modified.
      * @return The resulting matrix
      */
-    public static <T extends DMatrixD1> T subtract(T a, T b, @Nullable T output)
+    public static <T extends DMatrixD1> T subtract(T a, T b, T output)
     {
         UtilEjml.checkSameShape(a,b,true);
         output = UtilEjml.reshapeOrDeclare(output, a);
@@ -2506,7 +2505,7 @@ public class CommonOps_DDRM {
      * @param output Where the results are stored. Modified. Can be null.
      * @return The resulting matrix
      */
-    public static <T extends DMatrixD1> T divide(T input , double alpha  , @Nullable T output)
+    public static <T extends DMatrixD1> T divide(T input , double alpha  , T output)
     {
         output = UtilEjml.reshapeOrDeclare(output, input);
 
@@ -2546,7 +2545,7 @@ public class CommonOps_DDRM {
      *
      * @param input A matrix. Modified.
      */
-    public static <T extends DMatrixD1> T changeSign(T input , @Nullable T output)
+    public static <T extends DMatrixD1> T changeSign(T input , T output)
     {
         output = UtilEjml.reshapeOrDeclare(output, input);
 
@@ -2981,7 +2980,7 @@ public class CommonOps_DDRM {
      * @param output (Output) Matrix. Can be same instance as A. Modified.
      * @return The output matrix
      */
-    public static DMatrixRMaj apply(DMatrixRMaj input, DUnaryOperator func, @Nullable DMatrixRMaj output) {
+    public static DMatrixRMaj apply(DMatrixRMaj input, DUnaryOperator func, DMatrixRMaj output) {
         output = UtilEjml.reshapeOrDeclare(output,input.numRows, input.numCols);
 
         for (int i = 0; i < input.data.length; i++) {

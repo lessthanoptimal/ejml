@@ -28,7 +28,6 @@ import org.ejml.dense.row.linsol.svd.SolveNullSpaceSvd_DDRM;
 import org.ejml.interfaces.SolveNullSpace;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 
@@ -160,7 +159,7 @@ public class SingularOps_DDRM {
      * @param sv (Output) sorted list of singular values. Can be null.
      * @param Vt (Output) Storage for transposed V. Can be null.
      */
-    public static boolean svd(DMatrixRMaj A, @Nullable DMatrixRMaj U , DGrowArray sv , @Nullable DMatrixRMaj Vt ) {
+    public static boolean svd(DMatrixRMaj A, DMatrixRMaj U , DGrowArray sv , DMatrixRMaj Vt ) {
 
         boolean needU = U != null;
         boolean needV = Vt != null;

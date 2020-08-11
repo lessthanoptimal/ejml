@@ -24,7 +24,6 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;
@@ -44,7 +43,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                            @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+                            IGrowArray gw, DGrowArray gx )
     {
         double []x = adjust(gx, A.numRows);
         int []w = adjust(gw, A.numRows, A.numRows);
@@ -95,7 +94,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+                                  IGrowArray gw, DGrowArray gx )
     {
         double []x = adjust(gx, A.numRows);
         int []w = adjust(gw, A.numRows, A.numRows);
@@ -157,7 +156,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+                                  IGrowArray gw, DGrowArray gx ) {
         if( !B.isIndicesSorted() )
             throw new IllegalArgumentException("B must have its indices sorted.");
         else if( !CommonOps_DSCC.checkIndicesSorted(B)) {
@@ -433,7 +432,7 @@ public class ImplSparseSparseMult_DSCC {
      * @param gx (Optional) Workspace
      */
     public static void innerProductLower(DMatrixSparseCSC A , DMatrixSparseCSC B ,
-                                         @Nullable IGrowArray gw, @Nullable DGrowArray gx )
+                                         IGrowArray gw, DGrowArray gx )
     {
         double []x = adjust(gx, A.numRows);
         int []w = adjust(gw, A.numRows, A.numRows);

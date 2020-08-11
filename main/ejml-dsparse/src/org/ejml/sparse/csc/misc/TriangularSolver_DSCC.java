@@ -24,8 +24,6 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-import javax.annotation.Nullable;
-
 /**
  * @author Peter Abeles
  */
@@ -117,8 +115,8 @@ public class TriangularSolver_DSCC {
      */
     public static void solveTran(DMatrixSparseCSC G, boolean lower,
                                  DMatrixSparseCSC B, DMatrixSparseCSC X,
-                                 @Nullable int pinv[] ,
-                                 @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
+                                 int pinv[] ,
+                                 DGrowArray g_x, IGrowArray g_xi, IGrowArray g_w)
     {
         double[] x = UtilEjml.adjust(g_x,G.numRows);
 
@@ -173,7 +171,7 @@ public class TriangularSolver_DSCC {
     }
 
     private static int solveTranColumn(DMatrixSparseCSC G, double[] x, int[] xi, int[] w,
-                                       @Nullable int pinv[], int x_nz_count, int col) {
+                                       int pinv[], int x_nz_count, int col) {
         int idxG0 = G.col_idx[col];
         int idxG1 = G.col_idx[col+1];
 
@@ -216,8 +214,8 @@ public class TriangularSolver_DSCC {
      */
     public static void solve(DMatrixSparseCSC G, boolean lower,
                              DMatrixSparseCSC B, DMatrixSparseCSC X,
-                             @Nullable int pinv[] ,
-                             @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
+                             int pinv[] ,
+                             DGrowArray g_x, IGrowArray g_xi, IGrowArray g_w)
     {
         double[] x = UtilEjml.adjust(g_x,G.numRows);
         if( g_xi == null ) g_xi = new IGrowArray();
@@ -262,7 +260,7 @@ public class TriangularSolver_DSCC {
      */
     public static int solveColB(DMatrixSparseCSC G, boolean lower,
                                 DMatrixSparseCSC B, int colB, double x[],
-                                @Nullable int pinv[], @Nullable IGrowArray g_xi, int []w) {
+                                int pinv[], IGrowArray g_xi, int []w) {
 
         // NOTE x's length is the number of rows in G and not cols. This might be more than needed if a tall matrix,
         // but a change to remove it would require more thought
@@ -431,7 +429,7 @@ public class TriangularSolver_DSCC {
      * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
      * @param gwork  (Optional) Internal workspace.  Can be null.
      */
-    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int parent[], @Nullable IGrowArray gwork) {
+    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int parent[], IGrowArray gwork) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -495,7 +493,7 @@ public class TriangularSolver_DSCC {
      * @param post   (Output) Postordering permutation.
      * @param gwork  (Optional) Internal workspace. Can be null
      */
-    public static void postorder(int parent[], int N, int post[], @Nullable IGrowArray gwork) {
+    public static void postorder(int parent[], int N, int post[], IGrowArray gwork) {
         if (parent.length < N)
             throw new IllegalArgumentException("parent must be at least of length N");
         if (post.length < N)

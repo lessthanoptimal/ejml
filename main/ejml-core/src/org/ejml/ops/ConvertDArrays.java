@@ -22,7 +22,6 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrixRMaj;
 
-import javax.annotation.Nullable;
 
 /**
  * Converts 1D and 2D arrays to and from EJML data types
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
  * @author Peter Abeles
  */
 public class ConvertDArrays {
-    public static DMatrixRMaj convert(double[][]src , @Nullable DMatrixRMaj dst ) {
+    public static DMatrixRMaj convert(double[][]src , DMatrixRMaj dst ) {
         int rows = src.length;
         if( rows == 0 )
             throw new IllegalArgumentException("Rows of src can't be zero");
@@ -59,7 +58,7 @@ public class ConvertDArrays {
         return dst;
     }
 
-//    public static DMatrixSparseCSC convert(double[][]src , @Nullable DMatrixSparseCSC dst ) {
+//    public static DMatrixSparseCSC convert(double[][]src , DMatrixSparseCSC dst ) {
 //        int rows = src.length;
 //        if( rows == 0 )
 //            throw new IllegalArgumentException("Rows of src can't be zero");
