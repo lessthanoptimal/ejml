@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;

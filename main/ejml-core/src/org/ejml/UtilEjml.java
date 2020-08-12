@@ -25,7 +25,7 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.ConvertFMatrixStruct;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;

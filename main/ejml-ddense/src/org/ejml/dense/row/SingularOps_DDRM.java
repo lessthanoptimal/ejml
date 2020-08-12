@@ -28,7 +28,7 @@ import org.ejml.dense.row.linsol.svd.SolveNullSpaceSvd_DDRM;
 import org.ejml.interfaces.SolveNullSpace;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 

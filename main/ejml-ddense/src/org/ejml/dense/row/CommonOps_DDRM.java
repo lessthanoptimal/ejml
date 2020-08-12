@@ -38,7 +38,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
 import org.ejml.ops.DUnaryOperator;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.*;

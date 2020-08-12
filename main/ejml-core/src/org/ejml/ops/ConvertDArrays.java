@@ -22,7 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrixRMaj;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Converts 1D and 2D arrays to and from EJML data types

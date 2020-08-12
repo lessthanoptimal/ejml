@@ -34,7 +34,7 @@ import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.*;
