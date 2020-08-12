@@ -22,8 +22,8 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.ops.DSemiRing;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;
@@ -38,11 +38,12 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * Performs matrix addition:<br>
      * C = A + B
      *
-     * @param A  Matrix
-     * @param B  Matrix
-     * @param C  Output matrix.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param A        Matrix
+     * @param B        Matrix
+     * @param C        Output matrix.
+     * @param semiRing Semi-Ring to define + and *
+     * @param gw       (Optional) Storage for internal workspace.  Can be null.
+     * @param gx       (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                            @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
@@ -73,12 +74,13 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * Adds the results of adding a column in A and B as a new column in C.<br>
      * C(:,end+1) = A(:,colA) + B(:,colB)
      *
-     * @param A    matrix
-     * @param colA column in A
-     * @param B    matrix
-     * @param colB column in B
-     * @param C    Column in C
-     * @param gw   workspace
+     * @param A        matrix
+     * @param colA     column in A
+     * @param B        matrix
+     * @param colB     column in B
+     * @param C        Column in C
+     * @param semiRing Semi-Ring to define + and *
+     * @param gw       workspace
      */
     public static void addColAppend(DMatrixSparseCSC A, int colA, DMatrixSparseCSC B, int colB,
                                     DMatrixSparseCSC C, DSemiRing semiRing, @Nullable IGrowArray gw) {
@@ -119,11 +121,12 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * Performs element-wise multiplication:<br>
      * C_ij = A_ij * B_ij
      *
-     * @param A  (Input) Matrix
-     * @param B  (Input) Matrix
-     * @param C  (Output) Matrix.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param A        (Input) Matrix
+     * @param B        (Input) Matrix
+     * @param C        (Output) Matrix.
+     * @param semiRing Semi-Ring to define + and *
+     * @param gw       (Optional) Storage for internal workspace.  Can be null.
+     * @param gx       (Optional) Storage for internal workspace.  Can be null.
      */
     public static void elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx) {

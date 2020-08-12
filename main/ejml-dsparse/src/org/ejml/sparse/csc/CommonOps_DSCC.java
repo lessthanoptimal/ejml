@@ -138,7 +138,7 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Not modified.
-     * @param output (Output) Storage for results.  Data length is increased if increased if insufficient.
+     * @param output (Output) Storage for results.  Data length is increased if insufficient.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
@@ -172,7 +172,7 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Value not modified but indicies will be sorted if not sorted already.
-     * @param output (Output) Storage for results.  Data length is increased if increased if insufficient.
+     * @param output (Output) Storage for results.  Data length is increased if insufficient.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
@@ -1997,4 +1997,3 @@ public class CommonOps_DSCC {
         return output;
     }
 }
-

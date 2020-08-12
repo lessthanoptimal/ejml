@@ -30,11 +30,12 @@ public class MatrixVectorMultWithSemiRing_DSCC {
     /**
      * c = A*b
      *
-     * @param A       (Input) Matrix
-     * @param b       (Input) vector
-     * @param offsetB (Input) first index in vector b
-     * @param c       (Output) vector
-     * @param offsetC (Output) first index in vector c
+     * @param A        (Input) Matrix
+     * @param b        (Input) vector
+     * @param offsetB  (Input) first index in vector b
+     * @param c        (Output) vector
+     * @param offsetC  (Output) first index in vector c
+     * @param semiRing Semi-Ring to define + and *
      */
     public static void mult(DMatrixSparseCSC A,
                             double b[], int offsetB,
@@ -55,7 +56,7 @@ public class MatrixVectorMultWithSemiRing_DSCC {
      * @param offsetB  (Input) first index in vector b
      * @param c        (Output) vector
      * @param offsetC  (Output) first index in vector c
-     * @param semiRing
+     * @param semiRing Semi-Ring to define + and *
      */
     public static void multAdd(DMatrixSparseCSC A,
                                double[] b, int offsetB,
@@ -80,11 +81,12 @@ public class MatrixVectorMultWithSemiRing_DSCC {
     /**
      * c = a<sup>T</sup>*B
      *
-     * @param a       (Input) vector
-     * @param offsetA Input) first index in vector a
-     * @param B       (Input) Matrix
-     * @param c       (Output) vector
-     * @param offsetC (Output) first index in vector c
+     * @param a        (Input) vector
+     * @param offsetA  Input) first index in vector a
+     * @param B        (Input) Matrix
+     * @param c        (Output) vector
+     * @param offsetC  (Output) first index in vector c
+     * @param semiRing Semi-Ring to define + and *
      */
     public static void mult(double a[], int offsetA,
                             DMatrixSparseCSC B,
@@ -118,6 +120,7 @@ public class MatrixVectorMultWithSemiRing_DSCC {
      * @param B       (Input) Matrix
      * @param c       (Output) vector
      * @param offsetC (Output) first index in vector c
+     * @param semiRing Semi-Ring to define + and *
      */
     public static double innerProduct(double a[], int offsetA,
                                       DMatrixSparseCSC B,
