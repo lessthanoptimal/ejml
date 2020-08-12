@@ -18,8 +18,13 @@
 
 package org.ejml.ops;
 
+/**
+ * An algebraic structure with a single associative binary operation and an identity element
+ */
 public class DMonoid {
-    // possible re-interpreting 0
+    /**
+     * neutral-element/identity for `func`
+     */
     public final double id;
     public final DBinaryOperator func;
 

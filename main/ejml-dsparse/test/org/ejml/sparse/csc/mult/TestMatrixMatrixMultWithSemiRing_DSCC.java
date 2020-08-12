@@ -59,7 +59,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseVectorMatrixMultSources")
-    public void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
+    void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following outgoing edges of source nodes
         DMatrixSparseCSC vector = new DMatrixSparseCSC(1, 7);
         vector.set(0, 3, 0.5);
@@ -73,7 +73,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")
-    public void mult_AT_B(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+    void mult_AT_B(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
         DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.multTransA(matrix, otherMatrix, null, semiRing, null, null);
@@ -84,7 +84,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")
-    public void mult_A_BT(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+    void mult_A_BT(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
         DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.multTransB(matrix, otherMatrix, null, semiRing, null, null);
@@ -95,7 +95,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")
-    public void elementMult(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+    void elementMult(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
         DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, null, semiRing, null, null);
@@ -106,7 +106,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")
-    public void add(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+    void add(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
         DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.add(1, matrix, 1, otherMatrix, null, semiRing, null, null);
@@ -118,7 +118,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
     private static Stream<Arguments> sparseVectorMatrixMultSources() {
         return Stream.of(
                 // expected entries for (0, 0) and (0, 2)
-                Arguments.of("Plus, Times", DSemiRings.PLUS_TIMES, new double[]{0.1, 0.5}),
+                Arguments.of("PLUS, TIMES", DSemiRings.PLUS_TIMES, new double[]{0.1, 0.5}),
                 Arguments.of("OR, AND", DSemiRings.OR_AND, new double[]{1, 1}),
                 Arguments.of("MIN, PLUS", DSemiRings.MIN_PLUS, new double[]{0.7, 0.9}),
                 Arguments.of("MAX, PLUS", DSemiRings.MAX_PLUS, new double[]{0.7, 1.1}),
@@ -129,13 +129,15 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     private static Stream<Arguments> sparseMatrixSources() {
         Random rand = new Random(42);
+        Random otherRandom = new Random(1337);
         DMatrixSparseCSC sparseMatrix = RandomMatrices_DSCC.rectangle(10, 10, 15, rand);
         DMatrixSparseCSC denseMatrix = RandomMatrices_DSCC.rectangle(10, 10, 90, rand);
+
         return Stream.of(
-                Arguments.of("Both really sparse", sparseMatrix, sparseMatrix),
-                Arguments.of("Sparse, dense", sparseMatrix, denseMatrix),
+                Arguments.of("Both really sparse", sparseMatrix, RandomMatrices_DSCC.rectangle(10, 10, 15, otherRandom)),
+                Arguments.of("Sparse, denseCSC", sparseMatrix, denseMatrix),
                 Arguments.of("dense, sparse", denseMatrix, sparseMatrix),
-                Arguments.of("dense, dense", denseMatrix, denseMatrix)
+                Arguments.of("Both denseCSC", denseMatrix, RandomMatrices_DSCC.rectangle(10, 10, 90, otherRandom))
         );
     }
 }

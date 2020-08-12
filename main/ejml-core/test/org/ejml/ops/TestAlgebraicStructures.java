@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestAlgebraicStructures {
 
     @Test
-    public void testPreDefinedMonoids() {
+    void preDefinedMonoids() {
         assertEquals(0, DMonoids.AND.func.apply(20, 0));
         assertEquals(0, DMonoids.AND.func.apply(0, 20));
         assertEquals(0, DMonoids.AND.func.apply(0, 0));

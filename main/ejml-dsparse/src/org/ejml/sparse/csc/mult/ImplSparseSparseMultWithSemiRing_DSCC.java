@@ -24,8 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.ops.DSemiRing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.adjust;
 
@@ -201,7 +200,7 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
     }
 
     /**
-     * Performs the performing operation x = x + A(:,i)*alpha
+     * Performs the operation x = x + A(:,i)*alpha
      *
      * <p>NOTE: This is the same as cs_scatter() in csparse.</p>
      */

@@ -203,7 +203,7 @@ public class ImplSparseSparseMult_DSCC {
     }
 
     /**
-     * Performs the performing operation x = x + A(:,i)*alpha
+     * Performs the operation x = x + A(:,i)*alpha
      *
      * <p>NOTE: This is the same as cs_scatter() in csparse.</p>
      */

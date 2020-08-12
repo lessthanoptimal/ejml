@@ -55,45 +55,33 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("vectorMatrixMultSources")
-    public void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
+    void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following outgoing edges of source nodes
-        double v[] = new double[7];
+        double[] v = new double[7];
         Arrays.fill(v, semiRing.add.id);
         v[3] = 0.5;
         v[5] = 0.6;
 
-        System.out.println("input vector = " + Arrays.toString(v));
-
-        //input.print();
-
-        double found[] = new double[7];
+        double[] found = new double[7];
 
         MatrixVectorMultWithSemiRing_DSCC.mult(v, inputMatrix, found, semiRing);
 
-        System.out.println("found = " + Arrays.toString(found));
-        System.out.println("expected = " + Arrays.toString(expected));
         assertTrue(Arrays.equals(found, expected));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("matrixVectorMultSources")
-    public void mult_A_v(String desc, DSemiRing semiRing, double[] expected) {
+    void mult_A_v(String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following incoming edges of source nodes
-        double v[] = new double[7];
+        double[] v = new double[7];
         Arrays.fill(v, semiRing.add.id);
         v[3] = 0.5;
         v[4] = 0.6;
 
-        System.out.println("input vector = " + Arrays.toString(v));
-
-        //input.print();
-
-        double found[] = new double[7];
+        double[] found = new double[7];
 
         MatrixVectorMultWithSemiRing_DSCC.mult(inputMatrix, v, found, semiRing);
 
-        System.out.println("found = " + Arrays.toString(found));
-        System.out.println("expected = " + Arrays.toString(expected));
         assertTrue(Arrays.equals(found, expected));
     }
 
@@ -115,7 +103,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     private static Stream<Arguments> matrixVectorMultSources() {
         return Stream.of(
-                Arguments.of("Plus, Times", DSemiRings.PLUS_TIMES, new double[]{0.5, 0.6, 0, 0, 0, 0, 1.1}),
+                Arguments.of("PLUS, TIMES", DSemiRings.PLUS_TIMES, new double[]{0.5, 0.6, 0, 0, 0, 0, 1.1}),
                 Arguments.of("OR, AND", DSemiRings.OR_AND, new double[]{1, 1, 0, 0, 0, 0, 1}),
                 Arguments.of("MIN, PLUS", DSemiRings.MIN_PLUS,
                         new double[]{1.5, 1.6, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, 1.5})

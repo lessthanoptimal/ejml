@@ -18,6 +18,9 @@
 
 package org.ejml.ops;
 
+/**
+ * An algebraic structure, defined over the `doubles` by two monoids + and *, called addition and multiplication.
+ */
 public class DSemiRing {
     public final DMonoid add;
     public final DMonoid mult;
