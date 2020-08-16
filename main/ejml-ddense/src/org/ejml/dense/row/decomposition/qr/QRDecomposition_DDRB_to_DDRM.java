@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
+import javax.annotation.Nullable;
+
 
 /**
  * Wrapper that allows {@link QRDecomposition}(DMatrixRBlock) to be used
@@ -42,7 +44,7 @@ public class QRDecomposition_DDRB_to_DDRM
     }
 
     @Override
-    public DMatrixRMaj getQ(DMatrixRMaj Q, boolean compact) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q, boolean compact) {
 
         int minLength = Math.min(Ablock.numRows,Ablock.numCols);
         if( Q == null  ) {
@@ -69,7 +71,7 @@ public class QRDecomposition_DDRB_to_DDRM
     }
 
     @Override
-    public DMatrixRMaj getR(DMatrixRMaj R, boolean compact) {
+    public DMatrixRMaj getR(@Nullable DMatrixRMaj R, boolean compact) {
         DMatrixRBlock Rblock;
 
         Rblock = ((QRDecompositionHouseholder_DDRB)alg).getR(null,compact);

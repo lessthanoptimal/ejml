@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.data;
 
 /**
+ * Specifies that type of data structure a matrix is encoded with.
+ *
  * @author Peter Abeles
  */
 public enum MatrixType {
@@ -29,23 +31,23 @@ public enum MatrixType {
     CDRM(false,true,32,CMatrixRMaj.class),
     DSCC(true,false,64,DMatrixSparseCSC.class),
     FSCC(true,false,32,FMatrixSparseCSC.class),
-    ZSCC(false,false,64,null),
-    CSCC(false,false,32,null),
+    ZSCC(false,false,64,Object.class),
+    CSCC(false,false,32,Object.class),
     DTRIPLET(false,false,64,DMatrixSparseTriplet.class),
     FTRIPLET(false,false,64,FMatrixSparseTriplet.class),
-    UNSPECIFIED(false,false,0,null);
+    UNSPECIFIED(false,false,0,Object.class);
 
-    boolean fixed;
-    boolean dense;
-    boolean real;
-    int bits;
-    Class classType;
+    final boolean fixed;
+    final boolean dense;
+    final boolean real;
+    final int bits;
+    final Class<?> classType;
 
-    MatrixType(boolean real, boolean dense, int bits, Class type) {
+    MatrixType(boolean real, boolean dense, int bits, Class<?> type) {
         this(false,real,dense,bits,type);
     }
 
-    MatrixType(boolean fixed, boolean real, boolean dense, int bits, Class type ) {
+    MatrixType(boolean fixed, boolean real, boolean dense, int bits, Class<?> type ) {
         this.real = real;
         this.fixed = fixed;
         this.dense = dense;
@@ -53,7 +55,7 @@ public enum MatrixType {
         this.classType = type;
     }
 
-    public static MatrixType lookup( Class type ) {
+    public static MatrixType lookup( Class<?> type ) {
         if( type == DMatrixRMaj.class )
             return MatrixType.DDRM;
         else if( type == FMatrixRMaj.class )
@@ -131,8 +133,9 @@ public enum MatrixType {
             case FSCC: return new FMatrixSparseCSC(rows,cols);
 //            case ZSCC: return new ZMatrixSparseCSC(rows,cols);
 //            case CSCC: return new CMatrixSparseCSC(rows,cols);
+            default:
+                throw new RuntimeException("Unknown Matrix Type "+this);
         }
 
-        throw new RuntimeException("Unknown Matrix Type "+this);
     }
 }

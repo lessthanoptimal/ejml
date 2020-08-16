@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,6 +25,7 @@ import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F32;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class SimpleEVD <T extends SimpleBase>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
-    public T getEigenVector( int index ) {
+    public @Nullable T getEigenVector(int index ) {
         Matrix v = eig.getEigenVector(index);
         if( v == null )
             return null;

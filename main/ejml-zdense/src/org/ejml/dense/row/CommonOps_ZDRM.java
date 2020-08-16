@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,7 @@ import org.ejml.dense.row.misc.TransposeAlgs_ZDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_ZDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -1229,7 +1230,7 @@ public class CommonOps_ZDRM {
      * @param v Optional storage for columns.
      * @return An array of vectors.
      */
-    public static ZMatrixRMaj[] columnsToVector(ZMatrixRMaj A, ZMatrixRMaj[] v)
+    public static ZMatrixRMaj[] columnsToVector(ZMatrixRMaj A, @Nullable ZMatrixRMaj[] v)
     {
         ZMatrixRMaj[]ret;
         if( v == null || v.length < A.numCols ) {

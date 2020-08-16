@@ -39,6 +39,7 @@ public class LUDecompositionAlt_ZDRM extends LUDecompositionBase_ZDRM {
      * @param a The matrix that is to be decomposed.  Not modified.
      * @return true If the matrix can be decomposed and false if it can not.
      */
+    @Override
     public boolean decompose( ZMatrixRMaj a )
     {
         decomposeCommonInit(a);

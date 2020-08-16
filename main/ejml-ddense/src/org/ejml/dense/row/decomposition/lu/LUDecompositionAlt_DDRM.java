@@ -39,6 +39,7 @@ public class LUDecompositionAlt_DDRM extends LUDecompositionBase_DDRM {
      * @param a The matrix that is to be decomposed.  Not modified.
      * @return true If the matrix can be decomposed and false if it can not.
      */
+    @Override
     public boolean decompose( DMatrixRMaj a )
     {
         decomposeCommonInit(a);

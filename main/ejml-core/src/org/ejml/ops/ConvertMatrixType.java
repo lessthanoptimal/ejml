@@ -20,13 +20,22 @@ package org.ejml.ops;
 
 import org.ejml.data.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * Contains a function to convert from one matrix type into another
  * 
  * @author Peter Abeles
  */
 public class ConvertMatrixType {
-    public static Matrix convert( Matrix matrix , MatrixType desired ) {
+    /**
+     * Converts a matrix of one data type into another data type. If no conversion is known then an exception
+     * is thrown.
+     *
+     * @return The converted matrix
+     */
+    @SuppressWarnings("MissingCasesInEnumSwitch")
+    public static @Nonnull Matrix convert(Matrix matrix , MatrixType desired ) {
         Matrix m=null;
 
         switch( matrix.getType() ) {
@@ -169,6 +178,10 @@ public class ConvertMatrixType {
                     } break;
                 }
             } break;
+        }
+
+        if( m == null ) {
+            throw new IllegalArgumentException("Unknown "+matrix.getType()+" "+desired);
         }
 
         return m;

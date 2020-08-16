@@ -151,6 +151,7 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
             super.householder(j);
         }
 
+        @Override
         protected void convertToColumnMajor(DMatrixRMaj A) {
             super.convertToColumnMajor(A);
         }

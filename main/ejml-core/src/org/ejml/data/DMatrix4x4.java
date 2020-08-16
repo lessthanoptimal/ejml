@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import javax.annotation.Generated;
 import org.ejml.ops.MatrixIO;
 
 /**
@@ -27,6 +28,7 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
+@Generated("org.ejml.data.GenerateMatrixFixedNxN")
 public class DMatrix4x4 implements DMatrixFixed {
 
     public double a11,a12,a13,a14;

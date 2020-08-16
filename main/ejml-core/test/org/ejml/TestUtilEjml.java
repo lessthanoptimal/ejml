@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("FloatingPointLiteralPrecision")
 public class TestUtilEjml {
 
     Random rand = new Random(23423);
@@ -38,10 +39,10 @@ public class TestUtilEjml {
 
     @Test
     public void max_array() {
-        double a[] = new double[]{-1,2,3,4,5,6,3,4,5,7,8,2,3,-5,-6};
+        double[] a = new double[]{-1,2,3,4,5,6,3,4,5,7,8,2,3,-5,-6};
 
-        assertTrue(8==UtilEjml.max(a,0,a.length));
-        assertTrue(5==UtilEjml.max(a,6,3));
+        assertEquals(UtilEjml.max(a, 0, a.length), 8);
+        assertEquals(UtilEjml.max(a, 6, 3), 5);
     }
 
     /**
@@ -119,7 +120,7 @@ public class TestUtilEjml {
 
     @Test
     public void shuffle() {
-        int m[] = new int[200];
+        int[] m = new int[200];
         for (int i = 0; i < m.length; i++) {
             m[i] = i;
         }

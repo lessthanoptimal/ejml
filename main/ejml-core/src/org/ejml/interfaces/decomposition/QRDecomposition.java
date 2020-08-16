@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -62,7 +64,7 @@ public interface QRDecomposition <T extends Matrix>
      * @param compact If true an m by n matrix is created, otherwise n by n.
      * @return The Q matrix.
      */
-    public T getQ( T Q, boolean compact);
+    T getQ(@Nullable T Q, boolean compact);
 
     /**
      * <p>
@@ -84,5 +86,5 @@ public interface QRDecomposition <T extends Matrix>
      * @param compact If true only the upper triangular elements are set
      * @return The R matrix.
      */
-    public T getR( T R, boolean compact);
+    T getR(@Nullable T R, boolean compact);
 }

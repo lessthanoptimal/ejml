@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,8 @@ import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  *
@@ -35,6 +37,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * @see CholeskyDecomposition_F64
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public abstract class CholeskyDecompositionCommon_ZDRM
         implements CholeskyDecomposition_F64<ZMatrixRMaj> {
 
@@ -57,7 +60,7 @@ public abstract class CholeskyDecompositionCommon_ZDRM
      *
      * @param lower should a lower or upper triangular matrix be used.
      */
-    public CholeskyDecompositionCommon_ZDRM(boolean lower) {
+    protected CholeskyDecompositionCommon_ZDRM(boolean lower) {
         this.lower = lower;
     }
 
@@ -111,7 +114,7 @@ public abstract class CholeskyDecompositionCommon_ZDRM
     protected abstract boolean decomposeUpper();
 
     @Override
-    public ZMatrixRMaj getT(ZMatrixRMaj T ) {
+    public ZMatrixRMaj getT(@Nullable ZMatrixRMaj T ) {
         // write the values to T
         if( lower ) {
             T = UtilDecompositons_ZDRM.checkZerosUT(T,n,n);

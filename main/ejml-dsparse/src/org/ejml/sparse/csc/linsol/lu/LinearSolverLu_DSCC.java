@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -90,20 +90,21 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     }
 
     @Override
+    @SuppressWarnings("NullAway") // Compiler isn't smart enough to realize null condition is impossible
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
 //        if( B.numCols != X.numCols || B.numRows != numRows || X.numRows != numCols) {
 //            throw new IllegalArgumentException("Unexpected matrix size");
 //        }
 
-        int pinv[] = decomposition.getPinv();
-        int q[] = decomposition.getReducePermutation();
+        int[] pinv = decomposition.getPinv();
         double[] x = adjust(gx,X.numRows);
         double[] b = adjust(gb,B.numRows);
 
         DMatrixSparseCSC L = decomposition.getL();
         DMatrixSparseCSC U = decomposition.getU();
 
-        boolean reduceFill = decomposition.getReduceFill() != null;
+        final boolean reduceFill = decomposition.isReduceFill();
+        final int[] q = reduceFill ? decomposition.getReducePermutation() : null;
 
         // process each column in X and B individually
         for (int colX = 0; colX < X.numCols; colX++) {
@@ -113,7 +114,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
             CommonOps_DSCC.permuteInv(pinv,b,x,X.numRows);
             TriangularSolver_DSCC.solveL(L,x);
             TriangularSolver_DSCC.solveU(U,x);
-            double d[];
+            double[] d;
             if( reduceFill ) {
                 CommonOps_DSCC.permute(q, x, b, X.numRows);
                 d = b;

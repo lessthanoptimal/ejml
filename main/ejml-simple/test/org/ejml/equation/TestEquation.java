@@ -192,7 +192,7 @@ public class TestEquation {
 
         DMatrixRMaj B = eq.lookupDDRM("B");
         assertNotSame(A.getMatrix(), B);
-        assertTrue(MatrixFeatures_DDRM.isEquals((DMatrixRMaj)A.getMatrix(), B));
+        assertTrue(MatrixFeatures_DDRM.isEquals(A.getMatrix(), B));
     }
 
     /**
@@ -200,9 +200,7 @@ public class TestEquation {
      */
     @Test
     public void assign_lazy_right() {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            new Equation().process("B=A");
-        });
+        Assertions.assertThrows(RuntimeException.class, () -> new Equation().process("B=A"));
     }
 
     /**
@@ -535,7 +533,7 @@ public class TestEquation {
     public void compile_assign_IntSequence_Case2() {
         Equation eq = new Equation();
 
-        String tests[] = new String[]{"2 3 4 5 6 7:9","2:4 5 6 7 8 9"};
+        String[] tests = new String[]{"2 3 4 5 6 7:9","2:4 5 6 7 8 9"};
 
         for( String s : tests ) {
             eq.process("a=" + s);
@@ -554,7 +552,7 @@ public class TestEquation {
     public void compile_assign_IntSequence_Case3() {
         Equation eq = new Equation();
 
-        String tests[] = new String[]{"2 3:5","2:4 5"};
+        String[] tests = new String[]{"2 3:5","2:4 5"};
 
         for( String s : tests ) {
             eq.process("a="+s);
@@ -894,7 +892,8 @@ public class TestEquation {
         assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
         assertEquals("A", t.word); t = t.next;
         assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals("BSD", t.word); t = t.next;
+        assertEquals("BSD", t.word);
+        assertNull(t.next);
     }
 
     @Test
@@ -914,7 +913,8 @@ public class TestEquation {
         assertEquals("A", t.word); t = t.next;
         assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
         assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol()); t = t.next;
-        assertEquals("BSD", t.word); t = t.next;
+        assertEquals("BSD", t.word);
+        assertNull(t.next);
     }
 
     @Test
@@ -936,7 +936,8 @@ public class TestEquation {
         assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
         assertEquals("BSD", t.word); t = t.next;
         assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals(934, ((VariableInteger) t.getVariable()).value); t = t.next;
+        assertEquals(934, ((VariableInteger) t.getVariable()).value);
+        assertNull(t.next);
     }
 
     @Test
@@ -1051,7 +1052,8 @@ public class TestEquation {
         assertSame(v0, t.getVariable()); t = t.next;
         assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
         assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol()); t = t.next;
-        assertSame(v1, t.getVariable()); t = t.next;
+        assertSame(v1, t.getVariable());
+        assertNull(t.next);
     }
 
     @Test
@@ -1086,11 +1088,10 @@ public class TestEquation {
     }
 
     private void checkForParseException( String code ) {
-        try {
+        Assertions.assertThrows(ParseError.class,()->{
             Equation eq = new Equation();
             eq.process(code);
-            fail("Should have generated parse error. "+code);
-        } catch( ParseError ignore ) {}
+        });
     }
 
     @Test

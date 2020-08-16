@@ -41,7 +41,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM {
 
     ReducedRowEchelonForm_F64 alg;
 
-    public GeneralReducedRowEchelonFormChecks_DDRM(ReducedRowEchelonForm_F64 alg) {
+    protected GeneralReducedRowEchelonFormChecks_DDRM(ReducedRowEchelonForm_F64 alg) {
         this.alg = alg;
     }
 

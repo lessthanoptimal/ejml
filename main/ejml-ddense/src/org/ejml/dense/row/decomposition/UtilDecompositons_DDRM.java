@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,8 @@ package org.ejml.dense.row.decomposition;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 
+import javax.annotation.Nullable;
+
 /**
  * Helper functions for generic decompsotions.
  *
@@ -28,7 +30,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
  */
 public class UtilDecompositons_DDRM {
 
-    public static DMatrixRMaj checkIdentity(DMatrixRMaj A, int numRows, int numCols) {
+    public static DMatrixRMaj checkIdentity(@Nullable DMatrixRMaj A, int numRows, int numCols) {
         if( A == null ) {
             return CommonOps_DDRM.identity(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -38,7 +40,7 @@ public class UtilDecompositons_DDRM {
         return A;
     }
 
-    public static DMatrixRMaj checkZeros(DMatrixRMaj A , int numRows , int numCols) {
+    public static DMatrixRMaj checkZeros(@Nullable DMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new DMatrixRMaj(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -52,7 +54,7 @@ public class UtilDecompositons_DDRM {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the lower triangular portion with zeros.
      */
-    public static DMatrixRMaj checkZerosLT(DMatrixRMaj A , int numRows , int numCols) {
+    public static DMatrixRMaj checkZerosLT(@Nullable DMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new DMatrixRMaj(numRows,numCols);
         }  else if( numRows != A.numRows || numCols != A.numCols ) {
@@ -74,7 +76,7 @@ public class UtilDecompositons_DDRM {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the upper triangular portion with zeros.
      */
-    public static DMatrixRMaj checkZerosUT(DMatrixRMaj A , int numRows , int numCols) {
+    public static DMatrixRMaj checkZerosUT(@Nullable DMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new DMatrixRMaj(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )

@@ -41,6 +41,7 @@ public class TestDMatrixRMaj {
     public void testGeneric() {
         GenericTestsDMatrixD1 g;
         g = new GenericTestsDMatrixD1() {
+            @Override
             protected DMatrixD1 createMatrix(int numRows, int numCols) {
                 return new DMatrixRMaj(numRows,numCols);
             }

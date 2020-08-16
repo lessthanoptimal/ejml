@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,6 +26,8 @@ import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
 
 
@@ -46,6 +48,7 @@ import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class TridiagonalDecompositionHouseholder_DDRB
         implements TridiagonalSimilarDecomposition_F64<DMatrixRBlock> {
 
@@ -56,13 +59,13 @@ public class TridiagonalDecompositionHouseholder_DDRB
     protected DMatrixRBlock V = new DMatrixRBlock(1,1);
     // stores intermediate results in matrix multiplication
     protected DMatrixRBlock tmp = new DMatrixRBlock(1,1);
-    protected double gammas[] = new double[1];
+    protected double[] gammas = new double[1];
 
     // temporary storage for zeros and ones in U
     protected DMatrixRMaj zerosM = new DMatrixRMaj(1,1);
 
     @Override
-    public DMatrixRBlock getT(DMatrixRBlock T) {
+    public DMatrixRBlock getT(@Nullable DMatrixRBlock T) {
         if( T == null ) {
             T = new DMatrixRBlock(A.numRows,A.numCols,A.blockLength);
         } else {
@@ -84,7 +87,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
     }
 
     @Override
-    public DMatrixRBlock getQ(DMatrixRBlock Q, boolean transposed) {
+    public DMatrixRBlock getQ(@Nullable DMatrixRBlock Q, boolean transposed) {
         Q = QRDecompositionHouseholder_DDRB.initializeQ(Q, A.numRows, A.numCols, A.blockLength, false);
 
         int height = Math.min(A.blockLength,A.numRows);
@@ -95,7 +98,6 @@ public class TridiagonalDecompositionHouseholder_DDRB
         DSubmatrixD1 subU = new DSubmatrixD1(A);
         DSubmatrixD1 subW = new DSubmatrixD1(V);
         DSubmatrixD1 tmp = new DSubmatrixD1(this.tmp);
-
 
         int N = A.numRows;
 
@@ -250,10 +252,8 @@ public class TridiagonalDecompositionHouseholder_DDRB
     /**
      * C = C + A^T*B
      *
-     * @param blockLength
      * @param A row block vector
      * @param B row block vector
-     * @param C
      */
     public static void multPlusTransA(int blockLength ,
                                       DSubmatrixD1 A , DSubmatrixD1 B ,

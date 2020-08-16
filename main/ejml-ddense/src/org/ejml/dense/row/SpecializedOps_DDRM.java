@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -377,7 +379,7 @@ public class SpecializedOps_DDRM {
      * @param transposed If the transpose of the matrix is returned.
      * @return A pivot matrix.
      */
-    public static DMatrixRMaj pivotMatrix(DMatrixRMaj ret, int pivots[], int numPivots, boolean transposed ) {
+    public static DMatrixRMaj pivotMatrix(@Nullable DMatrixRMaj ret, int pivots[], int numPivots, boolean transposed ) {
 
         if( ret == null ) {
             ret = new DMatrixRMaj(numPivots, numPivots);

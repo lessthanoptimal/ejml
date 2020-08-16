@@ -25,11 +25,13 @@ import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.equation.Equation;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -321,31 +323,24 @@ public class TestSingularOps_DDRM {
         int s = Math.min(numRows,numCols);
 
         // create a none compact SVD
-        DMatrixRMaj U = new DMatrixRMaj(numRows,s);
-        DMatrixRMaj W = new DMatrixRMaj(numRows,numCols);
-        DMatrixRMaj V = new DMatrixRMaj(numCols,s);
+        {
+            DMatrixRMaj U = new DMatrixRMaj(numRows, s);
+            DMatrixRMaj W = new DMatrixRMaj(numRows, numCols);
+            DMatrixRMaj V = new DMatrixRMaj(numCols, s);
 
-        try {
-            SingularOps_DDRM.checkSvdMatrixSize(U,false,W,V,false);
-            fail("An exception should have been thrown");
-        } catch( RuntimeException e) {}
-
+            Assertions.assertThrows(RuntimeException.class,()->SingularOps_DDRM.checkSvdMatrixSize(U,false,W,V,false));
+        }
 
         // compact SVD
-        U = new DMatrixRMaj(numRows,s);
-        W = new DMatrixRMaj(s,s);
-        V = new DMatrixRMaj(numCols,s);
+        DMatrixRMaj U = new DMatrixRMaj(numRows, s);
+        DMatrixRMaj W = new DMatrixRMaj(s, s);
+        DMatrixRMaj V = new DMatrixRMaj(numCols, s);
 
-        try {
-            SingularOps_DDRM.checkSvdMatrixSize(U,true,W,V,true);
-            fail("An exception should have been thrown");
-        } catch( RuntimeException e) {}
+        Assertions.assertThrows(RuntimeException.class, () -> SingularOps_DDRM.checkSvdMatrixSize(U, true, W, V, true));
+
         CommonOps_DDRM.transpose(U);
         CommonOps_DDRM.transpose(V);
-        try {
-            SingularOps_DDRM.checkSvdMatrixSize(U,false,W,V,false);
-            fail("An exception should have been thrown");
-        } catch( RuntimeException e) {}
+        Assertions.assertThrows(RuntimeException.class, () -> SingularOps_DDRM.checkSvdMatrixSize(U,false,W,V,false));
     }
 
     @Test

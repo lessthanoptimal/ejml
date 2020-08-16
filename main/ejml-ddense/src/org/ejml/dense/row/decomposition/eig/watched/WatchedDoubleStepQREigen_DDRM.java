@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,6 +25,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.decomposition.eig.EigenvalueSmall_F64;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -41,6 +42,7 @@ import java.util.Random;
  */
 // TODO make rank1UpdateMultR efficient once again by setting 0 to x1 and creating a new one that updates all the rows
 // TODO option of modifying original matrix
+@SuppressWarnings("NullAway.Init")
 public class WatchedDoubleStepQREigen_DDRM {
 
     private Random rand = new Random(0x2342);
@@ -54,15 +56,15 @@ public class WatchedDoubleStepQREigen_DDRM {
     private DMatrixRMaj _temp;
 
     // how many steps did it take to find the eigenvalue
-    int numStepsFind[];
+    int[] numStepsFind;
     int steps;
-    Complex_F64 eigenvalues[];
+    Complex_F64[] eigenvalues;
     int numEigen;
 
     // computes eigenvalues for 2 by 2 submatrices
     private EigenvalueSmall_F64 valueSmall = new EigenvalueSmall_F64();
 
-    private double temp[] = new double[9];
+    private final double[] temp = new double[9];
 
     private boolean printHumps = false;
     boolean checkHessenberg = false;
@@ -81,13 +83,13 @@ public class WatchedDoubleStepQREigen_DDRM {
 
     public boolean createR = true;
 
-    public DMatrixRMaj Q;
+    public @Nullable DMatrixRMaj Q;
 
     public void incrementSteps() {
         steps++;
     }
 
-    public void setQ( DMatrixRMaj Q ) {
+    public void setQ( @Nullable DMatrixRMaj Q ) {
         this.Q = Q;
     }
 
@@ -189,8 +191,6 @@ public class WatchedDoubleStepQREigen_DDRM {
     /**
      * Performs an implicit double step using the values contained in the lower right hand side
      * of the submatrix for the estimated eigenvector values.
-     * @param x1
-     * @param x2
      */
     public void implicitDoubleStep( int x1 , int x2 ) {
         if( printHumps )

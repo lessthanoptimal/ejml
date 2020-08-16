@@ -913,7 +913,7 @@ public class CommonOps_DDRM {
      * @param v
      * @return An array of vectors.
      */
-    public static DMatrixRMaj[] columnsToVector(DMatrixRMaj A, DMatrixRMaj[] v)
+    public static DMatrixRMaj[] columnsToVector(DMatrixRMaj A, @Nullable DMatrixRMaj[] v)
     {
         DMatrixRMaj[]ret;
         if( v == null || v.length < A.numCols ) {
@@ -1057,7 +1057,7 @@ public class CommonOps_DDRM {
     /**
      * @see #diag(double...)
      */
-    public static DMatrixRMaj diag(DMatrixRMaj ret , int width , double ...diagEl )
+    public static DMatrixRMaj diag(@Nullable DMatrixRMaj ret , int width , double ...diagEl )
     {
         if( ret == null ) {
             ret = new DMatrixRMaj(width,width);

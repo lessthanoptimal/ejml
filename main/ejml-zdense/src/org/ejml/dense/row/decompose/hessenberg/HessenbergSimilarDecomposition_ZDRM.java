@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,6 +48,7 @@ import java.util.Arrays;
  * </p>
  */
 // TODO create a column based one similar to what was done for QR decomposition?
+@SuppressWarnings("NullAway.Init")
 public class HessenbergSimilarDecomposition_ZDRM
         implements DecompositionInterface<ZMatrixRMaj> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
@@ -56,10 +57,10 @@ public class HessenbergSimilarDecomposition_ZDRM
     private int N;
 
     // the first element in the orthogonal vectors
-    private double gammas[];
+    private double[] gammas;
     // temporary storage
-    private double b[];
-    private double u[];
+    private double[] b;
+    private double[] u;
     private Complex_F64 tau = new Complex_F64();
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
@@ -158,7 +159,7 @@ public class HessenbergSimilarDecomposition_ZDRM
      * Internal function for computing the decomposition.
      */
     private boolean _decompose() {
-        double h[] = QH.data;
+        double[] h = QH.data;
 
         for( int k = 0; k < N-2; k++ ) { // k = column
             u[k*2] = 0;

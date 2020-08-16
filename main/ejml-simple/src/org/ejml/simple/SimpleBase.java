@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,6 +28,7 @@ import org.ejml.ops.ConvertFMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ops.*;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -43,7 +44,7 @@ import java.lang.reflect.Method;
  *
  * @author Peter Abeles
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({"unchecked","NullAway.Init"})
 public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializable {
 
     static final long serialVersionUID = 2342556642L;
@@ -56,12 +57,11 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     protected transient AutomaticSimpleMatrixConvert convertType = new AutomaticSimpleMatrixConvert();
 
-    public SimpleBase( int numRows , int numCols ) {
+    protected SimpleBase( int numRows , int numCols ) {
         setMatrix(new DMatrixRMaj(numRows, numCols));
     }
 
-    protected SimpleBase() {
-    }
+    protected SimpleBase() {}
 
     private void readObject(java.io.ObjectInputStream in)
             throws IOException, ClassNotFoundException {
@@ -91,8 +91,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      *
      * @return Reference to the internal DMatrixRMaj.
      */
-    public <T extends Matrix>T getMatrix() {
-        return (T)mat;
+    public <InnerType extends Matrix> InnerType getMatrix() {
+        return (InnerType)mat;
     }
 
     public DMatrixRMaj getDDRM() {
@@ -127,8 +127,9 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
             case CDRM: return new SimpleOperations_CDRM();
             case DSCC: return new SimpleOperations_DSCC();
             case FSCC: return new SimpleOperations_FSCC();
+            default:
+                throw new RuntimeException("Unknown Matrix Type. "+type);
         }
-        throw new RuntimeException("Unknown Matrix Type. "+type);
     }
 
 
@@ -824,6 +825,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      *
      * @return String representation of the matrix.
      */
+    @Override
     public String toString() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PrintStream p = new PrintStream(stream);
@@ -1315,7 +1317,6 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      *
      * @param fileName File which is to be loaded.
      * @return The matrix.
-     * @throws IOException
      */
     public T loadCSV( String fileName )
             throws IOException {
@@ -1464,7 +1465,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     }
 
 
-    Method findAlternative( String method , Object... arguments ) {
+    @Nullable Method findAlternative(String method , Object... arguments ) {
         Method[] methods = ops.getClass().getMethods();
         for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
             if (!methods[methodIdx].getName().equals(method))

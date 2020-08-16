@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,7 @@ import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.dense.row.decompose.qr.QrHelperFunctions_ZDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -47,6 +48,7 @@ import java.util.Arrays;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class TridiagonalDecompositionHouseholder_ZDRM
         implements TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> {
 
@@ -60,11 +62,11 @@ public class TridiagonalDecompositionHouseholder_ZDRM
     private int N;
 
     // temporary storage
-    private double w[];
+    private double[] w;
     // gammas for the householder operations
-    private double gammas[];
+    private double[] gammas;
     // temporary storage
-    private double b[];
+    private double[] b;
 
     private Complex_F64 tau = new Complex_F64();
 
@@ -103,7 +105,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
      * @return The extracted T matrix.
      */
     @Override
-    public ZMatrixRMaj getT(ZMatrixRMaj T ) {
+    public ZMatrixRMaj getT(@Nullable ZMatrixRMaj T ) {
         T = UtilDecompositons_ZDRM.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
@@ -127,7 +129,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
      * @return The extracted Q matrix.
      */
     @Override
-    public ZMatrixRMaj getQ(ZMatrixRMaj Q , boolean transposed ) {
+    public ZMatrixRMaj getQ(@Nullable ZMatrixRMaj Q , boolean transposed ) {
         Q = UtilDecompositons_ZDRM.checkIdentity(Q,N,N);
 
         Arrays.fill(w,0,N*2,0);
@@ -167,7 +169,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
      * Computes and performs the similar a transform for submatrix k.
      */
     private void similarTransform( int k) {
-        double t[] = QT.data;
+        double[] t = QT.data;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow

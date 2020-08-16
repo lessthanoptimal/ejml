@@ -236,6 +236,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
     /**
      * Sets all the elements in the matrix to zero
      */
+    @Override
     public void zero() {
         Arrays.fill(data, 0, numCols*numRows*2, 0.0);
     }

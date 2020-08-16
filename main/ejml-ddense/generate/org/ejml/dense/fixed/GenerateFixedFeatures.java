@@ -55,10 +55,7 @@ public class GenerateFixedFeatures extends GenerateFixed {
                 "\n" +
                 "/**\n" +
                 " * <p>Matrix features for fixed sized matrices which are "+dimen+" x "+dimen+" or "+dimen+" element vectors.</p>\n" +
-                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
-                " *\n" +
-                " * @author Peter Abeles\n" +
-                " */\n" +
+                standardClassDocClosing("Peter Abeles") +
                 "public class "+className+" {\n");
     }
 

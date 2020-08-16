@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("ClassNewInstance")
 public class TestConvertMatrixStruct_F32 {
 
     Random rand = new Random(234);
@@ -164,32 +165,4 @@ public class TestConvertMatrixStruct_F32 {
             }
         }
     }
-
-    private void checkIdenticalV(FMatrix a , FMatrix b ) {
-        boolean columnVectorA = a.getNumRows() > a.getNumCols();
-        boolean columnVectorB = b.getNumRows() > b.getNumCols();
-
-        int length = Math.max(a.getNumRows(),b.getNumRows());
-
-        for( int i = 0; i < length; i++  ) {
-
-            float valueA,valueB;
-
-            if( columnVectorA )
-                valueA = a.get(i,0);
-            else
-                valueA = a.get(0,i);
-
-            if( columnVectorB )
-                valueB = b.get(i,0);
-            else
-                valueB = b.get(0,i);
-
-            assertEquals(valueA,valueB,UtilEjml.TEST_F32);
-        }
-
-
-
-    }
-
 }

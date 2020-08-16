@@ -45,10 +45,7 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase{
                 "\n" +
                 "/**\n" +
                 " * Fixed sized vector with "+dimen+" elements.  Can represent a "+dimen+" x 1 or 1 x "+dimen+" matrix, context dependent.\n" +
-                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
-                " *\n" +
-                " * @author Peter Abeles\n" +
-                " */\n" +
+                standardClassDocClosing("Peter Abeles") +
                 "public class "+className+" implements DMatrixFixed {\n");
         printClassParam(dimen);
         out.print("\n" +

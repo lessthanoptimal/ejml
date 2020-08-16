@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
+
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -47,7 +49,7 @@ public interface BidiagonalDecomposition<T extends Matrix>
      * @param B If not null the results are stored here, if null a new matrix is created.
      * @return The bidiagonal matrix.
      */
-    T getB(T B, boolean compact);
+    T getB(@Nullable T B, boolean compact);
 
     /**
      * Returns the orthogonal U matrix.
@@ -55,7 +57,7 @@ public interface BidiagonalDecomposition<T extends Matrix>
      * @param U If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    T getU(T U, boolean transpose, boolean compact);
+    T getU(@Nullable T U, boolean transpose, boolean compact);
 
     /**
      * Returns the orthogonal V matrix.
@@ -63,5 +65,5 @@ public interface BidiagonalDecomposition<T extends Matrix>
      * @param V If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    T getV(T V, boolean transpose, boolean compact);
+    T getV(@Nullable T V, boolean transpose, boolean compact);
 }

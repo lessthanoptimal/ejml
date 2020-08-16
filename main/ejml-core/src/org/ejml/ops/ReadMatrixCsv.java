@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,6 +30,7 @@ import java.util.List;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("unchecked")
 public class ReadMatrixCsv extends ReadCsv {
 
     /**
@@ -48,7 +49,8 @@ public class ReadMatrixCsv extends ReadCsv {
      */
     public <M extends FMatrix>M read32() throws IOException {
         List<String> words = extractWords();
-
+        if( words == null )
+            throw new IllegalArgumentException("Not enough lines in file");
         if( words.size() == 3 ) {
             int numRows = Integer.parseInt(words.get(0));
             int numCols = Integer.parseInt(words.get(1));
@@ -86,7 +88,8 @@ public class ReadMatrixCsv extends ReadCsv {
      */
     public <M extends DMatrix>M read64() throws IOException {
         List<String> words = extractWords();
-
+        if( words == null )
+            throw new IllegalArgumentException("Not enough lines in file");
         if( words.size() == 3 ) {
             int numRows = Integer.parseInt(words.get(0));
             int numCols = Integer.parseInt(words.get(1));
@@ -150,7 +153,6 @@ public class ReadMatrixCsv extends ReadCsv {
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
      * @return FMatrixRMaj
-     * @throws IOException
      */
     public FMatrixRMaj readFDRM(int numRows, int numCols) throws IOException {
 
@@ -178,7 +180,6 @@ public class ReadMatrixCsv extends ReadCsv {
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
      * @return ZMatrixRMaj
-     * @throws IOException
      */
     public ZMatrixRMaj readZDRM(int numRows, int numCols) throws IOException {
 
@@ -211,7 +212,6 @@ public class ReadMatrixCsv extends ReadCsv {
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
      * @return CMatrixRMaj
-     * @throws IOException
      */
     public CMatrixRMaj readCDRM(int numRows, int numCols) throws IOException {
 
@@ -244,7 +244,8 @@ public class ReadMatrixCsv extends ReadCsv {
 
         for (int i = 0; i < length; i++) {
             words = extractWords();
-
+            if( words == null )
+                throw new IllegalArgumentException("Not enough lines in file");
             if( words.size() != 3 )
                 throw new IllegalArgumentException("Unexpected number of words on line "+getLineNumber());
 
@@ -264,7 +265,8 @@ public class ReadMatrixCsv extends ReadCsv {
 
         for (int i = 0; i < length; i++) {
             words = extractWords();
-
+            if( words == null )
+                throw new IllegalArgumentException("Not enough lines in file");
             if( words.size() != 3 )
                 throw new IllegalArgumentException("Unexpected number of words on line "+getLineNumber());
 

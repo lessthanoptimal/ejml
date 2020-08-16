@@ -25,9 +25,9 @@ import java.io.FileNotFoundException;
  *
  * @author Peter Abeles
  */
-public class GenerateFixedNormOps extends GenerateFixed {
+public class GenerateNormOps_DDF extends GenerateFixed {
 
-    public GenerateFixedNormOps() {
+    public GenerateNormOps_DDF() {
         super("NormOps_DDF");
     }
 
@@ -54,28 +54,23 @@ public class GenerateFixedNormOps extends GenerateFixed {
 
         out.print("import org.ejml.data."+nameVector+";\n" +
                 "import org.ejml.data."+nameMatrix+";\n" +
-                "import MatrixFeatures_DDRM;\n" +
-                "import org.ejml.UtilEjml;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>Matrix norm related operations for fixed sized matrices of size "+dimen+".</p>\n" +
-                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
-                " *\n" +
-                " * @author Peter Abeles\n" +
-                " */\n" +
+                standardClassDocClosing("Peter Abeles") +
                 "public class "+className+" {\n");
     }
 
     private void normalizeF(int dimen ){
         out.print("    public static void normalizeF( "+nameMatrix+" M ) {\n" +
                 "        double val = normF(M);\n" +
-                "        FixedOps"+dimen+"_DDRM.divide(M,val);\n" +
+                "        CommonOps_DDF"+dimen+".divide(M,val);\n" +
                 "    }\n\n");
     }
     private void normalizeF_vector(int dimen ){
         out.print("    public static void normalizeF( "+nameVector+" M ) {\n" +
                 "        double val = normF(M);\n" +
-                "        FixedOps"+dimen+"_DDRM.divide(M,val);\n" +
+                "        CommonOps_DDF"+dimen+".divide(M,val);\n" +
                 "    }\n\n");
     }
 
@@ -117,7 +112,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
 
     private void normF(int dimen ) {
         out.print("    public static double normF( "+nameMatrix+" M ) {\n" +
-                "        double scale = FixedOps"+dimen+"_DDRM.elementMaxAbs(M);\n" +
+                "        double scale = CommonOps_DDF"+dimen+".elementMaxAbs(M);\n" +
                 "\n" +
                 "        if( scale == 0.0 )\n" +
                 "            return 0.0;\n" +
@@ -154,7 +149,7 @@ public class GenerateFixedNormOps extends GenerateFixed {
 
     private void normF_vector(int dimen ) {
         out.print("    public static double normF( "+nameVector+" M ) {\n" +
-                "        double scale = FixedOps"+dimen+"_DDRM.elementMaxAbs(M);\n" +
+                "        double scale = CommonOps_DDF"+dimen+".elementMaxAbs(M);\n" +
                 "\n" +
                 "        if( scale == 0.0 )\n" +
                 "            return 0.0;\n" +
@@ -184,8 +179,8 @@ public class GenerateFixedNormOps extends GenerateFixed {
     }
 
 
-    public static void main( String args[] ) throws FileNotFoundException {
-        GenerateFixedNormOps app = new GenerateFixedNormOps();
+    public static void main(String[] args) throws FileNotFoundException {
+        GenerateNormOps_DDF app = new GenerateNormOps_DDF();
 
         app.generate();
     }

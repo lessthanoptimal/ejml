@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
 
-    public CompareFixedToCommonOps_DDRM(Class classFixed) {
+    protected CompareFixedToCommonOps_DDRM(Class classFixed) {
         super(classFixed, CommonOps_DDRM.class);
     }
 

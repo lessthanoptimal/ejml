@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,9 @@
 
 package org.ejml.dense.row.misc;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -33,10 +35,10 @@ public class PermuteArray {
     // used by next
     private int level;
 
-    private int data[];
-    private int iter[];
-    private int valk[];
-    private int ret[];
+    private final int[] data;
+    private final int[] iter;
+    private final int[] valk;
+    private final int[] ret;
 
     public PermuteArray( int N ) {
         level = 0;
@@ -44,9 +46,7 @@ public class PermuteArray {
         valk = new int[ N ];
         data = new int[ N ];
         ret = new int[ N ];
-        for( int i = 0; i < data.length; i++ ) {
-            data[i] = -1;
-        }
+        Arrays.fill(data, -1);
     }
 
     /**
@@ -106,10 +106,8 @@ public class PermuteArray {
      */
     public static List<int[]> createList( int N )
     {
-        int data[] = new int[ N ];
-        for( int i = 0; i < data.length; i++ ) {
-            data[i] = -1;
-        }
+        int[] data = new int[ N ];
+        Arrays.fill(data, -1);
 
         List<int[]> ret = new ArrayList<int[]>();
 
@@ -122,7 +120,7 @@ public class PermuteArray {
     /**
      * Internal function that uses recursion to create the list
      */
-    private static void createList( int data[], int k , int level , List<int[]> ret )
+    private static void createList(int[] data, int k , int level , List<int[]> ret )
     {
         data[k] = level;
 
@@ -145,7 +143,7 @@ public class PermuteArray {
      *
      * @return An array containing the permutation.  The returned array is modified each time this function is called.
      */
-    public int[] next()
+    public @Nullable int[] next()
     {
         boolean hasNewPerm = false;
 

@@ -745,8 +745,8 @@ public class CommonOps_DSCC {
      * @param offset First index in values
      * @return The diagonal matrix
      */
-    public static DMatrixSparseCSC diag( @Nullable DMatrixSparseCSC A ,
-                                         double values[], int offset, int length) {
+    public static DMatrixSparseCSC diag(@Nullable DMatrixSparseCSC A ,
+                                        double[] values, int offset, int length) {
         int N = length;
         if( A == null )
             A = new DMatrixSparseCSC(N,N,N);
@@ -895,7 +895,7 @@ public class CommonOps_DSCC {
         }
     }
     public static int[] permutationInverse( int []original , int length ) {
-        int inverse[] = new int[length];
+        int[] inverse = new int[length];
         permutationInverse(original,inverse,length);
         return inverse;
     }
@@ -908,7 +908,7 @@ public class CommonOps_DSCC {
      * @param input (Input) Matrix which is to be permuted
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static void permuteRowInv(int permInv[], DMatrixSparseCSC input, DMatrixSparseCSC output) {
+    public static void permuteRowInv(int[] permInv, DMatrixSparseCSC input, DMatrixSparseCSC output) {
         if( input.numRows > permInv.length )
             throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
 
@@ -938,7 +938,7 @@ public class CommonOps_DSCC {
      * @param permCol (Input) Column permutation vector. Null is the same as passing in identity.
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static void permute(@Nullable int permRowInv[], DMatrixSparseCSC input, @Nullable int permCol[], DMatrixSparseCSC output) {
+    public static void permute(@Nullable int[] permRowInv, DMatrixSparseCSC input, @Nullable int[] permCol, DMatrixSparseCSC output) {
         if( permRowInv!= null && input.numRows > permRowInv.length )
             throw new IllegalArgumentException("rowInv permutation vector must have at least as many elements as input has columns");
         if( permCol != null && input.numCols > permCol.length )
@@ -1010,8 +1010,8 @@ public class CommonOps_DSCC {
      * @param output (Output) Upper triangular symmetric matrix which has the permutation stored in it.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void permuteSymmetric( DMatrixSparseCSC input, int permInv[], DMatrixSparseCSC output ,
-                                         @Nullable IGrowArray gw ) {
+    public static void permuteSymmetric(DMatrixSparseCSC input, int[] permInv, DMatrixSparseCSC output ,
+                                        @Nullable IGrowArray gw ) {
         if( input.numRows != input.numCols )
             throw new MatrixDimensionException("Input must be a square matrix. "+stringShapes(input,output));
         if( input.numRows != permInv.length )
@@ -1019,7 +1019,7 @@ public class CommonOps_DSCC {
 
         int N = input.numCols;
 
-        int w[] = adjustClear(gw,N); // histogram with column counts
+        int[] w = adjustClear(gw,N); // histogram with column counts
 
         output.reshape(N,N,0);
         output.indicesSorted = false;

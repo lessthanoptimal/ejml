@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,8 @@ import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  * Wrapper around {@link org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB} that allows
@@ -47,7 +49,7 @@ public class CholeskyDecomposition_DDRB_to_DDRM
     }
 
     @Override
-    public DMatrixRMaj getT(DMatrixRMaj T) {
+    public DMatrixRMaj getT(@Nullable DMatrixRMaj T) {
         DMatrixRBlock T_block = ((CholeskyOuterForm_DDRB)alg).getT(null);
 
         if( T == null ) {

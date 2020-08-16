@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,8 @@ package org.ejml.dense.row.decomposition.hessenberg;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
+
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -72,7 +74,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
-    public DMatrixRMaj getT(DMatrixRMaj T) {
+    public DMatrixRMaj getT(@Nullable DMatrixRMaj T) {
         T = UtilDecompositons_DDRM.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
@@ -97,7 +99,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DMatrixRMaj getQ(DMatrixRMaj Q ) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q ) {
         Q = UtilDecompositons_DDRM.checkIdentity(Q,N,N);
 
         for( int i = 0; i < N; i++ ) w[i] = 0;

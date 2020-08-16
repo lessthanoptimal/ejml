@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,6 +31,7 @@ import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class AdjLinearSolverQr_DDRM extends LinearSolverQr_DDRM implements AdjustableLinearSolver_DDRM {
 
     private QrUpdate_DDRM update;
@@ -59,12 +60,7 @@ public class AdjLinearSolverQr_DDRM extends LinearSolverQr_DDRM implements Adjus
      */
     @Override
     public DMatrixRMaj getA() {
-        if( A.data.length < numRows*numCols ) {
-            A = new DMatrixRMaj(numRows,numCols);
-        }
-        A.reshape(numRows,numCols, false);
         CommonOps_DDRM.mult(Q,R,A);
-
         return A;
     }
 

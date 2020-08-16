@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,6 +30,8 @@ import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
+import javax.annotation.Nullable;
+
 import static org.ejml.UtilEjml.adjust;
 
 /**
@@ -49,7 +51,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
 
-    public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , ComputePermutation<DMatrixSparseCSC> fillReduce) {
+    public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce) {
         this.cholesky = cholesky;
         this.reduce = new ApplyFillReductionPermutation_DSCC(fillReduce,true);
     }

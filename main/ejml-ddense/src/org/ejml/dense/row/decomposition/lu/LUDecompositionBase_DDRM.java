@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,8 @@ import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  * <p>
@@ -34,6 +36,7 @@ import org.ejml.interfaces.decomposition.LUDecomposition_F64;
  * </p>
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public abstract class LUDecompositionBase_DDRM
         implements LUDecomposition_F64<DMatrixRMaj> {
     // the decomposed matrix
@@ -45,13 +48,13 @@ public abstract class LUDecompositionBase_DDRM
     // the shape of the matrix
     protected int m,n;
     // data in the matrix
-    protected double dataLU[];
+    protected double[] dataLU;
 
     // used in set, solve, invert
-    protected double vv[];
+    protected double[] vv;
     // used in set
-    protected int indx[];
-    protected int pivot[];
+    protected int[] indx;
+    protected int[] pivot;
 
     // used by determinant
     protected double pivsign;
@@ -93,7 +96,7 @@ public abstract class LUDecompositionBase_DDRM
      * @param lower Where the lower triangular matrix is written to.
      */
     @Override
-    public DMatrixRMaj getLower(DMatrixRMaj lower )
+    public DMatrixRMaj getLower(@Nullable DMatrixRMaj lower )
     {
         int numRows = LU.numRows;
         int numCols = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
@@ -124,7 +127,7 @@ public abstract class LUDecompositionBase_DDRM
      * @param upper Where the upper triangular matrix is writen to.
      */
     @Override
-    public DMatrixRMaj getUpper(DMatrixRMaj upper )
+    public DMatrixRMaj getUpper(@Nullable DMatrixRMaj upper )
     {
         int numRows = LU.numRows < LU.numCols ? LU.numRows : LU.numCols;
         int numCols = LU.numCols;
@@ -141,12 +144,12 @@ public abstract class LUDecompositionBase_DDRM
     }
 
     @Override
-    public DMatrixRMaj getRowPivot(DMatrixRMaj pivot ) {
+    public DMatrixRMaj getRowPivot(@Nullable DMatrixRMaj pivot ) {
         return SpecializedOps_DDRM.pivotMatrix(pivot, this.pivot, LU.numRows, false);
     }
 
     @Override
-    public int[] getRowPivotV(IGrowArray pivot) {
+    public int[] getRowPivotV(@Nullable IGrowArray pivot) {
         return UtilEjml.pivotVector(this.pivot,LU.numRows,pivot);
     }
 

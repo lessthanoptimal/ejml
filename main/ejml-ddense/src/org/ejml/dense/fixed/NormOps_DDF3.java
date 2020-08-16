@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,15 +18,17 @@
 
 package org.ejml.dense.fixed;
 
+import javax.annotation.Generated;
 import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
 
 /**
  * <p>Matrix norm related operations for fixed sized matrices of size 3.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedNormOps</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateNormOps_DDF</p>
  *
  * @author Peter Abeles
  */
+@Generated("org.ejml.dense.fixed.GenerateNormOps_DDF")
 public class NormOps_DDF3 {
     public static void normalizeF( DMatrix3x3 M ) {
         double val = normF(M);

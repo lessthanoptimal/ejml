@@ -27,6 +27,7 @@ import org.ejml.ops.MatrixIO;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
     public int blockLength;
     public double[][][] blocks;
@@ -151,7 +152,7 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
 
     @Override
     public <T extends Matrix> T copy() {
-        return null;
+        throw new RuntimeException("Not supported");
     }
 
     @Override

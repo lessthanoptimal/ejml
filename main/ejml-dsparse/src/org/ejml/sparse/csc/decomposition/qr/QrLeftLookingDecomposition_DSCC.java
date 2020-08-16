@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,6 +29,7 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -50,14 +51,14 @@ public class QrLeftLookingDecomposition_DSCC implements
     // Storage for R matrix in QR
     DMatrixSparseCSC R = new DMatrixSparseCSC(1,1,0);
     // storage for beta in (I - beta*v*v')
-    double beta[] = new double[0];
+    double[] beta = new double[0];
     DScalar Beta = new DScalar(); // used to get return value from a function
 
     // local workspace
-    double x[] = new double[0];
+    double[] x = new double[0];
 
     QrStructuralCounts_DSCC structure = new QrStructuralCounts_DSCC();
-    int structureP[] = new int[0];
+    int[] structureP = new int[0];
     IGrowArray gwork = new IGrowArray();
     DGrowArray gx = new DGrowArray();
 
@@ -69,7 +70,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     // if true then the structure is locked and won't be computed again
     private boolean locked = false;
 
-    public QrLeftLookingDecomposition_DSCC(ComputePermutation<DMatrixSparseCSC> permutation ) {
+    public QrLeftLookingDecomposition_DSCC(@Nullable ComputePermutation<DMatrixSparseCSC> permutation ) {
         this.applyReduce = new ApplyFillReductionPermutation_DSCC(permutation,false);
 
         // use the same work space to reduce the overall memory foot print
@@ -97,12 +98,12 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     private void performDecomposition(DMatrixSparseCSC A) {
-        int w[] = gwork.data;
-        int permCol[] = applyReduce.getArrayQ();
-        int parent[] = structure.getParent();
-        int leftmost[] = structure.getLeftMost();
+        int[] w = gwork.data;
+        int[] permCol = applyReduce.getArrayQ();
+        int[] parent = structure.getParent();
+        int[] leftmost = structure.getLeftMost();
         // permutation that was done to ensure all rows have non-zero elements
-        int pinv_structure[] = structure.getPinv();
+        int[] pinv_structure = structure.getPinv();
         int s = m2;
 
         // clear mark nodes. See addRowsInAInToC
@@ -192,7 +193,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     @Override
-    public DMatrixSparseCSC getQ(DMatrixSparseCSC Q, boolean compact) {
+    public DMatrixSparseCSC getQ(@Nullable DMatrixSparseCSC Q, boolean compact) {
         if( Q == null )
             Q = new DMatrixSparseCSC(1,1,0);
 
@@ -221,7 +222,7 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     @Override
-    public DMatrixSparseCSC getR(DMatrixSparseCSC R, boolean compact) {
+    public DMatrixSparseCSC getR(@Nullable DMatrixSparseCSC R, boolean compact) {
         if( R == null )
             R = new DMatrixSparseCSC(0,0,0);
 
@@ -273,7 +274,10 @@ public class QrLeftLookingDecomposition_DSCC implements
     }
 
     public int[] getFillPermutation() {
-        return applyReduce.getArrayP();
+        int[] ret = applyReduce.getArrayP();
+        if( ret == null )
+            throw new RuntimeException("No permutation. Should have called isFillPermuted()");
+        return ret;
     }
 
     public boolean isFillPermutated() {

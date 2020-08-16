@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,6 +30,7 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class BidiagonalDecompositionNaive_DDRM {
     private SimpleMatrix U;
     private SimpleMatrix B;
@@ -41,7 +42,6 @@ public class BidiagonalDecompositionNaive_DDRM {
     private int n;
     // smallest of m and n
     private int min;
-
 
     DMatrixRMaj u;
 

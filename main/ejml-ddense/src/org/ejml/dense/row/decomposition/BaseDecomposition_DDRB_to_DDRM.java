@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
@@ -34,7 +35,7 @@ public class BaseDecomposition_DDRB_to_DDRM implements DecompositionInterface<DM
 
     protected DecompositionInterface<DMatrixRBlock> alg;
 
-    protected double[]tmp;
+    protected double[] tmp = UtilEjml.ZERO_LENGTH_F64;
     protected DMatrixRBlock Ablock = new DMatrixRBlock();
     protected int blockLength;
 
@@ -53,7 +54,7 @@ public class BaseDecomposition_DDRB_to_DDRM implements DecompositionInterface<DM
 
         int tmpLength = Math.min( Ablock.blockLength , A.numRows ) * A.numCols;
 
-        if( tmp == null || tmp.length < tmpLength )
+        if( tmp.length < tmpLength )
             tmp = new double[ tmpLength ];
 
         // doing an in-place convert is much more memory efficient at the cost of a little

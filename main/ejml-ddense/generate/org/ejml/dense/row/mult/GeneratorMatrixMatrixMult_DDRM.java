@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,6 +44,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                 "import org.ejml.MatrixDimensionException;\n" +
                 "import org.ejml.data.DMatrix1Row;\n" +
                 "import org.ejml.dense.row.CommonOps_DDRM;\n" +
+                "import javax.annotation.Nullable;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
@@ -72,12 +73,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                 " * Typically the straight forward implementation runs about 30% faster on smaller matrices and\n" +
                 " * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.\n" +
                 " * </p>\n" +
-                " * \n" +
-                " * <center>******** IMPORTANT **********</center>\n" +
-                " * This class was auto generated using "+getClass().getName()+"\n"+
-                " * \n" +
-                " * @author Peter Abeles\n" +
-                " */\n"+
+                standardClassDocClosing("Peter Abeles") +
                 "public class "+className+" {\n";
 
         out.print(preamble);
@@ -187,7 +183,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         if( hasAlpha ) ret += "double alpha , ";
 
         if( hasAux ) {
-            ret += "DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )\n";
+            ret += "DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )\n";
         } else {
             ret += "DMatrix1Row A , DMatrix1Row B , DMatrix1Row C )\n";
         }
@@ -513,9 +509,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         out.print(foo);
     }
 
-    public static void main( String args[] ) throws FileNotFoundException {
-        GeneratorMatrixMatrixMult_DDRM gen = new GeneratorMatrixMatrixMult_DDRM();
-
-        gen.generate();
+    public static void main(String[] args) throws FileNotFoundException {
+        new GeneratorMatrixMatrixMult_DDRM().generate();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
+import javax.annotation.Nullable;
+
 
 /**
  * <p>
@@ -34,6 +36,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DMatrixRMaj> {
 
     /**
@@ -41,10 +44,10 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
      * upper triangular portion and Q on the lower bit.  Lower columns
      * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
      */
-    protected double dataQR[][]; // [ column][ row ]
+    protected double[][] dataQR; // [ column][ row ]
 
     // used internally to store temporary data
-    protected double v[];
+    protected double[] v;
 
     // dimension of the decomposed matrices
     protected int numCols; // this is 'n'
@@ -52,7 +55,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
     protected int minLength;
 
     // the computed gamma for Q_k matrix
-    protected double gammas[];
+    protected double[] gammas;
     // local variables
     protected double gamma;
     protected double tau;
@@ -96,7 +99,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DMatrixRMaj getQ(DMatrixRMaj Q , boolean compact ) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
         if( compact ) {
             Q = UtilDecompositons_DDRM.checkIdentity(Q,numRows,minLength);
         } else {
@@ -104,7 +107,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
         }
 
         for( int j = minLength-1; j >= 0; j-- ) {
-            double u[] = dataQR[j];
+            double[] u = dataQR[j];
 
             double vv = u[j];
             u[j] = 1;
@@ -123,7 +126,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
      * @param compact If true then a compact matrix is expected.
      */
     @Override
-    public DMatrixRMaj getR(DMatrixRMaj R, boolean compact) {
+    public DMatrixRMaj getR(@Nullable DMatrixRMaj R, boolean compact) {
         if( compact ) {
             R = UtilDecompositons_DDRM.checkZerosLT(R,minLength,numCols);
         } else {
@@ -131,7 +134,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
         }
 
         for( int j = 0; j < numCols; j++ ) {
-            double colR[] = dataQR[j];
+            double[] colR = dataQR[j];
             int l = Math.min(j,numRows-1);
             for( int i = 0; i <= l; i++ ) {
                 double val = colR[i];
@@ -183,7 +186,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
      */
     protected void convertToColumnMajor(DMatrixRMaj A) {
         for( int x = 0; x < numCols; x++ ) {
-            double colQ[] = dataQR[x];
+            double[] colQ = dataQR[x];
             for( int y = 0; y < numRows; y++ ) {
                 colQ[y] = A.data[y*A.numCols+x];
             }
@@ -207,7 +210,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
      */
     protected void householder( int j )
     {
-        final double u[] = dataQR[j];
+        final double[] u = dataQR[j];
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
@@ -244,11 +247,11 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
      */
     protected void updateA( int w )
     {
-        final double u[] = dataQR[w];
+        final double[] u = dataQR[w];
 
         for( int j = w+1; j < numCols; j++ ) {
 
-            final double colQ[] = dataQR[j];
+            final double[] colQ = dataQR[j];
             double val = colQ[w];
 
             for( int k = w+1; k < numRows; k++ ) {

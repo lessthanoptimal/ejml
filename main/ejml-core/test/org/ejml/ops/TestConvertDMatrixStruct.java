@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings({"ClassNewInstance", "rawtypes"})
 public class TestConvertDMatrixStruct {
 
     Random rand = new Random(234);
@@ -102,7 +103,7 @@ public class TestConvertDMatrixStruct {
         for( Method m : methods ) {
             if( !m.getName().equals("convert") )
                 continue;
-            Class[]param = m.getParameterTypes();
+            Class[] param = m.getParameterTypes();
 
             if( !DMatrixFixed.class.isAssignableFrom(param[1]) ) {
                 continue;
@@ -165,30 +166,6 @@ public class TestConvertDMatrixStruct {
             for( int j = 0; j < a.getNumCols(); j++ ) {
                 assertEquals(a.get(i,j),b.get(i,j), UtilEjml.TEST_F64);
             }
-        }
-    }
-
-    private void checkIdenticalV(DMatrix a , DMatrix b ) {
-        boolean columnVectorA = a.getNumRows() > a.getNumCols();
-        boolean columnVectorB = b.getNumRows() > b.getNumCols();
-
-        int length = Math.max(a.getNumRows(),b.getNumRows());
-
-        for( int i = 0; i < length; i++  ) {
-
-            double valueA,valueB;
-
-            if( columnVectorA )
-                valueA = a.get(i,0);
-            else
-                valueA = a.get(0,i);
-
-            if( columnVectorB )
-                valueB = b.get(i,0);
-            else
-                valueB = b.get(0,i);
-
-            assertEquals(valueA,valueB,UtilEjml.TEST_F64);
         }
     }
 

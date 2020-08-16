@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 /**
  * <p>
  * Performs QR decomposition with column pivoting.  To prevent overflow/underflow the whole matrix
@@ -42,14 +44,15 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class QRColPivDecompositionHouseholderColumn_DDRM
         extends QRDecompositionHouseholderColumn_DDRM
         implements QRPDecomposition_F64<DMatrixRMaj>
 {
     // the ordering of each column, the current column i is the original column pivots[i]
-    protected int pivots[];
+    protected int[] pivots;
     // F-norm  squared for each column
-    protected double normsCol[];
+    protected double[] normsCol;
 
     // threshold used to determine when a column is considered to be singular
     // Threshold is relative to the maxAbs
@@ -95,7 +98,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DMatrixRMaj getQ(DMatrixRMaj Q , boolean compact ) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
                 Q = CommonOps_DDRM.identity(numRows,minLength);
@@ -119,7 +122,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         }
 
         for( int j = rank-1; j >= 0; j-- ) {
-            double u[] = dataQR[j];
+            double[] u = dataQR[j];
 
             double vv = u[j];
             u[j] = 1;
@@ -173,7 +176,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     protected void setupPivotInfo() {
         for( int col = 0; col < numCols; col++ ) {
             pivots[col] = col;
-            double c[] = dataQR[col];
+            double[] c = dataQR[col];
             double norm = 0;
             for( int row = 0; row < numRows; row++ ) {
                 double element = c[row];
@@ -203,7 +206,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         // and it should recompute the column norms from scratch
         if( foundNegative ) {
             for( int col = j; col < numCols; col++ ) {
-                double u[] = dataQR[col];
+                double[] u = dataQR[col];
                 double actual = 0;
                 for( int i=j; i < numRows; i++ ) {
                     double v = u[i];
@@ -260,7 +263,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      */
     protected boolean householderPivot(int j)
     {
-        final double u[] = dataQR[j];
+        final double[] u = dataQR[j];
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
@@ -298,7 +301,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     }
 
     @Override
-    public DMatrixRMaj getColPivotMatrix(DMatrixRMaj P) {
+    public DMatrixRMaj getColPivotMatrix(@Nullable DMatrixRMaj P) {
         if( P == null )
             P = new DMatrixRMaj(numCols,numCols);
         else if( P.numRows != numCols )

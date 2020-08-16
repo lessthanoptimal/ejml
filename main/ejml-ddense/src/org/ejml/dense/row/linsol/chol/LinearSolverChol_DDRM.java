@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,12 +29,13 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
 
     CholeskyDecompositionCommon_DDRM decomposer;
     int n;
-    double vv[];
-    double t[];
+    double[] vv;
+    double[] t;
 
     public LinearSolverChol_DDRM(CholeskyDecompositionCommon_DDRM decomposer) {
         this.decomposer = decomposer;
@@ -82,6 +83,8 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
         if( B.numRows != n ) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
+        if( A == null )
+            throw new RuntimeException("Must call setA() first");
         X.reshape(n,B.numCols);
 
         if(decomposer.isLower()) {
@@ -91,7 +94,7 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
         }
     }
 
-    public static void solveLower(DMatrixRMaj L , DMatrixRMaj B , DMatrixRMaj X , double vv[] ) {
+    public static void solveLower(DMatrixRMaj L , DMatrixRMaj B , DMatrixRMaj X , double[] vv) {
         final int numCols = B.numCols;
         final int N = L.numCols;
         for( int j = 0; j < numCols; j++ ) {
@@ -119,7 +122,7 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
             throw new IllegalArgumentException("Passing in the same matrix that was decomposed.");
         }
 
-        double a[] = inv.data;
+        double[] a = inv.data;
 
         if(decomposer.isLower()) {
             setToInverseL(a);
@@ -131,7 +134,7 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
     /**
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
-    public void setToInverseL( double a[] ) {
+    public void setToInverseL(double[] a) {
         // TODO reorder these operations to avoid cache misses
         
         // inverts the lower triangular system and saves the result

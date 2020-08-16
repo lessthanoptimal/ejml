@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.ejml.ops.MatrixIO;
 
 /**
@@ -31,7 +32,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
     /**
      * Where the raw data for the matrix is stored.  The format is type dependent.
      */
-    public double[] data;
+    public double[] data = UtilEjml.ZERO_LENGTH_F64;
 
     /**
      * Number of rows in the matrix.

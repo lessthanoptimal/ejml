@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,24 +21,27 @@ package org.ejml.dense.row.decomposition.svd;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
 
+import javax.annotation.Nullable;
+
 
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class SvdImplicitQrAlgorithmSmart extends SvdImplicitQrAlgorithm_DDRM {
 
     SmartRotatorUpdate smartU = new SmartRotatorUpdate();
     SmartRotatorUpdate smartV = new SmartRotatorUpdate();
 
     @Override
-    public void setUt(DMatrixRMaj ut) {
+    public void setUt(@Nullable DMatrixRMaj ut) {
         super.setUt(ut);
         if(Ut != null )
             smartU.init(Ut);
     }
 
     @Override
-    public void setVt(DMatrixRMaj vt) {
+    public void setVt(@Nullable DMatrixRMaj vt) {
         super.setVt(vt);
         if(Vt != null )
             smartV.init(Vt);

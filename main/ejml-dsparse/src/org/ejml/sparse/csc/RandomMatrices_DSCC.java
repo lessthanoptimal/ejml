@@ -230,7 +230,7 @@ public class RandomMatrices_DSCC {
      *
      * @param upper true for upper triangular and false for lower
      * @param N number of rows and columns
-er      * @param minFill minimum fill fraction
+     * @param minFill minimum fill fraction
      * @param maxFill maximum fill fraction
      * @param rand random number generator
      * @return Random matrix

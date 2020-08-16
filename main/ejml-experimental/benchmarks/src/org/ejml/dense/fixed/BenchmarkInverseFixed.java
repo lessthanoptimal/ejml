@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,6 @@ package org.ejml.dense.fixed;
 
 import org.ejml.data.DMatrix3x3;
 import org.ejml.data.DMatrix4x4;
-import org.ejml.data.DMatrix6x6;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -50,8 +49,8 @@ public class BenchmarkInverseFixed {
     private static DMatrix4x4 fixed4x4_a = new DMatrix4x4();
     private static DMatrix4x4 fixed4x4_b = new DMatrix4x4();
 
-    private static DMatrix6x6 fixed6x6_a = new DMatrix6x6();
-    private static DMatrix6x6 fixed6x6_b = new DMatrix6x6();
+//    private static DMatrix6x6 fixed6x6_a = new DMatrix6x6();
+//    private static DMatrix6x6 fixed6x6_b = new DMatrix6x6();
 
     public static long benchmark(DMatrixRMaj a, DMatrixRMaj b , int numTrials ) {
 

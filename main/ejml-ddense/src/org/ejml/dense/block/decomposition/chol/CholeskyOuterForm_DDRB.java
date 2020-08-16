@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,6 +26,8 @@ import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.TriangularSolver_DDRB;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  * <p>
@@ -38,6 +40,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrixRBlock> {
 
     // if it should compute an upper or lower triangular matrix
@@ -46,12 +49,12 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
     private DMatrixRBlock T;
 
     // predeclare local work space
-    private DSubmatrixD1 subA = new DSubmatrixD1();
-    private DSubmatrixD1 subB = new DSubmatrixD1();
-    private DSubmatrixD1 subC = new DSubmatrixD1();
+    private final DSubmatrixD1 subA = new DSubmatrixD1();
+    private final DSubmatrixD1 subB = new DSubmatrixD1();
+    private final DSubmatrixD1 subC = new DSubmatrixD1();
 
     // storage for the determinant
-    private Complex_F64 det = new Complex_F64();
+    private final Complex_F64 det = new Complex_F64();
 
     /**
      * Creates a new BlockCholeskyOuterForm
@@ -164,7 +167,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
     }
 
     @Override
-    public DMatrixRBlock getT(DMatrixRBlock T) {
+    public DMatrixRBlock getT(@Nullable DMatrixRBlock T) {
         if( T == null )
             return this.T;
         T.set(this.T);

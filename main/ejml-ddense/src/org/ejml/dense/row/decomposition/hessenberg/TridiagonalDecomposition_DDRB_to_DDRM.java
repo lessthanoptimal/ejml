@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,6 +26,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  * Wrapper around a block implementation of TridiagonalSimilarDecomposition_F64
@@ -46,7 +48,7 @@ public class TridiagonalDecomposition_DDRB_to_DDRM
     }
 
     @Override
-    public DMatrixRMaj getT(DMatrixRMaj T) {
+    public DMatrixRMaj getT(@Nullable DMatrixRMaj T) {
         int N = Ablock.numRows;
 
         if( T == null ) {
@@ -71,7 +73,7 @@ public class TridiagonalDecomposition_DDRB_to_DDRM
     }
 
     @Override
-    public DMatrixRMaj getQ(DMatrixRMaj Q, boolean transposed) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q, boolean transposed) {
         if( Q == null ) {
             Q = new DMatrixRMaj(Ablock.numRows,Ablock.numCols);
         }

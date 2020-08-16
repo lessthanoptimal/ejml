@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,12 +18,15 @@
 
 package org.ejml.ops;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * <p>
@@ -57,7 +60,7 @@ public class ReadCsv {
      * @param in Where the input comes from.
      */
     public ReadCsv(InputStream in) {
-        this.in = new BufferedReader(new InputStreamReader(in));
+        this.in = new BufferedReader(new InputStreamReader(in,UTF_8));
     }
 
     /**
@@ -91,9 +94,8 @@ public class ReadCsv {
      * Finds the next valid line of words in the stream and extracts them.
      *
      * @return List of valid words on the line.  null if the end of the file has been reached.
-     * @throws java.io.IOException
      */
-    protected List<String> extractWords() throws IOException
+    protected @Nullable List<String> extractWords() throws IOException
     {
         while( true ) {
             lineNumber++;

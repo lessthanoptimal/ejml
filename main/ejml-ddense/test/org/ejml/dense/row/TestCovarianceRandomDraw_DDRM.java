@@ -42,7 +42,7 @@ public class TestCovarianceRandomDraw_DDRM
 
         CovarianceRandomDraw_DDRM dist = new CovarianceRandomDraw_DDRM(new Random(0xfeed),orig_P);
 
-        DMatrixRMaj draws[] = new DMatrixRMaj[N];
+        DMatrixRMaj[] draws = new DMatrixRMaj[N];
 
         // sample the distribution
         for( int i = 0; i < N; i++ ) {
@@ -52,7 +52,7 @@ public class TestCovarianceRandomDraw_DDRM
         }
 
         // compute the statistics
-        double raw_comp_x[] = new double[2];
+        double[] raw_comp_x = new double[2];
 
         // find the mean
         for( int i = 0; i < N; i++ ) {
@@ -90,7 +90,7 @@ public class TestCovarianceRandomDraw_DDRM
         DMatrixRMaj orig_P = new DMatrixRMaj(new double[][]{{6,-2},{-2,10}});
         DMatrixRMaj input = orig_P.copy();
 
-        CovarianceRandomDraw_DDRM dist = new CovarianceRandomDraw_DDRM(new Random(0xfeed),input);
+        new CovarianceRandomDraw_DDRM(new Random(0xfeed),input);
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(input,orig_P, UtilEjml.TEST_F64));
     }

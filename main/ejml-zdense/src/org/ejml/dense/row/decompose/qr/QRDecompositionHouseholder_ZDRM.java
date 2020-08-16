@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,8 @@ import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -50,6 +52,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixRMaj> {
 
     /**
@@ -60,17 +63,18 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
     protected ZMatrixRMaj QR;
 
     // used internally to store temporary data
-    protected double u[],v[];
+    protected double[] u;
+    protected double[] v;
 
     // dimension of the decomposed matrices
     protected int numCols; // this is 'n'
     protected int numRows; // this is 'm'
     protected int minLength;
 
-    protected double dataQR[];
+    protected double[] dataQR;
 
     // the computed gamma for Q_k matrix
-    protected double gammas[];
+    protected double[] gammas;
     protected Complex_F64 tau = new Complex_F64();
 
 
@@ -123,7 +127,7 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public ZMatrixRMaj getQ(ZMatrixRMaj Q , boolean compact ) {
+    public ZMatrixRMaj getQ(@Nullable ZMatrixRMaj Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_ZDRM.checkIdentity(Q,numRows,minLength);
         else
@@ -141,10 +145,9 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
      * Returns an upper triangular matrix which is the R in the QR decomposition.
      *
      * @param R An upper triangular matrix.
-     * @param compact
      */
     @Override
-    public ZMatrixRMaj getR(ZMatrixRMaj R, boolean compact) {
+    public ZMatrixRMaj getR(@Nullable ZMatrixRMaj R, boolean compact) {
         if( compact )
             R = UtilDecompositons_ZDRM.checkZerosLT(R,minLength,numCols);
         else
@@ -245,8 +248,6 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
 
     /**
      * This function performs sanity check on the input for decompose and sets up the QR matrix.
-     *
-     * @param A
      */
     protected void commonSetup(ZMatrixRMaj A) {
         setExpectedMaxSize(A.numRows,A.numCols);

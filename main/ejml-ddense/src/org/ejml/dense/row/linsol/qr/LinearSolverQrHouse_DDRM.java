@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,24 +40,23 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
 
-    private QRDecompositionHouseholder_DDRM decomposer;
+    private final QRDecompositionHouseholder_DDRM decomposer;
 
     private double []a,u;
 
     private int maxRows = -1;
 
     private DMatrixRMaj QR;
-    private double gammas[];
+    private double[] gammas;
 
     /**
      * Creates a linear solver that uses QR decomposition.
      */
     public LinearSolverQrHouse_DDRM() {
         decomposer = new QRDecompositionHouseholder_DDRM();
-
-
     }
 
     public void setMaxSize( int maxRows ) {

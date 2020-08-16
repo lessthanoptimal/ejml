@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.equation;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Map;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class ManagerFunctions {
 
     // List of functions which take in N inputs
@@ -59,7 +61,7 @@ public class ManagerFunctions {
      * @param var0 Input variable
      * @return Resulting operation
      */
-    public Operation.Info create( String name , Variable var0 ) {
+    public @Nullable Operation.Info create( String name , Variable var0 ) {
         Input1 func = input1.get(name);
         if( func == null )
             return null;
@@ -72,7 +74,7 @@ public class ManagerFunctions {
      * @param vars Input variables
      * @return Resulting operation
      */
-    public Operation.Info create( String name , List<Variable> vars ) {
+    public @Nullable Operation.Info create(String name , List<Variable> vars ) {
         InputN func = inputN.get(name);
         if( func == null )
             return null;
@@ -135,11 +137,6 @@ public class ManagerFunctions {
                 throw new RuntimeException("Unknown operation " + op);
         }
     }
-
-    /**
-     *
-     * @param managerTemp
-     */
 
     public void setManagerTemp(ManagerTempVariables managerTemp) {
         this.managerTemp = managerTemp;

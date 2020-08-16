@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,6 +25,8 @@ import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
+
+import javax.annotation.Nullable;
 
 import static org.ejml.UtilEjml.adjust;
 
@@ -156,7 +158,7 @@ public class CholeskyUpLooking_DSCC implements
     }
 
     @Override
-    public DMatrixSparseCSC getT(DMatrixSparseCSC T) {
+    public DMatrixSparseCSC getT(@Nullable DMatrixSparseCSC T) {
         if( T == null ) {
             T = new DMatrixSparseCSC(L.numRows,L.numCols,L.nz_length);
         }

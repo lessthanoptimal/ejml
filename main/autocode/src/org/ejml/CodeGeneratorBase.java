@@ -28,6 +28,7 @@ import java.io.PrintStream;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public abstract class CodeGeneratorBase {
 
     public static final String copyright =
@@ -53,11 +54,18 @@ public abstract class CodeGeneratorBase {
     protected String className;
 
     /**
-     * Creates
-     *
-     * @throws java.io.FileNotFoundException
+     * Creates the code
      */
     public abstract void generate() throws FileNotFoundException;
+
+    protected String standardClassDocClosing(String ...authors) {
+        return  " *\n" +
+                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
+                " *\n" +
+                " * @author "+authors[0]+"\n" + // yes I was lazy here..
+                " */\n" +
+                "@Generated(\""+getClass().getCanonicalName()+"\")\n";
+    }
 
     public void setOutputFile( String className ) throws FileNotFoundException {
         this.className = className;
@@ -66,6 +74,7 @@ public abstract class CodeGeneratorBase {
         out.println();
         out.println("package " + getPackage() + ";");
         out.println();
+        out.println("import javax.annotation.Generated;");
     }
 
     public String getPackage() {

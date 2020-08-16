@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,6 +44,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
 
     private QRDecompositionHouseholderTran_ZDRM decomposer;
@@ -109,8 +110,8 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
             throw new IllegalArgumentException("Unexpected dimensions for B");
 
         U = decomposer.getR(U,true);
-        final double gammas[] = decomposer.getGammas();
-        final double dataQR[] = QR.data;
+        final double[] gammas = decomposer.getGammas();
+        final double[] dataQR = QR.data;
 
         final int BnumCols = B.numCols;
 

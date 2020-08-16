@@ -30,21 +30,22 @@ import java.util.List;
  * @author Peter Abeles
  */
 public class GenerateCode32 {
-    ConvertFile32From64 converter;
+    final ConvertFile32From64 converter;
 
     // prefixes and suffices for files which are to be converted
-    List<String> suffices64 = new ArrayList<>();
-    List<String> suffices32 = new ArrayList<>();
-    List<String> prefix64 = new ArrayList<>();
-    List<String> prefix32 = new ArrayList<>();
+    final List<String> suffices64 = new ArrayList<>();
+    final List<String> suffices32 = new ArrayList<>();
+    final List<String> prefix64 = new ArrayList<>();
+    final List<String> prefix32 = new ArrayList<>();
 
     // file name keyword black list - ignore files with these names
-    List<String> blacklist = new ArrayList<>();
+    final List<String> blacklist = new ArrayList<>();
 
-    String codeSuffix;
+    final String codeSuffix;
 
-    public GenerateCode32(String codeSuffix) {
+    public GenerateCode32(String codeSuffix, ConvertFile32From64 converter) {
         this.codeSuffix = codeSuffix;
+        this.converter = converter;
     }
 
     public void process(File inputDirectory ) {

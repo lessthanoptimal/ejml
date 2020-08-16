@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,8 @@ import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverDense;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -75,7 +77,7 @@ public class EigenOps_DDRM {
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
-    public static DEigenpair computeEigenVector(DMatrixRMaj A , double eigenvalue )
+    public static @Nullable DEigenpair computeEigenVector(DMatrixRMaj A , double eigenvalue )
     {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("Must be a square matrix.");
@@ -167,7 +169,6 @@ public class EigenOps_DDRM {
         return null;
     }
 
-
     /**
      * <p>
      * Computes the dominant eigen vector for a matrix.  The dominant eigen vector is an
@@ -182,7 +183,7 @@ public class EigenOps_DDRM {
      * @param A A matrix.  Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
-    public static DEigenpair dominantEigenpair(DMatrixRMaj A ) {
+    public static @Nullable DEigenpair dominantEigenpair(DMatrixRMaj A ) {
 
         EigenPowerMethod_DDRM power = new EigenPowerMethod_DDRM(A.numRows);
 
@@ -190,7 +191,8 @@ public class EigenOps_DDRM {
         if( !power.computeShiftInvert(A,0.1) )
             return null;
 
-        return null;//power.getEigenVector();
+        throw new RuntimeException("Not yet implemented");
+//        return null;//power.getEigenVector();
     }
 
     /**
@@ -252,7 +254,7 @@ public class EigenOps_DDRM {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return A diagonal matrix containing the eigenvalues.
      */
-    public static DMatrixRMaj createMatrixD(EigenDecomposition_F64 eig )
+    public static DMatrixRMaj createMatrixD(EigenDecomposition_F64<?> eig )
     {
         int N = eig.getNumberOfEigenvalues();
 

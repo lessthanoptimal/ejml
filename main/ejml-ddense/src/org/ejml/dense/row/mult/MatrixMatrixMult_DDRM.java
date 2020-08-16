@@ -22,6 +22,9 @@ import org.ejml.MatrixDimensionException;
 import org.ejml.data.DMatrix1Row;
 import org.ejml.dense.row.CommonOps_DDRM;
 
+import javax.annotation.Generated;
+import javax.annotation.Nullable;
+
 /**
  * <p>
  * This class contains various types of matrix matrix multiplication operations for {@link DMatrix1Row}.
@@ -49,12 +52,12 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * Typically the straight forward implementation runs about 30% faster on smaller matrices and
  * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.
  * </p>
- * 
- * <center>******** IMPORTANT **********</center>
- * This class was auto generated using org.ejml.dense.row.mult.GeneratorMatrixMatrixMult_DDRM
- * 
+ *
+ * <p>DO NOT MODIFY.  Automatically generated code created by GeneratorMatrixMatrixMult_DDRM</p>
+ *
  * @author Peter Abeles
  */
+@Generated("org.ejml.dense.row.mult.GeneratorMatrixMatrixMult_DDRM")
 public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -141,7 +144,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void mult_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -279,7 +282,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#multTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransAB_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void multTransAB_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -428,7 +431,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#multAdd( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void multAdd_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -565,7 +568,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#multAddTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransAB_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void multAddTransAB_aux( DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -714,7 +717,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#mult(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void mult_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void mult_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -852,7 +855,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#multTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multTransAB_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void multTransAB_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -1001,7 +1004,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#multAdd(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAdd_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void multAdd_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
@@ -1138,7 +1141,7 @@ public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#multAddTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
-    public static void multAddTransAB_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , double []aux )
+    public static void multAddTransAB_aux( double alpha , DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )
     {
         if( A == C || B == C )
             throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");

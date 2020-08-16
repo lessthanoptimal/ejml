@@ -18,6 +18,7 @@
 
 package org.ejml.dense.fixed;
 
+import javax.annotation.Generated;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrix4x4;
@@ -28,6 +29,7 @@ import org.ejml.data.DMatrix4x4;
  *
  * @author Peter Abeles
  */
+@Generated("org.ejml.dense.fixed.GenerateCommonOps_DDF")
 public class CommonOps_DDF4 {
     /**
      * <p>Performs the following operation:<br>

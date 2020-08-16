@@ -41,7 +41,7 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void findMax() {
-        double u[] = new double[50];
+        double[] u = new double[50];
 
         for (int i = 0; i < u.length; i++) {
             u[i] = (rand.nextDouble()-0.5)*20;
@@ -67,11 +67,11 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void divideElements_startU() {
-        double u[] = new double[12*2];
+        double[] u = new double[12*2];
         for (int i = 0; i < u.length; i++ ) {
             u[i] = (rand.nextDouble()*0.5-1.0)*2;
         }
-        double found[] = u.clone();
+        double[] found = u.clone();
 
         Complex_F64 A = new Complex_F64(rand.nextDouble(),rand.nextDouble());
         Complex_F64 U = new Complex_F64();
@@ -102,7 +102,7 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void computeTauGammaAndDivide() {
-        double u[] = new double[12*2];
+        double[] u = new double[12*2];
         for (int i = 0; i < u.length; i++ ) {
             u[i] = (rand.nextDouble()*0.5-1.0)*2;
         }
@@ -112,7 +112,6 @@ public class TestQrHelperFunctions_ZDRM {
         int numRows = 6;
 
         Complex_F64 expectedTau = new Complex_F64();
-        double expectedGamma = 0;
         double[] expectedU = u.clone();
 
         for (int i = j; i < numRows; i++) {
@@ -147,7 +146,7 @@ public class TestQrHelperFunctions_ZDRM {
             ComplexMath_F64.divide(A,B,result);
             normU += result.getMagnitude2();
         }
-        expectedGamma = 2.0/normU;
+        double expectedGamma = 2.0/normU;
 
         Complex_F64 foundTau = new Complex_F64();
         double[] foundU = u.clone();
@@ -165,10 +164,10 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void rank1UpdateMultR() {
-        double u[] = new double[12*2];
-        double uoff[] = new double[12*2+2];
-        double subU[] = new double[12*2];
-        double _temp[] = new double[u.length];
+        double[] u = new double[12*2];
+        double[] uoff = new double[12*2+2];
+        double[] subU = new double[12*2];
+        double[] _temp = new double[u.length];
         double gamma = 0.6;
 
         for (int i = 0; i < u.length; i++) {
@@ -195,7 +194,7 @@ public class TestQrHelperFunctions_ZDRM {
         }
     }
 
-    private ZMatrixRMaj rank1UpdateMultR(ZMatrixRMaj A , double gamma, double u[] ) {
+    private ZMatrixRMaj rank1UpdateMultR(ZMatrixRMaj A , double gamma, double[] u) {
         ZMatrixRMaj U = new ZMatrixRMaj(A.numCols,1);
         U.data = u;
         ZMatrixRMaj UUt = new ZMatrixRMaj(A.numCols,A.numCols);
@@ -209,8 +208,8 @@ public class TestQrHelperFunctions_ZDRM {
 
     @Test
     public void rank1UpdateMultL() {
-        double u[] = new double[12*2];
-        double subU[] = new double[12*2];
+        double[] u = new double[12*2];
+        double[] subU = new double[12*2];
         double gamma = 0.23;
 
         for (int i = 0; i < u.length; i++) {
@@ -237,7 +236,7 @@ public class TestQrHelperFunctions_ZDRM {
         }
     }
 
-    private ZMatrixRMaj rank1UpdateMultL(ZMatrixRMaj A , double gamma, double u[] ) {
+    private ZMatrixRMaj rank1UpdateMultL(ZMatrixRMaj A , double gamma, double[] u) {
         ZMatrixRMaj U = new ZMatrixRMaj(A.numCols,1);
         U.data = u;
         ZMatrixRMaj UUt = new ZMatrixRMaj(A.numCols,A.numCols);
@@ -267,7 +266,7 @@ public class TestQrHelperFunctions_ZDRM {
     public void extractHouseholderColumn() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(6,5,rand);
 
-        double u[] = new double[6*2];
+        double[] u = new double[6*2];
 
         QrHelperFunctions_ZDRM.extractHouseholderColumn(A,1,5,1,u,1);
 
@@ -287,7 +286,7 @@ public class TestQrHelperFunctions_ZDRM {
     public void extractHouseholderRow() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5,6,rand);
 
-        double u[] = new double[6*2];
+        double[] u = new double[6*2];
 
         QrHelperFunctions_ZDRM.extractHouseholderRow(A,1,1,5,u,1);
 
@@ -309,7 +308,7 @@ public class TestQrHelperFunctions_ZDRM {
 
         A.set(2,1,10,0);
 
-        double u[] = new double[6*2];
+        double[] u = new double[6*2];
         double max = QrHelperFunctions_ZDRM.extractColumnAndMax(A,1,5,1,u,1);
 
         assertEquals(10, max, UtilEjml.TEST_F64);

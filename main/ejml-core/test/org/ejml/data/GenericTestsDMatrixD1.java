@@ -27,8 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public abstract class GenericTestsDMatrixD1 extends GenericTestsDMatrix {
 
+    @Override
     protected abstract DMatrixD1 createMatrix(int numRows , int numCols );
 
+    @Override
     public void allTests() {
         super.allTests();
         testReshape();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,6 +32,7 @@ import java.util.Arrays;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class ColumnCounts_DSCC {
 
     // See constructor comments
@@ -42,7 +43,7 @@ public class ColumnCounts_DSCC {
 
     // workspace array
     IGrowArray gw = new IGrowArray();
-    int w[];
+    int[] w;
 
     // shape of input matrix
     int m,n; // (row,col)
@@ -100,13 +101,13 @@ public class ColumnCounts_DSCC {
      * @param post (Input) Post order permutation of elimination tree. See {@link TriangularSolver_DSCC#postorder}
      * @param counts (Output) Storage for column counts.
      */
-    public void process(DMatrixSparseCSC A , int parent[], int post[], int counts[] ) {
+    public void process(DMatrixSparseCSC A , int[] parent, int[] post, int[] counts) {
         if( counts.length < A.numCols )
             throw new IllegalArgumentException("counts must be at least of length A.numCols");
 
         initialize(A);
 
-        int delta[] = counts;
+        int[] delta = counts;
         findFirstDescendant(parent, post, delta);
 
         if( ata ) {
@@ -164,7 +165,7 @@ public class ColumnCounts_DSCC {
         return ata ? w[next+J] : -1;
     }
 
-    private void init_ata( int post[]) {
+    private void init_ata(int[] post) {
         int[] ATp = At.col_idx; int []ATi = At.nz_rows;
 
         head = 4*n;

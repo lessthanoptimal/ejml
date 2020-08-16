@@ -66,6 +66,7 @@ public class ComplexPolar_F64 {
         this.theta = theta;
     }
 
+    @Override
     public String toString() {
 		return "( r = "+r+" theta = "+theta+" )";
 	}

@@ -5,6 +5,15 @@ Date format: year/month/day
 ----- Version 0.40
 2020/
 
+TODO change subprojects so that the entire project isn't rebuilt because EjmlVersion is regenerated
+    ./gradlew build --info
+
+- Added static analysis to code base
+  * Error Prone https://errorprone.info/
+  * Updated auto code generator to mark code as auto generated for better static analysis
+- Strictly enforce usage of @Nullable to public API
+  * https://github.com/uber/NullAway
+  * Private class fields mostly have NullAway disabled because it doesn't model how they are coupled resulting in extremely and pointlessly verbose code
 - Fixed build task oneJarBin. Thanks liuyang0717 for the bug report
 - Added reduce operations for sparse matrices. Thanks Florentin Dörre for the donation
 - CommonOps_DDRM and CommonOps_DSCC

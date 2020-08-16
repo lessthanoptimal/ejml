@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,6 +28,8 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
+import javax.annotation.Nullable;
+
 import static org.ejml.UtilEjml.permutationSign;
 
 /**
@@ -47,17 +49,17 @@ public class LuUpLooking_DSCC
     private DMatrixSparseCSC U = new DMatrixSparseCSC(0,0,0);
 
     // row pivot matrix, for numerical stability
-    private int pinv[] = new int[0];
+    private int[] pinv = new int[0];
 
     // work space variables
-    private double x[] = new double[0];
+    private double[] x = new double[0];
     private IGrowArray gxi = new IGrowArray(); // storage for non-zero pattern
     private IGrowArray gw = new IGrowArray();
 
     // true if a singular matrix is detected
     private boolean singular;
 
-    public LuUpLooking_DSCC(ComputePermutation<DMatrixSparseCSC> reduceFill) {
+    public LuUpLooking_DSCC(@Nullable ComputePermutation<DMatrixSparseCSC> reduceFill) {
         this.applyReduce = new ApplyFillReductionPermutation_DSCC(reduceFill,false);
     }
 
@@ -92,7 +94,7 @@ public class LuUpLooking_DSCC
     private boolean performLU(DMatrixSparseCSC A ) {
         int m = A.numRows;
         int n = A.numCols;
-        int q[] = applyReduce.getArrayP();
+        int[] q = applyReduce.getArrayP();
 
         int[] w = UtilEjml.adjust(gw,m*2, m);
 
@@ -187,7 +189,7 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public DMatrixSparseCSC getLower(DMatrixSparseCSC lower) {
+    public DMatrixSparseCSC getLower(@Nullable DMatrixSparseCSC lower) {
         if( lower == null )
             lower = new DMatrixSparseCSC(1,1,0);
         lower.set(L);
@@ -195,7 +197,7 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public DMatrixSparseCSC getUpper(DMatrixSparseCSC upper) {
+    public DMatrixSparseCSC getUpper(@Nullable DMatrixSparseCSC upper) {
         if( upper == null )
             upper = new DMatrixSparseCSC(1,1,0);
         upper.set(U);
@@ -203,7 +205,7 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public DMatrixSparseCSC getRowPivot(DMatrixSparseCSC pivot) {
+    public DMatrixSparseCSC getRowPivot(@Nullable DMatrixSparseCSC pivot) {
         if( pivot == null )
             pivot = new DMatrixSparseCSC(L.numRows,L.numRows,0);
         pivot.reshape(L.numRows,L.numRows,L.numRows);
@@ -212,7 +214,7 @@ public class LuUpLooking_DSCC
     }
 
     @Override
-    public int[] getRowPivotV(IGrowArray pivot) {
+    public int[] getRowPivotV(@Nullable IGrowArray pivot) {
         return UtilEjml.pivotVector(pinv,L.numRows,pivot);
     }
 
@@ -246,12 +248,22 @@ public class LuUpLooking_DSCC
         return U;
     }
 
+    public boolean isReduceFill() {
+        return applyReduce.isApplied();
+    }
+
     public ComputePermutation<DMatrixSparseCSC> getReduceFill() {
-        return applyReduce.getFillReduce();
+        ComputePermutation<DMatrixSparseCSC> ret = applyReduce.getFillReduce();
+        if( ret == null )
+            throw new RuntimeException("Check to see if there is any fill reduce ordering to apply first");
+        return ret;
     }
 
     public int[] getReducePermutation() {
-        return applyReduce.getArrayP();
+        int[]  ret = applyReduce.getArrayP();
+        if( ret == null )
+            throw new RuntimeException("Check to see if there is any fill reduce ordering to apply first");
+        return ret;
     }
 
     @Override

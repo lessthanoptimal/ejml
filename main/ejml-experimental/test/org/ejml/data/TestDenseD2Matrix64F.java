@@ -30,6 +30,7 @@ public class TestDenseD2Matrix64F {
     public void testGeneric() {
         GenericTestsDMatrix g;
         g = new GenericTestsDMatrix() {
+            @Override
             protected DMatrix createMatrix(int numRows, int numCols) {
                 return new DenseD2Matrix64F(numRows,numCols);
             }

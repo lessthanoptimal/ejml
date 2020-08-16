@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,6 +29,7 @@ import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -137,6 +138,7 @@ public abstract class Operation {
         return ret;
     }
 
+    @SuppressWarnings("ArgumentSelectionDefectChecker")
     public static Info divide(final Variable A, final Variable B, ManagerTempVariables manager) {
 
         Info ret = new Info();
@@ -1246,7 +1248,7 @@ public abstract class Operation {
             ret.op = new Operation("abs-s") {
                 @Override
                 public void process() {
-                    output.value = Math.abs((((VariableDouble) A).getDouble()));
+                    output.value = Math.abs(((VariableDouble) A).getDouble());
                 }
             };
         }
@@ -1503,7 +1505,7 @@ public abstract class Operation {
 
         if( A instanceof VariableMatrix && B instanceof VariableMatrix ) {
             ret.op = new Operation("solve-mm") {
-                LinearSolverDense<DMatrixRMaj> solver;
+                @Nullable LinearSolverDense<DMatrixRMaj> solver;
                 @Override
                 public void process() {
 
@@ -1753,6 +1755,7 @@ public abstract class Operation {
         int col0,col1;
     }
 
+    @SuppressWarnings("NullAway.Init")
     public static class Info
     {
         public Operation op;
@@ -1761,7 +1764,7 @@ public abstract class Operation {
 
     public static class ArrayExtent
     {
-        int array[];
+        int[] array;
         int length;
 
         public ArrayExtent() {

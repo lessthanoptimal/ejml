@@ -185,6 +185,7 @@ public class DMatrixRBlock extends DMatrixD1 {
         return numRows*numCols;
     }
 
+    @Override
     public DMatrixRBlock copy() {
         DMatrixRBlock A = new DMatrixRBlock(numRows,numCols,blockLength);
         A.set(this);

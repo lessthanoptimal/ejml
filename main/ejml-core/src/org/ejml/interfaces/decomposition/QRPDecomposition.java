@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
+
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -56,5 +58,5 @@ public interface QRPDecomposition<T extends Matrix>
      * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
      * @return The pivot matrix.
      */
-    T getColPivotMatrix(T P);
+    T getColPivotMatrix(@Nullable T P);
 }

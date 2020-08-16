@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ejml.UtilEjml.fancyString;
 import static org.ejml.UtilEjml.fancyStringF;
 
@@ -237,7 +238,7 @@ public class MatrixIO {
     public static FMatrixSparseTriplet loadMatrixMarketF( InputStream streamIn )
     {
         FMatrixSparseTriplet output = new FMatrixSparseTriplet();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(streamIn));
+        BufferedReader reader =  new BufferedReader(new InputStreamReader(streamIn, UTF_8));
         try {
             boolean hasHeader = false;
             String line = reader.readLine();
@@ -272,7 +273,6 @@ public class MatrixIO {
      *
      * @param A The matrix being saved.
      * @param fileName Name of the file its being saved at.
-     * @throws java.io.IOException
      */
     public static void saveBin(DMatrix A, String fileName)
         throws IOException
@@ -299,8 +299,7 @@ public class MatrixIO {
      * serialization.
      *
      * @param fileName The file being loaded.
-     * @return  DMatrixRMaj
-     * @throws IOException
+     * @return DMatrixRMaj
      */
     public static <T extends DMatrix> T loadBin(String fileName)
         throws IOException
@@ -328,7 +327,6 @@ public class MatrixIO {
      *
      * @param A The matrix being saved.
      * @param fileName Name of the file its being saved at.
-     * @throws java.io.IOException
      */
     public static void saveDenseCSV(DMatrix A , String fileName )
         throws IOException
@@ -351,7 +349,6 @@ public class MatrixIO {
      *
      * @param A The matrix being saved.
      * @param fileName Name of the file its being saved at.
-     * @throws java.io.IOException
      */
     public static void saveSparseCSV(DMatrixSparseTriplet A , String fileName )
             throws IOException
@@ -375,7 +372,6 @@ public class MatrixIO {
      *
      * @param A The matrix being saved.
      * @param fileName Name of the file its being saved at.
-     * @throws java.io.IOException
      */
     public static void saveSparseCSV(FMatrixSparseTriplet A , String fileName )
             throws IOException
@@ -402,7 +398,6 @@ public class MatrixIO {
      *
      * @param fileName The file being loaded.
      * @return DMatrix
-     * @throws IOException
      */
     public static <T extends DMatrix>T loadCSV(String fileName , boolean doublePrecision )
         throws IOException
@@ -429,7 +424,6 @@ public class MatrixIO {
      * @param numRows number of rows in the matrix.
      * @param numCols number of columns in the matrix.
      * @return DMatrixRMaj
-     * @throws IOException
      */
     public static DMatrixRMaj loadCSV(String fileName , int numRows , int numCols )
         throws IOException

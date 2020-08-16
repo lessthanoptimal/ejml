@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,13 +29,14 @@ import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
 
-    private CholeskyDecompositionLDL_DDRM decomposer;
+    private final CholeskyDecompositionLDL_DDRM decomposer;
     private int n;
-    private double vv[];
-    private double el[];
-    private double d[];
+    private double[] vv;
+    private double[] el;
+    private double[] d;
 
     public LinearSolverCholLDL_DDRM(CholeskyDecompositionLDL_DDRM decomposer) {
         this.decomposer = decomposer;
@@ -88,8 +89,8 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
 
         int numCols = B.numCols;
 
-        double dataB[] = B.data;
-        double dataX[] = X.data;
+        double[] dataB = B.data;
+        double[] dataX = X.data;
 
         for( int j = 0; j < numCols; j++ ) {
             for( int i = 0; i < n; i++ ) vv[i] = dataB[i*numCols+j];
@@ -125,7 +126,7 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
             throw new RuntimeException("Unexpected matrix dimension");
         }
 
-        double a[] = inv.data;
+        double[] a = inv.data;
 
         // solve L*z = b
         for( int i =0; i < n; i++ ) {

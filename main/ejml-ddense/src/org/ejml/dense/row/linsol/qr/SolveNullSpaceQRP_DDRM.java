@@ -45,6 +45,7 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
      * @param nullspace Storage for null-space
      * @return true if successful or false if it failed
      */
+    @Override
     public boolean process(DMatrixRMaj A , int numSingularValues, DMatrixRMaj nullspace ) {
         decomposition.decompose(A);
 
@@ -62,13 +63,6 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
         return true;
     }
 
-    private double check(DMatrixRMaj A, DMatrixRMaj nullspace ) {
-        DMatrixRMaj r = new DMatrixRMaj(A.numRows,nullspace.numCols);
-        CommonOps_DDRM.mult(A,nullspace,r);
-
-        return NormOps_DDRM.normF(r);
-    }
-
     @Override
     public boolean inputModified() {
         return decomposition.inputModified();
@@ -79,6 +73,7 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
      */
     private static class CustomizedQRP extends QRColPivDecompositionHouseholderColumn_DDRM {
 
+        @Override
         protected void convertToColumnMajor(DMatrixRMaj A) {
             for( int x = 0; x < numCols; x++ ) {
                 System.arraycopy(A.data,x*A.numCols,dataQR[x],0,numRows);

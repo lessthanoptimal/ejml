@@ -1,5 +1,26 @@
+/*
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ *
+ * This file is part of Efficient Java Matrix Library (EJML).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import net.ltgt.gradle.errorprone.CheckSeverity
+
 plugins {
     id "com.peterabeles.gversion" version "1.7.0"
+    id "net.ltgt.errorprone" version "1.2.1" apply false
 }
 
 gversion {
@@ -20,6 +41,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'signing'
+    apply plugin: 'net.ltgt.errorprone'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -50,6 +72,19 @@ subprojects {
         maven { url = 'https://jitpack.io' } // Allows annotations past Java 8 to be used
     }
 
+    // InconsistentCapitalization is disabled because in Math capital letters are often used for matrices and lower case
+    // for vectors or scalars. Perhaps a more verbose name should be used but it's disabled for now to reduce build spam
+    tasks.withType(JavaCompile).configureEach {
+        options.errorprone.disableWarningsInGeneratedCode = true
+        options.errorprone.disable("TypeParameterUnusedInFormals","StringSplitter","InconsistentCapitalization",
+                "HidingField", // this is sometimes done when the specific type is known by child. Clean up later.
+                "ClassNewInstance", // yes it's deprecated but the more verbose just adds extra code to be ignored
+                "FloatingPointLiteralPrecision", // too many false positives in test code
+                "MissingSummary","UnescapedEntity","EmptyBlockTag")
+        options.errorprone.error("MissingOverride","MissingCasesInEnumSwitch","BadInstanceof",
+                "PublicConstructorForAbstractClass")
+    }
+
     sourceSets {
         main {
             java { srcDir 'src' }
@@ -63,7 +98,7 @@ subprojects {
 
         benchmark {
             java { srcDir 'benchmarks/src' }
-            resources { srcDir 'benchmark/resources' }
+            resources { srcDir 'benchmarks/resources' }
             compileClasspath += sourceSets.main.runtimeClasspath
         }
 
@@ -72,15 +107,14 @@ subprojects {
                 srcDir 'test'
                 srcDir 'benchmarks/test'
             }
-            resources {
-                srcDir 'resources/test'
-            }
+            resources { srcDir 'resources/test' }
             compileClasspath += sourceSets.benchmark.runtimeClasspath
         }
     }
 
     dependencies {
-        compile 'com.google.code.findbugs:jsr305:3.0.2' // @Nullable
+        implementation 'com.google.code.findbugs:jsr305:3.0.2' // @Nullable
+        implementation 'javax.annotation:jsr250-api:1.0'       // @Generated
 
         testImplementation( 'org.junit.jupiter:junit-jupiter-api:5.4.0' )
         testRuntimeOnly( 'org.junit.jupiter:junit-jupiter-engine:5.4.0' )
@@ -97,9 +131,20 @@ subprojects {
         }
         annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
         annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
+
+        errorprone "com.google.errorprone:error_prone_core:2.4.0"
+        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+
+        // even if it's not used you still need to include the dependency
+        annotationProcessor "com.uber.nullaway:nullaway:0.8.0"
+        testAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
+        benchmarkAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
+        generateAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
     }
 
     javadoc.failOnError = false
+//    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+    javadoc.enabled = false // disable to stop it from spamming stdout
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
         from javadoc
@@ -108,6 +153,28 @@ subprojects {
     task sourcesJar(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
+    }
+
+    tasks.withType(JavaCompile) {
+        // By default have all NullAway issues be fata errors but don't run this analysis on auto generated files
+        options.errorprone {
+            check("NullAway", CheckSeverity.ERROR)
+            // The line below effectively disables NullAway by default
+            option("NullAway:AnnotatedPackages", "RANDOM.PACKAGE.TO.DISABLE")
+            option("NullAway:TreatGeneratedAsUnannotated", true)
+        }
+
+        if( name.startsWith("compileTest") )
+            return
+        if( path.contains("experimental") )
+            return
+        if( path.contains("example") )
+            return
+
+        // Enable NullAway
+        options.errorprone {
+            option("NullAway:AnnotatedPackages", "org.ejml")
+        }
     }
 
     artifacts {
@@ -184,24 +251,6 @@ def allModules = [
         ':main:ejml-simple',
         ':main:ejml-experimental',
 ]
-
-/*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
- *
- * This file is part of Efficient Java Matrix Library (EJML).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 // Creates a directory with all the comiled jars
 task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModules.collect{ it+":sourcesJar"}) {

@@ -78,12 +78,12 @@ public class BenchmarkKalmanPerformance {
         evaluate(new KalmanFilterSimple());
     }
 
-    private void evaluate(KalmanFilter f) {
-        f.configure(F,Q,H);
+    private void evaluate(KalmanFilter filter) {
+        filter.configure(F,Q,H);
 
         for( int trial = 0; trial < NUM_TRIALS; trial++ ) {
-            f.setState(priorX,priorP);
-            processMeas(f,meas);
+            filter.setState(priorX,priorP);
+            processMeas(filter,meas);
         }
     }
 
@@ -107,14 +107,14 @@ public class BenchmarkKalmanPerformance {
         return ret;
     }
 
-    private void processMeas( KalmanFilter f ,
+    private void processMeas( KalmanFilter filter ,
                               List<DMatrixRMaj> meas )
     {
         DMatrixRMaj R = CommonOps_DDRM.identity(measDOF);
 
         for(DMatrixRMaj z : meas ) {
-            f.predict();
-            f.update(z,R);
+            filter.predict();
+            filter.update(z,R);
         }
     }
 

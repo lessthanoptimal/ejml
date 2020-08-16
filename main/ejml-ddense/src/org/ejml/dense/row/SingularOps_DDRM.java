@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,7 +55,7 @@ public class SingularOps_DDRM {
             throw new RuntimeException("SVD Failed!");
         }
 
-        double sv[] = svd.getSingularValues();
+        double[] sv = svd.getSingularValues();
         Arrays.sort(sv,0,svd.numberOfSingularValues());
 
         // change the ordering to ascending
@@ -109,7 +109,7 @@ public class SingularOps_DDRM {
             throw new RuntimeException("SVD Failed!");
         }
 
-        double sv[] = svd.getSingularValues();
+        double[] sv = svd.getSingularValues();
 
         int count = 0;
         for (int i = 0; i < sv.length; i++) {
@@ -137,7 +137,7 @@ public class SingularOps_DDRM {
         }
 
         int N = svd.numberOfSingularValues();
-        double sv[] = svd.getSingularValues();
+        double[] sv = svd.getSingularValues();
 
         double threshold = singularThreshold(sv,N);
         int count = 0;
@@ -268,10 +268,10 @@ public class SingularOps_DDRM {
      * @param V Matrix. Modified.
      * @param tranV is V transposed or not.
      */
-    public static void descendingOrder(DMatrixRMaj U , boolean tranU ,
-                                       double singularValues[] ,
+    public static void descendingOrder(@Nullable DMatrixRMaj U , boolean tranU ,
+                                       double[] singularValues,
                                        int singularLength ,
-                                       DMatrixRMaj V , boolean tranV )
+                                       @Nullable DMatrixRMaj V , boolean tranV )
     {
 //        checkSvdMatrixSize(U, tranU, W, V, tranV);
 
@@ -382,10 +382,10 @@ public class SingularOps_DDRM {
      * @return The null space.
      */
     public static DMatrixRMaj nullSpace(SingularValueDecomposition_F64<DMatrixRMaj> svd ,
-                                          DMatrixRMaj nullSpace , double tol )
+                                          @Nullable DMatrixRMaj nullSpace , double tol )
     {
         int N = svd.numberOfSingularValues();
-        double s[] = svd.getSingularValues();
+        double[] s = svd.getSingularValues();
 
         DMatrixRMaj V = svd.getV(null,true);
 
@@ -495,7 +495,7 @@ public class SingularOps_DDRM {
                                            DMatrixRMaj nullVector )
     {
         int N = svd.numberOfSingularValues();
-        double s[] = svd.getSingularValues();
+        double[] s = svd.getSingularValues();
 
         DMatrixRMaj A = isRight ? svd.getV(null,true) : svd.getU(null,false);
 
@@ -556,13 +556,13 @@ public class SingularOps_DDRM {
      * @param svd A precomputed decomposition.  Not modified.
      * @return threshold for singular values
      */
-    public static double singularThreshold( SingularValueDecomposition_F64 svd ) {
+    public static double singularThreshold( SingularValueDecomposition_F64<?> svd ) {
         return singularThreshold(svd,UtilEjml.EPS);
     }
 
-    public static double singularThreshold( SingularValueDecomposition_F64 svd , double tolerance ) {
+    public static double singularThreshold( SingularValueDecomposition_F64<?> svd , double tolerance ) {
 
-        double w[]= svd.getSingularValues();
+        double[] w = svd.getSingularValues();
 
         int N = svd.numberOfSingularValues();
 
@@ -591,7 +591,7 @@ public class SingularOps_DDRM {
      * @param svd A precomputed decomposition.  Not modified.
      * @return The rank of the decomposed matrix.
      */
-    public static int rank( SingularValueDecomposition_F64 svd ) {
+    public static int rank( SingularValueDecomposition_F64<?> svd ) {
         double threshold = singularThreshold(svd);
         return rank(svd,threshold);
     }
@@ -605,10 +605,10 @@ public class SingularOps_DDRM {
      * @param threshold Tolerance used to determine of a singular value is singular.
      * @return The rank of the decomposed matrix.
      */
-    public static int rank(SingularValueDecomposition_F64 svd , double threshold ) {
+    public static int rank(SingularValueDecomposition_F64<?> svd , double threshold ) {
         int numRank=0;
 
-        double w[]= svd.getSingularValues();
+        double[] w = svd.getSingularValues();
 
         int N = svd.numberOfSingularValues();
 
@@ -628,7 +628,7 @@ public class SingularOps_DDRM {
      * @param svd A precomputed decomposition.  Not modified.
      * @return The nullity of the decomposed matrix.
      */
-    public static int nullity( SingularValueDecomposition_F64 svd  ) {
+    public static int nullity( SingularValueDecomposition_F64<?> svd  ) {
         double threshold = singularThreshold(svd);
         return nullity(svd, threshold);
     }
@@ -642,10 +642,10 @@ public class SingularOps_DDRM {
      * @param threshold Tolerance used to determine of a singular value is singular.
      * @return The nullity of the decomposed matrix.
      */
-    public static int nullity(SingularValueDecomposition_F64 svd , double threshold ) {
+    public static int nullity(SingularValueDecomposition_F64<?> svd , double threshold ) {
         int ret = 0;
 
-        double w[]= svd.getSingularValues();
+        double[] w = svd.getSingularValues();
 
         int N = svd.numberOfSingularValues();
 
@@ -674,7 +674,7 @@ public class SingularOps_DDRM {
             throw new RuntimeException("SVD Failed!");
         }
 
-        double sv[] = svd.getSingularValues();
+        double[] sv = svd.getSingularValues();
 
         int count = 0;
         for (int i = 0; i < sv.length; i++) {

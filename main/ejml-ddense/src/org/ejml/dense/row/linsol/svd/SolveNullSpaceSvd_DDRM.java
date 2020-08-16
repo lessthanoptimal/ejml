@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,6 +28,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class SolveNullSpaceSvd_DDRM implements SolveNullSpace<DMatrixRMaj> {
 
     boolean compact = true;
