@@ -186,6 +186,7 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
         solve(I, A_inv);
     }
 
+    @Override
     public QRPDecomposition_F64<DMatrixRMaj> getDecomposition() {
         return decomposition;
     }

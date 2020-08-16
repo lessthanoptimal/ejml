@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,15 +21,17 @@ package org.ejml.sparse;
 import org.ejml.data.IGrowArray;
 import org.ejml.data.Matrix;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Peter Abeles
  */
 public abstract class ComputePermutation<T extends Matrix> {
 
-    protected IGrowArray prow;
-    protected IGrowArray pcol;
+    protected @Nullable IGrowArray prow;
+    protected @Nullable IGrowArray pcol;
 
-    public ComputePermutation( boolean hasRow , boolean hasCol ) {
+    protected ComputePermutation( boolean hasRow , boolean hasCol ) {
         if( hasRow )
             prow = new IGrowArray();
         if( hasCol )
@@ -41,14 +43,14 @@ public abstract class ComputePermutation<T extends Matrix> {
     /**
      * Returns row permutation
      */
-    public IGrowArray getRow() {
+    public @Nullable IGrowArray getRow() {
         return prow;
     }
 
     /**
      * Returns column permutation
      */
-    public IGrowArray getColumn() {
+    public @Nullable IGrowArray getColumn() {
         return pcol;
     }
 
@@ -56,7 +58,7 @@ public abstract class ComputePermutation<T extends Matrix> {
         return prow != null;
     }
 
-    public  boolean hasColumnPermutation() {
+    public boolean hasColumnPermutation() {
         return pcol != null;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,8 @@ import org.ejml.data.ReshapeMatrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
+import javax.annotation.Nullable;
+
 
 /**
  * Ensures that any linear solver it is wrapped around will never modify
@@ -33,11 +35,11 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDense<T> {
 
     // the solver it is wrapped around
-    private LinearSolverDense<T> alg;
+    private final LinearSolverDense<T> alg;
 
     // local copies of input matrices that can be modified.
-    private T A;
-    private T B;
+    private @Nullable T A;
+    private @Nullable T B;
 
     /**
      *
@@ -51,14 +53,8 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDe
     public boolean setA(T A) {
 
         if( alg.modifiesA() ) {
-            if( this.A == null ) {
-                this.A = (T)A.copy();
-            } else {
-                if( this.A.getNumRows() != A.getNumRows() || this.A.getNumCols() != A.getNumCols() ) {
-                    this.A.reshape(A.getNumRows(),A.getNumCols());
-                }
-                this.A.set(A);
-            }
+            this.A = UtilEjml.reshapeOrDeclare(this.A,A);
+            this.A.set(A);
             return alg.setA(this.A);
         }
 
@@ -73,11 +69,8 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDe
     @Override
     public void solve(T B, T X) {
         if( alg.modifiesB() ) {
-            if( this.B == null ) {
-                this.B = (T)B.copy();
-            } else {
-                this.B.set(B);
-            }
+            this.B = UtilEjml.reshapeOrDeclare(this.B,B);
+            this.B.set(B);
             B = this.B;
         }
 

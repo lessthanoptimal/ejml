@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -47,6 +47,7 @@ public interface MatrixSparse extends ReshapeMatrix {
      * @param numRows number of rows
      * @param numCols number of columns
      */
+    @Override
     void reshape( int numRows , int numCols );
 
     /**
@@ -71,8 +72,14 @@ public interface MatrixSparse extends ReshapeMatrix {
     boolean isAssigned( int row , int col );
 
     /**
+     * Returns number of non-zero values
+     */
+    int getNonZeroCount();
+
+    /**
      * Sets all elements to zero by removing the sparse graph
      */
+    @Override
     void zero();
 
     /**

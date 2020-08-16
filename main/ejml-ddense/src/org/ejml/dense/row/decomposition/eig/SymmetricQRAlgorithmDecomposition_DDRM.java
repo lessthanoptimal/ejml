@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,6 +43,7 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class SymmetricQRAlgorithmDecomposition_DDRM
         implements EigenDecomposition_F64<DMatrixRMaj> {
 
@@ -58,19 +59,19 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
     private boolean computeVectorsWithValues = false;
 
     // where the found eigenvalues are stored
-    private double values[];
+    private double[] values;
 
     // where the tridiagonal matrix is stored
-    private double diag[];
-    private double off[];
+    private double[] diag;
+    private double[] off;
 
-    private double diagSaved[];
-    private double offSaved[];
+    private double[] diagSaved;
+    private double[] offSaved;
 
     // temporary variable used to store/compute eigenvectors
     private DMatrixRMaj V;
     // the extracted eigenvectors
-    private DMatrixRMaj eigenvectors[];
+    private DMatrixRMaj[] eigenvectors;
 
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
@@ -82,7 +83,6 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         this.computeVectors = computeVectors;
 
         helper = new SymmetricQREigenHelper_DDRM();
-
         vector = new SymmetricQrAlgorithm_DDRM(helper);
     }
 
@@ -143,9 +143,11 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         if( !decomp.decompose(orig) )
             return false;
 
+        double[] diag = this.diag;
+        double[] off = this.off;
         if( diag == null || diag.length < N) {
-            diag = new double[N];
-            off = new double[N-1];
+            this.diag = diag = new double[N];
+            this.off = off = new double[N-1];
         }
         decomp.getDiagonal(diag,off);
 

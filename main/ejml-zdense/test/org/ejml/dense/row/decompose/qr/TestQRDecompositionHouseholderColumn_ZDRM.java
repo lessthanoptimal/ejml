@@ -158,7 +158,6 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
 
     private static class DebugQR extends QRDecompositionHouseholderColumn_ZDRM
     {
-
         public DebugQR( int numRows , int numCols ) {
             setExpectedMaxSize(numRows,numCols);
             this.numCols = numCols;
@@ -169,10 +168,6 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
             convertToColumnMajor(A);
 
             super.householder(j);
-        }
-
-        protected void convertToColumnMajor(ZMatrixRMaj A) {
-            super.convertToColumnMajor(A);
         }
 
         public void updateA( int w , double gamma ) {

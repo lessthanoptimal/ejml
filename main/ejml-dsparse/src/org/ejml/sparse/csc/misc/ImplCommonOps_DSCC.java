@@ -278,7 +278,7 @@ public class ImplCommonOps_DSCC {
             throw new IllegalArgumentException("Must be a lower triangular square matrix");
 
         int N = A.numCols;
-        int w[] = adjust(gw,N,N);
+        int[] w = adjust(gw,N,N);
         B.reshape(N,N,A.nz_length*2);
         B.indicesSorted = false;
 

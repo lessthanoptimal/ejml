@@ -62,6 +62,10 @@ public class UtilEjml {
     // The maximize size it will do inverse on
     public static int maxInverseSize = 5;
 
+    public static final int[] ZERO_LENGTH_I32 = new int[0];
+    public static final float[] ZERO_LENGTH_F32 = new float[0];
+    public static final double[] ZERO_LENGTH_F64 = new double[0];
+
     public static void checkSameInstance( Object a , Object b ) {
         if( a == b )
             throw new IllegalArgumentException("Can't pass in the same instance");
@@ -126,6 +130,14 @@ public class UtilEjml {
         return target;
     }
 
+    public static <T extends MatrixSparse> T reshapeOrDeclare(@Nullable T target , MatrixSparse reference ) {
+        if( target == null )
+            return reference.createLike();
+        else
+            target.reshape(reference.getNumRows(),reference.getNumCols(), reference.getNonZeroLength());
+        return target;
+    }
+
     /**
      * If the input matrix is null a new matrix is created and returned. If it exists it will be reshaped and returned.
      * @param target (Input/Output) matrix which is to be checked. Can be null.
@@ -140,6 +152,22 @@ public class UtilEjml {
         return target;
     }
 
+    public static DMatrixSparseCSC reshapeOrDeclare(@Nullable DMatrixSparseCSC target , int rows, int cols, int nz_length ) {
+        if( target == null )
+            return new DMatrixSparseCSC(rows,cols,nz_length);
+        else
+            target.reshape(rows,cols,nz_length);
+        return target;
+    }
+
+    public static FMatrixSparseCSC reshapeOrDeclare(@Nullable FMatrixSparseCSC target , int rows, int cols, int nz_length ) {
+        if( target == null )
+            return new FMatrixSparseCSC(rows,cols,nz_length);
+        else
+            target.reshape(rows,cols,nz_length);
+        return target;
+    }
+
     public static void checkSameShape( Matrix a , Matrix b , boolean allowedSameInstance ) {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
             throw new MatrixDimensionException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
@@ -151,7 +179,7 @@ public class UtilEjml {
         if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
             throw new MatrixDimensionException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+b.getNumRows()+"x"+b.getNumCols());
         }
-        if( a.getNumRows() != b.getNumRows() || c.getNumCols() != c.getNumCols() ) {
+        if( a.getNumRows() != c.getNumRows() || a.getNumCols() != c.getNumCols() ) {
             throw new IllegalArgumentException("Must be same shape. "+a.getNumRows()+"x"+a.getNumCols()+" vs "+c.getNumRows()+"x"+c.getNumCols());
         }
     }
@@ -249,7 +277,7 @@ public class UtilEjml {
         }
     }
 
-    public static double max( double array[], int start , int length ) {
+    public static double max(double[] array, int start , int length ) {
         double max = array[start];
         final int end = start+length;
 
@@ -263,7 +291,7 @@ public class UtilEjml {
         return max;
     }
 
-    public static float max( float array[], int start , int length ) {
+    public static float max(float[] array, int start , int length ) {
         float max = array[start];
         final int end = start+length;
 
@@ -280,6 +308,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
+    @SuppressWarnings("StringSplitter")
     public static DMatrixRMaj parse_DDRM(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
@@ -305,6 +334,7 @@ public class UtilEjml {
     /**
      * Give a string of numbers it returns a DenseMatrix
      */
+    @SuppressWarnings("StringSplitter")
     public static FMatrixRMaj parse_FDRM(String s , int numColumns )
     {
         String []vals = s.split("(\\s)+");
@@ -333,11 +363,7 @@ public class UtilEjml {
             idx[i] = i;
         }
 
-        Arrays.sort(idx, new Comparator<Integer>() {
-            @Override public int compare(final Integer o1, final Integer o2) {
-                return Double.compare(data[o1], data[o2]);
-            }
-        });
+        Arrays.sort(idx, Comparator.comparingDouble(o -> data[o]));
 
         return idx;
     }
@@ -359,7 +385,7 @@ public class UtilEjml {
     }
 
     public static int[] shuffled( int N , int shuffleUpTo , Random rand ) {
-        int l[] = new int[N];
+        int[] l = new int[N];
         for (int i = 0; i < N; i++) {
             l[i] = i;
         }
@@ -368,7 +394,7 @@ public class UtilEjml {
     }
 
     public static int[] shuffledSorted( int N , int shuffleUpTo , Random rand ) {
-        int l[] = new int[N];
+        int[] l = new int[N];
         for (int i = 0; i < N; i++) {
             l[i] = i;
         }
@@ -377,7 +403,7 @@ public class UtilEjml {
         return l;
     }
 
-    public static void shuffle( int list[] , int N ,int start , int end , Random rand ) {
+    public static void shuffle(int[] list, int N , int start , int end , Random rand ) {
         int range = end - start;
         for (int i = 0; i < range; i++) {
             int selected = rand.nextInt(N-i)+i+start;
@@ -387,14 +413,14 @@ public class UtilEjml {
         }
     }
 
-    public static int[] pivotVector(int pivots[] , int length , IGrowArray storage ) {
+    public static int[] pivotVector(int[] pivots, int length , @Nullable IGrowArray storage ) {
         if( storage == null ) storage = new IGrowArray();
         storage.reshape(length);
         System.arraycopy(pivots,0,storage.data,0,length);
         return storage.data;
     }
 
-    public static int permutationSign( int[] p , int N , int work[] ) {
+    public static int permutationSign(int[] p , int N , int[] work) {
         System.arraycopy(p,0,work,0,N);
         p = work;
         int cnt = 0;
@@ -410,7 +436,7 @@ public class UtilEjml {
     }
 
     public static double[] randomVector_F64( Random rand , int length ) {
-        double d[] = new double[length];
+        double[] d = new double[length];
         for (int i = 0; i < length; i++) {
             d[i] = rand.nextDouble();
         }
@@ -418,7 +444,7 @@ public class UtilEjml {
     }
 
     public static float[] randomVector_F32( Random rand , int length ) {
-        float d[] = new float[length];
+        float[] d = new float[length];
         for (int i = 0; i < length; i++) {
             d[i] = rand.nextFloat();
         }
@@ -451,7 +477,7 @@ public class UtilEjml {
 
         String formatted = fancyString(value, format, length, significant);
 
-        int n = length-formatted.length();
+        final int n = length-formatted.length();
         if( n > 0 ) {
             StringBuilder builder = new StringBuilder(n);
             for (int i = 0; i < n; i++) {
@@ -504,26 +530,26 @@ public class UtilEjml {
     /**
      * Resizes the array to ensure that it is at least of length desired and returns its internal array
      */
-    public static int[] adjust(IGrowArray gwork, int desired) {
+    public static int[] adjust(@Nullable IGrowArray gwork, int desired) {
         if (gwork == null) gwork = new IGrowArray();
         gwork.reshape(desired);
         return gwork.data;
     }
 
-    public static int[] adjust(IGrowArray gwork, int desired, int zeroToM) {
+    public static int[] adjust(@Nullable IGrowArray gwork, int desired, int zeroToM) {
        int[] w = adjust(gwork,desired);
        Arrays.fill(w,0,zeroToM,0);
        return w;
     }
 
-    public static int[] adjustClear(IGrowArray gwork, int desired) {
+    public static int[] adjustClear(@Nullable IGrowArray gwork, int desired) {
         return adjust(gwork,desired,desired);
     }
 
     /**
      * Resizes the array to ensure that it is at least of length desired and returns its internal array
      */
-    public static double[] adjust(DGrowArray gwork, int desired) {
+    public static double[] adjust(@Nullable DGrowArray gwork, int desired) {
         if (gwork == null) gwork = new DGrowArray();
         gwork.reshape(desired);
         return gwork.data;
@@ -532,21 +558,31 @@ public class UtilEjml {
     /**
      * Resizes the array to ensure that it is at least of length desired and returns its internal array
      */
-    public static float[] adjust(FGrowArray gwork, int desired) {
+    public static float[] adjust(@Nullable FGrowArray gwork, int desired) {
         if (gwork == null) gwork = new FGrowArray();
         gwork.reshape(desired);
         return gwork.data;
     }
 
+    /**
+     * Returns true if any of the matrix arguments has @Nullable
+     */
     public static boolean hasNullableArgument(Method func) {
         Annotation[][] annotations = func.getParameterAnnotations();
         if( annotations.length == 0)
             return false;
-        Annotation[] lastArray = annotations[annotations.length-1];
-        if( lastArray.length == 0)
-            return false;
 
-        Annotation last = lastArray[lastArray.length-1];
-        return last.toString().contains("Nullable");
+        Class<?>[] types = func.getParameterTypes();
+        for (int i = 0; i < types.length; i++) {
+            Annotation[] argumentAnnotations = annotations[i];
+            if( argumentAnnotations.length == 0)
+                continue;
+            if( !Matrix.class.isAssignableFrom(types[i]))
+                continue;
+            Annotation last = argumentAnnotations[argumentAnnotations.length-1];
+            if( last.toString().contains("Nullable") )
+                return true;
+        }
+        return false;
     }
 }

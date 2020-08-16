@@ -32,6 +32,7 @@ public class TestWatchedDoubleStepQRDecomposition_DDRM extends GeneralEigenDecom
     }
 
     @Test
+    @Override
     public void allTests() {
         super.allTests();
         super.justEigenValues();

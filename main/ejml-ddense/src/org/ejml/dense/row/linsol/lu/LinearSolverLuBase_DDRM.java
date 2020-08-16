@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
 
     protected LUDecompositionBase_DDRM decomp;
 
-    public LinearSolverLuBase_DDRM(LUDecompositionBase_DDRM decomp) {
+    protected LinearSolverLuBase_DDRM(LUDecompositionBase_DDRM decomp) {
         this.decomp = decomp;
 
     }
@@ -49,6 +49,9 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
 
     @Override
     public void invert(DMatrixRMaj A_inv) {
+        if( A == null )
+            throw new RuntimeException("Must call setA() first");
+
         double []vv = decomp._getVV();
         DMatrixRMaj LU = decomp.getLU();
 
@@ -57,7 +60,7 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
 
         int n = A.numCols;
 
-        double dataInv[] = A_inv.data;
+        double[] dataInv = A_inv.data;
 
         for( int j = 0; j < n; j++ ) {
             // don't need to change inv into an identity matrix before hand
@@ -82,10 +85,12 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
         if( b.numCols != x.numCols ) {
             throw new IllegalArgumentException("bad shapes");
         }
+        if( A == null )
+            throw new IllegalArgumentException("Must setA() first");
 
-        double dataA[] = A.data;
-        double dataB[] = b.data;
-        double dataX[] = x.data;
+        double[] dataA = A.data;
+        double[] dataB = b.data;
+        double[] dataX = x.data;
 
         final int nc = b.numCols;
         final int n = b.numCols;

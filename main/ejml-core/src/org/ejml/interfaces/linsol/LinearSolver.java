@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -102,8 +102,8 @@ public interface LinearSolver<S extends Matrix, D extends Matrix> {
      * If a decomposition class was used internally then this will return that class.
      * Most linear solvers decompose the input matrix into a more simplistic form.
      * However some solutions do not require decomposition, e.g. inverse by minor.
-     * @param <D> Decomposition type
+     * @param <Decomposition> Decomposition type
      * @return Internal decomposition class.  If there is none then null.
      */
-    <D extends DecompositionInterface>D getDecomposition();
+    <Decomposition extends DecompositionInterface>Decomposition getDecomposition();
 }

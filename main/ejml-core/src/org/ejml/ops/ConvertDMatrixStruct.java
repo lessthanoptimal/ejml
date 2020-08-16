@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,10 @@
 
 package org.ejml.ops;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.*;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -60,7 +62,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix2x2 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix2x2 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(2,2);
 
@@ -81,7 +83,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix3x3 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix3x3 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(3,3);
 
@@ -107,7 +109,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix4x4 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix4x4 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(4,4);
 
@@ -140,7 +142,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix5x5 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix5x5 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(5,5);
 
@@ -182,7 +184,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix6x6 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix6x6 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(6,6);
 
@@ -235,7 +237,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix2x2 convert(DMatrixRMaj input , DMatrix2x2 output ) {
+    public static DMatrix2x2 convert(DMatrixRMaj input , @Nullable DMatrix2x2 output ) {
         if( output == null)
             output = new DMatrix2x2();
 
@@ -259,7 +261,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix3x3 convert(DMatrixRMaj input , DMatrix3x3 output ) {
+    public static DMatrix3x3 convert(DMatrixRMaj input , @Nullable DMatrix3x3 output ) {
         if( output == null)
             output = new DMatrix3x3();
 
@@ -288,7 +290,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix4x4 convert(DMatrixRMaj input , DMatrix4x4 output ) {
+    public static DMatrix4x4 convert(DMatrixRMaj input , @Nullable DMatrix4x4 output ) {
         if( output == null)
             output = new DMatrix4x4();
 
@@ -324,7 +326,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix5x5 convert(DMatrixRMaj input , DMatrix5x5 output ) {
+    public static DMatrix5x5 convert(DMatrixRMaj input , @Nullable DMatrix5x5 output ) {
         if( output == null)
             output = new DMatrix5x5();
 
@@ -369,7 +371,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix6x6 convert(DMatrixRMaj input , DMatrix6x6 output ) {
+    public static DMatrix6x6 convert(DMatrixRMaj input , @Nullable DMatrix6x6 output ) {
         if( output == null)
             output = new DMatrix6x6();
 
@@ -425,7 +427,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix2 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix2 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(2,1);
 
@@ -448,7 +450,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix3 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix3 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(3,1);
 
@@ -472,7 +474,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix4 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix4 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(4,1);
 
@@ -497,7 +499,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix5 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix5 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(5,1);
 
@@ -523,7 +525,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix6 input , DMatrixRMaj output ) {
+    public static DMatrixRMaj convert(DMatrix6 input , @Nullable DMatrixRMaj output ) {
         if( output == null)
             output = new DMatrixRMaj(6,1);
 
@@ -550,7 +552,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix2 convert(DMatrixRMaj input , DMatrix2 output ) {
+    public static DMatrix2 convert(DMatrixRMaj input , @Nullable DMatrix2 output ) {
         if( output == null)
             output = new DMatrix2();
 
@@ -573,7 +575,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix3 convert(DMatrixRMaj input , DMatrix3 output ) {
+    public static DMatrix3 convert(DMatrixRMaj input , @Nullable DMatrix3 output ) {
         if( output == null)
             output = new DMatrix3();
 
@@ -597,7 +599,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix4 convert(DMatrixRMaj input , DMatrix4 output ) {
+    public static DMatrix4 convert(DMatrixRMaj input , @Nullable DMatrix4 output ) {
         if( output == null)
             output = new DMatrix4();
 
@@ -622,7 +624,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix5 convert(DMatrixRMaj input , DMatrix5 output ) {
+    public static DMatrix5 convert(DMatrixRMaj input , @Nullable DMatrix5 output ) {
         if( output == null)
             output = new DMatrix5();
 
@@ -648,7 +650,7 @@ public class ConvertDMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix6 convert(DMatrixRMaj input , DMatrix6 output ) {
+    public static DMatrix6 convert(DMatrixRMaj input , @Nullable DMatrix6 output ) {
         if( output == null)
             output = new DMatrix6();
 
@@ -705,7 +707,7 @@ public class ConvertDMatrixStruct {
      * @param dst Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrixRBlock src , DMatrixRMaj dst ) {
+    public static DMatrixRMaj convert(DMatrixRBlock src , @Nullable DMatrixRMaj dst ) {
         if( dst != null ) {
             dst.reshape(src.getNumRows(),src.getNumCols());
         } else {
@@ -732,7 +734,7 @@ public class ConvertDMatrixStruct {
         return dst;
     }
 
-    public static DMatrixSparseTriplet convert(DMatrix src , DMatrixSparseTriplet dst , double tol ) {
+    public static DMatrixSparseTriplet convert(DMatrix src , @Nullable DMatrixSparseTriplet dst , double tol ) {
         if( dst == null )
             dst = new DMatrixSparseTriplet(src.getNumRows(), src.getNumCols(), 1);
         else
@@ -749,7 +751,7 @@ public class ConvertDMatrixStruct {
         return dst;
     }
 
-    public static DMatrixSparseTriplet convert(DMatrixRMaj src , DMatrixSparseTriplet dst , double tol ) {
+    public static DMatrixSparseTriplet convert(DMatrixRMaj src , @Nullable DMatrixSparseTriplet dst , double tol ) {
         if( dst == null )
             dst = new DMatrixSparseTriplet(src.numRows, src.numCols,src.numRows*src.numCols);
         else
@@ -767,7 +769,7 @@ public class ConvertDMatrixStruct {
         return dst;
     }
 
-    public static DMatrixRMaj convert(DMatrixSparseTriplet src , DMatrixRMaj dst ) {
+    public static DMatrixRMaj convert(DMatrixSparseTriplet src , @Nullable DMatrixRMaj dst ) {
         if( dst == null )
             dst = new DMatrixRMaj(src.numRows, src.numCols);
         else {
@@ -786,7 +788,7 @@ public class ConvertDMatrixStruct {
         return dst;
     }
 
-    public static DMatrixRMaj convert(DMatrixSparseCSC src , DMatrixRMaj dst ) {
+    public static DMatrixRMaj convert(DMatrixSparseCSC src , @Nullable DMatrixRMaj dst ) {
         if( dst == null )
             dst = new DMatrixRMaj(src.numRows, src.numCols);
         else {
@@ -817,7 +819,7 @@ public class ConvertDMatrixStruct {
      * @param dst Storage for the converted matrix.  If null a new instance will be returned.
      * @return The converted matrix
      */
-    public static DMatrixSparseCSC convert(DMatrixRMaj src , DMatrixSparseCSC dst , double tol ) {
+    public static DMatrixSparseCSC convert(DMatrixRMaj src , @Nullable DMatrixSparseCSC dst , double tol ) {
         int nonzero = 0;
         int N = src.numRows*src.numCols;
         for (int i = 0; i < N; i++) {
@@ -825,10 +827,7 @@ public class ConvertDMatrixStruct {
                 nonzero++;
         }
 
-        if( dst == null )
-            dst = new DMatrixSparseCSC(src.numRows, src.numCols, nonzero);
-        else
-            dst.reshape(src.numRows, src.numCols, nonzero);
+        dst = UtilEjml.reshapeOrDeclare(dst,src.numRows, src.numCols, nonzero);
         dst.nz_length = 0;
 
         dst.col_idx[0] = 0;
@@ -855,11 +854,8 @@ public class ConvertDMatrixStruct {
      * @param dst Destination. Will be a copy.  Modified.
      * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
      */
-    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , DMatrixSparseCSC dst , int hist[] ) {
-        if( dst == null )
-            dst = new DMatrixSparseCSC(src.numRows, src.numCols , src.nz_length);
-        else
-            dst.reshape(src.numRows, src.numCols, src.nz_length);
+    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , @Nullable DMatrixSparseCSC dst , @Nullable int[] hist) {
+        dst = UtilEjml.reshapeOrDeclare(dst,src.numRows,src.numCols,src.nz_length);
 
         if( hist == null )
             hist = new int[ src.numCols ];
@@ -892,11 +888,11 @@ public class ConvertDMatrixStruct {
         return dst;
     }
 
-    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , DMatrixSparseCSC dst ) {
+    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , @Nullable DMatrixSparseCSC dst ) {
         return convert(src,dst,null);
     }
 
-    public static DMatrixSparseTriplet convert(DMatrixSparseCSC src , DMatrixSparseTriplet dst ) {
+    public static DMatrixSparseTriplet convert(DMatrixSparseCSC src , @Nullable DMatrixSparseTriplet dst ) {
         if( dst == null )
             dst = new DMatrixSparseTriplet(src.numRows, src.numCols, src.nz_length);
         else

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,6 +45,7 @@ public class LinearSolverChol_DDRB extends LinearSolver_DDRB_to_DDRM {
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
     @Override
+    @SuppressWarnings("NullAway") // known special case for solve()
     public void solve(DMatrixRMaj B, DMatrixRMaj X) {
         blockB.reshape(B.numRows,B.numCols,false);
         MatrixOps_DDRB.convert(B,blockB);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,19 +45,20 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverQrHouseCol_DDRM extends LinearSolverAbstract_DDRM {
 
-    private QRDecompositionHouseholderColumn_DDRM decomposer;
+    private final QRDecompositionHouseholderColumn_DDRM decomposer;
 
-    private DMatrixRMaj a = new DMatrixRMaj(1,1);
-    private DMatrixRMaj temp = new DMatrixRMaj(1,1);
+    private final DMatrixRMaj a = new DMatrixRMaj(1,1);
+    private final DMatrixRMaj temp = new DMatrixRMaj(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
     private double[][] QR; // a column major QR matrix
-    private DMatrixRMaj R = new DMatrixRMaj(1,1);
-    private double gammas[];
+    private final DMatrixRMaj R = new DMatrixRMaj(1,1);
+    private double[] gammas;
 
     /**
      * Creates a linear solver that uses QR decomposition.

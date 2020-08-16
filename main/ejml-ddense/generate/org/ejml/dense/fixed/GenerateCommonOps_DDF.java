@@ -20,7 +20,7 @@ package org.ejml.dense.fixed;
 
 import org.ejml.UtilEjml;
 import org.ejml.dense.row.misc.GenerateDeterminantFromMinor;
-import org.ejml.dense.row.misc.GenerateInverseFromMinor;
+import org.ejml.dense.row.misc.GenerateUnrolledInverseFromMinor_DDRM;
 
 import java.io.FileNotFoundException;
 
@@ -119,10 +119,7 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "\n" +
                 "/**\n" +
                 " * <p>Common matrix operations for fixed sized matrices which are "+dimen+" x "+dimen+" or "+dimen+" element vectors.</p>\n" +
-                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
-                " *\n" +
-                " * @author Peter Abeles\n" +
-                " */\n" +
+                standardClassDocClosing("Peter Abeles") +
                 "public class "+className+" {\n");
     }
 
@@ -776,7 +773,7 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "        double scale = 1.0/elementMaxAbs(a);\n" +
                 "\n");
 
-        int matrix[] = new int[dimen*dimen];
+        int[] matrix = new int[dimen*dimen];
         int index = 0;
         for (int y = 1; y <= dimen; y++) {
             for (int x = 1; x <= dimen; x++, index++) {
@@ -787,12 +784,7 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
         }
         out.println();
 
-        try {
-            GenerateInverseFromMinor gen = new GenerateInverseFromMinor(false);
-            gen.printMinors(matrix, dimen, out);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        GenerateUnrolledInverseFromMinor_DDRM.printMinors(matrix, dimen, out);
         out.println();
 
         for (int y = 1; y <= dimen; y++) {
@@ -1637,7 +1629,7 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "    }\n\n");
     }
 
-    public static void main( String args[] ) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException {
         GenerateCommonOps_DDF app = new GenerateCommonOps_DDF();
 
         app.generate();

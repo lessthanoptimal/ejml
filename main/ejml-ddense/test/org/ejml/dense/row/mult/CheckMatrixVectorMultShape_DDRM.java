@@ -45,13 +45,11 @@ public class CheckMatrixVectorMultShape_DDRM {
 
     /**
      * Perform all shape input checks.
-     *
-     * @throws Throwable
      */
     public void checkAll()
     {
         int numChecked = 0;
-        Method methods[] = theClass.getMethods();
+        Method[] methods = theClass.getMethods();
 
         for( Method method : methods ) {
             String name = method.getName();

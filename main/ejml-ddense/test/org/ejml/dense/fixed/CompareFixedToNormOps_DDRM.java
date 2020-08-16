@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class CompareFixedToNormOps_DDRM extends CompareFixed_DDRM {
 
-    public CompareFixedToNormOps_DDRM(Class classFixed) {
+    protected CompareFixedToNormOps_DDRM(Class classFixed) {
         super(classFixed, NormOps_DDRM.class);
     }
 

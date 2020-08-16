@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -45,7 +46,7 @@ public class TestReadMatrixCsv {
         Assertions.assertThrows(IOException.class, () -> {
             String s = "3 2 real\n0 0\n1 1";
 
-            ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
+            ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes(UTF_8)));
 
             alg.read64();
             fail("Should have had an exception");
@@ -58,7 +59,7 @@ public class TestReadMatrixCsv {
         Assertions.assertThrows(IOException.class, () -> {
             String s = "3 2 real\n0 0\n1\n0 3";
 
-            ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
+            ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes(UTF_8)));
 
             alg.read64();
             fail("Should have had an exception");
@@ -68,7 +69,7 @@ public class TestReadMatrixCsv {
     public void dense_complex() throws IOException {
         String s = "3 2 complex\n0 2 0 -1\n1 2 -1 -1\n0 2 3 10";
 
-        ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
+        ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes(UTF_8)));
 
         ZMatrixRMaj expected = new ZMatrixRMaj(3,2,true,0,2,0,-1,1,2,-1,-1,0,2,3,10);
         ZMatrixRMaj m = alg.read64();
@@ -79,7 +80,7 @@ public class TestReadMatrixCsv {
     public void real_sparse() throws IOException {
         String s = "3 2 3 real\n0 2 0.1\n0 0 -0.1\n2 1 12";
 
-        ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes()));
+        ReadMatrixCsv alg = new ReadMatrixCsv(new ByteArrayInputStream(s.getBytes(UTF_8)));
 
         DMatrixSparseTriplet expected = new DMatrixSparseTriplet(3,2,3);
         expected.addItem(0,2,0.1);

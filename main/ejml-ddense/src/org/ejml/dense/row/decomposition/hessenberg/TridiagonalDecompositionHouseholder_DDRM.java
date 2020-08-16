@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -51,17 +53,18 @@ public class TridiagonalDecompositionHouseholder_DDRM
      * Only the upper right triangle is used.  The Tridiagonal portion stores
      * the tridiagonal matrix.  The rows store householder vectors.
      */
+    @SuppressWarnings("NullAway.Init")
     private DMatrixRMaj QT;
 
     // The size of the matrix
     private int N;
 
     // temporary storage
-    private double w[];
+    private double[] w;
     // gammas for the householder operations
-    private double gammas[];
+    private double[] gammas;
     // temporary storage
-    private double b[];
+    private double[] b;
 
     public TridiagonalDecompositionHouseholder_DDRM() {
         N = 1;
@@ -96,7 +99,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
      * @return The extracted T matrix.
      */
     @Override
-    public DMatrixRMaj getT(DMatrixRMaj T ) {
+    public DMatrixRMaj getT(@Nullable DMatrixRMaj T ) {
         T = UtilDecompositons_DDRM.checkZeros(T,N,N);
 
         T.data[0] = QT.data[0];
@@ -123,7 +126,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
      * @return The extracted Q matrix.
      */
     @Override
-    public DMatrixRMaj getQ(DMatrixRMaj Q , boolean transposed ) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean transposed ) {
         Q = UtilDecompositons_DDRM.checkIdentity(Q,N,N);
 
         for( int i = 0; i < N; i++ ) w[i] = 0;
@@ -169,7 +172,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
      * Computes and performs the similar a transform for submatrix k.
      */
     private void similarTransform( int k) {
-        double t[] = QT.data;
+        double[] t = QT.data;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow

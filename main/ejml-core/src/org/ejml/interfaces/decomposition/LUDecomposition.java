@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,8 @@ package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.IGrowArray;
 import org.ejml.data.Matrix;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -62,7 +64,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param lower Storage for T matrix. If null then a new matrix is returned.  Modified.
      * @return The L matrix.
      */
-    T getLower( T lower );
+    T getLower( @Nullable T lower );
 
     /**
      * <p>
@@ -79,7 +81,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param upper Storage for U matrix. If null then a new matrix is returned. Modified.
      * @return The U matrix.
      */
-    T getUpper( T upper );
+    T getUpper( @Nullable T upper );
 
     /**
      * <p>
@@ -90,7 +92,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param pivot Storage for the pivot matrix. If null then a new matrix is returned. Modified.
      * @return The pivot matrix.
      */
-    T getRowPivot(T pivot );
+    T getRowPivot( @Nullable T pivot );
 
     /**
      * Returns the row pivot vector
@@ -98,7 +100,7 @@ public interface LUDecomposition <T extends Matrix>
      * @param pivot (Optional) Storage for pivot vector
      * @return The pivot vector
      */
-    int[] getRowPivotV( IGrowArray pivot );
+    int[] getRowPivotV( @Nullable IGrowArray pivot );
 
     /**
      * Returns true if the decomposition detected a singular matrix.  This check

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  * <p>
@@ -41,6 +43,7 @@ import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class CholeskyDecompositionLDL_DDRM
         implements CholeskyLDLDecomposition_F64<DMatrixRMaj> {
 
@@ -56,7 +59,7 @@ public class CholeskyDecompositionLDL_DDRM
     private double[] d;
 
     // tempoary variable used by various functions
-    double vv[];
+    double[] vv;
 
     public void setExpectedMaxSize( int numRows , int numCols ) {
         if( numRows != numCols ) {
@@ -81,9 +84,10 @@ public class CholeskyDecompositionLDL_DDRM
      * false since it can't complete its computations.  Not all errors will be
      * found.
      * </p>
-     * @param mat A symetric n by n positive definite matrix.
+     * @param mat A symmetric n by n positive definite matrix.
      * @return True if it was able to finish the decomposition.
      */
+    @Override
     public boolean decompose( DMatrixRMaj mat ) {
         if( mat.numRows > maxWidth ) {
             setExpectedMaxSize(mat.numRows,mat.numCols);
@@ -157,7 +161,7 @@ public class CholeskyDecompositionLDL_DDRM
     }
 
     @Override
-    public DMatrixRMaj getL(DMatrixRMaj L) {
+    public DMatrixRMaj getL(@Nullable DMatrixRMaj L) {
         if( L == null ) {
             L = this.L.copy();
         } else {
@@ -168,7 +172,7 @@ public class CholeskyDecompositionLDL_DDRM
     }
 
     @Override
-    public DMatrixRMaj getD(DMatrixRMaj D) {
+    public DMatrixRMaj getD(@Nullable DMatrixRMaj D) {
         return CommonOps_DDRM.diag(D,L.numCols,d);
     }
 }

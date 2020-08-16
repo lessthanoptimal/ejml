@@ -19,7 +19,6 @@
 package org.ejml.dense.row.decompose.hessenberg;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
@@ -109,7 +108,6 @@ public abstract class StandardTridiagonalTests_ZDRM {
             ZMatrixRMaj Q = alg.getQ(null,false);
             ZMatrixRMaj Q_t = alg.getQ(null,true);
 
-            Complex_F64 q = new Complex_F64();
             for( int i = 0; i < Q.numRows; i++ ) {
                 for( int j = 0; j < Q.numCols; j++ ) {
                     assertEquals(Q.getReal(i,j),Q_t.getReal(j,i),UtilEjml.TEST_F64);

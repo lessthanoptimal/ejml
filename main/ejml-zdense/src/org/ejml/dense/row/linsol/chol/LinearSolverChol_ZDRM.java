@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,12 +31,13 @@ import java.util.Arrays;
 /**
 * @author Peter Abeles
 */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
 
     CholeskyDecompositionCommon_ZDRM decomposer;
     int n;
-    double vv[] = new double[0];
-    double t[];
+    double[] vv = new double[0];
+    double[] t;
 
     public LinearSolverChol_ZDRM(CholeskyDecompositionCommon_ZDRM decomposer) {
         this.decomposer = decomposer;
@@ -88,8 +89,8 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
 
         int numCols = B.numCols;
 
-        double dataB[] = B.data;
-        double dataX[] = X.data;
+        double[] dataB = B.data;
+        double[] dataX = X.data;
 
         if(decomposer.isLower()) {
             for( int j = 0; j < numCols; j++ ) {
@@ -145,7 +146,7 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
     /**
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
-    public void setToInverseL( double a[] ) {
+    public void setToInverseL(double[] a) {
 
         // the more direct method which takes full advantage of the sparsity of the data structures proved to
         // be difficult to get right due to the conjugates and reordering.

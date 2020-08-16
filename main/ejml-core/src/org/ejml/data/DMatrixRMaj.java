@@ -339,6 +339,7 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @return A new identical matrix.
      */
     @SuppressWarnings({"unchecked"})
+    @Override
     public DMatrixRMaj copy() {
         return new DMatrixRMaj(this);
     }

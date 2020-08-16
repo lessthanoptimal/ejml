@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,7 @@ import org.ejml.ops.ConvertMatrixType;
  * 
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class AutomaticSimpleMatrixConvert {
     MatrixType commonType;
 

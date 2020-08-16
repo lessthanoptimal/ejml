@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,6 +34,7 @@ import java.util.Arrays;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class WatchedDoubleStepQREigenvector_DDRM {
 
     WatchedDoubleStepQREigen_DDRM implicit;
@@ -42,16 +43,16 @@ public class WatchedDoubleStepQREigenvector_DDRM {
     DMatrixRMaj Q;
 
 
-    DMatrixRMaj eigenvectors[];
+    DMatrixRMaj[] eigenvectors;
 
     DMatrixRMaj eigenvectorTemp;
 
     LinearSolverDense solver;
 
-    Complex_F64 origEigenvalues[];
+    Complex_F64[] origEigenvalues;
     int N;
 
-    int splits[];
+    int[] splits;
     int numSplits;
 
     int x1,x2;

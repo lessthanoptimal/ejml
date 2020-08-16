@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -53,7 +55,7 @@ public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
      * @param L If not null then the decomposed matrix is written here.
      * @return A lower triangular matrix.
      */
-    MatrixType getL(MatrixType L);
+    MatrixType getL(@Nullable MatrixType L);
 
     /**
      * <p>
@@ -68,5 +70,5 @@ public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
      * @param D If not null it will be used to store the diagonal matrix
      * @return D Square diagonal matrix
      */
-    MatrixType getD(MatrixType D);
+    MatrixType getD(@Nullable MatrixType D);
 }

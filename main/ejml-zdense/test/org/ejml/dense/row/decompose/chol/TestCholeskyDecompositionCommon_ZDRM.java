@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -42,13 +43,11 @@ public class TestCholeskyDecompositionCommon_ZDRM {
      */
     @Test
     public void getT() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N, rand);
-
         CholeskyDecomposition_F64<ZMatrixRMaj> cholesky = new Dummy(true);
 
         ZMatrixRMaj L_null = cholesky.getT(null);
         ZMatrixRMaj L_provided = RandomMatrices_ZDRM.rectangle(N, N, rand);
-        assertTrue( L_provided == cholesky.getT(L_provided));
+        assertSame(L_provided, cholesky.getT(L_provided));
 
         assertTrue(MatrixFeatures_ZDRM.isEquals(L_null, L_provided));
     }

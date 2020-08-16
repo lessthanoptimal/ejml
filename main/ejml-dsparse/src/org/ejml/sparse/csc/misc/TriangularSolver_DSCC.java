@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -117,7 +117,7 @@ public class TriangularSolver_DSCC {
      */
     public static void solveTran(DMatrixSparseCSC G, boolean lower,
                                  DMatrixSparseCSC B, DMatrixSparseCSC X,
-                                 @Nullable int pinv[] ,
+                                 @Nullable int[] pinv,
                                  @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
         double[] x = UtilEjml.adjust(g_x,G.numRows);
@@ -173,7 +173,7 @@ public class TriangularSolver_DSCC {
     }
 
     private static int solveTranColumn(DMatrixSparseCSC G, double[] x, int[] xi, int[] w,
-                                       @Nullable int pinv[], int x_nz_count, int col) {
+                                       @Nullable int[] pinv, int x_nz_count, int col) {
         int idxG0 = G.col_idx[col];
         int idxG1 = G.col_idx[col+1];
 
@@ -216,7 +216,7 @@ public class TriangularSolver_DSCC {
      */
     public static void solve(DMatrixSparseCSC G, boolean lower,
                              DMatrixSparseCSC B, DMatrixSparseCSC X,
-                             @Nullable int pinv[] ,
+                             @Nullable int[] pinv,
                              @Nullable DGrowArray g_x, @Nullable IGrowArray g_xi, @Nullable IGrowArray g_w)
     {
         double[] x = UtilEjml.adjust(g_x,G.numRows);
@@ -261,8 +261,8 @@ public class TriangularSolver_DSCC {
      * @return Return number of zeros in 'x', ignoring cancellations.
      */
     public static int solveColB(DMatrixSparseCSC G, boolean lower,
-                                DMatrixSparseCSC B, int colB, double x[],
-                                @Nullable int pinv[], @Nullable IGrowArray g_xi, int []w) {
+                                DMatrixSparseCSC B, int colB, double[] x,
+                                @Nullable int[] pinv, @Nullable IGrowArray g_xi, int []w) {
 
         // NOTE x's length is the number of rows in G and not cols. This might be more than needed if a tall matrix,
         // but a change to remove it would require more thought
@@ -325,8 +325,8 @@ public class TriangularSolver_DSCC {
      * @param w  workspace array used internally. Must have a length of G.numCols*2 or more. Assumed to be filled with 0 in first N elements.
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
-    public static int searchNzRowsInX(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, int pinv[],
-                                      int xi[], int w[]) {
+    public static int searchNzRowsInX(DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, @Nullable int[] pinv,
+                                      int[] xi, int[] w) {
 
         int X_rows = G.numCols;
         if (xi.length < X_rows)
@@ -372,7 +372,7 @@ public class TriangularSolver_DSCC {
      * @param xi recursion stack
      * @param w w[N:] = pstack[:] in csparse book. w[:N] is where a row in X is marked. that is a change from csparse.
      */
-    private static int searchNzRowsInX_DFS(int rowB , DMatrixSparseCSC G , int top , int pinv[], int xi[], int w[] )
+    private static int searchNzRowsInX_DFS(int rowB , DMatrixSparseCSC G , int top , @Nullable int[] pinv, int[] xi, int[] w)
     {
         int N = G.numCols;  // first N elements in w is the length of X
         int head = 0; // put the selected row into the FILO stack
@@ -431,7 +431,7 @@ public class TriangularSolver_DSCC {
      * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
      * @param gwork  (Optional) Internal workspace.  Can be null.
      */
-    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int parent[], @Nullable IGrowArray gwork) {
+    public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int[] parent, @Nullable IGrowArray gwork) {
         int m = A.numRows;
         int n = A.numCols;
 
@@ -495,7 +495,7 @@ public class TriangularSolver_DSCC {
      * @param post   (Output) Postordering permutation.
      * @param gwork  (Optional) Internal workspace. Can be null
      */
-    public static void postorder(int parent[], int N, int post[], @Nullable IGrowArray gwork) {
+    public static void postorder(int[] parent, int N, int[] post, @Nullable IGrowArray gwork) {
         if (parent.length < N)
             throw new IllegalArgumentException("parent must be at least of length N");
         if (post.length < N)
@@ -571,7 +571,7 @@ public class TriangularSolver_DSCC {
      * @param w workspace array used internally.  All elements must be &ge; 0 on input. Must be of size A.numCols
      * @return Returns the index of the first element in the xi list.  Also known as top.
      */
-    public static int searchNzRowsElim( DMatrixSparseCSC A , int k , int parent[], int s[], int w[] ) {
+    public static int searchNzRowsElim(DMatrixSparseCSC A , int k , int[] parent, int[] s, int[] w) {
         int top = A.numCols;
 
         // Traversing through the column in A is the same as the row in A since it's symmetric

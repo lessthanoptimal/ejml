@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -234,12 +234,13 @@ import static org.ejml.equation.TokenList.Type;
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
+@SuppressWarnings("NullAway") // Massive false positive rate
 public class Equation {
-    HashMap<String,Variable> variables = new HashMap<String, Variable>();
-    HashMap<String,Macro> macros = new HashMap<String, Macro>();
+    HashMap<String,Variable> variables = new HashMap<>();
+    HashMap<String,Macro> macros = new HashMap<>();
 
     // storage for a single word in the tokenizer
-    char storage[] = new char[1024];
+    char[] storage = new char[1024];
 
     ManagerFunctions functions = new ManagerFunctions();
     ManagerTempVariables managerTemp = new ManagerTempVariables();
@@ -398,7 +399,7 @@ public class Equation {
             alias(M,name);
         } else {
             throw new RuntimeException("Unknown value type of "+
-                    (variable.getClass().getSimpleName())+" for variable "+name);
+                    variable.getClass().getSimpleName()+" for variable "+name);
         }
     }
 
@@ -523,7 +524,7 @@ public class Equation {
         if( t.word == null ) {
             throw new ParseError("Expected the macro's name after "+tokens.getFirst().word);
         }
-        List<TokenList.Token> variableTokens = new ArrayList<TokenList.Token>();
+        List<TokenList.Token> variableTokens = new ArrayList<>();
 
         macro.name = t.word;
         t = t.next;
@@ -634,7 +635,7 @@ public class Equation {
         if( tokenAssign.previous.symbol == Symbol.PAREN_RIGHT ) {
             TokenList.Token start = t0.next;
             if( start.symbol != Symbol.PAREN_LEFT )
-                throw new ParseError(("Expected left param for assignment"));
+                throw new ParseError("Expected left param for assignment");
             TokenList.Token end = tokenAssign.previous;
             TokenList subTokens = tokens.extractSubList(start,end);
             subTokens.remove(subTokens.getFirst());
@@ -666,7 +667,7 @@ public class Equation {
      */
     protected void handleParentheses( TokenList tokens, Sequence sequence ) {
         // have a list to handle embedded parentheses, e.g. (((((a)))))
-        List<TokenList.Token> left = new ArrayList<TokenList.Token>();
+        List<TokenList.Token> left = new ArrayList<>();
 
         // find all of them
         TokenList.Token t = tokens.first;
@@ -728,7 +729,7 @@ public class Equation {
      */
     protected List<TokenList.Token> parseParameterCommaBlock( TokenList tokens, Sequence sequence ) {
         // find all the comma tokens
-        List<TokenList.Token> commas = new ArrayList<TokenList.Token>();
+        List<TokenList.Token> commas = new ArrayList<>();
         TokenList.Token token = tokens.first;
 
         int numBracket = 0;
@@ -742,12 +743,13 @@ public class Equation {
 
                     case BRACKET_LEFT: numBracket++; break;
                     case BRACKET_RIGHT: numBracket--; break;
+                    default:
                 }
             }
             token = token.next;
         }
 
-        List<TokenList.Token> output = new ArrayList<TokenList.Token>();
+        List<TokenList.Token> output = new ArrayList<>();
         if( commas.isEmpty() ) {
             output.add(parseBlockNoParentheses(tokens, sequence, false));
         } else {
@@ -785,7 +787,7 @@ public class Equation {
 
         List<TokenList.Token> inputs = parseParameterCommaBlock(tokens, sequence);
 
-        List<Variable> variables = new ArrayList<Variable>();
+        List<Variable> variables = new ArrayList<>();
 
         // for the operation, the first variable must be the matrix which is being manipulated
         variables.add(variableTarget.getVariable());
@@ -1113,7 +1115,7 @@ public class Equation {
      * 1 or more matrices together
      */
     protected void parseBracketCreateMatrix(TokenList tokens, Sequence sequence) {
-        List<TokenList.Token> left = new ArrayList<TokenList.Token>();
+        List<TokenList.Token> left = new ArrayList<>();
 
         TokenList.Token t = tokens.getFirst();
 
@@ -1254,7 +1256,7 @@ public class Equation {
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperationsLR(Symbol ops[], TokenList tokens, Sequence sequence) {
+    protected void parseOperationsLR(Symbol[] ops, TokenList tokens, Sequence sequence) {
 
         if( tokens.size == 0 )
             return;
@@ -1336,7 +1338,7 @@ public class Equation {
         if( inputs.size() == 1 )
             info = functions.create(name.getFunction().getName(),inputs.get(0).getVariable());
         else {
-            List<Variable> vars = new ArrayList<Variable>();
+            List<Variable> vars = new ArrayList<>();
             for (int i = 0; i < inputs.size(); i++) {
                 vars.add(inputs.get(i).getVariable());
             }
@@ -1383,21 +1385,21 @@ public class Equation {
         Variable v = variables.get(token);
 
         if( v instanceof VariableMatrix ) {
-            if( ((VariableMatrix)v).matrix instanceof DMatrix ) {
+//            if( ((VariableMatrix)v).matrix instanceof DMatrix ) {
                 DMatrix m = ((VariableMatrix) v).matrix;
                 if (m.getNumCols() == 1 && m.getNumRows() == 1) {
                     return m.get(0, 0);
                 } else {
                     throw new RuntimeException("Can only return 1x1 real matrices as doubles");
                 }
-            } else if( ((VariableMatrix)v).matrix instanceof FMatrix) {
+//            } else if( ((VariableMatrix)v).matrix instanceof FMatrix) {
 //                FMatrix m = ((VariableMatrix) v).matrix;
 //                if (m.getNumCols() == 1 && m.getNumRows() == 1) {
 //                    return m.get(0, 0);
 //                } else {
 //                    throw new RuntimeException("Can only return 1x1 real matrices as doubles");
 //                }
-            }
+//            }
         }
         return ((VariableScalar)variables.get(token)).getDouble();
     }
@@ -1543,7 +1545,7 @@ public class Equation {
                     t.variable = v;
                     t.word = null;
                 } else if (functions.isFunctionName(t.word)) {
-                    t.function = (new Function(t.word));
+                    t.function = new Function(t.word);
                     t.word = null;
                 }
             }
@@ -1561,7 +1563,7 @@ public class Equation {
                 Macro v = lookupMacro(t.word);
                 if (v != null) {
                     TokenList.Token before = t.previous;
-                    List<TokenList.Token> inputs = new ArrayList<TokenList.Token>();
+                    List<TokenList.Token> inputs = new ArrayList<>();
                     t = parseMacroInput(inputs,t.next);
 
                     TokenList sniplet = v.execute(inputs);
@@ -1626,8 +1628,9 @@ public class Equation {
             case MINUS:
             case ASSIGN:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     /**

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 // TODO this should be improved by creating custom matrices for many of these functions.
 public abstract class CompareFixedToMatrixFeatures_DDRM extends CompareFixed_DDRM {
 
-    public CompareFixedToMatrixFeatures_DDRM(Class classFixed) {
+    protected CompareFixedToMatrixFeatures_DDRM(Class classFixed) {
         super(classFixed, MatrixFeatures_DDRM.class);
     }
 

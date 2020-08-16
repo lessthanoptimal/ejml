@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,20 +34,21 @@ import java.util.Arrays;
  *
  * <p>NOTE: This class contains the all of or part of cs_sqrt() and cs_vcounts() in csparse</p>
  */
+@SuppressWarnings("NullAway.Init")
 public class QrStructuralCounts_DSCC {
 
     DMatrixSparseCSC A; // reference to input matrix
     int m,n; // short hand for number of rows and columns in A
-    int leftmost[] = new int[0]; // left most column in each row
+    int[] leftmost = new int[0]; // left most column in each row
     int m2; // number of rows for QR after adding fictitious rows
-    int pinv[] = new int[0]; // inverse permutation to ensure diagonal elements are all structurally nonzero
+    int[] pinv = new int[0]; // inverse permutation to ensure diagonal elements are all structurally nonzero
                              // this is a row pivot
-    int parent[] = new int[0]; // elimination tree
-    int post[] = new int[0]; // post ordered tree
+    int[] parent = new int[0]; // elimination tree
+    int[] post = new int[0]; // post ordered tree
     IGrowArray gwork = new IGrowArray(); // generic work space
     int nz_in_V; // number of entries in V
     int nz_in_R; // number of entries in R
-    int countsR[] = new int[0]; // column counts in R
+    int[] countsR = new int[0]; // column counts in R
 
     // ----- start location of different sections in work array inside of V
     int next;         // col=next[row] element in the linked list
@@ -138,7 +139,7 @@ public class QrStructuralCounts_DSCC {
      * @param parent elimination tree
      * @param ll linked list for each row that specifies elements that are not zero
      */
-    void countNonZeroUsingLinkedList( int parent[] , int ll[] ) {
+    void countNonZeroUsingLinkedList(int[] parent, int[] ll) {
 
         Arrays.fill(pinv,0,m,-1);
         nz_in_V = 0;
@@ -176,7 +177,7 @@ public class QrStructuralCounts_DSCC {
      * @param leftmost index first elements in each row
      * @param w work space array
      */
-    void createRowElementLinkedLists( int leftmost[] , int w[]) {
+    void createRowElementLinkedLists(int[] leftmost, int[] w) {
         for (int k = 0; k < n; k++) {
             w[head+k] = -1; w[tail+k] = -1;  w[nque+k] = 0;
         }
@@ -221,7 +222,7 @@ public class QrStructuralCounts_DSCC {
      * *
      * @param leftmost (output) storage for left most elements
      */
-    void findMinElementIndexInRows(int leftmost[] )
+    void findMinElementIndexInRows(int[] leftmost)
     {
         Arrays.fill(leftmost,0,m,-1);
 

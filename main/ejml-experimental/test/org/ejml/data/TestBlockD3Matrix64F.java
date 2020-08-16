@@ -30,6 +30,7 @@ public class TestBlockD3Matrix64F {
     public void testGeneric() {
         GenericTestsDMatrix g;
         g = new GenericTestsDMatrix() {
+            @Override
             protected DMatrix createMatrix(int numRows, int numCols) {
                 return new BlockD3Matrix64F(numRows,numCols,10);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -80,7 +82,7 @@ public class BidiagonalDecompositionTall_DDRM
     }
 
     @Override
-    public DMatrixRMaj getB(DMatrixRMaj B, boolean compact) {
+    public DMatrixRMaj getB(@Nullable DMatrixRMaj B, boolean compact) {
         B = BidiagonalDecompositionRow_DDRM.handleB(B, compact, m, n, min);
 
         B.set(0,0,this.B.get(0,0));
@@ -95,7 +97,7 @@ public class BidiagonalDecompositionTall_DDRM
     }
 
     @Override
-    public DMatrixRMaj getU(DMatrixRMaj U, boolean transpose, boolean compact) {
+    public DMatrixRMaj getU(@Nullable DMatrixRMaj U, boolean transpose, boolean compact) {
         U = BidiagonalDecompositionRow_DDRM.handleU(U, false, compact, m, n, min);
 
         if( compact ) {
@@ -120,7 +122,7 @@ public class BidiagonalDecompositionTall_DDRM
     }
 
     @Override
-    public DMatrixRMaj getV(DMatrixRMaj V, boolean transpose, boolean compact) {
+    public DMatrixRMaj getV(@Nullable DMatrixRMaj V, boolean transpose, boolean compact) {
         return decompBi.getV(V,transpose,compact);
     }
 

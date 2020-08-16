@@ -143,7 +143,6 @@ public class TestCholeskyOuterSolver_DDRB {
                 DMatrixRBlock A = createMatrixSPD(i);
                 DMatrixRBlock X = MatrixOps_DDRB.createRandom(i,j,-1,1,rand,r);
                 DMatrixRBlock Y = new DMatrixRBlock(i,j,r);
-                DMatrixRBlock X_found = new DMatrixRBlock(i,j,r);
 
                 // compute the expected solution directly
                 MatrixOps_DDRB.mult(A,X,Y);

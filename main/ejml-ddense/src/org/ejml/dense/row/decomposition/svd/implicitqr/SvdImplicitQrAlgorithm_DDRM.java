@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.eig.EigenvalueSmall_F64;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 
@@ -48,6 +49,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class SvdImplicitQrAlgorithm_DDRM {
 
     // used in exceptional shifts
@@ -55,8 +57,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 
     // U and V matrices in singular value decomposition.  Stored in the transpose
     // to reduce cache jumps
-    protected DMatrixRMaj Ut;
-    protected DMatrixRMaj Vt;
+    protected @Nullable DMatrixRMaj Ut;
+    protected @Nullable DMatrixRMaj Vt;
 
     // number of times it has performed an implicit step, the most costly part of the
     // algorithm
@@ -77,9 +79,9 @@ public class SvdImplicitQrAlgorithm_DDRM {
     protected int nextExceptional;
 
     // diagonal elements in the matrix
-    protected double diag[];
+    protected double[] diag;
     // the off diagonal elements
-    protected double off[];
+    protected double[] off;
     // value of the bulge
     double bulge;
 
@@ -91,7 +93,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     int steps;
 
     // where splits are performed
-    protected int splits[];
+    protected int[] splits;
     protected int numSplits;
 
     // After this many iterations it will perform an exceptional
@@ -105,7 +107,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     // if following a sequence of steps, this is the point at which it decides its
     // going no where and needs to use a different step
     private static final int giveUpOnKnown = 10;
-    private double values[];
+    private double[] values;
 
     //can it compute singularvalues directly
     private boolean fastValues = false;
@@ -122,30 +124,28 @@ public class SvdImplicitQrAlgorithm_DDRM {
         this.fastValues = fastValues;
     }
 
-    public SvdImplicitQrAlgorithm_DDRM() {
+    public SvdImplicitQrAlgorithm_DDRM() {}
 
-    }
-
-    public DMatrixRMaj getUt() {
+    public @Nullable DMatrixRMaj getUt() {
         return Ut;
     }
 
-    public void setUt(DMatrixRMaj ut) {
+    public void setUt(@Nullable DMatrixRMaj ut) {
         Ut = ut;
     }
 
-    public DMatrixRMaj getVt() {
+    public @Nullable DMatrixRMaj getVt() {
         return Vt;
     }
 
-    public void setVt(DMatrixRMaj vt) {
+    public void setVt(@Nullable DMatrixRMaj vt) {
         Vt = vt;
     }
 
     /**
      *
      */
-    public void setMatrix( int numRows , int numCols, double diag[], double off[] ) {
+    public void setMatrix(int numRows , int numCols, double[] diag, double[] off) {
         initParam(numRows,numCols);
         this.diag = diag;
         this.off = off;
@@ -164,13 +164,13 @@ public class SvdImplicitQrAlgorithm_DDRM {
         }
     }
 
-    public double[] swapDiag( double diag[] ) {
+    public double[] swapDiag(double[] diag) {
         double[] ret = this.diag;
         this.diag = diag;
         return ret;
     }
 
-    public double[] swapOff( double off[] ) {
+    public double[] swapOff(double[] off) {
         double[] ret = this.off;
         this.off = off;
         return ret;
@@ -209,11 +209,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 
     /**
      * Perform a sequence of steps based off of the singular values provided.
-     *
-     * @param values
-     * @return
      */
-    public boolean process(double values[] ) {
+    public boolean process(double[] values) {
         this.followScript = true;
         this.values = values;
         this.findingZeros = false;

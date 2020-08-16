@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,8 @@ import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Random;
 
 
@@ -37,7 +38,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
-public class SymmetricEigenStressTest {
+public class BenchmarkSymmetricEigenStress {
 
     Random rand = new Random(234234);
 
@@ -85,7 +86,7 @@ public class SymmetricEigenStressTest {
 
         for( int i = 0; i < 1000; i++ ) {
             long seed = rand.nextLong();
-            System.out.print("Date = "+new Date()+" Seed = "+seed);
+            System.out.print("Date = "+ LocalDateTime.now(ZoneId.systemDefault())+" Seed = "+seed);
 
             Random localRand = new Random(seed);
 
@@ -106,7 +107,7 @@ public class SymmetricEigenStressTest {
     }
 
     public static void main( String args[] ) {
-        SymmetricEigenStressTest stress = new SymmetricEigenStressTest();
+        BenchmarkSymmetricEigenStress stress = new BenchmarkSymmetricEigenStress();
 
         stress.checkRandomMatrices(1000);
 

@@ -19,11 +19,7 @@
 package org.ejml.sparse.csc.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_DDRM;
-import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
@@ -80,7 +76,7 @@ public class TestQrStructuralCountsDSCC {
     {
         DMatrixSparseCSC B = A.copy();
 
-        int nz[] = new int[ B.numRows ];
+        int[] nz = new int[ B.numRows ];
 
         for (int col = 0; col < B.numCols; col++) {
 //            System.out.println("#############  "+col);
@@ -144,89 +140,89 @@ public class TestQrStructuralCountsDSCC {
 //        });
 //    }
 
-    /**
-     * If a row is empty randomly assign a value
-     */
-    private void ensureNotSingular( DMatrixSparseCSC A ) {
-        for (int row = 0; row < A.numRows; row++) {
-            boolean empty = true;
-            for (int col = 0; col < A.numCols; col++) {
-                if( A.isAssigned(row,col) ) {
-                    empty = false;
-                    break;
-                }
-            }
-
-            if( empty ) {
-                A.set(row,rand.nextInt(A.numCols),2.0);
-            }
-        }
-
-        for (int col = 0; col < A.numCols; col++) {
-            boolean empty = true;
-            for (int row = 0; row < A.numRows; row++) {
-                if( A.isAssigned(row,col) ) {
-                    empty = false;
-                    break;
-                }
-            }
-
-            if( empty ) {
-                A.set(rand.nextInt(A.numRows),col,2.0);
-            }
-        }
-    }
-
-    private void compareToFilledV(DMatrixSparseCSC A , int foundV ) {
-        int countV = 0;
-        for (int i = 0; i < A.numRows; i++) {
-            for (int j = 0; j < A.numCols; j++) {
-                if( A.isAssigned(i,j) ) {
-                    if( i >= j ){
-                        countV++;
-                    }
-                }
-            }
-        }
-        System.out.println("estimated "+foundV+"   actual "+countV);
-        assertTrue(countV <= foundV);
-    }
-
-    private void compareToDense( DMatrixSparseCSC A , int foundR , int foundV ) {
-        DMatrixRMaj D = new DMatrixRMaj(A.numRows,A.numCols);
-        ConvertDMatrixStruct.convert(A,D);
-
-        QRDecompositionHouseholderColumn_DDRM decomp =
-                (QRDecompositionHouseholderColumn_DDRM)DecompositionFactory_DDRM.qr(1,1);
-        decomp.decompose(D);
-        double[][] F = decomp.getQR();
-        int countR = 0;
-        int countV = 0;
-        for (int i = 0; i < A.numRows; i++) {
-            for (int j = 0; j < A.numCols; j++) {
-                if( F[j][i] != 0 ) {
-//                    System.out.print("*");
-                    if( j < i ) {
-                        countR++;
-                    } else if( j > i ){
-                        countV++;
-                    } else {
-                        countR++;
-                        countV++;
-                    }
-                } else {
-//                    System.out.print(".");
-                }
-            }
-            System.out.println();
-            System.out.println("dense    "+countV+"    "+countR);
-            System.out.println("estimate "+foundV+"    "+foundR);
-
-
-//            assertTrue(countV <= foundV);
-//            assertTrue(countR <= foundR);
-        }
-    }
+//    /**
+//     * If a row is empty randomly assign a value
+//     */
+//    private void ensureNotSingular( DMatrixSparseCSC A ) {
+//        for (int row = 0; row < A.numRows; row++) {
+//            boolean empty = true;
+//            for (int col = 0; col < A.numCols; col++) {
+//                if( A.isAssigned(row,col) ) {
+//                    empty = false;
+//                    break;
+//                }
+//            }
+//
+//            if( empty ) {
+//                A.set(row,rand.nextInt(A.numCols),2.0);
+//            }
+//        }
+//
+//        for (int col = 0; col < A.numCols; col++) {
+//            boolean empty = true;
+//            for (int row = 0; row < A.numRows; row++) {
+//                if( A.isAssigned(row,col) ) {
+//                    empty = false;
+//                    break;
+//                }
+//            }
+//
+//            if( empty ) {
+//                A.set(rand.nextInt(A.numRows),col,2.0);
+//            }
+//        }
+//    }
+//
+//    private void compareToFilledV(DMatrixSparseCSC A , int foundV ) {
+//        int countV = 0;
+//        for (int i = 0; i < A.numRows; i++) {
+//            for (int j = 0; j < A.numCols; j++) {
+//                if( A.isAssigned(i,j) ) {
+//                    if( i >= j ){
+//                        countV++;
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("estimated "+foundV+"   actual "+countV);
+//        assertTrue(countV <= foundV);
+//    }
+//
+//    private void compareToDense( DMatrixSparseCSC A , int foundR , int foundV ) {
+//        DMatrixRMaj D = new DMatrixRMaj(A.numRows,A.numCols);
+//        ConvertDMatrixStruct.convert(A,D);
+//
+//        QRDecompositionHouseholderColumn_DDRM decomp =
+//                (QRDecompositionHouseholderColumn_DDRM)DecompositionFactory_DDRM.qr(1,1);
+//        decomp.decompose(D);
+//        double[][] F = decomp.getQR();
+//        int countR = 0;
+//        int countV = 0;
+//        for (int i = 0; i < A.numRows; i++) {
+//            for (int j = 0; j < A.numCols; j++) {
+//                if( F[j][i] != 0 ) {
+////                    System.out.print("*");
+//                    if( j < i ) {
+//                        countR++;
+//                    } else if( j > i ){
+//                        countV++;
+//                    } else {
+//                        countR++;
+//                        countV++;
+//                    }
+//                } else {
+////                    System.out.print(".");
+//                }
+//            }
+//            System.out.println();
+//            System.out.println("dense    "+countV+"    "+countR);
+//            System.out.println("estimate "+foundV+"    "+foundR);
+//
+//
+////            assertTrue(countV <= foundV);
+////            assertTrue(countR <= foundR);
+//        }
+//    }
 
     @Test
     public void createRowElementLinkedLists() {
@@ -243,11 +239,11 @@ public class TestQrStructuralCountsDSCC {
 
                 // compute the number of times each column is the first element in each row
                 // this will be the queue size
-                int colIsFirst[] = new int[A.numCols];
+                int[] colIsFirst = new int[A.numCols];
                 // the last row in which the column is the first element
-                int lastRow[] = new int[A.numCols];
-                int firstRow[] = new int[A.numCols];
-                int rowToFirstCol[] = new int[ A.numRows ];
+                int[] lastRow = new int[A.numCols];
+                int[] firstRow = new int[A.numCols];
+                int[] rowToFirstCol = new int[ A.numRows ];
                 Arrays.fill(firstRow,0,lastRow.length,-1);
                 Arrays.fill(lastRow,0,lastRow.length,-1);
                 for (int row = 0; row < A.numRows; row++) {
@@ -297,7 +293,7 @@ public class TestQrStructuralCountsDSCC {
         randomChecks(new Check() {
             @Override
             public void check(DMatrixSparseCSC A) {
-                int leftMost[] = new int[A.numRows];
+                int[] leftMost = new int[A.numRows];
 
                 alg.init(A);
                 alg.findMinElementIndexInRows(leftMost);

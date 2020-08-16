@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  *
@@ -35,6 +37,7 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
  * @see CholeskyDecomposition_F64
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public abstract class CholeskyDecompositionCommon_DDRM
         implements CholeskyDecomposition_F64<DMatrixRMaj> {
 
@@ -62,7 +65,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
      *
      * @param lower should a lower or upper triangular matrix be used.
      */
-    public CholeskyDecompositionCommon_DDRM(boolean lower) {
+    protected CholeskyDecompositionCommon_DDRM(boolean lower) {
         this.lower = lower;
     }
 
@@ -140,7 +143,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
     protected abstract boolean decomposeUpper();
 
     @Override
-    public DMatrixRMaj getT(DMatrixRMaj T ) {
+    public DMatrixRMaj getT(@Nullable DMatrixRMaj T ) {
 
         // write the values to T
         if( lower ) {

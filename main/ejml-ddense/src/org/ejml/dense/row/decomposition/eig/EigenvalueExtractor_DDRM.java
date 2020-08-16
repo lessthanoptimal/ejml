@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,9 +27,9 @@ import org.ejml.data.DMatrixRMaj;
  */
 public interface EigenvalueExtractor_DDRM {
 
-    public boolean process( DMatrixRMaj A );
+    boolean process(DMatrixRMaj A);
 
-    public int getNumberOfEigenvalues();
+    int getNumberOfEigenvalues();
 
-    public Complex_F64[] getEigenvalues();
+    Complex_F64[] getEigenvalues();
 }

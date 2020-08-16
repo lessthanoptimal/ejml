@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,6 +41,7 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
  * @author Peter Abeles
  */
 //TODO looks like there might be some pointless copying of arrays going on
+@SuppressWarnings("NullAway.Init")
 public class WatchedDoubleStepQRDecomposition_DDRM
         implements EigenDecomposition_F64<DMatrixRMaj> {
 

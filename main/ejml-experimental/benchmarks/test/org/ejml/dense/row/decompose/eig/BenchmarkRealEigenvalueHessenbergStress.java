@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Peter Abeles
  */
-public class RealEigenvalueHessenbergStressTest {
+public class BenchmarkRealEigenvalueHessenbergStress {
 
     double tol = 1e-10;
 
@@ -48,7 +48,7 @@ public class RealEigenvalueHessenbergStressTest {
 
     int numCantFindEigenvector;
 
-    public RealEigenvalueHessenbergStressTest() {
+    public BenchmarkRealEigenvalueHessenbergStress() {
         extractor = new WatchedDoubleStepQREigenvalue_DDRM();
     }
 
@@ -122,7 +122,7 @@ public class RealEigenvalueHessenbergStressTest {
         }
 
         totalError /= extractor.getNumberOfEigenvalues();
-        System.out.println("Mean error = "+(totalError));
+        System.out.println("Mean error = "+ totalError);
 
         return numFailed;
     }
@@ -327,16 +327,16 @@ public class RealEigenvalueHessenbergStressTest {
         // TODO add expected list of eigenvalues
     }
 
-    private boolean hasComplex() {
-        Complex_F64[]ev = extractor.getEigenvalues();
-
-        for( int j = 0; j < extractor.getNumberOfEigenvalues(); j++ ) {
-            if( ev[j].getImaginary() != 0 )
-                return true;
-        }
-
-        return false;
-    }
+//    private boolean hasComplex() {
+//        Complex_F64[]ev = extractor.getEigenvalues();
+//
+//        for( int j = 0; j < extractor.getNumberOfEigenvalues(); j++ ) {
+//            if( ev[j].getImaginary() != 0 )
+//                return true;
+//        }
+//
+//        return false;
+//    }
 
     private boolean isAllComplex() {
         Complex_F64[]ev = extractor.getEigenvalues();

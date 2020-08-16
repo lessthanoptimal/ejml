@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,8 @@ package org.ejml.dense.row.decompose;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
 
+import javax.annotation.Nullable;
+
 /**
  * Helper functions for generic decompsotions.
  *
@@ -28,7 +30,7 @@ import org.ejml.dense.row.CommonOps_ZDRM;
  */
 public class UtilDecompositons_ZDRM {
 
-    public static ZMatrixRMaj checkIdentity(ZMatrixRMaj A, int numRows, int numCols) {
+    public static ZMatrixRMaj checkIdentity(@Nullable ZMatrixRMaj A, int numRows, int numCols) {
         if( A == null ) {
             return CommonOps_ZDRM.identity(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -38,7 +40,7 @@ public class UtilDecompositons_ZDRM {
         return A;
     }
 
-    public static ZMatrixRMaj checkZeros(ZMatrixRMaj A , int numRows , int numCols) {
+    public static ZMatrixRMaj checkZeros(@Nullable ZMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new ZMatrixRMaj(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -52,7 +54,7 @@ public class UtilDecompositons_ZDRM {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the lower triangular portion with zeros.
      */
-    public static ZMatrixRMaj checkZerosLT(ZMatrixRMaj A , int numRows , int numCols) {
+    public static ZMatrixRMaj checkZerosLT(@Nullable ZMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new ZMatrixRMaj(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )
@@ -73,7 +75,7 @@ public class UtilDecompositons_ZDRM {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the upper triangular portion with zeros.
      */
-    public static ZMatrixRMaj checkZerosUT(ZMatrixRMaj A , int numRows , int numCols) {
+    public static ZMatrixRMaj checkZerosUT(@Nullable ZMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new ZMatrixRMaj(numRows,numCols);
         } else if( numRows != A.numRows || numCols != A.numCols )

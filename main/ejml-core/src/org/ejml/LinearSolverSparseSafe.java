@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.data.ReshapeMatrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 
+import javax.annotation.Nullable;
+
 
 /**
  * Ensures that any linear solver it is wrapped around will never modify
@@ -35,12 +37,11 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
         implements LinearSolverSparse<S,D> {
 
     // the solver it is wrapped around
-    private LinearSolverSparse<S,D> alg;
+    private final LinearSolverSparse<S,D> alg;
 
     // local copies of input matrices that can be modified.
-    private S A;
-    private D B;
-    private S Bsparse;
+    private @Nullable S A;
+    private @Nullable D B;
     /**
      *
      * @param alg The solver it is wrapped around.
@@ -53,14 +54,8 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     public boolean setA(S A) {
 
         if( alg.modifiesA() ) {
-            if( this.A == null ) {
-                this.A = A.copy();
-            } else {
-                if( this.A.getNumRows() != A.getNumRows() || this.A.getNumCols() != A.getNumCols() ) {
-                    this.A.reshape(A.getNumRows(),A.getNumCols(),1);
-                }
-                this.A.set(A);
-            }
+            this.A = UtilEjml.reshapeOrDeclare(this.A,A);
+            this.A.set(A);
             return alg.setA(this.A);
         }
 
@@ -75,14 +70,8 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     @Override
     public void solve(D B, D X) {
         if( alg.modifiesB() ) {
-            if( this.B == null ) {
-                this.B = B.copy();
-            } else {
-                if( this.B.getNumRows() != B.getNumRows() || this.B.getNumCols() != B.getNumCols() ) {
-                    this.B.reshape(A.getNumRows(),B.getNumCols());
-                }
-                this.B.set(B);
-            }
+            this.B = UtilEjml.reshapeOrDeclare(this.B,B);
+            this.B.set(B);
             B = this.B;
         }
 
@@ -100,7 +89,7 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     }
 
     @Override
-    public <D extends DecompositionInterface> D getDecomposition() {
+    public <Decomposition extends DecompositionInterface> Decomposition getDecomposition() {
         return alg.getDecomposition();
     }
 

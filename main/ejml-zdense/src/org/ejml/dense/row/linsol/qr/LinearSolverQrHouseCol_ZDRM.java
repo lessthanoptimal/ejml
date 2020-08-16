@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,19 +44,20 @@ import org.ejml.dense.row.linsol.LinearSolverAbstract_ZDRM;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class LinearSolverQrHouseCol_ZDRM extends LinearSolverAbstract_ZDRM {
 
-    private QRDecompositionHouseholderColumn_ZDRM decomposer;
+    private final QRDecompositionHouseholderColumn_ZDRM decomposer;
 
-    private ZMatrixRMaj a = new ZMatrixRMaj(1,1);
-    private ZMatrixRMaj temp = new ZMatrixRMaj(1,1);
+    private final ZMatrixRMaj a = new ZMatrixRMaj(1,1);
+    private final ZMatrixRMaj temp = new ZMatrixRMaj(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
     private double[][] QR; // a column major QR matrix
-    private ZMatrixRMaj R = new ZMatrixRMaj(1,1);
-    private double gammas[];
+    private final ZMatrixRMaj R = new ZMatrixRMaj(1,1);
+    private double[] gammas;
 
     /**
      * Creates a linear solver that uses QR decomposition.

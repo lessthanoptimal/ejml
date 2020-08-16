@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
+import javax.annotation.Nullable;
+
 /**
  * <p>
  * Finds the decomposition of a matrix in the form of:<br>
@@ -45,6 +47,7 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
  * </p>
  */
 // TODO create a column based one similar to what was done for QR decomposition?
+@SuppressWarnings("NullAway.Init")
 public class HessenbergSimilarDecomposition_DDRM
         implements DecompositionInterface<DMatrixRMaj> {
     // A combined matrix that stores te upper Hessenberg matrix and the orthogonal matrix.
@@ -53,10 +56,10 @@ public class HessenbergSimilarDecomposition_DDRM
     private int N;
 
     // the first element in the orthogonal vectors
-    private double gammas[];
+    private double[] gammas;
     // temporary storage
-    private double b[];
-    private double u[];
+    private double[] b;
+    private double[] u;
 
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
@@ -120,7 +123,7 @@ public class HessenbergSimilarDecomposition_DDRM
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public DMatrixRMaj getH(DMatrixRMaj H ) {
+    public DMatrixRMaj getH(@Nullable DMatrixRMaj H ) {
         H = UtilDecompositons_DDRM.checkZeros(H,N,N);
 
         // copy the first row
@@ -141,7 +144,7 @@ public class HessenbergSimilarDecomposition_DDRM
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DMatrixRMaj getQ(DMatrixRMaj Q ) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q ) {
         Q = UtilDecompositons_DDRM.checkIdentity(Q,N,N);
 
         for( int j = N-2; j >= 0; j-- ) {
@@ -159,7 +162,7 @@ public class HessenbergSimilarDecomposition_DDRM
      * Internal function for computing the decomposition.
      */
     private boolean _decompose() {
-        double h[] = QH.data;
+        double[] h = QH.data;
 
         for( int k = 0; k < N-2; k++ ) {
             // find the largest value in this column

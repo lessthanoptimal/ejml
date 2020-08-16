@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.MatrixMult_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.interfaces.decomposition.QRDecomposition;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -55,6 +57,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholder_DDRB
         implements QRDecomposition<DMatrixRBlock> {
 
@@ -64,21 +67,21 @@ public class QRDecompositionHouseholder_DDRB
     private DMatrixRBlock dataA;
 
     // where the computed W matrix is stored
-    private DMatrixRBlock dataW = new DMatrixRBlock(1,1);
+    private final DMatrixRBlock dataW = new DMatrixRBlock(1,1);
     // Matrix used to store an intermediate calculation
-    private DMatrixRBlock dataWTA = new DMatrixRBlock(1,1);
+    private final DMatrixRBlock dataWTA = new DMatrixRBlock(1,1);
 
     // size of the inner matrix block.
     private int blockLength;
     
     // The submatrices which are being manipulated in each iteration
-    private DSubmatrixD1 A = new DSubmatrixD1();
-    private DSubmatrixD1 Y = new DSubmatrixD1();
-    private DSubmatrixD1 W = new DSubmatrixD1(dataW);
-    private DSubmatrixD1 WTA = new DSubmatrixD1(dataWTA);
-    private double temp[] = new double[1];
+    private final DSubmatrixD1 A = new DSubmatrixD1();
+    private final DSubmatrixD1 Y = new DSubmatrixD1();
+    private final DSubmatrixD1 W = new DSubmatrixD1(dataW);
+    private final DSubmatrixD1 WTA = new DSubmatrixD1(dataWTA);
+    private double[] temp = new double[1];
     // stores the computed gammas
-    private double gammas[] = new double[1];
+    private double[] gammas = new double[1];
 
     // save the W matrix the first time it is computed in the decomposition
     private boolean saveW = false;
@@ -110,7 +113,7 @@ public class QRDecompositionHouseholder_DDRB
     }
 
     @Override
-    public DMatrixRBlock getQ(DMatrixRBlock Q, boolean compact) {
+    public DMatrixRBlock getQ(@Nullable DMatrixRBlock Q, boolean compact) {
         Q = initializeQ(Q, dataA.numRows , dataA.numCols  , blockLength , compact);
  
         applyQ(Q,true);
@@ -121,9 +124,9 @@ public class QRDecompositionHouseholder_DDRB
     /**
      * Sanity checks the input or declares a new matrix.  Return matrix is an identity matrix.
      */
-    public static DMatrixRBlock initializeQ(DMatrixRBlock Q,
-                                              int numRows , int numCols , int blockLength ,
-                                              boolean compact) {
+    public static DMatrixRBlock initializeQ(@Nullable DMatrixRBlock Q,
+                                            int numRows , int numCols , int blockLength ,
+                                            boolean compact) {
         int minLength = Math.min(numRows,numCols);
         if( compact ) {
             if( Q == null ) {
@@ -171,7 +174,6 @@ public class QRDecompositionHouseholder_DDRB
      * Specialized version of applyQ() that allows the zeros in an identity matrix
      * to be taken advantage of depending on if isIdentity is true or not.
      *
-     * @param B
      * @param isIdentity If B is an identity matrix.
      */
     public void applyQ(DMatrixRBlock B , boolean isIdentity ) {
@@ -267,7 +269,7 @@ public class QRDecompositionHouseholder_DDRB
     }
 
     @Override
-    public DMatrixRBlock getR(DMatrixRBlock R, boolean compact) {
+    public DMatrixRBlock getR(@Nullable DMatrixRBlock R, boolean compact) {
         int min = Math.min(dataA.numRows,dataA.numCols);
 
         if( R == null ) {
@@ -320,8 +322,6 @@ public class QRDecompositionHouseholder_DDRB
     /**
      * Adjust submatrices and helper data structures for the input matrix.  Must be called
      * before the decomposition can be computed.
-     *
-     * @param orig
      */
     private void setup(DMatrixRBlock orig) {
         blockLength = orig.blockLength;

@@ -97,7 +97,7 @@ public class ConvertDArrays {
 
         if( src.length == 4 ) {
             if( src[0].length == 1 )
-                throw new IllegalArgumentException(("Expected a vector"));
+                throw new IllegalArgumentException("Expected a vector");
             dst.a1 = src[0][0];
             dst.a2 = src[1][0];
             dst.a3 = src[2][0];

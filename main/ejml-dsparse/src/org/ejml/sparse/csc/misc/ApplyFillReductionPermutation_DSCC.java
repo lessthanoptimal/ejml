@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.data.IGrowArray;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 
+import javax.annotation.Nullable;
+
 /**
  * Applies the fill reduction row pivots to the input matrix to reduce fill in during decomposition/solve.
  *
@@ -32,7 +34,7 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
  */
 public class ApplyFillReductionPermutation_DSCC {
     // fill reduction permutation
-    private ComputePermutation<DMatrixSparseCSC> fillReduce;
+    private @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce;
 
     // storage for permuted A matrix
     DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
@@ -42,7 +44,7 @@ public class ApplyFillReductionPermutation_DSCC {
 
     boolean symmetric;
 
-    public ApplyFillReductionPermutation_DSCC(ComputePermutation<DMatrixSparseCSC> fillReduce,
+    public ApplyFillReductionPermutation_DSCC(@Nullable ComputePermutation<DMatrixSparseCSC> fillReduce,
                                               boolean symmetric ) {
         this.fillReduce = fillReduce;
         this.symmetric = symmetric;
@@ -60,6 +62,8 @@ public class ApplyFillReductionPermutation_DSCC {
         fillReduce.process(A);
 
         IGrowArray gp = fillReduce.getRow();
+        if( gp == null )
+            throw new RuntimeException("No row permutation matrix");
 
         if( pinv.length < gp.length)
             pinv = new int[ gp.length ];
@@ -71,14 +75,17 @@ public class ApplyFillReductionPermutation_DSCC {
         return Aperm;
     }
 
-    public int[] getArrayPinv() {
+    public @Nullable int[] getArrayPinv() {
         return fillReduce == null ? null : pinv;
     }
-    public int[] getArrayP() {
+
+    @SuppressWarnings("NullAway")
+    public @Nullable int[] getArrayP() {
         return fillReduce == null ? null : fillReduce.getRow().data;
     }
 
-    public int[] getArrayQ() {
+    @SuppressWarnings("NullAway")
+    public @Nullable int[] getArrayQ() {
         return fillReduce == null ? null : fillReduce.getColumn().data;
     }
 
@@ -90,7 +97,7 @@ public class ApplyFillReductionPermutation_DSCC {
         this.gw = gw;
     }
 
-    public ComputePermutation<DMatrixSparseCSC> getFillReduce() {
+    public @Nullable ComputePermutation<DMatrixSparseCSC> getFillReduce() {
         return fillReduce;
     }
 

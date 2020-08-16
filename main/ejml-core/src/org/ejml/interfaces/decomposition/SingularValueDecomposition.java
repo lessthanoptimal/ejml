@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,8 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -81,7 +83,7 @@ public interface SingularValueDecomposition <T extends Matrix>
      * @param transposed If the returned U is transposed.
      * @return An orthogonal matrix.
      */
-    T getU( T U , boolean transposed );
+    T getU(@Nullable T U , boolean transposed );
 
     /**
      * <p>
@@ -97,7 +99,7 @@ public interface SingularValueDecomposition <T extends Matrix>
      * @param transposed If the returned V is transposed.
      * @return An orthogonal matrix.
      */
-    T getV( T V , boolean transposed );
+    T getV(@Nullable T V , boolean transposed );
 
     /**
      * Returns a diagonal matrix with the singular values.  Order of the singular values
@@ -106,7 +108,7 @@ public interface SingularValueDecomposition <T extends Matrix>
      * @param W Optional storage for W. If null a new instance or internally maintained matrix is returned.  Modified.
      * @return Diagonal matrix with singular values along the diagonal.
      */
-    T getW( T W );
+    T getW(@Nullable T W );
 
     /**
      * Number of rows in the decomposed matrix.

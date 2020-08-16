@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -63,6 +63,7 @@ public class EigenPowerMethod_DDRM {
     private int maxIterations = 20;
 
     private DMatrixRMaj B;
+    @SuppressWarnings("NullAway.Init")
     private DMatrixRMaj seed;
 
     /**
@@ -86,11 +87,6 @@ public class EigenPowerMethod_DDRM {
         this.seed = seed;
     }
 
-    /**
-     *
-     * @param maxIterations
-     * @param tolerance
-     */
     public void setOptions(int maxIterations, double tolerance) {
         this.maxIterations = maxIterations;
         this.tol = tolerance;

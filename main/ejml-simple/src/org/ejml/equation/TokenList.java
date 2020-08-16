@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,14 @@
 
 package org.ejml.equation;
 
+import javax.annotation.Nullable;
+
 /**
  * Linked-list of tokens parsed from the equations string.
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway")
 class TokenList {
 
     Token first;
@@ -116,7 +119,7 @@ class TokenList {
      * @param where Where 'token' should be inserted after.  if null the put at it at the beginning
      * @param token The token that is to be inserted
      */
-    public void insert( Token where , Token token ) {
+    public void insert( @Nullable Token where , Token token ) {
         if( where == null ) {
             // put at the front of the list
             if( size == 0 )
@@ -231,6 +234,7 @@ class TokenList {
     /**
      * Prints the list of tokens
      */
+    @Override
     public String toString() {
         String ret = "";
         Token t = first;
@@ -266,6 +270,7 @@ class TokenList {
      * The token class contains a reference to parsed data (e.g. function, variable, or symbol) and reference
      * to list elements before and after it.
      */
+    @SuppressWarnings("NullAway.Init")
     public static class Token {
         /**
          * Next element in the list.  If null then it's at the end of the list
@@ -330,7 +335,7 @@ class TokenList {
         /**
          * If a scalar variable it returns its type, otherwise null
          */
-        public VariableScalar.Type getScalarType() {
+        public @Nullable VariableScalar.Type getScalarType() {
             if( variable != null )
                 if( variable.getType() == VariableType.SCALAR ) {
                     return ((VariableScalar)variable).getScalarType();
@@ -338,6 +343,7 @@ class TokenList {
             return null;
         }
 
+        @Override
         public String toString() {
             switch( getType() ) {
                 case FUNCTION:

@@ -173,8 +173,8 @@ public class TestTriangularSolver_DSCC {
 
                 //===========================================================
                 // now try it with pivots
-                int p[] = UtilEjml.shuffled(G.numRows,rand);
-                int pinv[] = CommonOps_DSCC.permutationInverse(p,p.length);
+                int[] p = UtilEjml.shuffled(G.numRows,rand);
+                int[] pinv = CommonOps_DSCC.permutationInverse(p,p.length);
 
                 DMatrixSparseCSC Gp = G.createLike();
                 CommonOps_DSCC.permute(null,G,p,Gp);
@@ -225,8 +225,8 @@ public class TestTriangularSolver_DSCC {
 
                 //===========================================================
                 // now try it with pivots
-                int p[] = UtilEjml.shuffled(G.numRows,rand);
-                int pinv[] = CommonOps_DSCC.permutationInverse(p,p.length);
+                int[] p = UtilEjml.shuffled(G.numRows,rand);
+                int[] pinv = CommonOps_DSCC.permutationInverse(p,p.length);
 
                 DMatrixSparseCSC Gp = G.createLike();
                 CommonOps_DSCC.permute(null,G,p,Gp);
@@ -311,8 +311,8 @@ public class TestTriangularSolver_DSCC {
 
         //======================================================================
         // now try it with pivots
-        int p[] = UtilEjml.shuffled(R.numRows,rand);
-        int pinv[] = CommonOps_DSCC.permutationInverse(p,p.length);
+        int[] p = UtilEjml.shuffled(R.numRows,rand);
+        int[] pinv = CommonOps_DSCC.permutationInverse(p,p.length);
 
         DMatrixSparseCSC Gp = G.createLike();
         CommonOps_DSCC.permute(null,G,p,Gp);
@@ -331,13 +331,13 @@ public class TestTriangularSolver_DSCC {
 
     public void solveColB_pivots_sparseX_vector( boolean lower ) {
         int m = 5;
-        int w[] = new int[m*2];
+        int[] w = new int[m*2];
 
         for (int trial = 0; trial < 10; trial++) {
             for (int nz_size : new int[]{5, 8, 10, 20}) {
 
-                int p[] = UtilEjml.shuffled(m,rand);
-                int pinv[] = CommonOps_DSCC.permutationInverse(p,5);
+                int[] p = UtilEjml.shuffled(m,rand);
+                int[] pinv = CommonOps_DSCC.permutationInverse(p,5);
 
                 int lengthX = rand.nextInt(3)+3;
 
@@ -370,8 +370,8 @@ public class TestTriangularSolver_DSCC {
         DMatrixSparseCSC A = CommonOps_DSCC.diag(1,2,3);
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(3,1,3,-1,1,rand);
 
-        int xi[] = new int[A.numCols];
-        int w[] = new int[B.numRows*2];
+        int[] xi = new int[A.numCols];
+        int[] w = new int[B.numRows*2];
 
         // A is diagonal and B is filled in
         int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
@@ -417,8 +417,8 @@ public class TestTriangularSolver_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.triangleLower(4,0,16, -1,1,rand);
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(4,1,4,-1,1,rand);
 
-        int xi[] = new int[A.numCols];
-        int w[] = new int[A.numCols*2];
+        int[] xi = new int[A.numCols];
+        int[] w = new int[A.numCols*2];
 
         int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(0,top);
@@ -468,8 +468,8 @@ public class TestTriangularSolver_DSCC {
 
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,1,5,-1,1,rand);
 
-        int xi[] = new int[A.numCols];
-        int w[] = new int[B.numRows*2];
+        int[] xi = new int[A.numCols];
+        int[] w = new int[B.numRows*2];
 
         int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(0,top);
@@ -489,8 +489,8 @@ public class TestTriangularSolver_DSCC {
             DMatrixSparseCSC A = RandomMatrices_DSCC.triangleLower(5,0,5,-1,1,rand);
             DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(5,2,2,-1,1,rand);
 
-            int xi[] = new int[A.numCols];
-            int w[] = new int[A.numCols*2];
+            int[] xi = new int[A.numCols];
+            int[] w = new int[A.numCols*2];
 
             int top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
             for (int j = 0; j < A.numCols; j++) {
@@ -500,8 +500,8 @@ public class TestTriangularSolver_DSCC {
             DMatrixSparseCSC bottom = RandomMatrices_DSCC.rectangle(4,5,10,-1,1,rand);
             A = CommonOps_DSCC.concatRows(A,bottom,null);
 
-            int xi2[] = new int[A.numCols];
-            int w2[] = new int[A.numCols*2];
+            int[] xi2 = new int[A.numCols];
+            int[] w2 = new int[A.numCols*2];
 
             int top2 = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi2,w2);
             for (int j = 0; j < A.numCols; j++) {
@@ -527,7 +527,7 @@ public class TestTriangularSolver_DSCC {
                         "0 0 0 1 1 " +
                         "0 0 0 0 1",5);
 
-        int parent[] = new int[A.numCols];
+        int[] parent = new int[A.numCols];
 
         TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
 
@@ -549,7 +549,7 @@ public class TestTriangularSolver_DSCC {
                         "0 0 0 1 0 " +
                         "0 0 0 0 1",5);
 
-        int parent[] = new int[A.numCols];
+        int[] parent = new int[A.numCols];
 
         TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
 
@@ -570,11 +570,11 @@ public class TestTriangularSolver_DSCC {
                         "0 0 0 1 0 " +
                         "0 0 0 0 1 ",5);
 
-        int parent[] = new int[A.numCols];
+        int[] parent = new int[A.numCols];
 
         TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
 
-        int expected[] = new int[]{-1,2,3,4,-1};
+        int[] expected = new int[]{-1,2,3,4,-1};
 
         for (int i = 0; i < A.numCols; i++) {
             assertEquals(expected[i],parent[i]);
@@ -595,11 +595,11 @@ public class TestTriangularSolver_DSCC {
                         "0 0 0 0 0 1 1 " +
                         "0 0 0 0 0 0 1 ",7);
 
-        int parent[] = new int[A.numCols];
+        int[] parent = new int[A.numCols];
 
         TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
 
-        int expected[] = new int[]{2,3,3,4,5,6,-1};
+        int[] expected = new int[]{2,3,3,4,5,6,-1};
 
         for (int i = 0; i < A.numCols; i++) {
             assertEquals(expected[i],parent[i]);
@@ -620,11 +620,11 @@ public class TestTriangularSolver_DSCC {
                         "0 0 0 0 1 0 " +
                         "0 0 0 0 0 1 " ,6);
 
-        int parent[] = new int[A.numCols];
+        int[] parent = new int[A.numCols];
 
         TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
 
-        int expected[] = new int[]{2,3,3,4,5,-1};
+        int[] expected = new int[]{2,3,3,4,5,-1};
 
         for (int i = 0; i < A.numCols; i++) {
             assertEquals(expected[i],parent[i]);
@@ -644,7 +644,7 @@ public class TestTriangularSolver_DSCC {
             int nz = (int)(((N-1)*(N-1)/2)*(rand.nextDouble()*0.8+0.2))+N;
             DMatrixSparseCSC A = RandomMatrices_DSCC.triangleUpper(N,0,nz,-1,1,rand);
 
-            int parent[] = new int[A.numCols];
+            int[] parent = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
 
             for (int col = 0; col < A.numCols; col++) {
@@ -655,18 +655,18 @@ public class TestTriangularSolver_DSCC {
                 for (int j = idx0; j < idx1-1; j++) {
                     int row = A.nz_rows[j];
 
-                    checkPathEliminationTree(row,col,parent,N);
+                    checkPathEliminationTree(row,col,parent);
                 }
             }
         }
     }
 
-    private void checkPathEliminationTree( int start , int end , int parent[], int N ) {
+    private void checkPathEliminationTree(int start , int end , int[] parent) {
         int i = start;
         while( i < end ) {
             i = parent[i];
         }
-        assertTrue(i==end);
+        assertEquals(end, i);
     }
 
     /**
@@ -683,9 +683,9 @@ public class TestTriangularSolver_DSCC {
             DMatrixSparseCSC ATA = new DMatrixSparseCSC(N,N,0);
             CommonOps_DSCC.multTransA(A,A,ATA,null,null);
 
-            int expected[] = new int[A.numCols];
+            int[] expected = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(ATA,false,expected,null);
-            int found[] = new int[A.numCols];
+            int[] found = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(A,true,found,null);
 
             for (int i = 0; i < A.numCols; i++) {
@@ -709,9 +709,9 @@ public class TestTriangularSolver_DSCC {
             DMatrixSparseCSC ATA = new DMatrixSparseCSC(N,N,0);
             CommonOps_DSCC.multTransA(tall,tall,ATA,null,null);
 
-            int expected[] = new int[A.numCols];
+            int[] expected = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(ATA,false,expected,null);
-            int found[] = new int[A.numCols];
+            int[] found = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(tall,true,found,null);
 
             for (int i = 0; i < A.numCols; i++) {
@@ -725,11 +725,11 @@ public class TestTriangularSolver_DSCC {
      */
     @Test
     public void postorder_case0() {
-        int parent[] =   new int[]{5,2,7,5,7,6,8,9,9,10,-1};
+        int[] parent =   new int[]{5,2,7,5,7,6,8,9,9,10,-1};
 
         int N = 11;
 
-        int found[] = new int[N];
+        int[] found = new int[N];
 
         TriangularSolver_DSCC.postorder(parent,N,found,null);
 
@@ -739,13 +739,13 @@ public class TestTriangularSolver_DSCC {
     /**
      * Uses the definition to see if a list is post-ordered
      */
-    private void assertPostorder( int parent[], int order[], int N ) {
+    private void assertPostorder(int[] parent, int[] order, int N ) {
 
-        int mod[] = new int[N];
-        int sanity[] = new int[N];
+        int[] mod = new int[N];
+        int[] sanity = new int[N];
 
         // reverse[ original index ] = postorder index
-        int reverse[] = new int[N];
+        int[] reverse = new int[N];
 
         // create a reverse lookup table
         for (int i = 0; i < N; i++) {
@@ -783,10 +783,10 @@ public class TestTriangularSolver_DSCC {
      */
     @Test
     public void postorder_case1() {
-        int parent[] =   new int[]{-1,-1,-1,-1,-1};
+        int[] parent =   new int[]{-1,-1,-1,-1,-1};
         int N = 5;
 
-        int found[] = new int[N];
+        int[] found = new int[N];
 
         TriangularSolver_DSCC.postorder(parent,N,found,null);
 
@@ -798,11 +798,11 @@ public class TestTriangularSolver_DSCC {
      */
     @Test
     public void postorder_case2() {
-        int parent[] =   new int[]{5,2,7,5,7,6,8,-1,-1};
+        int[] parent =   new int[]{5,2,7,5,7,6,8,-1,-1};
 
         int N = 9;
 
-        int found[] = new int[N];
+        int[] found = new int[N];
 
         TriangularSolver_DSCC.postorder(parent,N,found,null);
 
@@ -823,11 +823,13 @@ public class TestTriangularSolver_DSCC {
                         "0 0 0 0 0 1 1 " +
                         "0 0 0 0 0 0 1 ",7);
 
-        int parent[] = new int[]{2,3,3,4,5,6,-1};
+        int[] parent = new int[]{2,3,3,4,5,6,-1};
 
-        int top, s[] = new int[7], w[] = new int[7];
+        int top;
+        int[] s = new int[7];
+        int[] w = new int[7];
 
-        int expected[];
+        int[] expected;
 
         // check each row one at a time
         top = TriangularSolver_DSCC.searchNzRowsElim(A,0,parent,s,w);
@@ -865,8 +867,8 @@ public class TestTriangularSolver_DSCC {
     /**
      * Makes sure the same elements are contained in the two list but order doesn't matter
      */
-    private static void assertSetEquals( int expected[] , int found[], int start , int end ) {
-        boolean matched[] = new boolean[end];
+    private static void assertSetEquals(int[] expected, int[] found, int start , int end ) {
+        boolean[] matched = new boolean[end];
         for (int i = start; i < end; i++) {
             if( matched[i] )
                 fail("matched twice");

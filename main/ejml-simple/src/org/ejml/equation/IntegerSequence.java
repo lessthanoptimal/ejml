@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.equation;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public interface IntegerSequence {
     class For implements IntegerSequence {
 
         VariableInteger start;
-        VariableInteger step;
+        @Nullable VariableInteger step;
         VariableInteger end;
 
         int valStart;
@@ -131,7 +132,7 @@ public interface IntegerSequence {
         int where;
         int length;
 
-        public For(TokenList.Token start, TokenList.Token step, TokenList.Token end) {
+        public For(TokenList.Token start, @Nullable TokenList.Token step, TokenList.Token end) {
             this.start = (VariableInteger)start.getVariable();
             this.step = step == null ? null : (VariableInteger)step.getVariable();
             this.end = (VariableInteger)end.getVariable();
@@ -280,8 +281,8 @@ public interface IntegerSequence {
      */
     class Range implements IntegerSequence {
 
-        VariableInteger start;
-        VariableInteger step;
+        @Nullable VariableInteger start;
+        @Nullable VariableInteger step;
 
         int valStart;
         int valStep;

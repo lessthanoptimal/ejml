@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,8 @@ import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Peter Abeles
@@ -90,7 +92,7 @@ public class SpecializedOps_ZDRM {
      * @param transposed If the transpose of the matrix is returned.
      * @return A pivot matrix.
      */
-    public static ZMatrixRMaj pivotMatrix(ZMatrixRMaj ret, int pivots[], int numPivots, boolean transposed ) {
+    public static ZMatrixRMaj pivotMatrix(@Nullable ZMatrixRMaj ret, int[] pivots, int numPivots, boolean transposed ) {
 
         if( ret == null ) {
             ret = new ZMatrixRMaj(numPivots, numPivots);

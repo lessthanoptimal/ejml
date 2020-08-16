@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.eig.EigenvalueSmall_F64;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 
@@ -31,6 +32,7 @@ import java.util.Random;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("ConstantConditions")
 public class SymmetricQREigenHelper_DDRM {
 
     // used in exceptional shifts
@@ -48,21 +50,21 @@ public class SymmetricQREigenHelper_DDRM {
     protected EigenvalueSmall_F64 eigenSmall = new EigenvalueSmall_F64();
 
     // orthogonal matrix used in similar transform.  optional
-    protected DMatrixRMaj Q;
+    protected @Nullable DMatrixRMaj Q;
 
     // size of the matrix being processed
     protected int N;
     // diagonal elements in the matrix
-    protected double diag[];
+    protected double[] diag = UtilEjml.ZERO_LENGTH_F64;
     // the off diagonal elements
-    protected double off[];
+    protected double[] off = UtilEjml.ZERO_LENGTH_F64;
 
     // which submatrix is being processed
     protected int x1;
     protected int x2;
 
     // where splits are performed
-    protected int splits[];
+    protected int[] splits;
     protected int numSplits;
 
     // current value of the bulge
@@ -103,9 +105,9 @@ public class SymmetricQREigenHelper_DDRM {
      * @param off Off diagonal elements from tridiagonal matrix. Modified.
      * @param numCols number of columns (and rows) in the matrix.
      */
-    public void init( double diag[] ,
-                      double off[],
-                      int numCols ) {
+    public void init(double[] diag,
+                     double[] off,
+                     int numCols ) {
         reset(numCols);
 
         this.diag = diag;
@@ -115,7 +117,7 @@ public class SymmetricQREigenHelper_DDRM {
     /**
      * Exchanges the internal array of the diagonal elements for the provided one.
      */
-    public double[] swapDiag( double diag[] ) {
+    public double[] swapDiag(double[] diag) {
         double[] ret = this.diag;
         this.diag = diag;
 
@@ -125,7 +127,7 @@ public class SymmetricQREigenHelper_DDRM {
     /**
      * Exchanges the internal array of the off diagonal elements for the provided one.
      */
-    public double[] swapOff( double off[] ) {
+    public double[] swapOff(double[] off) {
         double[] ret = this.off;
         this.off = off;
 
@@ -139,8 +141,8 @@ public class SymmetricQREigenHelper_DDRM {
     public void reset( int N ) {
         this.N = N;
 
-        this.diag = null;
-        this.off = null;
+        this.diag = UtilEjml.ZERO_LENGTH_F64;
+        this.off = UtilEjml.ZERO_LENGTH_F64;
 
         if( splits.length < N ) {
             splits = new int[N];
@@ -221,6 +223,7 @@ public class SymmetricQREigenHelper_DDRM {
         }
     }
 
+    @SuppressWarnings("NullAway")
     protected void updateQ( int m , int n , double c ,  double s )
     {
         int rowA = m*N;

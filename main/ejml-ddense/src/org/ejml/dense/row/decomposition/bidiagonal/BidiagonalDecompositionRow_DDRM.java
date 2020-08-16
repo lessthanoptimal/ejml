@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,8 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 /**
  * <p>
  * Performs a {@link BidiagonalDecomposition_F64} using
@@ -45,11 +47,11 @@ public class BidiagonalDecompositionRow_DDRM
     private int min;
 
     // the first element in the orthogonal vectors
-    private double gammasU[];
-    private double gammasV[];
+    private double[] gammasU;
+    private double[] gammasV;
     // temporary storage
-    private double b[];
-    private double u[];
+    private double[] b;
+    private double[] u;
 
     /**
      * Creates a decompose that defines the specified amount of memory.
@@ -134,7 +136,7 @@ public class BidiagonalDecompositionRow_DDRM
      * @return The bidiagonal matrix.
      */
     @Override
-    public DMatrixRMaj getB(DMatrixRMaj B , boolean compact ) {
+    public DMatrixRMaj getB(@Nullable DMatrixRMaj B , boolean compact ) {
         B = handleB(B, compact,m,n,min);
 
         //System.arraycopy(UBV.data, 0, B.data, 0, UBV.getNumElements());
@@ -150,7 +152,7 @@ public class BidiagonalDecompositionRow_DDRM
         return B;
     }
 
-    public static DMatrixRMaj handleB(DMatrixRMaj B, boolean compact,
+    public static DMatrixRMaj handleB(@Nullable DMatrixRMaj B, boolean compact,
                                         int m , int n , int min ) {
         int w = n > m ? min + 1 : min;
 
@@ -179,7 +181,7 @@ public class BidiagonalDecompositionRow_DDRM
      * @return The extracted Q matrix.
      */
     @Override
-    public DMatrixRMaj getU(DMatrixRMaj U , boolean transpose , boolean compact ) {
+    public DMatrixRMaj getU(@Nullable DMatrixRMaj U , boolean transpose , boolean compact ) {
         U = handleU(U, transpose, compact,m,n,min);
         CommonOps_DDRM.setIdentity(U);
 
@@ -199,9 +201,9 @@ public class BidiagonalDecompositionRow_DDRM
         return U;
     }
 
-    public static DMatrixRMaj handleU(DMatrixRMaj U,
-                                        boolean transpose, boolean compact,
-                                        int m, int n , int min ) {
+    public static DMatrixRMaj handleU(@Nullable DMatrixRMaj U,
+                                      boolean transpose, boolean compact,
+                                      int m, int n , int min ) {
         if( compact ){
             if( transpose ) {
                 if( U == null )
@@ -232,7 +234,7 @@ public class BidiagonalDecompositionRow_DDRM
      * @return The extracted Q matrix.
      */
     @Override
-    public DMatrixRMaj getV(DMatrixRMaj V , boolean transpose , boolean compact ) {
+    public DMatrixRMaj getV(@Nullable DMatrixRMaj V , boolean transpose , boolean compact ) {
         V = handleV(V, transpose, compact,m,n,min);
         CommonOps_DDRM.setIdentity(V);
 
@@ -253,7 +255,7 @@ public class BidiagonalDecompositionRow_DDRM
         return V;
     }
 
-    public static DMatrixRMaj handleV(DMatrixRMaj V, boolean transpose, boolean compact,
+    public static DMatrixRMaj handleV(@Nullable DMatrixRMaj V, boolean transpose, boolean compact,
                                         int m , int n , int min ) {
         int w = n > m ? min + 1 : min;
 
@@ -297,7 +299,7 @@ public class BidiagonalDecompositionRow_DDRM
     }
 
     protected void computeU( int k) {
-        double b[] = UBV.data;
+        double[] b = UBV.data;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
@@ -335,7 +337,7 @@ public class BidiagonalDecompositionRow_DDRM
     }
 
     protected void computeV(int k) {
-        double b[] = UBV.data;
+        double[] b = UBV.data;
 
         int row = k*n;
 

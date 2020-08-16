@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,6 +62,8 @@ public class MatrixMatrixMult_D2 {
     }
 
     /**
+     * C = A*B and uses aux storage.
+     *
      * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
     public static void mult_aux( DenseD2Matrix64F a , DenseD2Matrix64F b , DenseD2Matrix64F c , double []aux )

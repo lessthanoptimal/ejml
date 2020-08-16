@@ -59,7 +59,7 @@ public class RandomMatrices_DDRM {
         if( dimen < numVectors )
             throw new IllegalArgumentException("The number of vectors must be less than or equal to the dimension");
 
-        DMatrixRMaj u[] = new DMatrixRMaj[numVectors];
+        DMatrixRMaj[] u = new DMatrixRMaj[numVectors];
 
         u[0] = RandomMatrices_DDRM.rectangle(dimen,1,-1,1,rand);
         NormOps_DDRM.normalizeF(u[0]);
@@ -67,13 +67,9 @@ public class RandomMatrices_DDRM {
         for( int i = 1; i < numVectors; i++ ) {
 //            System.out.println(" i = "+i);
             DMatrixRMaj a = new DMatrixRMaj(dimen,1);
-            DMatrixRMaj r=null;
+            DMatrixRMaj r = RandomMatrices_DDRM.rectangle(dimen,1,-1,1,rand);
 
             for( int j = 0; j < i; j++ ) {
-//                System.out.println("j = "+j);
-                if( j == 0 )
-                    r = RandomMatrices_DDRM.rectangle(dimen,1,-1,1,rand);
-
                 // find a vector that is normal to vector j
                 // u[i] = (1/2)*(r + Q[j]*r)
                 a.set(r);
@@ -118,7 +114,6 @@ public class RandomMatrices_DDRM {
             CommonOps_DDRM.scale(val,B);
 
             CommonOps_DDRM.add(A,B,A);
-
         }
 
         return A;
@@ -140,7 +135,7 @@ public class RandomMatrices_DDRM {
             throw new IllegalArgumentException("The number of rows must be more than or equal to the number of columns");
         }
 
-        DMatrixRMaj u[] = span(numRows,numCols,rand);
+        DMatrixRMaj[] u = span(numRows,numCols,rand);
 
         DMatrixRMaj ret = new DMatrixRMaj(numRows,numCols);
         for( int i = 0; i < numCols; i++ ) {
@@ -302,7 +297,7 @@ public class RandomMatrices_DDRM {
      * @param rand Random number generator used to fill the matrix.
      */
     public static void addUniform(DMatrixRMaj A , double min , double max , Random rand ) {
-        double d[] = A.getData();
+        double[] d = A.getData();
         int size = A.getNumElements();
 
         double r = max-min;
@@ -358,7 +353,7 @@ public class RandomMatrices_DDRM {
      */
     public static void fillUniform(DMatrixD1 mat , double min , double max , Random rand )
     {
-        double d[] = mat.getData();
+        double[] d = mat.getData();
         int size = mat.getNumElements();
 
         double r = max-min;
@@ -378,7 +373,7 @@ public class RandomMatrices_DDRM {
      */
     public static void setRandomB(BMatrixRMaj mat , Random rand )
     {
-        boolean d[] = mat.data;
+        boolean[] d = mat.data;
         int size = mat.getNumElements();
 
 
@@ -421,7 +416,7 @@ public class RandomMatrices_DDRM {
      */
     public static void fillGaussian(DMatrixD1 mat , double mean , double stdev , Random rand )
     {
-        double d[] = mat.getData();
+        double[] d = mat.getData();
         int size = mat.getNumElements();
 
         for( int i = 0; i < size; i++ ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,8 @@ package org.ejml.dense.row.decomposition.qr;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -49,10 +51,11 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * </p>
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway")
 public class QrUpdate_DDRM {
 
     // the decomposition that is being adjusted
-    private DMatrixRMaj Q,R;
+    private @Nullable DMatrixRMaj Q,R;
     // product of planar multiplications
     private DMatrixRMaj U_tran; // using transpose of U reduces cache misses
     private DMatrixRMaj Qm;
@@ -76,9 +79,6 @@ public class QrUpdate_DDRM {
     /**
      * Creates an update which can decompose matrices up to the specified size.  Autogrow
      * is set to false.
-     *
-     * @param maxRows
-     * @param maxCols
      */
     public QrUpdate_DDRM(int maxRows , int maxCols ) {
         autoGrow = false;
@@ -88,10 +88,6 @@ public class QrUpdate_DDRM {
     /**
      * Creates an update which can decompose matrices up to the specified size.  Autogrow
      * is configurable.
-     *
-     * @param maxRows
-     * @param maxCols
-     * @param autoGrow
      */
     public QrUpdate_DDRM(int maxRows , int maxCols , boolean autoGrow ) {
         this.autoGrow = autoGrow;
@@ -107,9 +103,6 @@ public class QrUpdate_DDRM {
 
     /**
      * Declares the internal data structures so that it can process matrices up to the specified size.
-     *
-     * @param maxRows
-     * @param maxCols
      */
     public void declareInternalData(int maxRows, int maxCols) {
         this.maxRows = maxRows;
@@ -268,9 +261,8 @@ public class QrUpdate_DDRM {
     }
 
     /**
-     * Updates the Q matrix to take inaccount the row that was removed by only multiplying e
-     * lements that need to be.  There is still some room for improvement here...
-     * @param rowIndex
+     * Updates the Q matrix to take in account the row that was removed by only multiplying elements that need to be.
+     * There is still some room for improvement here...
      */
     private void updateRemoveQ( int rowIndex ) {
         Qm.set(Q);
@@ -385,7 +377,7 @@ public class QrUpdate_DDRM {
         }
     }
 
-    private void computeRemoveGivens( int selectedRow )
+    private void computeRemoveGivens(int selectedRow )
     {
         CommonOps_DDRM.setIdentity(U_tran);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,7 @@ import org.ejml.data.IGrowArray;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -32,15 +33,22 @@ import java.util.Random;
 public class FillReductionFactory_DSCC {
     public static final Random rand = new Random(234234);
 
-    public static ComputePermutation<DMatrixSparseCSC> create(FillReducing type ) {
+    /**
+     * Returns a method for computing the fill reduce permutations. If null is returned that means no permutations
+     * should be done
+     * @param type The method
+     * @return ComputePermutation or null if no permutations should be applied
+     */
+    public static @Nullable ComputePermutation<DMatrixSparseCSC> create(FillReducing type ) {
         switch( type ) {
             case NONE:
                 return null;
 
             case RANDOM:
-                return new ComputePermutation<DMatrixSparseCSC>(true,true) {
+                return new ComputePermutation<>(true, true) {
                     @Override
-                    public void process(DMatrixSparseCSC m ) {
+                    @SuppressWarnings("NullAway") // constructor parameters ensures these are not null
+                    public void process(DMatrixSparseCSC m) {
                         prow.reshape(m.numRows);
                         pcol.reshape(m.numCols);
                         fillSequence(prow);
@@ -49,14 +57,15 @@ public class FillReductionFactory_DSCC {
                         synchronized (rand) {
                             _rand = new Random(rand.nextInt());
                         }
-                        UtilEjml.shuffle(prow.data,prow.length,0,prow.length,_rand);
-                        UtilEjml.shuffle(pcol.data,pcol.length,0,pcol.length,_rand);
+                        UtilEjml.shuffle(prow.data, prow.length, 0, prow.length, _rand);
+                        UtilEjml.shuffle(pcol.data, pcol.length, 0, pcol.length, _rand);
                     }
                 };
 
             case IDENTITY:
-                return new ComputePermutation<DMatrixSparseCSC>(true,true) {
+                return new ComputePermutation<>(true,true) {
                     @Override
+                    @SuppressWarnings("NullAway") // constructor parameters ensures these are not null
                     public void process(DMatrixSparseCSC m) {
                         prow.reshape(m.numRows);
                         pcol.reshape(m.numCols);

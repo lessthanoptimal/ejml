@@ -82,6 +82,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         numCols = 0;
     }
 
+    @Override
     public void reshape( int numRows , int numCols ) {
         this.numRows = numRows;
         this.numCols = numCols;
@@ -123,7 +124,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse
      * Adds a triplet of (row,vol,value) to the end of the list and performs a bounds check to make
      * sure it is a legal value.
      *
-     * @See #addItem(int, int, double)
+     * @see #addItem(int, int, double)
      *
      * @param row Row the element belongs in
      * @param col Column the element belongs in
@@ -372,9 +373,10 @@ public class DMatrixSparseTriplet implements DMatrixSparse
 
     @Override
     public Iterator<CoordinateRealValue> createCoordinateIterator() {
-        return new Iterator<CoordinateRealValue>() {
-            CoordinateRealValue coordinate = new CoordinateRealValue();
+        return new Iterator<>() {
+            final CoordinateRealValue coordinate = new CoordinateRealValue();
             int index = 0;
+
             @Override
             public boolean hasNext() {
                 return index < nz_length;
@@ -382,12 +384,17 @@ public class DMatrixSparseTriplet implements DMatrixSparse
 
             @Override
             public CoordinateRealValue next() {
-                coordinate.row = nz_rowcol.data[index*2];
-                coordinate.col = nz_rowcol.data[index*2+1];
+                coordinate.row = nz_rowcol.data[index * 2];
+                coordinate.col = nz_rowcol.data[index * 2 + 1];
                 coordinate.value = nz_value.data[index];
                 index++;
                 return coordinate;
             }
         };
+    }
+
+    @Override
+    public int getNonZeroCount() {
+        return nz_length;
     }
 }

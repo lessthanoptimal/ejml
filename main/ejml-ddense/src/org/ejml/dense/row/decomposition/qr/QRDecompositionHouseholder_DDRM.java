@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,8 @@ package org.ejml.dense.row.decomposition.qr;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -48,6 +50,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholder_DDRM implements QRDecomposition<DMatrixRMaj> {
 
     /**
@@ -58,17 +61,18 @@ public class QRDecompositionHouseholder_DDRM implements QRDecomposition<DMatrixR
     protected DMatrixRMaj QR;
 
     // used internally to store temporary data
-    protected double u[],v[];
+    protected double[] u;
+    protected double[] v;
 
     // dimension of the decomposed matrices
     protected int numCols; // this is 'n'
     protected int numRows; // this is 'm'
     protected int minLength;
 
-    protected double dataQR[];
+    protected double[] dataQR;
 
     // the computed gamma for Q_k matrix
-    protected double gammas[];
+    protected double[] gammas;
     // local variables
     protected double gamma;
     protected double tau;
@@ -122,7 +126,7 @@ public class QRDecompositionHouseholder_DDRM implements QRDecomposition<DMatrixR
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DMatrixRMaj getQ(DMatrixRMaj Q , boolean compact ) {
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
         if( compact ) {
             if( Q == null ) {
                 Q = CommonOps_DDRM.identity(numRows,minLength);
@@ -160,10 +164,9 @@ public class QRDecompositionHouseholder_DDRM implements QRDecomposition<DMatrixR
      * Returns an upper triangular matrix which is the R in the QR decomposition.
      *
      * @param R An upper triangular matrix.
-     * @param compact
      */
     @Override
-    public DMatrixRMaj getR(DMatrixRMaj R, boolean compact) {
+    public DMatrixRMaj getR(@Nullable DMatrixRMaj R, boolean compact) {
         if( R == null ) {
             if( compact ) {
                 R = new DMatrixRMaj(minLength,numCols);

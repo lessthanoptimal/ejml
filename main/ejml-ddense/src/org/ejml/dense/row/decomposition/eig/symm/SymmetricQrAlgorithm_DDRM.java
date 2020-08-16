@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,11 @@
 
 package org.ejml.dense.row.decomposition.eig.symm;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -32,16 +35,17 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * </p>
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class SymmetricQrAlgorithm_DDRM {
 
     // performs many of the low level calculations
-    private SymmetricQREigenHelper_DDRM helper;
+    private final SymmetricQREigenHelper_DDRM helper;
 
     // transpose of the orthogonal matrix
-    private DMatrixRMaj Q;
+    private @Nullable DMatrixRMaj Q;
 
     // the eigenvalues previously computed
-    private double eigenvalues[];
+    private double[] eigenvalues = UtilEjml.ZERO_LENGTH_F64;
 
     private int exceptionalThresh = 15;
     private int maxIterations = exceptionalThresh*15;
@@ -68,11 +72,11 @@ public class SymmetricQrAlgorithm_DDRM {
         this.maxIterations = maxIterations;
     }
 
-    public DMatrixRMaj getQ() {
+    public @Nullable DMatrixRMaj getQ() {
         return Q;
     }
 
-    public void setQ(DMatrixRMaj q) {
+    public void setQ( @Nullable DMatrixRMaj q) {
         Q = q;
     }
 
@@ -108,11 +112,11 @@ public class SymmetricQrAlgorithm_DDRM {
      * @param off Off diagonal elements from tridiagonal matrix. Modified.
      * @return true if it succeeds and false if it fails.
      */
-    public boolean process( int sideLength,
-                            double diag[] ,
-                            double off[] ,
-                            double eigenvalues[] ) {
-        if( diag != null )
+    public boolean process(int sideLength,
+                           @Nullable double[] diag,
+                           @Nullable double[] off,
+                           double[] eigenvalues) {
+        if( diag != null && off != null )
             helper.init(diag,off,sideLength);
         if( Q == null )
             Q = CommonOps_DDRM.identity(helper.N);
@@ -125,14 +129,14 @@ public class SymmetricQrAlgorithm_DDRM {
         return _process();
     }
 
-    public boolean process( int sideLength,
-                            double diag[] ,
-                            double off[] ) {
-        if( diag != null )
+    public boolean process(int sideLength,
+                           @Nullable double[] diag,
+                           @Nullable double[] off) {
+        if( diag != null && off != null )
             helper.init(diag,off,sideLength);
 
         this.followingScript = false;
-        this.eigenvalues = null;
+        this.eigenvalues = UtilEjml.ZERO_LENGTH_F64;
 
         return _process();
     }

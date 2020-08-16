@@ -37,7 +37,6 @@ public interface DMatrixSparse extends DMatrix, MatrixSparse {
      */
     double get(int row, int col, double fallBackValue);
 
-
     /**
      * Same as {@link #get} but does not perform bounds check on input parameters.  This results in about a 25%
      * speed increase but potentially sacrifices stability and makes it more difficult to track down simple errors.
@@ -54,8 +53,6 @@ public interface DMatrixSparse extends DMatrix, MatrixSparse {
     /**
      * Creates an iterator which will go through each non-zero value in the sparse matrix. Order is not defined
      * and is implementation specific
-     *
-     * @return Iterator
      */
     Iterator<CoordinateRealValue> createCoordinateIterator();
 

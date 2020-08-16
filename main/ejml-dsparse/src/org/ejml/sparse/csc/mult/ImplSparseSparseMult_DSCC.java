@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -210,7 +210,7 @@ public class ImplSparseSparseMult_DSCC {
     public static void multAddColA(DMatrixSparseCSC A , int colA ,
                                    double alpha,
                                    DMatrixSparseCSC C, int mark,
-                                   double x[] , int w[] ) {
+                                   double[] x, int[] w) {
         int idxA0 = A.col_idx[colA];
         int idxA1 = A.col_idx[colA+1];
 
@@ -246,7 +246,7 @@ public class ImplSparseSparseMult_DSCC {
      */
     public static void addRowsInAInToC(DMatrixSparseCSC A , int colA ,
                                        DMatrixSparseCSC C, int colC,
-                                       int w[] ) {
+                                       int[] w) {
         int idxA0 = A.col_idx[colA];
         int idxA1 = A.col_idx[colA+1];
 
@@ -393,9 +393,9 @@ public class ImplSparseSparseMult_DSCC {
         if( A.numRows != B.numRows )
             throw new IllegalArgumentException("Number of rows must match.");
 
-        int w[] = adjust(gw,A.numRows);
+        int[] w = adjust(gw,A.numRows);
         Arrays.fill(w,0,A.numRows,-1);
-        double x[] = adjust(gx,A.numRows);
+        double[] x = adjust(gx,A.numRows);
 
         int length = 0;
 

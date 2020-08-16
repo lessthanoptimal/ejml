@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,8 @@ import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_DD
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
+import javax.annotation.Nullable;
+
 
 /**
  * <p>
@@ -37,6 +39,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("NullAway.Init")
 public class SvdImplicitQrDecompose_UltimateS
         implements SingularValueDecomposition_F64<DMatrixRMaj> {
 
@@ -47,13 +50,13 @@ public class SvdImplicitQrDecompose_UltimateS
     private BidiagonalDecompositionRow_DDRM bidiag = new BidiagonalDecompositionRow_DDRM();
     private SvdImplicitQrAlgorithm_DDRM qralg = new SvdImplicitQrAlgorithmSmart();
 
-    private double diag[];
-    private double off[];
+    private double[] diag;
+    private double[] off;
 
     private DMatrixRMaj Ut;
     private DMatrixRMaj Vt;
 
-    private double singularValues[];
+    private double[] singularValues;
     private int numSingular;
 
     // compute a compact SVD
@@ -68,8 +71,8 @@ public class SvdImplicitQrDecompose_UltimateS
     private boolean prefComputeV;
 
     // stores the results of bidiagonalization
-    private double diagOld[];
-    private double offOld[];
+    private double[] diagOld;
+    private double[] offOld;
 
     // Either a copy of the input matrix or a copy of it transposed
     private DMatrixRMaj A_mod = new DMatrixRMaj(1,1);
@@ -96,7 +99,7 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public DMatrixRMaj getU(DMatrixRMaj U , boolean transpose) {
+    public DMatrixRMaj getU(@Nullable DMatrixRMaj U , boolean transpose) {
         if( !prefComputeU )
             throw new IllegalArgumentException("As requested U was not computed.");
         if( transpose )
@@ -109,7 +112,7 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public DMatrixRMaj getV(DMatrixRMaj V , boolean transpose ) {
+    public DMatrixRMaj getV(@Nullable DMatrixRMaj V , boolean transpose ) {
         if( !prefComputeV )
             throw new IllegalArgumentException("As requested V was not computed.");
         if( transpose )
@@ -122,7 +125,7 @@ public class SvdImplicitQrDecompose_UltimateS
     }
 
     @Override
-    public DMatrixRMaj getW(DMatrixRMaj W ) {
+    public DMatrixRMaj getW(@Nullable DMatrixRMaj W ) {
         int m = compact ? numSingular : numRows;
         int n = compact ? numSingular : numCols;
 

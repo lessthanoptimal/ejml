@@ -18,9 +18,11 @@
 
 package org.ejml.data;
 
+import org.ejml.UtilEjml;
 import org.ejml.ops.MatrixIO;
 import org.ejml.ops.SortCoupledArray_F64;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -43,7 +45,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     /**
      * Storage for non-zero values.  Only valid up to length-1.
      */
-    public double[] nz_values;
+    public double[] nz_values = UtilEjml.ZERO_LENGTH_F64;
     /**
      * Length of data. Number of non-zero values in the matrix
      */
@@ -52,12 +54,12 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * Specifies which row a specific non-zero value corresponds to.  If they are sorted or not with in each column
      * is specified by the {@link #indicesSorted} flag.
      */
-    public int nz_rows[];
+    public int[] nz_rows = UtilEjml.ZERO_LENGTH_I32;
     /**
      * Stores the range of indexes in the non-zero lists that belong to each column.  Column 'i' corresponds to
      * indexes col_idx[i] to col_idx[i+1]-1, inclusive.
      */
-    public int col_idx[];
+    public int[] col_idx;
 
     /**
      * Number of rows in the matrix
@@ -333,8 +335,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     @Override
     public void shrinkArrays() {
         if( nz_length < nz_values.length ) {
-            double tmp_values[] = new double[nz_length];
-            int tmp_rows[] = new int[nz_length];
+            double[] tmp_values = new double[nz_length];
+            int[] tmp_rows = new int[nz_length];
 
             System.arraycopy(this.nz_values,0,tmp_values,0,nz_length);
             System.arraycopy(this.nz_rows,0,tmp_rows,0,nz_length);
@@ -359,13 +361,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
             // save the user from themselves
             arrayLength = Math.min(numRows*numCols, arrayLength);
         }
-        if( nz_values == null || arrayLength > this.nz_values.length ) {
+        if( arrayLength > this.nz_values.length ) {
             double[] data = new double[ arrayLength ];
             int[] row_idx = new int[ arrayLength ];
 
             if( preserveValue ) {
-                if( nz_values == null )
-                    throw new IllegalArgumentException("Can't preserve values when uninitialized");
                 System.arraycopy(this.nz_values, 0, data, 0, this.nz_length);
                 System.arraycopy(this.nz_rows, 0, row_idx, 0, this.nz_length);
             }
@@ -394,7 +394,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * nz_values will grow if needed.
      * @param histogram histogram of column values in the sparse matrix. modified, see above.
      */
-    public void histogramToStructure(int histogram[] ) {
+    public void histogramToStructure(int[] histogram) {
         col_idx[0] = 0;
         int index = 0;
         for (int i = 1; i <= numCols; i++) {
@@ -410,7 +410,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * Sorts the row indices in ascending order.
      * @param sorter (Optional) Used to sort rows.  If null a new instance will be declared internally.
      */
-    public void sortIndices(SortCoupledArray_F64 sorter ) {
+    public void sortIndices( @Nullable SortCoupledArray_F64 sorter ) {
         if( sorter == null )
             sorter = new SortCoupledArray_F64();
 
@@ -483,5 +483,10 @@ public class DMatrixSparseCSC implements DMatrixSparse {
             }
         };
 
+    }
+
+    @Override
+    public int getNonZeroCount() {
+        return nz_length;
     }
 }

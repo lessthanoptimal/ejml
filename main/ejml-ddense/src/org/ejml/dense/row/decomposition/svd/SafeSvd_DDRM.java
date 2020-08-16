@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,8 @@ package org.ejml.dense.row.decomposition.svd;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+
+import javax.annotation.Nullable;
 
 /**
  * Wraps around a {@link SingularValueDecomposition} and ensures that the input is not modified.
@@ -55,17 +57,17 @@ public class SafeSvd_DDRM
     }
 
     @Override
-    public DMatrixRMaj getU(DMatrixRMaj U, boolean transposed) {
+    public DMatrixRMaj getU(@Nullable DMatrixRMaj U, boolean transposed) {
         return alg.getU(U,transposed);
     }
 
     @Override
-    public DMatrixRMaj getV(DMatrixRMaj V, boolean transposed) {
+    public DMatrixRMaj getV(@Nullable DMatrixRMaj V, boolean transposed) {
         return alg.getV(V,transposed);
     }
 
     @Override
-    public DMatrixRMaj getW(DMatrixRMaj W) {
+    public DMatrixRMaj getW(@Nullable DMatrixRMaj W) {
         return alg.getW(W);
     }
 

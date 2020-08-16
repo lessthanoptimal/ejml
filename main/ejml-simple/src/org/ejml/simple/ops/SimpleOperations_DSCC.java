@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,6 +30,8 @@ import org.ejml.sparse.csc.NormOps_DSCC;
 import java.io.PrintStream;
 
 /**
+ * Implementation of {@link org.ejml.simple.SimpleOperations} for {@link DMatrixSparseCSC}.
+ *
  * @author Peter Abeles
  */
 public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSparseCSC,DMatrixRMaj> {
@@ -93,6 +95,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         CommonOps_DSCC.multTransA(A,B,output);
     }
 
+    @Override
     public void mult(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output ) {
         CommonOps_DSCC.mult(A,B,output);
     }

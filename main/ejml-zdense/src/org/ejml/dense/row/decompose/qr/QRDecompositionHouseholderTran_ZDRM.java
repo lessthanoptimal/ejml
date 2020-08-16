@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,8 @@ import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
+import javax.annotation.Nullable;
+
 
 /**
  * <p>
@@ -37,6 +39,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  * @author Peter Abeles
  */
 // TODO figure out why this is significantly slower than col
+@SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMatrixRMaj> {
 
     /**
@@ -46,7 +49,7 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
     protected ZMatrixRMaj QR;
 
     // used internally to store temporary data
-    protected double v[];
+    protected double[] v;
 
     // dimension of the decomposed matrices
     protected int numCols; // this is 'n'
@@ -54,7 +57,7 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
     protected int minLength;
 
     // the computed gamma for Q_k matrix
-    protected double gammas[];
+    protected double[] gammas;
     // local variables
     protected double gamma;
     protected Complex_F64 tau = new Complex_F64();
@@ -98,7 +101,7 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public ZMatrixRMaj getQ(ZMatrixRMaj Q , boolean compact ) {
+    public ZMatrixRMaj getQ(@Nullable ZMatrixRMaj Q , boolean compact ) {
         if( compact )
             Q = UtilDecompositons_ZDRM.checkIdentity(Q,numRows,minLength);
         else
@@ -172,10 +175,9 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
      * Returns an upper triangular matrix which is the R in the QR decomposition.
      *
      * @param R An upper triangular matrix.
-     * @param compact
      */
     @Override
-    public ZMatrixRMaj getR(ZMatrixRMaj R, boolean compact) {
+    public ZMatrixRMaj getR(@Nullable ZMatrixRMaj R, boolean compact) {
         if( compact )
             R = UtilDecompositons_ZDRM.checkZerosLT(R,minLength,numCols);
         else
@@ -300,7 +302,7 @@ public class QRDecompositionHouseholderTran_ZDRM implements QRDecomposition<ZMat
 //            }
 //        }
 
-        final double data[] = QR.data;
+        final double[] data = QR.data;
         int rowW = w*numRows + w + 1;
         int rowJ = rowW + numRows;
         final int rowJEnd = 2*(rowJ + (numCols-w-1)*numRows);

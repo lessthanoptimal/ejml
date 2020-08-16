@@ -23,7 +23,6 @@ import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -98,7 +97,7 @@ public class CheckMatrixMultShape_DSCC {
      * Iterate through a variety of different sizes and shapes of matrices.
      */
     private void checkPositive( Method func, boolean transA, boolean transB )
-            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+            throws InvocationTargetException, IllegalAccessException {
         for( int i = 1; i <= 4; i++ ) {
             for( int j = 1; j <= 4; j++ ) {
                 for( int k = 1; k <= 4; k++ ) {
@@ -112,7 +111,7 @@ public class CheckMatrixMultShape_DSCC {
      * See if the function can be called with matrices of the correct size
      */
     private void checkPositive(Method func, boolean transA, boolean transB ,
-                               int m , int n , int o ) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+                               int m , int n , int o ) throws IllegalAccessException, InvocationTargetException {
         DMatrix A,B;
         DMatrix C = createMatrix(getMatrixType(func,2),m,o);
 
@@ -140,7 +139,7 @@ public class CheckMatrixMultShape_DSCC {
     /**
      * See if the function throws an exception when it is given bad inputs
      */
-    private void checkNegative(Method func, boolean transA, boolean transB) throws NoSuchMethodException, IllegalAccessException {
+    private void checkNegative(Method func, boolean transA, boolean transB) throws IllegalAccessException {
         // don't reshape if it adds since C is also an input
         boolean reshape = !func.getName().contains("Add");
 

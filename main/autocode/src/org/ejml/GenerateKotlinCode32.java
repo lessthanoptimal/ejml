@@ -30,7 +30,7 @@ import java.io.File;
 public class GenerateKotlinCode32 extends GenerateCode32{
 
     public GenerateKotlinCode32() {
-        super("kt");
+        super("kt",new ConvertFile32From64(Language.KOTLIN,false));
 
         String[] sufficeRoot = new String[]{"DRM","DMA","DRB","SCC","STL","DF2","DF3","DF4","DF5","DF6","TRIPLET"};
 
@@ -71,8 +71,6 @@ public class GenerateKotlinCode32 extends GenerateCode32{
             prefix64.add("Test"+prefix64.get(i));
             prefix32.add("Test"+prefix32.get(i));
         }
-
-        converter = new ConvertFile32From64(Language.KOTLIN,false);
 
         converter.replacePattern("DoubleStep", "FIXED_STEP");
         converter.replacePattern("Double", "Float");

@@ -33,6 +33,7 @@ public class TestSwitchingEigenDecomposition_DDRM extends GeneralEigenDecomposit
     }
 
     @Test
+    @Override
     public void allTests() {
         super.allTests();
 //        super.justEigenValues();
