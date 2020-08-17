@@ -19,7 +19,7 @@
 import net.ltgt.gradle.errorprone.CheckSeverity
 
 plugins {
-    id "com.peterabeles.gversion" version "1.7.0"
+    id "com.peterabeles.gversion" version "1.8.0"
     id "net.ltgt.errorprone" version "1.2.1" apply false
 }
 
@@ -27,6 +27,7 @@ gversion {
     srcDir = "main/ejml-core/src"
     classPackage = "org.ejml"
     className = "EjmlVersion"
+    indent = "    "
 }
 
 allprojects {
