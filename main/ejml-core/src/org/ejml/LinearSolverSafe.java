@@ -21,8 +21,7 @@ package org.ejml;
 import org.ejml.data.ReshapeMatrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverDense;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -31,7 +30,6 @@ import javax.annotation.Nullable;
  *
  * @author Peter Abeles
  */
-@SuppressWarnings({"unchecked"})
 public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDense<T> {
 
     // the solver it is wrapped around

@@ -26,8 +26,7 @@ import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverDense;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

@@ -18,7 +18,8 @@
 
 package org.ejml.equation;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 

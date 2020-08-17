@@ -21,8 +21,8 @@ package org.ejml.dense.row.decomposition.eig.symm;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.eig.EigenvalueSmall_F64;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 

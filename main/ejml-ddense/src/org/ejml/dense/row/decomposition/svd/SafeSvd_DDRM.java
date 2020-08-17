@@ -21,8 +21,7 @@ package org.ejml.dense.row.decomposition.svd;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Wraps around a {@link SingularValueDecomposition} and ensures that the input is not modified.

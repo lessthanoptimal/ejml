@@ -7,7 +7,9 @@ Date format: year/month/day
 
 TODO change subprojects so that the entire project isn't rebuilt because EjmlVersion is regenerated
     ./gradlew build --info
-
+- Switched to `org.jetbrains:annotations` from `com.google.code.findbugs:jsr305`
+  * Licensing ambiguity and lack of support
+  * Thanks Graham for pointing out the issue and the PR
 - Added static analysis to code base
   * Error Prone https://errorprone.info/
   * Updated auto code generator to mark code as auto generated for better static analysis

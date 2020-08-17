@@ -25,8 +25,7 @@ import org.ejml.dense.block.MatrixMult_DDRB;
 import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
 

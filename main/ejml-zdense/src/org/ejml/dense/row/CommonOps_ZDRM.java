@@ -26,8 +26,8 @@ import org.ejml.dense.row.factory.LinearSolverFactory_ZDRM;
 import org.ejml.dense.row.misc.TransposeAlgs_ZDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_ZDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**

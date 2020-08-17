@@ -25,8 +25,7 @@ import org.ejml.data.IGrowArray;
 import org.ejml.interfaces.decomposition.CholeskySparseDecomposition_F64;
 import org.ejml.sparse.csc.misc.ColumnCounts_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.adjust;
 

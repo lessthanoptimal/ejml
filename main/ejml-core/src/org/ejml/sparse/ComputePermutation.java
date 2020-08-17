@@ -20,8 +20,7 @@ package org.ejml.sparse;
 
 import org.ejml.data.IGrowArray;
 import org.ejml.data.Matrix;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Abeles

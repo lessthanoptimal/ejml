@@ -25,8 +25,7 @@ import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionTall_D
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

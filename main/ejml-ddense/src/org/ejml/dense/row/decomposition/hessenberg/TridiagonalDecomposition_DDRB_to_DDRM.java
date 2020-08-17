@@ -25,8 +25,7 @@ import org.ejml.dense.block.decomposition.hessenberg.TridiagonalDecompositionHou
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

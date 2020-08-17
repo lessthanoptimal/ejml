@@ -22,8 +22,7 @@ import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Peter Abeles

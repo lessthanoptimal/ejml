@@ -21,9 +21,9 @@ package org.ejml.dense.row.mult;
 import org.ejml.MatrixDimensionException;
 import org.ejml.data.DMatrix1Row;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Generated;
-import javax.annotation.Nullable;
 
 /**
  * <p>

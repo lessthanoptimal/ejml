@@ -22,8 +22,7 @@ import org.ejml.data.DMatrixSparse;
 import org.ejml.data.ReshapeMatrix;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

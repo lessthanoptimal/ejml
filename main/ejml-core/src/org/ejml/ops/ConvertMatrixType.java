@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,6 @@ package org.ejml.ops;
 
 import org.ejml.data.*;
 
-import javax.annotation.Nonnull;
-
 /**
  * Contains a function to convert from one matrix type into another
  * 
@@ -35,7 +33,7 @@ public class ConvertMatrixType {
      * @return The converted matrix
      */
     @SuppressWarnings("MissingCasesInEnumSwitch")
-    public static @Nonnull Matrix convert(Matrix matrix , MatrixType desired ) {
+    public static Matrix convert(Matrix matrix , MatrixType desired ) {
         Matrix m=null;
 
         switch( matrix.getType() ) {

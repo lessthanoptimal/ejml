@@ -18,7 +18,7 @@
 
 package org.ejml.equation;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Linked-list of tokens parsed from the equations string.

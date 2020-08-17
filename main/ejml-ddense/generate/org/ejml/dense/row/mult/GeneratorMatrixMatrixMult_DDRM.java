@@ -44,7 +44,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                 "import org.ejml.MatrixDimensionException;\n" +
                 "import org.ejml.data.DMatrix1Row;\n" +
                 "import org.ejml.dense.row.CommonOps_DDRM;\n" +
-                "import javax.annotation.Nullable;\n" +
+                "import org.jetbrains.annotations.Nullable;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +

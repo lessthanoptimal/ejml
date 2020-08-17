@@ -20,8 +20,7 @@ package org.ejml.dense.row.decomposition.svd;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

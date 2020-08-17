@@ -23,8 +23,8 @@ import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.dense.row.decompose.qr.QrHelperFunctions_ZDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**

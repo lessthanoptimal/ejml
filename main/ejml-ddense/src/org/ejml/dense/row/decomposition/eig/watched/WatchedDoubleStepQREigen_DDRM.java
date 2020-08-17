@@ -24,8 +24,8 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.decomposition.eig.EigenvalueSmall_F64;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 /**

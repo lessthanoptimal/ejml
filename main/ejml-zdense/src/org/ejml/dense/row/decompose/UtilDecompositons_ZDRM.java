@@ -20,8 +20,7 @@ package org.ejml.dense.row.decompose;
 
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Helper functions for generic decompsotions.

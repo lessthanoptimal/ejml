@@ -25,8 +25,7 @@ import org.ejml.dense.block.InnerRankUpdate_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.TriangularSolver_DDRB;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

@@ -21,8 +21,8 @@ package org.ejml.data;
 import org.ejml.UtilEjml;
 import org.ejml.ops.MatrixIO;
 import org.ejml.ops.SortCoupledArray_F64;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
 

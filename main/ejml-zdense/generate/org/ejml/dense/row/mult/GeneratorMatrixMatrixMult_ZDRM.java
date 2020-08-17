@@ -34,7 +34,7 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
                 "import org.ejml.MatrixDimensionException;\n" +
                 "import org.ejml.data.ZMatrixRMaj;\n" +
                 "import org.ejml.dense.row.CommonOps_ZDRM;\n" +
-                "import javax.annotation.Nullable;\n" +
+                "import org.jetbrains.annotations.Nullable;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>\n" +

@@ -21,9 +21,9 @@ package org.ejml.dense.row.mult;
 import org.ejml.MatrixDimensionException;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Generated;
-import javax.annotation.Nullable;
 
 /**
  * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>

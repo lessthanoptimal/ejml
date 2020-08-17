@@ -19,8 +19,7 @@
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
