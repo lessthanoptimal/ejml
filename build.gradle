@@ -101,8 +101,8 @@ subprojects {
     }
 
     dependencies {
-        implementation 'org.jetbrains:annotations:20.0.0' // @Nullable
-        implementation 'javax.annotation:jsr250-api:1.0'  // @Generated
+        compileOnly 'org.jetbrains:annotations:20.0.0' // @Nullable
+        compileOnly 'javax.annotation:jsr250-api:1.0'  // @Generated
 
         testImplementation( 'org.junit.jupiter:junit-jupiter-api:5.4.0' )
         testRuntimeOnly( 'org.junit.jupiter:junit-jupiter-engine:5.4.0' )
