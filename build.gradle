@@ -73,19 +73,6 @@ subprojects {
         maven { url = 'https://jitpack.io' } // Allows annotations past Java 8 to be used
     }
 
-    // InconsistentCapitalization is disabled because in Math capital letters are often used for matrices and lower case
-    // for vectors or scalars. Perhaps a more verbose name should be used but it's disabled for now to reduce build spam
-    tasks.withType(JavaCompile).configureEach {
-        options.errorprone.disableWarningsInGeneratedCode = true
-        options.errorprone.disable("TypeParameterUnusedInFormals","StringSplitter","InconsistentCapitalization",
-                "HidingField", // this is sometimes done when the specific type is known by child. Clean up later.
-                "ClassNewInstance", // yes it's deprecated but the more verbose just adds extra code to be ignored
-                "FloatingPointLiteralPrecision", // too many false positives in test code
-                "MissingSummary","UnescapedEntity","EmptyBlockTag")
-        options.errorprone.error("MissingOverride","MissingCasesInEnumSwitch","BadInstanceof",
-                "PublicConstructorForAbstractClass")
-    }
-
     sourceSets {
         main {
             java { srcDir 'src' }
@@ -156,15 +143,10 @@ subprojects {
         from sourceSets.main.allSource
     }
 
-    tasks.withType(JavaCompile) {
-        // By default have all NullAway issues be fata errors but don't run this analysis on auto generated files
-        options.errorprone {
-            check("NullAway", CheckSeverity.ERROR)
-            // The line below effectively disables NullAway by default
-            option("NullAway:AnnotatedPackages", "RANDOM.PACKAGE.TO.DISABLE")
-            option("NullAway:TreatGeneratedAsUnannotated", true)
-        }
-
+    // InconsistentCapitalization is disabled because in Math capital letters are often used for matrices and lower case
+    // for vectors or scalars. Perhaps a more verbose name should be used but it's disabled for now to reduce build spam
+    tasks.withType(JavaCompile).configureEach {
+        options.errorprone.enabled = false
         if( name.startsWith("compileTest") )
             return
         if( path.contains("experimental") )
@@ -172,8 +154,19 @@ subprojects {
         if( path.contains("example") )
             return
 
-        // Enable NullAway
+        options.errorprone.enabled = true
+        options.errorprone.disableWarningsInGeneratedCode = true
+        options.errorprone.disable("TypeParameterUnusedInFormals","StringSplitter","InconsistentCapitalization",
+                "HidingField", // this is sometimes done when the specific type is known by child. Clean up later.
+                "ClassNewInstance", // yes it's deprecated, but new version is more verbose with ignored errors
+                "FloatingPointLiteralPrecision", // too many false positives in test code
+                "MissingSummary","UnescapedEntity","EmptyBlockTag")
+        options.errorprone.error("MissingOverride","MissingCasesInEnumSwitch","BadInstanceof",
+                "PublicConstructorForAbstractClass","EmptyCatch","NarrowingCompoundAssignment","JdkObsolete")
+
         options.errorprone {
+            check("NullAway", CheckSeverity.ERROR)
+            option("NullAway:TreatGeneratedAsUnannotated", true)
             option("NullAway:AnnotatedPackages", "org.ejml")
         }
     }
