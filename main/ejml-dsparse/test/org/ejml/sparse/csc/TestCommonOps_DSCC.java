@@ -575,7 +575,7 @@ public class TestCommonOps_DSCC {
             int nz_a = RandomMatrices_DSCC.nonzero(rows,cols,0.05,0.8,rand);
 
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
-            double values[] = new double[A.numCols];
+            double[] values = new double[A.numCols];
 
             CommonOps_DSCC.columnMaxAbs(A,values);
 
@@ -600,7 +600,7 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
             DMatrixSparseCSC found = A.copy();
 
-            double values[] = new double[A.numCols];
+            double[] values = new double[A.numCols];
             for (int i = 0; i < A.numCols; i++) {
                 values[i] = rand.nextDouble()+0.1;
             }
@@ -626,7 +626,7 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz_a,rand);
             DMatrixSparseCSC found = A.copy();
 
-            double values[] = new double[A.numCols];
+            double[] values = new double[A.numCols];
             for (int i = 0; i < A.numCols; i++) {
                 values[i] = rand.nextDouble()+0.1;
             }
@@ -652,12 +652,12 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(rows,cols,nz_b,rand);
             DMatrixSparseCSC found = B.copy();
 
-            double diagA[] = new double[B.numRows];
+            double[] diagA = new double[B.numRows];
             for (int i = 0; i < B.numRows; i++) {
                 diagA[i] = rand.nextDouble()+0.1;
             }
 
-            double diagC[] = new double[B.numCols];
+            double[] diagC = new double[B.numCols];
             for (int i = 0; i < B.numCols; i++) {
                 diagC[i] = rand.nextDouble()+0.1;
             }
@@ -691,12 +691,12 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(rows,cols,nz_b,rand);
             DMatrixSparseCSC found = B.copy();
 
-            double diagA[] = new double[B.numRows];
+            double[] diagA = new double[B.numRows];
             for (int i = 0; i < B.numRows; i++) {
                 diagA[i] = rand.nextDouble()+0.1;
             }
 
-            double diagC[] = new double[B.numCols];
+            double[] diagC = new double[B.numCols];
             for (int i = 0; i < B.numCols; i++) {
                 diagC[i] = rand.nextDouble()+0.1;
             }
@@ -726,7 +726,7 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void diag() {
-        double d[] = new double[]{1.2,2.2,3.3};
+        double[] d = new double[]{1.2,2.2,3.3};
 
         DMatrixSparseCSC A = CommonOps_DSCC.diag(d);
 
@@ -797,7 +797,7 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permutationMatrix() {
-        int p[] = new int[]{2,0,1};
+        int[] p = new int[]{2,0,1};
 
         DMatrixSparseCSC P = new DMatrixSparseCSC(3,3,3);
         CommonOps_DSCC.permutationMatrix(p, false, 3,P);
@@ -830,10 +830,10 @@ public class TestCommonOps_DSCC {
                         "1 0 0 " +
                         "0 1 0 ", 3);
 
-        int found[] = new int[3];
+        int[] found = new int[3];
         CommonOps_DSCC.permutationVector(P,found);
 
-        int expected[] = new int[]{2,0,1};
+        int[] expected = new int[]{2,0,1};
         for (int i = 0; i < 3; i++) {
             assertEquals(expected[i],expected[i]);
         }
@@ -841,8 +841,8 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permutationInverse() {
-        int p[] = new int[]{2,0,1,3};
-        int found[] = new int[4];
+        int[] p = new int[]{2,0,1,3};
+        int[] found = new int[4];
 
         CommonOps_DSCC.permutationInverse(p,found,p.length);
 
@@ -854,8 +854,8 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permuteRowInv() {
-        int permRow[] = new int[]{2,0,3,1};
-        int permRowInv[] = new int[4];
+        int[] permRow = new int[]{2,0,3,1};
+        int[] permRowInv = new int[4];
         CommonOps_DSCC.permutationInverse(permRow,permRowInv,permRow.length);
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
@@ -874,10 +874,10 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permute_matrix() {
-        int permRow[] = new int[]{2,0,3,1};
-        int permCol[] = new int[]{1,2,0,3};
+        int[] permRow = new int[]{2,0,3,1};
+        int[] permCol = new int[]{1,2,0,3};
 
-        int permRowInv[] = new int[4];
+        int[] permRowInv = new int[4];
         CommonOps_DSCC.permutationInverse(permRow,permRowInv,permRow.length);
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,4,12,-1,1,rand);
@@ -896,9 +896,9 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permute_vector() {
-        int perm[] = new int[]{2,0,3,1};
-        double x[] = new double[]{2,3,4,5};
-        double b[] = new double[4];
+        int[] perm = new int[]{2,0,3,1};
+        double[] x = new double[]{2,3,4,5};
+        double[] b = new double[4];
 
         CommonOps_DSCC.permute(perm,x,b,4);
 
@@ -910,9 +910,9 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permuteInv_vector() {
-        int perm[] = new int[]{2,0,3,1};
-        double x[] = new double[]{2,3,4,5};
-        double b[] = new double[4];
+        int[] perm = new int[]{2,0,3,1};
+        double[] x = new double[]{2,3,4,5};
+        double[] b = new double[4];
 
         CommonOps_DSCC.permuteInv(perm,x,b,4);
 
@@ -923,11 +923,11 @@ public class TestCommonOps_DSCC {
 
     @Test
     public void permuteSymmetric() {
-        int perm[] = new int[]{4,0,3,1,2};
+        int[] perm = new int[]{4,0,3,1,2};
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(5,7,-1,1,rand);
 
-        int permInv[] = new int[perm.length];
+        int[] permInv = new int[perm.length];
         CommonOps_DSCC.permutationInverse(perm,permInv,perm.length);
 
         DMatrixSparseCSC B = new DMatrixSparseCSC(5,5,0);
@@ -1379,7 +1379,7 @@ public class TestCommonOps_DSCC {
     public void multRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
 
-        double factors[] = new double[]{0.1,0.2,0.3,0.4};
+        double[] factors = new double[]{0.1,0.2,0.3,0.4};
 
         DMatrixSparseCSC B = A.copy();
         CommonOps_DSCC.multRows(factors, 0, B);
@@ -1395,7 +1395,7 @@ public class TestCommonOps_DSCC {
     public void divideRows() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(4,5,6,-1,1,rand);
 
-        double factors[] = new double[]{0.1,0.2,0.3,0.4};
+        double[] factors = new double[]{0.1,0.2,0.3,0.4};
 
         DMatrixSparseCSC B = A.copy();
         CommonOps_DSCC.divideRows(factors, 0, B);

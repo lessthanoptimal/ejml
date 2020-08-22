@@ -46,7 +46,7 @@ public class DSubmatrixD1 {
     }
 
     public DSubmatrixD1(DMatrixD1 original,
-                           int row0, int row1, int col0, int col1) {
+                        int row0, int row1, int col0, int col1) {
         set(original,row0,row1,col0,col1);
     }
 

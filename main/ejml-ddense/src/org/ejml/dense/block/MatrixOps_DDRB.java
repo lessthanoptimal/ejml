@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,6 +25,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -236,7 +237,7 @@ public class MatrixOps_DDRB {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static DMatrixRBlock transpose(DMatrixRBlock A , DMatrixRBlock A_tran )
+    public static DMatrixRBlock transpose(DMatrixRBlock A , @Nullable DMatrixRBlock A_tran )
     {
         if( A_tran != null ) {
             if( A.numRows != A_tran.numCols || A.numCols != A_tran.numRows )

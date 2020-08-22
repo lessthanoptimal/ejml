@@ -291,7 +291,7 @@ public interface IntegerSequence {
         int where;
         int length;
 
-        public Range(TokenList.Token start, TokenList.Token step ) {
+        public Range(@Nullable TokenList.Token start, @Nullable TokenList.Token step ) {
             this.start = start == null ? null : (VariableInteger)start.getVariable();
             this.step = step == null ? null : (VariableInteger)step.getVariable();
         }

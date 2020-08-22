@@ -170,6 +170,7 @@ public class TestMatrixMult_DDRB {
         A.row1 = temp;
     }
 
+    @SuppressWarnings("NullAway")
     private static DSubmatrixD1 sub(int row0 , int col0 , int row1 , int col1 ) {
         return new DSubmatrixD1(null,row0, row1, col0, col1);
     }

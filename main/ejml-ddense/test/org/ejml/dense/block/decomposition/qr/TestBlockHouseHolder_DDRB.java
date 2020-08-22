@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings({"NullAway.Init"})
 public class TestBlockHouseHolder_DDRB {
 
     Random rand = new Random(234);
@@ -57,7 +58,7 @@ public class TestBlockHouseHolder_DDRB {
         QRDecompositionHouseholderTran_DDRM algTest = new QRDecompositionHouseholderTran_DDRM();
         assertTrue(algTest.decompose(A));
 
-        double gammas[] = new double[A.numCols];
+        double[] gammas = new double[A.numCols];
         BlockHouseHolder_DDRB.decomposeQR_block_col(r,new DSubmatrixD1(Ab),gammas);
 
         DMatrixRMaj expected = CommonOps_DDRM.transpose(algTest.getQR(),null);
@@ -379,7 +380,7 @@ public class TestBlockHouseHolder_DDRB {
 
     @Test
     public void computeW_Column() {
-        double betas[] = new double[]{1.2,2,3};
+        double[] betas = new double[]{1.2,2,3};
 
         A = SimpleMatrix.random_DDRM(r*2+r-1,r, -1.0 , 1.0 ,rand);
 
@@ -402,7 +403,7 @@ public class TestBlockHouseHolder_DDRB {
         }
 
         // now compute it using the block matrix stuff
-        double temp[] = new double[ r ];
+        double[] temp = new double[ r ];
 
         DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(),r);
         DMatrixRBlock Wb = new DMatrixRBlock(Ab.numRows,Ab.numCols,r);
@@ -473,7 +474,7 @@ public class TestBlockHouseHolder_DDRB {
         SimpleMatrix expected = Y.transpose().mult(V);
 
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
-        double found[] = new double[ M ];
+        double[] found = new double[ M ];
 
         BlockHouseHolder_DDRB.computeY_t_V(r,new DSubmatrixD1(Ab,0, A.numRows(), 0, r),M,found);
 

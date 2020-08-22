@@ -388,7 +388,7 @@ public class ImplSparseSparseMult_DSCC {
      * @return Dot product
      */
     public static double dotInnerColumns( DMatrixSparseCSC A , int colA , DMatrixSparseCSC B , int colB ,
-                                          IGrowArray gw , DGrowArray gx)
+                                          @Nullable IGrowArray gw , @Nullable DGrowArray gx)
     {
         if( A.numRows != B.numRows )
             throw new IllegalArgumentException("Number of rows must match.");

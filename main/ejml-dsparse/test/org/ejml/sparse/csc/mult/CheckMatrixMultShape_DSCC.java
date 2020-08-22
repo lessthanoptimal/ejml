@@ -22,6 +22,7 @@ import org.ejml.MatrixDimensionException;
 import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -227,9 +228,9 @@ public class CheckMatrixMultShape_DSCC {
         }
     }
 
-    public static DMatrix invoke(Method func,
-                                 double alpha,
-                                 DMatrix a, DMatrix b, DMatrix c)
+    public static @Nullable DMatrix invoke(Method func,
+                                           double alpha,
+                                           DMatrix a, DMatrix b, @Nullable DMatrix c)
             throws IllegalAccessException, InvocationTargetException {
 
         Object[] arguments = new Object[func.getParameterTypes().length];

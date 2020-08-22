@@ -21,40 +21,40 @@ package org.ejml.equation;
 import org.junit.jupiter.api.Test;
 
 import static org.ejml.equation.TokenList.Token;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings({"NullAway"})
 public class TestTokenList {
 
     @Test
     public void push() {
         TokenList list = new TokenList();
 
-        assertTrue(null==list.getFirst());
-        assertTrue(null==list.getLast());
+        assertNull(list.getFirst());
+        assertNull(list.getLast());
         assertEquals(0,list.size());
 
         list.add(Symbol.MINUS);
         Token a = list.getFirst();
-        assertTrue(null!=a);
-        assertTrue(a==list.getLast());
+        assertNotNull(a);
+        assertSame(a, list.getLast());
         assertEquals(1,list.size());
 
 
         list.add(Symbol.PAREN_LEFT);
         Token b = list.getLast();
-        assertTrue(a!=b);
-        assertTrue(b!=list.getFirst());
+        assertNotSame(a, b);
+        assertNotSame(b, list.getFirst());
         assertEquals(2,list.size());
 
         list.add(Symbol.PAREN_RIGHT);
         Token c = list.getLast();
-        assertTrue(a!=c);
-        assertTrue(b!=c);
-        assertTrue(c!=list.getFirst());
+        assertNotSame(a, c);
+        assertNotSame(b, c);
+        assertNotSame(c, list.getFirst());
         assertEquals(3,list.size());
     }
 
@@ -92,37 +92,35 @@ public class TestTokenList {
         list.add(Symbol.MINUS);
         list.remove(list.first);
         assertEquals(0,list.size);
-        assertTrue(null==list.getFirst());
-        assertTrue(null==list.getLast());
+        assertNull(list.getFirst());
+        assertNull(list.getLast());
 
         A = list.add(Symbol.MINUS);
         list.add(Symbol.PLUS);
         list.remove(list.last);
         assertEquals(1, list.size);
-        assertTrue(A == list.getFirst());
-        assertTrue(A==list.getLast());
-        assertTrue(A.next==null);
-        assertTrue(A.previous==null);
+        assertSame(A, list.getFirst());
+        assertSame(A, list.getLast());
+        assertNull(A.next);
+        assertNull(A.previous);
         B = list.add(Symbol.PLUS);
         list.remove(list.first);
         assertEquals(1, list.size);
-        assertTrue(B == list.getFirst());
-        assertTrue(B==list.getLast());
-        assertTrue(B.next==null);
-        assertTrue(B.previous==null);
-
+        assertSame(B, list.getFirst());
+        assertSame(B, list.getLast());
+        assertNull(B.next);
+        assertNull(B.previous);
 
         list.remove(list.first);
         A = list.add(Symbol.MINUS);
-        B = list.add(Symbol.PLUS);
+            list.add(Symbol.PLUS);
         C = list.add(Symbol.TIMES);
         list.remove(list.first.next);
         assertEquals(2, list.size);
-        assertTrue(A == list.getFirst());
-        assertTrue(C==list.getLast());
-        assertTrue(A.next==C);
-        assertTrue(A==C.previous);
-
+        assertSame(A, list.getFirst());
+        assertSame(C, list.getLast());
+        assertSame(A.next, C);
+        assertSame(A, C.previous);
     }
 
     @Test
@@ -134,8 +132,8 @@ public class TestTokenList {
         B = new Token(Symbol.PLUS);
         list.replace(A, B);
         assertEquals(1,list.size);
-        assertTrue(B==list.getFirst());
-        assertTrue(B == list.getLast());
+        assertSame(B, list.getFirst());
+        assertSame(B, list.getLast());
 
         list.remove(B);
 
@@ -145,12 +143,12 @@ public class TestTokenList {
 
         list.replace(A, C);
         assertEquals(2, list.size);
-        assertTrue(C==list.getFirst());
-        assertTrue(B==list.getLast());
-        assertTrue(C.previous==null);
-        assertTrue(C.next==B);
-        assertTrue(B.previous==C);
-        assertTrue(B.next==null);
+        assertSame(C, list.getFirst());
+        assertSame(B, list.getLast());
+        assertNull(C.previous);
+        assertSame(C.next, B);
+        assertSame(B.previous, C);
+        assertNull(B.next);
 
         list = new TokenList();
         A=list.add(Symbol.MINUS);
@@ -160,12 +158,12 @@ public class TestTokenList {
 
         list.replace(B,D);
         assertEquals(3, list.size);
-        assertTrue(A == list.getFirst());
-        assertTrue(C==list.getLast());
-        assertTrue(A.next==D);
-        assertTrue(A==D.previous);
-        assertTrue(C.previous==D);
-        assertTrue(C==D.next);
+        assertSame(A, list.getFirst());
+        assertSame(C, list.getLast());
+        assertSame(A.next, D);
+        assertSame(A, D.previous);
+        assertSame(C.previous, D);
+        assertSame(C, D.next);
     }
 
     @Test
@@ -209,8 +207,8 @@ public class TestTokenList {
 
     @Test
     public void Token_getType() {
-        assertTrue(new Token(new VariableMatrix(null)).getType() == TokenList.Type.VARIABLE);
-        assertTrue(new Token(Symbol.PLUS).getType() == TokenList.Type.SYMBOL);
-        assertTrue(new Token(new Function("foo")).getType() == TokenList.Type.FUNCTION);
+        assertSame(new Token(new VariableMatrix(null)).getType(), TokenList.Type.VARIABLE);
+        assertSame(new Token(Symbol.PLUS).getType(), TokenList.Type.SYMBOL);
+        assertSame(new Token(new Function("foo")).getType(), TokenList.Type.FUNCTION);
     }
 }

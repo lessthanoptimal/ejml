@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -125,6 +126,7 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
                 }
             }
         }
+        Objects.requireNonNull(match);
 
         double alpha = 1.5;
         double beta = -0.7;

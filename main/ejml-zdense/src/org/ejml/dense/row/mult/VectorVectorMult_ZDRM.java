@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.dense.row.mult;
 
 import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Operations that involve multiplication of two vectors.
@@ -44,7 +45,7 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static Complex_F64 innerProd(ZMatrixRMaj x, ZMatrixRMaj y , Complex_F64 output )
+    public static Complex_F64 innerProd(ZMatrixRMaj x, ZMatrixRMaj y , @Nullable Complex_F64 output )
     {
         if( output == null )
             output = new Complex_F64();
@@ -86,7 +87,7 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static Complex_F64 innerProdH(ZMatrixRMaj x, ZMatrixRMaj y , Complex_F64 output )
+    public static Complex_F64 innerProdH(ZMatrixRMaj x, ZMatrixRMaj y , @Nullable Complex_F64 output )
     {
         if( output == null )
             output = new Complex_F64();

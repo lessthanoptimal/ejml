@@ -23,6 +23,7 @@ import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.UtilDecompositons_ZDRM;
 import org.ejml.dense.row.decompose.qr.QrHelperFunctions_ZDRM;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -124,7 +125,7 @@ public class HessenbergSimilarDecomposition_ZDRM
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public ZMatrixRMaj getH(ZMatrixRMaj H ) {
+    public ZMatrixRMaj getH( @Nullable ZMatrixRMaj H ) {
         H = UtilDecompositons_ZDRM.checkZeros(H,N,N);
 
         // copy the first row
@@ -143,7 +144,7 @@ public class HessenbergSimilarDecomposition_ZDRM
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public ZMatrixRMaj getQ(ZMatrixRMaj Q ) {
+    public ZMatrixRMaj getQ( @Nullable ZMatrixRMaj Q ) {
         Q = UtilDecompositons_ZDRM.checkIdentity(Q,N,N);
 
         Arrays.fill(u,0,N*2,0);

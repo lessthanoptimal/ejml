@@ -27,6 +27,7 @@ import org.ejml.interfaces.decomposition.EigenDecomposition;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.safeDecomposition;
@@ -462,9 +463,9 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
                 fail("Uncountable eigenvalue");
 
             if( !c.isReal() ) {
-                assertTrue(v==null);
+                assertNull(v);
             } else {
-                assertTrue(v != null );
+                assertNotNull(v);
 //                if( MatrixFeatures.hasUncountable(v)) {
 //                    throw new RuntimeException("Egads");
 //                }
@@ -483,6 +484,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
                     A.print();
                     System.out.println("Eigenvalue = "+c.real);
                     DEigenpair p = EigenOps_DDRM.computeEigenVector(A,c.real);
+                    Objects.requireNonNull(p);
                     p.vector.print();
                     v.print();
 

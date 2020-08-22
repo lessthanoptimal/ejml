@@ -90,7 +90,7 @@ public class ConvertDArrays {
 //        return dst;
 //    }
 
-    public static DMatrix4 convert(double[][] src, DMatrix4 dst) {
+    public static DMatrix4 convert(double[][] src, @Nullable DMatrix4 dst) {
         if( dst == null )
             dst = new DMatrix4();
 

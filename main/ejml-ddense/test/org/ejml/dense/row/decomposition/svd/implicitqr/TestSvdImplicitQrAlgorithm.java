@@ -25,6 +25,7 @@ import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_DD
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -191,8 +192,8 @@ public class TestSvdImplicitQrAlgorithm {
 
 //        System.out.println("Vector total steps = "+svd.totalSteps);
 
-        SimpleMatrix Ut = SimpleMatrix.wrap(svd.getUt());
-        SimpleMatrix Vt = SimpleMatrix.wrap(svd.getVt());
+        SimpleMatrix Ut = SimpleMatrix.wrap(Objects.requireNonNull(svd.getUt()));
+        SimpleMatrix Vt = SimpleMatrix.wrap(Objects.requireNonNull(svd.getVt()));
         SimpleMatrix W = SimpleMatrix.diag(svd.diag);
 //
 //            Ut.mult(W).mult(V).print();

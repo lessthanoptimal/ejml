@@ -1365,7 +1365,7 @@ public class CommonOps_DDRM {
      * @param out output. Storage for the extracted row. If null then a new vector will be returned.
      * @return The extracted row.
      */
-    public static DMatrixRMaj extractRow(DMatrixRMaj a , int row , DMatrixRMaj out ) {
+    public static DMatrixRMaj extractRow(DMatrixRMaj a , int row , @Nullable DMatrixRMaj out ) {
         if( out == null)
             out = new DMatrixRMaj(1,a.numCols);
         else if( !MatrixFeatures_DDRM.isVector(out) || out.getNumElements() != a.numCols )
@@ -1383,7 +1383,7 @@ public class CommonOps_DDRM {
      * @param out output. Storage for the extracted column. If null then a new vector will be returned.
      * @return The extracted column.
      */
-    public static DMatrixRMaj extractColumn(DMatrixRMaj a , int column , DMatrixRMaj out ) {
+    public static DMatrixRMaj extractColumn(DMatrixRMaj a , int column , @Nullable DMatrixRMaj out ) {
         if( out == null)
             out = new DMatrixRMaj(a.numRows,1);
         else if( !MatrixFeatures_DDRM.isVector(out) || out.getNumElements() != a.numRows )
@@ -1892,7 +1892,7 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output. Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
-    public static DMatrixRMaj sumRows(DMatrixRMaj input , DMatrixRMaj output ) {
+    public static DMatrixRMaj sumRows(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, 1);
 
         for( int row = 0; row < input.numRows; row++ ) {
@@ -1919,7 +1919,7 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output.  Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
-    public static DMatrixRMaj minRows(DMatrixRMaj input , DMatrixRMaj output ) {
+    public static DMatrixRMaj minRows(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, 1);
 
         for( int row = 0; row < input.numRows; row++ ) {
@@ -1948,7 +1948,7 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output.  Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
-    public static DMatrixRMaj maxRows(DMatrixRMaj input , DMatrixRMaj output ) {
+    public static DMatrixRMaj maxRows(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, 1);
 
         for( int row = 0; row < input.numRows; row++ ) {
@@ -1977,7 +1977,7 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the sum of each column
      */
-    public static DMatrixRMaj sumCols(DMatrixRMaj input , DMatrixRMaj output ) {
+    public static DMatrixRMaj sumCols(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, 1, input.numCols);
 
         for( int cols = 0; cols < input.numCols; cols++ ) {
@@ -2005,7 +2005,7 @@ public class CommonOps_DDRM {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the minimum of each column
      */
-    public static DMatrixRMaj minCols(DMatrixRMaj input , DMatrixRMaj output ) {
+    public static DMatrixRMaj minCols(DMatrixRMaj input , @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, 1, input.numCols);
 
         for( int cols = 0; cols < input.numCols; cols++ ) {
@@ -2598,7 +2598,7 @@ public class CommonOps_DDRM {
      * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
      * @return Reduced echelon form of A
      */
-    public static DMatrixRMaj rref(DMatrixRMaj A , int numUnknowns, DMatrixRMaj reduced ) {
+    public static DMatrixRMaj rref(DMatrixRMaj A , int numUnknowns, @Nullable DMatrixRMaj reduced ) {
         reduced = UtilEjml.reshapeOrDeclare(reduced,A);
 
         if( numUnknowns <= 0 )
@@ -2747,7 +2747,7 @@ public class CommonOps_DDRM {
      * @param output Storage for output row vector. Can be null.  Will be reshaped.
      * @return Row vector with marked elements
      */
-    public static DMatrixRMaj elements(DMatrixRMaj A , BMatrixRMaj marked , DMatrixRMaj output ) {
+    public static DMatrixRMaj elements(DMatrixRMaj A , BMatrixRMaj marked , @Nullable DMatrixRMaj output ) {
         checkSameShape(A,marked,false);
 
         if( output == null )

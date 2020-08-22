@@ -54,6 +54,7 @@ public class TestLinearSolverAbstract_DDRM {
         assertTrue(solver.solveCalled);
     }
 
+    @SuppressWarnings({"NullAway"})
     private static class MySolver extends LinearSolverAbstract_DDRM
     {
         boolean solveCalled = false;

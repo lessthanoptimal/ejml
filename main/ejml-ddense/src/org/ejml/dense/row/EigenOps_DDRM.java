@@ -208,7 +208,7 @@ public class EigenOps_DDRM {
      * @param bound Where the results are stored.  If null then a matrix will be declared. Modified.
      * @return Lower and upper bound in the first and second elements respectively.
      */
-    public static double [] boundLargestEigenValue(DMatrixRMaj A , double []bound ) {
+    public static double [] boundLargestEigenValue(DMatrixRMaj A , @Nullable double []bound ) {
         if( A.numRows != A.numCols )
             throw new IllegalArgumentException("A must be a square matrix.");
 

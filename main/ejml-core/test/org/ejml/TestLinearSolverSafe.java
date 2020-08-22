@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings({"NullAway"})
 public class TestLinearSolverSafe {
 
     Random rand = new Random(234);
@@ -46,7 +47,7 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(true,false);
         dummy.expectedA = 5;
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
         Ainput.set(0,5);
         s.setA(Ainput);
@@ -54,7 +55,7 @@ public class TestLinearSolverSafe {
         // correct value
         s.setA(Ainput);
 
-        assertTrue(dummy.passedin != Ainput);
+        assertNotSame(dummy.passedin, Ainput);
     }
 
     /**
@@ -65,7 +66,7 @@ public class TestLinearSolverSafe {
         DummySolver dummy = new DummySolver(false,true);
         dummy.expectedB = 5;
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
         Binput.set(0,5);
         s.solve(Binput,new DMatrixRMaj(1,1));
@@ -73,65 +74,65 @@ public class TestLinearSolverSafe {
         // correct value
         s.solve(Binput,new DMatrixRMaj(1,1));
 
-        assertTrue(dummy.passedin != Ainput);
+        assertNotSame(dummy.passedin, Ainput);
     }
 
     @Test
     public void testSetA_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
         s.setA(Ainput);
 
-        assertTrue(dummy.passedin == Ainput);
+        assertSame(dummy.passedin, Ainput);
     }
 
     @Test
     public void testSetA_mod() {
         DummySolver dummy = new DummySolver(true,false);
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
         s.setA(Ainput);
 
-        assertTrue(dummy.passedin != Ainput);
+        assertNotSame(dummy.passedin, Ainput);
     }
 
     @Test
     public void testSolver_notMod() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
         s.solve(Binput,new DMatrixRMaj(1,1));
 
-        assertTrue(dummy.passedin == Binput);
+        assertSame(dummy.passedin, Binput);
     }
 
     @Test
     public void testSolver_mod() {
         DummySolver dummy = new DummySolver(false,true);
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
         s.solve(Binput,new DMatrixRMaj(1,1));
 
-        assertTrue(dummy.passedin != Binput);
+        assertNotSame(dummy.passedin, Binput);
     }
 
     @Test
     public void quality() {
         DummySolver dummy = new DummySolver(false,false);
 
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(dummy);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(dummy);
 
-        assertTrue(s.quality()==dummy.quality());
+        assertEquals(dummy.quality(), s.quality());
     }
 
     @Test
     public void modifies() {
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(null);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(null);
 
         assertFalse(s.modifiesA());
         assertFalse(s.modifiesB());

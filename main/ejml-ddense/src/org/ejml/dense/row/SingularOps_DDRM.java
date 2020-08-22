@@ -316,7 +316,8 @@ public class SingularOps_DDRM {
      * Checks to see if all the provided matrices are the expected size for an SVD.  If an error is encountered
      * then an exception is thrown.  This automatically handles compact and non-compact formats
      */
-    public static void checkSvdMatrixSize(DMatrixRMaj U, boolean tranU, DMatrixRMaj W, DMatrixRMaj V, boolean tranV ) {
+    public static void checkSvdMatrixSize(@Nullable DMatrixRMaj U, boolean tranU, DMatrixRMaj W,
+                                          @Nullable DMatrixRMaj V, boolean tranV ) {
         int numSingular = Math.min(W.numRows,W.numCols);
         boolean compact = W.numRows == W.numCols;
 
@@ -492,7 +493,7 @@ public class SingularOps_DDRM {
      */
     public static DMatrixRMaj nullVector(SingularValueDecomposition_F64<DMatrixRMaj> svd ,
                                            boolean isRight ,
-                                           DMatrixRMaj nullVector )
+                                           @Nullable DMatrixRMaj nullVector )
     {
         int N = svd.numberOfSingularValues();
         double[] s = svd.getSingularValues();

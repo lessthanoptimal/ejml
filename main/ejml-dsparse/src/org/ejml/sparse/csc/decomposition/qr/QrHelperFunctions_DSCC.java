@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,6 +24,7 @@ import org.ejml.data.DScalar;
 import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Functions used with a sparse QR decomposition
@@ -80,7 +81,7 @@ public class QrHelperFunctions_DSCC {
      */
     public static void rank1UpdateMultR(DMatrixSparseCSC V , int colV, double gamma ,
                                         DMatrixSparseCSC A , DMatrixSparseCSC C,
-                                        IGrowArray gw , DGrowArray gx )
+                                        @Nullable IGrowArray gw , @Nullable DGrowArray gx )
     {
         if( V.numRows != A.numRows )
             throw new IllegalArgumentException("Number of rows in V and A must match");

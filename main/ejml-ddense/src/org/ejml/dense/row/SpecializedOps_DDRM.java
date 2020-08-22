@@ -95,7 +95,7 @@ public class SpecializedOps_DDRM {
      * @param src The original matrix. Not modified.
      * @param dst A Matrix that is a row swapped copy of src. Modified.
      */
-    public static DMatrixRMaj copyChangeRow(int order[] , DMatrixRMaj src , DMatrixRMaj dst )
+    public static DMatrixRMaj copyChangeRow(int[] order, DMatrixRMaj src , @Nullable DMatrixRMaj dst )
     {
         if( dst == null ) {
             dst = new DMatrixRMaj(src.numRows,src.numCols);
@@ -121,7 +121,7 @@ public class SpecializedOps_DDRM {
      * @param upper If the upper or lower triangle should be copied.
      * @return The copied matrix.
      */
-    public static DMatrixRMaj copyTriangle(DMatrixRMaj src , DMatrixRMaj dst , boolean upper ) {
+    public static DMatrixRMaj copyTriangle(DMatrixRMaj src ,@Nullable DMatrixRMaj dst , boolean upper ) {
         if( dst == null ) {
             dst = new DMatrixRMaj(src.numRows,src.numCols);
         } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {

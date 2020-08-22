@@ -79,6 +79,7 @@ public class TestSafeSvd_DDRM {
         assertEquals(3,decomp.numRows());
     }
 
+    @SuppressWarnings({"NullAway"})
     protected static class Dummy implements SingularValueDecomposition_F64<DMatrixRMaj> {
 
         DMatrix passedInMatrix;

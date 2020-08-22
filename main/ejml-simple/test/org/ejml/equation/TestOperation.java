@@ -27,6 +27,7 @@ import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -218,13 +219,13 @@ public class TestOperation {
             eq.process("C=A*B");
             fail("Should have thrown exception");
         } catch( MatrixDimensionException e ) {
-            assertTrue( e.getMessage().startsWith("Trying to multiply a 1x1"));
+            assertTrue( Objects.requireNonNull(e.getMessage()).startsWith("Trying to multiply a 1x1"));
         }
         try {
             eq.process("C=B*A");
             fail("Should have thrown exception");
         } catch( MatrixDimensionException e ) {
-            assertTrue( e.getMessage().startsWith("Trying to multiply a 1x1"));
+            assertTrue( Objects.requireNonNull(e.getMessage()).startsWith("Trying to multiply a 1x1"));
         }
     }
 
@@ -571,13 +572,13 @@ public class TestOperation {
             eq.process("C=A+B");
             fail("Should have thrown exception");
         } catch( MatrixDimensionException e ) {
-            assertTrue( e.getMessage().startsWith("Trying to add a 1x1"));
+            assertTrue( Objects.requireNonNull(e.getMessage()).startsWith("Trying to add a 1x1"));
         }
         try {
             eq.process("C=B+A");
             fail("Should have thrown exception");
         } catch( MatrixDimensionException e ) {
-            assertTrue( e.getMessage().startsWith("Trying to add a 1x1"));
+            assertTrue(Objects.requireNonNull(e.getMessage()).startsWith("Trying to add a 1x1"));
         }
     }
 
@@ -651,13 +652,13 @@ public class TestOperation {
             eq.process("C=A-B");
             fail("Should have thrown exception");
         } catch( MatrixDimensionException e ) {
-            assertTrue( e.getMessage().startsWith("Trying to subtract a 1x1"));
+            assertTrue( Objects.requireNonNull(e.getMessage()).startsWith("Trying to subtract a 1x1"));
         }
         try {
             eq.process("C=B-A");
             fail("Should have thrown exception");
         } catch( MatrixDimensionException e ) {
-            assertTrue( e.getMessage().startsWith("Trying to subtract a 1x1"));
+            assertTrue( Objects.requireNonNull(e.getMessage()).startsWith("Trying to subtract a 1x1"));
         }
     }
 
@@ -691,7 +692,7 @@ public class TestOperation {
         try {
             eq.process("a=b");
             fail("Exception should have been thrown");
-        } catch( RuntimeException e ){}
+        } catch( RuntimeException ignore ){}
     }
 
     @Test

@@ -57,7 +57,7 @@ public class TestLinearSolverSparseSafe {
         // correct value
         s.setA(Ainput);
 
-        assertTrue(dummy.passedin != Ainput);
+        assertNotSame(dummy.passedin, Ainput);
     }
 
     /**
@@ -76,7 +76,7 @@ public class TestLinearSolverSparseSafe {
         // correct value
         s.solve(Binput,new DMatrixRMaj(1,1));
 
-        assertTrue(dummy.passedin != Ainput);
+        assertNotSame(dummy.passedin, Ainput);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TestLinearSolverSparseSafe {
 
         s.setA(Ainput);
 
-        assertTrue(dummy.passedin == Ainput);
+        assertSame(dummy.passedin, Ainput);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TestLinearSolverSparseSafe {
 
         s.setA(Ainput);
 
-        assertTrue(dummy.passedin != Ainput);
+        assertNotSame(dummy.passedin, Ainput);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TestLinearSolverSparseSafe {
 
         s.solve(Binput,new DMatrixRMaj(1,1));
 
-        assertTrue(dummy.passedInDense == Binput);
+        assertSame(dummy.passedInDense, Binput);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class TestLinearSolverSparseSafe {
 
         s.solve(Binput,new DMatrixRMaj(1,1));
 
-        assertTrue(dummy.passedInDense != Binput);
+        assertNotSame(dummy.passedInDense, Binput);
     }
 
     @Test
@@ -129,18 +129,19 @@ public class TestLinearSolverSparseSafe {
 
         LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> s = new LinearSolverSparseSafe<>(dummy);
 
-        assertTrue(s.quality()==dummy.quality());
+        assertEquals(dummy.quality(), s.quality());
     }
 
     @Test
+    @SuppressWarnings({"NullAway"})
     public void modifies() {
-        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<DMatrixRMaj>(null);
+        LinearSolverDense<DMatrixRMaj> s = new LinearSolverSafe<>(null);
 
         assertFalse(s.modifiesA());
         assertFalse(s.modifiesB());
-
     }
 
+    @SuppressWarnings({"NullAway"})
     private class DummySolver implements LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj>
     {
         boolean modifiesA;

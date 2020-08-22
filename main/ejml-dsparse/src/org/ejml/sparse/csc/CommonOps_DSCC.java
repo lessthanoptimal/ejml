@@ -832,7 +832,8 @@ public class CommonOps_DSCC {
      * @param inverse (Input) If it is the inverse. B[i,:] = A[p[i],:)
      * @param P (Output) Permutation matrix
      */
-    public static DMatrixSparseCSC permutationMatrix(int[] p, boolean inverse, int N, DMatrixSparseCSC P) {
+    public static DMatrixSparseCSC permutationMatrix(int[] p, boolean inverse, int N,
+                                                     @Nullable DMatrixSparseCSC P) {
 
         if( P == null )
             P = new DMatrixSparseCSC(N,N,N);
@@ -1187,7 +1188,8 @@ public class CommonOps_DSCC {
      * @param out (Output, Option) Storage for output matrix
      * @return The submatrix
      */
-    public static DMatrixSparseCSC extractRows(DMatrixSparseCSC A , int row0 , int row1 , DMatrixSparseCSC out ) {
+    public static DMatrixSparseCSC extractRows(DMatrixSparseCSC A , int row0 , int row1 ,
+                                               @Nullable DMatrixSparseCSC out ) {
 
         if( out == null )
             out = new DMatrixSparseCSC(1,1,1);
@@ -1598,7 +1600,7 @@ public class CommonOps_DSCC {
      * @return Dot product
      */
     public static double dotInnerColumns( DMatrixSparseCSC A , int colA , DMatrixSparseCSC B , int colB,
-                                          IGrowArray gw , DGrowArray gx)
+                                          @Nullable IGrowArray gw , @Nullable DGrowArray gx)
     {
         return ImplSparseSparseMult_DSCC.dotInnerColumns(A,colA,B,colB,gw,gx);
     }

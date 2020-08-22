@@ -20,11 +20,11 @@ package org.ejml.dense.row.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -252,9 +252,9 @@ public class TestMatrixMatrixMult_DDRM {
         a.set(b);
     }
 
-    public static DMatrixRMaj invoke(Method func,
-                              double alpha,
-                              DMatrixRMaj a, DMatrixRMaj b, DMatrixRMaj c)
+    public static @Nullable DMatrixRMaj invoke(Method func,
+                                               double alpha,
+                                               DMatrixRMaj a, DMatrixRMaj b, @Nullable DMatrixRMaj c)
             throws IllegalAccessException, InvocationTargetException {
 
         Object ret;

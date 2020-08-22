@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings({"NullAway"})
 public class TestLinearSolverToSparse {
     @Test
     public void locking() {
