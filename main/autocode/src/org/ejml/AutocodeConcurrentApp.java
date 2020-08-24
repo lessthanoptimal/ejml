@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.ejml.GenerateCode32.findPathToProjectRoot;
+
 /**
  * Generates concurrent implementations of a class using hints provided in comments throughout the code.
  *
@@ -309,9 +311,10 @@ public class AutocodeConcurrentApp {
 //				"main/boofcv-ip/src/main/java/boofcv/alg/enhance/impl/ImplEnhanceHistogram.java"
 		};
 
+		String projectRoot = findPathToProjectRoot();
 		for( String f : directories ) {
 			System.out.println("directory "+f);
-			convertDir(new File(f),"\\S+\\.java","\\S+MT\\S+");
+			convertDir(new File(projectRoot,f),"\\S+\\.java","\\S+MT\\S+");
 		}
 
 		for( String f : files ) {

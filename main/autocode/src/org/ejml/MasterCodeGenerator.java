@@ -16,20 +16,16 @@
  * limitations under the License.
  */
 
-dependencies {
-    compile group: 'com.peterabeles', name: 'auto64fto32f', version: '2.1'
-}
+package org.ejml;
 
-gversion {
-    srcDir = "../ejml-core/src"
-    classPackage = "org.ejml"
-    className = "EjmlVersion"
-    indent = "    "
-}
+import java.io.IOException;
 
-task(autogenerate, dependsOn: 'classes', type: JavaExec) {
-    main = 'org.ejml.MasterCodeGenerator'
-    classpath = sourceSets.main.runtimeClasspath
+/**
+ * @author Peter Abeles
+ */
+public class MasterCodeGenerator {
+    public static void main(String[] args) throws IOException {
+        AutocodeConcurrentApp.main(args);
+        GenerateCode32.main(args);
+    }
 }
-// Create the EjmlVersion file only when the autogenerate command is called. This speeds up build time significantly.
-project.autogenerate.dependsOn(createVersionFile)
