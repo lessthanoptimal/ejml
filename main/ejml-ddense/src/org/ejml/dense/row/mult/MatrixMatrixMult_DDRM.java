@@ -24,6 +24,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Generated;
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 /**
  * <p>
@@ -75,11 +76,11 @@ public class MatrixMatrixMult_DDRM {
             CommonOps_DDRM.fill(C,0);
             return;
         }
-        double valA;
-        int indexCbase= 0;
-        int endOfKLoop = B.numRows*B.numCols;
+        final int endOfKLoop = B.numRows*B.numCols;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int indexCbase= i*C.numCols;
             int indexA = i*A.numCols;
 
             // need to assign C.data to a value initially
@@ -87,7 +88,7 @@ public class MatrixMatrixMult_DDRM {
             int indexC = indexCbase;
             int end = indexB + B.numCols;
 
-            valA = A.data[indexA++];
+            double valA = A.data[indexA++];
 
             while( indexB < end ) {
                 C.set(indexC++ , valA*B.data[indexB++]);
@@ -104,8 +105,8 @@ public class MatrixMatrixMult_DDRM {
                     C.data[indexC++] += valA*B.data[indexB++];
                 }
             }
-            indexCbase += C.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -188,13 +189,13 @@ public class MatrixMatrixMult_DDRM {
             CommonOps_DDRM.fill(C,0);
             return;
         }
-        double valA;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
             int indexC_start = i*C.numCols;
 
             // first assign R
-            valA = A.data[i];
+            double valA = A.data[i];
             int indexB = 0;
             int end = indexB+B.numCols;
             int indexC = indexC_start;
@@ -212,6 +213,7 @@ public class MatrixMatrixMult_DDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -259,9 +261,10 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numCols,B.numRows);
 
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numRows;
             int indexB = 0;
             for( int j = 0; j < B.numRows; j++ ) {
                 int indexA = i;
@@ -277,6 +280,7 @@ public class MatrixMatrixMult_DDRM {
                 C.set( cIndex++ , total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -326,10 +330,11 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numRows,B.numRows);
 
-        int cIndex = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for( int xA = 0; xA < A.numRows; xA++ ) {
+            int cIndex = xA*B.numRows;
+            int aIndexStart = xA*B.numCols;
             int end = aIndexStart + B.numCols;
             int indexB = 0;
             for( int xB = 0; xB < B.numRows; xB++ ) {
@@ -343,8 +348,8 @@ public class MatrixMatrixMult_DDRM {
 
                 C.set( cIndex++ , total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -362,11 +367,11 @@ public class MatrixMatrixMult_DDRM {
         if( A.numCols == 0 || A.numRows == 0 ) {
             return;
         }
-        double valA;
-        int indexCbase= 0;
-        int endOfKLoop = B.numRows*B.numCols;
+        final int endOfKLoop = B.numRows*B.numCols;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int indexCbase= i*C.numCols;
             int indexA = i*A.numCols;
 
             // need to assign C.data to a value initially
@@ -374,7 +379,7 @@ public class MatrixMatrixMult_DDRM {
             int indexC = indexCbase;
             int end = indexB + B.numCols;
 
-            valA = A.data[indexA++];
+            double valA = A.data[indexA++];
 
             while( indexB < end ) {
                 C.plus(indexC++ , valA*B.data[indexB++]);
@@ -391,8 +396,8 @@ public class MatrixMatrixMult_DDRM {
                     C.data[indexC++] += valA*B.data[indexB++];
                 }
             }
-            indexCbase += C.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -474,13 +479,13 @@ public class MatrixMatrixMult_DDRM {
         if( A.numCols == 0 || A.numRows == 0 ) {
             return;
         }
-        double valA;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
             int indexC_start = i*C.numCols;
 
             // first assign R
-            valA = A.data[i];
+            double valA = A.data[i];
             int indexB = 0;
             int end = indexB+B.numCols;
             int indexC = indexC_start;
@@ -498,6 +503,7 @@ public class MatrixMatrixMult_DDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -545,9 +551,10 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numCols != C.numRows || B.numRows != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numRows;
             int indexB = 0;
             for( int j = 0; j < B.numRows; j++ ) {
                 int indexA = i;
@@ -563,6 +570,7 @@ public class MatrixMatrixMult_DDRM {
                 C.plus( cIndex++ , total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -611,10 +619,11 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numRows != C.numRows || B.numRows != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int cIndex = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for( int xA = 0; xA < A.numRows; xA++ ) {
+            int cIndex = xA*B.numRows;
+            int aIndexStart = xA*B.numCols;
             int end = aIndexStart + B.numCols;
             int indexB = 0;
             for( int xB = 0; xB < B.numRows; xB++ ) {
@@ -628,8 +637,8 @@ public class MatrixMatrixMult_DDRM {
 
                 C.plus( cIndex++ , total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -648,11 +657,11 @@ public class MatrixMatrixMult_DDRM {
             CommonOps_DDRM.fill(C,0);
             return;
         }
-        double valA;
-        int indexCbase= 0;
-        int endOfKLoop = B.numRows*B.numCols;
+        final int endOfKLoop = B.numRows*B.numCols;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int indexCbase= i*C.numCols;
             int indexA = i*A.numCols;
 
             // need to assign C.data to a value initially
@@ -660,7 +669,7 @@ public class MatrixMatrixMult_DDRM {
             int indexC = indexCbase;
             int end = indexB + B.numCols;
 
-            valA = alpha*A.data[indexA++];
+            double valA = alpha*A.data[indexA++];
 
             while( indexB < end ) {
                 C.set(indexC++ , valA*B.data[indexB++]);
@@ -677,8 +686,8 @@ public class MatrixMatrixMult_DDRM {
                     C.data[indexC++] += valA*B.data[indexB++];
                 }
             }
-            indexCbase += C.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -761,13 +770,13 @@ public class MatrixMatrixMult_DDRM {
             CommonOps_DDRM.fill(C,0);
             return;
         }
-        double valA;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
             int indexC_start = i*C.numCols;
 
             // first assign R
-            valA = alpha*A.data[i];
+            double valA = alpha*A.data[i];
             int indexB = 0;
             int end = indexB+B.numCols;
             int indexC = indexC_start;
@@ -785,6 +794,7 @@ public class MatrixMatrixMult_DDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -832,9 +842,10 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numCols,B.numRows);
 
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numRows;
             int indexB = 0;
             for( int j = 0; j < B.numRows; j++ ) {
                 int indexA = i;
@@ -850,6 +861,7 @@ public class MatrixMatrixMult_DDRM {
                 C.set( cIndex++ , alpha*total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -899,10 +911,11 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numRows,B.numRows);
 
-        int cIndex = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for( int xA = 0; xA < A.numRows; xA++ ) {
+            int cIndex = xA*B.numRows;
+            int aIndexStart = xA*B.numCols;
             int end = aIndexStart + B.numCols;
             int indexB = 0;
             for( int xB = 0; xB < B.numRows; xB++ ) {
@@ -916,8 +929,8 @@ public class MatrixMatrixMult_DDRM {
 
                 C.set( cIndex++ , alpha*total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -935,11 +948,11 @@ public class MatrixMatrixMult_DDRM {
         if( A.numCols == 0 || A.numRows == 0 ) {
             return;
         }
-        double valA;
-        int indexCbase= 0;
-        int endOfKLoop = B.numRows*B.numCols;
+        final int endOfKLoop = B.numRows*B.numCols;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int indexCbase= i*C.numCols;
             int indexA = i*A.numCols;
 
             // need to assign C.data to a value initially
@@ -947,7 +960,7 @@ public class MatrixMatrixMult_DDRM {
             int indexC = indexCbase;
             int end = indexB + B.numCols;
 
-            valA = alpha*A.data[indexA++];
+            double valA = alpha*A.data[indexA++];
 
             while( indexB < end ) {
                 C.plus(indexC++ , valA*B.data[indexB++]);
@@ -964,8 +977,8 @@ public class MatrixMatrixMult_DDRM {
                     C.data[indexC++] += valA*B.data[indexB++];
                 }
             }
-            indexCbase += C.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -1047,13 +1060,13 @@ public class MatrixMatrixMult_DDRM {
         if( A.numCols == 0 || A.numRows == 0 ) {
             return;
         }
-        double valA;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
             int indexC_start = i*C.numCols;
 
             // first assign R
-            valA = alpha*A.data[i];
+            double valA = alpha*A.data[i];
             int indexB = 0;
             int end = indexB+B.numCols;
             int indexC = indexC_start;
@@ -1071,6 +1084,7 @@ public class MatrixMatrixMult_DDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -1118,9 +1132,10 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numCols != C.numRows || B.numRows != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numRows;
             int indexB = 0;
             for( int j = 0; j < B.numRows; j++ ) {
                 int indexA = i;
@@ -1136,6 +1151,7 @@ public class MatrixMatrixMult_DDRM {
                 C.plus( cIndex++ , alpha*total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -1184,10 +1200,11 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numRows != C.numRows || B.numRows != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int cIndex = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for( int xA = 0; xA < A.numRows; xA++ ) {
+            int cIndex = xA*B.numRows;
+            int aIndexStart = xA*B.numCols;
             int end = aIndexStart + B.numCols;
             int indexB = 0;
             for( int xB = 0; xB < B.numRows; xB++ ) {
@@ -1201,8 +1218,8 @@ public class MatrixMatrixMult_DDRM {
 
                 C.plus( cIndex++ , alpha*total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
 }

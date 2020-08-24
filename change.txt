@@ -23,6 +23,13 @@ Date format: year/month/day
   * duplicatesAdd() is a function which will add element that is duplicated and turn it into a valid matrix again
 - ReadMatrixCsv
   * Thanks DEDZTBH for fixing an indexing error when reading complex data types
+- TODO Concurrent Algorithms
+  * Only simple for loops which do not require storage for each thread
+  * Control threads with EjmlConcurrency
+  * Must call concurrent functions from CommonOps_MT_****
+  * TODO add ability to clip functions from input source
+  * TODO MatrixMatrixMult_DDRM - clip functions that are not concurrent
+  * TODO TransposeAlgs_DDRM
 
 ----- Version 0.39
 2020/04/06

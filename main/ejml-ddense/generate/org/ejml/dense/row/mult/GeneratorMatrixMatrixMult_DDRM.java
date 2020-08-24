@@ -45,6 +45,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                 "import org.ejml.data.DMatrix1Row;\n" +
                 "import org.ejml.dense.row.CommonOps_DDRM;\n" +
                 "import org.jetbrains.annotations.Nullable;\n" +
+                "//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;\n" +
                 "\n" +
                 "/**\n" +
                 " * <p>\n" +
@@ -208,11 +209,11 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(false,false, null,!add)+handleZeros(add) +
-                        "        double valA;\n"+
-                        "        int indexCbase= 0;\n" +
-                        "        int endOfKLoop = B.numRows*B.numCols;\n"+
+                        "        final int endOfKLoop = B.numRows*B.numCols;\n"+
                         "\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
                         "        for( int i = 0; i < A.numRows; i++ ) {\n" +
+                        "            int indexCbase= i*C.numCols;\n" +
                         "            int indexA = i*A.numCols;\n" +
                         "\n"+
                         "            // need to assign C.data to a value initially\n" +
@@ -220,7 +221,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "            int indexC = indexCbase;\n" +
                         "            int end = indexB + B.numCols;\n" +
                         "\n" +
-                        "            "+valLine +
+                        "            double "+valLine +
                         "\n" +
                         "            while( indexB < end ) {\n" +
                         "                C."+assignment+"(indexC++ , valA*B.data[indexB++]);\n" +
@@ -237,8 +238,8 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "                    C.data[indexC++] += valA*B.data[indexB++];\n" +
                         "                }\n" +
                         "            }\n" +
-                        "            indexCbase += C.numCols;\n" +
                         "        }\n" +
+                        "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
 
         out.print(foo);
@@ -333,13 +334,13 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(true,false, null,!add)+handleZeros(add)+
-                        "        double valA;\n" +
                         "\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
                         "        for( int i = 0; i < A.numCols; i++ ) {\n" +
                         "            int indexC_start = i*C.numCols;\n" +
                         "\n" +
                         "            // first assign R\n" +
-                        "            " +valLine1+
+                        "            double " +valLine1+
                         "            int indexB = 0;\n" +
                         "            int end = indexB+B.numCols;\n" +
                         "            int indexC = indexC_start;\n" +
@@ -357,6 +358,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "                }\n" +
                         "            }\n" +
                         "        }\n" +
+                        "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
         out.print(foo);
     }
@@ -415,10 +417,11 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(false,true, null,!add)+
-                        "        int cIndex = 0;\n" +
-                        "        int aIndexStart = 0;\n" +
                         "\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {\n" +
                         "        for( int xA = 0; xA < A.numRows; xA++ ) {\n" +
+                        "            int cIndex = xA*B.numRows;\n" +
+                        "            int aIndexStart = xA*B.numCols;\n" +
                         "            int end = aIndexStart + B.numCols;\n" +
                         "            int indexB = 0;\n"+
                         "            for( int xB = 0; xB < B.numRows; xB++ ) {\n" +
@@ -432,8 +435,8 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "\n" +
                         "                "+valLine +
                         "            }\n" +
-                        "            aIndexStart += A.numCols;\n" +
                         "        }\n" +
+                        "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
         out.print(foo);
     }
@@ -453,9 +456,10 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(true,true, null,!add)+
-                        "        int cIndex = 0;\n" +
                         "\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {\n" +
                         "        for( int i = 0; i < A.numCols; i++ ) {\n" +
+                        "            int cIndex = i*B.numRows;\n" +
                         "            int indexB = 0;\n"+
                         "            for( int j = 0; j < B.numRows; j++ ) {\n" +
                         "                int indexA = i;\n" +
@@ -471,6 +475,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "                "+valLine+
                         "            }\n" +
                         "        }\n"+
+                        "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
         out.print(foo);
     }
