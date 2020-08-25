@@ -1449,17 +1449,7 @@ public class CommonOps_DDRM {
      * @return The max element value of the matrix.
      */
     public static double elementMax( DMatrixD1 a ) {
-        final int size = a.getNumElements();
-
-        double max = a.get(0);
-        for( int i = 1; i < size; i++ ) {
-            double val = a.get(i);
-            if( val >= max ) {
-                max = val;
-            }
-        }
-
-        return max;
+        return ImplCommonOps_DDRM.elementMax(a);
     }
 
     /**
@@ -1473,17 +1463,7 @@ public class CommonOps_DDRM {
      * @return The max abs element value of the matrix.
      */
     public static double elementMaxAbs( DMatrixD1 a ) {
-        final int size = a.getNumElements();
-
-        double max = 0;
-        for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(a.get(i));
-            if( val > max ) {
-                max = val;
-            }
-        }
-
-        return max;
+        return ImplCommonOps_DDRM.elementMaxAbs(a);
     }
 
     /**
@@ -1497,17 +1477,7 @@ public class CommonOps_DDRM {
      * @return The value of element in the matrix with the minimum value.
      */
     public static double elementMin( DMatrixD1 a ) {
-        final int size = a.getNumElements();
-
-        double min = a.get(0);
-        for( int i = 1; i < size; i++ ) {
-            double val = a.get(i);
-            if( val < min ) {
-                min = val;
-            }
-        }
-
-        return min;
+        return ImplCommonOps_DDRM.elementMin(a);
     }
 
     /**
@@ -1521,17 +1491,7 @@ public class CommonOps_DDRM {
      * @return The max element value of the matrix.
      */
     public static double elementMinAbs( DMatrixD1 a ) {
-        final int size = a.getNumElements();
-
-        double min = Double.MAX_VALUE;
-        for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(a.get(i));
-            if( val < min ) {
-                min = val;
-            }
-        }
-
-        return min;
+        return ImplCommonOps_DDRM.elementMinAbs(a);
     }
 
     /**
@@ -1542,15 +1502,8 @@ public class CommonOps_DDRM {
      * @param A The left matrix in the multiplication operation. Modified.
      * @param B The right matrix in the multiplication operation. Not modified.
      */
-    public static void elementMult(DMatrixD1 A , DMatrixD1 B )
-    {
-        checkSameShape(A,B,true);
-
-        int length = A.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            A.times(i, B.get(i));
-        }
+    public static void elementMult(DMatrixD1 A , DMatrixD1 B ) {
+        ImplCommonOps_DDRM.elementMult(A,B);
     }
 
     /**
@@ -1562,18 +1515,8 @@ public class CommonOps_DDRM {
      * @param B The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrixD1> T elementMult(T A , T B , @Nullable T output )
-    {
-        checkSameShape(A,B,true);
-        output = reshapeOrDeclare(output,A);
-
-        int length = A.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            output.set(i, A.get(i) * B.get(i));
-        }
-
-        return output;
+    public static <T extends DMatrixD1> T elementMult(T A , T B , @Nullable T output ) {
+        return ImplCommonOps_DDRM.elementMult(A,B,output);
     }
 
     /**
@@ -1584,15 +1527,8 @@ public class CommonOps_DDRM {
      * @param A The left matrix in the division operation. Modified.
      * @param B The right matrix in the division operation. Not modified.
      */
-    public static void elementDiv(DMatrixD1 A , DMatrixD1 B )
-    {
-        checkSameShape(A,B,true);
-
-        int length = A.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            A.div(i, B.get(i));
-        }
+    public static void elementDiv(DMatrixD1 A , DMatrixD1 B ) {
+        ImplCommonOps_DDRM.elementDiv(A,B);
     }
 
     /**
@@ -1604,18 +1540,8 @@ public class CommonOps_DDRM {
      * @param B The right matrix in the division operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrixD1> T elementDiv(T A , T B , @Nullable T output )
-    {
-        checkSameShape(A,B,true);
-        output = reshapeOrDeclare(output,A);
-
-        int length = A.getNumElements();
-
-        for( int i = 0; i < length; i++ ) {
-            output.set(i, A.get(i) / B.get(i));
-        }
-
-        return output;
+    public static <T extends DMatrixD1> T elementDiv(T A , T B , @Nullable T output ) {
+        return ImplCommonOps_DDRM.elementDiv(A,B,output);
     }
 
     /**
@@ -1629,15 +1555,7 @@ public class CommonOps_DDRM {
      * @return The sum of the elements.
      */
     public static double elementSum( DMatrixD1 mat ) {
-        double total = 0;
-
-        int size = mat.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            total += mat.get(i);
-        }
-
-        return total;
+        return ImplCommonOps_DDRM.elementSum(mat);
     }
 
     /**
@@ -1651,15 +1569,7 @@ public class CommonOps_DDRM {
      * @return The sum of the absolute value of each element.
      */
     public static double elementSumAbs( DMatrixD1 mat ) {
-        double total = 0;
-
-        int size = mat.getNumElements();
-
-        for( int i = 0; i < size; i++ ) {
-            total += Math.abs(mat.get(i));
-        }
-
-        return total;
+        return ImplCommonOps_DDRM.elementSumAbs(mat);
     }
 
     /**
@@ -1673,15 +1583,7 @@ public class CommonOps_DDRM {
      * @param output output (modified)
      */
     public static <T extends DMatrixD1> T elementPower(T A , T B , @Nullable T output ) {
-        checkSameShape(A,B,true);
-        output = reshapeOrDeclare(output,A);
-
-        int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
-            output.data[i] = Math.pow(A.data[i], B.data[i]);
-        }
-
-        return output;
+        return ImplCommonOps_DDRM.elementPower(A,B,output);
     }
 
     /**
@@ -1694,16 +1596,8 @@ public class CommonOps_DDRM {
      * @param B right side
      * @param output output (modified)
      */
-    public static <T extends DMatrixD1> T elementPower(double a , T B , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,B);
-
-        int size = B.getNumElements();
-        for( int i = 0; i < size; i++ ) {
-            output.data[i] = Math.pow(a, B.data[i]);
-        }
-
-        return output;
+    public static <T extends DMatrixD1> T elementPower(double a , T B , @Nullable T output ) {
+        return ImplCommonOps_DDRM.elementPower(a,B,output);
     }
 
     /**
@@ -1717,14 +1611,7 @@ public class CommonOps_DDRM {
      * @param output output (modified)
      */
     public static <T extends DMatrixD1> T elementPower(T A , double b, @Nullable T output ) {
-        output = reshapeOrDeclare(output,A);
-
-        int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
-            output.data[i] = Math.pow(A.data[i], b);
-        }
-
-        return output;
+        return ImplCommonOps_DDRM.elementPower(A,b,output);
     }
 
     /**
@@ -1737,16 +1624,8 @@ public class CommonOps_DDRM {
      * @param output (input/output) Storage for results. can be null. (modified)
      * @return The results
      */
-    public static <T extends DMatrixD1> T elementLog(T A , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,A);
-
-        int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
-            output.data[i] = Math.log(A.data[i]);
-        }
-
-        return output;
+    public static <T extends DMatrixD1> T elementLog(T A , @Nullable T output ) {
+        return ImplCommonOps_DDRM.elementLog(A,output);
     }
 
     /**
@@ -1760,14 +1639,7 @@ public class CommonOps_DDRM {
      * @return The results
      */
     public static <T extends DMatrixD1> T elementExp(T A , @Nullable T output ) {
-        output = reshapeOrDeclare(output,A);
-
-        int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
-            output.data[i] = Math.exp(A.data[i]);
-        }
-
-        return output;
+        return ImplCommonOps_DDRM.elementExp(A,output);
     }
 
     /**
