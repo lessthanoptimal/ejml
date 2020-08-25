@@ -35,7 +35,7 @@ import java.io.FileNotFoundException;
  *
  * @author Peter Abeles
  */
-public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
+public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
     @Override
     public void generate() throws FileNotFoundException {
@@ -260,10 +260,11 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(false,false, null,!add)+
-                        "        int aIndexStart = 0;\n" +
-                        "        int cIndex = 0;\n" +
                         "\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
                         "        for( int i = 0; i < A.numRows; i++ ) {\n" +
+                        "            int cIndex = i*B.numCols;\n" +
+                        "            int aIndexStart = i*A.numCols;\n" +
                         "            for( int j = 0; j < B.numCols; j++ ) {\n" +
                         "                double total = 0;\n" +
                         "\n" +
@@ -277,8 +278,8 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "\n" +
                         valLine +
                         "            }\n" +
-                        "            aIndexStart += A.numCols;\n" +
                         "        }\n" +
+                        "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
         out.print(foo);
     }
@@ -314,7 +315,9 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "            }\n" +
                         "        }\n" +
                         "    }\n";
+        out.println("    //CONCURRENT_OMIT_BEGIN");
         out.print(foo);
+        out.println("    //CONCURRENT_OMIT_END");
     }
 
     public void printMultTransA_reorder( boolean alpha , boolean add ) {
@@ -378,9 +381,10 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(true,false, null,!add)+
-                        "        int cIndex = 0;\n" +
                         "\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {\n" +
                         "        for( int i = 0; i < A.numCols; i++ ) {\n" +
+                        "            int cIndex = i*B.numCols;\n" +
                         "            for( int j = 0; j < B.numCols; j++ ) {\n" +
                         "                int indexA = i;\n" +
                         "                int indexB = j;\n" +
@@ -397,6 +401,7 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "                "+valLine +
                         "            }\n" +
                         "        }\n" +
+                        "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
 
          out.print(foo);
@@ -511,10 +516,12 @@ public class GeneratorMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "            }\n" +
                         "        }\n"+
                         "    }\n";
+        out.println("    //CONCURRENT_OMIT_BEGIN");
         out.print(foo);
+        out.println("    //CONCURRENT_OMIT_END");
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        new GeneratorMatrixMatrixMult_DDRM().generate();
+        new GenerateMatrixMatrixMult_DDRM().generate();
     }
 }

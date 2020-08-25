@@ -27,9 +27,9 @@ Date format: year/month/day
   * Only simple for loops which do not require storage for each thread
   * Control threads with EjmlConcurrency
   * Must call concurrent functions from CommonOps_MT_****
-  * TODO add ability to clip functions from input source
-  * TODO MatrixMatrixMult_DDRM - clip functions that are not concurrent
+  * TODO MatrixMatrixMult_DDRM - Unit Tests
   * TODO TransposeAlgs_DDRM
+  * TODO Elementwise Operations
 
 ----- Version 0.39
 2020/04/06

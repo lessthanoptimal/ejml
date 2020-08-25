@@ -42,6 +42,8 @@ import static org.ejml.GenerateCode32.findPathToProjectRoot;
  *     <li>//CONCURRENT_REMOVE_BELOW will remove the line below</li>
  *     <li>//CONCURRENT_REMOVE_ABOVE will remove the line above</li>
  *     <li>//CONCURRENT_MACRO NAME TEXT creates a macro that can be used instead of text</li>
+ *     <li>//CONCURRENT_OMIT_BEGIN It will omit everything until it finds an OMIT_END</li>
+ *     <li>//CONCURRENT_OMIT_END It will stop omitting when this is encountered.</li>
  * </ul>
  *
  * A macro is identified by enclosing its name with brackets, e.g. {NAME}.
@@ -70,6 +72,8 @@ public class AutocodeConcurrentApp {
 
 		// parse each line by line looking for instructions
 		boolean foundClassDef = false;
+		// If true it will not copy lines over
+		boolean omit = false;
 		for (int i = 0; i < inputLines.size(); i++) {
 			String line = inputLines.get(i);
 			int where = line.indexOf(prefix);
@@ -80,12 +84,13 @@ public class AutocodeConcurrentApp {
 				} else {
 					line = line.replace(classNameOld+"(",classNameNew+"(");
 				}
-				outputLines.add(line);
+				if( !omit )
+					outputLines.add(line);
 				continue;
 			}
 			String type = readType(line,where+prefix.length());
 			String whitespaces = line.substring(0,where);
-			int frontLength =where+prefix.length()+type.length();
+			int frontLength = where+prefix.length()+type.length();
 			String message = line.length()>frontLength ? line.substring(frontLength+1) : "";
 			switch(type) {
 				case "CLASS_NAME":continue; // ignore. already processed
@@ -106,6 +111,12 @@ public class AutocodeConcurrentApp {
 					break;
 				case "REMOVE_BELOW":
 					i += 1; // skip next line
+					break;
+				case "OMIT_BEGIN":
+					omit = true;
+					break;
+				case "OMIT_END":
+					omit = false;
 					break;
 				case "MACRO":
 					throw new RuntimeException("MACRO not handled yet");

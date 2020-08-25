@@ -218,4 +218,144 @@ public class CommonOps_MT_DDRM {
 
         return output;
     }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a * b<br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAdd_reorder(a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a * b<br>
+     * c<sub>ij</sub> = c<sub>ij</sub> +  &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param alpha scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAdd(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAdd_reorder(alpha, a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a<sup>T</sup> * b<br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAddTransA_reorder(a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a<sup>T</sup> * b<br>
+     * c<sub>ij</sub> =c<sub>ij</sub> +  &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>kj</sub>}
+     * </p>
+     *
+     * @param alpha scaling factor
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransA(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAddTransA_reorder(alpha, a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a * b<sup>T</sup> <br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAddTransB(a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a * b<sup>T</sup><br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ik</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not modified.
+     * @param b The right matrix in the multiplication operation. Not modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAddTransB(alpha, a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param a The left matrix in the multiplication operation. Not Modified.
+     * @param b The right matrix in the multiplication operation. Not Modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAddTransAB(a, b, c);
+    }
+
+    /**
+     * <p>
+     * Performs the following operation:<br>
+     * <br>
+     * c = c + &alpha; * a<sup>T</sup> * b<sup>T</sup><br>
+     * c<sub>ij</sub> = c<sub>ij</sub> + &alpha; * &sum;<sub>k=1:n</sub> { a<sub>ki</sub> * b<sub>jk</sub>}
+     * </p>
+     *
+     * @param alpha Scaling factor.
+     * @param a The left matrix in the multiplication operation. Not Modified.
+     * @param b The right matrix in the multiplication operation. Not Modified.
+     * @param c Where the results of the operation are stored. Modified.
+     */
+    public static void multAddTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
+    {
+        MatrixMatrixMult_MT_DDRM.multAddTransAB(alpha, a, b, c);
+    }
 }

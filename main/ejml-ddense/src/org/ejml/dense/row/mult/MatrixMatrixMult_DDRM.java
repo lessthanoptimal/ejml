@@ -54,11 +54,11 @@ import javax.annotation.Generated;
  * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.
  * </p>
  *
- * <p>DO NOT MODIFY.  Automatically generated code created by GeneratorMatrixMatrixMult_DDRM</p>
+ * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixMatrixMult_DDRM</p>
  *
  * @author Peter Abeles
  */
-@Generated("org.ejml.dense.row.mult.GeneratorMatrixMatrixMult_DDRM")
+@Generated("org.ejml.dense.row.mult.GenerateMatrixMatrixMult_DDRM")
 public class MatrixMatrixMult_DDRM {
     /**
      * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -121,10 +121,11 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numRows,B.numCols);
 
-        int aIndexStart = 0;
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int cIndex = i*B.numCols;
+            int aIndexStart = i*A.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 double total = 0;
 
@@ -138,10 +139,11 @@ public class MatrixMatrixMult_DDRM {
 
                 C.set( cIndex++ , total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -172,6 +174,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multTransA( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -228,9 +231,10 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numCols,B.numCols);
 
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 int indexA = i;
                 int indexB = j;
@@ -247,6 +251,7 @@ public class MatrixMatrixMult_DDRM {
                 C.set( cIndex++ , total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -283,6 +288,7 @@ public class MatrixMatrixMult_DDRM {
         //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#multTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -317,6 +323,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multTransB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -412,10 +419,11 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numRows != C.numRows || B.numCols != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int aIndexStart = 0;
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int cIndex = i*B.numCols;
+            int aIndexStart = i*A.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 double total = 0;
 
@@ -429,10 +437,11 @@ public class MatrixMatrixMult_DDRM {
 
                 C.plus( cIndex++ , total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#multAdd( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -463,6 +472,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multAddTransA( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -518,9 +528,10 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numCols != C.numRows || B.numCols != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 int indexA = i;
                 int indexB = j;
@@ -537,6 +548,7 @@ public class MatrixMatrixMult_DDRM {
                 C.plus( cIndex++ , total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -573,6 +585,7 @@ public class MatrixMatrixMult_DDRM {
         //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#multAddTransAB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -606,6 +619,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multAddTransB( org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -702,10 +716,11 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numRows,B.numCols);
 
-        int aIndexStart = 0;
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int cIndex = i*B.numCols;
+            int aIndexStart = i*A.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 double total = 0;
 
@@ -719,10 +734,11 @@ public class MatrixMatrixMult_DDRM {
 
                 C.set( cIndex++ , alpha*total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#mult(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -753,6 +769,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multTransA(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -809,9 +826,10 @@ public class MatrixMatrixMult_DDRM {
         }
         C.reshape(A.numCols,B.numCols);
 
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 int indexA = i;
                 int indexB = j;
@@ -828,6 +846,7 @@ public class MatrixMatrixMult_DDRM {
                 C.set( cIndex++ , alpha*total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -864,6 +883,7 @@ public class MatrixMatrixMult_DDRM {
         //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#multTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -898,6 +918,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multTransB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -993,10 +1014,11 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numRows != C.numRows || B.numCols != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int aIndexStart = 0;
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A.numRows; i++ ) {
+            int cIndex = i*B.numCols;
+            int aIndexStart = i*A.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 double total = 0;
 
@@ -1010,10 +1032,11 @@ public class MatrixMatrixMult_DDRM {
 
                 C.plus( cIndex++ , alpha*total );
             }
-            aIndexStart += A.numCols;
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#multAdd(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -1044,6 +1067,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multAddTransA(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
@@ -1099,9 +1123,10 @@ public class MatrixMatrixMult_DDRM {
         }
         if( A.numCols != C.numRows || B.numCols != C.numCols)
             throw new MatrixDimensionException("C is not compatible with A and B");
-        int cIndex = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for( int i = 0; i < A.numCols; i++ ) {
+            int cIndex = i*B.numCols;
             for( int j = 0; j < B.numCols; j++ ) {
                 int indexA = i;
                 int indexB = j;
@@ -1118,6 +1143,7 @@ public class MatrixMatrixMult_DDRM {
                 C.plus( cIndex++ , alpha*total );
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -1154,6 +1180,7 @@ public class MatrixMatrixMult_DDRM {
         //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * @see CommonOps_DDRM#multAddTransAB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
@@ -1187,6 +1214,7 @@ public class MatrixMatrixMult_DDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * @see CommonOps_DDRM#multAddTransB(double,  org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)

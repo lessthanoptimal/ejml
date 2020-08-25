@@ -72,6 +72,15 @@ public class BenchmarkCommonOps_MT_DDRM {
     }
 
     @Benchmark
+    public void multAdd() {
+        if( concurrent ) {
+            CommonOps_MT_DDRM.multAdd(A,B,C);
+        } else {
+            CommonOps_DDRM.multAdd(A,B,C);
+        }
+    }
+
+    @Benchmark
     public void mult_alpha() {
         if( concurrent ) {
             CommonOps_MT_DDRM.mult(2.1,A,B,C);
@@ -90,6 +99,15 @@ public class BenchmarkCommonOps_MT_DDRM {
     }
 
     @Benchmark
+    public void multAddTransA() {
+        if( concurrent ) {
+            CommonOps_MT_DDRM.multAddTransA(A,B,C);
+        } else {
+            CommonOps_DDRM.multAddTransA(A,B,C);
+        }
+    }
+
+    @Benchmark
     public void multTransAB() {
         if( concurrent ) {
             CommonOps_MT_DDRM.multTransAB(A,B,C);
@@ -99,11 +117,29 @@ public class BenchmarkCommonOps_MT_DDRM {
     }
 
     @Benchmark
+    public void multAddTransAB() {
+        if( concurrent ) {
+            CommonOps_MT_DDRM.multAddTransAB(A,B,C);
+        } else {
+            CommonOps_DDRM.multAddTransAB(A,B,C);
+        }
+    }
+
+    @Benchmark
     public void multTransB() {
         if( concurrent ) {
             CommonOps_MT_DDRM.multTransB(A,B,C);
         } else {
             CommonOps_DDRM.multTransB(A,B,C);
+        }
+    }
+
+    @Benchmark
+    public void multAddTransB() {
+        if( concurrent ) {
+            CommonOps_MT_DDRM.multAddTransB(A,B,C);
+        } else {
+            CommonOps_DDRM.multAddTransB(A,B,C);
         }
     }
 

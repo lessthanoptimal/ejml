@@ -280,11 +280,11 @@ public class EjmlConcurrency {
 		}
 	}
 
-	interface NewInstance<D> {
+	public interface NewInstance<D> {
 		D newInstance();
 	}
 
-	interface Reset<D> {
+	public interface Reset<D> {
 		void reset(D data);
 	}
 }
