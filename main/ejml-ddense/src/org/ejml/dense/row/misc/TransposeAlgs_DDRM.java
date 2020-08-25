@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,8 @@
 package org.ejml.dense.row.misc;
 
 import org.ejml.data.DMatrix1Row;
-
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+//CONCURRENT_INLINE import javax.annotation.Generated;
 
 /**
  * Low level transpose algorithms.  No sanity checks are performed.    Take a look at BenchmarkTranspose to
@@ -27,6 +28,7 @@ import org.ejml.data.DMatrix1Row;
  *
  * @author Peter Abeles
  */
+//CONCURRENT_INLINE @Generated("org.ejml.dense.row.misc.TransposeAlgs_DDRM")
 public class TransposeAlgs_DDRM {
 
     /**
@@ -39,8 +41,7 @@ public class TransposeAlgs_DDRM {
     {
         int index = 1;
         int indexEnd = mat.numCols;
-        for( int i = 0; i < mat.numRows;
-             i++ , index += i+1 , indexEnd += mat.numCols ) {
+        for( int i = 0; i < mat.numRows;i++ , index += i+1 , indexEnd += mat.numCols ) {
             int indexOther = (i+1)*mat.numCols + i;
             for( ; index < indexEnd; index++, indexOther += mat.numCols) {
                 double val = mat.data[ index ];
@@ -65,11 +66,14 @@ public class TransposeAlgs_DDRM {
     public static void block(DMatrix1Row A , DMatrix1Row A_tran ,
                              final int blockLength )
     {
-        for( int i = 0; i < A.numRows; i += blockLength ) {
-            int blockHeight = Math.min( blockLength , A.numRows - i);
+        //CONCURRENT_BELOW EjmlConcurrency.loopBlocks(0, A.numRows,blockLength, (idx0,idx1) -> {
+        for( int idx0 = 0; idx0 < A.numRows; idx0 += blockLength ) {
+            //CONCURRENT_REMOVE_BELOW
+            int idx1 = Math.min(A.numRows,idx0+blockLength);
+            int blockHeight = idx1-idx0;
 
-            int indexSrc = i*A.numCols;
-            int indexDst = i;
+            int indexSrc = idx0*A.numCols;
+            int indexDst = idx0;
 
             for( int j = 0; j < A.numCols; j += blockLength ) {
                 int blockWidth = Math.min( blockLength , A.numCols - j);
@@ -92,6 +96,7 @@ public class TransposeAlgs_DDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -102,8 +107,9 @@ public class TransposeAlgs_DDRM {
      */
     public static void standard(DMatrix1Row A, DMatrix1Row A_tran)
     {
-        int index = 0;
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for( int i = 0; i < A_tran.numRows; i++ ) {
+            int index = i* A_tran.numCols;
             int index2 = i;
 
             int end = index + A_tran.numCols;
@@ -112,5 +118,6 @@ public class TransposeAlgs_DDRM {
                 index2 += A.numCols;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 }

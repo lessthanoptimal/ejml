@@ -140,24 +140,26 @@ public class AutocodeConcurrentApp {
 	 */
 	private static void createTestIfNotThere( File file ) {
 		String fileName = "Test"+file.getName();
-		List<String> packagePath = new ArrayList<>();
-		while( true ) {
-			String parent = file.getParentFile().getName();
-			if( parent == null ) {
-				throw new IllegalArgumentException("Problem! Can't find 'src/main' directory");
-			} else if( parent.equals("main") ) {
-				file = file.getParentFile();
-				break;
-			} else {
-				packagePath.add(parent);
-				file = file.getParentFile();
-			}
-		}
-		file = new File(file.getParent(),"test/java");
-		for (int i = packagePath.size()-2; i >= 0; i--) {
-			file = new File(file,packagePath.get(i));
-		}
-		file = new File(file,fileName);
+		String parent = file.getParent().replaceAll("src","test");
+
+//		List<String> packagePath = new ArrayList<>();
+//		while( true ) {
+//			String parent = file.getParentFile().getName();
+//			if( parent == null ) {
+//				throw new IllegalArgumentException("Problem! Can't find 'src/main' directory");
+//			} else if( parent.equals("main") ) {
+//				file = file.getParentFile();
+//				break;
+//			} else {
+//				packagePath.add(parent);
+//				file = file.getParentFile();
+//			}
+//		}
+//		file = new File(file.getParent(),"test/java");
+//		for (int i = packagePath.size()-2; i >= 0; i--) {
+//			file = new File(file,packagePath.get(i));
+//		}
+		file = new File(parent,fileName);
 		if( file.exists() ) {
 			return;
 		}
@@ -198,10 +200,11 @@ public class AutocodeConcurrentApp {
 	private static String derivePackagePath( File file ) {
 		List<String> packagePath = new ArrayList<>();
 		while( true ) {
-			String parent = file.getParentFile().getName();
-			if( parent == null ) {
+			if( file.getParentFile() == null )
 				throw new IllegalArgumentException("Problem! Can't find java directory");
-			} else if( parent.equals("java") ) {
+
+			String parent = file.getParentFile().getName();
+			if( parent.equals("test") || parent.equals("src") || parent.equals("java") ) {
 				break;
 			} else {
 				packagePath.add(parent);
@@ -316,6 +319,7 @@ public class AutocodeConcurrentApp {
 	public static void main(String[] args) throws IOException {
 		String[] directories = new String[]{
 				"main/ejml-ddense/src/org/ejml/dense/row/mult",
+				"main/ejml-ddense/src/org/ejml/dense/row/misc",
 		};
 
 		String[] files = new String[]{

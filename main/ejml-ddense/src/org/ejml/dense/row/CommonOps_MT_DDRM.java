@@ -18,8 +18,11 @@
 
 package org.ejml.dense.row;
 
+import org.ejml.EjmlParameters;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix1Row;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.misc.TransposeAlgs_MT_DDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_MT_DDRM;
 import org.jetbrains.annotations.Nullable;
 
@@ -357,5 +360,51 @@ public class CommonOps_MT_DDRM {
     public static void multAddTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
     {
         MatrixMatrixMult_MT_DDRM.multAddTransAB(alpha, a, b, c);
+    }
+
+    /**
+     * <p>Performs an "in-place" transpose.</p>
+     *
+     * <p>
+     * For square matrices the transpose is truly in-place and does not require
+     * additional memory.  For non-square matrices, internally a temporary matrix is declared and
+     * {@link #transpose(DMatrixRMaj, DMatrixRMaj)} is invoked.
+     * </p>
+     *
+     * @param mat The matrix that is to be transposed. Modified.
+     */
+    public static void transpose( DMatrixRMaj mat ) {
+        if( mat.numCols == mat.numRows ){
+            TransposeAlgs_MT_DDRM.square(mat);
+        } else {
+            DMatrixRMaj b = new DMatrixRMaj(mat.numCols,mat.numRows);
+            transpose(mat,b);
+            mat.set(b);
+        }
+    }
+
+    /**
+     * <p>
+     * Transposes matrix 'a' and stores the results in 'b':<br>
+     * <br>
+     * b<sub>ij</sub> = a<sub>ji</sub><br>
+     * where 'b' is the transpose of 'a'.
+     * </p>
+     *
+     * @param A The original matrix.  Not modified.
+     * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
+     * @return The transposed matrix.
+     */
+    public static DMatrixRMaj transpose(DMatrixRMaj A, @Nullable DMatrixRMaj A_tran)
+    {
+        A_tran = reshapeOrDeclare(A_tran, A.numCols, A.numRows);
+
+        if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH &&
+                A.numCols > EjmlParameters.TRANSPOSE_SWITCH )
+            TransposeAlgs_MT_DDRM.block(A,A_tran,EjmlParameters.BLOCK_WIDTH);
+        else
+            TransposeAlgs_MT_DDRM.standard(A,A_tran);
+
+        return A_tran;
     }
 }

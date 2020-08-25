@@ -135,11 +135,20 @@ public class BenchmarkCommonOps_MT_DDRM {
     }
 
     @Benchmark
-    public void multAddTransB() {
+    public void transpose_inplace() {
         if( concurrent ) {
-            CommonOps_MT_DDRM.multAddTransB(A,B,C);
+            CommonOps_MT_DDRM.transpose(A);
         } else {
-            CommonOps_DDRM.multAddTransB(A,B,C);
+            CommonOps_DDRM.transpose(A);
+        }
+    }
+
+    @Benchmark
+    public void transpose() {
+        if( concurrent ) {
+            CommonOps_MT_DDRM.transpose(A,B);
+        } else {
+            CommonOps_DDRM.transpose(A,B);
         }
     }
 
