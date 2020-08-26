@@ -320,6 +320,7 @@ public class AutocodeConcurrentApp {
 		String[] directories = new String[]{
 				"main/ejml-ddense/src/org/ejml/dense/row/mult",
 				"main/ejml-ddense/src/org/ejml/dense/row/misc",
+				"main/ejml-ddense/src/org/ejml/dense/block/",
 		};
 
 		String[] files = new String[]{

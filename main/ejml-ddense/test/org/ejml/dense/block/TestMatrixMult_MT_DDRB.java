@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.mult;
+package org.ejml.dense.block;
 
-import org.ejml.CheckMultiThreadAgainstSingleThread;
+import org.junit.jupiter.api.Test;
 
-/**
- * @author Peter Abeles
- */
-public class TestMatrixMatrixMult_MT_DDRM extends CheckMultiThreadAgainstSingleThread
-{
-    public TestMatrixMatrixMult_MT_DDRM() {
-        super(MatrixMatrixMult_DDRM.class, MatrixMatrixMult_MT_DDRM.class, 24);
-    }
+import static org.junit.jupiter.api.Assertions.fail;
+
+class TestMatrixMult_MT_DDRB {
+	@Test
+	void implement() {
+		fail("implement");
+	}
 }
+

@@ -18,14 +18,11 @@
 
 package org.ejml.dense.row.misc;
 
-import org.junit.jupiter.api.Test;
+import org.ejml.CheckMultiThreadAgainstSingleThread;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-class TestTransposeAlgs_MT_DDRM {
-	@Test
-	void implement() {
-		fail("implement");
+class TestTransposeAlgs_MT_DDRM extends CheckMultiThreadAgainstSingleThread {
+	public TestTransposeAlgs_MT_DDRM() {
+		super(TransposeAlgs_DDRM.class, TransposeAlgs_MT_DDRM.class, 3);
 	}
 }
 

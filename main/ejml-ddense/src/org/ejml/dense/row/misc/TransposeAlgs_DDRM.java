@@ -35,20 +35,23 @@ public class TransposeAlgs_DDRM {
      * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
      * algorithm, but on most modern computers it's slower than block transpose.
      *
-     * @param mat The matrix that is transposed in-place.  Modified.
+     * @param A The matrix that is transposed in-place.  Modified.
      */
-    public static void square( DMatrix1Row mat )
+    public static void square( DMatrix1Row A )
     {
-        int index = 1;
-        int indexEnd = mat.numCols;
-        for( int i = 0; i < mat.numRows;i++ , index += i+1 , indexEnd += mat.numCols ) {
-            int indexOther = (i+1)*mat.numCols + i;
-            for( ; index < indexEnd; index++, indexOther += mat.numCols) {
-                double val = mat.data[ index ];
-                mat.data[ index ] = mat.data[ indexOther ];
-                mat.data[indexOther] = val;
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        for( int i = 0; i < A.numRows; i++) {
+            int index = i*A.numCols+i+1;
+            int indexEnd = (i+1)*A.numCols;
+
+            int indexOther = (i+1)*A.numCols + i;
+            for( ; index < indexEnd; index++, indexOther += A.numCols) {
+                double val = A.data[ index ];
+                A.data[ index ] = A.data[ indexOther ];
+                A.data[indexOther] = val;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -107,7 +110,7 @@ public class TransposeAlgs_DDRM {
      */
     public static void standard(DMatrix1Row A, DMatrix1Row A_tran)
     {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A_tran.numRows, i -> {
         for( int i = 0; i < A_tran.numRows; i++ ) {
             int index = i* A_tran.numCols;
             int index2 = i;

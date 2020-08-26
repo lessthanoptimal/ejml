@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,15 +22,19 @@ import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 
 import static org.ejml.dense.block.InnerMultiplication_DDRB.*;
+import static org.ejml.dense.block.MatrixOps_DDRB.checkShapeMult;
+
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+//CONCURRENT_INLINE import javax.annotation.Generated;
 
 /**
  * <p>
- * Matrix multiplication for {@link DMatrixRBlock}.  All sub-matrices must be
- * block aligned.
+ * Matrix multiplication for {@link DMatrixRBlock}.  All sub-matrices must be block aligned.
  * </p>
  * 
  * @author Peter Abeles
  */
+//CONCURRENT_INLINE @Generated("org.ejml.dense.block.MatrixMult_DDRB")
 public class MatrixMult_DDRB {
 
     /**
@@ -54,6 +58,9 @@ public class MatrixMult_DDRB {
                             DSubmatrixD1 A , DSubmatrixD1 B ,
                             DSubmatrixD1 C )
     {
+        checkShapeMult( blockLength,A,B,C);
+
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );
 
@@ -77,6 +84,7 @@ public class MatrixMult_DDRB {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -100,8 +108,9 @@ public class MatrixMult_DDRB {
                                 DSubmatrixD1 A , DSubmatrixD1 B ,
                                 DSubmatrixD1 C )
     {
-//        checkInput( blockLength,A,B,C);
+        checkShapeMult( blockLength,A,B,C);
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );
 
@@ -121,6 +130,7 @@ public class MatrixMult_DDRB {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -144,8 +154,9 @@ public class MatrixMult_DDRB {
                                  DSubmatrixD1 A , DSubmatrixD1 B ,
                                  DSubmatrixD1 C )
     {
-        checkInput( blockLength,A,B,C);
+        checkShapeMult( blockLength,A,B,C);
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );
 
@@ -165,31 +176,7 @@ public class MatrixMult_DDRB {
                 }
             }
         }
-    }
-
-    private static void checkInput(int blockLength ,
-                                   DSubmatrixD1 A , DSubmatrixD1 B ,
-                                   DSubmatrixD1 C )
-    {
-        int Arow = A.getRows();int Acol = A.getCols();
-        int Brow = B.getRows();int Bcol = B.getCols();
-        int Crow = C.getRows();int Ccol = C.getCols();
-
-        if( Arow != Crow )
-            throw new RuntimeException("Mismatch A and C rows");
-        if( Bcol != Ccol )
-            throw new RuntimeException("Mismatch B and C columns");
-        if( Acol != Brow )
-            throw new RuntimeException("Mismatch A columns and B rows");
-
-        if( !MatrixOps_DDRB.blockAligned(blockLength,A))
-            throw new RuntimeException("Sub-Matrix A is not block aligned");
-
-        if( !MatrixOps_DDRB.blockAligned(blockLength,B))
-            throw new RuntimeException("Sub-Matrix B is not block aligned");
-
-        if( !MatrixOps_DDRB.blockAligned(blockLength,C))
-            throw new RuntimeException("Sub-Matrix C is not block aligned");
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -213,6 +200,7 @@ public class MatrixMult_DDRB {
                                   DSubmatrixD1 A , DSubmatrixD1 B ,
                                   DSubmatrixD1 C )
     {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.col0,A.col1,blockLength,i->{
         for( int i = A.col0; i < A.col1; i += blockLength ) {
             int widthA = Math.min( blockLength , A.col1 - i );
 
@@ -236,12 +224,14 @@ public class MatrixMult_DDRB {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multPlusTransA(int blockLength ,
                                       DSubmatrixD1 A , DSubmatrixD1 B ,
                                       DSubmatrixD1 C )
     {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.col0,A.col1,blockLength,i->{
         for( int i = A.col0; i < A.col1; i += blockLength ) {
             int widthA = Math.min( blockLength , A.col1 - i );
 
@@ -261,12 +251,14 @@ public class MatrixMult_DDRB {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multMinusTransA(int blockLength ,
                                        DSubmatrixD1 A , DSubmatrixD1 B ,
                                        DSubmatrixD1 C )
     {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.col0,A.col1,blockLength,i->{
         for( int i = A.col0; i < A.col1; i += blockLength ) {
             int widthA = Math.min( blockLength , A.col1 - i );
 
@@ -287,6 +279,7 @@ public class MatrixMult_DDRB {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -310,6 +303,7 @@ public class MatrixMult_DDRB {
                                   DSubmatrixD1 A , DSubmatrixD1 B ,
                                   DSubmatrixD1 C )
     {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
         for( int i = A.row0; i < A.row1; i += blockLength ) {
             int heightA = Math.min( blockLength , A.row1 - i );
 
@@ -333,6 +327,6 @@ public class MatrixMult_DDRB {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
-
 }
