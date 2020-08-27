@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings({"UnusedMethod"})
 public class TestMatrixMatrixMultWithSemiRing_DSCC {
     DMatrixSparseCSC inputMatrix;
 
