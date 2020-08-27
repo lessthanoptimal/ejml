@@ -18,10 +18,13 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.FMatrixRMaj;
+import org.ejml.data.Matrix;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.MatrixFeatures_FDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.RandomMatrices_FDRM;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -85,7 +88,7 @@ public abstract class CheckMultiThreadAgainstSingleThread {
             return false;
 
         for( Class p : params ) {
-            if( DMatrix.class.isAssignableFrom(p) )
+            if( Matrix.class.isAssignableFrom(p) )
                 return true;
         }
         return false;
@@ -111,8 +114,8 @@ public abstract class CheckMultiThreadAgainstSingleThread {
             return false;
 
         for (int i = 0; i < typesFixed.length; i++) {
-            if( DMatrix.class.isAssignableFrom(typesFixed[i]) ) {
-                if( !DMatrix.class.isAssignableFrom(typesCommon[i]) ) {
+            if( Matrix.class.isAssignableFrom(typesFixed[i]) ) {
+                if( !Matrix.class.isAssignableFrom(typesCommon[i]) ) {
                     return false;
                 }
             }
@@ -124,12 +127,12 @@ public abstract class CheckMultiThreadAgainstSingleThread {
         if( returnFixed == returnCommon )
             return true;
 
-        if( DMatrix.class.isAssignableFrom(returnFixed) &&
-                DMatrix.class.isAssignableFrom(returnCommon) )
+        if( Matrix.class.isAssignableFrom(returnFixed) &&
+                Matrix.class.isAssignableFrom(returnCommon) )
             return true;
 
         // some "common" functions return the output as a convenience. Assume this to be the case
-        if( returnFixed.getSimpleName().equals("void") && DMatrix.class.isAssignableFrom(returnCommon))
+        if( returnFixed.getSimpleName().equals("void") && Matrix.class.isAssignableFrom(returnCommon))
             return true;
 
         return false;
@@ -148,7 +151,7 @@ public abstract class CheckMultiThreadAgainstSingleThread {
 
                 // If "common" returns the output matrix don't require the "fixed" implement to also
                 boolean ignoreReturn = retThread == null
-                        && retSingle != null && DMatrix.class.isAssignableFrom(retSingle.getClass());
+                        && retSingle != null && Matrix.class.isAssignableFrom(retSingle.getClass());
 
                 if( !ignoreReturn && !checkEquivalent(retThread,retSingle) )
                     return false;
@@ -172,11 +175,19 @@ public abstract class CheckMultiThreadAgainstSingleThread {
 
     private void declareParamStandard(Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle) {
         for( int i = 0; i < typesThreaded.length; i++ ) {
-            if(typesThreaded[i].isAssignableFrom(DMatrixRMaj.class)) {
+            if(typesThreaded[i].isAssignableFrom(FMatrixRMaj.class)) {
+                FMatrixRMaj m = new FMatrixRMaj(size, size);
+                RandomMatrices_FDRM.fillUniform(m, -1, 1, rand);
+                inputsThreaded[i] = m.copy();
+                inputsSingle[i] = m;
+            } else if(typesThreaded[i].isAssignableFrom(DMatrixRMaj.class)) {
                 DMatrixRMaj m = new DMatrixRMaj(size,size);
                 RandomMatrices_DDRM.fillUniform(m,-1,1,rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
+            } else if( float.class == typesThreaded[i] ) {
+                inputsThreaded[i] = 2.5f;
+                inputsSingle[i] = 2.5f;
             } else if( double.class == typesThreaded[i] ) {
                 inputsThreaded[i] = 2.5;
                 inputsSingle[i] = 2.5;
@@ -195,11 +206,19 @@ public abstract class CheckMultiThreadAgainstSingleThread {
             double valB = ((Double)b).doubleValue();
 
             return Math.abs(valA-valB) < UtilEjml.TEST_F64;
+        } else if( Float.class == a.getClass() ) {
+            double valA = ((Float)a).floatValue();
+            double valB = ((Float)b).floatValue();
+
+            return Math.abs(valA-valB) < UtilEjml.TEST_F32;
+        } else if(FMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+            FMatrixRMaj bb = (FMatrixRMaj)b;
+            FMatrixRMaj aa = (FMatrixRMaj)a;
+            return MatrixFeatures_FDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
         } else if(DMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
             DMatrixRMaj bb = (DMatrixRMaj)b;
             DMatrixRMaj aa = (DMatrixRMaj)a;
             return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
-
         } else if( Boolean.class == a.getClass() ) {
             return true;
         } else if( Integer.class == a.getClass() ) {

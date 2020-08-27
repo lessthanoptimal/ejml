@@ -40,6 +40,8 @@ public class DGrowArray {
         return length;
     }
 
+    public void reset() { reshape(0); }
+
     /**
      * Changes the array's length and doesn't attempt to preserve previous values if a new array is required
      *

@@ -74,7 +74,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @return The extracted T matrix.
      */
     public DMatrixRMaj getT(@Nullable DMatrixRMaj T) {
-        T = UtilDecompositons_DDRM.checkZeros(T,N,N);
+        T = UtilDecompositons_DDRM.ensureZeros(T,N,N);
 
         T.data[0] = QT.data[0];
         T.data[1] = QT.data[1];
@@ -99,7 +99,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @return The extracted Q matrix.
      */
     public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q ) {
-        Q = UtilDecompositons_DDRM.checkIdentity(Q,N,N);
+        Q = UtilDecompositons_DDRM.ensureIdentity(Q,N,N);
 
         for( int i = 0; i < N; i++ ) w[i] = 0;
 

@@ -48,23 +48,27 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 @SuppressWarnings("NullAway.Init")
 public class LinearSolverQrHouseCol_DDRM extends LinearSolverAbstract_DDRM {
 
-    private final QRDecompositionHouseholderColumn_DDRM decomposer;
+    protected final QRDecompositionHouseholderColumn_DDRM decomposer;
 
-    private final DMatrixRMaj a = new DMatrixRMaj(1,1);
-    private final DMatrixRMaj temp = new DMatrixRMaj(1,1);
+    protected final DMatrixRMaj a = new DMatrixRMaj(1,1);
+    protected final DMatrixRMaj temp = new DMatrixRMaj(1,1);
 
     protected int maxRows = -1;
     protected int maxCols = -1;
 
-    private double[][] QR; // a column major QR matrix
-    private final DMatrixRMaj R = new DMatrixRMaj(1,1);
-    private double[] gammas;
+    protected double[][] QR; // a column major QR matrix
+    protected final DMatrixRMaj R = new DMatrixRMaj(1,1);
+    protected double[] gammas;
 
     /**
      * Creates a linear solver that uses QR decomposition.
      */
     public LinearSolverQrHouseCol_DDRM() {
-        decomposer = new QRDecompositionHouseholderColumn_DDRM();
+        this(new QRDecompositionHouseholderColumn_DDRM());
+    }
+
+    protected LinearSolverQrHouseCol_DDRM(QRDecompositionHouseholderColumn_DDRM decomposer) {
+        this.decomposer = decomposer;
     }
 
     public void setMaxSize( int maxRows , int maxCols )

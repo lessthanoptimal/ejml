@@ -90,6 +90,8 @@ public class EjmlConcurrency {
 	 * @param consumer The consumer
 	 */
 	public static void loopFor(int start , int endExclusive , int step , IntConsumer consumer ) {
+		if( step <= 0 )
+			throw new IllegalArgumentException("Step must be a positive number.");
 		try {
 			int range = endExclusive-start;
 			pool.submit(() ->IntStream.range(0, range/step).parallel().forEach(i-> consumer.accept(start+i*step))).get();

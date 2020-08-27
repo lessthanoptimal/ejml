@@ -23,8 +23,8 @@ import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
+import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,14 +46,10 @@ public class QRDecomposition_DDRB_to_DDRM
     public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q, boolean compact) {
 
         int minLength = Math.min(Ablock.numRows,Ablock.numCols);
-        if( Q == null  ) {
-            if( compact ) {
-                Q = new DMatrixRMaj(Ablock.numRows,minLength);
-                CommonOps_DDRM.setIdentity(Q);
-            } else {
-                Q = new DMatrixRMaj(Ablock.numRows,Ablock.numRows);
-                CommonOps_DDRM.setIdentity(Q);
-            }
+        if( compact ) {
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,Ablock.numRows,minLength);
+        } else {
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,Ablock.numRows,Ablock.numRows);
         }
 
         DMatrixRBlock Qblock = new DMatrixRBlock();

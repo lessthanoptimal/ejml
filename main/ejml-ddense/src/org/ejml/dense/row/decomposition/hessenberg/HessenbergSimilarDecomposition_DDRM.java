@@ -123,7 +123,7 @@ public class HessenbergSimilarDecomposition_DDRM
      * @return The extracted H matrix.
      */
     public DMatrixRMaj getH(@Nullable DMatrixRMaj H ) {
-        H = UtilDecompositons_DDRM.checkZeros(H,N,N);
+        H = UtilDecompositons_DDRM.ensureZeros(H,N,N);
 
         // copy the first row
         System.arraycopy(QH.data, 0, H.data, 0, N);
@@ -144,7 +144,7 @@ public class HessenbergSimilarDecomposition_DDRM
      * @return The extracted Q matrix.
      */
     public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q ) {
-        Q = UtilDecompositons_DDRM.checkIdentity(Q,N,N);
+        Q = UtilDecompositons_DDRM.ensureIdentity(Q,N,N);
 
         for( int j = N-2; j >= 0; j-- ) {
             u[j+1] = 1;

@@ -100,9 +100,9 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
     @Override
     public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
         if( compact ) {
-            Q = UtilDecompositons_DDRM.checkIdentity(Q,numRows,minLength);
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,minLength);
         } else {
-            Q = UtilDecompositons_DDRM.checkIdentity(Q,numRows,numRows);
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,numRows);
         }
 
         for( int j = minLength-1; j >= 0; j-- ) {

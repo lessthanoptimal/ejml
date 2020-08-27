@@ -108,7 +108,7 @@ public class MatrixMult_DDRB {
                                 DSubmatrixD1 A , DSubmatrixD1 B ,
                                 DSubmatrixD1 C )
     {
-        checkShapeMult( blockLength,A,B,C);
+//        checkShapeMult( blockLength,A,B,C);
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
         for( int i = A.row0; i < A.row1; i += blockLength ) {
@@ -154,7 +154,7 @@ public class MatrixMult_DDRB {
                                  DSubmatrixD1 A , DSubmatrixD1 B ,
                                  DSubmatrixD1 C )
     {
-        checkShapeMult( blockLength,A,B,C);
+//        checkShapeMult( blockLength,A,B,C);
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
         for( int i = A.row0; i < A.row1; i += blockLength ) {

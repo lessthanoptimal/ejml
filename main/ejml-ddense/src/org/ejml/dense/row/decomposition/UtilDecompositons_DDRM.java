@@ -29,23 +29,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public class UtilDecompositons_DDRM {
 
-    public static DMatrixRMaj checkIdentity(@Nullable DMatrixRMaj A, int numRows, int numCols) {
+    public static DMatrixRMaj ensureIdentity(@Nullable DMatrixRMaj A, int numRows, int numCols) {
         if( A == null ) {
             return CommonOps_DDRM.identity(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
-        else
-            CommonOps_DDRM.setIdentity(A);
+        }
+        A.reshape(numRows, numCols);
+        CommonOps_DDRM.setIdentity(A);
         return A;
     }
 
-    public static DMatrixRMaj checkZeros(@Nullable DMatrixRMaj A , int numRows , int numCols) {
+    public static DMatrixRMaj ensureZeros(@Nullable DMatrixRMaj A , int numRows , int numCols) {
         if( A == null ) {
             return new DMatrixRMaj(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
-        else
-            A.zero();
+        }
+        A.reshape(numRows, numCols);
+        A.zero();
         return A;
     }
 

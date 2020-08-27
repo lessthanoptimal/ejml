@@ -21,6 +21,7 @@ package org.ejml.dense.row.decomposition.qr;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,25 +100,9 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     @Override
     public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
         if( compact ) {
-            if( Q == null ) {
-                Q = CommonOps_DDRM.identity(numRows,minLength);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != minLength ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps_DDRM.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,minLength);
         } else {
-            if( Q == null ) {
-                Q = CommonOps_DDRM.identity(numRows);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != numRows ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps_DDRM.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,numRows);
         }
 
         for( int j = rank-1; j >= 0; j-- ) {

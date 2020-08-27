@@ -20,6 +20,7 @@ package org.ejml.dense.row.decomposition.qr;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,25 +102,9 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
     @Override
     public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
         if( compact ) {
-            if( Q == null ) {
-                Q = CommonOps_DDRM.identity(numRows,minLength);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != minLength ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps_DDRM.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,minLength);
         } else {
-            if( Q == null ) {
-                Q = CommonOps_DDRM.identity(numRows);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != numRows ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps_DDRM.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,numRows);
         }
 
         // Unlike applyQ() this takes advantage of zeros in the identity matrix
@@ -175,24 +160,10 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
      */
     @Override
     public DMatrixRMaj getR(@Nullable DMatrixRMaj R, boolean compact) {
-        if( R == null ) {
-            if( compact ) {
-                R = new DMatrixRMaj(minLength,numCols);
-            } else
-                R = new DMatrixRMaj(numRows,numCols);
+        if( compact ) {
+            R = UtilDecompositons_DDRM.checkZerosLT(R,minLength,numCols);
         } else {
-            if( compact ) {
-                R.reshape(minLength,numCols);
-            } else {
-                R.reshape(numRows,numCols);
-            }
-
-            for( int i = 0; i < R.numRows; i++ ) {
-                int min = Math.min(i,R.numCols);
-                for( int j = 0; j < min; j++ ) {
-                    R.unsafe_set(i,j,0);
-                }
-            }
+            R = UtilDecompositons_DDRM.checkZerosLT(R,numRows,numCols);
         }
 
         for( int i = 0; i < R.numRows; i++ ) {
