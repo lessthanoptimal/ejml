@@ -18,9 +18,7 @@
 
 package org.ejml;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.FMatrixRMaj;
-import org.ejml.data.Matrix;
+import org.ejml.data.*;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.MatrixFeatures_FDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -41,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * @author Peter Abeles
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class CheckMultiThreadAgainstSingleThread {
     protected Random rand = new Random(3245);
     protected int size = 200;
@@ -49,7 +48,7 @@ public abstract class CheckMultiThreadAgainstSingleThread {
     Class singleClass;
     Class threadedClass;
 
-    public CheckMultiThreadAgainstSingleThread(Class singleClass, Class threadedClass, int expectedFunctions) {
+    protected CheckMultiThreadAgainstSingleThread(Class singleClass, Class threadedClass, int expectedFunctions) {
         this.singleClass = singleClass;
         this.threadedClass = threadedClass;
         this.expectedFunctions = expectedFunctions;
@@ -88,7 +87,7 @@ public abstract class CheckMultiThreadAgainstSingleThread {
             return false;
 
         for( Class p : params ) {
-            if( Matrix.class.isAssignableFrom(p) )
+            if( Matrix.class.isAssignableFrom(p) || Submatrix.class.isAssignableFrom(p) )
                 return true;
         }
         return false;
@@ -114,28 +113,18 @@ public abstract class CheckMultiThreadAgainstSingleThread {
             return false;
 
         for (int i = 0; i < typesFixed.length; i++) {
-            if( Matrix.class.isAssignableFrom(typesFixed[i]) ) {
-                if( !Matrix.class.isAssignableFrom(typesCommon[i]) ) {
-                    return false;
-                }
+            if( Matrix.class.isAssignableFrom(typesFixed[i]) != Matrix.class.isAssignableFrom(typesCommon[i])) {
+                return false;
+            }
+            if( Submatrix.class.isAssignableFrom(typesFixed[i]) != Submatrix.class.isAssignableFrom(typesCommon[i])) {
+                return false;
             }
         }
 
         Class returnFixed = fixed.getReturnType();
         Class returnCommon = common.getReturnType();
 
-        if( returnFixed == returnCommon )
-            return true;
-
-        if( Matrix.class.isAssignableFrom(returnFixed) &&
-                Matrix.class.isAssignableFrom(returnCommon) )
-            return true;
-
-        // some "common" functions return the output as a convenience. Assume this to be the case
-        if( returnFixed.getSimpleName().equals("void") && Matrix.class.isAssignableFrom(returnCommon))
-            return true;
-
-        return false;
+        return returnFixed == returnCommon;
     }
 
     private boolean compareBothMethods(Method threaded , Method single ) {
@@ -173,7 +162,15 @@ public abstract class CheckMultiThreadAgainstSingleThread {
         return true;
     }
 
-    private void declareParamStandard(Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle) {
+    protected Submatrix createSubmatrix( long seed ) {
+        throw new RuntimeException("Must override this function if submatrices are involved");
+    }
+
+    protected void compareSubmatrices( Submatrix subA , Submatrix subB ) {
+        throw new RuntimeException("Must override this function if submatrices are involved");
+    }
+
+    protected void declareParamStandard(Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle) {
         for( int i = 0; i < typesThreaded.length; i++ ) {
             if(typesThreaded[i].isAssignableFrom(FMatrixRMaj.class)) {
                 FMatrixRMaj m = new FMatrixRMaj(size, size);
@@ -185,6 +182,10 @@ public abstract class CheckMultiThreadAgainstSingleThread {
                 RandomMatrices_DDRM.fillUniform(m,-1,1,rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
+            } else if(Submatrix.class.isAssignableFrom(typesThreaded[i])) {
+                long seed = rand.nextLong();
+                inputsThreaded[i] = createSubmatrix(seed);
+                inputsSingle[i] = createSubmatrix(seed);
             } else if( float.class == typesThreaded[i] ) {
                 inputsThreaded[i] = 2.5f;
                 inputsSingle[i] = 2.5f;
@@ -198,7 +199,7 @@ public abstract class CheckMultiThreadAgainstSingleThread {
         }
     }
 
-    private boolean checkEquivalent( Object a , Object b ) {
+    protected boolean checkEquivalent( Object a , Object b ) {
         if( a == null ) {
             return b == null;
         } else if( Double.class == a.getClass() ) {
@@ -211,6 +212,8 @@ public abstract class CheckMultiThreadAgainstSingleThread {
             double valB = ((Float)b).floatValue();
 
             return Math.abs(valA-valB) < UtilEjml.TEST_F32;
+        } else if(Submatrix.class.isAssignableFrom(a.getClass()) ) {
+            compareSubmatrices((Submatrix)a,(Submatrix)b);
         } else if(FMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
             FMatrixRMaj bb = (FMatrixRMaj)b;
             FMatrixRMaj aa = (FMatrixRMaj)a;
@@ -218,6 +221,14 @@ public abstract class CheckMultiThreadAgainstSingleThread {
         } else if(DMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
             DMatrixRMaj bb = (DMatrixRMaj)b;
             DMatrixRMaj aa = (DMatrixRMaj)a;
+            return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
+        } else if(FMatrixRBlock.class.isAssignableFrom(a.getClass()) ) {
+            FMatrixRBlock bb = (FMatrixRBlock)b;
+            FMatrixRBlock aa = (FMatrixRBlock)a;
+            return MatrixFeatures_FDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
+        } else if(DMatrixRBlock.class.isAssignableFrom(a.getClass()) ) {
+            DMatrixRBlock bb = (DMatrixRBlock)b;
+            DMatrixRBlock aa = (DMatrixRBlock)a;
             return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
         } else if( Boolean.class == a.getClass() ) {
             return true;

@@ -108,10 +108,7 @@ public class QRDecompositionHouseholderColumn_DDRM implements QRDecomposition<DM
         for( int j = minLength-1; j >= 0; j-- ) {
             double[] u = dataQR[j];
 
-            double vv = u[j];
-            u[j] = 1;
-            QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u, gammas[j], j, j, numRows, v);
-            u[j] = vv;
+            QrHelperFunctions_DDRM.rank1UpdateMultR_u0(Q, u, 1.0, gammas[j], j, j, numRows, v);
         }
 
         return Q;

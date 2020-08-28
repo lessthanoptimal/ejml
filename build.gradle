@@ -108,8 +108,8 @@ subprojects {
         annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
         annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
 
-        errorprone "com.google.errorprone:error_prone_core:2.4.0"
-        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+        errorprone "com.google.errorprone:error_prone_core:2.4.0"   // adds benchmark/generated to sourceSet
+        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1" // annoying...
 
         benchmarkImplementation project.sourceSets.main.runtimeClasspath
         benchmarkImplementation project.sourceSets.main.compileClasspath

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,12 +40,8 @@ public class TriangularSolver_DDRM {
      * <p>
      * Inverts a square lower triangular matrix:  L = L<sup>-1</sup>
      * </p>
-     *
-     *
-     * @param L
-     * @param m
      */
-    public static void invertLower( double L[] , int m ) {
+    public static void invertLower(double[] L, int m ) {
         for( int i = 0; i < m; i++ ) {
             double L_ii = L[ i*m + i ];
             for( int j = 0; j < i; j++ ) {
@@ -59,7 +55,7 @@ public class TriangularSolver_DDRM {
         }
     }
 
-    public static void invertLower( double L[] , double L_inv[] , int m ) {
+    public static void invertLower(double[] L, double[] L_inv, int m ) {
         for( int i = 0; i < m; i++ ) {
             double L_ii = L[ i*m + i ];
             for( int j = 0; j < i; j++ ) {
@@ -86,7 +82,7 @@ public class TriangularSolver_DDRM {
      * @param b A vector of length n. Modified.
      * @param n The size of the matrices.
      */
-    public static void solveL( double L[] , double []b , int n )
+    public static void solveL(double[] L, double []b , int n )
     {
 //        for( int i = 0; i < n; i++ ) {
 //            double sum = b[i];
@@ -109,13 +105,8 @@ public class TriangularSolver_DDRM {
      *
      * L is a m by m matrix
      * B is a m by n matrix
-     *
-     * @param L
-     * @param b
-     * @param m
-     * @param n
      */
-    public static void solveL( double L[] , double []b , int m , int n )
+    public static void solveL(double[] L, double []b , int m , int n )
     {
         for( int j = 0; j < n; j++ ) {
             for( int i = 0; i < m; i++ ) {
@@ -145,7 +136,7 @@ public class TriangularSolver_DDRM {
      * @param b A vector of length n. Modified.
      * @param n The size of the matrices.
      */
-    public static void solveTranL( double L[] , double []b , int n )
+    public static void solveTranL(double[] L, double []b , int n )
     {
         for( int i =n-1; i>=0; i-- ) {
             double sum = b[i];
@@ -169,7 +160,7 @@ public class TriangularSolver_DDRM {
      * @param b A vector of length n. Modified.
      * @param n The size of the matrices.
      */
-    public static void solveU( double U[] , double []b , int n )
+    public static void solveU(double[] U, double []b , int n )
     {
 //        for( int i =n-1; i>=0; i-- ) {
 //            double sum = b[i];
@@ -188,7 +179,7 @@ public class TriangularSolver_DDRM {
         }
     }
 
-    public static void solveU( double U[] , double []b , int sideLength , int minRow , int maxRow )
+    public static void solveU(double[] U, double []b , int sideLength , int minRow , int maxRow )
     {
 //        for( int i =maxRow-1; i>=minRow; i-- ) {
 //            double sum = b[i];

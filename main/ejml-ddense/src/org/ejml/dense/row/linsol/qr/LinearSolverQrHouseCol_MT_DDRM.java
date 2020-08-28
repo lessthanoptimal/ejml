@@ -62,8 +62,8 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
 
         // solve each column one by one
         EjmlConcurrency.loopBlocks(0,BnumCols,workArrays,(work,idx0,idx1)->{
-            work.a.reshape(this.a.numRows,1);
-            work.tmp.reshape(this.a.numRows);
+            work.a.reshape(numRows,1);
+            work.tmp.reshape(numRows);
 
             DMatrixRMaj a = work.a;
             double[] temp = work.tmp.data;
@@ -81,11 +81,7 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
                 // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
                 for( int n = 0; n < numCols; n++ ) {
                     double []u = QR[n];
-
-                    double vv = u[n];
-                    u[n] = 1;
-                    QrHelperFunctions_DDRM.rank1UpdateMultR(a, u, gammas[n], 0, n, numRows, temp);
-                    u[n] = vv;
+                    QrHelperFunctions_DDRM.rank1UpdateMultR_u0(a, u, 1.0, gammas[n], 0, n, numRows, temp);
                 }
 
                 // solve for Rx = b using the standard upper triangular solver
@@ -101,6 +97,7 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
 
     private static class Work {
         public final DMatrixRMaj a = new DMatrixRMaj(1,1);
+        public final DMatrixRMaj u = new DMatrixRMaj(1,1);
         public final DGrowArray tmp = new DGrowArray();
     }
 }

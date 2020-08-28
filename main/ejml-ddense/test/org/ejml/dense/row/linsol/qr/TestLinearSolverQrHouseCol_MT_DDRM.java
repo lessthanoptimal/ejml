@@ -36,8 +36,8 @@ public class TestLinearSolverQrHouseCol_MT_DDRM {
 
     @Test
     void compare() {
-        DMatrixRMaj A = new DMatrixRMaj(200,50);
-        DMatrixRMaj B = new DMatrixRMaj(200,2);
+        DMatrixRMaj A = new DMatrixRMaj(400,90);
+        DMatrixRMaj B = new DMatrixRMaj(400,2);
         DMatrixRMaj expX = new DMatrixRMaj(1,1);
         DMatrixRMaj fndX = new DMatrixRMaj(1,1);
 

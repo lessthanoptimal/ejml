@@ -31,10 +31,10 @@ import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 @SuppressWarnings("NullAway.Init")
 public class CholeskyDecompositionBlock_DDRM extends CholeskyDecompositionCommon_DDRM {
 
-    private int blockWidth; // how wide the blocks should be
+    private final int blockWidth; // how wide the blocks should be
     private DMatrixRMaj B; // row rectangular matrix
 
-    private CholeskyBlockHelper_DDRM chol;
+    private final CholeskyBlockHelper_DDRM chol;
 
     /**
      * Creates a CholeksyDecomposition capable of decomposing a matrix that is
@@ -46,7 +46,7 @@ public class CholeskyDecompositionBlock_DDRM extends CholeskyDecompositionCommon
         super(true);
 
         this.blockWidth = blockWidth;
-
+        chol = new CholeskyBlockHelper_DDRM(blockWidth);
     }
 
     /**
@@ -62,8 +62,6 @@ public class CholeskyDecompositionBlock_DDRM extends CholeskyDecompositionCommon
             B = new DMatrixRMaj(0,0);
         else
             B = new DMatrixRMaj(blockWidth,maxWidth);
-
-        chol = new CholeskyBlockHelper_DDRM(blockWidth);
     }
 
     /**
@@ -144,16 +142,15 @@ public class CholeskyDecompositionBlock_DDRM extends CholeskyDecompositionCommon
      * @param b_src matrix with the vectors that are to be solved for
      * @param indexSrc First index of the submatrix where the inputs are coming from.
      * @param indexDst First index of the submatrix where the results are going to.
-     * @param B
      */
-    public static void solveL_special( final double L[] ,
+    public static void solveL_special( final double[] L,
                                        final DMatrixRMaj b_src,
                                        final int indexSrc , final int indexDst ,
                                        final DMatrixRMaj B )
     {
-        final double dataSrc[] = b_src.data;
+        final double[] dataSrc = b_src.data;
 
-        final double b[]= B.data;
+        final double[] b = B.data;
         final int m = B.numRows;
         final int n = B.numCols;
         final int widthL = m;
@@ -210,8 +207,8 @@ public class CholeskyDecompositionBlock_DDRM extends CholeskyDecompositionCommon
                                          int startIndexC )
     {
         // TODO update so that it doesn't modify/read parts that it shouldn't
-        final double dataA[] = a.data;
-        final double dataC[] = c.data;
+        final double[] dataA = a.data;
+        final double[] dataC = c.data;
 
 //        for( int i = 0; i < a.numCols; i++ ) {
 //            for( int k = 0; k < a.numRows; k++ ) {

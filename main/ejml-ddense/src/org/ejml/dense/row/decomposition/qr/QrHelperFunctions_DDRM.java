@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -89,8 +89,8 @@ public class QrHelperFunctions_DDRM {
     }
 
     public static void divideElements_Brow(int j, int numRows , double[] u,
-                                             double b[] , int startB ,
-                                             double u_0 ) {
+                                           double[] b, int startB ,
+                                           double u_0 ) {
 //        double div_u = 1.0/u_0;
 //
 //        if( Double.isInfinite(div_u)) {
@@ -105,9 +105,9 @@ public class QrHelperFunctions_DDRM {
     }
 
     public static void divideElements_Bcol(int j, int numRows , int numCols ,
-                                             double[] u,
-                                             double b[] , int startB ,
-                                             double u_0 ) {
+                                           double[] u,
+                                           double[] b, int startB ,
+                                           double u_0 ) {
 //        double div_u = 1.0/u_0;
 //
 //        if( Double.isInfinite(div_u)) {
@@ -209,10 +209,10 @@ public class QrHelperFunctions_DDRM {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultR(DMatrixRMaj A , double u[] , double gamma ,
+    public static void rank1UpdateMultR(DMatrixRMaj A , double[] u, double gamma ,
                                         int colA0,
                                         int w0, int w1 ,
-                                        double _temp[] )
+                                        double[] _temp)
     {
 //        for( int i = colA0; i < A.numCols; i++ ) {
 //            double val = 0;
@@ -251,12 +251,62 @@ public class QrHelperFunctions_DDRM {
         }
     }
 
+    // Useful for concurrent implementations where you don't want to modify u[0] to set it to 1.0
+    public static void rank1UpdateMultR_u0(DMatrixRMaj A , double[] u, final double u_0,
+                                           final double gamma ,
+                                           final int colA0,
+                                           final int w0, final int w1 ,
+                                           final double[] _temp)
+    {
+//        for( int i = colA0; i < A.numCols; i++ ) {
+//            double val = 0;
+//
+//            for( int k = w0; k < w1; k++ ) {
+//                val += u[k]*A.data[k*A.numCols +i];
+//            }
+//            _temp[i] = gamma*val;
+//        }
+
+        // reordered to reduce cpu cache issues
+        for( int i = colA0; i < A.numCols; i++ ) {
+            _temp[i] = u_0*A.data[w0 *A.numCols +i];
+        }
+
+        for( int k = w0+1; k < w1; k++ ) {
+            int indexA = k*A.numCols + colA0;
+            double valU = u[k];
+            for( int i = colA0; i < A.numCols; i++ ) {
+                _temp[i] += valU*A.data[indexA++];
+            }
+        }
+        for( int i = colA0; i < A.numCols; i++ ) {
+            _temp[i] *= gamma;
+        }
+
+        // end of reorder
+        {
+            int indexA = w0*A.numCols + colA0;
+            for( int j = colA0; j < A.numCols; j++ ) {
+                A.data[indexA++] -= u_0*_temp[j];
+            }
+        }
+
+        for( int i = w0+1; i < w1; i++ ) {
+            final double valU = u[i];
+
+            int indexA = i*A.numCols + colA0;
+            for( int j = colA0; j < A.numCols; j++ ) {
+                A.data[indexA++] -= valU*_temp[j];
+            }
+        }
+    }
+
     public static void rank1UpdateMultR(DMatrixRMaj A,
-                                        double u[], int offsetU,
+                                        double[] u, int offsetU,
                                         double gamma,
                                         int colA0,
                                         int w0, int w1,
-                                        double _temp[])
+                                        double[] _temp)
     {
 //        for( int i = colA0; i < A.numCols; i++ ) {
 //            double val = 0;
@@ -311,7 +361,7 @@ public class QrHelperFunctions_DDRM {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL(DMatrixRMaj A , double u[] ,
+    public static void rank1UpdateMultL(DMatrixRMaj A , double[] u,
                                         double gamma ,
                                         int colA0,
                                         int w0 , int w1 )

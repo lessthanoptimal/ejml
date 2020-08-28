@@ -31,7 +31,10 @@ import org.ejml.concurrency.EjmlConcurrency;
 @SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholderColumn_MT_DDRM extends QRDecompositionHouseholderColumn_DDRM
 {
-    // NOTE: About 2x speed up if Q can be made concurrent
+
+    // NOTE: Concurrent getQ()
+    // Making the rank1Update concurrent did not speed up the decomposition and used 4 cores instead of 1
+    // Can't make the outlier most loop concurrent since it modifies the entire Q
 
     @Override
     protected void updateA( int w )

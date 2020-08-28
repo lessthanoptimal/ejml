@@ -136,11 +136,7 @@ public class LinearSolverQrHouseCol_DDRM extends LinearSolverAbstract_DDRM {
             // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
             for( int n = 0; n < numCols; n++ ) {
                 double []u = QR[n];
-
-                double vv = u[n];
-                u[n] = 1;
-                QrHelperFunctions_DDRM.rank1UpdateMultR(a, u, gammas[n], 0, n, numRows, temp.data);
-                u[n] = vv;
+                QrHelperFunctions_DDRM.rank1UpdateMultR_u0(a, u,1.0, gammas[n], 0, n, numRows, temp.data);
             }
 
             // solve for Rx = b using the standard upper triangular solver
