@@ -25,7 +25,7 @@ public class DSemiRing {
     public final DMonoid add;
     public final DMonoid mult;
 
-    DSemiRing(DMonoid add, DMonoid mult) {
+    public DSemiRing(DMonoid add, DMonoid mult) {
         this.add = add;
         this.mult = mult;
     }

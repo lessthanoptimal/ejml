@@ -28,7 +28,7 @@ public class DMonoid {
     public final double id;
     public final DBinaryOperator func;
 
-    DMonoid(double id, DBinaryOperator func) {
+    public DMonoid(double id, DBinaryOperator func) {
         this.id = id;
         this.func = func;
     }
