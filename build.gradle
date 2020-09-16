@@ -19,20 +19,13 @@
 import net.ltgt.gradle.errorprone.CheckSeverity
 
 plugins {
-    id "com.peterabeles.gversion" version "1.8.3"
+    id "com.peterabeles.gversion" version "1.8.3" apply false
     id "net.ltgt.errorprone" version "1.2.1" apply false
 }
 
-gversion {
-    srcDir = "main/ejml-core/src"
-    classPackage = "org.ejml"
-    className = "EjmlVersion"
-    indent = "    "
-}
-
 allprojects {
-    apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'com.peterabeles.gversion'
 
     group = 'org.ejml'
     version = '0.40-SNAPSHOT'
@@ -315,8 +308,6 @@ wrapper {
     distributionType = Wrapper.DistributionType.BIN
     gradleVersion = '6.4.1'
 }
-
-project(':main:ejml-core').compileJava.dependsOn(createVersionFile)
 
 // Disable the creation of jars for distribution.  If you don't do this it will crash
 [':main',':examples',':main:autocode'].each {String a ->

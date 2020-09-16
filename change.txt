@@ -5,8 +5,7 @@ Date format: year/month/day
 ----- Version 0.40
 2020/
 
-TODO change subprojects so that the entire project isn't rebuilt because EjmlVersion is regenerated
-    ./gradlew build --info
+- Speed up build by only creating EjmlVersion.java when autogenerate is called
 - Switched to `org.jetbrains:annotations` from `com.google.code.findbugs:jsr305`
   * Licensing ambiguity and lack of support
   * Thanks Graham for pointing out the issue and the PR

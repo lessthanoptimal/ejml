@@ -20,13 +20,17 @@ dependencies {
     compile group: 'com.peterabeles', name: 'auto64fto32f', version: '2.1'
 }
 
-idea {
-    module {
-        name = "EJML Autocode"
-    }
+gversion {
+    srcDir = "../ejml-core/src"
+    classPackage = "org.ejml"
+    className = "EjmlVersion"
+    indent = "    "
 }
 
 task(autogenerate, dependsOn: 'classes', type: JavaExec) {
     main = 'org.ejml.GenerateCode32'
     classpath = sourceSets.main.runtimeClasspath
 }
+
+// Create the EjmlVersion file only when the autogenerate command is called. This speeds up build time significantly.
+project.autogenerate.dependsOn(createVersionFile)
