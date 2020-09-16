@@ -1814,8 +1814,6 @@ public class CommonOps_DSCC {
      * @param work Nullable. Internal workspace array.
      */
     public static void duplicatesAdd( DMatrixSparseCSC A , @Nullable IGrowArray work) {
-        if (work == null)
-            work = new IGrowArray();
         ImplCommonOps_DSCC.duplicatesAdd(A, work);
     }
 

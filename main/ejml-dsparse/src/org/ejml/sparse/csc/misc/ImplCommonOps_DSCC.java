@@ -265,7 +265,7 @@ public class ImplCommonOps_DSCC {
         A.nz_length -= offset;
     }
 
-    public static void duplicatesAdd( DMatrixSparseCSC A , IGrowArray work ) {
+    public static void duplicatesAdd( DMatrixSparseCSC A , @Nullable IGrowArray work ) {
         // Look up table from row to nz index
         int[] table = UtilEjml.adjustFill(work,A.numRows,-1);
 

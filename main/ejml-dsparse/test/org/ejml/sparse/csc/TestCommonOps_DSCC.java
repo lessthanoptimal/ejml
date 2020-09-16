@@ -27,7 +27,6 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
 import org.ejml.sparse.csc.mult.CheckMatrixMultShape_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
@@ -1385,7 +1384,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC B = A.copy();
 
         // first pass there should be no change
-        ImplCommonOps_DSCC.duplicatesAdd(B,null);
+        CommonOps_DSCC.duplicatesAdd(B,null);
         assertTrue(CommonOps_DSCC.checkStructure(B));
         A.sortIndices(null);
         B.sortIndices(null);
