@@ -356,11 +356,15 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     public void growMaxLength( int arrayLength , boolean preserveValue ) {
         if( arrayLength < 0 )
             throw new IllegalArgumentException("Negative array length. Overflow?");
-        // see if multiplying numRows*numCols will cause an overflow. If it won't then pick the smaller of the two
-        if( numRows != 0 && numCols <= Integer.MAX_VALUE / numRows ) {
-            // save the user from themselves
-            arrayLength = Math.min(numRows*numCols, arrayLength);
-        }
+
+        // NOTE: The code below has been (experimentally) commented out. A situation arose where we wanted to exceed
+        //       the max physical size, which would then be corrected later on.
+
+         // see if multiplying numRows*numCols will cause an overflow. If it won't then pick the smaller of the two
+//        if( numRows != 0 && numCols <= Integer.MAX_VALUE / numRows ) {
+//            // save the user from themselves
+//            arrayLength = Math.min(numRows*numCols, arrayLength);
+//        }
         if( arrayLength > this.nz_values.length ) {
             double[] data = new double[ arrayLength ];
             int[] row_idx = new int[ arrayLength ];

@@ -83,7 +83,7 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         assertTrue(CommonOps_DSCC.checkStructure(a));
         assertEquals(4,a.numRows);
         assertEquals(1,a.numCols);
-        assertEquals(4,a.nz_values.length);
+        assertEquals(10,a.nz_values.length);
         assertEquals(0,a.nz_length);
     }
 
