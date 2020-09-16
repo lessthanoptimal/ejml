@@ -21,10 +21,13 @@ package org.ejml.sparse.csc.misc;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.data.IGrowArray;
+import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -37,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TestImplCommonOps_DSCC {
 
-    private Random rand = new Random(324);
+    private final Random rand = new Random(324);
 
     @Test
     public void transpose() {
@@ -208,7 +211,7 @@ public class TestImplCommonOps_DSCC {
     @Test
     public void symmLowerToFull() {
         IGrowArray gw = new IGrowArray();
-        int sizes[] = {1,2,5,10};
+        int[] sizes = {1,2,5,10};
 
         for (int i = 0; i < 20; i++) {
             for( int N : sizes ) {
@@ -226,6 +229,42 @@ public class TestImplCommonOps_DSCC {
                         assertEquals(A.get(row,col), B.get(col,row), UtilEjml.TEST_F64);
                     }
                 }
+            }
+        }
+    }
+
+    @Test
+    void duplicatesAdd() {
+        IGrowArray gw = new IGrowArray();
+        int[] sizes = {1, 2, 5, 10};
+        for (int i = 0; i < 20; i++) {
+            for( int N : sizes ) {
+                DMatrixSparseTriplet triplet = RandomMatrices_DSTL.uniform(N,N,(N*N)/2,-1,1,rand);
+                DMatrixSparseCSC A = ConvertDMatrixStruct.convert(triplet,(DMatrixSparseCSC)null);
+                DMatrixSparseCSC B = A.copy();
+
+                // first pass there should be no change
+                ImplCommonOps_DSCC.duplicatesAdd(B,null);
+                assertTrue(CommonOps_DSCC.checkStructure(B));
+                A.sortIndices(null);
+                B.sortIndices(null);
+                assertTrue(MatrixFeatures_DSCC.isEquals(A,B));
+
+                // Second pass there will be a lot of duplicates
+                int nz = triplet.nz_length;
+                for (int j = 0; j < nz; j++) {
+                    int row = triplet.nz_rowcol.data[j*2];
+                    int col = triplet.nz_rowcol.data[j*2+1];
+                    double value = triplet.nz_value.data[j];
+                    triplet.addItem(row,col,value);
+                }
+                ConvertDMatrixStruct.convert(triplet,B);
+                // Remove duplicates and see if B has elements that are twice the size of elements in A
+                ImplCommonOps_DSCC.duplicatesAdd(B,gw);
+                assertTrue(CommonOps_DSCC.checkStructure(B));
+                CommonOps_DSCC.divide(B,2.0,B);
+                B.sortIndices(null);
+                assertTrue(MatrixFeatures_DSCC.isEquals(A, B, UtilEjml.TEST_F64));
             }
         }
     }

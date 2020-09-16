@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
@@ -260,6 +261,48 @@ public class ImplCommonOps_DSCC {
                 }
             }
             A.col_idx[i+1] -= offset;
+        }
+        A.nz_length -= offset;
+    }
+
+    public static void duplicatesAdd( DMatrixSparseCSC A , IGrowArray work ) {
+        // Look up table from row to nz index
+        int[] table = UtilEjml.adjustFill(work,A.numRows,-1);
+
+        int offset = 0;
+        for (int i = 0; i < A.numCols; i++) {
+            int idx0 = A.col_idx[i]+offset;
+            int idx1 = A.col_idx[i+1];
+
+            // When a row is first encountered note the element it's at
+            for (int j = idx0; j < idx1; j++) {
+                int row = A.nz_rows[j];
+                if (table[row] == -1)
+                    table[row] = j;
+            }
+
+            // Set then add each element
+            for (int j = idx0; j < idx1; j++){
+                int row = A.nz_rows[j];
+
+                // First or only time it's encountered, copy the value
+                if (table[row] == j) {
+                    A.nz_rows[j-offset] = row;
+                    A.nz_values[j-offset] = A.nz_values[j];
+                    table[row] = j-offset; // Update the table to include the offset location
+                } else {
+                    // Each time it's encountered after this add the value and increase the offset
+                    A.nz_values[table[row]] += A.nz_values[j];
+                    offset++;
+                }
+            }
+            A.col_idx[i+1] -= offset;
+
+            // Need to do a second pass to undo the markings in the lookup table
+            idx1 -= offset;
+            for (int j = A.col_idx[i]; j < idx1; j++){
+                table[A.nz_rows[j]] = -1;
+            }
         }
         A.nz_length -= offset;
     }

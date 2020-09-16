@@ -22,14 +22,13 @@ import org.ejml.UtilEjml;
 import org.ejml.data.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-
 /**
  * Functions for converting between matrix types.  Both matrices must be the same size and their values will
  * be copied.
  *
  * @author Peter Abeles
  */
+@SuppressWarnings("DuplicatedCode")
 public class ConvertDMatrixStruct {
 
     /**
@@ -813,7 +812,7 @@ public class ConvertDMatrixStruct {
     }
 
     /**
-     *
+     * Converts DMatrixRMaj into a DMatrixSparseCSC
      *
      * @param src Original matrix that is to be converted.
      * @param dst Storage for the converted matrix.  If null a new instance will be returned.
@@ -848,21 +847,18 @@ public class ConvertDMatrixStruct {
     }
 
     /**
-     * Converts SMatrixTriplet_64 into a SMatrixCC_64.
+     * Converts DMatrixSparseTriplet into a DMatrixSparseCSC. Duplicate elements in triplet will result in an
+     * illegal matrix in output having duplicate elements.
      *
      * @param src Original matrix which is to be copied.  Not modified.
      * @param dst Destination. Will be a copy.  Modified.
-     * @param hist Workspace.  Should be at least as long as the number of columns.  Can be null.
+     * @param histStorage Workspace. Can be null.
      */
-    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , @Nullable DMatrixSparseCSC dst , @Nullable int[] hist) {
+    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , @Nullable DMatrixSparseCSC dst ,
+                                           @Nullable IGrowArray histStorage) {
         dst = UtilEjml.reshapeOrDeclare(dst,src.numRows,src.numCols,src.nz_length);
 
-        if( hist == null )
-            hist = new int[ src.numCols ];
-        else if( hist.length >= src.numCols )
-            Arrays.fill(hist,0,src.numCols, 0);
-        else
-            throw new IllegalArgumentException("Length of hist must be at least numCols");
+        int[] hist = UtilEjml.adjustClear(histStorage,src.numCols);
 
         // compute the number of elements in each columns
         for (int i = 0; i < src.nz_length; i++) {

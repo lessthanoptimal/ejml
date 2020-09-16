@@ -20,6 +20,8 @@ TODO change subprojects so that the entire project isn't rebuilt because EjmlVer
 - Added reduce operations for sparse matrices. Thanks Florentin Dörre for the donation
 - CommonOps_DDRM and CommonOps_DSCC
   * Updating functions to return output if null and use common input sanity check functions
+- CommonOps_DSCC
+  * duplicatesAdd() is a function which will add element that is duplicated and turn it into a valid matrix again
 
 ----- Version 0.39
 2020/04/06

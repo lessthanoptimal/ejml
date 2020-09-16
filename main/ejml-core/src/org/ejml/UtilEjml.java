@@ -546,6 +546,12 @@ public class UtilEjml {
         return adjust(gwork,desired,desired);
     }
 
+    public static int[] adjustFill(@Nullable IGrowArray gwork, int desired, int value) {
+        int[] w = adjust(gwork,desired);
+        Arrays.fill(w,0,desired,value);
+        return w;
+    }
+
     /**
      * Resizes the array to ensure that it is at least of length desired and returns its internal array
      */

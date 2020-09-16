@@ -1806,6 +1806,20 @@ public class CommonOps_DSCC {
     }
 
     /**
+     * For each duplicate element in the matrix it will remove the duplicates and replace them with a single element
+     * that is the sum of all the duplicates. The result will be a valid matrix. This is done inplace and does not
+     * require the matrix to be initially sorted.
+     *
+     * @param A (Input/Output) input matrix. Modified.
+     * @param work Nullable. Internal workspace array.
+     */
+    public static void duplicatesAdd( DMatrixSparseCSC A , @Nullable IGrowArray work) {
+        if (work == null)
+            work = new IGrowArray();
+        ImplCommonOps_DSCC.duplicatesAdd(A, work);
+    }
+
+    /**
      * Multiply all elements of row 'i' by value[i]. A[i,:] *= values[i]
      *
      * @param diag (Input) multiplication factors
