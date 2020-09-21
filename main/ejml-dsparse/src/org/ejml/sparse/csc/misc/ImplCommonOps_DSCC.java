@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.sparse.csc.misc;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.ops.IPredicateBinary;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +37,44 @@ import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
  * @author Peter Abeles
  */
 public class ImplCommonOps_DSCC {
+
+    public static void select( DMatrixSparseCSC A, DMatrixSparseCSC output, IPredicateBinary selector ) {
+        int selectCount = 0;
+
+        // size estimation
+        if (output != A) {
+            output.growMaxLength(A.nz_length/2, false);
+        }
+
+        // selecting a subset doesn't change the order
+        output.indicesSorted = A.indicesSorted;
+
+        for (int col = 0; col < A.numCols; col++) {
+            int start = A.col_idx[col];
+            int end = A.col_idx[col + 1];
+
+            output.col_idx[col] = selectCount;
+
+            if (output.nz_rows.length < (selectCount + (end - start))) {
+                int maxLength = Integer.max(output.nz_length*2 + 1, A.nz_length);
+                output.growMaxLength(maxLength, true);
+            }
+
+            for (int i = start; i < end; i++) {
+                int row = A.nz_rows[i];
+
+                if (selector.apply(row, col)) {
+                    output.nz_rows[selectCount] = row;
+                    output.nz_values[selectCount] = A.nz_values[i];
+                    selectCount++;
+                }
+            }
+        }
+        // writing last entry
+        output.col_idx[output.numCols] = selectCount;
+
+        output.nz_length = selectCount;
+    }
 
     /**
      * Performs a matrix transpose.

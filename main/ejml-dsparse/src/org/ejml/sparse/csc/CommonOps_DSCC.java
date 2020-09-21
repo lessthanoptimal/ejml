@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.sparse.csc;
 
 import org.ejml.MatrixDimensionException;
@@ -29,6 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.DOperatorBinary;
 import org.ejml.ops.DOperatorBinaryIdx;
 import org.ejml.ops.DOperatorUnary;
+import org.ejml.ops.IPredicateBinary;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
@@ -1222,6 +1222,29 @@ public class CommonOps_DSCC {
                 }
             }
         }
+    }
+
+    /**
+     * Select entries from A and save them in C.
+     * A more generic but probably also slower version of `extract`
+     * <p>
+     * Can be used to select f.i. the lower or upper triangle of a matrix
+     * <p>
+     * Simplified version of: GxB_Select
+     *
+     * @param A           (Input) Matrix. Not modified.
+     * @param selector    Function to decide whether an entry gets selected
+     * @param output      (Optional/Output) Matrix to use for the output. Can be the same as A
+     * @return Matrix storing the selected entries of A
+     */
+    public static DMatrixSparseCSC select( DMatrixSparseCSC A, IPredicateBinary selector, @Nullable DMatrixSparseCSC output) {
+        if (output != A) {
+            output = reshapeOrDeclare(output, A);
+        }
+
+        ImplCommonOps_DSCC.select(A, output, selector);
+
+        return output;
     }
 
     /**
