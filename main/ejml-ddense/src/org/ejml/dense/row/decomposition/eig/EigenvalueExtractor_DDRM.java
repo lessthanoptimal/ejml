@@ -27,9 +27,9 @@ import org.ejml.data.DMatrixRMaj;
  */
 public interface EigenvalueExtractor_DDRM {
 
-    public boolean process( DMatrixRMaj A );
+    boolean process(DMatrixRMaj A);
 
-    public int getNumberOfEigenvalues();
+    int getNumberOfEigenvalues();
 
-    public Complex_F64[] getEigenvalues();
+    Complex_F64[] getEigenvalues();
 }

@@ -266,14 +266,14 @@ public class ManagerFunctions {
     /**
      * Creates new instances of functions from a single variable
      */
-    public static interface Input1 {
+    public interface Input1 {
         Operation.Info create(Variable A, ManagerTempVariables manager);
     }
 
     /**
      * Creates a new instance of functions from two variables
      */
-    public static interface InputN {
+    public interface InputN {
         Operation.Info create(List<Variable> inputs, ManagerTempVariables manager);
     }
 }
