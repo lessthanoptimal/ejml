@@ -1380,7 +1380,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         for (int i = 0; i < matrices.length; i++) {
             Matrix m = convertType.convert(matrices[i]).mat;
             int cols = m.getNumCols();
-            int rows = m.getNumRows();;
+            int rows = m.getNumRows();
             A.ops.extract(m,0,rows,0,cols,combined.mat,0,col);
             col += cols;
         }
@@ -1415,7 +1415,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         for (int i = 0; i < matrices.length; i++) {
             Matrix m = convertType.convert(matrices[i]).mat;
             int cols = m.getNumCols();
-            int rows = m.getNumRows();;
+            int rows = m.getNumRows();
             A.ops.extract(m,0,rows,0,cols,combined.mat,row,0);
             row += rows;
         }

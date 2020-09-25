@@ -134,7 +134,7 @@ public class TestMatrixFeatures_DSCC {
         assertFalse(MatrixFeatures_DSCC.isEqualsSort(a,b,UtilEjml.TEST_F64));
         b.nz_rows[1]--; b.col_idx[1]++;
         assertFalse(MatrixFeatures_DSCC.isEqualsSort(a,b,UtilEjml.TEST_F64));
-        b.col_idx[1]--;;
+        b.col_idx[1]--;
 
         // make it no longer exactly equal, but within tolerance
         b.nz_values[0] += UtilEjml.TEST_F64*0.1;
