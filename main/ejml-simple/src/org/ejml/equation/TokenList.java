@@ -374,7 +374,7 @@ class TokenList {
     /**
      * Specifies the type of data stored in a Token.
      */
-    public static enum Type
+    public enum Type
     {
         FUNCTION,
         VARIABLE,

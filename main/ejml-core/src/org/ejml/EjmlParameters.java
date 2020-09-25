@@ -81,7 +81,7 @@ public class EjmlParameters {
 
     public static int SWITCH_BLOCK64_QR = 1500;
 
-    public static enum MemoryUsage
+    public enum MemoryUsage
     {
         /**
          * Use lower memory algorithm while not totally sacrificing speed.
