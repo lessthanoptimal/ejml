@@ -62,7 +62,7 @@ public class UtilDecompositons_DDRM {
         } else {
             for( int i = 0; i < A.numRows; i++ ) {
                 int index = i*A.numCols;
-                int end = index + Math.min(i,A.numCols);;
+                int end = index + Math.min(i,A.numCols);
                 while( index < end ) {
                     A.data[index++] = 0;
                 }

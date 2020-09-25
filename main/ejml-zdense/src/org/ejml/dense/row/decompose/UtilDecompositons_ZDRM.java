@@ -61,7 +61,7 @@ public class UtilDecompositons_ZDRM {
         else {
             for( int i = 0; i < A.numRows; i++ ) {
                 int index = i*A.numCols*2;
-                int end = index + Math.min(i,A.numCols)*2;;
+                int end = index + Math.min(i,A.numCols)*2;
                 while( index < end ) {
                     A.data[index++] = 0;
                 }
