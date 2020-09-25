@@ -197,8 +197,8 @@ public class DeterminantFromMinor_DDRM {
 
     private void openAdd( int where, int val )
     {
-        for( int i = numOpen; i > where; i-- ) {
-            open[i] = open[i-1];
+        if (numOpen - where >= 0) {
+            System.arraycopy(open, where, open, where + 1, numOpen - where);
         }
         numOpen++;
         open[where] = val;

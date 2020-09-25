@@ -135,8 +135,8 @@ public class SvdImplicitQrDecompose_Ultimate
             W.zero();
         }
 
-        for( int i = 0; i < numSingular; i++ ) {
-            W.data[i*W.numCols+i] = singularValues[i];
+        if (numSingular >= 0) {
+            System.arraycopy(singularValues, 0, W.data, 0 * W.numCols + 0, numSingular);
         }
 
         return W;

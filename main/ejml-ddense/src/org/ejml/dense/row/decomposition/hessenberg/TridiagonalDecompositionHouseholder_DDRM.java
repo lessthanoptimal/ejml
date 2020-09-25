@@ -133,8 +133,8 @@ public class TridiagonalDecompositionHouseholder_DDRM
         if( transposed ) {
             for( int j = N-2; j >= 0; j-- ) {
                 w[j+1] = 1;
-                for( int i = j+2; i < N; i++ ) {
-                    w[i] = QT.data[j*N+i];
+                if (N - j + 2 >= 0) {
+                    System.arraycopy(QT.data, j * N + j + 2, w, j + 2, N - j + 2);
                 }
                 QrHelperFunctions_DDRM.rank1UpdateMultL(Q, w, gammas[j + 1], j + 1, j + 1, N);
             }
