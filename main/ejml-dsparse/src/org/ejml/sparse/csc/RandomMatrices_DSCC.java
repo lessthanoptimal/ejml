@@ -161,7 +161,6 @@ public class RandomMatrices_DSCC {
         for (int i = 0; i < dimen; i++) {
             if (i < dimen - 1 + hessenberg) rowStart[i] = N;
             N += i < hessenberg ? dimen : dimen - 1 - i + hessenberg;
-            ;
             if (i < dimen - 1 + hessenberg) rowEnd[i] = N;
         }
         N += dimen - hessenberg;

@@ -53,14 +53,14 @@ public class BenchmarkGenerics {
         }
     }
 
-    private static interface ScaleDense
+    private interface ScaleDense
     {
-        public void scale( double s , DMatrixRMaj mat );
+        void scale(double s, DMatrixRMaj mat);
     }
 
-    private static interface ScaleGeneric<T extends DMatrixD1>
+    private interface ScaleGeneric<T extends DMatrixD1>
     {
-        public void scale( double s , T mat );
+        void scale(double s, T mat);
     }
 
     public static long benchmarkDense(DMatrixRMaj A , double scale , int trials ) {
