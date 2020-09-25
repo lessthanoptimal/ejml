@@ -57,8 +57,8 @@ public class HessenbergSimilarDecomposition_DDRM
     // the first element in the orthogonal vectors
     private double[] gammas;
     // temporary storage
-    private double[] b;
-    private double[] u;
+    protected double[] b;
+    protected double[] u;
 
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
@@ -151,7 +151,7 @@ public class HessenbergSimilarDecomposition_DDRM
             for( int i = j+2; i < N; i++ ) {
                 u[i] = QH.get(i,j);
             }
-            QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u, gammas[j], j + 1, j + 1, N, b);
+            rank1UpdateMultR(Q, gammas[j], j + 1, j + 1, N);
         }
 
         return Q;
@@ -205,10 +205,10 @@ public class HessenbergSimilarDecomposition_DDRM
                 gammas[k] = gamma;
 
                 // ---------- multiply on the left by Q_k
-                QrHelperFunctions_DDRM.rank1UpdateMultR(QH, u, gamma, k + 1, k + 1, N, b);
+                rank1UpdateMultR(QH, gamma, k + 1, k + 1, N);
 
                 // ---------- multiply on the right by Q_k
-                QrHelperFunctions_DDRM.rank1UpdateMultL(QH, u, gamma, 0, k + 1, N);
+                rank1UpdateMultL(QH, gamma, 0, k + 1, N);
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg
@@ -221,6 +221,14 @@ public class HessenbergSimilarDecomposition_DDRM
         }
 
         return true;
+    }
+
+    protected void rank1UpdateMultL(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultL(A, u, gamma, colA0, w0, w1);
+    }
+
+    protected void rank1UpdateMultR(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultR(A, u, gamma, colA0, w0, w1, this.b);
     }
 
     public double[] getGammas() {

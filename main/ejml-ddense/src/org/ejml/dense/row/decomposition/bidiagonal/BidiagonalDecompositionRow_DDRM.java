@@ -49,8 +49,8 @@ public class BidiagonalDecompositionRow_DDRM
     private double[] gammasU;
     private double[] gammasV;
     // temporary storage
-    private double[] b;
-    private double[] u;
+    protected double[] b;
+    protected double[] u;
 
     /**
      * Creates a decompose that defines the specified amount of memory.
@@ -191,10 +191,12 @@ public class BidiagonalDecompositionRow_DDRM
             for( int i = j+1; i < m; i++ ) {
                 u[i] = UBV.get(i,j);
             }
-            if( transpose )
-                QrHelperFunctions_DDRM.rank1UpdateMultL(U, u, gammasU[j], j, j, m);
-            else
-                QrHelperFunctions_DDRM.rank1UpdateMultR(U, u, gammasU[j], j, j, m, this.b);
+
+            if( transpose ) {
+                rank1UpdateMultL(U, gammasU[j], j, j, m);
+            } else {
+                rank1UpdateMultR(U, gammasU[j], j, j, m);
+            }
         }
 
         return U;
@@ -245,10 +247,11 @@ public class BidiagonalDecompositionRow_DDRM
             for( int i = j+2; i < n; i++ ) {
                 u[i] = UBV.get(j,i);
             }
-            if( transpose )
-                QrHelperFunctions_DDRM.rank1UpdateMultL(V, u, gammasV[j], j + 1, j + 1, n);
-            else
-                QrHelperFunctions_DDRM.rank1UpdateMultR(V, u, gammasV[j], j + 1, j + 1, n, this.b);
+            if( transpose ) {
+                rank1UpdateMultL(V, gammasV[j], j + 1, j+1, n);
+            } else {
+                rank1UpdateMultR(V, gammasV[j], j + 1, j+1, n);
+            }
         }
 
         return V;
@@ -327,12 +330,20 @@ public class BidiagonalDecompositionRow_DDRM
             gammasU[k] = gamma;
 
             // ---------- multiply on the left by Q_k
-            QrHelperFunctions_DDRM.rank1UpdateMultR(UBV, u, gamma, k + 1, k, m, this.b);
+            rank1UpdateMultR(UBV, gamma, k + 1, k, m);
 
             b[k*n+k] = -tau*max;
         } else {
             gammasU[k] = 0;
         }
+    }
+
+    protected void rank1UpdateMultL(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultL(A, u, gamma, colA0, w0, w1);
+    }
+
+    protected void rank1UpdateMultR(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultR(A, u, gamma, colA0, w0, w1, this.b);
     }
 
     protected void computeV(int k) {
@@ -361,7 +372,7 @@ public class BidiagonalDecompositionRow_DDRM
             // writing to u could be avoided by working directly with b.
             // requires writing a custom rank1Update function
             // ---------- multiply on the left by Q_k
-            QrHelperFunctions_DDRM.rank1UpdateMultL(UBV, u, gamma, k + 1, k + 1, n);
+            rank1UpdateMultL(UBV, gamma, k + 1, k + 1, n);
 
             b[row+k+1] = -tau*max;
         } else {
@@ -371,8 +382,6 @@ public class BidiagonalDecompositionRow_DDRM
 
     /**
      * Returns gammas from the householder operations for the U matrix.
-     *
-     * @return gammas for householder operations
      */
     public double[] getGammasU() {
         return gammasU;
@@ -380,8 +389,6 @@ public class BidiagonalDecompositionRow_DDRM
 
     /**
      * Returns gammas from the householder operations for the V matrix.
-     *
-     * @return gammas for householder operations
      */
     public double[] getGammasV() {
         return gammasV;

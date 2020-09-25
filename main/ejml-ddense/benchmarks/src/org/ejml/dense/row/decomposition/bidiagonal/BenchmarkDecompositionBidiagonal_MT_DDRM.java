@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decomposition.qr;
+package org.ejml.dense.row.decomposition.bidiagonal;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -35,39 +35,47 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value=2)
-public class BenchmarkDecompositionQR_MT_DDRM {
+public class BenchmarkDecompositionBidiagonal_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj A,Q,R;
+    public DMatrixRMaj S,T;
 
-    QRDecompositionHouseholderColumn_MT_DDRM houseCol = new QRDecompositionHouseholderColumn_MT_DDRM();
+    BidiagonalDecompositionRow_MT_DDRM decompRow = new BidiagonalDecompositionRow_MT_DDRM();
+    BidiagonalDecompositionTall_MT_DDRM decompTall = new BidiagonalDecompositionTall_MT_DDRM();
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        Q = new DMatrixRMaj(size,size);
-        R = new DMatrixRMaj(Q.numCols,Q.numCols);
+        S = RandomMatrices_DDRM.rectangle(size,size,-1,1, rand);
+        T = RandomMatrices_DDRM.rectangle(size*10,size/10,-1,1, rand);
     }
 
     @Benchmark
-    public void houseCol() {
-        houseCol.decompose(A);
-        houseCol.getQ(Q,true);
-        houseCol.getR(R,true);
+    public void row_square() {
+        decompRow.decompose(S.copy());
     }
 
     @Benchmark
-    public void houseCol_decompose() {
-        houseCol.decompose(A);
+    public void row_tall() {
+        decompRow.decompose(T.copy());
+    }
+
+    @Benchmark
+    public void tall_square() {
+        decompTall.decompose(S.copy());
+    }
+
+    @Benchmark
+    public void tall_tall() {
+        decompTall.decompose(T.copy());
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkDecompositionQR_MT_DDRM.class.getSimpleName())
+                .include(BenchmarkDecompositionBidiagonal_MT_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

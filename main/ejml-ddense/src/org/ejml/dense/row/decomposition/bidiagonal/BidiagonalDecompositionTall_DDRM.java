@@ -25,6 +25,8 @@ import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+//CONCURRENT_INLINE import org.ejml.dense.row.CommonOps_MT_DDRM;;
 
 /**
  * <p>
@@ -60,6 +62,7 @@ public class BidiagonalDecompositionTall_DDRM
         implements BidiagonalDecomposition_F64<DMatrixRMaj>
 {
     QRPDecomposition_F64<DMatrixRMaj> decompQRP = DecompositionFactory_DDRM.qrp(500, 100); // todo this should be passed in
+    //CONCURRENT_BELOW BidiagonalDecomposition_F64<DMatrixRMaj> decompBi = new BidiagonalDecompositionRow_MT_DDRM();
     BidiagonalDecomposition_F64<DMatrixRMaj> decompBi = new BidiagonalDecompositionRow_DDRM();
 
     DMatrixRMaj B = new DMatrixRMaj(1,1);
@@ -103,6 +106,7 @@ public class BidiagonalDecompositionTall_DDRM
             // U = Q*U1
             DMatrixRMaj Q1 = decompQRP.getQ(null,true);
             DMatrixRMaj U1 = decompBi.getU(null,false,true);
+            //CONCURRENT_BELOW CommonOps_MT_DDRM.mult(Q1,U1,U);
             CommonOps_DDRM.mult(Q1,U1,U);
         } else {
            // U = [Q1*U1 Q2]
@@ -110,6 +114,7 @@ public class BidiagonalDecompositionTall_DDRM
             DMatrixRMaj U1 = decompBi.getU(null,false,true);
             DMatrixRMaj Q1 = CommonOps_DDRM.extract(Q,0,Q.numRows,0,min);
             DMatrixRMaj tmp = new DMatrixRMaj(Q1.numRows,U1.numCols);
+            //CONCURRENT_BELOW CommonOps_MT_DDRM.mult(Q1,U1,tmp);
             CommonOps_DDRM.mult(Q1,U1,tmp);
             CommonOps_DDRM.insert(tmp,Q,0,0);
         }
@@ -143,6 +148,7 @@ public class BidiagonalDecompositionTall_DDRM
         // TODO this is horribly inefficient
         DMatrixRMaj result = new DMatrixRMaj(min,n);
         DMatrixRMaj P = decompQRP.getColPivotMatrix(null);
+        //CONCURRENT_BELOW CommonOps_MT_DDRM.multTransB(B, P, result);
         CommonOps_DDRM.multTransB(B, P, result);
         B.set(result);
 

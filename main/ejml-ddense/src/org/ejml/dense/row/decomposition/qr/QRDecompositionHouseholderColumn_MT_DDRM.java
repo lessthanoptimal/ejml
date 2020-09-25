@@ -19,6 +19,9 @@
 package org.ejml.dense.row.decomposition.qr;
 
 import org.ejml.concurrency.EjmlConcurrency;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -31,10 +34,23 @@ import org.ejml.concurrency.EjmlConcurrency;
 @SuppressWarnings("NullAway.Init")
 public class QRDecompositionHouseholderColumn_MT_DDRM extends QRDecompositionHouseholderColumn_DDRM
 {
+    @Override
+    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
+        if( compact ) {
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,minLength);
+        } else {
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,numRows);
+        }
 
-    // NOTE: Concurrent getQ()
-    // Making the rank1Update concurrent did not speed up the decomposition and used 4 cores instead of 1
-    // Can't make the outlier most loop concurrent since it modifies the entire Q
+        for( int j = minLength-1; j >= 0; j-- ) {
+            double[] u = dataQR[j];
+
+            // This is a fairly modest speed up since only one of the loops can be made concurrent
+            QrHelperFunctions_MT_DDRM.rank1UpdateMultR_u0(Q, u, 1.0, gammas[j], j, j, numRows, v);
+        }
+
+        return Q;
+    }
 
     @Override
     protected void updateA( int w )

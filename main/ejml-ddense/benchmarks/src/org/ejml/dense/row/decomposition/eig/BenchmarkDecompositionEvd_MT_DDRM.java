@@ -16,10 +16,13 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decomposition.qr;
+package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigen_DDRM;
+import org.ejml.dense.row.decomposition.hessenberg.HessenbergSimilarDecomposition_MT_DDRM;
+import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouseholder_MT_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -35,39 +38,46 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value=2)
-public class BenchmarkDecompositionQR_MT_DDRM {
+public class BenchmarkDecompositionEvd_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000"})
+    @Param({"500"})
     public int size;
 
-    public DMatrixRMaj A,Q,R;
+    @Param({"false","true"})
+    public boolean vectors;
 
-    QRDecompositionHouseholderColumn_MT_DDRM houseCol = new QRDecompositionHouseholderColumn_MT_DDRM();
+    public DMatrixRMaj S,A;
+
+    SymmetricQRAlgorithmDecomposition_DDRM eigenSym;
+    WatchedDoubleStepQRDecomposition_DDRM eigen;
 
     @Setup
     public void setup() {
+        eigenSym = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_MT_DDRM(),vectors);
+        eigen = new WatchedDoubleStepQRDecomposition_DDRM(new HessenbergSimilarDecomposition_MT_DDRM(),
+                new WatchedDoubleStepQREigen_DDRM(),vectors);
+
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        Q = new DMatrixRMaj(size,size);
-        R = new DMatrixRMaj(Q.numCols,Q.numCols);
+        S = RandomMatrices_DDRM.symmetric(size,-1,1, rand);
     }
 
     @Benchmark
-    public void houseCol() {
-        houseCol.decompose(A);
-        houseCol.getQ(Q,true);
-        houseCol.getR(R,true);
+    public void symmetric() {
+        DMatrixRMaj A = eigen.inputModified() ? S.copy() : S;
+        eigenSym.decompose(A);
     }
 
     @Benchmark
-    public void houseCol_decompose() {
-        houseCol.decompose(A);
+    public void general() {
+        DMatrixRMaj A = eigen.inputModified() ? S.copy() : S;
+        A.set(2,4,2.0); // break the symmetry
+        eigen.decompose(A);
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkDecompositionQR_MT_DDRM.class.getSimpleName())
+                .include(BenchmarkDecompositionEvd_MT_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

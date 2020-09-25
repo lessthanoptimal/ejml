@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_DDRM;
@@ -25,6 +26,7 @@ import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionTall_D
 import org.ejml.dense.row.decomposition.svd.implicitqr.SvdImplicitQrAlgorithm_DDRM;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -47,20 +49,20 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("NullAway.Init")
 public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F64<DMatrixRMaj> {
 
-    private int numRows;
-    private int numCols;
+    protected int numRows;
+    protected int numCols;
 
     // dimensions of transposed matrix
-    private int numRowsT;
-    private int numColsT;
+    protected int numRowsT;
+    protected int numColsT;
 
     // if true then it can use the special Bidiagonal decomposition
-    private boolean canUseTallBidiagonal;
+    protected boolean canUseTallBidiagonal;
 
     // If U is not being computed and the input matrix is 'tall' then a special bidiagonal decomposition
     // can be used which is faster.
-    private BidiagonalDecomposition_F64<DMatrixRMaj> bidiag;
-    private SvdImplicitQrAlgorithm_DDRM qralg = new SvdImplicitQrAlgorithm_DDRM();
+    protected BidiagonalDecomposition_F64<DMatrixRMaj> bidiag;
+    protected SvdImplicitQrAlgorithm_DDRM qralg = new SvdImplicitQrAlgorithm_DDRM();
 
     double[] diag;
     double[] off;
@@ -72,18 +74,18 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
     private int numSingular;
 
     // compute a compact SVD
-    private boolean compact;
+    protected boolean compact;
     // What is actually computed
-    private boolean computeU;
-    private boolean computeV;
+    protected boolean computeU;
+    protected boolean computeV;
 
     // What the user requested to be computed
     // If the transpose is computed instead then what is actually computed is swapped
-    private boolean prefComputeU;
-    private boolean prefComputeV;
+    protected boolean prefComputeU;
+    protected boolean prefComputeV;
 
     // Should it compute the transpose instead
-    private boolean transposed;
+    protected boolean transposed;
 
     // Either a copy of the input matrix or a copy of it transposed
     private DMatrixRMaj A_mod = new DMatrixRMaj(1,1);
@@ -129,12 +131,8 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
                 return Ut;
             U.set(Ut);
         } else {
-            if( U == null )
-                U = new DMatrixRMaj(Ut.numCols,Ut.numRows);
-            else
-                U.reshape(Ut.numCols,Ut.numRows);
-
-            CommonOps_DDRM.transpose(Ut,U);
+            U = UtilEjml.reshapeOrDeclare(U,Ut.numCols,Ut.numRows);
+            transpose(U, Ut);
         }
 
         return U;
@@ -150,15 +148,15 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
 
             V.set(Vt);
         } else {
-            if( V == null )
-                V = new DMatrixRMaj(Vt.numCols,Vt.numRows);
-            else
-                V.reshape(Vt.numCols,Vt.numRows);
-
-            CommonOps_DDRM.transpose(Vt,V);
+            V = UtilEjml.reshapeOrDeclare(V,Vt.numCols,Vt.numRows);
+            transpose(V, Vt);
         }
 
         return V;
+    }
+
+    protected void transpose(@NotNull DMatrixRMaj V, DMatrixRMaj Vt) {
+        CommonOps_DDRM.transpose(Vt, V);
     }
 
     @Override
@@ -209,7 +207,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         // change the matrix to bidiagonal form
         if( transposed ) {
             A_mod.reshape(orig.numCols,orig.numRows,false);
-            CommonOps_DDRM.transpose(orig,A_mod);
+            transpose(A_mod, orig);
         } else {
             A_mod.reshape(orig.numRows,orig.numCols,false);
             A_mod.set(orig);
@@ -290,6 +288,12 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         }
 
         // if it is a tall matrix and U is not needed then there is faster decomposition algorithm
+        declareBidiagonalDecomposition();
+
+        return true;
+    }
+
+    protected void declareBidiagonalDecomposition() {
         if( canUseTallBidiagonal && numRows > numCols * 2 && !computeU ) {
             if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall_DDRM) ) {
                 bidiag = new BidiagonalDecompositionTall_DDRM();
@@ -297,8 +301,6 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow_DDRM) ) {
             bidiag = new BidiagonalDecompositionRow_DDRM();
         }
-
-        return true;
     }
 
     /**

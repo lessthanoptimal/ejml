@@ -58,6 +58,14 @@ public class SwitchingEigenDecomposition_DDRM
         this.tol = tol;
     }
 
+    public SwitchingEigenDecomposition_DDRM(EigenDecomposition_F64<DMatrixRMaj> symmetricAlg,
+                                            EigenDecomposition_F64<DMatrixRMaj> generalAlg, double tol ) {
+        this.symmetricAlg = symmetricAlg;
+        this.generalAlg = generalAlg;
+        this.tol = tol;
+    }
+
+
     public SwitchingEigenDecomposition_DDRM(int matrixSize ) {
         this(matrixSize,true, UtilEjml.TEST_F64);
     }

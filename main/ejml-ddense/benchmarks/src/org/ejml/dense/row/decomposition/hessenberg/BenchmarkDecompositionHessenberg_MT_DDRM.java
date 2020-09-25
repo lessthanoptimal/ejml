@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decomposition.qr;
+package org.ejml.dense.row.decomposition.hessenberg;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -35,39 +35,31 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value=2)
-public class BenchmarkDecompositionQR_MT_DDRM {
+public class BenchmarkDecompositionHessenberg_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj A,Q,R;
+    public DMatrixRMaj S,A;
 
-    QRDecompositionHouseholderColumn_MT_DDRM houseCol = new QRDecompositionHouseholderColumn_MT_DDRM();
+    TridiagonalDecompositionHouseholder_DDRM tridiagonal = new TridiagonalDecompositionHouseholder_MT_DDRM();
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        Q = new DMatrixRMaj(size,size);
-        R = new DMatrixRMaj(Q.numCols,Q.numCols);
+        S = RandomMatrices_DDRM.symmetric(size,-1,1, rand);
     }
 
     @Benchmark
-    public void houseCol() {
-        houseCol.decompose(A);
-        houseCol.getQ(Q,true);
-        houseCol.getR(R,true);
-    }
-
-    @Benchmark
-    public void houseCol_decompose() {
-        houseCol.decompose(A);
+    public void tridiagonal() {
+        DMatrixRMaj A = tridiagonal.inputModified() ? S.copy() : S;
+        tridiagonal.decompose(A);
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkDecompositionQR_MT_DDRM.class.getSimpleName())
+                .include(BenchmarkDecompositionHessenberg_MT_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

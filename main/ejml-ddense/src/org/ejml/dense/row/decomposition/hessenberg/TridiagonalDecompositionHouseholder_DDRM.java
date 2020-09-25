@@ -53,17 +53,17 @@ public class TridiagonalDecompositionHouseholder_DDRM
      * the tridiagonal matrix.  The rows store householder vectors.
      */
     @SuppressWarnings("NullAway.Init")
-    private DMatrixRMaj QT;
+    protected DMatrixRMaj QT;
 
     // The size of the matrix
-    private int N;
+    protected int N;
 
     // temporary storage
-    private double[] w;
+    protected double[] w;
     // gammas for the householder operations
-    private double[] gammas;
+    protected double[] gammas;
     // temporary storage
-    private double[] b;
+    protected double[] b;
 
     public TridiagonalDecompositionHouseholder_DDRM() {
         N = 1;
@@ -74,7 +74,6 @@ public class TridiagonalDecompositionHouseholder_DDRM
 
     /**
      * Returns the internal matrix where the decomposed results are stored.
-     * @return
      */
     public DMatrixRMaj getQT() {
         return QT;
@@ -136,7 +135,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
                 for( int i = j+2; i < N; i++ ) {
                     w[i] = QT.data[j*N+i];
                 }
-                QrHelperFunctions_DDRM.rank1UpdateMultL(Q, w, gammas[j + 1], j + 1, j + 1, N);
+                rank1UpdateMultL(Q, gammas[j + 1], j + 1, j + 1, N);
             }
         } else {
             for( int j = N-2; j >= 0; j-- ) {
@@ -144,7 +143,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
                 for( int i = j+2; i < N; i++ ) {
                     w[i] = QT.get(j,i);
                 }
-                QrHelperFunctions_DDRM.rank1UpdateMultR(Q, w, gammas[j + 1], j + 1, j + 1, N, b);
+                rank1UpdateMultR(Q, gammas[j + 1], j + 1, j + 1, N);
             }
         }
 
@@ -281,6 +280,14 @@ public class TridiagonalDecompositionHouseholder_DDRM
         }
 
         QT = A;
+    }
+
+    protected void rank1UpdateMultL(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultL(A, w, gamma, colA0, w0, w1);
+    }
+
+    protected void rank1UpdateMultR(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultR(A, w, gamma, colA0, w0, w1, this.b);
     }
 
     @Override

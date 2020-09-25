@@ -29,9 +29,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Peter Abeles
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -61,6 +58,11 @@ public class BenchmarkDecompositionQR_DDRM {
         houseCol.decompose(A);
         houseCol.getQ(Q,true);
         houseCol.getR(R,true);
+    }
+
+    @Benchmark
+    public void houseCol_decompose() {
+        houseCol.decompose(A);
     }
 
     public static void main(String[] args) throws RunnerException {

@@ -50,10 +50,10 @@ public class WatchedDoubleStepQREigen_DDRM {
     private int N;
 
     DMatrixRMaj A;
-    private DMatrixRMaj u;
-    private double gamma;
+    protected DMatrixRMaj u;
+    protected double gamma;
 
-    private DMatrixRMaj _temp;
+    protected DMatrixRMaj _temp;
 
     // how many steps did it take to find the eigenvalue
     int[] numStepsFind;
@@ -114,7 +114,6 @@ public class WatchedDoubleStepQREigen_DDRM {
         this.checkOrthogonal = orthogonal;
         this.checkUncountable = uncountable;
     }
-
 
     public boolean isZero( int x1 , int x2 ) {
         // this provides a relative threshold for when dealing with very large/small numbers
@@ -282,7 +281,7 @@ public class WatchedDoubleStepQREigen_DDRM {
 
         // get rid of the bump
         if( Q != null ) {
-            QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u.data, gamma, 0, x1, x1 + 3, _temp.data);
+            rank1UpdateMultR(Q, gamma, 0, x1, x1 + 3);
             if( checkOrthogonal && !MatrixFeatures_DDRM.isOrthogonal(Q,UtilEjml.TEST_F64) ) {
                 u.print();
 
@@ -300,7 +299,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         // perform double steps
         for( int i = x1; i < x2-2; i++ ) {
             if( bulgeDoubleStepQn(i) && Q != null ) {
-                QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u.data, gamma, 0, i + 1, i + 4, _temp.data);
+                rank1UpdateMultR(Q,gamma, 0, i + 1, i + 4);
                 if( checkOrthogonal && !MatrixFeatures_DDRM.isOrthogonal(Q,UtilEjml.TEST_F64) )
                     throw new RuntimeException("Bad");
             }
@@ -314,7 +313,7 @@ public class WatchedDoubleStepQREigen_DDRM {
             System.out.println("removing last bump");
         // the last one has to be a single step
         if( x2-2 >= 0 && bulgeSingleStepQn(x2-2) && Q != null ) {
-            QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u.data, gamma, 0, x2 - 1, x2 + 1, _temp.data);
+            rank1UpdateMultR(Q, gamma, 0, x2 - 1, x2 + 1);
             if( checkOrthogonal && !MatrixFeatures_DDRM.isOrthogonal(Q,UtilEjml.TEST_F64) )
                 throw new RuntimeException("Bad");
 
@@ -338,7 +337,7 @@ public class WatchedDoubleStepQREigen_DDRM {
 
         // get rid of the bump
         if( Q != null ) {
-            QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u.data, gamma, 0, x1, x1 + 2, _temp.data);
+            rank1UpdateMultR(Q,gamma, 0, x1, x1 + 2);
             if( checkOrthogonal && !MatrixFeatures_DDRM.isOrthogonal(Q,UtilEjml.TEST_F64) )
                 throw new RuntimeException("Bad");
         }
@@ -352,7 +351,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         // perform simple steps
         for( int i = x1; i < x2-1; i++ ) {
             if( bulgeSingleStepQn(i) && Q != null ) {
-                QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u.data, gamma, 0, i + 1, i + 3, _temp.data);
+                rank1UpdateMultR(Q, gamma, 0, i + 1, i + 3);
                 if( checkOrthogonal && !MatrixFeatures_DDRM.isOrthogonal(Q,UtilEjml.TESTP_F64) )
                     throw new RuntimeException("Bad");
             }
@@ -435,7 +434,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         // compute A_1 = Q_1^T * A * Q_1
 
         // apply Q*A  - just do the 3 rows
-        QrHelperFunctions_DDRM.rank1UpdateMultR(A, u.data, gamma, 0, i, i + 3, _temp.data);
+        rank1UpdateMultR(A, gamma, 0, i, i + 3);
 
         if( set ) {
             A.set(i,i-1,-max*tau);
@@ -449,7 +448,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         }
 
         // apply A*Q - just the three things
-        QrHelperFunctions_DDRM.rank1UpdateMultL(A, u.data, gamma, 0, i, i + 3);
+        rank1UpdateMultL(A, gamma, 0, i, i + 3);
 
 //        System.out.println("  after Q*A*Q ");
 //        A.print();
@@ -513,7 +512,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         // compute A_1 = Q_1^T * A * Q_1
 
         // apply Q*A  - just do the 3 rows
-        QrHelperFunctions_DDRM.rank1UpdateMultR(A, u.data, gamma, 0, i, i + 2, _temp.data);
+        rank1UpdateMultR(A, gamma, 0, i, i + 2);
 
         if( set ) {
             A.set(i,i-1,-max*tau);
@@ -521,7 +520,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         }
 
         // apply A*Q - just the three things
-        QrHelperFunctions_DDRM.rank1UpdateMultL(A, u.data, gamma, 0, i, i + 2);
+        rank1UpdateMultL(A, gamma, 0, i, i + 2);
 
         if(checkUncountable && MatrixFeatures_DDRM.hasUncountable(A)) {
             throw new RuntimeException("bad matrix");
@@ -592,6 +591,14 @@ public class WatchedDoubleStepQREigen_DDRM {
 
     public void addEigenAt( int x1 ) {
         addEigenvalue(A.get(x1,x1));
+    }
+
+    protected void rank1UpdateMultL(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultL(A, u.data, gamma, colA0, w0, w1);
+    }
+
+    protected void rank1UpdateMultR(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+        QrHelperFunctions_DDRM.rank1UpdateMultR(A, u.data, gamma, colA0, w0, w1, _temp.data);
     }
 
     public void printSteps() {

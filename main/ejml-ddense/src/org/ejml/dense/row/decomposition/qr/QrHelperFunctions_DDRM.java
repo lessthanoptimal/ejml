@@ -20,6 +20,7 @@ package org.ejml.dense.row.decomposition.qr;
 
 import org.ejml.data.DMatrixRMaj;
 
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 /**
  * <p>
@@ -43,7 +44,7 @@ import org.ejml.data.DMatrixRMaj;
  * @author Peter Abeles
  */
 public class QrHelperFunctions_DDRM {
-
+    //CONCURRENT_OMIT_BEGIN
     public static double findMax( double[] u, int startU , int length ) {
         double max = -1;
 
@@ -192,6 +193,7 @@ public class QrHelperFunctions_DDRM {
 
         return tau;
     }
+    //CONCURRENT_OMIT_END
 
     /**
      * <p>
@@ -235,12 +237,14 @@ public class QrHelperFunctions_DDRM {
                 _temp[i] += valU*A.data[indexA++];
             }
         }
+
         for( int i = colA0; i < A.numCols; i++ ) {
             _temp[i] *= gamma;
         }
 
         // end of reorder
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(w0, w1, i->{
         for( int i = w0; i < w1; i++ ) {
             double valU = u[i];
 
@@ -249,6 +253,7 @@ public class QrHelperFunctions_DDRM {
                 A.data[indexA++] -= valU*_temp[j];
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     // Useful for concurrent implementations where you don't want to modify u[0] to set it to 1.0
@@ -279,6 +284,7 @@ public class QrHelperFunctions_DDRM {
                 _temp[i] += valU*A.data[indexA++];
             }
         }
+
         for( int i = colA0; i < A.numCols; i++ ) {
             _temp[i] *= gamma;
         }
@@ -291,6 +297,7 @@ public class QrHelperFunctions_DDRM {
             }
         }
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(w0+1, w1, i->{
         for( int i = w0+1; i < w1; i++ ) {
             final double valU = u[i];
 
@@ -299,6 +306,7 @@ public class QrHelperFunctions_DDRM {
                 A.data[indexA++] -= valU*_temp[j];
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void rank1UpdateMultR(DMatrixRMaj A,
@@ -335,6 +343,7 @@ public class QrHelperFunctions_DDRM {
 
         // end of reorder
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(w0, w1, i->{
         for( int i = w0; i < w1; i++ ) {
             double valU = u[i+offsetU];
 
@@ -343,6 +352,7 @@ public class QrHelperFunctions_DDRM {
                 A.data[indexA++] -= valU*_temp[j];
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -366,6 +376,7 @@ public class QrHelperFunctions_DDRM {
                                         int colA0,
                                         int w0 , int w1 )
     {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(colA0, A.numRows, i->{
         for( int i = colA0; i < A.numRows; i++ ) {
             int startIndex = i*A.numCols+w0;
             double sum = 0;
@@ -380,5 +391,6 @@ public class QrHelperFunctions_DDRM {
                 A.data[rowIndex++] += sum*u[j];
             }
         }
+        //CONCURRENT_ABOVE });
     }
 }

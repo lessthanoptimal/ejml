@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -221,7 +221,7 @@ public class DecompositionFactory_DDRM {
     public static EigenDecomposition_F64<DMatrixRMaj> eig(int matrixSize , boolean computeVectors ,
                                                           boolean isSymmetric ) {
         if( isSymmetric ) {
-            TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.tridiagonal(matrixSize);
+            TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_MT_DDRM.tridiagonal(matrixSize);
             return new SymmetricQRAlgorithmDecomposition_DDRM(decomp,computeVectors);
         } else
             return new WatchedDoubleStepQRDecomposition_DDRM(computeVectors);

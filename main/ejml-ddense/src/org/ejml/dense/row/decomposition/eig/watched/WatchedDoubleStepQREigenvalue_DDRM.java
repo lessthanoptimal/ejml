@@ -38,7 +38,11 @@ public class WatchedDoubleStepQREigenvalue_DDRM implements EigenvalueExtractor_D
     int x2;
 
     public WatchedDoubleStepQREigenvalue_DDRM() {
-        implicitQR = new WatchedDoubleStepQREigen_DDRM();
+        this(new WatchedDoubleStepQREigen_DDRM());
+    }
+
+    public WatchedDoubleStepQREigenvalue_DDRM( WatchedDoubleStepQREigen_DDRM implicitQR) {
+        this.implicitQR = implicitQR;
     }
 
     public void setup( DMatrixRMaj A ) {

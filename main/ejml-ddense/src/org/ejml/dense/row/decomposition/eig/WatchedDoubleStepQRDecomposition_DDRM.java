@@ -20,6 +20,7 @@ package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigen_DDRM;
 import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvalue_DDRM;
 import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvector_DDRM;
 import org.ejml.dense.row.decomposition.hessenberg.HessenbergSimilarDecomposition_DDRM;
@@ -54,10 +55,19 @@ public class WatchedDoubleStepQRDecomposition_DDRM
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
 
-    public WatchedDoubleStepQRDecomposition_DDRM(boolean computeVectors) {
-        hessenberg = new HessenbergSimilarDecomposition_DDRM(10);
-        algValue = new WatchedDoubleStepQREigenvalue_DDRM();
-        algVector = new WatchedDoubleStepQREigenvector_DDRM();
+    public WatchedDoubleStepQRDecomposition_DDRM(boolean computeVectors)
+    {
+        this(new HessenbergSimilarDecomposition_DDRM(10),
+                new WatchedDoubleStepQREigen_DDRM(),
+                computeVectors);
+    }
+
+    public WatchedDoubleStepQRDecomposition_DDRM(HessenbergSimilarDecomposition_DDRM hessenberg,
+                                                 WatchedDoubleStepQREigen_DDRM eigenQR,
+                                                 boolean computeVectors) {
+        this.hessenberg = hessenberg;
+        this.algValue = new WatchedDoubleStepQREigenvalue_DDRM(eigenQR);
+        this.algVector = new WatchedDoubleStepQREigenvector_DDRM();
 
         this.computeVectors = computeVectors;
     }

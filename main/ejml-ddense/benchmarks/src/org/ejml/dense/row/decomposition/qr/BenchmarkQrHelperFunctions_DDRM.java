@@ -35,14 +35,13 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value=2)
-public class BenchmarkDecompositionQR_MT_DDRM {
-    //    @Param({"100", "500", "1000", "5000", "10000"})
+public class BenchmarkQrHelperFunctions_DDRM {
     @Param({"1000"})
     public int size;
 
     public DMatrixRMaj A,Q,R;
-
-    QRDecompositionHouseholderColumn_MT_DDRM houseCol = new QRDecompositionHouseholderColumn_MT_DDRM();
+    public double[] u;
+    public double[] v;
 
     @Setup
     public void setup() {
@@ -51,23 +50,32 @@ public class BenchmarkDecompositionQR_MT_DDRM {
         A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
         Q = new DMatrixRMaj(size,size);
         R = new DMatrixRMaj(Q.numCols,Q.numCols);
+
+        v = new double[size];
+        u = new double[size];
+        for (int i = 0; i < size; i++) {
+            u[i] = rand.nextGaussian();
+        }
     }
 
     @Benchmark
-    public void houseCol() {
-        houseCol.decompose(A);
-        houseCol.getQ(Q,true);
-        houseCol.getR(R,true);
+    public void rank1UpdateMultR_u0() {
+        QrHelperFunctions_DDRM.rank1UpdateMultR_u0(Q, u, 1.0, 1.2, 0, 0, size, v);
     }
 
     @Benchmark
-    public void houseCol_decompose() {
-        houseCol.decompose(A);
+    public void rank1UpdateMultR() {
+        QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u, 0, 1.2, 0, 0, size, v);
+    }
+
+    @Benchmark
+    public void rank1UpdateMultL() {
+        QrHelperFunctions_DDRM.rank1UpdateMultL(Q, u, 1.0, 0, 0, size);
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkDecompositionQR_MT_DDRM.class.getSimpleName())
+                .include(BenchmarkQrHelperFunctions_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();
