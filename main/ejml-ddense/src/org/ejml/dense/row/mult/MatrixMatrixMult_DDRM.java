@@ -39,22 +39,22 @@ import javax.annotation.Generated;
  *
  * <p>
  * Algorithms that are labeled as 'reorder' are designed to avoid caching jumping issues, some times at the cost
- * of increasing the number of operations.  This is important for large matrices.  The straight forward 
+ * of increasing the number of operations. This is important for large matrices. The straight forward 
  * implementation seems to be faster for small matrices.
  * </p>
  * 
  * <p>
- * Algorithms that are labeled as 'aux' use an auxiliary array of length n.  This array is used to create
- * a copy of an out of sequence column vector that is referenced several times.  This reduces the number
- * of cache misses.  If the 'aux' parameter passed in is null then the array is declared internally.
+ * Algorithms that are labeled as 'aux' use an auxiliary array of length n. This array is used to create
+ * a copy of an out of sequence column vector that is referenced several times. This reduces the number
+ * of cache misses. If the 'aux' parameter passed in is null then the array is declared internally.
  * </p>
  *
  * <p>
  * Typically the straight forward implementation runs about 30% faster on smaller matrices and
- * about 5 times slower on larger matrices.  This is all computer architecture and matrix shape/size specific.
+ * about 5 times slower on larger matrices. This is all computer architecture and matrix shape/size specific.
  * </p>
  *
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixMatrixMult_DDRM</p>
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateMatrixMatrixMult_DDRM</p>
  *
  * @author Peter Abeles
  */

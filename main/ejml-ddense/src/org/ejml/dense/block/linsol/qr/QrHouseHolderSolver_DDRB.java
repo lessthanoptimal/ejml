@@ -27,10 +27,9 @@ import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
 /**
  * <p>
- * A solver for {@link org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB}.  Systems are solved for using the standard
+ * A solver for {@link org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB}. Systems are solved for using the standard
  * QR decomposition method, sketched below.
  * </p>
  *
@@ -55,7 +54,6 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
     // the input matrix which has been decomposed
     protected DMatrixRBlock QR;
 
-
     public QrHouseHolderSolver_DDRB() {
         decomposer.setSaveW(false);
     }
@@ -67,12 +65,12 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
      * @return true if the decomposition was successful.
      */
     @Override
-    public boolean setA(DMatrixRBlock A) {
-        if( A.numRows < A.numCols )
-            throw new IllegalArgumentException("Number of rows must be more than or equal to the number of columns.  " +
+    public boolean setA( DMatrixRBlock A ) {
+        if (A.numRows < A.numCols)
+            throw new IllegalArgumentException("Number of rows must be more than or equal to the number of columns. " +
                     "Can't solve an underdetermined system.");
 
-        if( !decomposer.decompose(A))
+        if (!decomposer.decompose(A))
             return false;
 
         this.QR = decomposer.getQR();
@@ -91,12 +89,12 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
     }
 
     @Override
-    public void solve(DMatrixRBlock B, DMatrixRBlock X) {
+    public void solve( DMatrixRBlock B, DMatrixRBlock X ) {
 
-        if( B.numRows != QR.numRows )
+        if (B.numRows != QR.numRows)
             throw new IllegalArgumentException("Row of B and A do not match");
 
-        X.reshape(QR.numCols,B.numCols);
+        X.reshape(QR.numCols, B.numCols);
 
         // The system being solved for can be described as:
         // Q*R*X = B
@@ -107,14 +105,13 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
 
         // Second solve for Y using the upper triangle matrix R and the just computed Y
         // X = R^-1 * Y
-        MatrixOps_DDRB.extractAligned(B,X);
+        MatrixOps_DDRB.extractAligned(B, X);
 
         // extract a block aligned matrix
-        int M = Math.min(QR.numRows,QR.numCols);
+        int M = Math.min(QR.numRows, QR.numCols);
 
-        TriangularSolver_DDRB.solve(QR.blockLength,true,
-                new DSubmatrixD1(QR,0,M,0,M),new DSubmatrixD1(X),false);
-
+        TriangularSolver_DDRB.solve(QR.blockLength, true,
+                new DSubmatrixD1(QR, 0, M, 0, M), new DSubmatrixD1(X), false);
     }
 
     /**
@@ -123,10 +120,10 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
      * @param A_inv Where the inverted matrix saved. Modified.
      */
     @Override
-    public void invert(DMatrixRBlock A_inv) {
-        int M = Math.min(QR.numRows,QR.numCols);
-        if( A_inv.numRows != M || A_inv.numCols != M )
-            throw new IllegalArgumentException("A_inv must be square an have dimension "+M);
+    public void invert( DMatrixRBlock A_inv ) {
+        int M = Math.min(QR.numRows, QR.numCols);
+        if (A_inv.numRows != M || A_inv.numCols != M)
+            throw new IllegalArgumentException("A_inv must be square an have dimension " + M);
 
 
         // Solve for A^-1
@@ -140,8 +137,8 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
         // Solve using upper triangular R matrix
         // R*A^-1 = y
         // A^-1 = R^-1*y
-        TriangularSolver_DDRB.solve(QR.blockLength,true,
-                new DSubmatrixD1(QR,0,M,0,M),new DSubmatrixD1(A_inv),false);
+        TriangularSolver_DDRB.solve(QR.blockLength, true,
+                new DSubmatrixD1(QR, 0, M, 0, M), new DSubmatrixD1(A_inv), false);
     }
 
     @Override

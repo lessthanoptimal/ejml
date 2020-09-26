@@ -84,8 +84,11 @@ public class AutocodeConcurrentApp {
 				} else {
 					line = line.replace(classNameOld+"(",classNameNew+"(");
 				}
-				if( !omit )
-					outputLines.add(line);
+				if (omit)
+					continue;
+				for( Macro m : macros )
+					line = line.replace(m.name,m.text);
+				outputLines.add(line);
 				continue;
 			}
 			String type = readType(line,where+prefix.length());
@@ -118,8 +121,16 @@ public class AutocodeConcurrentApp {
 				case "OMIT_END":
 					omit = false;
 					break;
-				case "MACRO":
-					throw new RuntimeException("MACRO not handled yet");
+				case "MACRO": {
+					String[] words = message.split(" ");
+					if( words.length != 2)
+						throw new RuntimeException("Expected only two words for the macro. "+message);
+					Macro m = new Macro();
+					m.name = words[0];
+					m.text = words[1];
+					macros.add(m);
+					break;
+				}
 				default:
 					throw new RuntimeException("Unknown: "+type);
 			}
@@ -324,6 +335,11 @@ public class AutocodeConcurrentApp {
 				"main/ejml-ddense/src/org/ejml/dense/row/decomposition/hessenberg",
 				"main/ejml-ddense/src/org/ejml/dense/row/decomposition/qr",
 				"main/ejml-ddense/src/org/ejml/dense/block/",
+				"main/ejml-ddense/src/org/ejml/dense/block/decomposition/chol",
+				"main/ejml-ddense/src/org/ejml/dense/block/decomposition/qr",
+				"main/ejml-ddense/src/org/ejml/dense/block/decomposition/hessenberg",
+				"main/ejml-ddense/src/org/ejml/dense/block/linsol/chol",
+				"main/ejml-ddense/src/org/ejml/dense/block/linsol/qr",
 		};
 
 		String[] files = new String[]{

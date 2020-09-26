@@ -27,6 +27,12 @@ import org.ejml.dense.block.TriangularSolver_DDRB;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
+//CONCURRENT_INLINE import org.ejml.dense.block.*;
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+
+//CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
+//CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
+//CONCURRENT_MACRO InnerRankUpdate_DDRB InnerRankUpdate_MT_DDRB
 
 /**
  * <p>
@@ -43,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrixRBlock> {
 
     // if it should compute an upper or lower triangular matrix
-    private boolean lower = false;
+    private final boolean lower;
     // The decomposed matrix.
     private DMatrixRBlock T;
 
@@ -60,7 +66,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
      *
      * @param lower Should it decompose it into a lower triangular matrix or not.
      */
-    public CholeskyOuterForm_DDRB(boolean lower) {
+    public CholeskyOuterForm_DDRB( boolean lower ) {
         this.lower = lower;
     }
 
@@ -71,13 +77,13 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
      * @return If it succeeded or not.
      */
     @Override
-    public boolean decompose(DMatrixRBlock A) {
-        if( A.numCols != A.numRows )
+    public boolean decompose( DMatrixRBlock A ) {
+        if (A.numCols != A.numRows)
             throw new IllegalArgumentException("A must be square");
 
         this.T = A;
 
-        if( lower )
+        if (lower)
             return decomposeLower();
         else
             return decomposeUpper();
@@ -90,8 +96,8 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
         subB.set(T);
         subC.set(T);
 
-        for( int i = 0; i < T.numCols; i += blockLength ) {
-            int widthA = Math.min(blockLength, T.numCols-i);
+        for (int i = 0; i < T.numCols; i += blockLength) {
+            int widthA = Math.min(blockLength, T.numCols - i);
 
             subA.col0 = i;           subA.col1 = i+widthA;
             subA.row0 = subA.col0;   subA.row1 = subA.col1;
@@ -103,24 +109,23 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
             subC.row0 = i+widthA;    subC.row1 = T.numRows;
             
             // cholesky on inner block A
-            if( !InnerCholesky_DDRB.lower(subA))
+            if (!InnerCholesky_DDRB.lower(subA))
                 return false;
 
             // on the last block these operations are not needed.
-            if( widthA == blockLength ) {
+            if (widthA == blockLength) {
                 // B = L^-1 B
-                TriangularSolver_DDRB.solveBlock(blockLength,false,subA,subB,false,true);
+                TriangularSolver_DDRB.solveBlock(blockLength, false, subA, subB, false, true);
 
                 // C = C - B * B^T
-                InnerRankUpdate_DDRB.symmRankNMinus_L(blockLength,subC,subB);
+                InnerRankUpdate_DDRB.symmRankNMinus_L(blockLength, subC, subB);
             }
         }
 
-        MatrixOps_DDRB.zeroTriangle(true,T);
+        MatrixOps_DDRB.zeroTriangle(true, T);
 
         return true;
     }
-
 
     private boolean decomposeUpper() {
         int blockLength = T.blockLength;
@@ -129,8 +134,8 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
         subB.set(T);
         subC.set(T);
 
-        for( int i = 0; i < T.numCols; i += blockLength ) {
-            int widthA = Math.min(blockLength, T.numCols-i);
+        for (int i = 0; i < T.numCols; i += blockLength) {
+            int widthA = Math.min(blockLength, T.numCols - i);
 
             subA.col0 = i;          subA.col1 = i+widthA;
             subA.row0 = subA.col0;  subA.row1 = subA.col1;
@@ -142,20 +147,20 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
             subC.row0 = i+widthA;   subC.row1 = T.numCols;
 
             // cholesky on inner block A
-            if( !InnerCholesky_DDRB.upper(subA))
+            if (!InnerCholesky_DDRB.upper(subA))
                 return false;
 
             // on the last block these operations are not needed.
-            if( widthA == blockLength ) {
+            if (widthA == blockLength) {
                 // B = U^-1 B
-                TriangularSolver_DDRB.solveBlock(blockLength,true,subA,subB,true,false);
+                TriangularSolver_DDRB.solveBlock(blockLength, true, subA, subB, true, false);
 
                 // C = C - B^T * B
-                InnerRankUpdate_DDRB.symmRankNMinus_U(blockLength,subC,subB);
+                InnerRankUpdate_DDRB.symmRankNMinus_U(blockLength, subC, subB);
             }
         }
 
-        MatrixOps_DDRB.zeroTriangle(false,T);
+        MatrixOps_DDRB.zeroTriangle(false, T);
 
         return true;
     }
@@ -166,8 +171,8 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
     }
 
     @Override
-    public DMatrixRBlock getT(@Nullable DMatrixRBlock T) {
-        if( T == null )
+    public DMatrixRBlock getT( @Nullable DMatrixRBlock T ) {
+        if (T == null)
             return this.T;
         T.set(this.T);
 
@@ -179,9 +184,9 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
         double prod = 1.0;
 
         int blockLength = T.blockLength;
-        for( int i = 0; i < T.numCols; i += blockLength ) {
+        for (int i = 0; i < T.numCols; i += blockLength) {
             // width of the submatrix
-            int widthA = Math.min(blockLength, T.numCols-i);
+            int widthA = Math.min(blockLength, T.numCols - i);
 
             // index of the first element in the block
             int indexT = i*T.numCols + i*widthA;
@@ -189,7 +194,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
             // product along the diagonal
             for (int j = 0; j < widthA; j++) {
                 prod *= T.data[indexT];
-                indexT += widthA+1;
+                indexT += widthA + 1;
             }
         }
 

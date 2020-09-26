@@ -26,6 +26,7 @@ import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
 import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
+import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -40,6 +41,10 @@ public class CholeskyDecomposition_DDRB_to_DDRM
 
     public CholeskyDecomposition_DDRB_to_DDRM(boolean lower) {
         super(new CholeskyOuterForm_DDRB(lower), EjmlParameters.BLOCK_WIDTH);
+    }
+
+    public CholeskyDecomposition_DDRB_to_DDRM( DecompositionInterface<DMatrixRBlock> alg, int blockLength ) {
+        super(alg, blockLength);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,8 @@ package org.ejml.dense.block;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 
+//CONCURRENT_INLINE import static org.ejml.dense.block.InnerRankUpdate_DDRB.*;
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 /**
  * Performs rank-n update operations on the inner blocks of a {@link DMatrixRBlock}
@@ -37,48 +39,49 @@ public class InnerRankUpdate_DDRB {
      * <br>
      * A = A + &alpha; B <sup>T</sup>B
      * </p>
-     * 
+     *
      * @param blockLength Size of the block in the block matrix.
      * @param alpha scaling factor for right hand side.
      * @param A Block aligned submatrix.
      * @param B Block aligned submatrix.
      */
-    public static void rankNUpdate(int blockLength , double alpha ,
-                                   DSubmatrixD1 A , DSubmatrixD1 B )
-    {
+    public static void rankNUpdate( int blockLength, double alpha, DSubmatrixD1 A, DSubmatrixD1 B ) {
 
-        int heightB = B.row1-B.row0;
-        if( heightB > blockLength )
+        int heightB = B.row1 - B.row0;
+        if (heightB > blockLength)
             throw new IllegalArgumentException("Height of B cannot be greater than the block length");
 
-        int N = B.col1-B.col0;
+        int N = B.col1 - B.col0;
 
-        if( A.col1-A.col0 != N )
+        if (A.col1 - A.col0 != N)
             throw new IllegalArgumentException("A does not have the expected number of columns based on B's width");
-        if( A.row1-A.row0 != N )
+        if (A.row1 - A.row0 != N)
             throw new IllegalArgumentException("A does not have the expected number of rows based on B's width");
 
-        for( int i = B.col0; i < B.col1; i += blockLength ) {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0,B.col1,blockLength,i->{
+        for (int i = B.col0; i < B.col1; i += blockLength) {
 
             int indexB_i = B.row0*B.original.numCols + i*heightB;
-            int widthB_i = Math.min(blockLength,B.col1-i);
+            int widthB_i = Math.min(blockLength, B.col1 - i);
 
-            int rowA = i-B.col0+A.row0;
-            int heightA = Math.min( blockLength , A.row1 - rowA);
+            int rowA = i - B.col0 + A.row0;
+            int heightA = Math.min(blockLength, A.row1 - rowA);
 
-            for( int j = B.col0; j < B.col1; j += blockLength ) {
+            for (int j = B.col0; j < B.col1; j += blockLength) {
 
-                int widthB_j = Math.min(blockLength,B.col1-j);
+                int widthB_j = Math.min(blockLength, B.col1 - j);
 
-                int indexA = rowA * A.original.numCols + (j-B.col0+A.col0)*heightA;
+                int indexA = rowA*A.original.numCols + (j - B.col0 + A.col0)*heightA;
                 int indexB_j = B.row0*B.original.numCols + j*heightB;
 
                 InnerMultiplication_DDRB.blockMultPlusTransA(alpha,
-                        B.original.data,B.original.data,A.original.data,
-                        indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
+                        B.original.data, B.original.data, A.original.data,
+                        indexB_i, indexB_j, indexA, heightB, widthB_i, widthB_j);
             }
         }
+        //CONCURRENT_ABOVE });
     }
+
 
     /**
      * <p>
@@ -88,47 +91,48 @@ public class InnerRankUpdate_DDRB {
      * A = A - B <sup>T</sup>B
      * </p>
      */
-    public static void symmRankNMinus_U(int blockLength ,
-                                        DSubmatrixD1 A , DSubmatrixD1 B )
-    {
+    public static void symmRankNMinus_U( int blockLength,
+                                         DSubmatrixD1 A, DSubmatrixD1 B ) {
 
-        int heightB = B.row1-B.row0;
-        if( heightB > blockLength )
+        int heightB = B.row1 - B.row0;
+        if (heightB > blockLength)
             throw new IllegalArgumentException("Height of B cannot be greater than the block length");
 
-        int N = B.col1-B.col0;
+        int N = B.col1 - B.col0;
 
-        if( A.col1-A.col0 != N )
+        if (A.col1 - A.col0 != N)
             throw new IllegalArgumentException("A does not have the expected number of columns based on B's width");
-        if( A.row1-A.row0 != N )
+        if (A.row1 - A.row0 != N)
             throw new IllegalArgumentException("A does not have the expected number of rows based on B's width");
 
 
-        for( int i = B.col0; i < B.col1; i += blockLength ) {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0,B.col1,blockLength,i->{
+        for (int i = B.col0; i < B.col1; i += blockLength) {
 
             int indexB_i = B.row0*B.original.numCols + i*heightB;
-            int widthB_i = Math.min(blockLength,B.col1-i);
+            int widthB_i = Math.min(blockLength, B.col1 - i);
 
-            int rowA = i-B.col0+A.row0;
-            int heightA = Math.min( blockLength , A.row1 - rowA);
+            int rowA = i - B.col0 + A.row0;
+            int heightA = Math.min(blockLength, A.row1 - rowA);
 
-            for( int j = i; j < B.col1; j += blockLength ) {
+            for (int j = i; j < B.col1; j += blockLength) {
 
-                int widthB_j = Math.min(blockLength,B.col1-j);
+                int widthB_j = Math.min(blockLength, B.col1 - j);
 
-                int indexA = rowA * A.original.numCols + (j-B.col0+A.col0)*heightA;
+                int indexA = rowA*A.original.numCols + (j - B.col0 + A.col0)*heightA;
                 int indexB_j = B.row0*B.original.numCols + j*heightB;
 
-                if( i == j ) {
+                if (i == j) {
                     // only the upper portion of this block needs to be modified since it is along a diagonal
-                    multTransABlockMinus_U( B.original.data,A.original.data,
-                            indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
+                    multTransABlockMinus_U(B.original.data, A.original.data,
+                            indexB_i, indexB_j, indexA, heightB, widthB_i, widthB_j);
                 } else {
-                    multTransABlockMinus( B.original.data,A.original.data,
-                            indexB_i,indexB_j,indexA,heightB,widthB_i,widthB_j);
+                    multTransABlockMinus(B.original.data, A.original.data,
+                            indexB_i, indexB_j, indexA, heightB, widthB_i, widthB_j);
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -139,46 +143,46 @@ public class InnerRankUpdate_DDRB {
      * A = A - B*B<sup>T</sup><br>
      * </p>
      */
-    public static void symmRankNMinus_L(int blockLength ,
-                                        DSubmatrixD1 A , DSubmatrixD1 B )
-    {
-        int widthB = B.col1-B.col0;
-        if( widthB > blockLength )
+    public static void symmRankNMinus_L( int blockLength,
+                                         DSubmatrixD1 A, DSubmatrixD1 B ) {
+        int widthB = B.col1 - B.col0;
+        if (widthB > blockLength)
             throw new IllegalArgumentException("Width of B cannot be greater than the block length");
 
-        int N = B.row1-B.row0;
+        int N = B.row1 - B.row0;
 
-        if( A.col1-A.col0 != N )
+        if (A.col1 - A.col0 != N)
             throw new IllegalArgumentException("A does not have the expected number of columns based on B's height");
-        if( A.row1-A.row0 != N )
+        if (A.row1 - A.row0 != N)
             throw new IllegalArgumentException("A does not have the expected number of rows based on B's height");
 
-        for( int i = B.row0; i < B.row1; i += blockLength ) {
-
-
-            int heightB_i = Math.min(blockLength,B.row1-i);
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.row0,B.row1,blockLength,i->{
+        for (int i = B.row0; i < B.row1; i += blockLength) {
+            int heightB_i = Math.min(blockLength, B.row1 - i);
             int indexB_i = i*B.original.numCols + heightB_i*B.col0;
 
-            int rowA = i-B.row0+A.row0;
-            int heightA = Math.min( blockLength , A.row1 - rowA);
+            int rowA = i - B.row0 + A.row0;
+            int heightA = Math.min(blockLength, A.row1 - rowA);
 
-            for( int j = B.row0; j <= i; j += blockLength ) {
-                
-                int widthB_j = Math.min(blockLength,B.row1-j);
+            for (int j = B.row0; j <= i; j += blockLength) {
 
-                int indexA = rowA * A.original.numCols + (j-B.row0+A.col0)*heightA;
+                int widthB_j = Math.min(blockLength, B.row1 - j);
+
+                int indexA = rowA*A.original.numCols + (j - B.row0 + A.col0)*heightA;
                 int indexB_j = j*B.original.numCols + widthB_j*B.col0;
 
-                if( i == j ) {
-                    multTransBBlockMinus_L( B.original.data,A.original.data,
-                            indexB_i,indexB_j,indexA,widthB,heightB_i,widthB_j);
+                if (i == j) {
+                    multTransBBlockMinus_L(B.original.data, A.original.data,
+                            indexB_i, indexB_j, indexA, widthB, heightB_i, widthB_j);
                 } else {
-                    multTransBBlockMinus( B.original.data,A.original.data,
-                            indexB_i,indexB_j,indexA,widthB,heightB_i,widthB_j);
+                    multTransBBlockMinus(B.original.data, A.original.data,
+                            indexB_i, indexB_j, indexA, widthB, heightB_i, widthB_j);
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
+    //CONCURRENT_OMIT_BEGIN
 
     /**
      * <p>
@@ -187,15 +191,15 @@ public class InnerRankUpdate_DDRB {
      * c = c - a<sup>T</sup>a<br>
      * </p>
      */
-    protected static void multTransABlockMinus( double[] dataA, double []dataC,
+    protected static void multTransABlockMinus( double[] dataA, double[] dataC,
                                                 int indexA, int indexB, int indexC,
                                                 final int heightA, final int widthA, final int widthC ) {
-//        for( int i = 0; i < widthA; i++ ) {
-//            for( int k = 0; k < heightA; k++ ) {
+//        for (int i = 0; i < widthA; i++) {
+//            for (int k = 0; k < heightA; k++) {
 //
 //                double valA = dataA[k*widthA + i + indexA];
-//                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] -= valA * dataA[k*widthC + j + indexB];
+//                for (int j = 0; j < widthC; j++) {
+//                    dataC[i*widthC + j + indexC] -= valA*dataA[k*widthC + j + indexB];
 //                }
 //            }
 //        }
@@ -205,19 +209,19 @@ public class InnerRankUpdate_DDRB {
         int startA = indexA;
 
         //for( int k = 0; k < heightA; k++ ) {
-        for( ; rowB != endLoopK; rowB += widthC , startA += widthA ) {
+        for (; rowB != endLoopK; rowB += widthC, startA += widthA) {
             int a = startA;
             int c = indexC;
 
             int endA = a + widthA;
             int endB = rowB + widthC;
 
-            while( a != endA ) {
+            while (a != endA) {
                 double valA = dataA[a++];
 
                 int b = rowB;
-                while( b != endB ) {
-                    dataC[ c++ ] -= valA * dataA[b++];
+                while (b != endB) {
+                    dataC[c++] -= valA*dataA[b++];
                 }
             }
         }
@@ -230,31 +234,31 @@ public class InnerRankUpdate_DDRB {
      * c = c - a<sup>T</sup>a<br>
      * </p>
      */
-    protected static void multTransABlockMinus_U( double[] dataA, double []dataC,
+    protected static void multTransABlockMinus_U( double[] dataA, double[] dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int heightA, final int widthA, final int widthC ) {
-//        for( int i = 0; i < widthA; i++ ) {
-//            for( int k = 0; k < heightA; k++ ) {
+//        for (int i = 0; i < widthA; i++) {
+//            for (int k = 0; k < heightA; k++) {
 //
 //                double valA = dataA[k*widthA + i + indexA];
-//                for( int j = i; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] -= valA * dataA[k*widthC + j + indexB];
+//                for (int j = i; j < widthC; j++) {
+//                    dataC[i*widthC + j + indexC] -= valA*dataA[k*widthC + j + indexB];
 //                }
 //            }
 //        }
 
-        for( int i = 0; i < widthA; i++ ) {
-            for( int k = 0; k < heightA; k++ ) {
+        for (int i = 0; i < widthA; i++) {
+            for (int k = 0; k < heightA; k++) {
 
                 double valA = dataA[k*widthA + i + indexA];
                 int b = k*widthC + indexB + i;
                 int c = i*widthC + indexC + i;
 
-                int endC = (c-i)+widthC;
+                int endC = (c - i) + widthC;
 
-                while( c != endC ) {
+                while (c != endC) {
 //                for( int j = i; j < widthC; j++ ) {
-                    dataC[ c++ ] -= valA * dataA[b++];
+                    dataC[c++] -= valA*dataA[b++];
                 }
             }
         }
@@ -267,36 +271,36 @@ public class InnerRankUpdate_DDRB {
      * c = c - a*a<sup>T</sup><br>
      * </p>
      */
-    protected static void multTransBBlockMinus( final double[] dataA, final double []dataC,
+    protected static void multTransBBlockMinus( final double[] dataA, final double[] dataC,
                                                 final int indexA, final int indexB, final int indexC,
                                                 final int widthA, final int heightA, final int widthC ) {
-//        for( int i = 0; i < heightA; i++ ) {
-//            for( int j = 0; j < widthC; j++ ) {
+//        for (int i = 0; i < heightA; i++) {
+//            for (int j = 0; j < widthC; j++) {
 //                double sum = 0;
-//                for( int k = 0; k < widthA; k++ ) {
-//                    sum += dataA[i*widthA + k + indexA] * dataA[j*widthA + k + indexB];
+//                for (int k = 0; k < widthA; k++) {
+//                    sum += dataA[i*widthA + k + indexA]*dataA[j*widthA + k + indexB];
 //                }
-//                dataC[ i*widthC + j + indexC ] -= sum;
+//                dataC[i*widthC + j + indexC] -= sum;
 //            }
 //        }
-        
+
         int rowA = indexA;
         int c = indexC;
-        for( int i = 0; i < heightA; i++ , rowA += widthA ) {
+        for (int i = 0; i < heightA; i++, rowA += widthA) {
             final int endA = rowA + widthA;
             int rowB = indexB;
             final int endLoopJ = c + widthC;
 
             // for( int j = 0; j < widthC; j++  ) {
-            while( c != endLoopJ ) {
+            while (c != endLoopJ) {
                 int a = rowA;
                 int b = rowB;
 
                 double sum = 0;
-                while( a != endA ) {
-                    sum += dataA[a++] * dataA[b++];
+                while (a != endA) {
+                    sum += dataA[a++]*dataA[b++];
                 }
-                dataC[ c++ ] -= sum;
+                dataC[c++] -= sum;
                 rowB += widthA;
             }
         }
@@ -309,36 +313,36 @@ public class InnerRankUpdate_DDRB {
      * c = c - a*a<sup>T</sup><br>
      * </p>
      */
-    protected static void multTransBBlockMinus_L( double[] dataA, double []dataC,
+    protected static void multTransBBlockMinus_L( double[] dataA, double[] dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int widthA, final int heightA, final int widthC ) {
-//        for( int i = 0; i < heightA; i++ ) {
-//            for( int j = 0; j <= i; j++ ) {
+//        for (int i = 0; i < heightA; i++) {
+//            for (int j = 0; j <= i; j++) {
 //                double sum = 0;
-//                for( int k = 0; k < widthA; k++ ) {
-//                    sum += dataA[i*widthA + k + indexA] * dataA[j*widthA + k + indexB];
+//                for (int k = 0; k < widthA; k++) {
+//                    sum += dataA[i*widthA + k + indexA]*dataA[j*widthA + k + indexB];
 //                }
-//                dataC[ i*widthC + j + indexC ] -= sum;
+//                dataC[i*widthC + j + indexC] -= sum;
 //            }
 //        }
 
-        for( int i = 0; i < heightA; i++ ) {
-            int rowA = i*widthA+indexA;
+        for (int i = 0; i < heightA; i++) {
+            int rowA = i*widthA + indexA;
             int endA = rowA + widthA;
             int rowB = indexB;
             int rowC = i*widthC + indexC;
-            for( int j = 0; j <= i; j++ , rowB += widthA) {
+            for (int j = 0; j <= i; j++, rowB += widthA) {
                 double sum = 0;
 
                 int a = rowA;
                 int b = rowB;
 
-                while( a != endA ) {
-                    sum += dataA[a++] * dataA[b++];
+                while (a != endA) {
+                    sum += dataA[a++]*dataA[b++];
                 }
-                dataC[ rowC + j ] -= sum;
+                dataC[rowC + j] -= sum;
             }
         }
-
     }
+    //CONCURRENT_OMIT_END
 }

@@ -19,6 +19,8 @@
 package org.ejml.dense.block;
 
 import org.ejml.UtilEjml;
+import org.ejml.concurrency.GrowArray;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DSubmatrixD1;
@@ -31,7 +33,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 /**
  * @author Peter Abeles
  */
@@ -40,88 +41,84 @@ public class TestTriangularSolver_DDRB {
     Random rand = new Random(234534);
 
     @Test
-    public void invert_two() {
+    void invert_two() {
         // block size
         int r = 3;
 
-        double temp[] = new double[r*r];
+        var workspace = new GrowArray<>(DGrowArray::new);
 
-        for( int size = 1; size <= 9; size++ ) {
-            DMatrixRBlock T = MatrixOps_DDRB.createRandom(size,size,-1,1,rand,r);
-            MatrixOps_DDRB.zeroTriangle(true,T);
+        for (int size = 1; size <= 9; size++) {
+            DMatrixRBlock T = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, r);
+            MatrixOps_DDRB.zeroTriangle(true, T);
 
             DMatrixRBlock T_inv = T.copy();
 
-            TriangularSolver_DDRB.invert(r,false,new DSubmatrixD1(T),new DSubmatrixD1(T_inv),temp);
-
-            DMatrixRBlock C = new DMatrixRBlock(size,size,r);
-
-            MatrixOps_DDRB.mult(T,T_inv,C);
-
-            assertTrue(GenericMatrixOps_F64.isIdentity(C,UtilEjml.TEST_F64));
+            // Solve with the same input being passed in
+            TriangularSolver_DDRB.invert(r, false, new DSubmatrixD1(T), new DSubmatrixD1(T_inv), workspace);
+            DMatrixRBlock C = new DMatrixRBlock(size, size, r);
+            MatrixOps_DDRB.mult(T, T_inv, C);
+            assertTrue(GenericMatrixOps_F64.isIdentity(C, UtilEjml.TEST_F64));
 
             // see if passing in the same matrix instance twice messes it up or not
-            TriangularSolver_DDRB.invert(r,false,new DSubmatrixD1(T),new DSubmatrixD1(T),temp);
-
-            assertTrue(MatrixOps_DDRB.isEquals(T,T_inv, UtilEjml.TEST_F64));
+            TriangularSolver_DDRB.invert(r, false, new DSubmatrixD1(T), new DSubmatrixD1(T), workspace);
+            assertTrue(MatrixOps_DDRB.isEquals(T, T_inv, UtilEjml.TEST_F64));
         }
     }
 
     @Test
-    public void invert_one() {
+    void invert_one() {
         // block size
         int r = 3;
 
-        double temp[] = new double[r*r];
+        var workspace = new GrowArray<>(DGrowArray::new);
 
-        for( int size = 1; size <= 9; size++ ) {
-            DMatrixRBlock T = MatrixOps_DDRB.createRandom(size,size,-1,1,rand,r);
-            MatrixOps_DDRB.zeroTriangle(true,T);
+        for (int size = 1; size <= 9; size++) {
+            DMatrixRBlock T = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, r);
+            MatrixOps_DDRB.zeroTriangle(true, T);
 
             DMatrixRBlock T_inv = T.copy();
 
-            TriangularSolver_DDRB.invert(r,false,new DSubmatrixD1(T_inv),temp);
+            TriangularSolver_DDRB.invert(r, false, new DSubmatrixD1(T_inv), workspace);
 
-            DMatrixRBlock C = new DMatrixRBlock(size,size,r);
+            DMatrixRBlock C = new DMatrixRBlock(size, size, r);
 
-            MatrixOps_DDRB.mult(T,T_inv,C);
+            MatrixOps_DDRB.mult(T, T_inv, C);
 
-            assertTrue(GenericMatrixOps_F64.isIdentity(C,UtilEjml.TEST_F64));
+            assertTrue(GenericMatrixOps_F64.isIdentity(C, UtilEjml.TEST_F64));
         }
     }
-
 
     /**
      * Test solving several different triangular systems with different sizes.
      * All matrices begin and end along block boundaries.
      */
     @Test
-    public void testSolve() {
+    void solve() {
         // block size
         int r = 3;
 
-        for( int dir = 0; dir < 2; dir++ ) {
+        for (int dir = 0; dir < 2; dir++) {
             boolean upper = dir == 0;
-            for( int triangleSize = 1; triangleSize <= 9; triangleSize++ ) {
-                for( int cols = 1; cols <= 9; cols++ ) {
+            for (int triangleSize = 1; triangleSize <= 9; triangleSize++) {
+                for (int cols = 1; cols <= 9; cols++) {
 //                System.out.println("triangle "+triangleSize+" cols "+cols);
-                    DMatrixRBlock T = MatrixOps_DDRB.createRandom(triangleSize,triangleSize,-1,1,rand,r);
-                    MatrixOps_DDRB.zeroTriangle(true,T);
+                    DMatrixRBlock T = MatrixOps_DDRB.createRandom(triangleSize, triangleSize, -1, 1, rand, r);
+                    MatrixOps_DDRB.zeroTriangle(true, T);
 
-                    if( upper ) {
-                        T= MatrixOps_DDRB.transpose(T,null);
+                    if (upper) {
+                        T = MatrixOps_DDRB.transpose(T, null);
                     }
 
-                    DMatrixRBlock B = MatrixOps_DDRB.createRandom(triangleSize,cols,-1,1,rand,r);
-                    DMatrixRBlock Y = new DMatrixRBlock(B.numRows,B.numCols,r);
+                    DMatrixRBlock B = MatrixOps_DDRB.createRandom(triangleSize, cols, -1, 1, rand, r);
+                    DMatrixRBlock Y = new DMatrixRBlock(B.numRows, B.numCols, r);
 
-                    checkSolve(T,B,Y,r,upper,false);
-                    checkSolve(T,B,Y,r,upper,true);
+                    checkSolve(T, B, Y, r, upper, false);
+                    checkSolve(T, B, Y, r, upper, true);
 
                     // test cases where the submatrix is not aligned with the inner
                     // blocks
-                    checkSolveUnaligned(T,B,Y,r,upper,false);
-                    checkSolveUnaligned(T,B,Y,r,upper,true);
+                    checkSolveUnaligned(T, B, Y, r, upper, false);
+                    checkSolveUnaligned(T, B, Y, r, upper, true);
                 }
             }
         }
@@ -131,72 +128,69 @@ public class TestTriangularSolver_DDRB {
      * Checks to see if BlockTriangularSolver.solve produces the expected output given
      * these inputs.  The solution is computed directly.
      */
-    private void checkSolve(DMatrixRBlock T , DMatrixRBlock B , DMatrixRBlock Y ,
-                            int r , boolean upper , boolean transT )
-    {
-        if( transT ) {
-            DMatrixRBlock T_tran = MatrixOps_DDRB.transpose(T,null);
+    private void checkSolve( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
+                             int r, boolean upper, boolean transT ) {
+        if (transT) {
+            DMatrixRBlock T_tran = MatrixOps_DDRB.transpose(T, null);
 
             // Compute Y directly from the expected result B
-            MatrixOps_DDRB.mult(T_tran,B,Y);
+            MatrixOps_DDRB.mult(T_tran, B, Y);
         } else {
             // Compute Y directly from the expected result B
-            MatrixOps_DDRB.mult(T,B,Y);
+            MatrixOps_DDRB.mult(T, B, Y);
         }
 
         // Y is overwritten with the solution
-        TriangularSolver_DDRB.solve(r,upper,new DSubmatrixD1(T),new DSubmatrixD1(Y),transT);
+        TriangularSolver_DDRB.solve(r, upper, new DSubmatrixD1(T), new DSubmatrixD1(Y), transT);
 
-        assertTrue( MatrixOps_DDRB.isEquals(B,Y, UtilEjml.TEST_F64_SQ));
+        assertTrue(MatrixOps_DDRB.isEquals(B, Y, UtilEjml.TEST_F64_SQ));
     }
 
     /**
      * Checks to see if BlockTriangularSolver.solve produces the expected output given
      * these inputs.  The solution is computed directly.
      */
-    private void checkSolveUnaligned(DMatrixRBlock T , DMatrixRBlock B , DMatrixRBlock Y ,
-                                     int r , boolean upper , boolean transT )
-    {
+    private void checkSolveUnaligned( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
+                                      int r, boolean upper, boolean transT ) {
         DMatrixRBlock T2;
 
-        if( upper )
-            T2 = MatrixOps_DDRB.createRandom(T.numRows+1,T.numCols,-1,1,rand,T.blockLength);
+        if (upper)
+            T2 = MatrixOps_DDRB.createRandom(T.numRows + 1, T.numCols, -1, 1, rand, T.blockLength);
         else
-            T2 = MatrixOps_DDRB.createRandom(T.numRows,T.numCols+1,-1,1,rand,T.blockLength);
+            T2 = MatrixOps_DDRB.createRandom(T.numRows, T.numCols + 1, -1, 1, rand, T.blockLength);
 
-        CommonOps_DDRM.insert(T,T2,0,0);
+        CommonOps_DDRM.insert(T, T2, 0, 0);
 
-        if( transT ) {
-            DMatrixRBlock T_tran = MatrixOps_DDRB.transpose(T,null);
+        if (transT) {
+            DMatrixRBlock T_tran = MatrixOps_DDRB.transpose(T, null);
 
             // Compute Y directly from the expected result B
-            MatrixOps_DDRB.mult(T_tran,B,Y);
+            MatrixOps_DDRB.mult(T_tran, B, Y);
         } else {
             // Compute Y directly from the expected result B
-            MatrixOps_DDRB.mult(T,B,Y);
+            MatrixOps_DDRB.mult(T, B, Y);
         }
 
         int size = T.numRows;
 
         // Y is overwritten with the solution
-        TriangularSolver_DDRB.solve(r,upper,new DSubmatrixD1(T2,0,size,0,size),new DSubmatrixD1(Y),transT);
+        TriangularSolver_DDRB.solve(r, upper, new DSubmatrixD1(T2, 0, size, 0, size), new DSubmatrixD1(Y), transT);
 
-        assertTrue(MatrixOps_DDRB.isEquals(B,Y, UtilEjml.TEST_F64_SQ),
-                "Failed upper = "+upper+" transT = "+transT+" T.length "+T.numRows+" B.cols "+B.numCols);
+        assertTrue(MatrixOps_DDRB.isEquals(B, Y, UtilEjml.TEST_F64_SQ),
+                "Failed upper = " + upper + " transT = " + transT + " T.length " + T.numRows + " B.cols " + B.numCols);
     }
-
 
     /**
      * Check all permutations of solve for submatrices
      */
     @Test
-    public void testSolveBlock() {
-        check_solveBlock_submatrix(false,false,false);
-        check_solveBlock_submatrix(true,false,false);
-        check_solveBlock_submatrix(false,true,false);
-        check_solveBlock_submatrix(true,true,false);
+    void solveBlock() {
+        check_solveBlock_submatrix(false, false, false);
+        check_solveBlock_submatrix(true, false, false);
+        check_solveBlock_submatrix(false, true, false);
+        check_solveBlock_submatrix(true, true, false);
 //        check_solveBlock_submatrix(false,false,true);
-        check_solveBlock_submatrix(true,false,true);
+        check_solveBlock_submatrix(true, false, true);
 //        check_solveBlock_submatrix(false,true,true);
 //        check_solveBlock_submatrix(false,true,true);
     }
@@ -204,36 +198,36 @@ public class TestTriangularSolver_DDRB {
     /**
      * Checks to see if solve functions that use sub matrices as input work correctly
      */
-    private void check_solveBlock_submatrix( boolean solveL , boolean transT , boolean transB ) {
+    private void check_solveBlock_submatrix( boolean solveL, boolean transT, boolean transB ) {
         // compute expected solution
         DMatrixRMaj L = createRandomLowerTriangular(3);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,5,rand);
-        DMatrixRMaj X = new DMatrixRMaj(3,5);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3, 5, rand);
+        DMatrixRMaj X = new DMatrixRMaj(3, 5);
 
-        if( !solveL ) {
+        if (!solveL) {
             CommonOps_DDRM.transpose(L);
         }
 
-        if( transT ) {
-           CommonOps_DDRM.transpose(L);
+        if (transT) {
+            CommonOps_DDRM.transpose(L);
         }
 
-        CommonOps_DDRM.solve(L,B,X);
+        CommonOps_DDRM.solve(L, B, X);
 
         // do it again using block matrices
-        DMatrixRBlock b_L = MatrixOps_DDRB.convert(L,3);
-        DMatrixRBlock b_B = MatrixOps_DDRB.convert(B,3);
+        DMatrixRBlock b_L = MatrixOps_DDRB.convert(L, 3);
+        DMatrixRBlock b_B = MatrixOps_DDRB.convert(B, 3);
 
-        DSubmatrixD1 sub_L = new DSubmatrixD1(b_L,0, 3, 0, 3);
-        DSubmatrixD1 sub_B = new DSubmatrixD1(b_B,0, 3, 0, 5);
+        DSubmatrixD1 sub_L = new DSubmatrixD1(b_L, 0, 3, 0, 3);
+        DSubmatrixD1 sub_B = new DSubmatrixD1(b_B, 0, 3, 0, 5);
 
-        if( transT ) {
-            sub_L.original = MatrixOps_DDRB.transpose((DMatrixRBlock)sub_L.original,null);
+        if (transT) {
+            sub_L.original = MatrixOps_DDRB.transpose((DMatrixRBlock)sub_L.original, null);
             TestMatrixMult_DDRB.transposeSub(sub_L);
         }
 
-        if( transB ) {
-            sub_B.original = b_B = MatrixOps_DDRB.transpose((DMatrixRBlock)sub_B.original,null);
+        if (transB) {
+            sub_B.original = b_B = MatrixOps_DDRB.transpose((DMatrixRBlock)sub_B.original, null);
             TestMatrixMult_DDRB.transposeSub(sub_B);
             CommonOps_DDRM.transpose(X);
         }
@@ -241,13 +235,13 @@ public class TestTriangularSolver_DDRB {
 //        sub_L.original.print();
 //        sub_B.original.print();
 
-        TriangularSolver_DDRB.solveBlock(3,!solveL,sub_L,sub_B,transT,transB);
+        TriangularSolver_DDRB.solveBlock(3, !solveL, sub_L, sub_B, transT, transB);
 
-        assertTrue(GenericMatrixOps_F64.isEquivalent(X,b_B,UtilEjml.TEST_F64));
+        assertTrue(GenericMatrixOps_F64.isEquivalent(X, b_B, UtilEjml.TEST_F64));
     }
 
-    private DMatrixRMaj createRandomLowerTriangular(int N ) {
-        DMatrixRMaj U = RandomMatrices_DDRM.triangularUpper(N,0,-1,1,rand);
+    private DMatrixRMaj createRandomLowerTriangular( int N ) {
+        DMatrixRMaj U = RandomMatrices_DDRM.triangularUpper(N, 0, -1, 1, rand);
 
         CommonOps_DDRM.transpose(U);
 

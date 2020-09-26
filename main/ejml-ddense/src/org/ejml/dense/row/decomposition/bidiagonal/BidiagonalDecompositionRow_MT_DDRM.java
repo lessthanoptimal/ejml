@@ -24,8 +24,8 @@ import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
 /**
  * <p>
- * Performs a {@link BidiagonalDecomposition_F64} using
- * householder reflectors.  This is efficient on wide or square matrices.
+ * Performs a {@link BidiagonalDecomposition_F64} using householder reflectors. This is efficient on wide or
+ * square matrices.
  * </p>
  *
  * @author Peter Abeles

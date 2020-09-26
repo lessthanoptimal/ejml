@@ -41,7 +41,7 @@ class TestQrHelperFunctions_MT_DDRM {
 	void init() {
 		Q = RandomMatrices_DDRM.rectangle(N,N,-1,1, rand);
 		for (int i = 0; i < N; i++) {
-			u[i] = rand.nextGaussian();
+			u[i] = (double) rand.nextGaussian();
 		}
 	}
 

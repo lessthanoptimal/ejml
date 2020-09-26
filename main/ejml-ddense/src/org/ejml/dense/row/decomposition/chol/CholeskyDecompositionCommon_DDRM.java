@@ -18,30 +18,27 @@
 
 package org.ejml.dense.row.decomposition.chol;
 
-
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
- *
  * <p>
  * This is an abstract class for a Cholesky decomposition.  It provides the solvers, but the actual
  * decomposition is provided in other classes.
  * </p>
  *
- * @see CholeskyDecomposition_F64
  * @author Peter Abeles
+ * @see CholeskyDecomposition_F64
  */
 @SuppressWarnings("NullAway.Init")
 public abstract class CholeskyDecompositionCommon_DDRM
         implements CholeskyDecomposition_F64<DMatrixRMaj> {
 
     // it can decompose a matrix up to this width
-    protected int maxWidth=-1;
+    protected int maxWidth = -1;
 
     // width and height of the matrix
     protected int n;
@@ -51,7 +48,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
     protected double[] t;
 
     // tempoary variable used by various functions
-    protected double vv[];
+    protected double[] vv;
 
     // is it a lower triangular matrix or an upper triangular matrix
     protected boolean lower;
@@ -64,12 +61,12 @@ public abstract class CholeskyDecompositionCommon_DDRM
      *
      * @param lower should a lower or upper triangular matrix be used.
      */
-    protected CholeskyDecompositionCommon_DDRM(boolean lower) {
+    protected CholeskyDecompositionCommon_DDRM( boolean lower ) {
         this.lower = lower;
     }
 
-    public void setExpectedMaxSize( int numRows , int numCols ) {
-        if( numRows != numCols ) {
+    public void setExpectedMaxSize( int numRows, int numCols ) {
+        if (numRows != numCols) {
             throw new IllegalArgumentException("Can only decompose square matrices");
         }
 
@@ -99,14 +96,15 @@ public abstract class CholeskyDecompositionCommon_DDRM
      * false since it can't complete its computations.  Not all errors will be
      * found.  This is an efficient way to check for positive definiteness.
      * </p>
+     *
      * @param mat A symmetric positive definite matrix with n &le; widthMax.
      * @return True if it was able to finish the decomposition.
      */
     @Override
     public boolean decompose( DMatrixRMaj mat ) {
-        if( mat.numRows > maxWidth ) {
-            setExpectedMaxSize(mat.numRows,mat.numCols);
-        } else if( mat.numRows != mat.numCols ) {
+        if (mat.numRows > maxWidth) {
+            setExpectedMaxSize(mat.numRows, mat.numCols);
+        } else if (mat.numRows != mat.numCols) {
             throw new IllegalArgumentException("Must be a square matrix.");
         }
 
@@ -115,7 +113,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
         T = mat;
         t = T.data;
 
-        if(lower) {
+        if (lower) {
             return decomposeLower();
         } else {
             return decomposeUpper();
@@ -142,21 +140,21 @@ public abstract class CholeskyDecompositionCommon_DDRM
     protected abstract boolean decomposeUpper();
 
     @Override
-    public DMatrixRMaj getT(@Nullable DMatrixRMaj T ) {
+    public DMatrixRMaj getT( @Nullable DMatrixRMaj T ) {
 
         // write the values to T
-        if( lower ) {
-            T = UtilDecompositons_DDRM.checkZerosUT(T,n,n);
-            for( int i = 0; i < n; i++ ) {
-                for( int j = 0; j <= i; j++ ) {
-                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
+        if (lower) {
+            T = UtilDecompositons_DDRM.checkZerosUT(T, n, n);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j <= i; j++) {
+                    T.unsafe_set(i, j, this.T.unsafe_get(i, j));
                 }
             }
         } else {
-             T = UtilDecompositons_DDRM.checkZerosLT(T,n,n);
-            for( int i = 0; i < n; i++ ) {
-                for( int j = i; j < n; j++ ) {
-                    T.unsafe_set(i,j,this.T.unsafe_get(i,j));
+            T = UtilDecompositons_DDRM.checkZerosLT(T, n, n);
+            for (int i = 0; i < n; i++) {
+                for (int j = i; j < n; j++) {
+                    T.unsafe_set(i, j, this.T.unsafe_get(i, j));
                 }
             }
         }
@@ -182,7 +180,7 @@ public abstract class CholeskyDecompositionCommon_DDRM
         double prod = 1;
 
         int total = n*n;
-        for( int i = 0; i < total; i += n + 1 ) {
+        for (int i = 0; i < total; i += n + 1) {
             prod *= t[i];
         }
 

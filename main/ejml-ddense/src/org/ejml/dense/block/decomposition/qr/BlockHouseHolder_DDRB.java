@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,14 +42,10 @@ public class BlockHouseHolder_DDRB {
 
     /**
      * Performs a standard QR decomposition on the specified submatrix that is one block wide.
-     *
-     * @param blockLength
-     * @param Y
-     * @param gamma
      */
     public static boolean decomposeQR_block_col( final int blockLength ,
                                                  final DSubmatrixD1 Y ,
-                                                 final double gamma[] )
+                                                 final double[] gamma )
     {
         int width = Y.col1-Y.col0;
         int height = Y.row1-Y.row0;
@@ -147,7 +143,7 @@ public class BlockHouseHolder_DDRB {
     /**
      * <p>
      * Applies a householder reflector stored in column 'col' to the remainder of the columns
-     * in the block after it.  Takes in account leading zeros and one.<br>
+     * in the block after it. Takes in account leading zeros and one.<br>
      * <br>
      * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
      * </p>
@@ -161,7 +157,7 @@ public class BlockHouseHolder_DDRB {
     {
         final int width = Math.min(blockLength,A.col1 - A.col0);
 
-        final double dataA[] = A.original.data;
+        final double[] dataA = A.original.data;
 
         for( int j = col+1; j < width; j++ ) {
 
@@ -202,7 +198,7 @@ public class BlockHouseHolder_DDRB {
     /**
      * <p>
      * Applies a householder reflector stored in column 'col' to the top block row (excluding
-     * the first column) of A.  Takes in account leading zeros and one.<br>
+     * the first column) of A. Takes in account leading zeros and one.<br>
      * <br>
      * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
      * </p>
@@ -214,7 +210,7 @@ public class BlockHouseHolder_DDRB {
     public static void rank1UpdateMultR_TopRow(final int blockLength ,
                                                final DSubmatrixD1 A , final int col , final double gamma )
     {
-        final double dataA[] = A.original.data;
+        final double[] dataA = A.original.data;
 
         final int widthCol = Math.min( blockLength , A.col1 - col );
 
@@ -252,7 +248,7 @@ public class BlockHouseHolder_DDRB {
     /**
      * <p>
      * Applies a householder reflector stored in row 'row' to the remainder of the row
-     * in the block after it.  Takes in account leading zeros and one.<br>
+     * in the block after it. Takes in account leading zeros and one.<br>
      * <br>
      * A = A*(I - &gamma;*u*u<sup>T</sup>)<br>
      * </p>
@@ -268,7 +264,7 @@ public class BlockHouseHolder_DDRB {
     {
         final int height = Math.min(blockLength,A.row1 - A.row0);
 
-        final double dataA[] = A.original.data;
+        final double[] dataA = A.original.data;
 
         int zeroOffset = colStart-row;
 
@@ -323,7 +319,7 @@ public class BlockHouseHolder_DDRB {
         final int heightU = Math.min(blockLength,A.row1 - A.row0);
         final int width = Math.min(blockLength,A.col1-A.col0);
 
-        final double data[] = A.original.data;
+        final double[] data = A.original.data;
 
         for( int blockStart = A.row0+blockLength; blockStart < A.row1; blockStart += blockLength) {
             final int heightA = Math.min(blockLength,A.row1 - blockStart);
@@ -363,10 +359,9 @@ public class BlockHouseHolder_DDRB {
      * </p>
      *
      * <p>
-     * Column A is assumed to be a householder vector.  Element at 'colA' is one and previous ones are zero.
+     * Column A is assumed to be a householder vector. Element at 'colA' is one and previous ones are zero.
      * </p>
      *
-     * @param blockLength
      * @param A block aligned submatrix.
      * @param colA Column inside the block of first column vector.
      * @param widthA how wide the column block that colA is inside of.
@@ -379,7 +374,7 @@ public class BlockHouseHolder_DDRB {
                                           int colB, int widthB ) {
         double total = 0;
 
-        final double data[] = A.original.data;
+        final double[] data = A.original.data;
         // first column in the blocks
         final int colBlockA = A.col0 + colA - colA % blockLength;
         final int colBlockB = A.col0 + colB - colB % blockLength;
@@ -430,10 +425,9 @@ public class BlockHouseHolder_DDRB {
      * </p>
      *
      * <p>
-     * Row A is assumed to be a householder vector.  Element at 'colStartA' is one and previous elements are zero.
+     * Row A is assumed to be a householder vector. Element at 'colStartA' is one and previous elements are zero.
      * </p>
      *
-     * @param blockLength
      * @param A block aligned submatrix.
      * @param rowA Row index inside the sub-matrix of first row vector has zeros and ones..
      * @param rowB Row index inside the sub-matrix of second row vector.
@@ -472,14 +466,14 @@ public class BlockHouseHolder_DDRB {
     }
 
     /**
-     * Divides the elements at the specified column by 'val'.  Takes in account
+     * Divides the elements at the specified column by 'val'. Takes in account
      * leading zeros and one.
      */
     public static void divideElementsCol(final int blockLength ,
                                          final DSubmatrixD1 Y , final int col , final double val ) {
         final int width = Math.min(blockLength,Y.col1-Y.col0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         for( int i = Y.row0; i < Y.row1; i += blockLength ) {
             int height = Math.min( blockLength , Y.row1 - i );
@@ -553,7 +547,7 @@ public class BlockHouseHolder_DDRB {
                                                  final int col , final double max ) {
         final int width = Math.min(blockLength,Y.col1-Y.col0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         double top=0;
         double norm2 = 0;
@@ -616,7 +610,7 @@ public class BlockHouseHolder_DDRB {
                                                  final int row , int colStart , final double max ) {
         final int height = Math.min(blockLength , Y.row1-Y.row0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         double top=0;
         double norm2 = 0;
@@ -664,7 +658,7 @@ public class BlockHouseHolder_DDRB {
     {
         final int width = Math.min(blockLength,Y.col1-Y.col0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         double max = 0;
 
@@ -703,7 +697,7 @@ public class BlockHouseHolder_DDRB {
                                           final int row , final int colStart ) {
         final int height = Math.min(blockLength , Y.row1-Y.row0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         double max = 0;
 
@@ -749,7 +743,7 @@ public class BlockHouseHolder_DDRB {
      * &nbsp;&nbsp;Y = [Y v<sup>(j)</sup>]<br>
      * end<br>
      * <br>
-     * where v<sup>(.)</sup> are the house holder vectors, and r is the block length.  Note that
+     * where v<sup>(.)</sup> are the house holder vectors, and r is the block length. Note that
      * Y already contains the householder vectors so it does not need to be modified.
      * </p>
      *
@@ -757,15 +751,15 @@ public class BlockHouseHolder_DDRB {
      * Y and W are assumed to have the same number of rows and columns.
      * </p>
      *
-     * @param Y Input matrix containing householder vectors.  Not modified.
+     * @param Y Input matrix containing householder vectors. Not modified.
      * @param W Resulting W matrix. Modified.
-     * @param temp Used internally.  Must have W.numCols elements.
+     * @param temp Used internally. Must have W.numCols elements.
      * @param beta Beta's for householder vectors.
      * @param betaIndex Index of first relevant beta.
      */
-    public static void computeW_Column(final int blockLength ,
-                                       final DSubmatrixD1 Y , final DSubmatrixD1 W ,
-                                       final double temp[], final double beta[] , int betaIndex ) {
+    public static void computeW_Column( final int blockLength ,
+                                        final DSubmatrixD1 Y , final DSubmatrixD1 W ,
+                                        final double[] temp, final double[] beta, int betaIndex ) {
 
         final int widthB = W.col1-W.col0;
 
@@ -801,8 +795,8 @@ public class BlockHouseHolder_DDRB {
                                    final DSubmatrixD1 W, final DSubmatrixD1 Y,
                                    final int widthB, final double b) {
 
-        final double dataW[] = W.original.data;
-        final double dataY[] = Y.original.data;
+        final double[] dataW = W.original.data;
+        final double[] dataY = Y.original.data;
 
         for( int i = W.row0; i < W.row1; i += blockLength ) {
             int heightW = Math.min( blockLength , W.row1 - i );
@@ -832,7 +826,7 @@ public class BlockHouseHolder_DDRB {
      * z = - &beta;<sub>j</sub>*(V<sup>j</sup> + W*h)<br>
      * <br>
      * where h is a vector of length 'col' and was computed using {@link #computeY_t_V}.
-     * V is a column in the Y matrix. Z is a column in the W matrix.  Both Z and V are
+     * V is a column in the Y matrix. Z is a column in the W matrix. Both Z and V are
      * column 'col'.
      */
     public static void computeZ(final int blockLength , final DSubmatrixD1 Y , final DSubmatrixD1 W,
@@ -840,8 +834,8 @@ public class BlockHouseHolder_DDRB {
     {
         final int width = Y.col1-Y.col0;
 
-        final double dataW[] = W.original.data;
-        final double dataY[] = Y.original.data;
+        final double[] dataW = W.original.data;
+        final double[] dataY = Y.original.data;
 
         final int colsW = W.original.numCols;
 
@@ -894,8 +888,8 @@ public class BlockHouseHolder_DDRB {
     }
 
     /**
-     * Computes Y<sup>T</sup>v<sup>(j)</sup>.  Where Y are the columns before 'col' and v is the column
-     * at 'col'.  The zeros and ones are taken in account.  The solution is a vector with 'col' elements.
+     * Computes Y<sup>T</sup>v<sup>(j)</sup>. Where Y are the columns before 'col' and v is the column
+     * at 'col'. The zeros and ones are taken in account. The solution is a vector with 'col' elements.
      *
      * width of Y must be along the block of original matrix A
      *
@@ -976,7 +970,7 @@ public class BlockHouseHolder_DDRB {
 
     /**
      * <p>
-     * Performs a matrix multiplication on the block aligned submatrices.  A is
+     * Performs a matrix multiplication on the block aligned submatrices. A is
      * assumed to be block column vector that is lower triangular with diagonal elements set to 1.<br>
      * <br>
      * C = A^T * B

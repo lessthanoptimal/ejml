@@ -27,9 +27,8 @@ Date format: year/month/day
   * Only simple for loops which do not require storage for each thread
   * Control threads with EjmlConcurrency
   * Must call concurrent functions from CommonOps_MT_****
-  * TODO TriangularSolver_DDRB
   * TODO InnerRankUpdate_DDRB
-  * TODO Block decomposition
+  * TODO Block QR + solveQR
 
 ----- Version 0.39
 2020/04/06

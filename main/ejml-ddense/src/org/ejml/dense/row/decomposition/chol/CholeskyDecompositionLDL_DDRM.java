@@ -23,7 +23,6 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * <p>
  * This variant on the Cholesky decomposition avoid the need to take the square root
@@ -36,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  * </p>
  * <p>
  * Unfortunately the speed advantage of not computing the square root is washed out by the
- * increased number of array accesses.  There only appears to be a slight speed boost for
+ * increased number of array accesses. There only appears to be a slight speed boost for
  * very small matrices.
  * </p>
  *
@@ -60,14 +59,14 @@ public class CholeskyDecompositionLDL_DDRM
     // tempoary variable used by various functions
     double[] vv;
 
-    public void setExpectedMaxSize( int numRows , int numCols ) {
-        if( numRows != numCols ) {
+    public void setExpectedMaxSize( int numRows, int numCols ) {
+        if (numRows != numCols) {
             throw new IllegalArgumentException("Can only decompose square matrices");
         }
 
         this.maxWidth = numRows;
 
-        this.L = new DMatrixRMaj(maxWidth,maxWidth);
+        this.L = new DMatrixRMaj(maxWidth, maxWidth);
 
         this.vv = new double[maxWidth];
         this.d = new double[maxWidth];
@@ -80,50 +79,51 @@ public class CholeskyDecompositionLDL_DDRM
      *
      * <p>
      * If the matrix is not positive definite then this function will return
-     * false since it can't complete its computations.  Not all errors will be
+     * false since it can't complete its computations. Not all errors will be
      * found.
      * </p>
+     *
      * @param mat A symmetric n by n positive definite matrix.
      * @return True if it was able to finish the decomposition.
      */
     @Override
     public boolean decompose( DMatrixRMaj mat ) {
-        if( mat.numRows > maxWidth ) {
-            setExpectedMaxSize(mat.numRows,mat.numCols);
-        } else if( mat.numRows != mat.numCols ) {
+        if (mat.numRows > maxWidth) {
+            setExpectedMaxSize(mat.numRows, mat.numCols);
+        } else if (mat.numRows != mat.numCols) {
             throw new RuntimeException("Can only decompose square matrices");
         }
         n = mat.numRows;
 
         L.set(mat);
-        double []el = L.data;
+        double[] el = L.data;
 
-        double d_inv=0;
-        for( int i = 0; i < n; i++ ) {
-            for( int j = i; j < n; j++ ) {
-                double sum = el[i*n+j];
+        double d_inv = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                double sum = el[i*n + j];
 
-                for( int k = 0; k < i; k++ ) {
-                    sum -= el[i*n+k]*el[j*n+k]*d[k];
+                for (int k = 0; k < i; k++) {
+                    sum -= el[i*n + k]*el[j*n + k]*d[k];
                 }
 
-                if( i == j ) {
+                if (i == j) {
                     // is it positive-definite?
-                    if( sum <= 0.0 )
+                    if (sum <= 0.0)
                         return false;
 
                     d[i] = sum;
                     d_inv = 1.0/sum;
-                    el[i*n+i] = 1;
+                    el[i*n + i] = 1;
                 } else {
-                    el[j*n+i] = sum*d_inv;
+                    el[j*n + i] = sum*d_inv;
                 }
             }
         }
         // zero the top right corner.
-        for( int i = 0; i < n; i++ ) {
-            for( int j = i+1; j < n; j++ ) {
-                el[i*n+j] = 0.0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                el[i*n + j] = 0.0;
             }
         }
 
@@ -160,8 +160,8 @@ public class CholeskyDecompositionLDL_DDRM
     }
 
     @Override
-    public DMatrixRMaj getL(@Nullable DMatrixRMaj L) {
-        if( L == null ) {
+    public DMatrixRMaj getL( @Nullable DMatrixRMaj L ) {
+        if (L == null) {
             L = this.L.copy();
         } else {
             L.set(this.L);
@@ -171,7 +171,7 @@ public class CholeskyDecompositionLDL_DDRM
     }
 
     @Override
-    public DMatrixRMaj getD(@Nullable DMatrixRMaj D) {
-        return CommonOps_DDRM.diag(D,L.numCols,d);
+    public DMatrixRMaj getD( @Nullable DMatrixRMaj D ) {
+        return CommonOps_DDRM.diag(D, L.numCols, d);
     }
 }
