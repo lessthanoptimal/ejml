@@ -164,7 +164,7 @@ public class GenerateCode32 {
         String path = "./";
         while( true ) {
             File d = new File(path);
-            if( new File(d,"main").exists() )
+            if( new File(d,"main").exists() && new File(d,".gitignore").exists() )
                 break;
             path = "../"+path;
         }

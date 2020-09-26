@@ -293,7 +293,7 @@ public class AutocodeConcurrentApp {
 
 	public static void convertDir( File directory , String include , String exclude ) {
 		if( !directory.isDirectory() )
-			throw new IllegalArgumentException("Must be a directory");
+			throw new IllegalArgumentException("Must be a directory: '"+directory.getPath()+"'");
 		File[] files = directory.listFiles();
 		if( files == null )
 			throw new IllegalArgumentException("No files");
@@ -331,6 +331,8 @@ public class AutocodeConcurrentApp {
 		};
 
 		String projectRoot = findPathToProjectRoot();
+		System.out.println("Project Root: '"+projectRoot+"'");
+
 		for( String f : directories ) {
 			System.out.println("directory "+f);
 			convertDir(new File(projectRoot,f),"\\S+\\.java","\\S+MT\\S+");

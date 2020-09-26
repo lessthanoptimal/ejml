@@ -93,10 +93,33 @@ public class EjmlConcurrency {
 	public static void loopFor(int start , int endExclusive , int step , IntConsumer consumer ) {
 		if( step <= 0 )
 			throw new IllegalArgumentException("Step must be a positive number.");
+		if( start >= endExclusive)
+			return;
 		try {
 			int range = endExclusive-start;
 			int iterations = range/step + ((range%step==0) ? 0 : 1);
 			pool.submit(() ->IntStream.range(0, iterations).parallel().forEach(i-> consumer.accept(start+i*step))).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Concurrent for loop. Each loop with spawn as a thread up to the maximum number of threads.
+	 *
+	 * @param start starting value, inclusive
+	 * @param endExclusive ending value, exclusive
+	 * @param step fixed sized step for each iteration
+	 * @param consumer The consumer
+	 */
+	public static <T>
+	void loopFor(int start , int endExclusive , int step , GrowArray<T> workspace, IntObjectConsumer<T> consumer ) {
+		if( step <= 0 )
+			throw new IllegalArgumentException("Step must be a positive number.");
+		if( start >= endExclusive)
+			return;
+		try {
+			pool.submit(new IntObjectTask<>(start,endExclusive,step,pool.getParallelism(),-1,workspace,consumer)).get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
