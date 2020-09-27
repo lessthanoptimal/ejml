@@ -21,6 +21,8 @@ Date format: year/month/day
   * Updating functions to return output if null and use common input sanity check functions
 - CommonOps_DSCC
   * duplicatesAdd() is a function which will add element that is duplicated and turn it into a valid matrix again
+- ReadMatrixCsv
+  * Thanks DEDZTBH for fixing an indexing error when reading complex data types
 
 ----- Version 0.39
 2020/04/06
