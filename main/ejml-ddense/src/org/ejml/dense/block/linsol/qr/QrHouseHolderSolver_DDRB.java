@@ -27,6 +27,12 @@ import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
+//CONCURRENT_INLINE import org.ejml.dense.block.*;
+//CONCURRENT_INLINE import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_MT_DDRB;
+
+//CONCURRENT_MACRO QRDecompositionHouseholder_DDRB QRDecompositionHouseholder_MT_DDRB
+//CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
+
 /**
  * <p>
  * A solver for {@link org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB}. Systems are solved for using the standard

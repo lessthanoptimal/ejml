@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.block.decompose;
+package org.ejml.dense.block.decompose.chol;
 
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.dense.block.MatrixOps_DDRB;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionCholesky_MT_DDRB {
     @Param({"100", "500", "1000", "5000", "10000"})
 //    @Param({"2000","4000"})
@@ -47,7 +47,7 @@ public class BenchmarkDecompositionCholesky_MT_DDRB {
     @Param({"true"})
     public boolean lower;
 
-    public DMatrixRBlock A,L;
+    public DMatrixRBlock A, L;
 
     CholeskyDecomposition_F64<DMatrixRBlock> cholesky;
 
@@ -56,17 +56,17 @@ public class BenchmarkDecompositionCholesky_MT_DDRB {
         Random rand = new Random(234);
 
         cholesky = new CholeskyOuterForm_MT_DDRB(lower);
-        A = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetricPosDef(size,rand));
-        L = new DMatrixRBlock(1,1);
+        A = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetricPosDef(size, rand));
+        L = new DMatrixRBlock(1, 1);
     }
 
     @Benchmark
     public void decompose() {
-        if( !cholesky.decompose(A.copy()) )
+        if (!cholesky.decompose(A.copy()))
             throw new RuntimeException("FAILED?!");
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionCholesky_MT_DDRB.class.getSimpleName())
                 .build();

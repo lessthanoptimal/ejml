@@ -25,7 +25,6 @@ import static org.ejml.dense.block.InnerMultiplication_DDRB.*;
 import static org.ejml.dense.block.MatrixOps_DDRB.checkShapeMult;
 
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
-//CONCURRENT_INLINE import javax.annotation.Generated;
 
 /**
  * <p>
@@ -34,7 +33,6 @@ import static org.ejml.dense.block.MatrixOps_DDRB.checkShapeMult;
  *
  * @author Peter Abeles
  */
-//CONCURRENT_INLINE @Generated("org.ejml.dense.block.MatrixMult_DDRB")
 public class MatrixMult_DDRB {
 
     /**

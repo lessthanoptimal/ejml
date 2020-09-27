@@ -33,7 +33,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
  * @author Peter Abeles
  */
@@ -49,21 +48,21 @@ public class TestCholeskyOuterSolver_DDRB {
     public void testPositiveSolve() {
         CholeskyOuterSolver_DDRB solver = new CholeskyOuterSolver_DDRB();
 
-        for( int i = 1; i <= r*3; i++ ) {
-            for( int j = 1; j <= r*3; j++ ) {
+        for (int i = 1; i <= r*3; i++) {
+            for (int j = 1; j <= r*3; j++) {
                 DMatrixRBlock A = createMatrixSPD(i);
-                DMatrixRBlock X = MatrixOps_DDRB.createRandom(i,j,-1,1,rand,r);
-                DMatrixRBlock Y = new DMatrixRBlock(i,j,r);
-                DMatrixRBlock X_found = new DMatrixRBlock(i,j,r);
+                DMatrixRBlock X = MatrixOps_DDRB.createRandom(i, j, -1, 1, rand, r);
+                DMatrixRBlock Y = new DMatrixRBlock(i, j, r);
+                DMatrixRBlock X_found = new DMatrixRBlock(i, j, r);
 
                 // compute the expected solution directly
-                MatrixOps_DDRB.mult(A,X,Y);
+                MatrixOps_DDRB.mult(A, X, Y);
 
                 assertTrue(solver.setA(A.copy()));
 
-                solver.solve(Y,X_found);
+                solver.solve(Y, X_found);
 
-                assertTrue(MatrixOps_DDRB.isEquals(X,X_found,UtilEjml.TEST_F64));
+                assertTrue(MatrixOps_DDRB.isEquals(X, X_found, UtilEjml.TEST_F64));
             }
         }
     }
@@ -75,7 +74,7 @@ public class TestCholeskyOuterSolver_DDRB {
     public void testNegativeSolve() {
         CholeskyOuterSolver_DDRB solver = new CholeskyOuterSolver_DDRB();
 
-        DMatrixRBlock X = MatrixOps_DDRB.createRandom(7,7,-1,1,rand,r);
+        DMatrixRBlock X = MatrixOps_DDRB.createRandom(7, 7, -1, 1, rand, r);
 
         assertFalse(solver.setA(X));
     }
@@ -84,17 +83,17 @@ public class TestCholeskyOuterSolver_DDRB {
     public void testInvert() {
         CholeskyOuterSolver_DDRB solver = new CholeskyOuterSolver_DDRB();
 
-        for( int i = 1; i <= r*3; i++ ) {
+        for (int i = 1; i <= r*3; i++) {
             DMatrixRBlock A = createMatrixSPD(i);
-            DMatrixRBlock A_inv = MatrixOps_DDRB.createRandom(i,i,-1,1,rand,r);
+            DMatrixRBlock A_inv = MatrixOps_DDRB.createRandom(i, i, -1, 1, rand, r);
 
             assertTrue(solver.setA(A.copy()));
 
             solver.invert(A_inv);
 
-            DMatrixRBlock B = new DMatrixRBlock(i,i,r);
+            DMatrixRBlock B = new DMatrixRBlock(i, i, r);
 
-            MatrixOps_DDRB.mult(A,A_inv,B);
+            MatrixOps_DDRB.mult(A, A_inv, B);
 
             assertTrue(GenericMatrixOps_F64.isIdentity(B, UtilEjml.TEST_F64));
         }
@@ -104,13 +103,13 @@ public class TestCholeskyOuterSolver_DDRB {
     public void testQuality() {
         CholeskyOuterSolver_DDRB solver = new CholeskyOuterSolver_DDRB();
 
-        DMatrixRMaj A = CommonOps_DDRM.diag(5,3,2,1);
-        DMatrixRMaj B = CommonOps_DDRM.diag(5,3,2,0.001);
+        DMatrixRMaj A = CommonOps_DDRM.diag(5, 3, 2, 1);
+        DMatrixRMaj B = CommonOps_DDRM.diag(5, 3, 2, 0.001);
 
-        assertTrue(solver.setA(MatrixOps_DDRB.convert(A,r)));
+        assertTrue(solver.setA(MatrixOps_DDRB.convert(A, r)));
         double qualityA = (double)solver.quality();
 
-        assertTrue(solver.setA(MatrixOps_DDRB.convert(B,r)));
+        assertTrue(solver.setA(MatrixOps_DDRB.convert(B, r)));
         double qualityB = (double)solver.quality();
 
         assertTrue(qualityB < qualityA);
@@ -121,43 +120,43 @@ public class TestCholeskyOuterSolver_DDRB {
     public void testQuality_scale() {
         CholeskyOuterSolver_DDRB solver = new CholeskyOuterSolver_DDRB();
 
-        DMatrixRMaj A = CommonOps_DDRM.diag(5,3,2,1);
+        DMatrixRMaj A = CommonOps_DDRM.diag(5, 3, 2, 1);
         DMatrixRMaj B = A.copy();
-        CommonOps_DDRM.scale(0.001,B);
+        CommonOps_DDRM.scale(0.001, B);
 
-        assertTrue(solver.setA(MatrixOps_DDRB.convert(A,r)));
+        assertTrue(solver.setA(MatrixOps_DDRB.convert(A, r)));
         double qualityA = (double)solver.quality();
 
-        assertTrue(solver.setA(MatrixOps_DDRB.convert(B,r)));
+        assertTrue(solver.setA(MatrixOps_DDRB.convert(B, r)));
         double qualityB = (double)solver.quality();
 
-        assertEquals(qualityB,qualityA,UtilEjml.TEST_F64);
+        assertEquals(qualityB, qualityA, UtilEjml.TEST_F64);
     }
 
     @Test
     public void testPositiveSolveNull() {
         CholeskyOuterSolver_DDRB solver = new CholeskyOuterSolver_DDRB();
 
-        for( int i = 1; i <= r*3; i++ ) {
-            for( int j = 1; j <= r*3; j++ ) {
+        for (int i = 1; i <= r*3; i++) {
+            for (int j = 1; j <= r*3; j++) {
                 DMatrixRBlock A = createMatrixSPD(i);
-                DMatrixRBlock X = MatrixOps_DDRB.createRandom(i,j,-1,1,rand,r);
-                DMatrixRBlock Y = new DMatrixRBlock(i,j,r);
+                DMatrixRBlock X = MatrixOps_DDRB.createRandom(i, j, -1, 1, rand, r);
+                DMatrixRBlock Y = new DMatrixRBlock(i, j, r);
 
                 // compute the expected solution directly
-                MatrixOps_DDRB.mult(A,X,Y);
+                MatrixOps_DDRB.mult(A, X, Y);
 
                 assertTrue(solver.setA(A.copy()));
 
-                solver.solve(Y,null);
+                solver.solve(Y, null);
 
-                assertTrue(MatrixOps_DDRB.isEquals(X,Y,UtilEjml.TEST_F64));
+                assertTrue(MatrixOps_DDRB.isEquals(X, Y, UtilEjml.TEST_F64));
             }
         }
     }
 
     @Test
-    public void modifiesA(){
+    public void modifiesA() {
         DMatrixRBlock A = createMatrixSPD(4);
         DMatrixRBlock A_orig = A.copy();
 
@@ -165,33 +164,33 @@ public class TestCholeskyOuterSolver_DDRB {
 
         assertTrue(solver.setA(A));
 
-        boolean modified = !MatrixFeatures_DDRM.isEquals(A,A_orig);
+        boolean modified = !MatrixFeatures_DDRM.isEquals(A, A_orig);
 
         assertTrue(modified == solver.modifiesA());
     }
 
     @Test
-    public void modifiesB(){
+    public void modifiesB() {
         DMatrixRBlock A = createMatrixSPD(4);
 
         QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
 
         assertTrue(solver.setA(A));
 
-        DMatrixRBlock B = MatrixOps_DDRB.createRandom(4,2,-1,1,rand,3);
+        DMatrixRBlock B = MatrixOps_DDRB.createRandom(4, 2, -1, 1, rand, 3);
         DMatrixRBlock B_orig = B.copy();
-        DMatrixRBlock X = new DMatrixRBlock(A.numRows,B.numCols,3);
+        DMatrixRBlock X = new DMatrixRBlock(A.numRows, B.numCols, 3);
 
-        solver.solve(B,X);
+        solver.solve(B, X);
 
-        boolean modified = !MatrixFeatures_DDRM.isEquals(B_orig,B);
+        boolean modified = !MatrixFeatures_DDRM.isEquals(B_orig, B);
 
         assertTrue(modified == solver.modifiesB());
     }
 
-    protected DMatrixRBlock createMatrixSPD(int width ) {
-        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(width,rand);
+    protected DMatrixRBlock createMatrixSPD( int width ) {
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(width, rand);
 
-        return MatrixOps_DDRB.convert(A,r);
+        return MatrixOps_DDRB.convert(A, r);
     }
 }

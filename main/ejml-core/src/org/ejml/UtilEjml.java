@@ -18,6 +18,7 @@
 
 package org.ejml;
 
+import org.ejml.concurrency.GrowArray;
 import org.ejml.data.*;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.interfaces.linsol.LinearSolverDense;
@@ -591,4 +592,17 @@ public class UtilEjml {
         }
         return false;
     }
+
+    public static GrowArray<FGrowArray> checkDeclare_F32( @Nullable GrowArray<FGrowArray> workspace ) {
+        if( workspace == null)
+            return new GrowArray<>(FGrowArray::new);
+        return workspace;
+    }
+
+    public static GrowArray<DGrowArray> checkDeclare_F64( @Nullable GrowArray<DGrowArray> workspace ) {
+        if( workspace == null)
+            return new GrowArray<>(DGrowArray::new);
+        return workspace;
+    }
+
 }

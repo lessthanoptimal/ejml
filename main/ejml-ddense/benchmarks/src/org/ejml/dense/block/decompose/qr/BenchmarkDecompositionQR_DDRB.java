@@ -16,10 +16,12 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.qr;
+package org.ejml.dense.block.decompose.qr;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.data.DMatrixRBlock;
+import org.ejml.dense.block.MatrixOps_DDRB;
+import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
+import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -29,44 +31,37 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Peter Abeles
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
-public class BenchmarkLinearSolverQR_DDRM {
+@Fork(value = 2)
+public class BenchmarkDecompositionQR_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000","2000"})
+    @Param({"1000", "2000"})
     public int size;
 
-    public DMatrixRMaj A,X,B;
+    public DMatrixRBlock A;
 
-    LinearSolverQrHouseCol_DDRM houseCol = new LinearSolverQrHouseCol_DDRM();
+    QRDecomposition<DMatrixRBlock> qr = new QRDecompositionHouseholder_DDRB();
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        B = RandomMatrices_DDRM.rectangle(A.numRows,20,-1,1, rand);
-        X = new DMatrixRMaj(A.numRows,B.numCols);
+        A = MatrixOps_DDRB.createRandom(size*4, size/4, -1, 1, rand);
     }
 
     @Benchmark
-    public void houseCol() {
-        DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
-        houseCol.setA(A);
-        houseCol.solve(B,X);
+    public void decompose() {
+        if (!qr.decompose(A.copy()))
+            throw new RuntimeException("FAILED?!");
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkLinearSolverQR_DDRM.class.getSimpleName())
+                .include(BenchmarkDecompositionQR_DDRB.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

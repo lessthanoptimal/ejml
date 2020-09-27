@@ -16,13 +16,10 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.block.decompose;
+package org.ejml.dense.block.linsol.qr;
 
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.dense.block.MatrixOps_DDRB;
-import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
-import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -32,43 +29,46 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Peter Abeles
+ */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value=2)
-public class BenchmarkDecompositionCholesky_DDRB {
+public class BenchmarkLinearSolverQR_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"2000"})
+    @Param({"1000","2000"})
     public int size;
 
-    //    @Param({"true","false"})
-    @Param({"true"})
-    public boolean lower;
+    public DMatrixRBlock A;
+    public DMatrixRBlock X,B;
 
-    public DMatrixRBlock A,L;
-
-    CholeskyDecomposition_F64<DMatrixRBlock> cholesky;
+    QrHouseHolderSolver_DDRB householder = new QrHouseHolderSolver_DDRB();
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        cholesky = new CholeskyOuterForm_DDRB(lower);
-        A = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetricPosDef(size,rand));
-        L = new DMatrixRBlock(1,1);
+        A = MatrixOps_DDRB.createRandom(size*4,size/4,-1,1,rand);
+        B = MatrixOps_DDRB.createRandom(A.numRows,20,-1,1, rand);
+        X = A.create(1,1);
     }
 
     @Benchmark
-    public void decompose() {
-        if( !cholesky.decompose(A.copy()) )
-            throw new RuntimeException("FAILED?!");
+    public void householder() {
+        DMatrixRBlock A = householder.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRBlock B = householder.modifiesB() ? this.B.copy() : this.B;
+        if( !householder.setA(A) )
+            throw new RuntimeException("Bad");
+        householder.solve(B, X);
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkDecompositionCholesky_DDRB.class.getSimpleName())
+                .include(BenchmarkLinearSolverQR_DDRB.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

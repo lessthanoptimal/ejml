@@ -20,6 +20,8 @@ package org.ejml.dense.row.linsol.qr;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
+import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -40,12 +42,12 @@ import java.util.concurrent.TimeUnit;
 @Fork(value=2)
 public class BenchmarkLinearSolverQR_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000"})
+    @Param({"1000","2000"})
     public int size;
 
     public DMatrixRMaj A,X,B;
 
-    LinearSolverQrHouseCol_MT_DDRM houseCol = new LinearSolverQrHouseCol_MT_DDRM();
+    LinearSolverChol_DDRM houseCol = new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true));
 
     @Setup
     public void setup() {
@@ -58,6 +60,8 @@ public class BenchmarkLinearSolverQR_MT_DDRM {
 
     @Benchmark
     public void houseCol() {
+        DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
         houseCol.setA(A);
         houseCol.solve(B,X);
     }

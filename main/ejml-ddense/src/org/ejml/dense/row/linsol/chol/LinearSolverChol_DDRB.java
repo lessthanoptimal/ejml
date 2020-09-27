@@ -18,12 +18,13 @@
 
 package org.ejml.dense.row.linsol.chol;
 
+import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_DDRB;
 import org.ejml.dense.row.linsol.LinearSolver_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * A wrapper around {@link CholeskyDecomposition_F64}(DMatrixRBlock) that allows
@@ -37,23 +38,26 @@ public class LinearSolverChol_DDRB extends LinearSolver_DDRB_to_DDRM {
         super(new CholeskyOuterSolver_DDRB());
     }
 
+    public LinearSolverChol_DDRB( LinearSolverDense<DMatrixRBlock> alg ) {
+        super(alg);
+    }
+
     /**
      * Only converts the B matrix and passes that onto solve.  Te result is then copied into
      * the input 'X' matrix.
-     * 
+     *
      * @param B A matrix &real; <sup>m &times; p</sup>.  Not modified.
      * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
      */
     @Override
     @SuppressWarnings("NullAway") // known special case for solve()
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        blockB.reshape(B.numRows,B.numCols,false);
-        MatrixOps_DDRB.convert(B,blockB);
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        blockB.reshape(B.numRows, B.numCols, false);
+        MatrixOps_DDRB.convert(B, blockB);
 
         // since overwrite B is true X does not need to be passed in
-        alg.solve(blockB,null);
+        alg.solve(blockB, null);
 
-        MatrixOps_DDRB.convert(blockB,X);
+        MatrixOps_DDRB.convert(blockB, X);
     }
-
 }

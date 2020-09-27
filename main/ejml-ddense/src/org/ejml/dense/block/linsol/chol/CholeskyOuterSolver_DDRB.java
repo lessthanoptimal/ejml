@@ -102,13 +102,11 @@ public class CholeskyOuterSolver_DDRB implements LinearSolverDense<DMatrixRBlock
 
         DSubmatrixD1 L = new DSubmatrixD1(decomposer.getT(null));
 
-        if (X != null) {
-            if (X.blockLength != blockLength)
-                throw new IllegalArgumentException("Unexpected blocklength in X.");
-            if (X.numRows != L.col1) throw new IllegalArgumentException("Not enough rows in X");
+        if (X == null) {
+            X = B.create(L.col1, B.numCols);
+        } else {
+            X.reshape(L.col1, B.numCols, blockLength, false);
         }
-
-        if (B.numRows != L.col1) throw new IllegalArgumentException("Not enough rows in B");
 
         //  L * L^T*X = B
 

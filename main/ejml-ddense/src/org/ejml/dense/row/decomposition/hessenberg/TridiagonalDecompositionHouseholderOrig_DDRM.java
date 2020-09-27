@@ -45,15 +45,15 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     int N;
 
     // temporary storage
-    double w[];
+    double[] w;
     // gammas for the householder operations
-    double gammas[];
+    double[] gammas;
     // temporary storage
-    double b[];
+    double[] b;
 
     public TridiagonalDecompositionHouseholderOrig_DDRM() {
         N = 1;
-        QT = new DMatrixRMaj(N,N);
+        QT = new DMatrixRMaj(N, N);
         w = new double[N];
         b = new double[N];
         gammas = new double[N];
@@ -61,7 +61,6 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
 
     /**
      * Returns the interal matrix where the decomposed results are stored.
-     * @return
      */
     public DMatrixRMaj getQT() {
         return QT;
@@ -73,21 +72,21 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
-    public DMatrixRMaj getT(@Nullable DMatrixRMaj T) {
-        T = UtilDecompositons_DDRM.ensureZeros(T,N,N);
+    public DMatrixRMaj getT( @Nullable DMatrixRMaj T ) {
+        T = UtilDecompositons_DDRM.ensureZeros(T, N, N);
 
         T.data[0] = QT.data[0];
         T.data[1] = QT.data[1];
 
 
-        for( int i = 1; i < N-1; i++ ) {
-            T.set(i,i, QT.get(i,i));
-            T.set(i,i+1,QT.get(i,i+1));
-            T.set(i,i-1,QT.get(i-1,i));
+        for (int i = 1; i < N - 1; i++) {
+            T.set(i, i, QT.get(i, i));
+            T.set(i, i + 1, QT.get(i, i + 1));
+            T.set(i, i - 1, QT.get(i - 1, i));
         }
 
-        T.data[(N-1)*N+N-1] = QT.data[(N-1)*N+N-1];
-        T.data[(N-1)*N+N-2] = QT.data[(N-2)*N+N-1];
+        T.data[(N - 1)*N + N - 1] = QT.data[(N - 1)*N + N - 1];
+        T.data[(N - 1)*N + N - 2] = QT.data[(N - 2)*N + N - 1];
 
         return T;
     }
@@ -98,15 +97,15 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q ) {
-        Q = UtilDecompositons_DDRM.ensureIdentity(Q,N,N);
+    public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q ) {
+        Q = UtilDecompositons_DDRM.ensureIdentity(Q, N, N);
 
-        for( int i = 0; i < N; i++ ) w[i] = 0;
+        for (int i = 0; i < N; i++) w[i] = 0;
 
-        for( int j = N-2; j >= 0; j-- ) {
-            w[j+1] = 1;
-            for( int i = j+2; i < N; i++ ) {
-                w[i] = QT.get(j,i);
+        for (int j = N - 2; j >= 0; j--) {
+            w[j + 1] = 1;
+            for (int i = j + 2; i < N; i++) {
+                w[i] = QT.get(j, i);
             }
             QrHelperFunctions_DDRM.rank1UpdateMultR(Q, w, gammas[j + 1], j + 1, j + 1, N, b);
 //            Q.print();
@@ -123,7 +122,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     public void decompose( DMatrixRMaj A ) {
         init(A);
 
-        for( int k = 1; k < N; k++ ) {
+        for (int k = 1; k < N; k++) {
             similarTransform(k);
 //            System.out.println("k=="+k);
 //            QT.print();
@@ -133,54 +132,54 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     /**
      * Computes and performs the similar a transform for submatrix k.
      */
-    private void similarTransform( int k) {
-        double t[] = QT.data;
+    private void similarTransform( int k ) {
+        double[] t = QT.data;
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
         double max = 0;
 
-        int rowU = (k-1)*N;
+        int rowU = (k - 1)*N;
 
-        for( int i = k; i < N; i++ ) {
-            double val = Math.abs(t[rowU+i]);
-            if( val > max )
+        for (int i = k; i < N; i++) {
+            double val = Math.abs(t[rowU + i]);
+            if (val > max)
                 max = val;
         }
 
-        if( max > 0 ) {
+        if (max > 0) {
             // -------- set up the reflector Q_k
 
             double tau = 0;
             // normalize to reduce overflow/underflow
             // and compute tau for the reflector
-            for( int i = k; i < N; i++ ) {
-                double val = t[rowU+i] /= max;
+            for (int i = k; i < N; i++) {
+                double val = t[rowU + i] /= max;
                 tau += val*val;
             }
 
             tau = Math.sqrt(tau);
 
-            if( t[rowU+k] < 0 )
+            if (t[rowU + k] < 0)
                 tau = -tau;
 
             // write the reflector into the lower left column of the matrix
-            double nu = t[rowU+k] + tau;
-            t[rowU+k] = 1.0;
+            double nu = t[rowU + k] + tau;
+            t[rowU + k] = 1.0;
 
-            for( int i = k+1; i < N; i++ ) {
-                t[rowU+i] /= nu;
+            for (int i = k + 1; i < N; i++) {
+                t[rowU + i] /= nu;
             }
 
             double gamma = nu/tau;
             gammas[k] = gamma;
 
             // ---------- Specialized householder that takes advantage of the symmetry
-            householderSymmetric(k,gamma);
+            householderSymmetric(k, gamma);
 
             // since the first element in the householder vector is known to be 1
             // store the full upper hessenberg
-            t[rowU+k] = -tau*max;
+            t[rowU + k] = -tau*max;
         } else {
             gammas[k] = 0;
         }
@@ -188,19 +187,18 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
 
     /**
      * Performs the householder operations on left and right and side of the matrix.  Q<sup>T</sup>AQ
-     * @param row Specifies the submatrix.
      *
+     * @param row Specifies the submatrix.
      * @param gamma The gamma for the householder operation
      */
-    public void householderSymmetric( int row , double gamma )
-    {
-        int startU = (row-1)*N;
+    public void householderSymmetric( int row, double gamma ) {
+        int startU = (row - 1)*N;
 
         // compute v = -gamma*A*u
-        for( int i = row; i < N; i++ ) {
+        for (int i = row; i < N; i++) {
             double total = 0;
-            for( int j = row; j < N; j++ ) {
-                total += QT.data[i*N+j]*QT.data[startU+j];
+            for (int j = row; j < N; j++) {
+                total += QT.data[i*N + j]*QT.data[startU + j];
             }
             w[i] = -gamma*total;
 //            System.out.println("y["+i+"] = "+w[i]);
@@ -208,30 +206,28 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
         // alpha = -0.5*gamma*u^T*v
         double alpha = 0;
 
-        for( int i = row; i < N; i++ ) {
-            alpha += QT.data[startU+i]*w[i];
+        for (int i = row; i < N; i++) {
+            alpha += QT.data[startU + i]*w[i];
         }
         alpha *= -0.5*gamma;
 
         // w = v + alpha*u
-        for( int i = row; i < N; i++ ) {
-            w[i] += alpha*QT.data[startU+i];
+        for (int i = row; i < N; i++) {
+            w[i] += alpha*QT.data[startU + i];
 //            System.out.println("w["+i+"] = "+w[i]);
         }
         // A = A + w*u^T + u*w^T
-        for( int i = row; i < N; i++ ) {
+        for (int i = row; i < N; i++) {
 
             double ww = w[i];
-            double uu = QT.data[startU+i];
+            double uu = QT.data[startU + i];
 //            System.out.println("u["+i+"] = "+uu);
 
-            for( int j = i; j < N; j++ ) {
-                QT.data[j*N+i] = QT.data[i*N+j] += ww*QT.data[startU+j] + w[j]*uu;
+            for (int j = i; j < N; j++) {
+                QT.data[j*N + i] = QT.data[i*N + j] += ww*QT.data[startU + j] + w[j]*uu;
             }
         }
-
     }
-
 
     /**
      * If needed declares and sets up internal data structures.
@@ -239,15 +235,15 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
      * @param A Matrix being decomposed.
      */
     public void init( DMatrixRMaj A ) {
-        if( A.numRows != A.numCols)
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be square");
 
-        if( A.numCols != N ) {
+        if (A.numCols != N) {
             N = A.numCols;
-            QT.reshape(N,N, false);
+            QT.reshape(N, N, false);
 
-            if( w.length < N ) {
-                w = new double[ N ];
+            if (w.length < N) {
+                w = new double[N];
                 gammas = new double[N];
                 b = new double[N];
             }

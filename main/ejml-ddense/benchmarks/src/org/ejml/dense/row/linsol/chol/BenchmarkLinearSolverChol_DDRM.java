@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.qr;
+package org.ejml.dense.row.linsol.chol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -38,35 +39,35 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value=2)
-public class BenchmarkLinearSolverQR_DDRM {
+public class BenchmarkLinearSolverChol_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000","2000"})
     public int size;
 
     public DMatrixRMaj A,X,B;
 
-    LinearSolverQrHouseCol_DDRM houseCol = new LinearSolverQrHouseCol_DDRM();
+    LinearSolverChol_DDRM inner = new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true));
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
+        A = RandomMatrices_DDRM.symmetricPosDef(size, rand);
         B = RandomMatrices_DDRM.rectangle(A.numRows,20,-1,1, rand);
         X = new DMatrixRMaj(A.numRows,B.numCols);
     }
 
     @Benchmark
-    public void houseCol() {
-        DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
-        houseCol.setA(A);
-        houseCol.solve(B,X);
+    public void inner() {
+        DMatrixRMaj A = inner.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRMaj B = inner.modifiesB() ? this.B.copy() : this.B;
+        inner.setA(A);
+        inner.solve(B,X);
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkLinearSolverQR_DDRM.class.getSimpleName())
+                .include(BenchmarkLinearSolverChol_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.qr;
+package org.ejml.dense.block.linsol.qr;
 
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.data.DMatrixRBlock;
+import org.ejml.dense.block.MatrixOps_DDRB;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -37,36 +37,38 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
-public class BenchmarkLinearSolverQR_DDRM {
+@Fork(value = 2)
+public class BenchmarkLinearSolverQR_MT_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000","2000"})
+    @Param({"1000", "2000"})
     public int size;
 
-    public DMatrixRMaj A,X,B;
+    public DMatrixRBlock A;
+    public DMatrixRBlock X, B;
 
-    LinearSolverQrHouseCol_DDRM houseCol = new LinearSolverQrHouseCol_DDRM();
+    QrHouseHolderSolver_MT_DDRB householder = new QrHouseHolderSolver_MT_DDRB();
 
     @Setup
     public void setup() {
-        Random rand = new Random(234);
+        var rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        B = RandomMatrices_DDRM.rectangle(A.numRows,20,-1,1, rand);
-        X = new DMatrixRMaj(A.numRows,B.numCols);
+        A = MatrixOps_DDRB.createRandom(size*4, size/4, -1, 1, rand);
+        B = MatrixOps_DDRB.createRandom(A.numRows, 20, -1, 1, rand);
+        X = A.create(1, 1);
     }
 
     @Benchmark
-    public void houseCol() {
-        DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
-        houseCol.setA(A);
-        houseCol.solve(B,X);
+    public void householder() {
+        DMatrixRBlock A = householder.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRBlock B = householder.modifiesB() ? this.B.copy() : this.B;
+        if (!householder.setA(A))
+            throw new RuntimeException("Bad");
+        householder.solve(B, X);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkLinearSolverQR_DDRM.class.getSimpleName())
+                .include(BenchmarkLinearSolverQR_MT_DDRB.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

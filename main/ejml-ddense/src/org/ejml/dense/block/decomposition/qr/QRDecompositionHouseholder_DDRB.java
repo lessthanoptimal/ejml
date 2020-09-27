@@ -18,12 +18,21 @@
 
 package org.ejml.dense.block.decomposition.qr;
 
+import org.ejml.concurrency.GrowArray;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.MatrixMult_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.jetbrains.annotations.Nullable;
+
+//CONCURRENT_INLINE import org.ejml.dense.block.*;
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+
+//CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
+//CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
+//CONCURRENT_MACRO BlockHouseHolder_DDRB BlockHouseHolder_MT_DDRB
 
 /**
  * <p>
@@ -77,7 +86,7 @@ public class QRDecompositionHouseholder_DDRB
     private final DSubmatrixD1 Y = new DSubmatrixD1();
     private final DSubmatrixD1 W = new DSubmatrixD1(dataW);
     private final DSubmatrixD1 WTA = new DSubmatrixD1(dataWTA);
-    private double[] temp = new double[1];
+    private final GrowArray<DGrowArray> workspace = new GrowArray<>(DGrowArray::new);
     // stores the computed gammas
     private double[] gammas = new double[1];
 
@@ -206,7 +215,7 @@ public class QRDecompositionHouseholder_DDRB
 
             // Compute W matrix from reflectors stored in Y
             if (!saveW)
-                BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, temp, gammas, Y.col0);
+                BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, workspace, gammas, Y.col0);
 
             // Apply the Qi to Q
             BlockHouseHolder_DDRB.multTransA_vecCol(blockLength, Y, subB, WTA);
@@ -258,7 +267,7 @@ public class QRDecompositionHouseholder_DDRB
 
             // Compute W matrix from reflectors stored in Y
             if (!saveW)
-                BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, temp, gammas, Y.col0);
+                BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, workspace, gammas, Y.col0);
 
             // Apply the Qi to Q
             MatrixMult_DDRB.multTransA(blockLength, W, subB, WTA);
@@ -334,8 +343,6 @@ public class QRDecompositionHouseholder_DDRB
         dataWTA.reshape(l, orig.numRows, false);
         Y.original = orig;
         Y.row1 = W.row1 = orig.numRows;
-        if (temp.length < blockLength)
-            temp = new double[blockLength];
         if (gammas.length < orig.numCols)
             gammas = new double[orig.numCols];
 
@@ -367,12 +374,12 @@ public class QRDecompositionHouseholder_DDRB
         WTA.original.reshape(WTA.row1, WTA.col1, false);
 
         if (A.col1 > A.col0) {
-            BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, temp, gammas, Y.col0);
+            BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, workspace, gammas, Y.col0);
 
             MatrixMult_DDRB.multTransA(blockLength, W, A, WTA);
             BlockHouseHolder_DDRB.multAdd_zeros(blockLength, Y, WTA, A);
         } else if (saveW) {
-            BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, temp, gammas, Y.col0);
+            BlockHouseHolder_DDRB.computeW_Column(blockLength, Y, W, workspace, gammas, Y.col0);
         }
     }
 

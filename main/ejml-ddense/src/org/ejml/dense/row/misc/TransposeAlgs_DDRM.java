@@ -19,8 +19,8 @@
 package org.ejml.dense.row.misc;
 
 import org.ejml.data.DMatrix1Row;
+
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
-//CONCURRENT_INLINE import javax.annotation.Generated;
 
 /**
  * Low level transpose algorithms.  No sanity checks are performed.    Take a look at BenchmarkTranspose to
@@ -28,7 +28,6 @@ import org.ejml.data.DMatrix1Row;
  *
  * @author Peter Abeles
  */
-//CONCURRENT_INLINE @Generated("org.ejml.dense.row.misc.TransposeAlgs_DDRM")
 public class TransposeAlgs_DDRM {
 
     /**
