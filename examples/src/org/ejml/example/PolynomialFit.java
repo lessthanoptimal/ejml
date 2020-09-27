@@ -157,8 +157,8 @@ public class PolynomialFit {
         final double d[] = y.data;
 
         // shift
-        for( int i = index; i < N; i++ ) {
-            d[i] = d[i+1];
+        if (N - index >= 0) {
+            System.arraycopy(d, index + 1, d, index, N - index);
         }
         y.numRows--;
     }

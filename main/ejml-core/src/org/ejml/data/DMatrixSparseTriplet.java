@@ -304,8 +304,8 @@ public class DMatrixSparseTriplet implements DMatrixSparse
         if( where >= 0 ) {
 
             nz_length -= 1;
-            for (int i = where; i < nz_length; i++) {
-                nz_value.data[i] = nz_value.data[i+1];
+            if (nz_length - where >= 0) {
+                System.arraycopy(nz_value.data, where + 1, nz_value.data, where, nz_length - where);
             }
             int end = nz_length*2;
             for (int i = where*2; i < end; i += 2) {
