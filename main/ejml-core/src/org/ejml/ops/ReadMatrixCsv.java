@@ -199,7 +199,7 @@ public class ReadMatrixCsv extends ReadCsv {
                 double real = Double.parseDouble(words.get(j));
                 double imaginary = Double.parseDouble(words.get(j+1));
 
-                A.set(i, j, real, imaginary);
+                A.set(i, j/2, real, imaginary);
             }
         }
 
@@ -231,7 +231,7 @@ public class ReadMatrixCsv extends ReadCsv {
                 float real = Float.parseFloat(words.get(j));
                 float imaginary = Float.parseFloat(words.get(j+1));
 
-                A.set(i, j, real, imaginary);
+                A.set(i, j/2, real, imaginary);
             }
         }
 
