@@ -54,6 +54,7 @@ import static org.ejml.GenerateCode32.findPathToProjectRoot;
 public class AutocodeConcurrentApp {
 
 	private static final String prefix = "//CONCURRENT_";
+	private static String tab = "    ";
 
 	/**
 	 * Converts the file from single thread into concurrent implementation
@@ -70,6 +71,9 @@ public class AutocodeConcurrentApp {
 
 		List<Macro> macros = new ArrayList<>();
 
+		// If an import statement has been found
+		boolean foundImport = false;
+
 		// parse each line by line looking for instructions
 		boolean foundClassDef = false;
 		// If true it will not copy lines over
@@ -78,9 +82,17 @@ public class AutocodeConcurrentApp {
 			String line = inputLines.get(i);
 			int where = line.indexOf(prefix);
 			if( where < 0 ) {
-				if( !foundClassDef && line.contains("class "+classNameOld)) {
+				if (!foundImport && !foundClassDef && line.startsWith("import")) {
+					foundImport = true;
+					outputLines.add("import javax.annotation.Generated;");
+				} else if( !foundClassDef && line.contains("class "+classNameOld)) {
 					foundClassDef = true;
-					line = line.replaceFirst("class "+classNameOld,"class "+classNameNew);
+					if (foundImport)
+						outputLines.add("@Generated(\"" + derivePackagePath(outputFile) + "." + classNameOld + "\")");
+					line = line.replaceFirst("class " + classNameOld, "class " + classNameNew);
+				} else if( foundImport && line.startsWith("@Generated")) {
+					// If the file already has a generated statement and we are going to add our own remove the old one
+					continue;
 				} else {
 					line = line.replace(classNameOld+"(",classNameNew+"(");
 				}
@@ -197,10 +209,10 @@ public class AutocodeConcurrentApp {
 					"import static org.junit.jupiter.api.Assertions.fail;\n" +
 					"\n" +
 					"class " + className + " {\n" +
-					"\t@Test\n" +
-					"\tvoid implement() {\n" +
-					"\t\tfail(\"implement\");\n" +
-					"\t}\n" +
+					tab+"@Test\n" +
+					tab+"void compareToSingle() {\n" +
+					tab+tab+"fail(\"implement\");\n" +
+					tab+"}\n" +
 					"}\n");
 			out.close();
 		} catch( FileNotFoundException e ) {
