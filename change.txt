@@ -23,12 +23,11 @@ Date format: year/month/day
   * duplicatesAdd() is a function which will add element that is duplicated and turn it into a valid matrix again
 - ReadMatrixCsv
   * Thanks DEDZTBH for fixing an indexing error when reading complex data types
-- TODO Concurrent Algorithms
-  * Only simple for loops which do not require storage for each thread
+- Added Concurrent Algorithms
+  * First pass everything is subject to optimization
   * Control threads with EjmlConcurrency
   * Must call concurrent functions from CommonOps_MT_****
-  * TODO InnerRankUpdate_DDRB
-  * TODO Block QR + solveQR
+- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
 
 ----- Version 0.39
 2020/04/06

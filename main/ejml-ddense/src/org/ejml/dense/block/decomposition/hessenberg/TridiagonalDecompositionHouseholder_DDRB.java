@@ -29,6 +29,12 @@ import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
 
+//CONCURRENT_INLINE import org.ejml.dense.block.*;
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+
+//CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
+//CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
+
 /**
  * <p>
  * Tridiagonal similar decomposition for block matrices. Orthogonal matrices are computed using
@@ -230,7 +236,6 @@ public class TridiagonalDecompositionHouseholder_DDRB
             TridiagonalHelper_DDRB.tridiagUpperRow(A.blockLength, subA, gammas, subV);
 
             // apply Householder reflectors to the lower portion using block multiplication
-
             if (subU.row1 < orig.numCols) {
                 // take in account the 1 in the last row. The others are skipped over.
                 double before = subU.get(A.blockLength - 1, A.blockLength);
@@ -258,6 +263,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
                                        DSubmatrixD1 C ) {
         int heightA = Math.min(blockLength, A.row1 - A.row0);
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(C.row0 + blockLength, C.row1, blockLength, i -> {
         for (int i = C.row0 + blockLength; i < C.row1; i += blockLength) {
             int heightC = Math.min(blockLength, C.row1 - i);
 
@@ -273,6 +279,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
                         indexA, indexB, indexC, heightA, heightC, widthC);
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     private void init( DMatrixRBlock orig ) {

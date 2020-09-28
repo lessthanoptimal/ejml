@@ -26,6 +26,10 @@ import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionBlock_MT_DDRM;
 import org.ejml.dense.row.decomposition.eig.SwitchingEigenDecomposition_DDRM;
 import org.ejml.dense.row.decomposition.eig.SymmetricQRAlgorithmDecomposition_DDRM;
 import org.ejml.dense.row.decomposition.eig.WatchedDoubleStepQRDecomposition_DDRM;
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigen_DDRM;
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigen_MT_DDRM;
+import org.ejml.dense.row.decomposition.hessenberg.HessenbergSimilarDecomposition_DDRM;
+import org.ejml.dense.row.decomposition.hessenberg.HessenbergSimilarDecomposition_MT_DDRM;
 import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouseholder_MT_DDRM;
 import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_MT_DDRM;
 import org.ejml.dense.row.decomposition.svd.SvdImplicitQrDecompose_MT_DDRM;
@@ -153,8 +157,11 @@ public class DecompositionFactory_MT_DDRM {
         if (isSymmetric) {
             TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_MT_DDRM.tridiagonal(matrixSize);
             return new SymmetricQRAlgorithmDecomposition_DDRM(decomp, computeVectors);
-        } else
-            return new WatchedDoubleStepQRDecomposition_DDRM(computeVectors);
+        } else {
+            HessenbergSimilarDecomposition_DDRM hessenberg = new HessenbergSimilarDecomposition_MT_DDRM();
+            WatchedDoubleStepQREigen_DDRM eigenQR = new WatchedDoubleStepQREigen_MT_DDRM();
+            return new WatchedDoubleStepQRDecomposition_DDRM(hessenberg,eigenQR,computeVectors);
+        }
     }
 
     public static EigenDecomposition_F64<DMatrixRMaj> eig( boolean computeVectors,
@@ -169,12 +176,12 @@ public class DecompositionFactory_MT_DDRM {
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      */
     public static TridiagonalSimilarDecomposition_F64<DMatrixRMaj> tridiagonal( int matrixSize ) {
-        if (matrixSize >= 1800) {
-            throw new RuntimeException("IMplement");
-//            return new TridiagonalDecomposition_DDRB_to_DDRM();
-        } else {
+//        if (matrixSize >= 1800) {
+//            throw new RuntimeException("IMplement");
+////            return new TridiagonalDecomposition_DDRB_to_DDRM();
+//        } else {
             return new TridiagonalDecompositionHouseholder_MT_DDRM();
-        }
+//        }
     }
 
     /**

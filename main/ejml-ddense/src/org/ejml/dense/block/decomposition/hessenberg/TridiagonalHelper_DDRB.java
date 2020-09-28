@@ -36,11 +36,11 @@ public class TridiagonalHelper_DDRB {
      * </p>
      *
      * <p>
-     * For each row 'a' in 'A':
-     * Compute 'u' the householder reflector.
-     * y(:) = A*u
-     * v(i) = y - (1/2)*(y^T*u)*u
-     * a(i+1) = a(i) - u*&gamma;*v^T - v*u^t
+     * For each row 'a' in 'A':<br>
+     * Compute 'u' the householder reflector.<br>
+     * y(:) = A*u<br>
+     * v(i) = y - (1/2)*(y^T*u)*u<br>
+     * a(i+1) = a(i) - u*&gamma;*v^T - v*u^t<br>
      * </p>
      *
      * @param blockLength Size of a block
