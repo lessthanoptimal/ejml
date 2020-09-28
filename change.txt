@@ -19,9 +19,9 @@ Date format: year/month/day
   * Thanks liuyang0717 for the bug report
 - Added reduce operations for sparse matrices.
   * Thanks Florentin Dörre for the donation
-  * Thanks Gabor Szarnyas and @breandan for reviewing
 - Added Semirings for Graph Operations
   * Thanks Florentin Dörre for the donation
+  * Thanks Gabor Szarnyas and @breandan for reviewing
 - CommonOps_DDRM and CommonOps_DSCC
   * Updating functions to return output if null and use common input sanity check functions
 - CommonOps_DSCC
