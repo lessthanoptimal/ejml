@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,11 +50,6 @@ public class EjmlParameters {
     public static int BLOCK_WIDTH = 60;
     public static int BLOCK_WIDTH_CHOL = 20;
 
-    /**
-     * Number of elements in a block.
-     */
-    public static int BLOCK_SIZE = BLOCK_WIDTH*BLOCK_WIDTH;
-
     public static int TRANSPOSE_SWITCH = 375;
 
     /**
@@ -81,7 +76,7 @@ public class EjmlParameters {
 
     public static int SWITCH_BLOCK64_QR = 1500;
 
-    public static enum MemoryUsage
+    public enum MemoryUsage
     {
         /**
          * Use lower memory algorithm while not totally sacrificing speed.

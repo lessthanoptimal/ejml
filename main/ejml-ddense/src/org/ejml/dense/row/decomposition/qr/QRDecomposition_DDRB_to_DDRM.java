@@ -60,7 +60,7 @@ public class QRDecomposition_DDRB_to_DDRM
 
         ((QRDecompositionHouseholder_DDRB)alg).getQ(Qblock,compact);
 
-        convertBlockToRow(Q.numRows,Q.numCols,Ablock.blockLength,Q.data);
+        convertBlockToRow(Q.numRows,Q.numCols,Q.data);
 
         return Q;
     }

@@ -85,7 +85,7 @@ public class TridiagonalDecomposition_DDRB_to_DDRM
 
         ((TridiagonalDecompositionHouseholder_DDRB)alg).getQ(Qblock,transposed);
 
-        convertBlockToRow(Q.numRows,Q.numCols,Ablock.blockLength,Q.data);
+        convertBlockToRow(Q.numRows,Q.numCols,Q.data);
 
         return Q;
     }

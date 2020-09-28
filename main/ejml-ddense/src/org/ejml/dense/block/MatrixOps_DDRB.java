@@ -18,6 +18,8 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DSubmatrixD1;
@@ -29,6 +31,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
+//CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
+
 /**
  * Various operations on {@link DMatrixRBlock}.
  *
@@ -36,14 +40,35 @@ import java.util.Random;
  */
 public class MatrixOps_DDRB {
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * Converts a row major matrix into a row major block matrix.
      *
-     * @param src Original DMatrixRMaj.  Not modified.
+     * @param src Original DMatrixRMaj. Not modified.
      * @param dst Equivalent DMatrixRBlock. Modified.
      */
     public static void convert( DMatrixRMaj src, DMatrixRBlock dst ) {
         ConvertDMatrixStruct.convert(src, dst);
+    }
+
+    /**
+     * Converts a row major matrix into a row major block matrix. Both matrices will contain
+     * the same data array. Useful when you wish to avoid declaring two large matrices.
+     *
+     * @param src Original DMatrixRMaj. Modified.
+     * @param dst Equivalent DMatrixRBlock. Modified.
+     */
+    public static DMatrixRBlock convertInplace( DMatrixRMaj src, @Nullable DMatrixRBlock dst ,
+                                                @Nullable DGrowArray workspace ) {
+        if (dst == null)
+            dst = new DMatrixRBlock();
+
+        dst.data = src.data;
+        dst.numRows = src.numRows;
+        dst.numCols = src.numCols;
+        convertRowToBlock(src.numRows, src.numCols, dst.blockLength, src.data, workspace);
+
+        return dst;
     }
 
     /**
@@ -55,14 +80,12 @@ public class MatrixOps_DDRB {
      * @param numCols number of columns in the matrix.
      * @param blockLength Block size in the converted matrix.
      * @param data Matrix data in a row-major format. Modified.
-     * @param tmp Temporary data structure that is to be the size of a block row.
+     * @param workspace Optional internal workspace. Nullable.
      */
     public static void convertRowToBlock( int numRows, int numCols, int blockLength,
-                                          double[] data, double[] tmp ) {
+                                          double[] data, @Nullable DGrowArray workspace ) {
         int minLength = Math.min(blockLength, numRows)*numCols;
-        if (tmp.length < minLength) {
-            throw new IllegalArgumentException("tmp must be at least " + minLength + " long ");
-        }
+        double[] tmp = UtilEjml.adjust(workspace, minLength);
 
         for (int i = 0; i < numRows; i += blockLength) {
             int blockHeight = Math.min(blockLength, numRows - i);
@@ -88,11 +111,31 @@ public class MatrixOps_DDRB {
     /**
      * Converts a row major block matrix into a row major matrix.
      *
-     * @param src Original DMatrixRBlock..  Not modified.
-     * @param dst Equivalent DMatrixRMaj.  Modified.
+     * @param src Original DMatrixRBlock.. Not modified.
+     * @param dst Equivalent DMatrixRMaj. Modified.
      */
     public static DMatrixRMaj convert( DMatrixRBlock src, DMatrixRMaj dst ) {
         return ConvertDMatrixStruct.convert(src, dst);
+    }
+
+    /**
+     * Converts a row major block matrix into a row major matrix. Both matrices will contain
+     * the same data array. Useful when you wish to avoid declaring two large matrices.
+     *
+     * @param src Original DMatrixRBlock. Modified.
+     * @param dst Equivalent DMatrixRMaj. Modified.
+     */
+    public static DMatrixRMaj convertInplace( DMatrixRBlock src, @Nullable DMatrixRMaj dst ,
+                                              @Nullable DGrowArray workspace ) {
+        if (dst == null)
+            dst = new DMatrixRMaj();
+
+        dst.data = src.data;
+        dst.numRows = src.numRows;
+        dst.numCols = src.numCols;
+        convertBlockToRow(src.numRows, src.numCols, src.blockLength, src.data, workspace);
+
+        return dst;
     }
 
     /**
@@ -104,14 +147,12 @@ public class MatrixOps_DDRB {
      * @param numCols number of columns in the matrix.
      * @param blockLength Block size in the converted matrix.
      * @param data Matrix data in a block row-major format. Modified.
-     * @param tmp Temporary data structure that is to be the size of a block row.
+     * @param workspace Optional internal workspace. Nullable.
      */
     public static void convertBlockToRow( int numRows, int numCols, int blockLength,
-                                          double[] data, double[] tmp ) {
+                                          double[] data, @Nullable DGrowArray workspace ) {
         int minLength = Math.min(blockLength, numRows)*numCols;
-        if (tmp.length < minLength) {
-            throw new IllegalArgumentException("tmp must be at least " + minLength + " long and not " + tmp.length);
-        }
+        double[] tmp = UtilEjml.adjust(workspace, minLength);
 
         for (int i = 0; i < numRows; i += blockLength) {
             int blockHeight = Math.min(blockLength, numRows - i);
@@ -136,7 +177,7 @@ public class MatrixOps_DDRB {
     /**
      * Converts the transpose of a row major matrix into a row major block matrix.
      *
-     * @param src Original DMatrixRMaj.  Not modified.
+     * @param src Original DMatrixRMaj. Not modified.
      * @param dst Equivalent DMatrixRBlock. Modified.
      */
     public static void convertTranSrc( DMatrixRMaj src, DMatrixRBlock dst ) {
@@ -162,9 +203,10 @@ public class MatrixOps_DDRB {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     // This can be speed up by inlining the multBlock* calls, reducing number of multiplications
-    // and other stuff.  doesn't seem to have any speed advantage over mult_reorder()
+    // and other stuff. doesn't seem to have any speed advantage over mult_reorder()
     public static void mult( DMatrixRBlock A, DMatrixRBlock B, DMatrixRBlock C ) {
         if (A.numCols != B.numRows)
             throw new IllegalArgumentException("Columns in A are incompatible with rows in B");
@@ -222,11 +264,12 @@ public class MatrixOps_DDRB {
         MatrixMult_DDRB.multTransB(blockLength, Asub, Bsub, Csub);
     }
 
+    //CONCURRENT_OMIT_BEGIN
     /**
      * Transposes a block matrix.
      *
-     * @param A Original matrix.  Not modified.
-     * @param A_tran Transposed matrix.  Modified.
+     * @param A Original matrix. Not modified.
+     * @param A_tran Transposed matrix. Modified.
      */
     public static DMatrixRBlock transpose( DMatrixRBlock A, @Nullable DMatrixRBlock A_tran ) {
         if (A_tran != null) {
@@ -374,7 +417,7 @@ public class MatrixOps_DDRB {
     }
 
     /**
-     * Copies either the upper or lower triangular portion of src into dst.  Dst can be smaller
+     * Copies either the upper or lower triangular portion of src into dst. Dst can be smaller
      * than src.
      *
      * @param upper If the upper or lower triangle is copied.
@@ -536,13 +579,13 @@ public class MatrixOps_DDRB {
 
     /**
      * <p>
-     * Extracts a matrix from src into dst.  The submatrix which is copied has its initial coordinate
+     * Extracts a matrix from src into dst. The submatrix which is copied has its initial coordinate
      * at (0,0) and ends at (dst.numRows,dst.numCols). The end rows/columns must be aligned along blocks
      * or else it will silently screw things up.
      * </p>
      *
      * @param src Matrix which a submatrix is being extracted from. Not modified.
-     * @param dst Where the submatrix is written to.  Its rows and columns be less than or equal to 'src'.  Modified.
+     * @param dst Where the submatrix is written to. Its rows and columns be less than or equal to 'src'. Modified.
      */
     public static void extractAligned( DMatrixRBlock src, DMatrixRBlock dst ) {
         if (src.blockLength != dst.blockLength)
@@ -622,4 +665,5 @@ public class MatrixOps_DDRB {
         if (!MatrixOps_DDRB.blockAligned(blockLength, C))
             throw new RuntimeException("Sub-Matrix C is not block aligned");
     }
+    //CONCURRENT_OMIT_END
 }
