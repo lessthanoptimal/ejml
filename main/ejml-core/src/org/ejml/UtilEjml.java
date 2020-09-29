@@ -604,5 +604,20 @@ public class UtilEjml {
             return new GrowArray<>(DGrowArray::new);
         return workspace;
     }
+    public static void printTime( String message, Process timer ) {
+        printTime("Processing... ",message,timer);
+    }
+
+    public static void printTime( String pre, String message, Process timer ) {
+        System.out.printf(pre);
+        long time0 = System.nanoTime();
+        timer.process();
+        long time1 = System.nanoTime();
+        System.out.println(message+" "+((time1-time0)*1e-6)+" (ms)");
+    }
+
+    public interface Process {
+        void process();
+    }
 
 }

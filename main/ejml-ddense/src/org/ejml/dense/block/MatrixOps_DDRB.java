@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.EjmlParameters;
 import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
@@ -65,6 +66,7 @@ public class MatrixOps_DDRB {
             dst = new DMatrixRBlock();
 
         dst.data = src.data;
+        dst.blockLength = EjmlParameters.BLOCK_WIDTH;
         dst.numRows = src.numRows;
         dst.numCols = src.numCols;
         convertRowToBlock(src.numRows, src.numCols, dst.blockLength, src.data, workspace);

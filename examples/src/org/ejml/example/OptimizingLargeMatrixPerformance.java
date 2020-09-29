@@ -19,6 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.EjmlParameters;
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
@@ -45,7 +46,7 @@ public class OptimizingLargeMatrixPerformance {
         DMatrixRMaj C = A.createLike();
 
         // Since we are dealing with larger matrices let's use the concurrent implementation. By default
-        printTime("Row-Major Multiplication:",()-> CommonOps_MT_DDRM.mult(A,B,C));
+        UtilEjml.printTime("Row-Major Multiplication:",()-> CommonOps_MT_DDRM.mult(A,B,C));
 
         // Converts A into a block matrix and creates a new matrix while leaving A unmodified
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A);
@@ -55,7 +56,7 @@ public class OptimizingLargeMatrixPerformance {
         DMatrixRBlock Cb = Ab.createLike();
 
         // Since we are dealing with larger matrices let's use the concurrent implementation. By default
-        printTime("Block Multiplication:    ",()-> MatrixOps_MT_DDRB.mult(Ab,Bb,Cb));
+        UtilEjml.printTime("Block Multiplication:    ",()-> MatrixOps_MT_DDRB.mult(Ab,Bb,Cb));
 
         // Can we make this faster? Probably by adjusting the block size. This is system dependent so let's
         // try a range of values
@@ -68,7 +69,7 @@ public class OptimizingLargeMatrixPerformance {
             DMatrixRBlock Ac = MatrixOps_DDRB.convert(A);
             DMatrixRBlock Bc = MatrixOps_DDRB.convert(B);
             DMatrixRBlock Cc = Ac.createLike();
-            printTime("Block "+EjmlParameters.BLOCK_WIDTH+": ",()-> MatrixOps_MT_DDRB.mult(Ac,Bc,Cc));
+            UtilEjml.printTime("Block "+EjmlParameters.BLOCK_WIDTH+": ",()-> MatrixOps_MT_DDRB.mult(Ac,Bc,Cc));
         }
 
         // On my system the optimal block size is around 100 and has an improvement of about 5%
@@ -78,17 +79,5 @@ public class OptimizingLargeMatrixPerformance {
         // future and others too. The main reason this hasn't happened for it to be memory efficient it would
         // need to modify then undo the modification for input matrices which would be very confusion if you're
         // writing concurrent code.
-    }
-
-    public static void printTime( String message, Process timer ) {
-        System.out.println("Processing...");
-        long time0 = System.nanoTime();
-        timer.process();
-        long time1 = System.nanoTime();
-        System.out.println(message+" "+((time1-time0)*1e-6)+" (ms)");
-    }
-
-    private interface Process {
-        void process();
     }
 }

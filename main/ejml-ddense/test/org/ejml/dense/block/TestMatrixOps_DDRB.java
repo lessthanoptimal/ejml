@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.EjmlParameters;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
@@ -73,6 +74,9 @@ public class TestMatrixOps_DDRB {
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(A_orig, B, UtilEjml.TEST_F64));
         assertSame(A.data, B.data);
+        assertEquals(A.numRows, B.numRows);
+        assertEquals(A.numCols, B.numCols);
+        assertEquals(EjmlParameters.BLOCK_WIDTH, B.blockLength);
     }
 
     @Test
