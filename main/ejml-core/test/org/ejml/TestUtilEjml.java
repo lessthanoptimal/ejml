@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SuppressWarnings("FloatingPointLiteralPrecision")
 public class TestUtilEjml {
-
     Random rand = new Random(23423);
 
     @Test
@@ -96,8 +95,7 @@ public class TestUtilEjml {
         try {
             UtilEjml.checkTooLarge(Integer.MAX_VALUE, 600);
             fail("Exception should have been thrown");
-        } catch (IllegalArgumentException ignore) {
-        }
+        } catch( IllegalArgumentException ignore){}
     }
 
     @Test
@@ -190,5 +188,13 @@ public class TestUtilEjml {
         assertEquals(" 1.235E-102", UtilEjml.fancyStringF(1.234567E-102, format, 11, 4));
         assertEquals("-1.235E+102", UtilEjml.fancyStringF(-1.234567E102, format, 11, 4));
         assertEquals(" 1.235E+102", UtilEjml.fancyStringF(1.234567E102, format, 11, 4));
+    }
+
+    @Test
+    void exceedsMaxMatrixSize() {
+        assertFalse(UtilEjml.exceedsMaxMatrixSize(100, 200));
+        assertFalse(UtilEjml.exceedsMaxMatrixSize(1, 200));
+        assertFalse(UtilEjml.exceedsMaxMatrixSize(50, 0));
+        assertTrue(UtilEjml.exceedsMaxMatrixSize(1_000_000, 1_000_000));
     }
 }

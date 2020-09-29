@@ -36,8 +36,7 @@ public class TestRandomMatrices_DSCC {
     int numCols = 7;
 
     @Test
-    void uniform() {
-
+    void rectangle() {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows, numCols, 10, -1, 1, rand);
 
         assertEquals(numRows, a.numRows);
@@ -60,6 +59,15 @@ public class TestRandomMatrices_DSCC {
 
         assertEquals(10, count);
         assertTrue(CommonOps_DSCC.checkSortedFlag(a));
+    }
+
+    /**
+     * There was a bug where the rows and columns multiplied together caused an overflow
+     */
+    @Test
+    void rectangle_large() {
+        assertThrows(IllegalArgumentException.class, () ->
+                RandomMatrices_DSCC.rectangle(1_000_000, 1_000_000, 10, -1, 1, rand));
     }
 
     @Test
@@ -88,9 +96,13 @@ public class TestRandomMatrices_DSCC {
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
                 int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5 + 0.1) + 0.5);
+                nz = Math.max(1,nz);
                 DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N, nz, -1, 1, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
+
+                // Sanity check to see if it's obeying the requested number of non-zero elements
+                assertTrue(A.nz_length >= nz && A.nz_length <= 2*nz);
 
                 // Check the matrix properties
                 assertTrue(MatrixFeatures_DSCC.isSymmetric(A, UtilEjml.TEST_F64));
@@ -98,13 +110,31 @@ public class TestRandomMatrices_DSCC {
         }
     }
 
+    /**
+     * There was a bug where the rows and columns multiplied together caused an overflow
+     */
+    @Test
+    void symmetric_large() {
+        assertThrows(IllegalArgumentException.class, () ->
+                RandomMatrices_DSCC.symmetric(1_000_000, 10, -1, 1, rand));
+    }
+
     @Test
     void symmetricPosDef() {
+        double probabilityZero = 0.25;
+
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N, 0.25, rand);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N, probabilityZero, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
+
+                // The upper limit is  bit fuzzy. This really just checks to see if it's exceeded by an extreme amount
+                assertTrue(A.nz_length <= (int)Math.ceil(N*N*(1.0-probabilityZero))+N);
+
+                // Extremely crude check to see if the size is above a lower limit. In theory it could be full of
+                // zeros and that would still be valid.
+                assertTrue(A.nz_length >= N*N*(probabilityZero/5.0));
 
                 assertTrue(MatrixFeatures_DSCC.isPositiveDefinite(A));
             }

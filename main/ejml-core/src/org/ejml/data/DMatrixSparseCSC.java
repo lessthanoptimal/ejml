@@ -36,9 +36,6 @@ import java.util.Iterator;
  * Row indexes must be specified in chronological order.
  * </p>
  *
- *
- * TODO fully describe
- *
  * @author Peter Abeles
  */
 public class DMatrixSparseCSC implements DMatrixSparse {
@@ -93,6 +90,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      * @param arrayLength Initial maximum number of non-zero elements that can be in the matrix
      */
     public DMatrixSparseCSC( int numRows, int numCols, int arrayLength ) {
+        if (numRows < 0 || numCols < 0 || arrayLength < 0)
+            throw new IllegalArgumentException("Rows, columns, and arrayLength must be not be negative");
         this.numRows = numRows;
         this.numCols = numCols;
         this.nz_length = 0;
@@ -463,8 +462,8 @@ public class DMatrixSparseCSC implements DMatrixSparse {
 
     @Override
     public Iterator<CoordinateRealValue> createCoordinateIterator() {
-        return new Iterator<CoordinateRealValue>() {
-            CoordinateRealValue coordinate = new CoordinateRealValue();
+        return new Iterator<>() {
+            final CoordinateRealValue coordinate = new CoordinateRealValue();
             int nz_index = 0; // the index of the non-zero value and row
             int column = 0; // which column it's in
 
