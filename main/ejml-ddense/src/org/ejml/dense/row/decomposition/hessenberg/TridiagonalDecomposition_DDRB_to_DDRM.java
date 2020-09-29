@@ -27,7 +27,6 @@ import org.ejml.dense.row.decomposition.BaseDecomposition_DDRB_to_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * Wrapper around a block implementation of TridiagonalSimilarDecomposition_F64
  *
@@ -37,61 +36,60 @@ public class TridiagonalDecomposition_DDRB_to_DDRM
         extends BaseDecomposition_DDRB_to_DDRM
         implements TridiagonalSimilarDecomposition_F64<DMatrixRMaj> {
 
-
     public TridiagonalDecomposition_DDRB_to_DDRM() {
         this(EjmlParameters.BLOCK_WIDTH);
     }
 
-    public TridiagonalDecomposition_DDRB_to_DDRM(int blockSize) {
-        super(new TridiagonalDecompositionHouseholder_DDRB(),blockSize);
+    public TridiagonalDecomposition_DDRB_to_DDRM( int blockSize ) {
+        super(new TridiagonalDecompositionHouseholder_DDRB(), blockSize);
     }
 
     @Override
-    public DMatrixRMaj getT(@Nullable DMatrixRMaj T) {
+    public DMatrixRMaj getT( @Nullable DMatrixRMaj T ) {
         int N = Ablock.numRows;
 
-        if( T == null ) {
-            T = new DMatrixRMaj(N,N);
+        if (T == null) {
+            T = new DMatrixRMaj(N, N);
         } else {
             CommonOps_DDRM.fill(T, 0);
         }
 
-        double[] diag = new double[ N ];
-        double[] off = new double[ N ];
+        double[] diag = new double[N];
+        double[] off = new double[N];
 
-        ((TridiagonalDecompositionHouseholder_DDRB)alg).getDiagonal(diag,off);
+        ((TridiagonalDecompositionHouseholder_DDRB)alg).getDiagonal(diag, off);
 
-        T.unsafe_set(0,0,diag[0]);
-        for( int i = 1; i < N; i++ ) {
-            T.unsafe_set(i,i,diag[i]);
-            T.unsafe_set(i,i-1,off[i-1]);
-            T.unsafe_set(i-1,i,off[i-1]);
+        T.unsafe_set(0, 0, diag[0]);
+        for (int i = 1; i < N; i++) {
+            T.unsafe_set(i, i, diag[i]);
+            T.unsafe_set(i, i - 1, off[i - 1]);
+            T.unsafe_set(i - 1, i, off[i - 1]);
         }
 
         return T;
     }
 
     @Override
-    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q, boolean transposed) {
-        if( Q == null ) {
-            Q = new DMatrixRMaj(Ablock.numRows,Ablock.numCols);
+    public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q, boolean transposed ) {
+        if (Q == null) {
+            Q = new DMatrixRMaj(Ablock.numRows, Ablock.numCols);
         }
 
         DMatrixRBlock Qblock = new DMatrixRBlock();
-        Qblock.numRows =  Q.numRows;
-        Qblock.numCols =  Q.numCols;
+        Qblock.numRows = Q.numRows;
+        Qblock.numCols = Q.numCols;
         Qblock.blockLength = blockLength;
         Qblock.data = Q.data;
 
-        ((TridiagonalDecompositionHouseholder_DDRB)alg).getQ(Qblock,transposed);
+        ((TridiagonalDecompositionHouseholder_DDRB)alg).getQ(Qblock, transposed);
 
-        convertBlockToRow(Q.numRows,Q.numCols,Q.data);
+        convertBlockToRow(Q.numRows, Q.numCols, Q.data);
 
         return Q;
     }
 
     @Override
-    public void getDiagonal(double[] diag, double[] off) {
-        ((TridiagonalDecompositionHouseholder_DDRB)alg).getDiagonal(diag,off);
+    public void getDiagonal( double[] diag, double[] off ) {
+        ((TridiagonalDecompositionHouseholder_DDRB)alg).getDiagonal(diag, off);
     }
 }

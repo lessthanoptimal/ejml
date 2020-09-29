@@ -46,13 +46,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T mult(T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numRows,b.numCols);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T mult( T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numRows, b.numCols);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.mult_reorder(a,b,output);
+        MatrixMatrixMult_MT_DDRM.mult_reorder(a, b, output);
 
         return output;
     }
@@ -70,13 +69,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T mult(double alpha , T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numRows,b.numCols);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T mult( double alpha, T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numRows, b.numCols);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.mult_reorder(alpha,a,b,output);
+        MatrixMatrixMult_MT_DDRM.mult_reorder(alpha, a, b, output);
 
         return output;
     }
@@ -93,13 +91,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransA(T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numCols,b.numCols);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T multTransA( T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numCols, b.numCols);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.multTransA_reorder(a,b,output);
+        MatrixMatrixMult_MT_DDRM.multTransA_reorder(a, b, output);
 
         return output;
     }
@@ -117,13 +114,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransA(double alpha , T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numCols,b.numCols);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T multTransA( double alpha, T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numCols, b.numCols);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.multTransA_reorder(alpha,a,b,output);
+        MatrixMatrixMult_MT_DDRM.multTransA_reorder(alpha, a, b, output);
 
         return output;
     }
@@ -140,13 +136,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransB(T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numRows,b.numRows);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T multTransB( T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numRows, b.numRows);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.multTransB(a,b,output);
+        MatrixMatrixMult_MT_DDRM.multTransB(a, b, output);
 
         return output;
     }
@@ -164,13 +159,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransB(double alpha , T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numRows,b.numRows);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T multTransB( double alpha, T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numRows, b.numRows);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.multTransB(alpha,a,b,output);
+        MatrixMatrixMult_MT_DDRM.multTransB(alpha, a, b, output);
 
         return output;
     }
@@ -187,13 +181,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransAB(T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numCols,b.numRows);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T multTransAB( T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numCols, b.numRows);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.multTransAB(a,b,output);
+        MatrixMatrixMult_MT_DDRM.multTransAB(a, b, output);
 
         return output;
     }
@@ -211,13 +204,12 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static <T extends DMatrix1Row> T multTransAB(double alpha , T a , T b , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,a,a.numCols,b.numRows);
-        UtilEjml.checkSameInstance(a,output);
-        UtilEjml.checkSameInstance(b,output);
+    public static <T extends DMatrix1Row> T multTransAB( double alpha, T a, T b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a, a.numCols, b.numRows);
+        UtilEjml.checkSameInstance(a, output);
+        UtilEjml.checkSameInstance(b, output);
 
-        MatrixMatrixMult_MT_DDRM.multTransAB(alpha,a,b,output);
+        MatrixMatrixMult_MT_DDRM.multTransAB(alpha, a, b, output);
 
         return output;
     }
@@ -234,8 +226,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAdd( DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAdd_reorder(a, b, c);
     }
 
@@ -252,8 +243,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAdd( double alpha, DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAdd_reorder(alpha, a, b, c);
     }
 
@@ -269,8 +259,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAddTransA( DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAddTransA_reorder(a, b, c);
     }
 
@@ -287,8 +276,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAddTransA( double alpha, DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAddTransA_reorder(alpha, a, b, c);
     }
 
@@ -304,8 +292,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAddTransB( DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAddTransB(a, b, c);
     }
 
@@ -322,8 +309,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAddTransB( double alpha, DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAddTransB(alpha, a, b, c);
     }
 
@@ -339,8 +325,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAddTransAB( DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAddTransAB(a, b, c);
     }
 
@@ -357,8 +342,7 @@ public class CommonOps_MT_DDRM {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(double alpha , DMatrix1Row a , DMatrix1Row b , DMatrix1Row c )
-    {
+    public static void multAddTransAB( double alpha, DMatrix1Row a, DMatrix1Row b, DMatrix1Row c ) {
         MatrixMatrixMult_MT_DDRM.multAddTransAB(alpha, a, b, c);
     }
 
@@ -374,11 +358,11 @@ public class CommonOps_MT_DDRM {
      * @param mat The matrix that is to be transposed. Modified.
      */
     public static void transpose( DMatrixRMaj mat ) {
-        if( mat.numCols == mat.numRows ){
+        if (mat.numCols == mat.numRows) {
             TransposeAlgs_MT_DDRM.square(mat);
         } else {
-            DMatrixRMaj b = new DMatrixRMaj(mat.numCols,mat.numRows);
-            transpose(mat,b);
+            DMatrixRMaj b = new DMatrixRMaj(mat.numCols, mat.numRows);
+            transpose(mat, b);
             mat.set(b);
         }
     }
@@ -395,15 +379,14 @@ public class CommonOps_MT_DDRM {
      * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static DMatrixRMaj transpose(DMatrixRMaj A, @Nullable DMatrixRMaj A_tran)
-    {
+    public static DMatrixRMaj transpose( DMatrixRMaj A, @Nullable DMatrixRMaj A_tran ) {
         A_tran = reshapeOrDeclare(A_tran, A.numCols, A.numRows);
 
-        if( A.numRows > EjmlParameters.TRANSPOSE_SWITCH &&
-                A.numCols > EjmlParameters.TRANSPOSE_SWITCH )
-            TransposeAlgs_MT_DDRM.block(A,A_tran,EjmlParameters.BLOCK_WIDTH);
+        if (A.numRows > EjmlParameters.TRANSPOSE_SWITCH &&
+                A.numCols > EjmlParameters.TRANSPOSE_SWITCH)
+            TransposeAlgs_MT_DDRM.block(A, A_tran, EjmlParameters.BLOCK_WIDTH);
         else
-            TransposeAlgs_MT_DDRM.standard(A,A_tran);
+            TransposeAlgs_MT_DDRM.standard(A, A_tran);
 
         return A_tran;
     }

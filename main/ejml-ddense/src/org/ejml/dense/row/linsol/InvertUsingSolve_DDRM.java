@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
 /**
  * A matrix can be easily inverted by solving a system with an identify matrix.  The only
  * disadvantage of this approach is that additional computations are required compared to
@@ -33,25 +32,25 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  */
 public class InvertUsingSolve_DDRM {
 
-    public static void invert(LinearSolverDense<DMatrixRMaj> solver , DMatrix1Row A , DMatrixRMaj A_inv , DMatrixRMaj storage) {
+    public static void invert( LinearSolverDense<DMatrixRMaj> solver, DMatrix1Row A, DMatrixRMaj A_inv, DMatrixRMaj storage ) {
 
-        if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
+        if (A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
         }
 
         CommonOps_DDRM.setIdentity(storage);
 
-        solver.solve(storage,A_inv);
+        solver.solve(storage, A_inv);
     }
 
-    public static void invert(LinearSolverDense<DMatrixRMaj> solver , DMatrix1Row A , DMatrixRMaj A_inv ) {
+    public static void invert( LinearSolverDense<DMatrixRMaj> solver, DMatrix1Row A, DMatrixRMaj A_inv ) {
 
-        if( A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
+        if (A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
             throw new IllegalArgumentException("A and A_inv must have the same dimensions");
         }
 
         CommonOps_DDRM.setIdentity(A_inv);
 
-        solver.solve(A_inv,A_inv);
+        solver.solve(A_inv, A_inv);
     }
 }

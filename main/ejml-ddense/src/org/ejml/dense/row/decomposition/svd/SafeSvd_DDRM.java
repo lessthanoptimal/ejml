@@ -29,14 +29,13 @@ import org.jetbrains.annotations.Nullable;
  * @author Peter Abeles
  */
 public class SafeSvd_DDRM
-        implements SingularValueDecomposition_F64<DMatrixRMaj>
-{
+        implements SingularValueDecomposition_F64<DMatrixRMaj> {
     // the decomposition algorithm
     SingularValueDecomposition_F64<DMatrixRMaj> alg;
     // storage for the input if it would be modified
-    DMatrixRMaj work = new DMatrixRMaj(1,1);
+    DMatrixRMaj work = new DMatrixRMaj(1, 1);
 
-    public SafeSvd_DDRM(SingularValueDecomposition_F64<DMatrixRMaj> alg) {
+    public SafeSvd_DDRM( SingularValueDecomposition_F64<DMatrixRMaj> alg ) {
         this.alg = alg;
     }
 
@@ -56,17 +55,17 @@ public class SafeSvd_DDRM
     }
 
     @Override
-    public DMatrixRMaj getU(@Nullable DMatrixRMaj U, boolean transposed) {
-        return alg.getU(U,transposed);
+    public DMatrixRMaj getU( @Nullable DMatrixRMaj U, boolean transposed ) {
+        return alg.getU(U, transposed);
     }
 
     @Override
-    public DMatrixRMaj getV(@Nullable DMatrixRMaj V, boolean transposed) {
-        return alg.getV(V,transposed);
+    public DMatrixRMaj getV( @Nullable DMatrixRMaj V, boolean transposed ) {
+        return alg.getV(V, transposed);
     }
 
     @Override
-    public DMatrixRMaj getW(@Nullable DMatrixRMaj W) {
+    public DMatrixRMaj getW( @Nullable DMatrixRMaj W ) {
         return alg.getW(W);
     }
 
@@ -81,9 +80,9 @@ public class SafeSvd_DDRM
     }
 
     @Override
-    public boolean decompose(DMatrixRMaj orig) {
-        if( alg.inputModified() ) {
-            work.reshape(orig.numRows,orig.numCols);
+    public boolean decompose( DMatrixRMaj orig ) {
+        if (alg.inputModified()) {
+            work.reshape(orig.numRows, orig.numCols);
             work.set(orig);
             return alg.decompose(work);
         } else {

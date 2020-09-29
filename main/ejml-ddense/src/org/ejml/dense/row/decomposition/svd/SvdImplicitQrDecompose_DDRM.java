@@ -29,7 +29,6 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * <p>
  * Computes the Singular value decomposition of a matrix using the implicit QR algorithm
@@ -88,7 +87,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
     protected boolean transposed;
 
     // Either a copy of the input matrix or a copy of it transposed
-    private DMatrixRMaj A_mod = new DMatrixRMaj(1,1);
+    private DMatrixRMaj A_mod = new DMatrixRMaj(1, 1);
 
     /**
      * Configures the class
@@ -98,9 +97,8 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
      * @param computeV If true it will compute the V matrix
      * @param canUseTallBidiagonal If true then it can choose to use a tall Bidiagonal decomposition to improve runtime performance.
      */
-    public SvdImplicitQrDecompose_DDRM(boolean compact, boolean computeU, boolean computeV,
-                                      boolean canUseTallBidiagonal)
-    {
+    public SvdImplicitQrDecompose_DDRM( boolean compact, boolean computeU, boolean computeV,
+                                        boolean canUseTallBidiagonal ) {
         this.compact = compact;
         this.prefComputeU = computeU;
         this.prefComputeV = computeV;
@@ -123,15 +121,15 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
     }
 
     @Override
-    public DMatrixRMaj getU(@Nullable DMatrixRMaj U , boolean transpose) {
-        if( !prefComputeU )
+    public DMatrixRMaj getU( @Nullable DMatrixRMaj U, boolean transpose ) {
+        if (!prefComputeU)
             throw new IllegalArgumentException("As requested U was not computed.");
-        if( transpose ) {
-            if( U == null )
+        if (transpose) {
+            if (U == null)
                 return Ut;
             U.set(Ut);
         } else {
-            U = UtilEjml.reshapeOrDeclare(U,Ut.numCols,Ut.numRows);
+            U = UtilEjml.reshapeOrDeclare(U, Ut.numCols, Ut.numRows);
             transpose(U, Ut);
         }
 
@@ -139,54 +137,54 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
     }
 
     @Override
-    public DMatrixRMaj getV(@Nullable DMatrixRMaj V , boolean transpose ) {
-        if( !prefComputeV )
+    public DMatrixRMaj getV( @Nullable DMatrixRMaj V, boolean transpose ) {
+        if (!prefComputeV)
             throw new IllegalArgumentException("As requested V was not computed.");
-        if( transpose ) {
-            if( V == null )
+        if (transpose) {
+            if (V == null)
                 return Vt;
 
             V.set(Vt);
         } else {
-            V = UtilEjml.reshapeOrDeclare(V,Vt.numCols,Vt.numRows);
+            V = UtilEjml.reshapeOrDeclare(V, Vt.numCols, Vt.numRows);
             transpose(V, Vt);
         }
 
         return V;
     }
 
-    protected void transpose(@NotNull DMatrixRMaj V, DMatrixRMaj Vt) {
+    protected void transpose( @NotNull DMatrixRMaj V, DMatrixRMaj Vt ) {
         CommonOps_DDRM.transpose(Vt, V);
     }
 
     @Override
-    public DMatrixRMaj getW(@Nullable DMatrixRMaj W ) {
+    public DMatrixRMaj getW( @Nullable DMatrixRMaj W ) {
         int m = compact ? numSingular : numRows;
         int n = compact ? numSingular : numCols;
 
-        if( W == null )
-            W = new DMatrixRMaj(m,n);
+        if (W == null)
+            W = new DMatrixRMaj(m, n);
         else {
-            W.reshape(m,n, false);
+            W.reshape(m, n, false);
             W.zero();
         }
 
-        for( int i = 0; i < numSingular; i++ ) {
-            W.unsafe_set(i,i, singularValues[i]);
+        for (int i = 0; i < numSingular; i++) {
+            W.unsafe_set(i, i, singularValues[i]);
         }
 
         return W;
     }
 
     @Override
-    public boolean decompose(DMatrixRMaj orig) {
-        if( !setup(orig) )
+    public boolean decompose( DMatrixRMaj orig ) {
+        if (!setup(orig))
             return false;
 
         if (bidiagonalization(orig))
             return false;
 
-        if( computeUWV() )
+        if (computeUWV())
             return false;
 
         // make sure all the singular values or positive
@@ -203,13 +201,13 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         return false;
     }
 
-    private boolean bidiagonalization(DMatrixRMaj orig) {
+    private boolean bidiagonalization( DMatrixRMaj orig ) {
         // change the matrix to bidiagonal form
-        if( transposed ) {
-            A_mod.reshape(orig.numCols,orig.numRows,false);
+        if (transposed) {
+            A_mod.reshape(orig.numCols, orig.numRows, false);
             transpose(A_mod, orig);
         } else {
-            A_mod.reshape(orig.numRows,orig.numCols,false);
+            A_mod.reshape(orig.numRows, orig.numCols, false);
             A_mod.set(orig);
         }
         return !bidiag.decompose(A_mod);
@@ -219,7 +217,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
      * If the transpose was computed instead do some additional computations
      */
     private void undoTranspose() {
-        if( transposed ) {
+        if (transposed) {
             DMatrixRMaj temp = Vt;
             Vt = Ut;
             Ut = temp;
@@ -230,22 +228,22 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
      * Compute singular values and U and V at the same time
      */
     private boolean computeUWV() {
-        bidiag.getDiagonal(diag,off);
-        qralg.setMatrix(numRowsT,numColsT,diag,off);
+        bidiag.getDiagonal(diag, off);
+        qralg.setMatrix(numRowsT, numColsT, diag, off);
 
 //        long pointA = System.currentTimeMillis();
         // compute U and V matrices
-        if( computeU )
-            Ut = bidiag.getU(Ut,true,compact);
-        if( computeV )
-            Vt = bidiag.getV(Vt,true,compact);
+        if (computeU)
+            Ut = bidiag.getU(Ut, true, compact);
+        if (computeV)
+            Vt = bidiag.getV(Vt, true, compact);
 
         qralg.setFastValues(false);
-        if( computeU )
+        if (computeU)
             qralg.setUt(Ut);
         else
             qralg.setUt(null);
-        if( computeV )
+        if (computeV)
             qralg.setVt(Vt);
         else
             qralg.setVt(null);
@@ -260,11 +258,11 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         return ret;
     }
 
-    private boolean setup(DMatrixRMaj orig) {
+    private boolean setup( DMatrixRMaj orig ) {
         transposed = orig.numCols > orig.numRows;
 
         // flag what should be computed and what should not be computed
-        if( transposed ) {
+        if (transposed) {
             computeU = prefComputeV;
             computeV = prefComputeU;
             numRowsT = orig.numCols;
@@ -279,12 +277,12 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         numRows = orig.numRows;
         numCols = orig.numCols;
 
-        if( numRows == 0 || numCols == 0 )
+        if (numRows == 0 || numCols == 0)
             return false;
 
-        if( diag == null || diag.length < numColsT ) {
-            diag = new double[ numColsT ];
-            off = new double[ numColsT-1 ];
+        if (diag == null || diag.length < numColsT) {
+            diag = new double[numColsT];
+            off = new double[numColsT - 1];
         }
 
         // if it is a tall matrix and U is not needed then there is faster decomposition algorithm
@@ -294,11 +292,11 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
     }
 
     protected void declareBidiagonalDecomposition() {
-        if( canUseTallBidiagonal && numRows > numCols * 2 && !computeU ) {
-            if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall_DDRM) ) {
+        if (canUseTallBidiagonal && numRows > numCols*2 && !computeU) {
+            if (bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall_DDRM)) {
                 bidiag = new BidiagonalDecompositionTall_DDRM();
             }
-        } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow_DDRM) ) {
+        } else if (bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow_DDRM)) {
             bidiag = new BidiagonalDecompositionRow_DDRM();
         }
     }
@@ -311,19 +309,19 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         numSingular = qralg.getNumberOfSingularValues();
         singularValues = qralg.getSingularValues();
 
-        for( int i = 0; i < numSingular; i++ ) {
+        for (int i = 0; i < numSingular; i++) {
             double val = qralg.getSingularValue(i);
 
-            if( val < 0 ) {
+            if (val < 0) {
                 singularValues[i] = 0.0 - val;
 
-                if( computeU ) {
+                if (computeU) {
                     // compute the results of multiplying it by an element of -1 at this location in
                     // a diagonal matrix.
-                    int start = i* Ut.numCols;
-                    int stop = start+ Ut.numCols;
+                    int start = i*Ut.numCols;
+                    int stop = start + Ut.numCols;
 
-                    for( int j = start; j < stop; j++ ) {
+                    for (int j = start; j < stop; j++) {
                         Ut.set(j, 0.0 - Ut.get(j));
                     }
                 }

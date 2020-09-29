@@ -38,16 +38,16 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkTransposeAlgs_DDRM {
-//    @Param({"100", "500", "1000", "5000", "10000"})
+    //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj S1 = new DMatrixRMaj(1,1);
-    public DMatrixRMaj S2 = new DMatrixRMaj(1,1);
-    public DMatrixRMaj R1 = new DMatrixRMaj(1,1);
-    public DMatrixRMaj R2 = new DMatrixRMaj(1,1);
+    public DMatrixRMaj S1 = new DMatrixRMaj(1, 1);
+    public DMatrixRMaj S2 = new DMatrixRMaj(1, 1);
+    public DMatrixRMaj R1 = new DMatrixRMaj(1, 1);
+    public DMatrixRMaj R2 = new DMatrixRMaj(1, 1);
 
     @Setup
     public void setup() {
@@ -55,11 +55,11 @@ public class BenchmarkTransposeAlgs_DDRM {
 
         S1.reshape(size, size);
         S2.reshape(size, size);
-        R1.reshape(size*10/7,size*7/10);
-        R2.reshape(R1.numCols,R1.numRows);
+        R1.reshape(size*10/7, size*7/10);
+        R2.reshape(R1.numCols, R1.numRows);
 
-        RandomMatrices_DDRM.fillUniform(S1,-1,1,rand);
-        RandomMatrices_DDRM.fillUniform(R1,-1,1,rand);
+        RandomMatrices_DDRM.fillUniform(S1, -1, 1, rand);
+        RandomMatrices_DDRM.fillUniform(R1, -1, 1, rand);
     }
 
     @Benchmark
@@ -69,25 +69,25 @@ public class BenchmarkTransposeAlgs_DDRM {
 
     @Benchmark
     public void square_standard() {
-        TransposeAlgs_DDRM.standard(S1,S2);
+        TransposeAlgs_DDRM.standard(S1, S2);
     }
 
     @Benchmark
     public void standard() {
-        TransposeAlgs_DDRM.standard(R1,R2);
+        TransposeAlgs_DDRM.standard(R1, R2);
     }
 
     @Benchmark
     public void block() {
-        TransposeAlgs_DDRM.block(R1,R2, EjmlParameters.BLOCK_WIDTH);
+        TransposeAlgs_DDRM.block(R1, R2, EjmlParameters.BLOCK_WIDTH);
     }
 
     @Benchmark
     public void block_2x() {
-        TransposeAlgs_DDRM.block(R1,R2, 2*EjmlParameters.BLOCK_WIDTH);
+        TransposeAlgs_DDRM.block(R1, R2, 2*EjmlParameters.BLOCK_WIDTH);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkTransposeAlgs_DDRM.class.getSimpleName())
                 .build();

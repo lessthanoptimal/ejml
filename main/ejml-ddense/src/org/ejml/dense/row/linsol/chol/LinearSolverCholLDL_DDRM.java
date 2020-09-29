@@ -25,7 +25,6 @@ import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionLDL_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyLDLDecomposition_F64;
 
-
 /**
  * @author Peter Abeles
  */
@@ -38,7 +37,7 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
     private double[] el;
     private double[] d;
 
-    public LinearSolverCholLDL_DDRM(CholeskyDecompositionLDL_DDRM decomposer) {
+    public LinearSolverCholLDL_DDRM( CholeskyDecompositionLDL_DDRM decomposer ) {
         this.decomposer = decomposer;
     }
 
@@ -47,10 +46,10 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
+    public boolean setA( DMatrixRMaj A ) {
         _setA(A);
 
-        if( decomposer.decompose(A) ){
+        if (decomposer.decompose(A)) {
             n = A.numCols;
             vv = decomposer._getVV();
             el = decomposer.getL().data;
@@ -82,8 +81,8 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(DMatrixRMaj B , DMatrixRMaj X ) {
-        if( B.numCols != X.numCols && B.numRows != n && X.numRows != n) {
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numCols != X.numCols && B.numRows != n && X.numRows != n) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
 
@@ -92,10 +91,10 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
         double[] dataB = B.data;
         double[] dataX = X.data;
 
-        for( int j = 0; j < numCols; j++ ) {
-            for( int i = 0; i < n; i++ ) vv[i] = dataB[i*numCols+j];
+        for (int j = 0; j < numCols; j++) {
+            for (int i = 0; i < n; i++) vv[i] = dataB[i*numCols + j];
             solveInternal();
-            for( int i = 0; i < n; i++ ) dataX[i*numCols+j] = vv[i];
+            for (int i = 0; i < n; i++) dataX[i*numCols + j] = vv[i];
         }
     }
 
@@ -104,15 +103,15 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
      */
     private void solveInternal() {
         // solve L*s=b storing y in x
-        TriangularSolver_DDRM.solveL(el,vv,n);
+        TriangularSolver_DDRM.solveL(el, vv, n);
 
         // solve D*y=s
-        for( int i = 0; i < n; i++ ) {
+        for (int i = 0; i < n; i++) {
             vv[i] /= d[i];
         }
 
         // solve L^T*x=y
-        TriangularSolver_DDRM.solveTranL(el,vv,n);
+        TriangularSolver_DDRM.solveTranL(el, vv, n);
     }
 
     /**
@@ -122,39 +121,39 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void invert( DMatrixRMaj inv ) {
-        if( inv.numRows != n || inv.numCols != n ) {
+        if (inv.numRows != n || inv.numCols != n) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
 
         double[] a = inv.data;
 
         // solve L*z = b
-        for( int i =0; i < n; i++ ) {
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i==j) ? 1.0 : 0.0;
-                for( int k=i-1; k >=j; k-- ) {
-                    sum -= el[i*n+k]*a[j*n+k];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= i; j++) {
+                double sum = (i == j) ? 1.0 : 0.0;
+                for (int k = i - 1; k >= j; k--) {
+                    sum -= el[i*n + k]*a[j*n + k];
                 }
-                a[j*n+i] = sum;
+                a[j*n + i] = sum;
             }
         }
 
         // solve D*y=z
-        for( int i =0; i < n; i++ ) {
+        for (int i = 0; i < n; i++) {
             double inv_d = 1.0/d[i];
-            for( int j = 0; j <= i; j++ ) {
-                a[j*n+i] *= inv_d;
+            for (int j = 0; j <= i; j++) {
+                a[j*n + i] *= inv_d;
             }
         }
 
         // solve L^T*x = y
-        for( int i=n-1; i>=0; i-- ) {
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i<j) ? 0 : a[j*n+i];
-                for( int k=i+1;k<n;k++) {
-                    sum -= el[k*n+i]*a[j*n+k];
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = 0; j <= i; j++) {
+                double sum = (i < j) ? 0 : a[j*n + i];
+                for (int k = i + 1; k < n; k++) {
+                    sum -= el[k*n + i]*a[j*n + k];
                 }
-                a[i*n+j] = a[j*n+i] = sum;
+                a[i*n + j] = a[j*n + i] = sum;
             }
         }
     }

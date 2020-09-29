@@ -38,13 +38,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkLinearSolverChol_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000","2000"})
+    @Param({"1000", "2000"})
     public int size;
 
-    public DMatrixRMaj A,X,B;
+    public DMatrixRMaj A, X, B;
 
     LinearSolverChol_DDRM inner = new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true));
 
@@ -53,8 +53,8 @@ public class BenchmarkLinearSolverChol_DDRM {
         Random rand = new Random(234);
 
         A = RandomMatrices_DDRM.symmetricPosDef(size, rand);
-        B = RandomMatrices_DDRM.rectangle(A.numRows,20,-1,1, rand);
-        X = new DMatrixRMaj(A.numRows,B.numCols);
+        B = RandomMatrices_DDRM.rectangle(A.numRows, 20, -1, 1, rand);
+        X = new DMatrixRMaj(A.numRows, B.numCols);
     }
 
     @Benchmark
@@ -62,10 +62,10 @@ public class BenchmarkLinearSolverChol_DDRM {
         DMatrixRMaj A = inner.modifiesA() ? this.A.copy() : this.A;
         DMatrixRMaj B = inner.modifiesB() ? this.B.copy() : this.B;
         inner.setA(A);
-        inner.solve(B,X);
+        inner.solve(B, X);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkLinearSolverChol_DDRM.class.getSimpleName())
                 .build();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,12 +26,10 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  * This can happen when solving using the most recent data or when rejecting outliers.  In these situations
  * it is possible to solve these related systems much faster than solving the entire data set again.
  *
- * @see LinearSolverDense
- *
  * @author Peter Abeles
+ * @see LinearSolverDense
  */
 public interface AdjustableLinearSolver_DDRM extends LinearSolverDense<DMatrixRMaj> {
-
 
     /**
      * Adds a row to A.  This has the same effect as creating a new A and calling {@link #setA}.
@@ -40,7 +38,7 @@ public interface AdjustableLinearSolver_DDRM extends LinearSolverDense<DMatrixRM
      * @param rowIndex Where the row appears in A.
      * @return if it succeeded or not.
      */
-    boolean addRowToA( double []A_row , int rowIndex );
+    boolean addRowToA( double[] A_row, int rowIndex );
 
     /**
      * Removes a row from A.  This has the same effect as creating a new A and calling {@link #setA}.

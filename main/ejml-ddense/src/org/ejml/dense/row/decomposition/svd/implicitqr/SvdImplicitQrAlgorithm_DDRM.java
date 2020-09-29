@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-
 /**
  * <p>
  * Computes the QR decomposition of a bidiagonal matrix.  Internally this matrix is stored as
@@ -115,12 +114,12 @@ public class SvdImplicitQrAlgorithm_DDRM {
     // if not in scripted mode is it looking for new zeros first?
     private boolean findingZeros;
 
-    double c,s;
+    double c, s;
 
     // for debugging
 //    SimpleMatrix B;
 
-    public SvdImplicitQrAlgorithm_DDRM(boolean fastValues ) {
+    public SvdImplicitQrAlgorithm_DDRM( boolean fastValues ) {
         this.fastValues = fastValues;
     }
 
@@ -130,7 +129,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
         return Ut;
     }
 
-    public void setUt(@Nullable DMatrixRMaj ut) {
+    public void setUt( @Nullable DMatrixRMaj ut ) {
         Ut = ut;
     }
 
@@ -138,60 +137,60 @@ public class SvdImplicitQrAlgorithm_DDRM {
         return Vt;
     }
 
-    public void setVt(@Nullable DMatrixRMaj vt) {
+    public void setVt( @Nullable DMatrixRMaj vt ) {
         Vt = vt;
     }
 
     /**
      *
      */
-    public void setMatrix(int numRows , int numCols, double[] diag, double[] off) {
-        initParam(numRows,numCols);
+    public void setMatrix( int numRows, int numCols, double[] diag, double[] off ) {
+        initParam(numRows, numCols);
         this.diag = diag;
         this.off = off;
 
         maxValue = Math.abs(diag[0]);
-        for( int i = 1; i < N; i++ ) {
+        for (int i = 1; i < N; i++) {
             double a = Math.abs(diag[i]);
-            double b = Math.abs(off[i-1]);
+            double b = Math.abs(off[i - 1]);
 
-            if( a > maxValue ) {
+            if (a > maxValue) {
                 maxValue = Math.abs(a);
             }
-            if( b > maxValue ) {
+            if (b > maxValue) {
                 maxValue = Math.abs(b);
             }
         }
     }
 
-    public double[] swapDiag(double[] diag) {
+    public double[] swapDiag( double[] diag ) {
         double[] ret = this.diag;
         this.diag = diag;
         return ret;
     }
 
-    public double[] swapOff(double[] off) {
+    public double[] swapOff( double[] off ) {
         double[] ret = this.off;
         this.off = off;
         return ret;
     }
 
-    public void setMaxValue(double maxValue) {
+    public void setMaxValue( double maxValue ) {
         this.maxValue = maxValue;
     }
 
-    public void initParam( int M , int N ) {
-        if( N > M )
+    public void initParam( int M, int N ) {
+        if (N > M)
             throw new RuntimeException("Must be a square or tall matrix");
 
         this.N = N;
 
-        if( splits == null || splits.length < N ) {
+        if (splits == null || splits.length < N) {
             splits = new int[N];
         }
 
         x1 = 0;
-        x2 = this.N-1;
+        x2 = this.N - 1;
 
         steps = 0;
         totalSteps = 0;
@@ -210,7 +209,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     /**
      * Perform a sequence of steps based off of the singular values provided.
      */
-    public boolean process(double[] values) {
+    public boolean process( double[] values ) {
         this.followScript = true;
         this.values = values;
         this.findingZeros = false;
@@ -220,32 +219,32 @@ public class SvdImplicitQrAlgorithm_DDRM {
 
     public boolean _process() {
         // it is a zero matrix
-        if( maxValue == 0 )
+        if (maxValue == 0)
             return true;
-        while( x2 >= 0 ) {
+        while (x2 >= 0) {
             // if it has cycled too many times give up
-            if( steps > maxIterations ) {
+            if (steps > maxIterations) {
                 return false;
             }
 
-            if( x1 == x2 ) {
+            if (x1 == x2) {
 //                System.out.println("steps = "+steps+"  script = "+followScript+" at "+x1);
 //                System.out.println("Split");
                 // see if it is done processing this submatrix
                 resetSteps();
-                if( !nextSplit() )
+                if (!nextSplit())
                     break;
-            } else if( fastValues && x2-x1 == 1 ) {
+            } else if (fastValues && x2 - x1 == 1) {
                 // There are analytical solutions to this case. Just compute them directly.
                 resetSteps();
                 eigenBB_2x2(x1);
-                setSubmatrix(x2,x2);
-            } else if( steps >= nextExceptional ){
+                setSubmatrix(x2, x2);
+            } else if (steps >= nextExceptional) {
                 exceptionShift();
             } else {
                 // perform a step
                 if (!checkForAndHandleZeros()) {
-                    if( followScript ) {
+                    if (followScript) {
                         performScriptedStep();
                     } else {
                         performDynamicStep();
@@ -266,12 +265,12 @@ public class SvdImplicitQrAlgorithm_DDRM {
      */
     private void performDynamicStep() {
         // initially look for singular values of zero
-        if( findingZeros ) {
-            if( steps > 6 ) {
+        if (findingZeros) {
+            if (steps > 6) {
                 findingZeros = false;
             } else {
                 double scale = computeBulgeScale();
-                performImplicitSingleStep(scale,0,false);
+                performImplicitSingleStep(scale, 0, false);
             }
         } else {
             // For very large and very small numbers the only way to prevent overflow/underflow
@@ -282,7 +281,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
             // use the wilkinson shift to perform a step
             double lambda = selectWilkinsonShift(scale);
 
-            performImplicitSingleStep(scale,lambda,false);
+            performImplicitSingleStep(scale, lambda, false);
         }
     }
 
@@ -292,13 +291,13 @@ public class SvdImplicitQrAlgorithm_DDRM {
      */
     private void performScriptedStep() {
         double scale = computeBulgeScale();
-        if( steps > giveUpOnKnown ) {
+        if (steps > giveUpOnKnown) {
             // give up on the script
             followScript = false;
         } else {
             // use previous singular value to step
             double s = values[x2]/scale;
-            performImplicitSingleStep(scale,s*s,false);
+            performImplicitSingleStep(scale, s*s, false);
         }
     }
 
@@ -307,18 +306,18 @@ public class SvdImplicitQrAlgorithm_DDRM {
         totalSteps++;
     }
 
-    public boolean isOffZero(int i) {
-        double bottom = Math.abs(diag[i])+Math.abs(diag[i+1]);
+    public boolean isOffZero( int i ) {
+        double bottom = Math.abs(diag[i]) + Math.abs(diag[i + 1]);
 
-        return Math.abs(off[i]) <= bottom* UtilEjml.EPS;
+        return Math.abs(off[i]) <= bottom*UtilEjml.EPS;
     }
 
-    public boolean isDiagonalZero(int i) {
+    public boolean isDiagonalZero( int i ) {
 //        return Math.abs(diag[i]) <= maxValue* UtilEjml.EPS;
 
-        double bottom = Math.abs(diag[i+1])+Math.abs(off[i]);
+        double bottom = Math.abs(diag[i + 1]) + Math.abs(off[i]);
 
-        return Math.abs(diag[i]) <= bottom* UtilEjml.EPS;
+        return Math.abs(diag[i]) <= bottom*UtilEjml.EPS;
     }
 
     public void resetSteps() {
@@ -332,11 +331,11 @@ public class SvdImplicitQrAlgorithm_DDRM {
      * current submatrix has been processed.
      */
     public boolean nextSplit() {
-        if( numSplits == 0 )
+        if (numSplits == 0)
             return false;
         x2 = splits[--numSplits];
-        if( numSplits > 0 )
-            x1 = splits[numSplits-1]+1;
+        if (numSplits > 0)
+            x1 = splits[numSplits - 1] + 1;
         else
             x1 = 0;
 
@@ -350,18 +349,18 @@ public class SvdImplicitQrAlgorithm_DDRM {
      *
      * @param lambda Stepping factor.
      */
-    public void performImplicitSingleStep(double scale , double lambda , boolean byAngle) {
-        createBulge(x1,lambda,scale,byAngle);
+    public void performImplicitSingleStep( double scale, double lambda, boolean byAngle ) {
+        createBulge(x1, lambda, scale, byAngle);
 
-        for( int i = x1; i < x2-1 && bulge != 0.0; i++ ) {
-            removeBulgeLeft(i,true);
-            if( bulge == 0 )
+        for (int i = x1; i < x2 - 1 && bulge != 0.0; i++) {
+            removeBulgeLeft(i, true);
+            if (bulge == 0)
                 break;
             removeBulgeRight(i);
         }
 
-        if( bulge != 0 )
-            removeBulgeLeft(x2-1,false);
+        if (bulge != 0)
+            removeBulgeLeft(x2 - 1, false);
 
         incrementSteps();
     }
@@ -371,14 +370,13 @@ public class SvdImplicitQrAlgorithm_DDRM {
      * to update the U and V matrices.  Updating the transpose of the matrix is faster
      * since it only modifies the rows.
      *
-     *
      * @param Q Orthogonal matrix
      * @param m Coordinate of rotator.
      * @param n Coordinate of rotator.
      * @param c cosine of rotator.
      * @param s sine of rotator.
      */
-    protected void updateRotator(DMatrixRMaj Q , int m, int n, double c, double s) {
+    protected void updateRotator( DMatrixRMaj Q, int m, int n, double c, double s ) {
         int rowA = m*Q.numCols;
         int rowB = n*Q.numCols;
 
@@ -392,7 +390,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
 //        Q.print();
 //        System.out.println();
         int endA = rowA + Q.numCols;
-        for( ; rowA != endA; rowA++ , rowB++ ) {
+        for (; rowA != endA; rowA++, rowB++) {
             double a = Q.get(rowA);
             double b = Q.get(rowB);
             Q.set(rowA, c*a + s*b);
@@ -404,7 +402,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
         double b11 = diag[x1];
         double b12 = off[x1];
 
-        return Math.max( Math.abs(b11) , Math.abs(b12));
+        return Math.max(Math.abs(b11), Math.abs(b12));
 //
 //        double b22 = diag[x1+1];
 //
@@ -416,17 +414,17 @@ public class SvdImplicitQrAlgorithm_DDRM {
     /**
      * Performs a similar transform on B<sup>T</sup>B-pI
      */
-    protected void createBulge( int x1 , double p , double scale , boolean byAngle ) {
+    protected void createBulge( int x1, double p, double scale, boolean byAngle ) {
         double b11 = diag[x1];
         double b12 = off[x1];
-        double b22 = diag[x1+1];
+        double b22 = diag[x1 + 1];
 
-        if( byAngle ) {
+        if (byAngle) {
             c = Math.cos(p);
             s = Math.sin(p);
         } else {
             // normalize to improve resistance to overflow/underflow
-            double u1 = (b11/scale)*(b11/scale)-p;
+            double u1 = (b11/scale)*(b11/scale) - p;
             double u2 = (b12/scale)*(b11/scale);
 
             double gamma = Math.sqrt(u1*u1 + u2*u2);
@@ -438,7 +436,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
         // multiply the rotator on the top left.
         diag[x1] = b11*c + b12*s;
         off[x1] = b12*c - b11*s;
-        diag[x1+1] = b22*c;
+        diag[x1 + 1] = b22*c;
         bulge = b22*s;
 
 //        SimpleMatrix Q = createQ(x1, c, s, false);
@@ -448,8 +446,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 //        printMatrix();
 //        System.out.println("  bulge = "+bulge);
 
-        if( Vt != null ) {
-            updateRotator(Vt,x1,x1+1,c,s);
+        if (Vt != null) {
+            updateRotator(Vt, x1, x1 + 1, c, s);
 
 //            SimpleMatrix.wrap(Ut).mult(B).mult(SimpleMatrix.wrap(Vt).transpose()).print();
 //            printMatrix();
@@ -461,44 +459,43 @@ public class SvdImplicitQrAlgorithm_DDRM {
     /**
      * Computes a rotator that will set run to zero (?)
      */
-    protected void computeRotator( double rise , double run )
-    {
+    protected void computeRotator( double rise, double run ) {
 //        double gamma = Math.sqrt(rise*rise + run*run);
 //
 //        c = rise/gamma;
 //        s = run/gamma;
 
         // See page 384 of Fundamentals of Matrix Computations 2nd
-          if( Math.abs(rise) < Math.abs(run)) {
-              double k = rise/run;
+        if (Math.abs(rise) < Math.abs(run)) {
+            double k = rise/run;
 
-              double bottom = Math.sqrt(1.0+k*k);
-              s = 1.0/bottom;
-              c = k/bottom;
-          } else {
-              double t = run/rise;
-              double bottom = Math.sqrt(1.0 + t*t);
-              c = 1.0/bottom;
-              s = t/bottom;
-          }
+            double bottom = Math.sqrt(1.0 + k*k);
+            s = 1.0/bottom;
+            c = k/bottom;
+        } else {
+            double t = run/rise;
+            double bottom = Math.sqrt(1.0 + t*t);
+            c = 1.0/bottom;
+            s = t/bottom;
+        }
     }
 
-    protected void removeBulgeLeft( int x1 , boolean notLast ) {
+    protected void removeBulgeLeft( int x1, boolean notLast ) {
         double b11 = diag[x1];
         double b12 = off[x1];
-        double b22 = diag[x1+1];
+        double b22 = diag[x1 + 1];
 
-        computeRotator(b11,bulge);
+        computeRotator(b11, bulge);
 
         // apply rotator on the left
         diag[x1] = c*b11 + s*bulge;
         off[x1] = c*b12 + s*b22;
-        diag[x1+1] = c*b22-s*b12;
+        diag[x1 + 1] = c*b22 - s*b12;
 
-        if( notLast ) {
-            double b23 = off[x1+1];
+        if (notLast) {
+            double b23 = off[x1 + 1];
             bulge = s*b23;
-            off[x1+1] = c*b23;
+            off[x1 + 1] = c*b23;
         }
 
 //        SimpleMatrix Q = createQ(x1, c, s, true);
@@ -508,8 +505,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 //        printMatrix();
 //        System.out.println("  bulge = "+bulge);
 
-        if( Ut != null ) {
-            updateRotator(Ut,x1,x1+1,c,s);
+        if (Ut != null) {
+            updateRotator(Ut, x1, x1 + 1, c, s);
 
 //            SimpleMatrix.wrap(Ut).mult(B).mult(SimpleMatrix.wrap(Vt).transpose()).print();
 //            printMatrix();
@@ -520,18 +517,18 @@ public class SvdImplicitQrAlgorithm_DDRM {
 
     protected void removeBulgeRight( int x1 ) {
         double b12 = off[x1];
-        double b22 = diag[x1+1];
-        double b23 = off[x1+1];
+        double b22 = diag[x1 + 1];
+        double b23 = off[x1 + 1];
 
-        computeRotator(b12,bulge);
+        computeRotator(b12, bulge);
 
         // apply rotator on the right
         off[x1] = b12*c + bulge*s;
-        diag[x1+1] = b22*c + b23*s;
-        off[x1+1] = -b22*s + b23*c;
+        diag[x1 + 1] = b22*c + b23*s;
+        off[x1 + 1] = -b22*s + b23*c;
 
-        double b33 = diag[x1+2];
-        diag[x1+2] = b33*c;
+        double b33 = diag[x1 + 2];
+        diag[x1 + 2] = b33*c;
         bulge = b33*s;
 
 //        SimpleMatrix Q = createQ(x1+1, c, s, false);
@@ -541,8 +538,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 //        printMatrix();
 //        System.out.println("  bulge = "+bulge);
 
-        if( Vt != null ) {
-            updateRotator(Vt,x1+1,x1+2,c,s);
+        if (Vt != null) {
+            updateRotator(Vt, x1 + 1, x1 + 2, c, s);
 
 //            SimpleMatrix.wrap(Ut).mult(B).mult(SimpleMatrix.wrap(Vt).transpose()).print();
 //            printMatrix();
@@ -551,8 +548,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
         }
     }
 
-
-    public void setSubmatrix(int x1, int x2) {
+    public void setSubmatrix( int x1, int x2 ) {
         this.x1 = x1;
         this.x2 = x2;
     }
@@ -566,34 +562,34 @@ public class SvdImplicitQrAlgorithm_DDRM {
      */
     public double selectWilkinsonShift( double scale ) {
 
-        double a11,a22;
+        double a11, a22;
 
-        if( x2-x1 > 1 ) {
-            double d1 = diag[x2-1] / scale;
-            double o1 = off[x2-2] / scale;
-            double d2 = diag[x2] / scale;
-            double o2 = off[x2-1] / scale;
+        if (x2 - x1 > 1) {
+            double d1 = diag[x2 - 1]/scale;
+            double o1 = off[x2 - 2]/scale;
+            double d2 = diag[x2]/scale;
+            double o2 = off[x2 - 1]/scale;
 
             a11 = o1*o1 + d1*d1;
             a22 = o2*o2 + d2*d2;
 
-            eigenSmall.symm2x2_fast(a11 , o2*d1 , a22);
+            eigenSmall.symm2x2_fast(a11, o2*d1, a22);
         } else {
-            double a = diag[x2-1]/scale;
-            double b = off[x2-1]/scale;
+            double a = diag[x2 - 1]/scale;
+            double b = off[x2 - 1]/scale;
             double c = diag[x2]/scale;
 
             a11 = a*a;
             a22 = b*b + c*c;
 
-            eigenSmall.symm2x2_fast(a11, a*b , a22);
+            eigenSmall.symm2x2_fast(a11, a*b, a22);
         }
 
         // return the eigenvalue closest to a22
-        double diff0 = Math.abs(eigenSmall.value0.real-a22);
-        double diff1 = Math.abs(eigenSmall.value1.real-a22);
+        double diff0 = Math.abs(eigenSmall.value0.real - a22);
+        double diff1 = Math.abs(eigenSmall.value1.real - a22);
 
-        return diff0 < diff1 ? eigenSmall.value0.real :  eigenSmall.value1.real;
+        return diff0 < diff1 ? eigenSmall.value0.real : eigenSmall.value1.real;
     }
 
     /**
@@ -602,7 +598,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     protected void eigenBB_2x2( int x1 ) {
         double b11 = diag[x1];
         double b12 = off[x1];
-        double b22 = diag[x1+1];
+        double b22 = diag[x1 + 1];
 
         // normalize to reduce overflow
         double absA = Math.abs(b11);
@@ -610,26 +606,24 @@ public class SvdImplicitQrAlgorithm_DDRM {
         double absC = Math.abs(b22);
 
         double scale = absA > absB ? absA : absB;
-        if( absC > scale ) scale = absC;
+        if (absC > scale) scale = absC;
 
         // see if it is a pathological case.  the diagonal must already be zero
         // and the eigenvalues are all zero.  so just return
-        if( scale == 0 )
+        if (scale == 0)
             return;
 
         b11 /= scale;
         b12 /= scale;
         b22 /= scale;
 
-        eigenSmall.symm2x2_fast(b11*b11, b11*b12 , b12*b12+b22*b22);
+        eigenSmall.symm2x2_fast(b11*b11, b11*b12, b12*b12 + b22*b22);
 
         off[x1] = 0;
-        diag[x1] = scale* Math.sqrt(eigenSmall.value0.real);
+        diag[x1] = scale * Math.sqrt(eigenSmall.value0.real);
         double sgn = Math.signum(eigenSmall.value1.real);
-        diag[x1+1] = sgn*scale* Math.sqrt(Math.abs(eigenSmall.value1.real));
-
+        diag[x1 + 1] = sgn*scale * Math.sqrt(Math.abs(eigenSmall.value1.real));
     }
-
 
     /**
      * Checks to see if either the diagonal element or off diagonal element is zero.  If one is
@@ -639,24 +633,24 @@ public class SvdImplicitQrAlgorithm_DDRM {
      */
     protected boolean checkForAndHandleZeros() {
         // check for zeros along off diagonal
-        for( int i = x2-1; i >= x1; i-- ) {
-            if( isOffZero(i) ) {
+        for (int i = x2 - 1; i >= x1; i--) {
+            if (isOffZero(i)) {
 //                System.out.println("steps at split = "+steps);
                 resetSteps();
                 splits[numSplits++] = i;
-                x1 = i+1;
+                x1 = i + 1;
                 return true;
             }
         }
 
         // check for zeros along diagonal
-        for( int i = x2-1; i >= x1; i-- ) {
-            if( isDiagonalZero(i)) {
+        for (int i = x2 - 1; i >= x1; i--) {
+            if (isDiagonalZero(i)) {
 //                System.out.println("steps at split = "+steps);
                 pushRight(i);
                 resetSteps();
                 splits[numSplits++] = i;
-                x1 = i+1;
+                x1 = i + 1;
                 return true;
             }
         }
@@ -668,15 +662,15 @@ public class SvdImplicitQrAlgorithm_DDRM {
      * off so that all the algorithms assumptions are two and so that it can split the matrix.
      */
     private void pushRight( int row ) {
-        if( isOffZero(row))
+        if (isOffZero(row))
             return;
 
 //        B = createB();
 //        B.print();
         rotatorPushRight(row);
-        int end = N-2-row;
-        for( int i = 0; i < end && bulge != 0; i++ ) {
-            rotatorPushRight2(row,i+2);
+        int end = N - 2 - row;
+        for (int i = 0; i < end && bulge != 0; i++) {
+            rotatorPushRight2(row, i + 2);
         }
 //        }
     }
@@ -684,22 +678,21 @@ public class SvdImplicitQrAlgorithm_DDRM {
     /**
      * Start pushing the element off to the right.
      */
-    private void rotatorPushRight( int m )
-    {
+    private void rotatorPushRight( int m ) {
         double b11 = off[m];
-        double b21 = diag[m+1];
+        double b21 = diag[m + 1];
 
-        computeRotator(b21,-b11);
+        computeRotator(b21, -b11);
 
         // apply rotator on the right
         off[m] = 0;
-        diag[m+1] = b21*c-b11*s;
+        diag[m + 1] = b21*c - b11*s;
 
-        if( m+2 < N) {
-            double b22 = off[m+1];
-            off[m+1] = b22*c;
-            bulge =  b22*s;
-        }  else {
+        if (m + 2 < N) {
+            double b22 = off[m + 1];
+            off[m + 1] = b22*c;
+            bulge = b22*s;
+        } else {
             bulge = 0;
         }
 
@@ -711,8 +704,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 //        System.out.println("  bulge = "+bulge);
 //        System.out.println();
 
-        if( Ut != null ) {
-            updateRotator(Ut,m,m+1,c,s);
+        if (Ut != null) {
+            updateRotator(Ut, m, m + 1, c, s);
 
 //            SimpleMatrix.wrap(Ut).mult(B).mult(SimpleMatrix.wrap(Vt).transpose()).print();
 //            printMatrix();
@@ -724,18 +717,17 @@ public class SvdImplicitQrAlgorithm_DDRM {
     /**
      * Used to finish up pushing the bulge off the matrix.
      */
-    private void rotatorPushRight2( int m , int offset)
-    {
+    private void rotatorPushRight2( int m, int offset ) {
         double b11 = bulge;
-        double b12 = diag[m+offset];
+        double b12 = diag[m + offset];
 
-        computeRotator(b12,-b11);
+        computeRotator(b12, -b11);
 
-        diag[m+offset] = b12*c-b11*s;
+        diag[m + offset] = b12*c - b11*s;
 
-        if( m+offset<N-1) {
-            double b22 = off[m+offset];
-            off[m+offset] = b22*c;
+        if (m + offset < N - 1) {
+            double b22 = off[m + offset];
+            off[m + offset] = b22*c;
             bulge = b22*s;
         }
 
@@ -747,8 +739,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
 //        System.out.println("  bulge = "+bulge);
 //        System.out.println();
 
-        if( Ut != null ) {
-            updateRotator(Ut,m,m+offset,c,s);
+        if (Ut != null) {
+            updateRotator(Ut, m, m + offset, c, s);
 
 //            SimpleMatrix.wrap(Ut).mult(B).mult(SimpleMatrix.wrap(Vt).transpose()).print();
 //            printMatrix();
@@ -763,10 +755,10 @@ public class SvdImplicitQrAlgorithm_DDRM {
      */
     public void exceptionShift() {
         numExceptional++;
-        double mag = 0.05 * numExceptional;
+        double mag = 0.05*numExceptional;
         if (mag > 1.0) mag = 1.0;
 
-        double angle = 2.0 * UtilEjml.PI * (rand.nextDouble() - 0.5) * mag;
+        double angle = 2.0*UtilEjml.PI*(rand.nextDouble() - 0.5)*mag;
         performImplicitSingleStep(0, angle, true);
 
         // allow more convergence time
@@ -775,17 +767,16 @@ public class SvdImplicitQrAlgorithm_DDRM {
 
     public void printMatrix() {
         System.out.print("Off Diag[ ");
-        for( int j = 0; j < N-1; j++ ) {
-            System.out.printf("%5.2f ",off[j]);
+        for (int j = 0; j < N - 1; j++) {
+            System.out.printf("%5.2f ", off[j]);
         }
         System.out.println();
         System.out.print("    Diag[ ");
-        for( int j = 0; j < N; j++ ) {
-            System.out.printf("%5.2f ",diag[j]);
+        for (int j = 0; j < N; j++) {
+            System.out.printf("%5.2f ", diag[j]);
         }
         System.out.println();
     }
-
 
     public int getNumberOfSingularValues() {
         return N;
@@ -795,10 +786,9 @@ public class SvdImplicitQrAlgorithm_DDRM {
         return diag[index];
     }
 
-    public void setFastValues(boolean b) {
+    public void setFastValues( boolean b ) {
         fastValues = b;
     }
-
 
     public double[] getSingularValues() {
         return diag;

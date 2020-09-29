@@ -34,13 +34,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionHessenberg_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj S,A;
+    public DMatrixRMaj S, A;
 
     TridiagonalDecompositionHouseholder_DDRM tridiagonal = new TridiagonalDecompositionHouseholder_DDRM();
 
@@ -48,7 +48,7 @@ public class BenchmarkDecompositionHessenberg_DDRM {
     public void setup() {
         Random rand = new Random(234);
 
-        S = RandomMatrices_DDRM.symmetric(size,-1,1, rand);
+        S = RandomMatrices_DDRM.symmetric(size, -1, 1, rand);
     }
 
     @Benchmark
@@ -57,7 +57,7 @@ public class BenchmarkDecompositionHessenberg_DDRM {
         tridiagonal.decompose(A);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionHessenberg_DDRM.class.getSimpleName())
                 .build();

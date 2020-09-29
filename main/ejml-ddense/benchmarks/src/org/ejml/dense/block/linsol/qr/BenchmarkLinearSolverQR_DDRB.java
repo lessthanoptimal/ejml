@@ -37,14 +37,14 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkLinearSolverQR_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000","2000"})
+    @Param({"1000", "2000"})
     public int size;
 
     public DMatrixRBlock A;
-    public DMatrixRBlock X,B;
+    public DMatrixRBlock X, B;
 
     QrHouseHolderSolver_DDRB householder = new QrHouseHolderSolver_DDRB();
 
@@ -52,21 +52,21 @@ public class BenchmarkLinearSolverQR_DDRB {
     public void setup() {
         Random rand = new Random(234);
 
-        A = MatrixOps_DDRB.createRandom(size*4,size/4,-1,1,rand);
-        B = MatrixOps_DDRB.createRandom(A.numRows,20,-1,1, rand);
-        X = A.create(1,1);
+        A = MatrixOps_DDRB.createRandom(size*4, size/4, -1, 1, rand);
+        B = MatrixOps_DDRB.createRandom(A.numRows, 20, -1, 1, rand);
+        X = A.create(1, 1);
     }
 
     @Benchmark
     public void householder() {
         DMatrixRBlock A = householder.modifiesA() ? this.A.copy() : this.A;
         DMatrixRBlock B = householder.modifiesB() ? this.B.copy() : this.B;
-        if( !householder.setA(A) )
+        if (!householder.setA(A))
             throw new RuntimeException("Bad");
         householder.solve(B, X);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkLinearSolverQR_DDRB.class.getSimpleName())
                 .build();

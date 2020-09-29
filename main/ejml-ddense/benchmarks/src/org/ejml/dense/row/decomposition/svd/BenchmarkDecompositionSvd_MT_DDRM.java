@@ -34,30 +34,30 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionSvd_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj A,U,V;
+    public DMatrixRMaj A, U, V;
 
-    SvdImplicitQrDecompose_MT_DDRM svd = new SvdImplicitQrDecompose_MT_DDRM(true,true,true,true);
+    SvdImplicitQrDecompose_MT_DDRM svd = new SvdImplicitQrDecompose_MT_DDRM(true, true, true, true);
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        U = new DMatrixRMaj(size,size);
-        V = new DMatrixRMaj(size,size);
+        A = RandomMatrices_DDRM.rectangle(size*2, size/2, -1, 1, rand);
+        U = new DMatrixRMaj(size, size);
+        V = new DMatrixRMaj(size, size);
     }
 
     @Benchmark
     public void implicit_uv() {
         svd.decompose(A.copy());
-        svd.getU(U,false);
-        svd.getV(V,true);
+        svd.getU(U, false);
+        svd.getV(V, true);
     }
 
     @Benchmark
@@ -65,7 +65,7 @@ public class BenchmarkDecompositionSvd_MT_DDRM {
         svd.decompose(A.copy());
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionSvd_MT_DDRM.class.getSimpleName())
                 .build();

@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * <p>
  * Computes the eigenvalues and eigenvectors of a symmetric tridiagonal matrix using the symmetric QR algorithm.
@@ -32,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * This implementation is based on the algorithm is sketched out in:<br>
  * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition. page 377-385
  * </p>
+ *
  * @author Peter Abeles
  */
 @SuppressWarnings("NullAway.Init")
@@ -56,7 +56,7 @@ public class SymmetricQrAlgorithm_DDRM {
     // is it following a script or not
     private boolean followingScript;
 
-    public SymmetricQrAlgorithm_DDRM(SymmetricQREigenHelper_DDRM helper ) {
+    public SymmetricQrAlgorithm_DDRM( SymmetricQREigenHelper_DDRM helper ) {
         this.helper = helper;
     }
 
@@ -67,7 +67,7 @@ public class SymmetricQrAlgorithm_DDRM {
         this.helper = new SymmetricQREigenHelper_DDRM();
     }
 
-    public void setMaxIterations(int maxIterations) {
+    public void setMaxIterations( int maxIterations ) {
         this.maxIterations = maxIterations;
     }
 
@@ -75,11 +75,11 @@ public class SymmetricQrAlgorithm_DDRM {
         return Q;
     }
 
-    public void setQ( @Nullable DMatrixRMaj q) {
+    public void setQ( @Nullable DMatrixRMaj q ) {
         Q = q;
     }
 
-    public void setFastEigenvalues(boolean fastEigenvalues) {
+    public void setFastEigenvalues( boolean fastEigenvalues ) {
         this.fastEigenvalues = fastEigenvalues;
     }
 
@@ -90,7 +90,7 @@ public class SymmetricQrAlgorithm_DDRM {
      * @return The eigenvalue.
      */
     public double getEigenvalue( int index ) {
-       return helper.diag[index];
+        return helper.diag[index];
     }
 
     /**
@@ -111,13 +111,13 @@ public class SymmetricQrAlgorithm_DDRM {
      * @param off Off diagonal elements from tridiagonal matrix. Modified.
      * @return true if it succeeds and false if it fails.
      */
-    public boolean process(int sideLength,
-                           @Nullable double[] diag,
-                           @Nullable double[] off,
-                           double[] eigenvalues) {
-        if( diag != null && off != null )
-            helper.init(diag,off,sideLength);
-        if( Q == null )
+    public boolean process( int sideLength,
+                            @Nullable double[] diag,
+                            @Nullable double[] off,
+                            double[] eigenvalues ) {
+        if (diag != null && off != null)
+            helper.init(diag, off, sideLength);
+        if (Q == null)
             Q = CommonOps_DDRM.identity(helper.N);
         helper.setQ(Q);
 
@@ -128,11 +128,11 @@ public class SymmetricQrAlgorithm_DDRM {
         return _process();
     }
 
-    public boolean process(int sideLength,
-                           @Nullable double[] diag,
-                           @Nullable double[] off) {
-        if( diag != null && off != null )
-            helper.init(diag,off,sideLength);
+    public boolean process( int sideLength,
+                            @Nullable double[] diag,
+                            @Nullable double[] off ) {
+        if (diag != null && off != null)
+            helper.init(diag, off, sideLength);
 
         this.followingScript = false;
         this.eigenvalues = UtilEjml.ZERO_LENGTH_F64;
@@ -140,27 +140,26 @@ public class SymmetricQrAlgorithm_DDRM {
         return _process();
     }
 
-
     private boolean _process() {
-        while( helper.x2 >= 0 ) {
+        while (helper.x2 >= 0) {
             // if it has cycled too many times give up
-            if( helper.steps > maxIterations ) {
+            if (helper.steps > maxIterations) {
                 return false;
             }
 
-            if( helper.x1 == helper.x2 ) {
+            if (helper.x1 == helper.x2) {
 //                System.out.println("Steps = "+helper.steps);
                 // see if it is done processing this submatrix
                 helper.resetSteps();
-                if( !helper.nextSplit() )
+                if (!helper.nextSplit())
                     break;
-            } else if( fastEigenvalues && helper.x2-helper.x1 == 1 ) {
+            } else if (fastEigenvalues && helper.x2 - helper.x1 == 1) {
                 // There are analytical solutions to this case. Just compute them directly.
                 // TODO might be able to speed this up by doing the 3 by 3 case also
                 helper.resetSteps();
                 helper.eigenvalue2by2(helper.x1);
-                helper.setSubmatrix(helper.x2,helper.x2);
-            } else if( helper.steps-helper.lastExceptional > exceptionalThresh ){
+                helper.setSubmatrix(helper.x2, helper.x2);
+            } else if (helper.steps - helper.lastExceptional > exceptionalThresh) {
                 // it isn't a good sign if exceptional shifts are being done here
                 helper.exceptionalShift();
             } else {
@@ -179,18 +178,18 @@ public class SymmetricQrAlgorithm_DDRM {
      */
     public void performStep() {
         // check for zeros
-        for( int i = helper.x2-1; i >= helper.x1; i-- ) {
-            if( helper.isZero(i) ) {
+        for (int i = helper.x2 - 1; i >= helper.x1; i--) {
+            if (helper.isZero(i)) {
                 helper.splits[helper.numSplits++] = i;
-                helper.x1 = i+1;
+                helper.x1 = i + 1;
                 return;
             }
         }
 
         double lambda;
 
-        if( followingScript ) {
-            if( helper.steps > 10 ) {
+        if (followingScript) {
+            if (helper.steps > 10) {
                 followingScript = false;
                 return;
             } else {
@@ -204,6 +203,6 @@ public class SymmetricQrAlgorithm_DDRM {
         }
 
         // similar transforms
-        helper.performImplicitSingleStep(lambda,false);
+        helper.performImplicitSingleStep(lambda, false);
     }
 }

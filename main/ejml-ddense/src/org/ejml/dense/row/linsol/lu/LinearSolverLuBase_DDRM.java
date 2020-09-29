@@ -22,7 +22,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionBase_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
 
-
 /**
  * @author Peter Abeles
  */
@@ -30,13 +29,12 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
 
     protected LUDecompositionBase_DDRM decomp;
 
-    protected LinearSolverLuBase_DDRM(LUDecompositionBase_DDRM decomp) {
+    protected LinearSolverLuBase_DDRM( LUDecompositionBase_DDRM decomp ) {
         this.decomp = decomp;
-
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
+    public boolean setA( DMatrixRMaj A ) {
         _setA(A);
 
         return decomp.decompose(A);
@@ -48,27 +46,27 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
     }
 
     @Override
-    public void invert(DMatrixRMaj A_inv) {
-        if( A == null )
+    public void invert( DMatrixRMaj A_inv ) {
+        if (A == null)
             throw new RuntimeException("Must call setA() first");
 
-        double []vv = decomp._getVV();
+        double[] vv = decomp._getVV();
         DMatrixRMaj LU = decomp.getLU();
 
-        if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
+        if (A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows)
             throw new IllegalArgumentException("Unexpected matrix dimension");
 
         int n = A.numCols;
 
         double[] dataInv = A_inv.data;
 
-        for( int j = 0; j < n; j++ ) {
+        for (int j = 0; j < n; j++) {
             // don't need to change inv into an identity matrix before hand
-            for( int i = 0; i < n; i++ ) vv[i] = i == j ? 1 : 0;
+            for (int i = 0; i < n; i++) vv[i] = i == j ? 1 : 0;
             decomp._solveVectorInternal(vv);
 //            for( int i = 0; i < n; i++ ) dataInv[i* n +j] = vv[i];
             int index = j;
-            for( int i = 0; i < n; i++ , index += n) dataInv[ index ] = vv[i];
+            for (int i = 0; i < n; i++, index += n) dataInv[index] = vv[i];
         }
     }
 
@@ -80,12 +78,11 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
      * @param b A matrix. Not modified.
      * @param x A matrix. Modified.
      */
-    public void improveSol(DMatrixRMaj b , DMatrixRMaj x )
-    {
-        if( b.numCols != x.numCols ) {
+    public void improveSol( DMatrixRMaj b, DMatrixRMaj x ) {
+        if (b.numCols != x.numCols) {
             throw new IllegalArgumentException("bad shapes");
         }
-        if( A == null )
+        if (A == null)
             throw new IllegalArgumentException("Must setA() first");
 
         double[] dataA = A.data;
@@ -95,23 +92,23 @@ public abstract class LinearSolverLuBase_DDRM extends LinearSolverAbstract_DDRM 
         final int nc = b.numCols;
         final int n = b.numCols;
 
-        double []vv = decomp._getVV();
+        double[] vv = decomp._getVV();
 
 //        BigDecimal sdp = new BigDecimal(0);
-        for( int k = 0; k < nc; k++ ) {
-            for( int i = 0; i < n; i++ ) {
+        for (int k = 0; k < nc; k++) {
+            for (int i = 0; i < n; i++) {
                 // *NOTE* in the book this is a long double.  extra precision might be required
-                double sdp = -dataB[ i * nc + k];
+                double sdp = -dataB[i*nc + k];
 //                BigDecimal sdp = new BigDecimal(-dataB[ i * nc + k]);
-                for( int j = 0; j < n; j++ ) {
-                    sdp += dataA[i* n +j] * dataX[ j * nc + k];
+                for (int j = 0; j < n; j++) {
+                    sdp += dataA[i*n + j]*dataX[j*nc + k];
 //                    sdp = sdp.add( BigDecimal.valueOf(dataA[i* n +j] * dataX[ j * nc + k]));
                 }
                 vv[i] = sdp;
 //                vv[i] = sdp.doubleValue();
             }
             decomp._solveVectorInternal(vv);
-            for( int i = 0; i < n; i++ ) {
+            for (int i = 0; i < n; i++) {
                 dataX[i*nc + k] -= vv[i];
             }
         }

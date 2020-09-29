@@ -26,7 +26,6 @@ import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_MT_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 
-
 /**
  * <p>
  * Concurrent extension of {@link LinearSolverQrHouseCol_DDRM}.
@@ -53,16 +52,16 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        if( B.numRows != numRows )
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numRows);
-        X.reshape(numCols,B.numCols);
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numRows);
+        X.reshape(numCols, B.numCols);
 
         int BnumCols = B.numCols;
 
         // solve each column one by one
-        EjmlConcurrency.loopBlocks(0,BnumCols,workArrays,(work,idx0,idx1)->{
-            work.a.reshape(numRows,1);
+        EjmlConcurrency.loopBlocks(0, BnumCols, workArrays, ( work, idx0, idx1 ) -> {
+            work.a.reshape(numRows, 1);
             work.tmp.reshape(numRows);
 
             DMatrixRMaj a = work.a;
@@ -70,7 +69,7 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
 
             for (int colB = idx0; colB < idx1; colB++) {
                 // make a copy of this column in the vector
-                for( int i = 0; i < numRows; i++ ) {
+                for (int i = 0; i < numRows; i++) {
                     a.data[i] = B.data[i*BnumCols + colB];
                 }
 
@@ -79,25 +78,25 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
                 // a = Q_{n-1}...Q_2*Q_1*b
                 //
                 // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
-                for( int n = 0; n < numCols; n++ ) {
-                    double []u = QR[n];
+                for (int n = 0; n < numCols; n++) {
+                    double[] u = QR[n];
                     QrHelperFunctions_DDRM.rank1UpdateMultR_u0(a, u, 1.0, gammas[n], 0, n, numRows, temp);
                 }
 
                 // solve for Rx = b using the standard upper triangular solver
-                TriangularSolver_DDRM.solveU(R.data,a.data,numCols);
+                TriangularSolver_DDRM.solveU(R.data, a.data, numCols);
 
                 // save the results
-                for( int i = 0; i < numCols; i++ ) {
-                    X.data[i*X.numCols+colB] = a.data[i];
+                for (int i = 0; i < numCols; i++) {
+                    X.data[i*X.numCols + colB] = a.data[i];
                 }
             }
         });
     }
 
     private static class Work {
-        public final DMatrixRMaj a = new DMatrixRMaj(1,1);
-        public final DMatrixRMaj u = new DMatrixRMaj(1,1);
+        public final DMatrixRMaj a = new DMatrixRMaj(1, 1);
+        public final DMatrixRMaj u = new DMatrixRMaj(1, 1);
         public final DGrowArray tmp = new DGrowArray();
     }
 }

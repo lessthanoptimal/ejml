@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,6 @@ package org.ejml.dense.row.mult;
 
 import org.ejml.data.DMatrix1Row;
 
-
 /**
  * Operations that are performed on a submatrix inside a larger matrix.
  *
@@ -28,14 +27,13 @@ import org.ejml.data.DMatrix1Row;
  */
 public class SubmatrixOps_DDRM {
 
-    public static void setSubMatrix(DMatrix1Row src , DMatrix1Row dst ,
-                                    int srcRow , int srcCol , int dstRow , int dstCol ,
-                                    int numSubRows, int numSubCols )
-    {
-        for( int i = 0; i < numSubRows; i++ ) {
-            for( int j = 0; j < numSubCols; j++ ) {
-                double val = src.get(i+srcRow,j+srcCol);
-                dst.set(i+dstRow,j+dstCol,val);
+    public static void setSubMatrix( DMatrix1Row src, DMatrix1Row dst,
+                                     int srcRow, int srcCol, int dstRow, int dstCol,
+                                     int numSubRows, int numSubCols ) {
+        for (int i = 0; i < numSubRows; i++) {
+            for (int j = 0; j < numSubCols; j++) {
+                double val = src.get(i + srcRow, j + srcCol);
+                dst.set(i + dstRow, j + dstCol, val);
             }
         }
     }

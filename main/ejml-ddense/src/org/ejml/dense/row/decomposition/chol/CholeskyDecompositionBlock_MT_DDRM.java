@@ -44,7 +44,7 @@ public class CholeskyDecompositionBlock_MT_DDRM extends CholeskyDecompositionBlo
         final int n = B.numCols;
         final int widthL = m;
 
-        EjmlConcurrency.loopFor(0, n, j ->{
+        EjmlConcurrency.loopFor(0, n, j -> {
             int indexb = j;
             int rowL = 0;
 
@@ -83,7 +83,7 @@ public class CholeskyDecompositionBlock_MT_DDRM extends CholeskyDecompositionBlo
 //        }
 
         final int strideC = c.numCols + 1;
-        EjmlConcurrency.loopFor(0, a.numCols, i ->{
+        EjmlConcurrency.loopFor(0, a.numCols, i -> {
             int indexA = i;
             int endR = a.numCols;
 

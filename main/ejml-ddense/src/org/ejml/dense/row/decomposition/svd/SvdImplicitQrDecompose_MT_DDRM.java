@@ -24,7 +24,6 @@ import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionRow_MT
 import org.ejml.dense.row.decomposition.bidiagonal.BidiagonalDecompositionTall_MT_DDRM;
 import org.jetbrains.annotations.NotNull;
 
-
 /**
  * <p>Concurrent version of {@link SvdImplicitQrDecompose_DDRM}</p>
  *
@@ -33,23 +32,23 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("NullAway.Init")
 public class SvdImplicitQrDecompose_MT_DDRM extends SvdImplicitQrDecompose_DDRM {
 
-    public SvdImplicitQrDecompose_MT_DDRM(boolean compact, boolean computeU, boolean computeV,
-                                          boolean canUseTallBidiagonal) {
+    public SvdImplicitQrDecompose_MT_DDRM( boolean compact, boolean computeU, boolean computeV,
+                                           boolean canUseTallBidiagonal ) {
         super(compact, computeU, computeV, canUseTallBidiagonal);
     }
 
     @Override
-    protected void transpose(@NotNull DMatrixRMaj V, DMatrixRMaj Vt) {
+    protected void transpose( @NotNull DMatrixRMaj V, DMatrixRMaj Vt ) {
         CommonOps_MT_DDRM.transpose(Vt, V);
     }
 
     @Override
     protected void declareBidiagonalDecomposition() {
-        if( canUseTallBidiagonal && numRows > numCols * 2 && !computeU ) {
-            if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall_MT_DDRM) ) {
+        if (canUseTallBidiagonal && numRows > numCols*2 && !computeU) {
+            if (bidiag == null || !(bidiag instanceof BidiagonalDecompositionTall_MT_DDRM)) {
                 bidiag = new BidiagonalDecompositionTall_MT_DDRM();
             }
-        } else if( bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow_MT_DDRM) ) {
+        } else if (bidiag == null || !(bidiag instanceof BidiagonalDecompositionRow_MT_DDRM)) {
             bidiag = new BidiagonalDecompositionRow_MT_DDRM();
         }
     }

@@ -26,7 +26,6 @@ import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvect
 import org.ejml.dense.row.decomposition.hessenberg.HessenbergSimilarDecomposition_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
-
 /**
  * <p>
  * Finds the eigenvalue decomposition of an arbitrary square matrix using the implicit double-step QR algorithm.
@@ -55,16 +54,15 @@ public class WatchedDoubleStepQRDecomposition_DDRM
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
 
-    public WatchedDoubleStepQRDecomposition_DDRM(boolean computeVectors)
-    {
+    public WatchedDoubleStepQRDecomposition_DDRM( boolean computeVectors ) {
         this(new HessenbergSimilarDecomposition_DDRM(10),
                 new WatchedDoubleStepQREigen_DDRM(),
                 computeVectors);
     }
 
-    public WatchedDoubleStepQRDecomposition_DDRM(HessenbergSimilarDecomposition_DDRM hessenberg,
-                                                 WatchedDoubleStepQREigen_DDRM eigenQR,
-                                                 boolean computeVectors) {
+    public WatchedDoubleStepQRDecomposition_DDRM( HessenbergSimilarDecomposition_DDRM hessenberg,
+                                                  WatchedDoubleStepQREigen_DDRM eigenQR,
+                                                  boolean computeVectors ) {
         this.hessenberg = hessenberg;
         this.algValue = new WatchedDoubleStepQREigenvalue_DDRM(eigenQR);
         this.algVector = new WatchedDoubleStepQREigenvector_DDRM();
@@ -73,9 +71,9 @@ public class WatchedDoubleStepQRDecomposition_DDRM
     }
 
     @Override
-    public boolean decompose(DMatrixRMaj A) {
+    public boolean decompose( DMatrixRMaj A ) {
 
-        if( !hessenberg.decompose(A) )
+        if (!hessenberg.decompose(A))
             return false;
 
         H = hessenberg.getH(null);
@@ -83,7 +81,7 @@ public class WatchedDoubleStepQRDecomposition_DDRM
         algValue.getImplicitQR().createR = false;
 //        algValue.getImplicitQR().setChecks(true,true,true);
 
-        if( !algValue.process(H) )
+        if (!algValue.process(H))
             return false;
 
 //        for( int i = 0; i < A.numRows; i++ ) {
@@ -92,7 +90,7 @@ public class WatchedDoubleStepQRDecomposition_DDRM
 
         algValue.getImplicitQR().createR = true;
 
-        if( computeVectors )
+        if (computeVectors)
             return algVector.process(algValue.getImplicitQR(), H, hessenberg.getQ(null));
         else
             return true;
@@ -109,12 +107,12 @@ public class WatchedDoubleStepQRDecomposition_DDRM
     }
 
     @Override
-    public Complex_F64 getEigenvalue(int index) {
+    public Complex_F64 getEigenvalue( int index ) {
         return algValue.getEigenvalues()[index];
     }
 
     @Override
-    public DMatrixRMaj getEigenVector(int index) {
+    public DMatrixRMaj getEigenVector( int index ) {
         return algVector.getEigenvectors()[index];
     }
 }

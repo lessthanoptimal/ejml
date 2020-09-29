@@ -34,13 +34,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionQR_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj A,Q,R;
+    public DMatrixRMaj A, Q, R;
 
     QRDecompositionHouseholderColumn_MT_DDRM houseCol = new QRDecompositionHouseholderColumn_MT_DDRM();
 
@@ -48,16 +48,16 @@ public class BenchmarkDecompositionQR_MT_DDRM {
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        Q = new DMatrixRMaj(size,size);
-        R = new DMatrixRMaj(Q.numCols,Q.numCols);
+        A = RandomMatrices_DDRM.rectangle(size*2, size/2, -1, 1, rand);
+        Q = new DMatrixRMaj(size, size);
+        R = new DMatrixRMaj(Q.numCols, Q.numCols);
     }
 
     @Benchmark
     public void houseCol() {
         houseCol.decompose(A);
-        houseCol.getQ(Q,true);
-        houseCol.getR(R,true);
+        houseCol.getQ(Q, true);
+        houseCol.getR(R, true);
     }
 
     @Benchmark
@@ -65,7 +65,7 @@ public class BenchmarkDecompositionQR_MT_DDRM {
         houseCol.decompose(A);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionQR_MT_DDRM.class.getSimpleName())
                 .build();

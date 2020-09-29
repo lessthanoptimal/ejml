@@ -99,6 +99,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
         for (int i = 0; i < T.numCols; i += blockLength) {
             int widthA = Math.min(blockLength, T.numCols - i);
 
+            //@formatter:off
             subA.col0 = i;           subA.col1 = i+widthA;
             subA.row0 = subA.col0;   subA.row1 = subA.col1;
 
@@ -107,7 +108,8 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
 
             subC.col0 = i+widthA;    subC.col1 = T.numRows;
             subC.row0 = i+widthA;    subC.row1 = T.numRows;
-            
+            //@formatter:on
+
             // cholesky on inner block A
             if (!InnerCholesky_DDRB.lower(subA))
                 return false;
@@ -137,6 +139,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
         for (int i = 0; i < T.numCols; i += blockLength) {
             int widthA = Math.min(blockLength, T.numCols - i);
 
+            //@formatter:off
             subA.col0 = i;          subA.col1 = i+widthA;
             subA.row0 = subA.col0;  subA.row1 = subA.col1;
 
@@ -145,6 +148,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
 
             subC.col0 = i+widthA;   subC.col1 = T.numCols;
             subC.row0 = i+widthA;   subC.row1 = T.numCols;
+            //@formatter:on
 
             // cholesky on inner block A
             if (!InnerCholesky_DDRB.upper(subA))

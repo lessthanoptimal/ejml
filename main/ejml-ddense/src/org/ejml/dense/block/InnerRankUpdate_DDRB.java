@@ -82,7 +82,6 @@ public class InnerRankUpdate_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-
     /**
      * <p>
      * Rank N update function for a symmetric inner submatrix and only operates on the upper

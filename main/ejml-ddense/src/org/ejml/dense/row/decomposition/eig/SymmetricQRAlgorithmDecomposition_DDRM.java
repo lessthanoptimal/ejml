@@ -27,7 +27,6 @@ import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 
-
 /**
  * <p>
  * Computes the eigenvalues and eigenvectors of a real symmetric matrix using the symmetric implicit QR algorithm.
@@ -38,10 +37,9 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
  * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition. page 377-385
  * </p>
  *
+ * @author Peter Abeles
  * @see SymmetricQrAlgorithm_DDRM
  * @see org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouseholder_DDRM
- *
- * @author Peter Abeles
  */
 @SuppressWarnings("NullAway.Init")
 public class SymmetricQRAlgorithmDecomposition_DDRM
@@ -49,11 +47,11 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
 
     // computes a tridiagonal matrix whose eigenvalues are the same as the original
     // matrix and can be easily computed.
-    private TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp;
+    private final TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp;
     // helper class for eigenvalue and eigenvector algorithms
-    private SymmetricQREigenHelper_DDRM helper;
+    private final SymmetricQREigenHelper_DDRM helper;
     // computes the eigenvectors
-    private SymmetricQrAlgorithm_DDRM vector;
+    private final SymmetricQrAlgorithm_DDRM vector;
 
     // should it compute eigenvectors at the same time as the eigenvalues?
     private boolean computeVectorsWithValues = false;
@@ -76,8 +74,8 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
     // should it compute eigenvectors or just eigenvalues
     boolean computeVectors;
 
-    public SymmetricQRAlgorithmDecomposition_DDRM(TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp,
-                                                 boolean computeVectors) {
+    public SymmetricQRAlgorithmDecomposition_DDRM( TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp,
+                                                   boolean computeVectors ) {
 
         this.decomp = decomp;
         this.computeVectors = computeVectors;
@@ -86,13 +84,13 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         vector = new SymmetricQrAlgorithm_DDRM(helper);
     }
 
-    public SymmetricQRAlgorithmDecomposition_DDRM(boolean computeVectors) {
+    public SymmetricQRAlgorithmDecomposition_DDRM( boolean computeVectors ) {
 
-        this(DecompositionFactory_DDRM.tridiagonal(0),computeVectors);
+        this(DecompositionFactory_DDRM.tridiagonal(0), computeVectors);
     }
 
-    public void setComputeVectorsWithValues(boolean computeVectorsWithValues) {
-        if( !computeVectors )
+    public void setComputeVectorsWithValues( boolean computeVectorsWithValues ) {
+        if (!computeVectors)
             throw new IllegalArgumentException("Compute eigenvalues has been set to false");
 
         this.computeVectorsWithValues = computeVectorsWithValues;
@@ -114,12 +112,12 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
     }
 
     @Override
-    public Complex_F64 getEigenvalue(int index) {
-        return new Complex_F64(values[index],0);
+    public Complex_F64 getEigenvalue( int index ) {
+        return new Complex_F64(values[index], 0);
     }
 
     @Override
-    public DMatrixRMaj getEigenVector(int index) {
+    public DMatrixRMaj getEigenVector( int index ) {
         return eigenvectors[index];
     }
 
@@ -131,33 +129,33 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
      * @return true if it decomposed the matrix or false if an error was detected.  This will not catch all errors.
      */
     @Override
-    public boolean decompose(DMatrixRMaj orig) {
-        if( orig.numCols != orig.numRows )
+    public boolean decompose( DMatrixRMaj orig ) {
+        if (orig.numCols != orig.numRows)
             throw new IllegalArgumentException("Matrix must be square.");
-        if( orig.numCols <= 0 )
+        if (orig.numCols <= 0)
             return false;
 
         int N = orig.numRows;
 
         // compute a similar tridiagonal matrix
-        if( !decomp.decompose(orig) )
+        if (!decomp.decompose(orig))
             return false;
 
         double[] diag = this.diag;
         double[] off = this.off;
-        if( diag == null || diag.length < N) {
+        if (diag == null || diag.length < N) {
             this.diag = diag = new double[N];
-            this.off = off = new double[N-1];
+            this.off = off = new double[N - 1];
         }
-        decomp.getDiagonal(diag,off);
+        decomp.getDiagonal(diag, off);
 
         // Tell the helper to work with this matrix
-        helper.init(diag,off,N);
+        helper.init(diag, off, N);
 
-        if( computeVectors ) {
-            if( computeVectorsWithValues ) {
+        if (computeVectors) {
+            if (computeVectorsWithValues) {
                 return extractTogether();
-            }  else {
+            } else {
                 return extractSeparate(N);
             }
         } else {
@@ -172,7 +170,7 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
 
     private boolean extractTogether() {
         // extract the orthogonal from the similar transform
-        V = decomp.getQ(V,true);
+        V = decomp.getQ(V, true);
 
         // tell eigenvector algorithm to update this matrix as it computes the rotators
         helper.setQ(V);
@@ -180,11 +178,11 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         vector.setFastEigenvalues(false);
 
         // extract the eigenvalues
-        if( !vector.process(-1,null,null) )
+        if (!vector.process(-1, null, null))
             return false;
 
         // the V matrix contains the eigenvectors.  Convert those into column vectors
-        eigenvectors = CommonOps_DDRM.rowsToVector(V,eigenvectors);
+        eigenvectors = CommonOps_DDRM.rowsToVector(V, eigenvectors);
 
         // save a copy of them since this data structure will be recycled next
         values = helper.copyEigenvalues(values);
@@ -192,7 +190,7 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         return true;
     }
 
-    private boolean extractSeparate(int numCols) {
+    private boolean extractSeparate( int numCols ) {
         if (!computeEigenValues())
             return false;
 
@@ -203,42 +201,40 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         offSaved = helper.swapOff(offSaved);
 
         // extract the orthogonal from the similar transform
-        V = decomp.getQ(V,true);
+        V = decomp.getQ(V, true);
 
         // tell eigenvector algorithm to update this matrix as it computes the rotators
         vector.setQ(V);
 
         // extract eigenvectors
-        if( !vector.process(-1,null,null, values) )
+        if (!vector.process(-1, null, null, values))
             return false;
 
         // the ordering of the eigenvalues might have changed
         values = helper.copyEigenvalues(values);
         // the V matrix contains the eigenvectors.  Convert those into column vectors
-        eigenvectors = CommonOps_DDRM.rowsToVector(V,eigenvectors);
+        eigenvectors = CommonOps_DDRM.rowsToVector(V, eigenvectors);
 
         return true;
     }
 
-   /**
+    /**
      * Computes eigenvalues only
-    *
-     * @return
      */
     private boolean computeEigenValues() {
-       // make a copy of the internal tridiagonal matrix data for later use
-       diagSaved = helper.copyDiag(diagSaved);
-       offSaved = helper.copyOff(offSaved);
+        // make a copy of the internal tridiagonal matrix data for later use
+        diagSaved = helper.copyDiag(diagSaved);
+        offSaved = helper.copyOff(offSaved);
 
-       vector.setQ(null);
-       vector.setFastEigenvalues(true);
+        vector.setQ(null);
+        vector.setFastEigenvalues(true);
 
-       // extract the eigenvalues
-       if( !vector.process(-1,null,null) )
-           return false;
+        // extract the eigenvalues
+        if (!vector.process(-1, null, null))
+            return false;
 
-       // save a copy of them since this data structure will be recycled next
-       values = helper.copyEigenvalues(values);
-       return true;
-   }
+        // save a copy of them since this data structure will be recycled next
+        values = helper.copyEigenvalues(values);
+        return true;
+    }
 }

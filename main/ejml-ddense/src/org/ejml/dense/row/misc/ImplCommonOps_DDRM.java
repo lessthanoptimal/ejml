@@ -32,26 +32,25 @@ import static org.ejml.UtilEjml.reshapeOrDeclare;
  * @author Peter Abeles
  */
 public class ImplCommonOps_DDRM {
-    public static void extract(DMatrixRMaj src,
-                               int srcY0, int srcX0,
-                               DMatrixRMaj dst,
-                               int dstY0, int dstX0,
-                               int numRows, int numCols)
-    {
-         for( int y = 0; y < numRows; y++ ) {
-             int indexSrc = src.getIndex(y+srcY0,srcX0);
-             int indexDst = dst.getIndex(y+dstY0,dstX0);
-             System.arraycopy(src.data,indexSrc,dst.data,indexDst, numCols);
-         }
+    public static void extract( DMatrixRMaj src,
+                                int srcY0, int srcX0,
+                                DMatrixRMaj dst,
+                                int dstY0, int dstX0,
+                                int numRows, int numCols ) {
+        for (int y = 0; y < numRows; y++) {
+            int indexSrc = src.getIndex(y + srcY0, srcX0);
+            int indexDst = dst.getIndex(y + dstY0, dstX0);
+            System.arraycopy(src.data, indexSrc, dst.data, indexDst, numCols);
+        }
     }
 
     public static double elementMax( DMatrixD1 a ) {
         final int size = a.getNumElements();
 
         double max = a.get(0);
-        for( int i = 1; i < size; i++ ) {
+        for (int i = 1; i < size; i++) {
             double val = a.get(i);
-            if( val >= max ) {
+            if (val >= max) {
                 max = val;
             }
         }
@@ -63,9 +62,9 @@ public class ImplCommonOps_DDRM {
         final int size = a.getNumElements();
 
         double max = 0;
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             double val = Math.abs(a.get(i));
-            if( val > max ) {
+            if (val > max) {
                 max = val;
             }
         }
@@ -77,9 +76,9 @@ public class ImplCommonOps_DDRM {
         final int size = a.getNumElements();
 
         double min = a.get(0);
-        for( int i = 1; i < size; i++ ) {
+        for (int i = 1; i < size; i++) {
             double val = a.get(i);
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }
@@ -91,9 +90,9 @@ public class ImplCommonOps_DDRM {
         final int size = a.getNumElements();
 
         double min = Double.MAX_VALUE;
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             double val = Math.abs(a.get(i));
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }
@@ -101,51 +100,47 @@ public class ImplCommonOps_DDRM {
         return min;
     }
 
-    public static void elementMult(DMatrixD1 A , DMatrixD1 B )
-    {
-        checkSameShape(A,B,true);
+    public static void elementMult( DMatrixD1 A, DMatrixD1 B ) {
+        checkSameShape(A, B, true);
 
         int length = A.getNumElements();
 
-        for( int i = 0; i < length; i++ ) {
+        for (int i = 0; i < length; i++) {
             A.times(i, B.get(i));
         }
     }
 
-    public static <T extends DMatrixD1> T elementMult(T A , T B , @Nullable T output )
-    {
-        checkSameShape(A,B,true);
-        output = reshapeOrDeclare(output,A);
+    public static <T extends DMatrixD1> T elementMult( T A, T B, @Nullable T output ) {
+        checkSameShape(A, B, true);
+        output = reshapeOrDeclare(output, A);
 
         int length = A.getNumElements();
 
-        for( int i = 0; i < length; i++ ) {
-            output.set(i, A.get(i) * B.get(i));
+        for (int i = 0; i < length; i++) {
+            output.set(i, A.get(i)*B.get(i));
         }
 
         return output;
     }
 
-    public static void elementDiv(DMatrixD1 A , DMatrixD1 B )
-    {
-        checkSameShape(A,B,true);
+    public static void elementDiv( DMatrixD1 A, DMatrixD1 B ) {
+        checkSameShape(A, B, true);
 
         int length = A.getNumElements();
 
-        for( int i = 0; i < length; i++ ) {
+        for (int i = 0; i < length; i++) {
             A.div(i, B.get(i));
         }
     }
 
-    public static <T extends DMatrixD1> T elementDiv(T A , T B , @Nullable T output )
-    {
-        checkSameShape(A,B,true);
-        output = reshapeOrDeclare(output,A);
+    public static <T extends DMatrixD1> T elementDiv( T A, T B, @Nullable T output ) {
+        checkSameShape(A, B, true);
+        output = reshapeOrDeclare(output, A);
 
         int length = A.getNumElements();
 
-        for( int i = 0; i < length; i++ ) {
-            output.set(i, A.get(i) / B.get(i));
+        for (int i = 0; i < length; i++) {
+            output.set(i, A.get(i)/B.get(i));
         }
 
         return output;
@@ -156,7 +151,7 @@ public class ImplCommonOps_DDRM {
 
         int size = mat.getNumElements();
 
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             total += mat.get(i);
         }
 
@@ -168,65 +163,63 @@ public class ImplCommonOps_DDRM {
 
         int size = mat.getNumElements();
 
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             total += Math.abs(mat.get(i));
         }
 
         return total;
     }
 
-    public static <T extends DMatrixD1> T elementPower(T A , T B , @Nullable T output ) {
-        checkSameShape(A,B,true);
-        output = reshapeOrDeclare(output,A);
+    public static <T extends DMatrixD1> T elementPower( T A, T B, @Nullable T output ) {
+        checkSameShape(A, B, true);
+        output = reshapeOrDeclare(output, A);
 
         int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             output.data[i] = Math.pow(A.data[i], B.data[i]);
         }
 
         return output;
     }
 
-    public static <T extends DMatrixD1> T elementPower(double a , T B , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,B);
+    public static <T extends DMatrixD1> T elementPower( double a, T B, @Nullable T output ) {
+        output = reshapeOrDeclare(output, B);
 
         int size = B.getNumElements();
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             output.data[i] = Math.pow(a, B.data[i]);
         }
 
         return output;
     }
 
-    public static <T extends DMatrixD1> T elementPower(T A , double b, @Nullable T output ) {
-        output = reshapeOrDeclare(output,A);
+    public static <T extends DMatrixD1> T elementPower( T A, double b, @Nullable T output ) {
+        output = reshapeOrDeclare(output, A);
 
         int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             output.data[i] = Math.pow(A.data[i], b);
         }
 
         return output;
     }
 
-    public static <T extends DMatrixD1> T elementLog(T A , @Nullable T output )
-    {
-        output = reshapeOrDeclare(output,A);
+    public static <T extends DMatrixD1> T elementLog( T A, @Nullable T output ) {
+        output = reshapeOrDeclare(output, A);
 
         int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             output.data[i] = Math.log(A.data[i]);
         }
 
         return output;
     }
 
-    public static <T extends DMatrixD1> T elementExp(T A , @Nullable T output ) {
-        output = reshapeOrDeclare(output,A);
+    public static <T extends DMatrixD1> T elementExp( T A, @Nullable T output ) {
+        output = reshapeOrDeclare(output, A);
 
         int size = A.getNumElements();
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             output.data[i] = Math.exp(A.data[i]);
         }
 

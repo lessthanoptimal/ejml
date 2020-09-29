@@ -64,7 +64,7 @@ public class TriangularSolver_DDRB {
         //CONCURRENT_INLINE if (T.original == T_inv.original)
         //CONCURRENT_INLINE    throw new IllegalArgumentException("Same instance not allowed for concurrent");
 
-        if (workspace==null)
+        if (workspace == null)
             workspace = new GrowArray<>(DGrowArray::new);
         else
             workspace.reset();
@@ -116,6 +116,7 @@ public class TriangularSolver_DDRB {
     }
 
     //CONCURRENT_OMIT_BEGIN
+
     /**
      * Inverts an upper or lower triangular block submatrix. Uses a row oriented approach.
      *
@@ -130,7 +131,7 @@ public class TriangularSolver_DDRB {
         if (upper)
             throw new IllegalArgumentException("Upper triangular matrices not supported yet");
 
-        if (workspace==null)
+        if (workspace == null)
             workspace = new GrowArray<>(DGrowArray::new);
         else
             workspace.reset();
@@ -352,11 +353,15 @@ public class TriangularSolver_DDRB {
             // width and height of the inner T(i,i) block
             int widthT = Math.min(blockLength, lengthL - i);
 
-            Linner.col0 = L.col0 + i;   Linner.col1 = Linner.col0 + widthT;
-            Linner.row0 = L.row0 + i;   Linner.row1 = Linner.row0 + widthT;
+            Linner.col0 = L.col0 + i;
+            Linner.col1 = Linner.col0 + widthT;
+            Linner.row0 = L.row0 + i;
+            Linner.row1 = Linner.row0 + widthT;
 
-            Binner.col0 = B.col0;       Binner.col1 = B.col1;
-            Binner.row0 = B.row0 + i;   Binner.row1 = Binner.row0 + widthT;
+            Binner.col0 = B.col0;
+            Binner.col1 = B.col1;
+            Binner.row0 = B.row0 + i;
+            Binner.row1 = Binner.row0 + widthT;
 
             // solve the top row block
             // B(i,:) = T(i,i)^-1 Y(i,:)
@@ -474,11 +479,15 @@ public class TriangularSolver_DDRB {
             // width and height of the inner T(i,i) block
             int widthT = Math.min(blockLength, lengthR - i);
 
-            Rinner.col0 = R.col0 + i;   Rinner.col1 = Rinner.col0 + widthT;
-            Rinner.row0 = R.row0 + i;   Rinner.row1 = Rinner.row0 + widthT;
+            Rinner.col0 = R.col0 + i;
+            Rinner.col1 = Rinner.col0 + widthT;
+            Rinner.row0 = R.row0 + i;
+            Rinner.row1 = Rinner.row0 + widthT;
 
-            Binner.col0 = B.col0;       Binner.col1 = B.col1;
-            Binner.row0 = B.row0 + i;   Binner.row1 = Binner.row0 + widthT;
+            Binner.col0 = B.col0;
+            Binner.col1 = B.col1;
+            Binner.row0 = B.row0 + i;
+            Binner.row1 = Binner.row0 + widthT;
 
             // solve the top row block
             // B(i,:) = T(i,i)^-1 Y(i,:)

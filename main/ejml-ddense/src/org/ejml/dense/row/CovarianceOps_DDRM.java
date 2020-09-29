@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,6 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Random;
 
-
 /**
  * Contains operations specific to covariance matrices.
  *
@@ -41,8 +40,8 @@ public class CovarianceOps_DDRM {
      * This is a fairly light weight check to see of a covariance matrix is valid.
      * It checks to see if the diagonal elements are all positive, which they should be
      * if it is valid.  Not all invalid covariance matrices will be caught by this method.
-	 *
-	 * @return true if valid and false if invalid
+     *
+     * @return true if valid and false if invalid
      */
     public static boolean isValidFast( DMatrixRMaj cov ) {
         return MatrixFeatures_DDRM.isDiagonalPositive(cov);
@@ -52,16 +51,16 @@ public class CovarianceOps_DDRM {
      * Performs a variety of tests to see if the provided matrix is a valid
      * covariance matrix.
      *
-     * @return  0 = is valid 1 = failed positive diagonal, 2 = failed on symmetry, 2 = failed on positive definite
+     * @return 0 = is valid 1 = failed positive diagonal, 2 = failed on symmetry, 2 = failed on positive definite
      */
     public static int isValid( DMatrixRMaj cov ) {
-        if( !MatrixFeatures_DDRM.isDiagonalPositive(cov) )
+        if (!MatrixFeatures_DDRM.isDiagonalPositive(cov))
             return 1;
 
-        if( !MatrixFeatures_DDRM.isSymmetric(cov,TOL) )
+        if (!MatrixFeatures_DDRM.isSymmetric(cov, TOL))
             return 2;
 
-        if( !MatrixFeatures_DDRM.isPositiveSemidefinite(cov) )
+        if (!MatrixFeatures_DDRM.isPositiveSemidefinite(cov))
             return 3;
 
         return 0;
@@ -75,7 +74,7 @@ public class CovarianceOps_DDRM {
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DMatrixRMaj cov ) {
-        return invert(cov,cov);
+        return invert(cov, cov);
     }
 
     /**
@@ -86,22 +85,21 @@ public class CovarianceOps_DDRM {
      * @param cov_inv The inverse of cov.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert(final DMatrixRMaj cov , final DMatrixRMaj cov_inv ) {
-        if( cov.numCols <= 4 ) {
-            if( cov.numCols != cov.numRows ) {
+    public static boolean invert( final DMatrixRMaj cov, final DMatrixRMaj cov_inv ) {
+        if (cov.numCols <= 4) {
+            if (cov.numCols != cov.numRows) {
                 throw new IllegalArgumentException("Must be a square matrix.");
             }
 
-            if( cov.numCols >= 2 )
-                UnrolledInverseFromMinor_DDRM.inv(cov,cov_inv);
+            if (cov.numCols >= 2)
+                UnrolledInverseFromMinor_DDRM.inv(cov, cov_inv);
             else
                 cov_inv.data[0] = 1.0/cov.data[0];
-
         } else {
             LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.symmPosDef(cov.numRows);
             // wrap it to make sure the covariance is not modified.
             solver = new LinearSolverSafe<DMatrixRMaj>(solver);
-            if( !solver.setA(cov) )
+            if (!solver.setA(cov))
                 return false;
             solver.invert(cov_inv);
         }
@@ -116,11 +114,10 @@ public class CovarianceOps_DDRM {
      * @param vector The random vector. Modified.
      * @param rand Random number generator.
      */
-    public static void randomVector( DMatrixRMaj cov ,
-                                     DMatrixRMaj vector ,
-                                     Random rand  )
-    {
-        CovarianceRandomDraw_DDRM rng = new CovarianceRandomDraw_DDRM(rand,cov);
+    public static void randomVector( DMatrixRMaj cov,
+                                     DMatrixRMaj vector,
+                                     Random rand ) {
+        CovarianceRandomDraw_DDRM rng = new CovarianceRandomDraw_DDRM(rand, cov);
         rng.next(vector);
     }
 }

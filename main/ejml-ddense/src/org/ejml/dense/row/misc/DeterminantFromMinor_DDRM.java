@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,6 @@ package org.ejml.dense.row.misc;
 import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixRMaj;
 
-
 /**
  * <p>
  * Computes the determinant of a matrix using Laplace expansion.  This is done
@@ -39,68 +38,63 @@ import org.ejml.data.DMatrixRMaj;
  * its computation has the advantage being independent of the matrices value.
  * </p>
  *
- * @see org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM
- *
  * @author Peter Abeles
+ * @see org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM
  */
 public class DeterminantFromMinor_DDRM {
 
     // how wide the square matrix is
-    private int width;
+    private final int width;
 
     // used to decide at which point it uses a direct algorithm to compute the determinant
-    private int minWidth;
+    private final int minWidth;
 
     // used to keep track of which submatrix it is computing the results for
-    private int []levelIndexes;
+    private final int[] levelIndexes;
     // the results at different levels of minor matrices
-    private double []levelResults;
+    private final double[] levelResults;
     // which columns where removed at what level
-    private int []levelRemoved;
+    private final int[] levelRemoved;
 
     // columns that are currently open
-    private int open[];
+    private final int[] open;
     private int numOpen;
     // a minor matrix which is created at the lowest level
-    private DMatrixRMaj tempMat;
+    private final DMatrixRMaj tempMat;
 
     private boolean dirty = false;
 
     /**
-     *
      * @param width The width of the matrices that it will be computing the determinant for
      */
-    public DeterminantFromMinor_DDRM(int width )
-    {
-        this(width,5);
+    public DeterminantFromMinor_DDRM( int width ) {
+        this(width, 5);
     }
 
     /**
-     *
      * @param width The width of the matrices that it will be computing the determinant for
      * @param minWidth At which point should it use a predefined function to compute the determinant.
      */
-    public DeterminantFromMinor_DDRM(int width , int minWidth )
-    {
-        if( minWidth > 5 || minWidth < 2 ) {
+    public DeterminantFromMinor_DDRM( int width, int minWidth ) {
+        if (minWidth > 5 || minWidth < 2) {
             throw new IllegalArgumentException("No direct function for that width");
         }
 
-        if( width < minWidth )
+        if (width < minWidth)
             minWidth = width;
 
         this.minWidth = minWidth;
         this.width = width;
 
-        int numLevels = width-(minWidth-2);
+        int numLevels = width - (minWidth - 2);
 
         levelResults = new double[numLevels];
         levelRemoved = new int[numLevels];
         levelIndexes = new int[numLevels];
 
-        open = new int[ width ];
+        open = new int[width];
 
-        tempMat = new DMatrixRMaj(minWidth-1,minWidth-1);
+        tempMat = new DMatrixRMaj(minWidth - 1, minWidth - 1);
     }
 
     /**
@@ -111,7 +105,7 @@ public class DeterminantFromMinor_DDRM {
      * @return The determinant.
      */
     public double compute( DMatrix1Row mat ) {
-        if( width != mat.numCols || width != mat.numRows ) {
+        if (width != mat.numCols || width != mat.numRows) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
 
@@ -121,40 +115,40 @@ public class DeterminantFromMinor_DDRM {
 //        System.arraycopy(mat.data,0,minorMatrix[0],0,mat.data.length);
 
         int level = 0;
-        while( true ) {
-            int levelWidth = width-level;
+        while (true) {
+            int levelWidth = width - level;
             int levelIndex = levelIndexes[level];
 
-            if( levelIndex == levelWidth ) {
-                if( level == 0 ) {
+            if (levelIndex == levelWidth) {
+                if (level == 0) {
                     return levelResults[0];
                 }
-                int prevLevelIndex = levelIndexes[level-1]++;
+                int prevLevelIndex = levelIndexes[level - 1]++;
 
-                double val = mat.get((level-1)*width+levelRemoved[level-1]);
-                if( prevLevelIndex % 2 == 0 ) {
-                    levelResults[level-1] += val * levelResults[level];
+                double val = mat.get((level - 1)*width + levelRemoved[level - 1]);
+                if (prevLevelIndex%2 == 0) {
+                    levelResults[level - 1] += val*levelResults[level];
                 } else {
-                    levelResults[level-1] -= val * levelResults[level];
+                    levelResults[level - 1] -= val*levelResults[level];
                 }
 
-                putIntoOpen(level-1);
+                putIntoOpen(level - 1);
 
                 levelResults[level] = 0;
                 levelIndexes[level] = 0;
                 level--;
             } else {
-                int excluded = openRemove( levelIndex );
+                int excluded = openRemove(levelIndex);
 
                 levelRemoved[level] = excluded;
 
-                if( levelWidth == minWidth ) {
+                if (levelWidth == minWidth) {
                     createMinor(mat);
-                    double subresult = mat.get(level*width+levelRemoved[level]);
+                    double subresult = mat.get(level*width + levelRemoved[level]);
 
                     subresult *= UnrolledDeterminantFromMinor_DDRM.det(tempMat);
 
-                    if( levelIndex % 2 == 0 ) {
+                    if (levelIndex%2 == 0) {
                         levelResults[level] += subresult;
                     } else {
                         levelResults[level] -= subresult;
@@ -171,13 +165,13 @@ public class DeterminantFromMinor_DDRM {
     }
 
     private void initStructures() {
-        for( int i = 0; i < width; i++ ) {
+        for (int i = 0; i < width; i++) {
             open[i] = i;
         }
         numOpen = width;
 
-        if( dirty ) {
-            for( int i = 0; i < levelIndexes.length; i++ ) {
+        if (dirty) {
+            for (int i = 0; i < levelIndexes.length; i++) {
                 levelIndexes[i] = 0;
                 levelResults[i] = 0;
                 levelRemoved[i] = 0;
@@ -189,16 +183,15 @@ public class DeterminantFromMinor_DDRM {
     private int openRemove( int where ) {
         int val = open[where];
 
-        System.arraycopy(open,where+1,open,where,(numOpen-where-1));
+        System.arraycopy(open, where + 1, open, where, (numOpen - where - 1));
         numOpen--;
 
         return val;
     }
 
-    private void openAdd( int where, int val )
-    {
-        for( int i = numOpen; i > where; i-- ) {
-            open[i] = open[i-1];
+    private void openAdd( int where, int val ) {
+        for (int i = numOpen; i > where; i--) {
+            open[i] = open[i - 1];
         }
         numOpen++;
         open[where] = val;
@@ -208,32 +201,32 @@ public class DeterminantFromMinor_DDRM {
         open[numOpen++] = val;
     }
 
-    private void putIntoOpen(int level) {
+    private void putIntoOpen( int level ) {
         boolean added = false;
-        for( int i = 0; i < numOpen; i++ ) {
-            if( open[i] > levelRemoved[level]) {
+        for (int i = 0; i < numOpen; i++) {
+            if (open[i] > levelRemoved[level]) {
                 added = true;
-                openAdd(i,levelRemoved[level]);
+                openAdd(i, levelRemoved[level]);
                 break;
             }
         }
-        if( !added ) {
+        if (!added) {
             openAdd(levelRemoved[level]);
         }
     }
 
     private void createMinor( DMatrix1Row mat ) {
 
-        int w = minWidth-1;
-        int firstRow = (width-w)*width;
+        int w = minWidth - 1;
+        int firstRow = (width - w)*width;
 
-        for( int i = 0; i < numOpen; i++ ) {
+        for (int i = 0; i < numOpen; i++) {
             int col = open[i];
             int srcIndex = firstRow + col;
             int dstIndex = i;
 
-            for( int j = 0; j < w; j++ ) {
-                tempMat.set( dstIndex , mat.get( srcIndex ) );
+            for (int j = 0; j < w; j++) {
+                tempMat.set(dstIndex, mat.get(srcIndex));
                 dstIndex += w;
                 srcIndex += width;
             }

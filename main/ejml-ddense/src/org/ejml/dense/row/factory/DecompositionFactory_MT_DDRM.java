@@ -160,7 +160,7 @@ public class DecompositionFactory_MT_DDRM {
         } else {
             HessenbergSimilarDecomposition_DDRM hessenberg = new HessenbergSimilarDecomposition_MT_DDRM();
             WatchedDoubleStepQREigen_DDRM eigenQR = new WatchedDoubleStepQREigen_MT_DDRM();
-            return new WatchedDoubleStepQRDecomposition_DDRM(hessenberg,eigenQR,computeVectors);
+            return new WatchedDoubleStepQRDecomposition_DDRM(hessenberg, eigenQR, computeVectors);
         }
     }
 
@@ -180,7 +180,7 @@ public class DecompositionFactory_MT_DDRM {
 //            throw new RuntimeException("IMplement");
 ////            return new TridiagonalDecomposition_DDRB_to_DDRM();
 //        } else {
-            return new TridiagonalDecompositionHouseholder_MT_DDRM();
+        return new TridiagonalDecompositionHouseholder_MT_DDRM();
 //        }
     }
 

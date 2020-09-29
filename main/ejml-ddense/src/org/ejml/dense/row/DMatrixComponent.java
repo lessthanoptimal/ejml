@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-
 /**
  * Renders a matrix as an image.  Positive elements are shades of red, negative shades of blue, 0 is black.
  *
@@ -33,52 +32,48 @@ import java.awt.image.BufferedImage;
 public class DMatrixComponent extends JPanel {
     BufferedImage image;
 
-    public DMatrixComponent(int width , int height ) {
-        image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-        setPreferredSize(new Dimension(width,height));
-        setMinimumSize(new Dimension(width,height));
+    public DMatrixComponent( int width, int height ) {
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        setPreferredSize(new Dimension(width, height));
+        setMinimumSize(new Dimension(width, height));
     }
 
     public synchronized void setMatrix( DMatrixD1 A ) {
         double maxValue = CommonOps_DDRM.elementMaxAbs(A);
-        renderMatrix(A,image,maxValue);
+        renderMatrix(A, image, maxValue);
         repaint();
     }
 
-    public static void renderMatrix(DMatrixD1 M , BufferedImage image , double maxValue )
-    {
+    public static void renderMatrix( DMatrixD1 M, BufferedImage image, double maxValue ) {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        double widthStep = (double)M.numCols / image.getWidth();
-        double heightStep = (double)M.numRows / image.getHeight();
+        double widthStep = (double)M.numCols/image.getWidth();
+        double heightStep = (double)M.numRows/image.getHeight();
 
-        for( int i = 0; i < h; i++ ) {
-            for( int j = 0; j < w; j++ ) {
-                double value = M.get( (int)(i*heightStep) , (int)(j*widthStep) );
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                double value = M.get((int)(i*heightStep), (int)(j*widthStep));
 
-                if( value == 0 ){
-                    image.setRGB(j,i,255 << 24);
-                } else if( value > 0 ) {
-                    int p = 255-(int)(255.0*(value/maxValue));
+                if (value == 0) {
+                    image.setRGB(j, i, 255 << 24);
+                } else if (value > 0) {
+                    int p = 255 - (int)(255.0*(value/maxValue));
                     int rgb = 255 << 24 | 255 << 16 | p << 8 | p;
 
-                    image.setRGB(j,i,rgb);
+                    image.setRGB(j, i, rgb);
                 } else {
-                    int p = 255+(int)(255.0*(value/maxValue));
+                    int p = 255 + (int)(255.0*(value/maxValue));
                     int rgb = 255 << 24 | p << 16 | p << 8 | 255;
 
-                    image.setRGB(j,i,rgb);
+                    image.setRGB(j, i, rgb);
                 }
             }
         }
-
-
     }
 
     @Override
     public synchronized void paint( Graphics g ) {
-        g.drawImage(image,0,0,this);
+        g.drawImage(image, 0, 0, this);
     }
-
 }

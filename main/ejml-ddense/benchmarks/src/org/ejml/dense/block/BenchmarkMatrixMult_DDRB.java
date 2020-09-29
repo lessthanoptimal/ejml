@@ -37,68 +37,68 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkMatrixMult_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-//    @Param({"5","10","20","40","80","120"})
+    //    @Param({"5","10","20","40","80","120"})
     @Param({"80"})
     public int blockLength;
 
-    public DMatrixRBlock A,B,C;
-    public DSubmatrixD1 Asub,Bsub,Csub;
+    public DMatrixRBlock A, B, C;
+    public DSubmatrixD1 Asub, Bsub, Csub;
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = MatrixOps_DDRB.createRandom(size,size,-1,1, rand, blockLength);
-        B = MatrixOps_DDRB.createRandom(size,size,-1,1, rand, blockLength);
-        C = MatrixOps_DDRB.createRandom(size,size,-1,1, rand, blockLength);
+        A = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
+        B = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
+        C = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
 
-        Asub = new DSubmatrixD1(A,0, A.numRows, 0, A.numCols);
-        Bsub = new DSubmatrixD1(B,0, B.numRows, 0, B.numCols);
-        Csub = new DSubmatrixD1(C,0, C.numRows, 0, C.numCols);
+        Asub = new DSubmatrixD1(A, 0, A.numRows, 0, A.numCols);
+        Bsub = new DSubmatrixD1(B, 0, B.numRows, 0, B.numCols);
+        Csub = new DSubmatrixD1(C, 0, C.numRows, 0, C.numCols);
     }
 
     @Benchmark
     public void mult() {
-        MatrixMult_DDRB.mult(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.mult(blockLength, Asub, Bsub, Csub);
     }
 
     @Benchmark
     public void multMinus() {
-        MatrixMult_DDRB.multMinus(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.multMinus(blockLength, Asub, Bsub, Csub);
     }
 
     @Benchmark
     public void multPlus() {
-        MatrixMult_DDRB.multPlus(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.multPlus(blockLength, Asub, Bsub, Csub);
     }
 
     @Benchmark
     public void multMinusTransA() {
-        MatrixMult_DDRB.multMinusTransA(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.multMinusTransA(blockLength, Asub, Bsub, Csub);
     }
 
     @Benchmark
     public void multPlusTransA() {
-        MatrixMult_DDRB.multPlusTransA(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.multPlusTransA(blockLength, Asub, Bsub, Csub);
     }
 
     @Benchmark
     public void multTransA() {
-        MatrixMult_DDRB.multTransA(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.multTransA(blockLength, Asub, Bsub, Csub);
     }
 
     @Benchmark
     public void multTransB() {
-        MatrixMult_DDRB.multTransB(blockLength,Asub,Bsub,Csub);
+        MatrixMult_DDRB.multTransB(blockLength, Asub, Bsub, Csub);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkMatrixMult_DDRB.class.getSimpleName())
                 .build();

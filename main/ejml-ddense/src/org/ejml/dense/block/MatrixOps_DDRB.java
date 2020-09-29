@@ -41,6 +41,7 @@ import java.util.Random;
 public class MatrixOps_DDRB {
 
     //CONCURRENT_OMIT_BEGIN
+
     /**
      * Converts a row major matrix into a row major block matrix.
      *
@@ -58,7 +59,7 @@ public class MatrixOps_DDRB {
      * @param src Original DMatrixRMaj. Modified.
      * @param dst Equivalent DMatrixRBlock. Modified.
      */
-    public static DMatrixRBlock convertInplace( DMatrixRMaj src, @Nullable DMatrixRBlock dst ,
+    public static DMatrixRBlock convertInplace( DMatrixRMaj src, @Nullable DMatrixRBlock dst,
                                                 @Nullable DGrowArray workspace ) {
         if (dst == null)
             dst = new DMatrixRBlock();
@@ -125,7 +126,7 @@ public class MatrixOps_DDRB {
      * @param src Original DMatrixRBlock. Modified.
      * @param dst Equivalent DMatrixRMaj. Modified.
      */
-    public static DMatrixRMaj convertInplace( DMatrixRBlock src, @Nullable DMatrixRMaj dst ,
+    public static DMatrixRMaj convertInplace( DMatrixRBlock src, @Nullable DMatrixRMaj dst,
                                               @Nullable DGrowArray workspace ) {
         if (dst == null)
             dst = new DMatrixRMaj();
@@ -265,6 +266,7 @@ public class MatrixOps_DDRB {
     }
 
     //CONCURRENT_OMIT_BEGIN
+
     /**
      * Transposes a block matrix.
      *
@@ -645,9 +647,11 @@ public class MatrixOps_DDRB {
     static void checkShapeMult( int blockLength,
                                 DSubmatrixD1 A, DSubmatrixD1 B,
                                 DSubmatrixD1 C ) {
+        //@formatter:off
         int Arow = A.getRows(); int Acol = A.getCols();
         int Brow = B.getRows(); int Bcol = B.getCols();
         int Crow = C.getRows(); int Ccol = C.getCols();
+        //@formatter:on
 
         if (Arow != Crow)
             throw new RuntimeException("Mismatch A and C rows");

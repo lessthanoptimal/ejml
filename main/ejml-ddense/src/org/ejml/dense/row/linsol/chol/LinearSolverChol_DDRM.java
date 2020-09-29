@@ -25,7 +25,6 @@ import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionCommon_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
-
 /**
  * @author Peter Abeles
  */
@@ -37,18 +36,18 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
     double[] vv;
     double[] t;
 
-    public LinearSolverChol_DDRM(CholeskyDecompositionCommon_DDRM decomposer) {
+    public LinearSolverChol_DDRM( CholeskyDecompositionCommon_DDRM decomposer ) {
         this.decomposer = decomposer;
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
-        if( A.numRows != A.numCols )
+    public boolean setA( DMatrixRMaj A ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("Matrix must be square");
 
         _setA(A);
 
-        if( decomposer.decompose(A) ){
+        if (decomposer.decompose(A)) {
             n = A.numCols;
             vv = decomposer._getVV();
             t = decomposer.getT().data;
@@ -79,32 +78,32 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(DMatrixRMaj B , DMatrixRMaj X ) {
-        if( B.numRows != n ) {
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numRows != n) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
-        if( A == null )
+        if (A == null)
             throw new RuntimeException("Must call setA() first");
-        X.reshape(n,B.numCols);
+        X.reshape(n, B.numCols);
 
-        if(decomposer.isLower()) {
-            solveLower(A,B,X,vv);
+        if (decomposer.isLower()) {
+            solveLower(A, B, X, vv);
         } else {
             throw new RuntimeException("Implement");
         }
     }
 
-    public static void solveLower(DMatrixRMaj L , DMatrixRMaj B , DMatrixRMaj X , double[] vv) {
+    public static void solveLower( DMatrixRMaj L, DMatrixRMaj B, DMatrixRMaj X, double[] vv ) {
         final int numCols = B.numCols;
         final int N = L.numCols;
-        for( int j = 0; j < numCols; j++ ) {
-            for( int i = 0; i < N; i++ ) vv[i] = B.data[i*numCols+j];
+        for (int j = 0; j < numCols; j++) {
+            for (int i = 0; i < N; i++) vv[i] = B.data[i*numCols + j];
             // solve L*y=b storing y in x
-            TriangularSolver_DDRM.solveL(L.data,vv,N);
+            TriangularSolver_DDRM.solveL(L.data, vv, N);
 
             // solve L^T*x=y
-            TriangularSolver_DDRM.solveTranL(L.data,vv,N);
-            for( int i = 0; i < N; i++ ) X.data[i*numCols+j] = vv[i];
+            TriangularSolver_DDRM.solveTranL(L.data, vv, N);
+            for (int i = 0; i < N; i++) X.data[i*numCols + j] = vv[i];
         }
     }
 
@@ -115,16 +114,16 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void invert( DMatrixRMaj inv ) {
-        if( inv.numRows != n || inv.numCols != n ) {
+        if (inv.numRows != n || inv.numCols != n) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
-        if( inv.data == t ) {
+        if (inv.data == t) {
             throw new IllegalArgumentException("Passing in the same matrix that was decomposed.");
         }
 
         double[] a = inv.data;
 
-        if(decomposer.isLower()) {
+        if (decomposer.isLower()) {
             setToInverseL(a);
         } else {
             throw new RuntimeException("Implement");
@@ -134,32 +133,32 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
     /**
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
-    public void setToInverseL(double[] a) {
+    public void setToInverseL( double[] a ) {
         // TODO reorder these operations to avoid cache misses
-        
+
         // inverts the lower triangular system and saves the result
         // in the upper triangle to minimize cache misses
-        for( int i =0; i < n; i++ ) {
-            double el_ii = t[i*n+i];
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i==j) ? 1.0 : 0;
-                for( int k=i-1; k >=j; k-- ) {
-                    sum -= t[i*n+k]*a[j*n+k];
+        for (int i = 0; i < n; i++) {
+            double el_ii = t[i*n + i];
+            for (int j = 0; j <= i; j++) {
+                double sum = (i == j) ? 1.0 : 0;
+                for (int k = i - 1; k >= j; k--) {
+                    sum -= t[i*n + k]*a[j*n + k];
                 }
-                a[j*n+i] = sum / el_ii;
+                a[j*n + i] = sum/el_ii;
             }
         }
         // solve the system and handle the previous solution being in the upper triangle
         // takes advantage of symmetry
-        for( int i=n-1; i>=0; i-- ) {
-            double el_ii = t[i*n+i];
+        for (int i = n - 1; i >= 0; i--) {
+            double el_ii = t[i*n + i];
 
-            for( int j = 0; j <= i; j++ ) {
-                double sum = (i<j) ? 0 : a[j*n+i];
-                for( int k=i+1;k<n;k++) {
-                    sum -= t[k*n+i]*a[j*n+k];
+            for (int j = 0; j <= i; j++) {
+                double sum = (i < j) ? 0 : a[j*n + i];
+                for (int k = i + 1; k < n; k++) {
+                    sum -= t[k*n + i]*a[j*n + k];
                 }
-                a[i*n+j] = a[j*n+i] = sum / el_ii;
+                a[i*n + j] = a[j*n + i] = sum/el_ii;
             }
         }
     }

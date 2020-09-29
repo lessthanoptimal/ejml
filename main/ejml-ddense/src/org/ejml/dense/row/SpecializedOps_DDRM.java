@@ -25,7 +25,6 @@ import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * This contains less common or more specialized matrix operations.
  *
@@ -49,15 +48,15 @@ public class SpecializedOps_DDRM {
      * @param u A vector. Not modified.
      * @return An orthogonal reflector.
      */
-    public static DMatrixRMaj createReflector(DMatrix1Row u ) {
-        if( !MatrixFeatures_DDRM.isVector(u))
+    public static DMatrixRMaj createReflector( DMatrix1Row u ) {
+        if (!MatrixFeatures_DDRM.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
         double norm = NormOps_DDRM.fastNormF(u);
         double gamma = -2.0/(norm*norm);
 
         DMatrixRMaj Q = CommonOps_DDRM.identity(u.getNumElements());
-        CommonOps_DDRM.multAddTransB(gamma,u,u,Q);
+        CommonOps_DDRM.multAddTransB(gamma, u, u, Q);
 
         return Q;
     }
@@ -78,12 +77,12 @@ public class SpecializedOps_DDRM {
      * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
      * @return An orthogonal reflector.
      */
-    public static DMatrixRMaj createReflector(DMatrixRMaj u , double gamma) {
-        if( !MatrixFeatures_DDRM.isVector(u))
+    public static DMatrixRMaj createReflector( DMatrixRMaj u, double gamma ) {
+        if (!MatrixFeatures_DDRM.isVector(u))
             throw new IllegalArgumentException("u must be a vector");
 
         DMatrixRMaj Q = CommonOps_DDRM.identity(u.getNumElements());
-        CommonOps_DDRM.multAddTransB(-gamma,u,u,Q);
+        CommonOps_DDRM.multAddTransB(-gamma, u, u, Q);
 
         return Q;
     }
@@ -95,19 +94,18 @@ public class SpecializedOps_DDRM {
      * @param src The original matrix. Not modified.
      * @param dst A Matrix that is a row swapped copy of src. Modified.
      */
-    public static DMatrixRMaj copyChangeRow(int[] order, DMatrixRMaj src , @Nullable DMatrixRMaj dst )
-    {
-        if( dst == null ) {
-            dst = new DMatrixRMaj(src.numRows,src.numCols);
-        } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
+    public static DMatrixRMaj copyChangeRow( int[] order, DMatrixRMaj src, @Nullable DMatrixRMaj dst ) {
+        if (dst == null) {
+            dst = new DMatrixRMaj(src.numRows, src.numCols);
+        } else if (src.numRows != dst.numRows || src.numCols != dst.numCols) {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
 
-        for( int i = 0; i < src.numRows; i++ ) {
+        for (int i = 0; i < src.numRows; i++) {
             int indexDst = i*src.numCols;
             int indexSrc = order[i]*src.numCols;
 
-            System.arraycopy(src.data,indexSrc,dst.data,indexDst,src.numCols);
+            System.arraycopy(src.data, indexSrc, dst.data, indexDst, src.numCols);
         }
 
         return dst;
@@ -121,24 +119,24 @@ public class SpecializedOps_DDRM {
      * @param upper If the upper or lower triangle should be copied.
      * @return The copied matrix.
      */
-    public static DMatrixRMaj copyTriangle(DMatrixRMaj src ,@Nullable DMatrixRMaj dst , boolean upper ) {
-        if( dst == null ) {
-            dst = new DMatrixRMaj(src.numRows,src.numCols);
-        } else if( src.numRows != dst.numRows || src.numCols != dst.numCols ) {
+    public static DMatrixRMaj copyTriangle( DMatrixRMaj src, @Nullable DMatrixRMaj dst, boolean upper ) {
+        if (dst == null) {
+            dst = new DMatrixRMaj(src.numRows, src.numCols);
+        } else if (src.numRows != dst.numRows || src.numCols != dst.numCols) {
             throw new IllegalArgumentException("src and dst must have the same dimensions.");
         }
 
-        if( upper ) {
-            int N = Math.min(src.numRows,src.numCols);
-            for( int i = 0; i < N; i++ ) {
-                int index = i*src.numCols+i;
-                System.arraycopy(src.data,index,dst.data,index,src.numCols-i);
+        if (upper) {
+            int N = Math.min(src.numRows, src.numCols);
+            for (int i = 0; i < N; i++) {
+                int index = i*src.numCols + i;
+                System.arraycopy(src.data, index, dst.data, index, src.numCols - i);
             }
         } else {
-            for( int i = 0; i < src.numRows; i++ ) {
-                int length = Math.min(i+1,src.numCols);
+            for (int i = 0; i < src.numRows; i++) {
+                int length = Math.min(i + 1, src.numCols);
                 int index = i*src.numCols;
-                System.arraycopy(src.data,index,dst.data,index,length);
+                System.arraycopy(src.data, index, dst.data, index, length);
             }
         }
 
@@ -151,41 +149,42 @@ public class SpecializedOps_DDRM {
     public static void multLowerTranB( DMatrixRMaj mat ) {
         int m = mat.numCols;
         double[] L = mat.data;
-        for( int i = 0; i < m; i++ ) {
-            for( int j = m-1; j >= i; j-- ) {
+        for (int i = 0; i < m; i++) {
+            for (int j = m - 1; j >= i; j--) {
                 double val = 0;
-                for( int k = 0; k <= i; k++ ) {
-                    val += L[ i*m + k] * L[ j*m + k ];
+                for (int k = 0; k <= i; k++) {
+                    val += L[i*m + k]*L[j*m + k];
                 }
-                L[ i*m + j ] = val;
+                L[i*m + j] = val;
             }
         }
         // copy the results into the lower portion
-        for( int i = 0; i < m; i++ ) {
+        for (int i = 0; i < m; i++) {
             for (int j = 0; j < i; j++) {
-                L[i*m+j] = L[j*m+i];
+                L[i*m + j] = L[j*m + i];
             }
         }
     }
+
     /**
      * Performs L = L<sup>T</sup>*L
      */
     public static void multLowerTranA( DMatrixRMaj mat ) {
         int m = mat.numCols;
         double[] L = mat.data;
-        for( int i = 0; i < m; i++ ) {
-            for( int j = m-1; j >= i; j-- ) {
+        for (int i = 0; i < m; i++) {
+            for (int j = m - 1; j >= i; j--) {
                 double val = 0;
                 for (int k = j; k < m; k++) {
-                    val += L[ k*m + i] * L[ k*m + j ];
+                    val += L[k*m + i]*L[k*m + j];
                 }
-                L[ i*m + j ] = val;
+                L[i*m + j] = val;
             }
         }
         // copy the results into the lower portion
-        for( int i = 0; i < m; i++ ) {
+        for (int i = 0; i < m; i++) {
             for (int j = 0; j < i; j++) {
-                L[i*m+j] = L[j*m+i];
+                L[i*m + j] = L[j*m + i];
             }
         }
     }
@@ -200,39 +199,35 @@ public class SpecializedOps_DDRM {
      * This is often used as a cost function.
      * </p>
      *
-     * @see NormOps_DDRM#fastNormF
-     *
      * @param a m by n matrix. Not modified.
      * @param b m by n matrix. Not modified.
-     *
      * @return The F normal of the difference matrix.
+     * @see NormOps_DDRM#fastNormF
      */
-    public static double diffNormF(DMatrixD1 a , DMatrixD1 b )
-    {
-        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+    public static double diffNormF( DMatrixD1 a, DMatrixD1 b ) {
+        if (a.numRows != b.numRows || a.numCols != b.numCols) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
         }
 
         final int size = a.getNumElements();
 
-        DMatrixRMaj diff = new DMatrixRMaj(size,1);
+        DMatrixRMaj diff = new DMatrixRMaj(size, 1);
 
-        for( int i = 0; i < size; i++ ) {
-            diff.set(i , b.get(i) - a.get(i));
+        for (int i = 0; i < size; i++) {
+            diff.set(i, b.get(i) - a.get(i));
         }
         return NormOps_DDRM.normF(diff);
     }
 
-    public static double diffNormF_fast(DMatrixD1 a , DMatrixD1 b )
-    {
-        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+    public static double diffNormF_fast( DMatrixD1 a, DMatrixD1 b ) {
+        if (a.numRows != b.numRows || a.numCols != b.numCols) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
         }
 
         final int size = a.getNumElements();
 
-        double total=0;
-        for( int i = 0; i < size; i++ ) {
+        double total = 0;
+        for (int i = 0; i < size; i++) {
             double diff = b.get(i) - a.get(i);
             total += diff*diff;
         }
@@ -253,19 +248,17 @@ public class SpecializedOps_DDRM {
      *
      * @param a m by n matrix. Not modified.
      * @param b m by n matrix. Not modified.
-     *
      * @return The p=1 p-norm of the difference matrix.
      */
-    public static double diffNormP1(DMatrixD1 a , DMatrixD1 b )
-    {
-        if( a.numRows != b.numRows || a.numCols != b.numCols ) {
+    public static double diffNormP1( DMatrixD1 a, DMatrixD1 b ) {
+        if (a.numRows != b.numRows || a.numCols != b.numCols) {
             throw new IllegalArgumentException("Both matrices must have the same shape.");
         }
 
         final int size = a.getNumElements();
 
-        double total=0;
-        for( int i = 0; i < size; i++ ) {
+        double total = 0;
+        for (int i = 0; i < size; i++) {
             total += Math.abs(b.get(i) - a.get(i));
         }
         return total;
@@ -276,28 +269,27 @@ public class SpecializedOps_DDRM {
      * Performs the following operation:<br>
      * <br>
      * B = A + &alpha;I
-     * <p> 
+     * <p>
      *
      * @param A A square matrix.  Not modified.
      * @param B A square matrix that the results are saved to.  Modified.
      * @param alpha Scaling factor for the identity matrix.
      */
-    public static void addIdentity(DMatrix1Row A , DMatrix1Row B , double alpha )
-    {
-        if( A.numCols != A.numRows )
+    public static void addIdentity( DMatrix1Row A, DMatrix1Row B, double alpha ) {
+        if (A.numCols != A.numRows)
             throw new IllegalArgumentException("A must be square");
-        if( B.numCols != A.numCols || B.numRows != A.numRows )
+        if (B.numCols != A.numCols || B.numRows != A.numRows)
             throw new IllegalArgumentException("B must be the same shape as A");
 
         int n = A.numCols;
 
         int index = 0;
-        for( int i = 0; i < n; i++ ) {
-            for( int j = 0; j < n; j++ , index++) {
-                if( i == j ) {
-                    B.set( index , A.get(index) + alpha);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++, index++) {
+                if (i == j) {
+                    B.set(index, A.get(index) + alpha);
                 } else {
-                    B.set( index , A.get(index) );
+                    B.set(index, A.get(index));
                 }
             }
         }
@@ -318,14 +310,14 @@ public class SpecializedOps_DDRM {
      * @param offsetV First element in 'v' where the results are extracted to.
      * @param v Vector where the results are written to. Modified.
      */
-    public static void subvector(DMatrix1Row A, int rowA, int colA, int length , boolean row, int offsetV, DMatrix1Row v) {
-        if( row ) {
-            for( int i = 0; i < length; i++ ) {
-                v.set( offsetV +i , A.get(rowA,colA+i) );
+    public static void subvector( DMatrix1Row A, int rowA, int colA, int length, boolean row, int offsetV, DMatrix1Row v ) {
+        if (row) {
+            for (int i = 0; i < length; i++) {
+                v.set(offsetV + i, A.get(rowA, colA + i));
             }
         } else {
-            for( int i = 0; i < length; i++ ) {
-                v.set( offsetV +i , A.get(rowA+i,colA));
+            for (int i = 0; i < length; i++) {
+                v.set(offsetV + i, A.get(rowA + i, colA));
             }
         }
     }
@@ -337,24 +329,23 @@ public class SpecializedOps_DDRM {
      * @param column If true then column vectors will be created.
      * @return Set of vectors.
      */
-    public static DMatrixRMaj[] splitIntoVectors(DMatrix1Row A , boolean column )
-    {
+    public static DMatrixRMaj[] splitIntoVectors( DMatrix1Row A, boolean column ) {
         int w = column ? A.numCols : A.numRows;
 
         int M = column ? A.numRows : 1;
         int N = column ? 1 : A.numCols;
 
-        int o = Math.max(M,N);
+        int o = Math.max(M, N);
 
-        DMatrixRMaj[] ret  = new DMatrixRMaj[w];
+        DMatrixRMaj[] ret = new DMatrixRMaj[w];
 
-        for( int i = 0; i < w; i++ ) {
-            DMatrixRMaj a = new DMatrixRMaj(M,N);
+        for (int i = 0; i < w; i++) {
+            DMatrixRMaj a = new DMatrixRMaj(M, N);
 
-            if( column )
-                subvector(A,0,i,o,false,0,a);
+            if (column)
+                subvector(A, 0, i, o, false, 0, a);
             else
-                subvector(A,i,0,o,true,0,a);
+                subvector(A, i, 0, o, true, 0, a);
 
             ret[i] = a;
         }
@@ -378,23 +369,23 @@ public class SpecializedOps_DDRM {
      * @param transposed If the transpose of the matrix is returned.
      * @return A pivot matrix.
      */
-    public static DMatrixRMaj pivotMatrix(@Nullable DMatrixRMaj ret, int pivots[], int numPivots, boolean transposed ) {
+    public static DMatrixRMaj pivotMatrix( @Nullable DMatrixRMaj ret, int pivots[], int numPivots, boolean transposed ) {
 
-        if( ret == null ) {
+        if (ret == null) {
             ret = new DMatrixRMaj(numPivots, numPivots);
         } else {
-            if( ret.numCols != numPivots || ret.numRows != numPivots )
+            if (ret.numCols != numPivots || ret.numRows != numPivots)
                 throw new IllegalArgumentException("Unexpected matrix dimension");
             CommonOps_DDRM.fill(ret, 0);
         }
 
-        if( transposed ) {
-            for( int i = 0; i < numPivots; i++ ) {
-                ret.set(pivots[i],i,1);
+        if (transposed) {
+            for (int i = 0; i < numPivots; i++) {
+                ret.set(pivots[i], i, 1);
             }
         } else {
-            for( int i = 0; i < numPivots; i++ ) {
-                ret.set(i,pivots[i],1);
+            for (int i = 0; i < numPivots; i++) {
+                ret.set(i, pivots[i], 1);
             }
         }
 
@@ -408,12 +399,11 @@ public class SpecializedOps_DDRM {
      * @param T A matrix.
      * @return product of the diagonal elements.
      */
-    public static double diagProd( DMatrix1Row T )
-    {
+    public static double diagProd( DMatrix1Row T ) {
         double prod = 1.0;
-        int N = Math.min(T.numRows,T.numCols);
-        for( int i = 0; i < N; i++ ) {
-            prod *= T.unsafe_get(i,i);
+        int N = Math.min(T.numRows, T.numCols);
+        for (int i = 0; i < N; i++) {
+            prod *= T.unsafe_get(i, i);
         }
 
         return prod;
@@ -430,12 +420,12 @@ public class SpecializedOps_DDRM {
      * @return The max abs element value of the matrix.
      */
     public static double elementDiagonalMaxAbs( DMatrixD1 a ) {
-        final int size = Math.min(a.numRows,a.numCols);
+        final int size = Math.min(a.numRows, a.numCols);
 
         double max = 0;
-        for( int i = 0; i < size; i++ ) {
-            double val = Math.abs(a.get( i,i ));
-            if( val > max ) {
+        for (int i = 0; i < size; i++) {
+            double val = Math.abs(a.get(i, i));
+            if (val > max) {
                 max = val;
             }
         }
@@ -453,19 +443,18 @@ public class SpecializedOps_DDRM {
      * @param T A matrix.
      * @return the quality of the system.
      */
-    public static double qualityTriangular(DMatrixD1 T)
-    {
-        int N = Math.min(T.numRows,T.numCols);
+    public static double qualityTriangular( DMatrixD1 T ) {
+        int N = Math.min(T.numRows, T.numCols);
 
         // TODO make faster by just checking the upper triangular portion
         double max = elementDiagonalMaxAbs(T);
 
-        if( max == 0.0 )
+        if (max == 0.0)
             return 0.0;
 
         double quality = 1.0;
-        for( int i = 0; i < N; i++ ) {
-            quality *= T.unsafe_get(i,i)/max;
+        for (int i = 0; i < N; i++) {
+            quality *= T.unsafe_get(i, i)/max;
         }
 
         return Math.abs(quality);
@@ -478,17 +467,17 @@ public class SpecializedOps_DDRM {
      * @param m Matrix.
      * @return Sum of elements squared.
      */
-    public static double elementSumSq( DMatrixD1 m  ) {
+    public static double elementSumSq( DMatrixD1 m ) {
 
         // minimize round off error
         double maxAbs = CommonOps_DDRM.elementMaxAbs(m);
-        if( maxAbs == 0)
+        if (maxAbs == 0)
             return 0;
 
         double total = 0;
-        
+
         int N = m.getNumElements();
-        for( int i = 0; i < N; i++ ) {
+        for (int i = 0; i < N; i++) {
             double d = m.data[i]/maxAbs;
             total += d*d;
         }

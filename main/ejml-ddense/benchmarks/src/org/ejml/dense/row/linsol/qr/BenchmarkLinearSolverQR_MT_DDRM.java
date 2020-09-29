@@ -39,13 +39,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkLinearSolverQR_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000","2000"})
+    @Param({"1000", "2000"})
     public int size;
 
-    public DMatrixRMaj A,X,B;
+    public DMatrixRMaj A, X, B;
 
     LinearSolverChol_DDRM houseCol = new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true));
 
@@ -53,9 +53,9 @@ public class BenchmarkLinearSolverQR_MT_DDRM {
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
-        B = RandomMatrices_DDRM.rectangle(A.numRows,20,-1,1, rand);
-        X = new DMatrixRMaj(A.numRows,B.numCols);
+        A = RandomMatrices_DDRM.rectangle(size*2, size/2, -1, 1, rand);
+        B = RandomMatrices_DDRM.rectangle(A.numRows, 20, -1, 1, rand);
+        X = new DMatrixRMaj(A.numRows, B.numCols);
     }
 
     @Benchmark
@@ -63,10 +63,10 @@ public class BenchmarkLinearSolverQR_MT_DDRM {
         DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
         DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
         houseCol.setA(A);
-        houseCol.solve(B,X);
+        houseCol.solve(B, X);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkLinearSolverQR_MT_DDRM.class.getSimpleName())
                 .build();

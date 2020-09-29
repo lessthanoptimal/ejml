@@ -24,7 +24,6 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * Solver which uses an unrolled inverse to compute the inverse.  This can only invert matrices and not solve.
  * This is faster than LU inverse but only supports small matrices..
@@ -35,8 +34,8 @@ public class LinearSolverUnrolled_DDRM implements LinearSolverDense<DMatrixRMaj>
     @Nullable DMatrixRMaj A;
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
-        if( A.numRows != A.numCols)
+    public boolean setA( DMatrixRMaj A ) {
+        if (A.numRows != A.numCols)
             return false;
 
         this.A = A;
@@ -49,17 +48,17 @@ public class LinearSolverUnrolled_DDRM implements LinearSolverDense<DMatrixRMaj>
     }
 
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
         throw new RuntimeException("Not supported");
     }
 
     @Override
-    public void invert(DMatrixRMaj A_inv) {
-        if( A == null )
+    public void invert( DMatrixRMaj A_inv ) {
+        if (A == null)
             throw new RuntimeException("Must call setA() first");
-        if( A.numRows == 1 )
-            A_inv.set(0,  1.0/A.get(0));
-        UnrolledInverseFromMinor_DDRM.inv(A,A_inv);
+        if (A.numRows == 1)
+            A_inv.set(0, 1.0/A.get(0));
+        UnrolledInverseFromMinor_DDRM.inv(A, A_inv);
     }
 
     @Override

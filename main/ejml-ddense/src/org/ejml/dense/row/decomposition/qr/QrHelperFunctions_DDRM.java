@@ -45,29 +45,29 @@ import org.ejml.data.DMatrixRMaj;
  */
 public class QrHelperFunctions_DDRM {
     //CONCURRENT_OMIT_BEGIN
-    public static double findMax( double[] u, int startU , int length ) {
+    public static double findMax( double[] u, int startU, int length ) {
         double max = -1;
 
         int index = startU;
         int stopIndex = startU + length;
-        for( ; index < stopIndex; index++ ) {
+        for (; index < stopIndex; index++) {
             double val = u[index];
             val = (val < 0.0) ? -val : val;
-            if( val > max )
+            if (val > max)
                 max = val;
         }
 
         return max;
     }
 
-    public static void divideElements(final int j, final int numRows ,
-                                      final double[] u, final double u_0 ) {
+    public static void divideElements( final int j, final int numRows,
+                                       final double[] u, final double u_0 ) {
 //        double div_u = 1.0/u_0;
 //
 //        if( Double.isInfinite(div_u)) {
-            for( int i = j; i < numRows; i++ ) {
-                u[i] /= u_0;
-            }
+        for (int i = j; i < numRows; i++) {
+            u[i] /= u_0;
+        }
 //        } else {
 //            for( int i = j; i < numRows; i++ ) {
 //                u[i] *= div_u;
@@ -75,13 +75,13 @@ public class QrHelperFunctions_DDRM {
 //        }
     }
 
-    public static void divideElements(int j, int numRows , double[] u, int startU , double u_0 ) {
+    public static void divideElements( int j, int numRows, double[] u, int startU, double u_0 ) {
 //        double div_u = 1.0/u_0;
 //
 //        if( Double.isInfinite(div_u)) {
-            for( int i = j; i < numRows; i++ ) {
-                u[i+startU] /= u_0;
-            }
+        for (int i = j; i < numRows; i++) {
+            u[i + startU] /= u_0;
+        }
 //        } else {
 //            for( int i = j; i < numRows; i++ ) {
 //                u[i+startU] *= div_u;
@@ -89,15 +89,15 @@ public class QrHelperFunctions_DDRM {
 //        }
     }
 
-    public static void divideElements_Brow(int j, int numRows , double[] u,
-                                           double[] b, int startB ,
-                                           double u_0 ) {
+    public static void divideElements_Brow( int j, int numRows, double[] u,
+                                            double[] b, int startB,
+                                            double u_0 ) {
 //        double div_u = 1.0/u_0;
 //
 //        if( Double.isInfinite(div_u)) {
-            for( int i = j; i < numRows; i++ ) {
-                u[i] = b[i+startB] /= u_0;
-            }
+        for (int i = j; i < numRows; i++) {
+            u[i] = b[i + startB] /= u_0;
+        }
 //        } else {
 //            for( int i = j; i < numRows; i++ ) {
 //                u[i] = b[i+startB] *= div_u;
@@ -105,17 +105,17 @@ public class QrHelperFunctions_DDRM {
 //        }
     }
 
-    public static void divideElements_Bcol(int j, int numRows , int numCols ,
-                                           double[] u,
-                                           double[] b, int startB ,
-                                           double u_0 ) {
+    public static void divideElements_Bcol( int j, int numRows, int numCols,
+                                            double[] u,
+                                            double[] b, int startB,
+                                            double u_0 ) {
 //        double div_u = 1.0/u_0;
 //
 //        if( Double.isInfinite(div_u)) {
-            int indexB = j*numCols+startB;
-            for( int i = j; i < numRows; i++ , indexB += numCols ) {
-                b[indexB] = u[i] /= u_0;
-            }
+        int indexB = j*numCols + startB;
+        for (int i = j; i < numRows; i++, indexB += numCols) {
+            b[indexB] = u[i] /= u_0;
+        }
 //        } else {
 //            int indexB = j*numCols+startB;
 //            for( int i = j; i < numRows; i++ , indexB += numCols ) {
@@ -124,17 +124,17 @@ public class QrHelperFunctions_DDRM {
 //        }
     }
 
-    public static double computeTauAndDivide(int j, int numRows , double[] u, int startU , double max) {
+    public static double computeTauAndDivide( int j, int numRows, double[] u, int startU, double max ) {
         // compute the norm2 of the matrix, with each element
         // normalized by the max value to avoid overflow problems
         double tau = 0;
 //        double div_max = 1.0/max;
 //        if( Double.isInfinite(div_max)) {
-            // more accurate
-            for( int i = j; i < numRows; i++ ) {
-                double d = u[startU+i] /= max;
-                tau += d*d;
-            }
+        // more accurate
+        for (int i = j; i < numRows; i++) {
+            double d = u[startU + i] /= max;
+            tau += d*d;
+        }
 //        } else {
 //            // faster
 //            for( int i = j; i < numRows; i++ ) {
@@ -144,7 +144,7 @@ public class QrHelperFunctions_DDRM {
 //        }
         tau = Math.sqrt(tau);
 
-        if( u[startU+j] < 0 )
+        if (u[startU + j] < 0)
             tau = -tau;
 
         return tau;
@@ -171,15 +171,15 @@ public class QrHelperFunctions_DDRM {
      * @param max Max value in 'u' that is used to normalize it.
      * @return norm2 of 'u'
      */
-    public static double computeTauAndDivide(final int j, final int numRows ,
-                                             final double[] u , final double max) {
+    public static double computeTauAndDivide( final int j, final int numRows,
+                                              final double[] u, final double max ) {
         double tau = 0;
 //        double div_max = 1.0/max;
 //        if( Double.isInfinite(div_max)) {
-            for( int i = j; i < numRows; i++ ) {
-                double d = u[i] /= max;
-                tau += d*d;
-            }
+        for (int i = j; i < numRows; i++) {
+            double d = u[i] /= max;
+            tau += d*d;
+        }
 //        } else {
 //            for( int i = j; i < numRows; i++ ) {
 //                double d = u[i] *= div_max;
@@ -188,7 +188,7 @@ public class QrHelperFunctions_DDRM {
 //        }
         tau = Math.sqrt(tau);
 
-        if( u[j] < 0 )
+        if (u[j] < 0)
             tau = -tau;
 
         return tau;
@@ -211,11 +211,10 @@ public class QrHelperFunctions_DDRM {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultR(DMatrixRMaj A , double[] u, double gamma ,
-                                        int colA0,
-                                        int w0, int w1 ,
-                                        double[] _temp)
-    {
+    public static void rank1UpdateMultR( DMatrixRMaj A, double[] u, double gamma,
+                                         int colA0,
+                                         int w0, int w1,
+                                         double[] _temp ) {
 //        for( int i = colA0; i < A.numCols; i++ ) {
 //            double val = 0;
 //
@@ -226,30 +225,30 @@ public class QrHelperFunctions_DDRM {
 //        }
 
         // reordered to reduce cpu cache issues
-        for( int i = colA0; i < A.numCols; i++ ) {
-            _temp[i] = u[w0]*A.data[w0 *A.numCols +i];
+        for (int i = colA0; i < A.numCols; i++) {
+            _temp[i] = u[w0]*A.data[w0*A.numCols + i];
         }
 
-        for( int k = w0+1; k < w1; k++ ) {
+        for (int k = w0 + 1; k < w1; k++) {
             int indexA = k*A.numCols + colA0;
             double valU = u[k];
-            for( int i = colA0; i < A.numCols; i++ ) {
+            for (int i = colA0; i < A.numCols; i++) {
                 _temp[i] += valU*A.data[indexA++];
             }
         }
 
-        for( int i = colA0; i < A.numCols; i++ ) {
+        for (int i = colA0; i < A.numCols; i++) {
             _temp[i] *= gamma;
         }
 
         // end of reorder
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(w0, w1, i->{
-        for( int i = w0; i < w1; i++ ) {
+        for (int i = w0; i < w1; i++) {
             double valU = u[i];
 
             int indexA = i*A.numCols + colA0;
-            for( int j = colA0; j < A.numCols; j++ ) {
+            for (int j = colA0; j < A.numCols; j++) {
                 A.data[indexA++] -= valU*_temp[j];
             }
         }
@@ -257,12 +256,11 @@ public class QrHelperFunctions_DDRM {
     }
 
     // Useful for concurrent implementations where you don't want to modify u[0] to set it to 1.0
-    public static void rank1UpdateMultR_u0(DMatrixRMaj A , double[] u, final double u_0,
-                                           final double gamma ,
-                                           final int colA0,
-                                           final int w0, final int w1 ,
-                                           final double[] _temp)
-    {
+    public static void rank1UpdateMultR_u0( DMatrixRMaj A, double[] u, final double u_0,
+                                            final double gamma,
+                                            final int colA0,
+                                            final int w0, final int w1,
+                                            final double[] _temp ) {
 //        for( int i = colA0; i < A.numCols; i++ ) {
 //            double val = 0;
 //
@@ -273,49 +271,48 @@ public class QrHelperFunctions_DDRM {
 //        }
 
         // reordered to reduce cpu cache issues
-        for( int i = colA0; i < A.numCols; i++ ) {
-            _temp[i] = u_0*A.data[w0 *A.numCols +i];
+        for (int i = colA0; i < A.numCols; i++) {
+            _temp[i] = u_0*A.data[w0*A.numCols + i];
         }
 
-        for( int k = w0+1; k < w1; k++ ) {
+        for (int k = w0 + 1; k < w1; k++) {
             int indexA = k*A.numCols + colA0;
             double valU = u[k];
-            for( int i = colA0; i < A.numCols; i++ ) {
+            for (int i = colA0; i < A.numCols; i++) {
                 _temp[i] += valU*A.data[indexA++];
             }
         }
 
-        for( int i = colA0; i < A.numCols; i++ ) {
+        for (int i = colA0; i < A.numCols; i++) {
             _temp[i] *= gamma;
         }
 
         // end of reorder
         {
             int indexA = w0*A.numCols + colA0;
-            for( int j = colA0; j < A.numCols; j++ ) {
+            for (int j = colA0; j < A.numCols; j++) {
                 A.data[indexA++] -= u_0*_temp[j];
             }
         }
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(w0+1, w1, i->{
-        for( int i = w0+1; i < w1; i++ ) {
+        for (int i = w0 + 1; i < w1; i++) {
             final double valU = u[i];
 
             int indexA = i*A.numCols + colA0;
-            for( int j = colA0; j < A.numCols; j++ ) {
+            for (int j = colA0; j < A.numCols; j++) {
                 A.data[indexA++] -= valU*_temp[j];
             }
         }
         //CONCURRENT_ABOVE });
     }
 
-    public static void rank1UpdateMultR(DMatrixRMaj A,
-                                        double[] u, int offsetU,
-                                        double gamma,
-                                        int colA0,
-                                        int w0, int w1,
-                                        double[] _temp)
-    {
+    public static void rank1UpdateMultR( DMatrixRMaj A,
+                                         double[] u, int offsetU,
+                                         double gamma,
+                                         int colA0,
+                                         int w0, int w1,
+                                         double[] _temp ) {
 //        for( int i = colA0; i < A.numCols; i++ ) {
 //            double val = 0;
 //
@@ -326,29 +323,29 @@ public class QrHelperFunctions_DDRM {
 //        }
 
         // reordered to reduce cpu cache issues
-        for( int i = colA0; i < A.numCols; i++ ) {
-            _temp[i] = u[w0+offsetU]*A.data[w0 *A.numCols +i];
+        for (int i = colA0; i < A.numCols; i++) {
+            _temp[i] = u[w0 + offsetU]*A.data[w0*A.numCols + i];
         }
 
-        for( int k = w0+1; k < w1; k++ ) {
+        for (int k = w0 + 1; k < w1; k++) {
             int indexA = k*A.numCols + colA0;
-            double valU = u[k+offsetU];
-            for( int i = colA0; i < A.numCols; i++ ) {
+            double valU = u[k + offsetU];
+            for (int i = colA0; i < A.numCols; i++) {
                 _temp[i] += valU*A.data[indexA++];
             }
         }
-        for( int i = colA0; i < A.numCols; i++ ) {
+        for (int i = colA0; i < A.numCols; i++) {
             _temp[i] *= gamma;
         }
 
         // end of reorder
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(w0, w1, i->{
-        for( int i = w0; i < w1; i++ ) {
-            double valU = u[i+offsetU];
+        for (int i = w0; i < w1; i++) {
+            double valU = u[i + offsetU];
 
             int indexA = i*A.numCols + colA0;
-            for( int j = colA0; j < A.numCols; j++ ) {
+            for (int j = colA0; j < A.numCols; j++) {
                 A.data[indexA++] -= valU*_temp[j];
             }
         }
@@ -371,23 +368,22 @@ public class QrHelperFunctions_DDRM {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultL(DMatrixRMaj A , double[] u,
-                                        double gamma ,
-                                        int colA0,
-                                        int w0 , int w1 )
-    {
+    public static void rank1UpdateMultL( DMatrixRMaj A, double[] u,
+                                         double gamma,
+                                         int colA0,
+                                         int w0, int w1 ) {
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(colA0, A.numRows, i->{
-        for( int i = colA0; i < A.numRows; i++ ) {
-            int startIndex = i*A.numCols+w0;
+        for (int i = colA0; i < A.numRows; i++) {
+            int startIndex = i*A.numCols + w0;
             double sum = 0;
             int rowIndex = startIndex;
-            for( int j = w0; j < w1; j++ ) {
+            for (int j = w0; j < w1; j++) {
                 sum += A.data[rowIndex++]*u[j];
             }
             sum = -gamma*sum;
 
             rowIndex = startIndex;
-            for( int j = w0; j < w1; j++ ) {
+            for (int j = w0; j < w1; j++) {
                 A.data[rowIndex++] += sum*u[j];
             }
         }

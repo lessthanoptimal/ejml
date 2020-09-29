@@ -31,16 +31,14 @@ import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
  * @author Peter Abeles
  */
 public class BidiagonalDecompositionRow_MT_DDRM
-    extends BidiagonalDecompositionRow_DDRM
-{
+        extends BidiagonalDecompositionRow_DDRM {
     @Override
-    protected void rank1UpdateMultL(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+    protected void rank1UpdateMultL( DMatrixRMaj A, double gamma, int colA0, int w0, int w1 ) {
         QrHelperFunctions_MT_DDRM.rank1UpdateMultL(A, u, gamma, colA0, w0, w1);
     }
 
     @Override
-    protected void rank1UpdateMultR(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+    protected void rank1UpdateMultR( DMatrixRMaj A, double gamma, int colA0, int w0, int w1 ) {
         QrHelperFunctions_MT_DDRM.rank1UpdateMultR(A, u, gamma, colA0, w0, w1, this.b);
     }
-
 }

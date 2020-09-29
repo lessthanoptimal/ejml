@@ -24,7 +24,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 
-
 /**
  * Generic interface for wrapping a {@link DMatrixRBlock} decomposition for
  * processing of {@link DMatrixRMaj}.
@@ -39,14 +38,14 @@ public class BaseDecomposition_DDRB_to_DDRM implements DecompositionInterface<DM
     protected DMatrixRBlock Ablock = new DMatrixRBlock();
     protected int blockLength;
 
-    public BaseDecomposition_DDRB_to_DDRM(DecompositionInterface<DMatrixRBlock> alg,
-                                        int blockLength) {
+    public BaseDecomposition_DDRB_to_DDRM( DecompositionInterface<DMatrixRBlock> alg,
+                                           int blockLength ) {
         this.alg = alg;
         this.blockLength = blockLength;
     }
 
     @Override
-    public boolean decompose(DMatrixRMaj A) {
+    public boolean decompose( DMatrixRMaj A ) {
         Ablock.numRows = A.numRows;
         Ablock.numCols = A.numCols;
         Ablock.blockLength = blockLength;
@@ -54,20 +53,20 @@ public class BaseDecomposition_DDRB_to_DDRM implements DecompositionInterface<DM
 
         // doing an in-place convert is much more memory efficient at the cost of a little
         // but of CPU
-        MatrixOps_DDRB.convertRowToBlock(A.numRows,A.numCols,Ablock.blockLength,A.data,workspace);
+        MatrixOps_DDRB.convertRowToBlock(A.numRows, A.numCols, Ablock.blockLength, A.data, workspace);
 
         boolean ret = alg.decompose(Ablock);
 
         // convert it back to the normal format if it wouldn't have been modified
-        if( !alg.inputModified() ) {
-            MatrixOps_DDRB.convertBlockToRow(A.numRows,A.numCols,Ablock.blockLength,A.data,workspace);
+        if (!alg.inputModified()) {
+            MatrixOps_DDRB.convertBlockToRow(A.numRows, A.numCols, Ablock.blockLength, A.data, workspace);
         }
 
         return ret;
     }
 
-    public void convertBlockToRow(int numRows , int numCols , double[] data) {
-        MatrixOps_DDRB.convertBlockToRow(numRows,numCols,Ablock.blockLength,data,workspace);
+    public void convertBlockToRow( int numRows, int numCols, double[] data ) {
+        MatrixOps_DDRB.convertBlockToRow(numRows, numCols, Ablock.blockLength, data, workspace);
     }
 
     @Override

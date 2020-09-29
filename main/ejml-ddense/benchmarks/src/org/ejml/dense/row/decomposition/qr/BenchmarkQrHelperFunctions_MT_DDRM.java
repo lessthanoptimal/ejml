@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkQrHelperFunctions_MT_DDRM {
     @Param({"1000"})
     public int size;
@@ -47,7 +47,7 @@ public class BenchmarkQrHelperFunctions_MT_DDRM {
     public void setup() {
         Random rand = new Random(234);
 
-        Q = RandomMatrices_DDRM.rectangle(size,size,-1,1, rand);
+        Q = RandomMatrices_DDRM.rectangle(size, size, -1, 1, rand);
 
         v = new double[size];
         u = new double[size];
@@ -71,7 +71,7 @@ public class BenchmarkQrHelperFunctions_MT_DDRM {
         QrHelperFunctions_MT_DDRM.rank1UpdateMultL(Q, u, 1.0, 0, 0, size);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkQrHelperFunctions_MT_DDRM.class.getSimpleName())
                 .build();

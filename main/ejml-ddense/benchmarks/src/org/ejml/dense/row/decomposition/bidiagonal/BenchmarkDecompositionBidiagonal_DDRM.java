@@ -34,13 +34,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionBidiagonal_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000"})
     public int size;
 
-    public DMatrixRMaj S,T;
+    public DMatrixRMaj S, T;
 
     BidiagonalDecompositionRow_DDRM decompRow = new BidiagonalDecompositionRow_DDRM();
     BidiagonalDecompositionTall_DDRM decompTall = new BidiagonalDecompositionTall_DDRM();
@@ -49,8 +49,8 @@ public class BenchmarkDecompositionBidiagonal_DDRM {
     public void setup() {
         Random rand = new Random(234);
 
-        S = RandomMatrices_DDRM.rectangle(size,size,-1,1, rand);
-        T = RandomMatrices_DDRM.rectangle(size*2,size/2,-1,1, rand);
+        S = RandomMatrices_DDRM.rectangle(size, size, -1, 1, rand);
+        T = RandomMatrices_DDRM.rectangle(size*2, size/2, -1, 1, rand);
     }
 
     @Benchmark
@@ -73,7 +73,7 @@ public class BenchmarkDecompositionBidiagonal_DDRM {
         decompTall.decompose(T.copy());
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionBidiagonal_DDRM.class.getSimpleName())
                 .build();

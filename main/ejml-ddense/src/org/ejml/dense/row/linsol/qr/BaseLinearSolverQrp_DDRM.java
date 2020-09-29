@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -68,14 +68,14 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
     // if true then only the basic solution will be found
     protected boolean norm2Solution;
 
-    protected DMatrixRMaj Y = new DMatrixRMaj(1,1);
-    protected DMatrixRMaj R = new DMatrixRMaj(1,1);
-    
+    protected DMatrixRMaj Y = new DMatrixRMaj(1, 1);
+    protected DMatrixRMaj R = new DMatrixRMaj(1, 1);
+
     // stores sub-matrices inside the R matrix
-    protected DMatrixRMaj R11 = new DMatrixRMaj(1,1);
-    
+    protected DMatrixRMaj R11 = new DMatrixRMaj(1, 1);
+
     // store an identity matrix for computing the inverse
-    protected DMatrixRMaj I = new DMatrixRMaj(1,1);
+    protected DMatrixRMaj I = new DMatrixRMaj(1, 1);
 
     // rank of the system matrix
     protected int rank;
@@ -83,7 +83,7 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
     protected LinearSolverDense<DMatrixRMaj> internalSolver = LinearSolverFactory_DDRM.leastSquares(1, 1);
 
     // used to compute optimal 2-norm solution
-    private DMatrixRMaj W = new DMatrixRMaj(1,1);
+    private DMatrixRMaj W = new DMatrixRMaj(1, 1);
 
     /**
      * Configures internal parameters.
@@ -91,49 +91,48 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
      * @param decomposition Used to solve the linear system.
      * @param norm2Solution If true then the optimal 2-norm solution will be computed for degenerate systems.
      */
-    protected BaseLinearSolverQrp_DDRM(QRPDecomposition_F64<DMatrixRMaj> decomposition,
-                                      boolean norm2Solution)
-    {
+    protected BaseLinearSolverQrp_DDRM( QRPDecomposition_F64<DMatrixRMaj> decomposition,
+                                        boolean norm2Solution ) {
         this.decomposition = decomposition;
         this.norm2Solution = norm2Solution;
 
-        if( internalSolver.modifiesA() )
+        if (internalSolver.modifiesA())
             internalSolver = new LinearSolverSafe<DMatrixRMaj>(internalSolver);
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
+    public boolean setA( DMatrixRMaj A ) {
         _setA(A);
 
-        if( !decomposition.decompose(A) )
+        if (!decomposition.decompose(A))
             return false;
 
         rank = decomposition.getRank();
 
-        R.reshape(numRows,numCols);
-        decomposition.getR(R,false);
+        R.reshape(numRows, numCols);
+        decomposition.getR(R, false);
 
         // extract the r11 triangle sub matrix
         R11.reshape(rank, rank);
         CommonOps_DDRM.extract(R, 0, rank, 0, rank, R11, 0, 0);
 
-        if( norm2Solution && rank < numCols ) {
+        if (norm2Solution && rank < numCols) {
             // extract the R12 sub-matrix
-            W.reshape(rank,numCols - rank);
-            CommonOps_DDRM.extract(R,0,rank,rank,numCols,W,0,0);
+            W.reshape(rank, numCols - rank);
+            CommonOps_DDRM.extract(R, 0, rank, rank, numCols, W, 0, 0);
 
             // W=inv(R11)*R12
             TriangularSolver_DDRM.solveU(R11.data, 0, R11.numCols, R11.numCols, W.data, 0, W.numCols, W.numCols);
 
             // set the identity matrix in the upper portion
-            W.reshape(numCols, W.numCols,true);
+            W.reshape(numCols, W.numCols, true);
 
-            for( int i = 0; i < numCols-rank; i++ ) {
-                for( int j = 0; j < numCols-rank; j++ ) {
-                    if( i == j )
-                        W.set(i+rank,j,-1);
+            for (int i = 0; i < numCols - rank; i++) {
+                for (int j = 0; j < numCols - rank; j++) {
+                    if (i == j)
+                        W.set(i + rank, j, -1);
                     else
-                        W.set(i+rank,j,0);
+                        W.set(i + rank, j, 0);
                 }
             }
         }
@@ -156,7 +155,6 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
      *
      *       || x_b - P*[ R_11^-1 * R_12 ] * z ||2
      * min z ||         [ - I_{n-r}      ]     ||
-     *
      * </pre>
      *
      * @param X basic solution, also output solution
@@ -166,9 +164,9 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
 
         // compute the z which will minimize the 2-norm of X
         // because of the identity matrix tacked onto the end 'A' should never be singular
-        if( !internalSolver.setA(W) )
+        if (!internalSolver.setA(W))
             throw new RuntimeException("This should never happen.  Is input NaN?");
-        z.reshape(numCols-rank,1);
+        z.reshape(numCols - rank, 1);
         internalSolver.solve(X, z);
 
         // compute X by tweaking the original
@@ -176,8 +174,8 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
     }
 
     @Override
-    public void invert(DMatrixRMaj A_inv) {
-        if( A_inv.numCols != numRows || A_inv.numRows != numCols )
+    public void invert( DMatrixRMaj A_inv ) {
+        if (A_inv.numCols != numRows || A_inv.numRows != numCols)
             throw new IllegalArgumentException("Unexpected dimensions for A_inv");
 
         I.reshape(numRows, numRows);

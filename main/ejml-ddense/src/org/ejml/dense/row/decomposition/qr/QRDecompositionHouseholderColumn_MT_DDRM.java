@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * <p>
  * Concurrent extension of {@link QRDecompositionHouseholderColumn_DDRM}.
@@ -32,17 +31,16 @@ import org.jetbrains.annotations.Nullable;
  * @author Peter Abeles
  */
 @SuppressWarnings("NullAway.Init")
-public class QRDecompositionHouseholderColumn_MT_DDRM extends QRDecompositionHouseholderColumn_DDRM
-{
+public class QRDecompositionHouseholderColumn_MT_DDRM extends QRDecompositionHouseholderColumn_DDRM {
     @Override
-    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
-        if( compact ) {
-            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,minLength);
+    public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q, boolean compact ) {
+        if (compact) {
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q, numRows, minLength);
         } else {
-            Q = UtilDecompositons_DDRM.ensureIdentity(Q,numRows,numRows);
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q, numRows, numRows);
         }
 
-        for( int j = minLength-1; j >= 0; j-- ) {
+        for (int j = minLength - 1; j >= 0; j--) {
             double[] u = dataQR[j];
 
             // This is a fairly modest speed up since only one of the loops can be made concurrent
@@ -53,21 +51,20 @@ public class QRDecompositionHouseholderColumn_MT_DDRM extends QRDecompositionHou
     }
 
     @Override
-    protected void updateA( int w )
-    {
+    protected void updateA( int w ) {
         final double[] u = dataQR[w];
 
-        EjmlConcurrency.loopFor(w+1,numCols,j->{
+        EjmlConcurrency.loopFor(w + 1, numCols, j -> {
             final double[] colQ = dataQR[j];
             double val = colQ[w];
 
-            for( int k = w+1; k < numRows; k++ ) {
+            for (int k = w + 1; k < numRows; k++) {
                 val += u[k]*colQ[k];
             }
             val *= gamma;
 
             colQ[w] -= val;
-            for( int i = w+1; i < numRows; i++ ) {
+            for (int i = w + 1; i < numRows; i++) {
                 colQ[i] -= u[i]*val;
             }
         });

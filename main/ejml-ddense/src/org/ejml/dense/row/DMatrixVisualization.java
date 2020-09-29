@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixD1;
 import javax.swing.*;
 import java.awt.*;
 
-
 /**
  * <p>
  * Functions for visualizing matrices in a GUI matrices.
@@ -45,25 +44,24 @@ public class DMatrixVisualization {
      * @param A A matrix.
      * @param title Name of the window.
      */
-    public static void show(DMatrixD1 A , String title ) {
+    public static void show( DMatrixD1 A, String title ) {
         JFrame frame = new JFrame(title);
 
         int width = 300;
         int height = 300;
 
-        if( A.numRows > A.numCols) {
+        if (A.numRows > A.numCols) {
             width = width*A.numCols/A.numRows;
         } else {
             height = height*A.numRows/A.numCols;
         }
 
-        DMatrixComponent panel = new DMatrixComponent(width,height);
+        DMatrixComponent panel = new DMatrixComponent(width, height);
         panel.setMatrix(A);
 
         frame.add(panel, BorderLayout.CENTER);
 
         frame.pack();
         frame.setVisible(true);
-
     }
 }

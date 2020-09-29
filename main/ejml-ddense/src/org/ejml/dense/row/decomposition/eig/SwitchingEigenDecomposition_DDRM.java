@@ -25,11 +25,9 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
-
 /**
  * Checks to see what type of matrix is being decomposed and calls different eigenvalue decomposition
  * algorithms depending on the results.  This primarily checks to see if the matrix is symmetric or not.
- *
  *
  * @author Peter Abeles
  */
@@ -45,29 +43,27 @@ public class SwitchingEigenDecomposition_DDRM
     // should it compute eigenvectors or just eigenvalues?
     boolean computeVectors;
 
-    DMatrixRMaj A = new DMatrixRMaj(1,1);
+    DMatrixRMaj A = new DMatrixRMaj(1, 1);
 
     /**
-     *
      * @param tol Tolerance for a matrix being symmetric
      */
-    public SwitchingEigenDecomposition_DDRM(int matrixSize , boolean computeVectors , double tol ) {
-        symmetricAlg = DecompositionFactory_DDRM.eig(matrixSize,computeVectors,true);
-        generalAlg = DecompositionFactory_DDRM.eig(matrixSize,computeVectors,false);
+    public SwitchingEigenDecomposition_DDRM( int matrixSize, boolean computeVectors, double tol ) {
+        symmetricAlg = DecompositionFactory_DDRM.eig(matrixSize, computeVectors, true);
+        generalAlg = DecompositionFactory_DDRM.eig(matrixSize, computeVectors, false);
         this.computeVectors = computeVectors;
         this.tol = tol;
     }
 
-    public SwitchingEigenDecomposition_DDRM(EigenDecomposition_F64<DMatrixRMaj> symmetricAlg,
-                                            EigenDecomposition_F64<DMatrixRMaj> generalAlg, double tol ) {
+    public SwitchingEigenDecomposition_DDRM( EigenDecomposition_F64<DMatrixRMaj> symmetricAlg,
+                                             EigenDecomposition_F64<DMatrixRMaj> generalAlg, double tol ) {
         this.symmetricAlg = symmetricAlg;
         this.generalAlg = generalAlg;
         this.tol = tol;
     }
 
-
-    public SwitchingEigenDecomposition_DDRM(int matrixSize ) {
-        this(matrixSize,true, UtilEjml.TEST_F64);
+    public SwitchingEigenDecomposition_DDRM( int matrixSize ) {
+        this(matrixSize, true, UtilEjml.TEST_F64);
     }
 
     @Override
@@ -77,14 +73,14 @@ public class SwitchingEigenDecomposition_DDRM
     }
 
     @Override
-    public Complex_F64 getEigenvalue(int index) {
+    public Complex_F64 getEigenvalue( int index ) {
         return symmetric ? symmetricAlg.getEigenvalue(index) :
                 generalAlg.getEigenvalue(index);
     }
 
     @Override
-    public DMatrixRMaj getEigenVector(int index) {
-        if( !computeVectors )
+    public DMatrixRMaj getEigenVector( int index ) {
+        if (!computeVectors)
             throw new IllegalArgumentException("Configured to not compute eignevectors");
 
         return symmetric ? symmetricAlg.getEigenVector(index) :
@@ -92,15 +88,14 @@ public class SwitchingEigenDecomposition_DDRM
     }
 
     @Override
-    public boolean decompose(DMatrixRMaj orig) {
+    public boolean decompose( DMatrixRMaj orig ) {
         A.set(orig);
 
-        symmetric = MatrixFeatures_DDRM.isSymmetric(A,tol);
+        symmetric = MatrixFeatures_DDRM.isSymmetric(A, tol);
 
         return symmetric ?
                 symmetricAlg.decompose(A) :
                 generalAlg.decompose(A);
-
     }
 
     @Override

@@ -38,13 +38,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionCholesky_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"2000"})
     public int size;
 
-    public DMatrixRMaj A,L;
+    public DMatrixRMaj A, L;
 
     CholeskyDecomposition_F64<DMatrixRMaj> inner = new CholeskyDecompositionInner_DDRM();
     CholeskyDecomposition_F64<DMatrixRMaj> block = new CholeskyDecompositionBlock_DDRM(EjmlParameters.BLOCK_WIDTH_CHOL);
@@ -53,23 +53,23 @@ public class BenchmarkDecompositionCholesky_DDRM {
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.symmetricPosDef(size,rand);
-        L = new DMatrixRMaj(1,1);
+        A = RandomMatrices_DDRM.symmetricPosDef(size, rand);
+        L = new DMatrixRMaj(1, 1);
     }
 
     @Benchmark
     public void inner() {
-        if( !inner.decompose(A.copy()) )
+        if (!inner.decompose(A.copy()))
             throw new RuntimeException("FAILED?!");
     }
 
     @Benchmark
     public void block() {
-        if( !block.decompose(A.copy()) )
+        if (!block.decompose(A.copy()))
             throw new RuntimeException("FAILED?!");
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionCholesky_DDRM.class.getSimpleName())
                 .build();

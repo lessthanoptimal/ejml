@@ -22,17 +22,16 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_MT_DDRM;
 
 /**
- *
  * @author Peter Abeles
  */
 public class WatchedDoubleStepQREigen_MT_DDRM extends WatchedDoubleStepQREigen_DDRM {
     @Override
-    protected void rank1UpdateMultL(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+    protected void rank1UpdateMultL( DMatrixRMaj A, double gamma, int colA0, int w0, int w1 ) {
         QrHelperFunctions_MT_DDRM.rank1UpdateMultL(A, u.data, gamma, colA0, w0, w1);
     }
 
     @Override
-    protected void rank1UpdateMultR(DMatrixRMaj A, double gamma, int colA0, int w0, int w1) {
+    protected void rank1UpdateMultR( DMatrixRMaj A, double gamma, int colA0, int w0, int w1 ) {
         QrHelperFunctions_MT_DDRM.rank1UpdateMultR(A, u.data, gamma, colA0, w0, w1, _temp.data);
     }
 }

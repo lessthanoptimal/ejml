@@ -37,29 +37,29 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value=2)
+@Fork(value = 2)
 public class BenchmarkDecompositionEvd_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"500"})
     public int size;
 
-    @Param({"false","true"})
+    @Param({"false", "true"})
     public boolean vectors;
 
-    public DMatrixRMaj S,A;
+    public DMatrixRMaj S, A;
 
     SymmetricQRAlgorithmDecomposition_DDRM eigenSym;
     WatchedDoubleStepQRDecomposition_DDRM eigen;
 
     @Setup
     public void setup() {
-        eigenSym = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_MT_DDRM(),vectors);
+        eigenSym = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_MT_DDRM(), vectors);
         eigen = new WatchedDoubleStepQRDecomposition_DDRM(new HessenbergSimilarDecomposition_MT_DDRM(),
-                new WatchedDoubleStepQREigen_DDRM(),vectors);
+                new WatchedDoubleStepQREigen_DDRM(), vectors);
 
         Random rand = new Random(234);
 
-        S = RandomMatrices_DDRM.symmetric(size,-1,1, rand);
+        S = RandomMatrices_DDRM.symmetric(size, -1, 1, rand);
     }
 
     @Benchmark
@@ -71,11 +71,11 @@ public class BenchmarkDecompositionEvd_MT_DDRM {
     @Benchmark
     public void general() {
         DMatrixRMaj A = eigen.inputModified() ? S.copy() : S;
-        A.set(2,4,2.0); // break the symmetry
+        A.set(2, 4, 2.0); // break the symmetry
         eigen.decompose(A);
     }
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(BenchmarkDecompositionEvd_MT_DDRM.class.getSimpleName())
                 .build();

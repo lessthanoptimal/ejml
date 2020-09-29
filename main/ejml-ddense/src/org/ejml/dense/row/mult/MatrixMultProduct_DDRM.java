@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,26 +26,26 @@ import java.util.Arrays;
  * <p>
  * Specialized operations for performing inner and outer products for matrices.
  * </p>
- * 
+ *
  * <p>
  * inner product: B=A<sup>T</sup>*A<br>
  * outer product: B=A*A<sup>T</sup>
  * </p>
- * 
+ *
  * @author Peter Abeles
  */
 public class MatrixMultProduct_DDRM {
 
-    public static void outer(DMatrix1Row a, DMatrix1Row c) {
-        for( int i = 0; i < a.numRows; i++ ) {
-            int indexC1 = i*c.numCols+i;
+    public static void outer( DMatrix1Row a, DMatrix1Row c ) {
+        for (int i = 0; i < a.numRows; i++) {
+            int indexC1 = i*c.numCols + i;
             int indexC2 = indexC1;
-            for( int j = i; j < a.numRows; j++ , indexC2 += c.numCols) {
+            for (int j = i; j < a.numRows; j++, indexC2 += c.numCols) {
                 int indexA = i*a.numCols;
                 int indexB = j*a.numCols;
                 double sum = 0;
                 int end = indexA + a.numCols;
-                for( ; indexA < end; indexA++,indexB++ ) {
+                for (; indexA < end; indexA++, indexB++) {
                     sum += a.data[indexA]*a.data[indexB];
                 }
                 c.data[indexC2] = c.data[indexC1++] = sum;
@@ -61,18 +61,18 @@ public class MatrixMultProduct_DDRM {
 //            }
 //        }
     }
-    
-    public static void inner_small(DMatrix1Row a, DMatrix1Row c) {
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            for( int j = i; j < a.numCols; j++ ) {
-                int indexC1 = i*c.numCols+j;
-                int indexC2 = j*c.numCols+i;
+    public static void inner_small( DMatrix1Row a, DMatrix1Row c ) {
+
+        for (int i = 0; i < a.numCols; i++) {
+            for (int j = i; j < a.numCols; j++) {
+                int indexC1 = i*c.numCols + j;
+                int indexC2 = j*c.numCols + i;
                 int indexA = i;
                 int indexB = j;
                 double sum = 0;
                 int end = indexA + a.numRows*a.numCols;
-                for( ; indexA < end; indexA += a.numCols, indexB += a.numCols ) {
+                for (; indexA < end; indexA += a.numCols, indexB += a.numCols) {
                     sum += a.data[indexA]*a.data[indexB];
                 }
                 c.data[indexC1] = c.data[indexC2] = sum;
@@ -90,27 +90,27 @@ public class MatrixMultProduct_DDRM {
 //        }
     }
 
-    public static void inner_reorder(DMatrix1Row a, DMatrix1Row c) {
+    public static void inner_reorder( DMatrix1Row a, DMatrix1Row c ) {
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            int indexC = i*c.numCols+i;
+        for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*c.numCols + i;
             double valAi = a.data[i];
-            for( int j = i; j < a.numCols; j++ ) {
-                c.data[indexC++] =  valAi*a.data[j];
+            for (int j = i; j < a.numCols; j++) {
+                c.data[indexC++] = valAi*a.data[j];
             }
 
-            for( int k = 1; k < a.numRows; k++ ) {
-                indexC = i*c.numCols+i;
-                int indexB = k*a.numCols+i;
+            for (int k = 1; k < a.numRows; k++) {
+                indexC = i*c.numCols + i;
+                int indexB = k*a.numCols + i;
                 valAi = a.data[indexB];
-                for( int j = i; j < a.numCols; j++ ) {
-                    c.data[indexC++] +=  valAi*a.data[indexB++];
+                for (int j = i; j < a.numCols; j++) {
+                    c.data[indexC++] += valAi*a.data[indexB++];
                 }
             }
 
-            indexC = i*c.numCols+i;
+            indexC = i*c.numCols + i;
             int indexC2 = indexC;
-            for( int j = i; j < a.numCols; j++ , indexC2 += c.numCols) {
+            for (int j = i; j < a.numCols; j++, indexC2 += c.numCols) {
                 c.data[indexC2] = c.data[indexC++];
             }
         }
@@ -131,20 +131,20 @@ public class MatrixMultProduct_DDRM {
 //        }
     }
 
-    public static void inner_reorder_upper(DMatrix1Row a, DMatrix1Row c) {
-        for( int i = 0; i < a.numCols; i++ ) {
-            int indexC = i*c.numCols+i;
+    public static void inner_reorder_upper( DMatrix1Row a, DMatrix1Row c ) {
+        for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*c.numCols + i;
             double valAi = a.data[i];
-            for( int j = i; j < a.numCols; j++ ) {
-                c.data[indexC++] =  valAi*a.data[j];
+            for (int j = i; j < a.numCols; j++) {
+                c.data[indexC++] = valAi*a.data[j];
             }
 
-            for( int k = 1; k < a.numRows; k++ ) {
-                indexC = i*c.numCols+i;
-                int indexB = k*a.numCols+i;
+            for (int k = 1; k < a.numRows; k++) {
+                indexC = i*c.numCols + i;
+                int indexB = k*a.numCols + i;
                 valAi = a.data[indexB];
-                for( int j = i; j < a.numCols; j++ ) {
-                    c.data[indexC++] +=  valAi*a.data[indexB++];
+                for (int j = i; j < a.numCols; j++) {
+                    c.data[indexC++] += valAi*a.data[indexB++];
                 }
             }
         }
@@ -159,20 +159,19 @@ public class MatrixMultProduct_DDRM {
      * @param A (Input) Matrix
      * @param B (Output) Storage for output.
      */
-    public static void inner_reorder_lower(DMatrix1Row A , DMatrix1Row B )
-    {
+    public static void inner_reorder_lower( DMatrix1Row A, DMatrix1Row B ) {
         final int cols = A.numCols;
-        B.reshape(cols,cols);
+        B.reshape(cols, cols);
 
-        Arrays.fill(B.data,0);
-        for (int i = 0; i <cols; i++) {
-            for (int j = 0; j <=i; j++) {
-                B.data[i*cols+j] += A.data[i]*A.data[j];
+        Arrays.fill(B.data, 0);
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j <= i; j++) {
+                B.data[i*cols + j] += A.data[i]*A.data[j];
             }
 
             for (int k = 1; k < A.numRows; k++) {
                 int indexRow = k*cols;
-                double valI = A.data[i+indexRow];
+                double valI = A.data[i + indexRow];
                 int indexB = i*cols;
                 for (int j = 0; j <= i; j++) {
                     B.data[indexB++] += valI*A.data[indexRow++];
