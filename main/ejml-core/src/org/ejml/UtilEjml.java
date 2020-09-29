@@ -608,6 +608,16 @@ public class UtilEjml {
         return workspace;
     }
 
+    /**
+     * Checks to see if a matrix of this size will exceed the maximum possible value an integer can store, which is
+     * the max possible array size in Java.
+     */
+    public static boolean exceedsMaxMatrixSize( int numRows, int numCols ) {
+        if (numRows == 0 || numCols == 0)
+            return false;
+        return numCols > Integer.MAX_VALUE/numRows;
+    }
+
     public static void printTime( String message, Process timer ) {
         printTime("Processing... ", message, timer);
     }

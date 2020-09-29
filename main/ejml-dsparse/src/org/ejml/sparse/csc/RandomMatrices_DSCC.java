@@ -47,7 +47,10 @@ public class RandomMatrices_DSCC {
     public static DMatrixSparseCSC rectangle( int numRows, int numCols, int nz_total,
                                               double min, double max, Random rand ) {
 
-        nz_total = Math.min(numCols*numRows, nz_total);
+        if (UtilEjml.exceedsMaxMatrixSize(numRows, numCols))
+            throw new IllegalArgumentException("Due to how a random matrix is created, rows*cols < Integer.MAX_VALUE");
+
+        nz_total = Math.min(numRows*numCols, nz_total);
         int[] selected = UtilEjml.shuffled(numRows*numCols, nz_total, rand);
         Arrays.sort(selected, 0, nz_total);
 
@@ -90,6 +93,10 @@ public class RandomMatrices_DSCC {
      */
     public static DMatrixSparseCSC symmetric( int N, int nz_total,
                                               double min, double max, Random rand ) {
+        if (UtilEjml.exceedsMaxMatrixSize(N, N))
+            throw new IllegalArgumentException("Due to how a random matrix is created, N*N < Integer.MAX_VALUE");
+        if (N < 0)
+            throw new IllegalArgumentException("Matrix must have a positive size. N=" + N);
 
         // compute the number of elements in the triangle, including diagonal
         int Ntriagle = (N*N + N)/2;
@@ -149,7 +156,7 @@ public class RandomMatrices_DSCC {
         // pre compute element count in each row
         int[] rowStart = new int[dimen];
         int[] rowEnd = new int[dimen];
-        // diagonal is manditory and these indexes refer to a triangle -1 dimension
+        // diagonal is mandatory and these indexes refer to a triangle -1 dimension
         int N = 0;
         for (int i = 0; i < dimen; i++) {
             if (i < dimen - 1 + hessenberg) rowStart[i] = N;
@@ -159,7 +166,7 @@ public class RandomMatrices_DSCC {
         }
         N += dimen - hessenberg;
 
-        // contrain the total number of non-zero elements
+        // constrain the total number of non-zero elements
         nz_total = Math.min(N, nz_total);
         nz_total = Math.max(diag_total, nz_total);
 
@@ -253,6 +260,9 @@ public class RandomMatrices_DSCC {
      * @return Random matrix
      */
     public static DMatrixSparseCSC symmetricPosDef( int width, double probabilityZero, Random rand ) {
+        if (UtilEjml.exceedsMaxMatrixSize(width, width))
+            throw new IllegalArgumentException("Due to how a random matrix is created, width*width < Integer.MAX_VALUE");
+
         if (probabilityZero < 0 || probabilityZero > 1.0)
             throw new IllegalArgumentException("Invalid value for probabilityZero");
 
