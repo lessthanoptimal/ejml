@@ -88,8 +88,9 @@ public class TestColumnCounts_DSCC {
             parent.reshape(N);
             post.reshape(N);
             DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(true, N, 0.2, 0.5, rand);
+            DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A,null,null);
             DMatrixSparseCSC ATA = new DMatrixSparseCSC(N, N, 0);
-            CommonOps_DSCC.multTransA(A, A, ATA, null, null);
+            CommonOps_DSCC.mult(A_t, A, ATA, null, null);
 
             // compute expected results
             int expected[] = new int[A.numCols];

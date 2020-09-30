@@ -26,6 +26,10 @@ Date format: year/month/day
   * Updating functions to return output if null and use common input sanity check functions
 - CommonOps_DSCC
   * duplicatesAdd() is a function which will add elements that are duplicated, turning it into a valid matrix again
+  * Removed the functions below since they had a runtime complexity of O(N^2) relative to matrix size instead of O(N)
+    - multTransA(S,S,S), multTransB(S,S,S), innerProductLower(S,S,S)
+    - Thanks Florentin Dörre for first noticing the performance issue
+  * TODO add all functions to benchmark
 - ReadMatrixCsv
   * Thanks DEDZTBH for fixing an indexing error when reading complex data types
 - Added Concurrent Algorithms

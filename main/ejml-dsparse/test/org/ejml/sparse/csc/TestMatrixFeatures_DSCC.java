@@ -274,11 +274,12 @@ public class TestMatrixFeatures_DSCC {
             for (int mc = 0; mc < 30; mc++) {
                 int nz = (int)Math.ceil(N*N*(rand.nextDouble()*0.4+0.1));
                 A = RandomMatrices_DSCC.rectangle(N,N,nz,rand);
+                DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A,null,null);
 
                 DMatrixSparseCSC C = new DMatrixSparseCSC(N,N,0);
 
                 // C must be symmetric
-                CommonOps_DSCC.multTransB(A,A,C,null,null);
+                CommonOps_DSCC.mult(A,A_t,C,null,null);
                 assertTrue(MatrixFeatures_DSCC.isSymmetric(C,UtilEjml.TEST_F64));
 
                 // make it not symmetric

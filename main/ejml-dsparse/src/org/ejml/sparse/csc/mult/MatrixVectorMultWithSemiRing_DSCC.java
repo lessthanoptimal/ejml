@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,37 +30,37 @@ public class MatrixVectorMultWithSemiRing_DSCC {
     /**
      * c = A*b
      *
-     * @param A        (Input) Matrix
-     * @param b        (Input) vector
-     * @param offsetB  (Input) first index in vector b
-     * @param c        (Output) vector
-     * @param offsetC  (Output) first index in vector c
+     * @param A (Input) Matrix
+     * @param b (Input) vector
+     * @param offsetB (Input) first index in vector b
+     * @param c (Output) vector
+     * @param offsetC (Output) first index in vector c
      * @param semiRing Semi-Ring to define + and *
      */
-    public static void mult(DMatrixSparseCSC A,
-                            double b[], int offsetB,
-                            double c[], int offsetC, DSemiRing semiRing) {
+    public static void mult( DMatrixSparseCSC A,
+                             double[] b, int offsetB,
+                             double[] c, int offsetC, DSemiRing semiRing ) {
         Arrays.fill(c, offsetC, offsetC + A.numRows, semiRing.add.id);
         multAdd(A, b, offsetB, c, offsetC, semiRing);
     }
 
-    public static void mult(DMatrixSparseCSC A, double b[], double c[], DSemiRing semiRing) {
+    public static void mult( DMatrixSparseCSC A, double[] b, double[] c, DSemiRing semiRing ) {
         mult(A, b, 0, c, 0, semiRing);
     }
 
     /**
      * c = c + A*b
      *
-     * @param A        (Input) Matrix
-     * @param b        (Input) vector
-     * @param offsetB  (Input) first index in vector b
-     * @param c        (Output) vector
-     * @param offsetC  (Output) first index in vector c
+     * @param A (Input) Matrix
+     * @param b (Input) vector
+     * @param offsetB (Input) first index in vector b
+     * @param c (Output) vector
+     * @param offsetC (Output) first index in vector c
      * @param semiRing Semi-Ring to define + and *
      */
-    public static void multAdd(DMatrixSparseCSC A,
-                               double[] b, int offsetB,
-                               double[] c, int offsetC, DSemiRing semiRing) {
+    public static void multAdd( DMatrixSparseCSC A,
+                                double[] b, int offsetB,
+                                double[] c, int offsetC, DSemiRing semiRing ) {
         if (b.length - offsetB < A.numCols)
             throw new IllegalArgumentException("Length of 'b' isn't long enough");
         if (c.length - offsetC < A.numRows)
@@ -81,16 +81,16 @@ public class MatrixVectorMultWithSemiRing_DSCC {
     /**
      * c = a<sup>T</sup>*B
      *
-     * @param a        (Input) vector
-     * @param offsetA  Input) first index in vector a
-     * @param B        (Input) Matrix
-     * @param c        (Output) vector
-     * @param offsetC  (Output) first index in vector c
+     * @param a (Input) vector
+     * @param offsetA Input) first index in vector a
+     * @param B (Input) Matrix
+     * @param c (Output) vector
+     * @param offsetC (Output) first index in vector c
      * @param semiRing Semi-Ring to define + and *
      */
-    public static void mult(double a[], int offsetA,
-                            DMatrixSparseCSC B,
-                            double c[], int offsetC, DSemiRing semiRing) {
+    public static void mult( double[] a, int offsetA,
+                             DMatrixSparseCSC B,
+                             double[] c, int offsetC, DSemiRing semiRing ) {
         if (a.length - offsetA < B.numRows)
             throw new IllegalArgumentException("Length of 'a' isn't long enough");
         if (c.length - offsetC < B.numCols)
@@ -108,23 +108,23 @@ public class MatrixVectorMultWithSemiRing_DSCC {
         }
     }
 
-    public static void mult(double a[], DMatrixSparseCSC B, double c[], DSemiRing semiRing) {
+    public static void mult( double[] a, DMatrixSparseCSC B, double[] c, DSemiRing semiRing ) {
         mult(a, 0, B, c, 0, semiRing);
     }
 
     /**
      * scalar = A<sup>T</sup>*B*C
      *
-     * @param a       (Input) vector
+     * @param a (Input) vector
      * @param offsetA Input) first index in vector a
-     * @param B       (Input) Matrix
-     * @param c       (Output) vector
+     * @param B (Input) Matrix
+     * @param c (Output) vector
      * @param offsetC (Output) first index in vector c
      * @param semiRing Semi-Ring to define + and *
      */
-    public static double innerProduct(double a[], int offsetA,
-                                      DMatrixSparseCSC B,
-                                      double c[], int offsetC, DSemiRing semiRing) {
+    public static double innerProduct( double[] a, int offsetA,
+                                       DMatrixSparseCSC B,
+                                       double[] c, int offsetC, DSemiRing semiRing ) {
         if (a.length - offsetA < B.numRows)
             throw new IllegalArgumentException("Length of 'a' isn't long enough");
         if (c.length - offsetC < B.numCols)

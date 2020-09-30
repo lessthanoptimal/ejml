@@ -431,16 +431,16 @@ public class TriangularSolver_DSCC {
      * @param gwork  (Optional) Internal workspace.  Can be null.
      */
     public static void eliminationTree(DMatrixSparseCSC A, boolean ata, int[] parent, @Nullable IGrowArray gwork) {
-        int m = A.numRows;
-        int n = A.numCols;
+        final int m = A.numRows;
+        final int n = A.numCols;
 
         if (parent.length < n)
             throw new IllegalArgumentException("parent must be of length N");
 
-        int[] work = UtilEjml.adjust(gwork, n + (ata ? m : 0));
+        final int[] work = UtilEjml.adjust(gwork, n + (ata ? m : 0));
 
-        int ancestor = 0; // reference to index in work array
-        int previous = n; // reference to index in work array
+        final int ancestor = 0; // reference to index in work array
+        final int previous = n; // reference to index in work array
 
         if( ata ) {
             for (int i = 0; i < m; i++) {

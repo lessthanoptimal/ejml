@@ -46,21 +46,22 @@ public class CommonOps_DSCC {
 
     /**
      * Checks to see if row indicies are sorted into ascending order.  O(N)
+     *
      * @return true if sorted and false if not
      */
     public static boolean checkIndicesSorted( DMatrixSparseCSC A ) {
         for (int j = 0; j < A.numCols; j++) {
             int idx0 = A.col_idx[j];
-            int idx1 = A.col_idx[j+1];
+            int idx1 = A.col_idx[j + 1];
 
-            if( idx0 != idx1 && A.nz_rows[idx0] >= A.numRows )
+            if (idx0 != idx1 && A.nz_rows[idx0] >= A.numRows)
                 return false;
 
-            for (int i = idx0+1; i < idx1; i++) {
+            for (int i = idx0 + 1; i < idx1; i++) {
                 int row = A.nz_rows[i];
-                if( A.nz_rows[i-1] >= row)
+                if (A.nz_rows[i - 1] >= row)
                     return false;
-                if( row >= A.numRows )
+                if (row >= A.numRows)
                     return false;
             }
         }
@@ -68,42 +69,43 @@ public class CommonOps_DSCC {
     }
 
     public static boolean checkStructure( DMatrixSparseCSC A ) {
-        if( A.col_idx.length < A.numCols+1)
+        if (A.col_idx.length < A.numCols + 1)
             return false;
-        if( A.col_idx[A.numCols] != A.nz_length )
+        if (A.col_idx[A.numCols] != A.nz_length)
             return false;
-        if( A.nz_rows.length < A.nz_length)
+        if (A.nz_rows.length < A.nz_length)
             return false;
-        if( A.nz_values.length < A.nz_length)
+        if (A.nz_values.length < A.nz_length)
             return false;
-        if( A.col_idx[0] != 0 )
+        if (A.col_idx[0] != 0)
             return false;
         for (int i = 0; i < A.numCols; i++) {
-            if( A.col_idx[i] > A.col_idx[i+1] ) {
+            if (A.col_idx[i] > A.col_idx[i + 1]) {
                 return false;
             }
-            if( A.col_idx[i+1]-A.col_idx[i] > A.numRows)
+            if (A.col_idx[i + 1] - A.col_idx[i] > A.numRows)
                 return false;
         }
-        if( !checkSortedFlag(A))
+        if (!checkSortedFlag(A))
             return false;
-        if( checkDuplicateElements(A))
+        if (checkDuplicateElements(A))
             return false;
         return true;
     }
 
     public static boolean checkSortedFlag( DMatrixSparseCSC A ) {
-        if( A.indicesSorted )
+        if (A.indicesSorted)
             return checkIndicesSorted(A);
         return true;
     }
 
     /**
      * Checks for duplicate elements. A is sorted
+     *
      * @param A Matrix to be tested.
      * @return true if duplicates or false if false duplicates
      */
-    public static boolean checkDuplicateElements(DMatrixSparseCSC A ) {
+    public static boolean checkDuplicateElements( DMatrixSparseCSC A ) {
         A = A.copy(); // create a copy so that it doesn't modify A
         A.sortIndices(null);
         return !checkSortedFlag(A);
@@ -112,25 +114,20 @@ public class CommonOps_DSCC {
     /**
      * Perform matrix transpose
      *
-     * @param a Input matrix.  Not modified
-     * @param a_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
+     * @param A Input matrix.  Not modified
+     * @param A_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @return The transposed matrix
      */
-    public static DMatrixSparseCSC transpose(DMatrixSparseCSC a , @Nullable DMatrixSparseCSC a_t , @Nullable IGrowArray gw ) {
-
-        if( a_t == null ) {
-            a_t = new DMatrixSparseCSC(a.numCols,a.numRows,a.nz_length);
-        } else {
-            a_t.reshape(a.numCols,a.numRows,a.nz_length);
-        }
-
-        ImplCommonOps_DSCC.transpose(a, a_t, gw);
-        return a_t;
+    public static DMatrixSparseCSC transpose( DMatrixSparseCSC A, @Nullable DMatrixSparseCSC A_t, @Nullable IGrowArray gw ) {
+        A_t = reshapeOrDeclare(A_t, A.numCols, A.numRows, A.nz_length);
+        ImplCommonOps_DSCC.transpose(A, A_t, gw);
+        return A_t;
     }
 
-    public static DMatrixSparseCSC mult(DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable DMatrixSparseCSC output ) {
-        return mult(A,B,output,null,null);
+    public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B,
+                                         @Nullable DMatrixSparseCSC outputC ) {
+        return mult(A, B, outputC, null, null);
     }
 
     /**
@@ -138,90 +135,49 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Not modified.
-     * @param output (Output) Storage for results.  Data length is increased if insufficient.
+     * @param outputC (Output) Storage for results.  Data length is increased if insufficient.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static DMatrixSparseCSC mult(DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable DMatrixSparseCSC output ,
-                                        @Nullable IGrowArray gw, @Nullable DGrowArray gx )
-    {
-        if( A.numCols != B.numRows )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A,A.numRows,B.numCols);
+    public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B,
+                                         @Nullable DMatrixSparseCSC outputC,
+                                         @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        if (A.numCols != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_DSCC.mult(A,B,output, gw, gx);
+        ImplSparseSparseMult_DSCC.mult(A, B, outputC, gw, gx);
 
-        return output;
+        return outputC;
     }
-
-    public static DMatrixSparseCSC multTransA(DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable DMatrixSparseCSC output ,
-                                              @Nullable IGrowArray gw, @Nullable DGrowArray gx )
-    {
-        if( A.numRows != B.numRows )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A,A.numCols,B.numCols);
-
-        ImplSparseSparseMult_DSCC.multTransA(A,B,output,gw,gx);
-
-        return output;
-    }
-
-    /**
-     * Performs matrix multiplication.  C = A*B<sup>T</sup>. B needs to be sorted and will be sorted if it
-     * has not already been sorted.
-     *
-     * @param A (Input) Matrix. Not modified.
-     * @param B (Input) Matrix. Value not modified but indicies will be sorted if not sorted already.
-     * @param output (Output) Storage for results.  Data length is increased if insufficient.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
-     */
-    public static DMatrixSparseCSC multTransB(DMatrixSparseCSC A , DMatrixSparseCSC B ,
-                                              @Nullable DMatrixSparseCSC output ,
-                                              @Nullable IGrowArray gw, @Nullable DGrowArray gx )
-    {
-        if( A.numCols != B.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A,A.numRows,B.numRows);
-
-        if( !B.isIndicesSorted() )
-            B.sortIndices(null);
-
-        ImplSparseSparseMult_DSCC.multTransB(A,B,output,gw,gx);
-
-        return output;
-    }
-
 
     /**
      * Performs matrix multiplication.  C = A*B
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param output Dense Matrix
+     * @param outputC Dense Matrix
      */
-    public static DMatrixRMaj mult(DMatrixSparseCSC A , DMatrixRMaj B , @Nullable DMatrixRMaj output )
-    {
-        if( A.numCols != B.numRows )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A.numRows,B.numCols);
+    public static DMatrixRMaj mult( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC ) {
+        if (A.numCols != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_DSCC.mult(A,B,output);
+        ImplSparseSparseMult_DSCC.mult(A, B, outputC);
 
-        return output;
+        return outputC;
     }
 
     /**
      * <p>C = C + A*B</p>
      */
-    public static void multAdd(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
-    {
-        if( A.numCols != B.numRows )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        if( A.numRows != output.numRows || B.numCols != output.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+    public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numCols != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numRows != outputC.numRows || B.numCols != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAdd(A,B,output);
+        ImplSparseSparseMult_DSCC.multAdd(A, B, outputC);
     }
 
     /**
@@ -229,31 +185,29 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param output Dense Matrix
+     * @param outputC Dense Matrix
      */
-    public static DMatrixRMaj multTransA(DMatrixSparseCSC A , DMatrixRMaj B , @Nullable DMatrixRMaj output )
-    {
-        if( A.numRows != B.numRows )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
+    public static DMatrixRMaj multTransA( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC ) {
+        if (A.numRows != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
 
-        output = reshapeOrDeclare(output,A.numCols,B.numCols);
+        outputC = reshapeOrDeclare(outputC, A.numCols, B.numCols);
 
-        ImplSparseSparseMult_DSCC.multTransA(A,B,output);
+        ImplSparseSparseMult_DSCC.multTransA(A, B, outputC);
 
-        return output;
+        return outputC;
     }
 
     /**
      * <p>C = C + A<sup>T</sup>*B</p>
      */
-    public static void multAddTransA(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
-    {
-        if( A.numRows != B.numRows )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        if( A.numCols != output.numRows || B.numCols != output.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numRows != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numCols != outputC.numRows || B.numCols != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAddTransA(A,B,output);
+        ImplSparseSparseMult_DSCC.multAddTransA(A, B, outputC);
     }
 
     /**
@@ -261,30 +215,28 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param output Dense Matrix
+     * @param outputC Dense Matrix
      */
-    public static DMatrixRMaj multTransB(DMatrixSparseCSC A , DMatrixRMaj B , @Nullable DMatrixRMaj output )
-    {
-        if( A.numCols != B.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A.numRows,B.numRows);
+    public static DMatrixRMaj multTransB( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC ) {
+        if (A.numCols != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A.numRows, B.numRows);
 
-        ImplSparseSparseMult_DSCC.multTransB(A,B,output);
+        ImplSparseSparseMult_DSCC.multTransB(A, B, outputC);
 
-        return output;
+        return outputC;
     }
 
     /**
      * <p>C = C + A*B<sup>T</sup></p>
      */
-    public static void multAddTransB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
-    {
-        if( A.numCols != B.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        if( A.numRows != output.numRows || B.numRows != output.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numCols != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numRows != outputC.numRows || B.numRows != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAddTransB(A,B,output);
+        ImplSparseSparseMult_DSCC.multAddTransB(A, B, outputC);
     }
 
     /**
@@ -292,49 +244,28 @@ public class CommonOps_DSCC {
      *
      * @param A Matrix
      * @param B Dense Matrix
-     * @param output Dense Matrix
+     * @param outputC Dense Matrix
      */
-    public static DMatrixRMaj multTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
-    {
-        if( A.numRows != B.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output,A.numCols,B.numRows);
+    public static DMatrixRMaj multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numRows != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A.numCols, B.numRows);
 
-        ImplSparseSparseMult_DSCC.multTransAB(A,B,output);
+        ImplSparseSparseMult_DSCC.multTransAB(A, B, outputC);
 
-        return output;
+        return outputC;
     }
-
 
     /**
      * <p>C = C + A<sup>T</sup>*B<sup>T</sup></p>
      */
-    public static void multAddTransAB(DMatrixSparseCSC A , DMatrixRMaj B , DMatrixRMaj output )
-    {
-        if( A.numRows != B.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        if( A.numCols != output.numRows || B.numRows != output.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B,output));
+    public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numRows != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numCols != outputC.numRows || B.numRows != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAddTransAB(A,B,output);
-    }
-
-    /**
-     * Computes the inner product of A times A and stores the results in B. The inner product is symmetric and this
-     * function will only store the lower triangle. If the full matrix is needed then. If you need the full
-     * matrix use {@link #symmLowerToFull}.
-     *
-     * <p>B = A<sup>T</sup>*A</sup>
-     *
-     * @param A (Input) Matrix
-     * @param B (Output) Storage for output.
-     * @param gw (Optional) Workspace
-     * @param gx (Optional) Workspace
-     */
-    public static void innerProductLower(DMatrixSparseCSC A , DMatrixSparseCSC B ,
-                                         @Nullable IGrowArray gw, @Nullable DGrowArray gx )
-    {
-        ImplSparseSparseMult_DSCC.innerProductLower(A, B, gw, gx);
+        ImplSparseSparseMult_DSCC.multAddTransAB(A, B, outputC);
     }
 
     /**
@@ -342,82 +273,80 @@ public class CommonOps_DSCC {
      * a full symmetric matrix
      *
      * @param A (Input) Lower triangular matrix
-     * @param B (Output) Symmetric matrix.
+     * @param outputB (Output) Symmetric matrix.
      * @param gw (Optional) Workspace. Can be null.
      */
-    public static void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable IGrowArray gw )
-    {
-        ImplCommonOps_DSCC.symmLowerToFull(A, B, gw);
+    public static void symmLowerToFull( DMatrixSparseCSC A, DMatrixSparseCSC outputB, @Nullable IGrowArray gw ) {
+        ImplCommonOps_DSCC.symmLowerToFull(A, outputB, gw);
     }
 
     /**
      * Performs matrix addition:<br>
-     * output = &alpha;A + &beta;B
-     *  @param alpha scalar value multiplied against A
+     * C = &alpha;A + &beta;B
+     *
+     * @param alpha scalar value multiplied against A
      * @param A Matrix
      * @param beta scalar value multiplied against B
      * @param B Matrix
-     * @param output Output matrix.
+     * @param outputC Output matrix.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
-     * @return
      */
-    public static DMatrixSparseCSC add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output,
-                                       @Nullable IGrowArray gw, @Nullable DGrowArray gx)
-    {
-        if( A.numRows != B.numRows || A.numCols != B.numCols )
-            throw new MatrixDimensionException("Inconsistent matrix shapes. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output, A, A.numRows,A.numCols);
+    public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B,
+                                        @Nullable DMatrixSparseCSC outputC,
+                                        @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        if (A.numRows != B.numRows || A.numCols != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A, A.numRows, A.numCols);
 
-        ImplCommonOps_DSCC.add(alpha,A,beta,B,output, gw, gx);
+        ImplCommonOps_DSCC.add(alpha, A, beta, B, outputC, gw, gx);
 
-        return output;
+        return outputC;
     }
 
-    public static DMatrixSparseCSC identity(int length ) {
+    public static DMatrixSparseCSC identity( int length ) {
         return identity(length, length);
     }
 
-    public static DMatrixSparseCSC identity(int numRows , int numCols ) {
+    public static DMatrixSparseCSC identity( int numRows, int numCols ) {
         int min = Math.min(numRows, numCols);
         DMatrixSparseCSC A = new DMatrixSparseCSC(numRows, numCols, min);
         setIdentity(A);
         return A;
     }
 
-    public static void setIdentity(DMatrixSparseCSC A ) {
+    public static void setIdentity( DMatrixSparseCSC A ) {
         int min = Math.min(A.numRows, A.numCols);
-        A.growMaxLength(min,false);
+        A.growMaxLength(min, false);
         A.nz_length = min;
 
-        Arrays.fill(A.nz_values,0,min,1);
+        Arrays.fill(A.nz_values, 0, min, 1);
         for (int i = 1; i <= min; i++) {
             A.col_idx[i] = i;
-            A.nz_rows[i-1] = i-1;
+            A.nz_rows[i - 1] = i - 1;
         }
-        for (int i = min+1; i <= A.numCols; i++) {
+        for (int i = min + 1; i <= A.numCols; i++) {
             A.col_idx[i] = min;
         }
     }
-
 
     /**
      * B = scalar*A.   A and B can be the same instance.
      *
      * @param scalar (Input) Scalar value
      * @param A (Input) Matrix. Not modified.
-     * @param B (Output) Matrix. Modified.
+     * @param outputB (Output) Matrix. Modified.
      */
-    public static void scale(double scalar, DMatrixSparseCSC A, DMatrixSparseCSC B) {
-        if( A != B ) {
-            B.copyStructure(A);
+    public static void scale( double scalar, DMatrixSparseCSC A, DMatrixSparseCSC outputB ) {
+        if (A != outputB) {
+            outputB.copyStructure(A);
 
-            for(int i = 0; i < A.nz_length; i++ ) {
-                B.nz_values[i] = A.nz_values[i]*scalar;
+            for (int i = 0; i < A.nz_length; i++) {
+                outputB.nz_values[i] = A.nz_values[i]*scalar;
             }
         } else {
-            for(int i = 0; i < A.nz_length; i++ ) {
-                B.nz_values[i] *= scalar;
+            for (int i = 0; i < A.nz_length; i++) {
+                outputB.nz_values[i] *= scalar;
             }
         }
     }
@@ -427,14 +356,14 @@ public class CommonOps_DSCC {
      *
      * @param scalar (Input) Scalar value
      * @param A (Input) Matrix. Not modified.
-     * @param B (Output) Matrix. Modified.
+     * @param outputB (Output) Matrix. Modified.
      */
-    public static void divide(DMatrixSparseCSC A , double scalar , DMatrixSparseCSC B ) {
-        if( A != B ) {
-            B.copyStructure(A);
+    public static void divide( DMatrixSparseCSC A, double scalar, DMatrixSparseCSC outputB ) {
+        if (A != outputB) {
+            outputB.copyStructure(A);
 
             for (int i = 0; i < A.nz_length; i++) {
-                B.nz_values[i] = A.nz_values[i] / scalar;
+                outputB.nz_values[i] = A.nz_values[i]/scalar;
             }
         } else {
             for (int i = 0; i < A.nz_length; i++) {
@@ -448,47 +377,47 @@ public class CommonOps_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param scalar (Input) Scalar value
-     * @param B (Output) Matrix. Modified.
+     * @param outputB (Output) Matrix. Modified.
      */
-    public static void divide( double scalar, DMatrixSparseCSC A , DMatrixSparseCSC B ) {
-        if( A != B ) {
-            B.copyStructure(A);
+    public static void divide( double scalar, DMatrixSparseCSC A, DMatrixSparseCSC outputB ) {
+        if (A != outputB) {
+            outputB.copyStructure(A);
         }
         for (int i = 0; i < A.nz_length; i++) {
-            B.nz_values[i] = scalar / A.nz_values[i];
+            outputB.nz_values[i] = scalar/A.nz_values[i];
         }
     }
-
 
     /**
      * B = -A.   Changes the sign of elements in A and stores it in B. A and B can be the same instance.
      *
      * @param A (Input) Matrix. Not modified.
-     * @param B (Output) Matrix. Modified.
+     * @param outputB (Output) Matrix. Modified.
      */
-    public static void changeSign(DMatrixSparseCSC A , DMatrixSparseCSC B ) {
-        if( A != B ) {
-            B.copyStructure(A);
+    public static void changeSign( DMatrixSparseCSC A, DMatrixSparseCSC outputB ) {
+        if (A != outputB) {
+            outputB.copyStructure(A);
         }
 
         for (int i = 0; i < A.nz_length; i++) {
-            B.nz_values[i] = -A.nz_values[i];
+            outputB.nz_values[i] = -A.nz_values[i];
         }
     }
 
     /**
      * Returns the value of the element with the smallest abs()
+     *
      * @param A (Input) Matrix. Not modified.
      * @return scalar
      */
     public static double elementMinAbs( DMatrixSparseCSC A ) {
-        if( A.nz_length == 0)
+        if (A.nz_length == 0)
             return 0;
 
         double min = A.isFull() ? Math.abs(A.nz_values[0]) : 0;
-        for(int i = 0; i < A.nz_length; i++ ) {
+        for (int i = 0; i < A.nz_length; i++) {
             double val = Math.abs(A.nz_values[i]);
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }
@@ -498,17 +427,18 @@ public class CommonOps_DSCC {
 
     /**
      * Returns the value of the element with the largest abs()
+     *
      * @param A (Input) Matrix. Not modified.
      * @return scalar
      */
     public static double elementMaxAbs( DMatrixSparseCSC A ) {
-        if( A.nz_length == 0)
+        if (A.nz_length == 0)
             return 0;
 
         double max = A.isFull() ? Math.abs(A.nz_values[0]) : 0;
-        for(int i = 0; i < A.nz_length; i++ ) {
+        for (int i = 0; i < A.nz_length; i++) {
             double val = Math.abs(A.nz_values[i]);
-            if( val > max ) {
+            if (val > max) {
                 max = val;
             }
         }
@@ -518,19 +448,20 @@ public class CommonOps_DSCC {
 
     /**
      * Returns the value of the element with the minimum value
+     *
      * @param A (Input) Matrix. Not modified.
      * @return scalar
      */
     public static double elementMin( DMatrixSparseCSC A ) {
-        if( A.nz_length == 0)
+        if (A.nz_length == 0)
             return 0;
 
         // if every element is assigned a value then the first element can be a minimum.
         // Otherwise zero needs to be considered
         double min = A.isFull() ? A.nz_values[0] : 0;
-        for(int i = 0; i < A.nz_length; i++ ) {
+        for (int i = 0; i < A.nz_length; i++) {
             double val = A.nz_values[i];
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }
@@ -540,19 +471,20 @@ public class CommonOps_DSCC {
 
     /**
      * Returns the value of the element with the largest value
+     *
      * @param A (Input) Matrix. Not modified.
      * @return scalar
      */
     public static double elementMax( DMatrixSparseCSC A ) {
-        if( A.nz_length == 0)
+        if (A.nz_length == 0)
             return 0;
 
         // if every element is assigned a value then the first element can be a max.
         // Otherwise zero needs to be considered
         double max = A.isFull() ? A.nz_values[0] : 0;
-        for(int i = 0; i < A.nz_length; i++ ) {
+        for (int i = 0; i < A.nz_length; i++) {
             double val = A.nz_values[i];
-            if( val > max ) {
+            if (val > max) {
                 max = val;
             }
         }
@@ -567,11 +499,11 @@ public class CommonOps_DSCC {
      * @return scalar
      */
     public static double elementSum( DMatrixSparseCSC A ) {
-        if( A.nz_length == 0)
+        if (A.nz_length == 0)
             return 0;
 
         double sum = 0;
-        for(int i = 0; i < A.nz_length; i++ ) {
+        for (int i = 0; i < A.nz_length; i++) {
             sum += A.nz_values[i];
         }
 
@@ -582,43 +514,44 @@ public class CommonOps_DSCC {
      * Performs an element-wise multiplication.<br>
      * output[i,j] = A[i,j]*B[i,j]<br>
      * All matrices must have the same shape.
-     *  @param A (Input) Matrix.
+     *
+     * @param A (Input) Matrix.
      * @param B (Input) Matrix
      * @param output (Output) Matrix. data array is grown to min(A.nz_length,B.nz_length), resulting a in a large speed boost.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output ,
-                                               @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
-        if( A.numCols != B.numCols || A.numRows != B.numRows )
-            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. "+stringShapes(A,B));
-        output = reshapeOrDeclare(output, A, A.numRows,A.numCols);
+    public static DMatrixSparseCSC elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output,
+                                                @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        if (A.numCols != B.numCols || A.numRows != B.numRows)
+            throw new MatrixDimensionException("All inputs must have the same number of rows and columns. " + stringShapes(A, B));
+        output = reshapeOrDeclare(output, A, A.numRows, A.numCols);
 
-        ImplCommonOps_DSCC.elementMult(A,B,output,gw,gx);
+        ImplCommonOps_DSCC.elementMult(A, B, output, gw, gx);
 
         return output;
     }
 
     /**
      * Finds the maximum abs in each column of A and stores it into values
+     *
      * @param A (Input) Matrix
-     * @param values (Output) storage for column max abs
+     * @param outputB (Output) storage for column max abs
      */
-    public static void columnMaxAbs( DMatrixSparseCSC A , double []values ) {
-        if( values.length < A.numCols )
-            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+    public static void maxAbsCols( DMatrixSparseCSC A, @Nullable DMatrixRMaj outputB) {
+        outputB = reshapeOrDeclare(outputB,1,A.numCols);
 
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];
-            int idx1 = A.col_idx[i+1];
+            int idx1 = A.col_idx[i + 1];
 
             double maxabs = 0;
             for (int j = idx0; j < idx1; j++) {
                 double v = Math.abs(A.nz_values[j]);
-                if( v > maxabs )
+                if (v > maxabs)
                     maxabs = v;
             }
-            values[i] = maxabs;
+            outputB.data[i] = maxabs;
         }
     }
 
@@ -630,15 +563,15 @@ public class CommonOps_DSCC {
      * @param values (Input) multiplication factor for each column
      * @param offset (Input) first index in values to start at
      */
-    public static void multColumns(DMatrixSparseCSC A , double []values , int offset) {
-        if( values.length+offset < A.numCols )
-            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+    public static void multColumns( DMatrixSparseCSC A, double[] values, int offset ) {
+        if (values.length + offset < A.numCols)
+            throw new IllegalArgumentException("Array is too small. " + values.length + " < " + A.numCols);
 
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];
-            int idx1 = A.col_idx[i+1];
+            int idx1 = A.col_idx[i + 1];
 
-            double v = values[offset+i];
+            double v = values[offset + i];
             for (int j = idx0; j < idx1; j++) {
                 A.nz_values[j] *= v;
             }
@@ -653,15 +586,15 @@ public class CommonOps_DSCC {
      * @param values (Input) multiplication factor for each column
      * @param offset (Input) first index in values to start at
      */
-    public static void divideColumns(DMatrixSparseCSC A , double []values , int offset ) {
-        if( values.length+offset < A.numCols )
-            throw new IllegalArgumentException("Array is too small. "+values.length+" < "+A.numCols);
+    public static void divideColumns( DMatrixSparseCSC A, double[] values, int offset ) {
+        if (values.length + offset < A.numCols)
+            throw new IllegalArgumentException("Array is too small. " + values.length + " < " + A.numCols);
 
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];
-            int idx1 = A.col_idx[i+1];
+            int idx1 = A.col_idx[i + 1];
 
-            double v = values[offset+i];
+            double v = values[offset + i];
             for (int j = idx0; j < idx1; j++) {
                 A.nz_values[j] /= v;
             }
@@ -678,22 +611,21 @@ public class CommonOps_DSCC {
      * @param diagC Array of length indexC + B.numCols
      * @param offsetC First index in C
      */
-    public static void multRowsCols( double []diagA , int offsetA ,
-                                     DMatrixSparseCSC B ,
-                                     double []diagC , int offsetC )
-    {
-        if( diagA.length+offsetA < B.numRows )
+    public static void multRowsCols( double[] diagA, int offsetA,
+                                     DMatrixSparseCSC B,
+                                     double[] diagC, int offsetC ) {
+        if (diagA.length + offsetA < B.numRows)
             throw new IllegalArgumentException("diagA is too small.");
-        if( diagC.length+offsetC < B.numCols )
+        if (diagC.length + offsetC < B.numCols)
             throw new IllegalArgumentException("diagA is too small.");
 
         for (int i = 0; i < B.numCols; i++) {
             int idx0 = B.col_idx[i];
-            int idx1 = B.col_idx[i+1];
+            int idx1 = B.col_idx[i + 1];
 
-            double c = diagC[offsetC+i];
+            double c = diagC[offsetC + i];
             for (int j = idx0; j < idx1; j++) {
-                B.nz_values[j] *= c*diagA[offsetA+B.nz_rows[j]];
+                B.nz_values[j] *= c*diagA[offsetA + B.nz_rows[j]];
             }
         }
     }
@@ -708,36 +640,35 @@ public class CommonOps_DSCC {
      * @param diagC Array of length indexC + B.numCols
      * @param offsetC First index in C
      */
-    public static void divideRowsCols( double []diagA , int offsetA ,
-                                       DMatrixSparseCSC B ,
-                                       double []diagC , int offsetC )
-    {
-        if( diagA.length+offsetA < B.numRows )
+    public static void divideRowsCols( double[] diagA, int offsetA,
+                                       DMatrixSparseCSC B,
+                                       double[] diagC, int offsetC ) {
+        if (diagA.length + offsetA < B.numRows)
             throw new IllegalArgumentException("diagA is too small.");
-        if( diagC.length+offsetC < B.numCols )
+        if (diagC.length + offsetC < B.numCols)
             throw new IllegalArgumentException("diagA is too small.");
 
         for (int i = 0; i < B.numCols; i++) {
             int idx0 = B.col_idx[i];
-            int idx1 = B.col_idx[i+1];
+            int idx1 = B.col_idx[i + 1];
 
-            double c = diagC[offsetC+i];
+            double c = diagC[offsetC + i];
             for (int j = idx0; j < idx1; j++) {
-                B.nz_values[j] /= c*diagA[offsetA+B.nz_rows[j]];
+                B.nz_values[j] /= c*diagA[offsetA + B.nz_rows[j]];
             }
         }
     }
 
     /**
      * Returns a diagonal matrix with the specified diagonal elements.
+     *
      * @param values values of diagonal elements
      * @return A diagonal matrix
      */
-    public static DMatrixSparseCSC diag(double... values ) {
+    public static DMatrixSparseCSC diag( double... values ) {
         int N = values.length;
-        return diag(new DMatrixSparseCSC(N,N,N),values,0,N);
+        return diag(new DMatrixSparseCSC(N, N, N), values, 0, N);
     }
-
 
     /**
      * Creates a diagonal matrix from an array. Elements in the array can be offset.
@@ -748,63 +679,61 @@ public class CommonOps_DSCC {
      * @param offset First index in values
      * @return The diagonal matrix
      */
-    public static DMatrixSparseCSC diag(@Nullable DMatrixSparseCSC A ,
-                                        double[] values, int offset, int length) {
+    public static DMatrixSparseCSC diag( @Nullable DMatrixSparseCSC A,
+                                         double[] values, int offset, int length ) {
         int N = length;
-        if( A == null )
-            A = new DMatrixSparseCSC(N,N,N);
+        if (A == null)
+            A = new DMatrixSparseCSC(N, N, N);
         else
-            A.reshape(N,N,N);
+            A.reshape(N, N, N);
         A.nz_length = N;
 
         for (int i = 0; i < N; i++) {
-            A.col_idx[i+1] = i+1;
+            A.col_idx[i + 1] = i + 1;
             A.nz_rows[i] = i;
-            A.nz_values[i] = values[offset+i];
+            A.nz_values[i] = values[offset + i];
         }
 
         return A;
     }
 
-
     /**
      * <p>
      * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
      * can either be a row or column vector.
      * <p>
      *
-     * @param src Matrix whose diagonal elements are being extracted. Not modified.
-     * @param dst A vector the results will be written into. Modified.
+     * @param A Matrix whose diagonal elements are being extracted. Not modified.
+     * @param outputB A vector the results will be written into. Modified.
      */
-    public static void extractDiag(DMatrixSparseCSC src, DMatrixSparseCSC dst ) {
-        int N = Math.min(src.numRows, src.numCols);
+    public static void extractDiag( DMatrixSparseCSC A, DMatrixSparseCSC outputB ) {
+        int N = Math.min(A.numRows, A.numCols);
 
-        if( !MatrixFeatures_DSCC.isVector(dst) ) {
-            dst.reshape(N, 1, N);
-        } else if( dst.numRows*dst.numCols != N ) {
-            dst.reshape(N,1,N);
+        if (!MatrixFeatures_DSCC.isVector(outputB)) {
+            outputB.reshape(N, 1, N);
+        } else if (outputB.numRows*outputB.numCols != N) {
+            outputB.reshape(N, 1, N);
         } else {
-            dst.growMaxLength(N,false);
+            outputB.growMaxLength(N, false);
         }
 
-        dst.nz_length = N;
-        dst.indicesSorted = true;
+        outputB.nz_length = N;
+        outputB.indicesSorted = true;
 
-        if( dst.numRows != 1 ) {
-            dst.col_idx[0] = 0;
-            dst.col_idx[1] = N;
+        if (outputB.numRows != 1) {
+            outputB.col_idx[0] = 0;
+            outputB.col_idx[1] = N;
             for (int i = 0; i < N; i++) {
-                dst.nz_values[i] = src.unsafe_get(i, i);
-                dst.nz_rows[i] = i;
+                outputB.nz_values[i] = A.unsafe_get(i, i);
+                outputB.nz_rows[i] = i;
             }
         } else {
-            dst.col_idx[0] = 0;
+            outputB.col_idx[0] = 0;
             for (int i = 0; i < N; i++) {
-                dst.nz_values[i] = src.unsafe_get(i, i);
-                dst.nz_rows[i] = 0;
-                dst.col_idx[i+1] = i+1;
+                outputB.nz_values[i] = A.unsafe_get(i, i);
+                outputB.nz_rows[i] = 0;
+                outputB.col_idx[i + 1] = i + 1;
             }
-
         }
     }
 
@@ -814,39 +743,40 @@ public class CommonOps_DSCC {
      * can either be a row or column vector.
      * <p>
      *
-     * @param src Matrix whose diagonal elements are being extracted. Not modified.
-     * @param dst A vector the results will be written into. Modified.
+     * @param A Matrix whose diagonal elements are being extracted. Not modified.
+     * @param outputB A vector the results will be written into. Modified.
      */
-    public static void extractDiag(DMatrixSparseCSC src, DMatrixRMaj dst ) {
-        int N = Math.min(src.numRows, src.numCols);
+    public static void extractDiag( DMatrixSparseCSC A, DMatrixRMaj outputB ) {
+        int N = Math.min(A.numRows, A.numCols);
 
-        if( dst.getNumElements() != N || !(dst.numRows==1 || dst.numCols==1) ) {
-            dst.reshape(N, 1);
+        if (outputB.getNumElements() != N || !(outputB.numRows == 1 || outputB.numCols == 1)) {
+            outputB.reshape(N, 1);
         }
 
         for (int i = 0; i < N; i++) {
-            dst.data[i] = src.unsafe_get(i, i);
+            outputB.data[i] = A.unsafe_get(i, i);
         }
     }
 
     /**
      * Converts the permutation vector into a matrix. B = P*A.  B[p[i],:] = A[i,:]
+     *
      * @param p (Input) Permutation vector
      * @param inverse (Input) If it is the inverse. B[i,:] = A[p[i],:)
      * @param P (Output) Permutation matrix
      */
-    public static DMatrixSparseCSC permutationMatrix(int[] p, boolean inverse, int N,
-                                                     @Nullable DMatrixSparseCSC P) {
+    public static DMatrixSparseCSC permutationMatrix( int[] p, boolean inverse, int N,
+                                                      @Nullable DMatrixSparseCSC P ) {
 
-        if( P == null )
-            P = new DMatrixSparseCSC(N,N,N);
+        if (P == null)
+            P = new DMatrixSparseCSC(N, N, N);
         else
-            P.reshape(N,N,N);
+            P.reshape(N, N, N);
         P.indicesSorted = true;
         P.nz_length = N;
 
         // each column should have one element inside of it
-        if( !inverse ) {
+        if (!inverse) {
             for (int i = 0; i < N; i++) {
                 P.col_idx[i + 1] = i + 1;
                 P.nz_rows[p[i]] = i;
@@ -865,22 +795,23 @@ public class CommonOps_DSCC {
 
     /**
      * Converts the permutation matrix into a vector
+     *
      * @param P (Input) Permutation matrix
      * @param vector (Output) Permutation vector
      */
-    public static void permutationVector( DMatrixSparseCSC P , int[] vector) {
-        if( P.numCols != P.numRows ) {
+    public static void permutationVector( DMatrixSparseCSC P, int[] vector ) {
+        if (P.numCols != P.numRows) {
             throw new MatrixDimensionException("Expected a square matrix");
-        } else if( P.nz_length != P.numCols ) {
+        } else if (P.nz_length != P.numCols) {
             throw new IllegalArgumentException("Expected N non-zero elements in permutation matrix");
-        } else if( vector.length < P.numCols ) {
+        } else if (vector.length < P.numCols) {
             throw new IllegalArgumentException("vector is too short");
         }
 
         int M = P.numCols;
 
         for (int i = 0; i < M; i++) {
-            if( P.col_idx[i+1] != i+1 )
+            if (P.col_idx[i + 1] != i + 1)
                 throw new IllegalArgumentException("Unexpected number of elements in a column");
 
             vector[P.nz_rows[i]] = i;
@@ -893,14 +824,15 @@ public class CommonOps_DSCC {
      * @param original Original permutation vector
      * @param inverse It's inverse
      */
-    public static void permutationInverse( int []original , int []inverse , int length ) {
+    public static void permutationInverse( int[] original, int[] inverse, int length ) {
         for (int i = 0; i < length; i++) {
             inverse[original[i]] = i;
         }
     }
-    public static int[] permutationInverse( int []original , int length ) {
+
+    public static int[] permutationInverse( int[] original, int length ) {
         int[] inverse = new int[length];
-        permutationInverse(original,inverse,length);
+        permutationInverse(original, inverse, length);
         return inverse;
     }
 
@@ -912,20 +844,20 @@ public class CommonOps_DSCC {
      * @param input (Input) Matrix which is to be permuted
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static void permuteRowInv(int[] permInv, DMatrixSparseCSC input, DMatrixSparseCSC output) {
-        if( input.numRows > permInv.length )
+    public static void permuteRowInv( int[] permInv, DMatrixSparseCSC input, DMatrixSparseCSC output ) {
+        if (input.numRows > permInv.length)
             throw new IllegalArgumentException("permutation vector must have at least as many elements as input has rows");
 
-        output.reshape(input.numRows,input.numCols,input.nz_length);
+        output.reshape(input.numRows, input.numCols, input.nz_length);
         output.nz_length = input.nz_length;
         output.indicesSorted = false;
 
-        System.arraycopy(input.nz_values,0,output.nz_values,0,input.nz_length);
-        System.arraycopy(input.col_idx,0,output.col_idx,0,input.numCols+1);
+        System.arraycopy(input.nz_values, 0, output.nz_values, 0, input.nz_length);
+        System.arraycopy(input.col_idx, 0, output.col_idx, 0, input.numCols + 1);
 
         int idx0 = 0;
         for (int i = 0; i < input.numCols; i++) {
-            int idx1 = output.col_idx[i+1];
+            int idx1 = output.col_idx[i + 1];
 
             for (int j = idx0; j < idx1; j++) {
                 output.nz_rows[j] = permInv[input.nz_rows[j]];
@@ -937,18 +869,20 @@ public class CommonOps_DSCC {
     /**
      * Applies the forward column and inverse row permutation specified by the two vector to the input matrix
      * and save the results in the output matrix. output[permRow[j],permCol[i]] = input[j,i]
+     *
      * @param permRowInv (Input) Inverse row permutation vector. Null is the same as passing in identity.
      * @param input (Input) Matrix which is to be permuted
      * @param permCol (Input) Column permutation vector. Null is the same as passing in identity.
      * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
      */
-    public static void permute(@Nullable int[] permRowInv, DMatrixSparseCSC input, @Nullable int[] permCol, DMatrixSparseCSC output) {
-        if( permRowInv!= null && input.numRows > permRowInv.length )
+    public static void permute( @Nullable int[] permRowInv, DMatrixSparseCSC input, @Nullable int[] permCol,
+                                DMatrixSparseCSC output ) {
+        if (permRowInv != null && input.numRows > permRowInv.length)
             throw new IllegalArgumentException("rowInv permutation vector must have at least as many elements as input has columns");
-        if( permCol != null && input.numCols > permCol.length )
+        if (permCol != null && input.numCols > permCol.length)
             throw new IllegalArgumentException("permCol permutation vector must have at least as many elements as input has rows");
 
-        output.reshape(input.numRows,input.numCols,input.nz_length);
+        output.reshape(input.numRows, input.numCols, input.nz_length);
         output.indicesSorted = false;
         output.nz_length = input.nz_length;
 
@@ -957,15 +891,15 @@ public class CommonOps_DSCC {
         // traverse through in order for the output columns
         int outputNZ = 0;
         for (int i = 0; i < N; i++) {
-            int inputCol = permCol!=null?permCol[i]:i; // column of input to source from
+            int inputCol = permCol != null ? permCol[i] : i; // column of input to source from
             int inputNZ = input.col_idx[inputCol];
-            int total = input.col_idx[inputCol+1]- inputNZ; // total nz in this column
+            int total = input.col_idx[inputCol + 1] - inputNZ; // total nz in this column
 
-            output.col_idx[i+1] = output.col_idx[i] + total;
+            output.col_idx[i + 1] = output.col_idx[i] + total;
 
             for (int j = 0; j < total; j++) {
                 int row = input.nz_rows[inputNZ];
-                output.nz_rows[outputNZ] = permRowInv!=null?permRowInv[row]:row;
+                output.nz_rows[outputNZ] = permRowInv != null ? permRowInv[row] : row;
                 output.nz_values[outputNZ++] = input.nz_values[inputNZ++];
             }
         }
@@ -979,7 +913,7 @@ public class CommonOps_DSCC {
      * @param output (Output) Where the permuted vector is stored.
      * @param N Number of elements in the vector.
      */
-    public static void permute( int[] perm , double []input , double[]output , int N ) {
+    public static void permute( int[] perm, double[] input, double[] output, int N ) {
         for (int k = 0; k < N; k++) {
             output[k] = input[perm[k]];
         }
@@ -993,12 +927,11 @@ public class CommonOps_DSCC {
      * @param output (Output) Where the permuted vector is stored.
      * @param N Number of elements in the vector.
      */
-    public static void permuteInv( int[] perm , double []input , double[]output , int N ) {
+    public static void permuteInv( int[] perm, double[] input, double[] output, int N ) {
         for (int k = 0; k < N; k++) {
             output[perm[k]] = input[k];
         }
     }
-
 
     /**
      * Applies the permutation to upper triangular symmetric matrices. Typically a symmetric matrix only stores the
@@ -1009,23 +942,23 @@ public class CommonOps_DSCC {
      * <p>See page cs_symperm() on Page 22 of "Direct Methods for Sparse Linear Systems"</p>
      *
      * @param input (Input) Upper triangular symmetric matrix which is to be permuted.
-     *              Entries below the diagonal are ignored.
+     * Entries below the diagonal are ignored.
      * @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows and columns.
      * @param output (Output) Upper triangular symmetric matrix which has the permutation stored in it.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void permuteSymmetric(DMatrixSparseCSC input, int[] permInv, DMatrixSparseCSC output ,
-                                        @Nullable IGrowArray gw ) {
-        if( input.numRows != input.numCols )
-            throw new MatrixDimensionException("Input must be a square matrix. "+stringShapes(input,output));
-        if( input.numRows != permInv.length )
+    public static void permuteSymmetric( DMatrixSparseCSC input, int[] permInv, DMatrixSparseCSC output,
+                                         @Nullable IGrowArray gw ) {
+        if (input.numRows != input.numCols)
+            throw new MatrixDimensionException("Input must be a square matrix. " + stringShapes(input, output));
+        if (input.numRows != permInv.length)
             throw new MatrixDimensionException("Number of column in input must match length of permInv");
 
         int N = input.numCols;
 
-        int[] w = adjustClear(gw,N); // histogram with column counts
+        int[] w = adjustClear(gw, N); // histogram with column counts
 
-        output.reshape(N,N,0);
+        output.reshape(N, N, 0);
         output.indicesSorted = false;
         output.col_idx[0] = 0;
 
@@ -1033,37 +966,37 @@ public class CommonOps_DSCC {
         for (int j = 0; j < N; j++) {
             int j2 = permInv[j];
             int idx0 = input.col_idx[j];
-            int idx1 = input.col_idx[j+1];
+            int idx1 = input.col_idx[j + 1];
 
             for (int p = idx0; p < idx1; p++) {
                 int i = input.nz_rows[p];
-                if( i > j ) // ignore the lower triangular portion
+                if (i > j) // ignore the lower triangular portion
                     continue;
                 int i2 = permInv[i];
 
-                w[i2>j2?i2:j2]++;
+                w[i2 > j2 ? i2 : j2]++;
             }
         }
 
         // update structure of output
         output.histogramToStructure(w);
-        System.arraycopy(output.col_idx,0,w,0,output.numCols);
+        System.arraycopy(output.col_idx, 0, w, 0, output.numCols);
 
         for (int j = 0; j < N; j++) {
             // column j of Input is row j2 of Output
             int j2 = permInv[j];
             int idx0 = input.col_idx[j];
-            int idx1 = input.col_idx[j+1];
+            int idx1 = input.col_idx[j + 1];
 
             for (int p = idx0; p < idx1; p++) {
                 int i = input.nz_rows[p];
-                if( i > j ) // ignore the lower triangular portion
+                if (i > j) // ignore the lower triangular portion
                     continue;
 
                 int i2 = permInv[i];
                 // row i of Input is row i2 of Output
-                int q = w[i2>j2?i2:j2]++;
-                output.nz_rows[q] = i2<j2?i2:j2;
+                int q = w[i2 > j2 ? i2 : j2]++;
+                output.nz_rows[q] = i2 < j2 ? i2 : j2;
                 output.nz_values[q] = input.nz_values[p];
             }
         }
@@ -1077,34 +1010,33 @@ public class CommonOps_DSCC {
      * @param out (Output) (Optional) Storage for combined matrix. Resized.
      * @return Combination of the two matrices
      */
-    public static DMatrixSparseCSC concatRows(DMatrixSparseCSC top , DMatrixSparseCSC bottom ,
-                                              @Nullable DMatrixSparseCSC out )
-    {
-        if( top.numCols != bottom.numCols )
-            throw new MatrixDimensionException("Number of columns must match. "+stringShapes(top,bottom));
-        if( out == null )
-            out = new DMatrixSparseCSC(0,0,0);
+    public static DMatrixSparseCSC concatRows( DMatrixSparseCSC top, DMatrixSparseCSC bottom,
+                                               @Nullable DMatrixSparseCSC out ) {
+        if (top.numCols != bottom.numCols)
+            throw new MatrixDimensionException("Number of columns must match. " + stringShapes(top, bottom));
+        if (out == null)
+            out = new DMatrixSparseCSC(0, 0, 0);
 
-        out.reshape(top.numRows+bottom.numRows,top.numCols,top.nz_length+bottom.nz_length);
-        out.nz_length = top.nz_length+bottom.nz_length;
+        out.reshape(top.numRows + bottom.numRows, top.numCols, top.nz_length + bottom.nz_length);
+        out.nz_length = top.nz_length + bottom.nz_length;
 
         int index = 0;
         for (int i = 0; i < top.numCols; i++) {
             int top0 = top.col_idx[i];
-            int top1 = top.col_idx[i+1];
+            int top1 = top.col_idx[i + 1];
 
             int bot0 = bottom.col_idx[i];
-            int bot1 = bottom.col_idx[i+1];
+            int bot1 = bottom.col_idx[i + 1];
 
             int out0 = out.col_idx[i];
-            int out1 = out0 + top1-top0 + bot1-bot0;
-            out.col_idx[i+1] = out1;
+            int out1 = out0 + top1 - top0 + bot1 - bot0;
+            out.col_idx[i + 1] = out1;
 
-            for (int j = top0; j < top1; j++ , index++) {
+            for (int j = top0; j < top1; j++, index++) {
                 out.nz_values[index] = top.nz_values[j];
                 out.nz_rows[index] = top.nz_rows[j];
             }
-            for (int j = bot0; j < bot1; j++ , index++) {
+            for (int j = bot0; j < bot1; j++, index++) {
                 out.nz_values[index] = bottom.nz_values[j];
                 out.nz_rows[index] = top.numRows + bottom.nz_rows[j];
             }
@@ -1122,28 +1054,27 @@ public class CommonOps_DSCC {
      * @param out (Output) (Optional) Storage for combined matrix. Resized.
      * @return Combination of the two matrices
      */
-    public static DMatrixSparseCSC concatColumns(DMatrixSparseCSC left , DMatrixSparseCSC right ,
-                                                 @Nullable DMatrixSparseCSC out )
-    {
-        if( left.numRows != right.numRows )
-            throw new MatrixDimensionException("Number of rows must match. "+stringShapes(left,right));
-        if( out == null )
-            out = new DMatrixSparseCSC(0,0,0);
+    public static DMatrixSparseCSC concatColumns( DMatrixSparseCSC left, DMatrixSparseCSC right,
+                                                  @Nullable DMatrixSparseCSC out ) {
+        if (left.numRows != right.numRows)
+            throw new MatrixDimensionException("Number of rows must match. " + stringShapes(left, right));
+        if (out == null)
+            out = new DMatrixSparseCSC(0, 0, 0);
 
-        out.reshape(left.numRows,left.numCols+right.numCols,left.nz_length+right.nz_length);
-        out.nz_length = left.nz_length+right.nz_length;
+        out.reshape(left.numRows, left.numCols + right.numCols, left.nz_length + right.nz_length);
+        out.nz_length = left.nz_length + right.nz_length;
 
-        System.arraycopy(left.col_idx,0,out.col_idx,0,left.numCols+1);
-        System.arraycopy(left.nz_rows,0,out.nz_rows,0,left.nz_length);
-        System.arraycopy(left.nz_values,0,out.nz_values,0,left.nz_length);
+        System.arraycopy(left.col_idx, 0, out.col_idx, 0, left.numCols + 1);
+        System.arraycopy(left.nz_rows, 0, out.nz_rows, 0, left.nz_length);
+        System.arraycopy(left.nz_values, 0, out.nz_values, 0, left.nz_length);
 
         int index = left.nz_length;
         for (int i = 0; i < right.numCols; i++) {
             int r0 = right.col_idx[i];
-            int r1 = right.col_idx[i+1];
+            int r1 = right.col_idx[i + 1];
 
-            out.col_idx[left.numCols+i] = index;
-            out.col_idx[left.numCols+i+1] = index + (r1 - r0);
+            out.col_idx[left.numCols + i] = index;
+            out.col_idx[left.numCols + i + 1] = index + (r1 - r0);
 
             for (int j = r0; j < r1; j++, index++) {
                 out.nz_rows[index] = right.nz_rows[j];
@@ -1163,56 +1094,57 @@ public class CommonOps_DSCC {
      * @param out (Output, Optional) Storage for column vector
      * @return The column of A.
      */
-    public static DMatrixSparseCSC extractColumn(DMatrixSparseCSC A , int column , @Nullable DMatrixSparseCSC out ) {
+    public static DMatrixSparseCSC extractColumn( DMatrixSparseCSC A, int column, @Nullable DMatrixSparseCSC out ) {
 
-        if( out == null )
-            out = new DMatrixSparseCSC(1,1,1);
+        if (out == null)
+            out = new DMatrixSparseCSC(1, 1, 1);
 
         int idx0 = A.col_idx[column];
-        int idx1 = A.col_idx[column+1];
+        int idx1 = A.col_idx[column + 1];
 
-        out.reshape(A.numRows,1,idx1-idx0);
-        out.nz_length = idx1-idx0;
+        out.reshape(A.numRows, 1, idx1 - idx0);
+        out.nz_length = idx1 - idx0;
 
         out.col_idx[0] = 0;
         out.col_idx[1] = out.nz_length;
 
-        System.arraycopy(A.nz_values,idx0,out.nz_values,0,out.nz_length);
-        System.arraycopy(A.nz_rows,idx0,out.nz_rows,0,out.nz_length);
+        System.arraycopy(A.nz_values, idx0, out.nz_values, 0, out.nz_length);
+        System.arraycopy(A.nz_rows, idx0, out.nz_rows, 0, out.nz_length);
 
         return out;
     }
 
     /**
      * Creates a submatrix by extracting the specified rows from A. rows = {row0 %le; i %le; row1}.
+     *
      * @param A (Input) matrix
      * @param row0 First row. Inclusive
      * @param row1 Last row+1.
      * @param out (Output, Option) Storage for output matrix
      * @return The submatrix
      */
-    public static DMatrixSparseCSC extractRows(DMatrixSparseCSC A , int row0 , int row1 ,
-                                               @Nullable DMatrixSparseCSC out ) {
+    public static DMatrixSparseCSC extractRows( DMatrixSparseCSC A, int row0, int row1,
+                                                @Nullable DMatrixSparseCSC out ) {
 
-        if( out == null )
-            out = new DMatrixSparseCSC(1,1,1);
+        if (out == null)
+            out = new DMatrixSparseCSC(1, 1, 1);
 
-        out.reshape(row1-row0,A.numCols,A.nz_length);
+        out.reshape(row1 - row0, A.numCols, A.nz_length);
 //        out.col_idx[0] = 0;
 //        out.nz_length = 0;
 
         for (int col = 0; col < A.numCols; col++) {
             int idx0 = A.col_idx[col];
-            int idx1 = A.col_idx[col+1];
+            int idx1 = A.col_idx[col + 1];
 
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
-                if( row >= row0 && row < row1 ) {
+                if (row >= row0 && row < row1) {
                     out.nz_values[out.nz_length] = A.nz_values[i];
-                    out.nz_rows[out.nz_length++] = row-row0;
+                    out.nz_rows[out.nz_length++] = row - row0;
                 }
             }
-            out.col_idx[col+1] = out.nz_length;
+            out.col_idx[col + 1] = out.nz_length;
         }
 
         return out;
@@ -1241,23 +1173,22 @@ public class CommonOps_DSCC {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract(DMatrixSparseCSC src, int srcY0, int srcY1, int srcX0, int srcX1,
-                               DMatrixSparseCSC dst, int dstY0, int dstX0)
-    {
-        if( srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows() )
-            throw new MatrixDimensionException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows. "+stringShapes(src,dst));
-        if( srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols() )
-            throw new MatrixDimensionException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols. "+stringShapes(src,dst));
+    public static void extract( DMatrixSparseCSC src, int srcY0, int srcY1, int srcX0, int srcX1,
+                                DMatrixSparseCSC dst, int dstY0, int dstX0 ) {
+        if (srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.getNumRows())
+            throw new MatrixDimensionException("srcY1 < srcY0 || srcY0 < 0 || srcY1 > src.numRows. " + stringShapes(src, dst));
+        if (srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.getNumCols())
+            throw new MatrixDimensionException("srcX1 < srcX0 || srcX0 < 0 || srcX1 > src.numCols. " + stringShapes(src, dst));
 
-        int w = srcX1-srcX0;
-        int h = srcY1-srcY0;
+        int w = srcX1 - srcX0;
+        int h = srcY1 - srcY0;
 
-        if( dstY0+h > dst.getNumRows() )
-            throw new IllegalArgumentException("dst is too small in rows. "+dst.getNumRows()+" < "+(dstY0+h));
-        if( dstX0+w > dst.getNumCols() )
-            throw new IllegalArgumentException("dst is too small in columns. "+dst.getNumCols()+" < "+(dstX0+w));
+        if (dstY0 + h > dst.getNumRows())
+            throw new IllegalArgumentException("dst is too small in rows. " + dst.getNumRows() + " < " + (dstY0 + h));
+        if (dstX0 + w > dst.getNumCols())
+            throw new IllegalArgumentException("dst is too small in columns. " + dst.getNumCols() + " < " + (dstX0 + w));
 
-        zero(dst,dstY0,dstY0+h,dstX0,dstX0+w);
+        zero(dst, dstY0, dstY0 + h, dstX0, dstX0 + w);
 
         // NOTE: One possible optimization would be to determine the non-zero pattern in dst after the change is
         //       applied, modify it's structure, then copy the values in. That way you aren't shifting memory constantly.
@@ -1287,16 +1218,16 @@ public class CommonOps_DSCC {
      * @param A A matrix whose elements are about to be set. Modified.
      * @param value The value each element will have.
      */
-    public static void fill(DMatrixSparseCSC A , double value ) {
+    public static void fill( DMatrixSparseCSC A, double value ) {
         int N = A.numCols*A.numRows;
-        A.growMaxLength(N,false);
+        A.growMaxLength(N, false);
         A.col_idx[0] = 0;
         for (int col = 0; col < A.numCols; col++) {
             int idx0 = A.col_idx[col];
-            int idx1 = A.col_idx[col+1] = idx0 + A.numRows;
+            int idx1 = A.col_idx[col + 1] = idx0 + A.numRows;
 
             for (int i = idx0; i < idx1; i++) {
-                A.nz_rows[i] = i-idx0;
+                A.nz_rows[i] = i - idx0;
                 A.nz_values[i] = value;
             }
         }
@@ -1315,11 +1246,11 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the sum of each column
      */
-    public static DMatrixRMaj sumCols(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(1,input.numCols);
+    public static DMatrixRMaj sumCols( DMatrixSparseCSC input, @Nullable DMatrixRMaj output ) {
+        if (output == null) {
+            output = new DMatrixRMaj(1, input.numCols);
         } else {
-            output.reshape(1,input.numCols);
+            output.reshape(1, input.numCols);
         }
 
         for (int col = 0; col < input.numCols; col++) {
@@ -1331,7 +1262,6 @@ public class CommonOps_DSCC {
                 sum += input.nz_values[i];
             }
             output.data[col] = sum;
-
         }
 
         return output;
@@ -1348,22 +1278,18 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the minimums of each column
      */
-    public static DMatrixRMaj minCols(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(1,input.numCols);
-        } else {
-            output.reshape(1,input.numCols);
-        }
+    public static DMatrixRMaj minCols( DMatrixSparseCSC input, @Nullable DMatrixRMaj output ) {
+        output = reshapeOrDeclare(output, 1, input.numCols);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
             int idx1 = input.col_idx[col + 1];
 
             // take in account the zeros
-            double min = idx1-idx0 == input.numRows ? Double.MAX_VALUE : 0;
+            double min = idx1 - idx0 == input.numRows ? Double.MAX_VALUE : 0;
             for (int i = idx0; i < idx1; i++) {
                 double v = input.nz_values[i];
-                if( min > v ) {
+                if (min > v) {
                     min = v;
                 }
             }
@@ -1384,22 +1310,18 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a row vector. Modified.
      * @return Vector containing the maximums of each column
      */
-    public static DMatrixRMaj maxCols(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(1,input.numCols);
-        } else {
-            output.reshape(1,input.numCols);
-        }
+    public static DMatrixRMaj maxCols( DMatrixSparseCSC input, @Nullable DMatrixRMaj output ) {
+        output = reshapeOrDeclare(output, 1, input.numCols);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
             int idx1 = input.col_idx[col + 1];
 
             // take in account the zeros
-            double max = idx1-idx0 == input.numRows ? -Double.MAX_VALUE : 0;
+            double max = idx1 - idx0 == input.numRows ? -Double.MAX_VALUE : 0;
             for (int i = idx0; i < idx1; i++) {
                 double v = input.nz_values[i];
-                if( max < v ) {
+                if (max < v) {
                     max = v;
                 }
             }
@@ -1420,14 +1342,10 @@ public class CommonOps_DSCC {
      * @param output Optional storage for output. Reshaped into a column vector. Modified.
      * @return Vector containing the sum of each row
      */
-    public static DMatrixRMaj sumRows(DMatrixSparseCSC input , @Nullable DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,1);
-        } else {
-            output.reshape(input.numRows,1);
-        }
+    public static DMatrixRMaj sumRows( DMatrixSparseCSC input, @Nullable DMatrixRMaj output ) {
+        output = reshapeOrDeclare(output, input.numRows, 1);
 
-        Arrays.fill(output.data,0,input.numRows,0);
+        Arrays.fill(output.data, 0, input.numRows, 0);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1453,21 +1371,11 @@ public class CommonOps_DSCC {
      * @param gw work space
      * @return Vector containing the minimum of each row
      */
-    public static DMatrixRMaj minRows(DMatrixSparseCSC input , @Nullable DMatrixRMaj output , @Nullable IGrowArray gw) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,1);
-        } else {
-            output.reshape(input.numRows,1);
-        }
-        if( gw == null )
-            gw = new IGrowArray(input.numRows);
-        else {
-            gw.reshape(input.numRows);
-            Arrays.fill(gw.data,0,input.numRows,0);
-        }
+    public static DMatrixRMaj minRows( DMatrixSparseCSC input, @Nullable DMatrixRMaj output, @Nullable IGrowArray gw ) {
+        output = reshapeOrDeclare(output, input.numRows, 1);
+        int[] w = adjust(gw, input.numRows, input.numRows);
 
-        Arrays.fill(output.data,0,input.numRows,Double.MAX_VALUE);
-        Arrays.fill(gw.data,0,input.numRows,0);
+        Arrays.fill(output.data, 0, input.numRows, Double.MAX_VALUE);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1476,16 +1384,17 @@ public class CommonOps_DSCC {
             for (int i = idx0; i < idx1; i++) {
                 int row = input.nz_rows[i];
                 double v = input.nz_values[i];
-                if( output.data[row] > v ) {
+                if (output.data[row] > v) {
                     output.data[row] = v;
                 }
-                gw.data[row]++;
+                w[row]++;
             }
         }
+
         for (int row = 0; row < input.numRows; row++) {
             // consider the zeros now if a row wasn't filled in all the way
-            if( gw.data[row] != input.numCols ) {
-                if( output.data[row] > 0 ) {
+            if (w[row] != input.numCols) {
+                if (output.data[row] > 0) {
                     output.data[row] = 0;
                 }
             }
@@ -1493,7 +1402,6 @@ public class CommonOps_DSCC {
 
         return output;
     }
-
 
     /**
      * <p>
@@ -1507,20 +1415,11 @@ public class CommonOps_DSCC {
      * @param gw work space
      * @return Vector containing the maximum of each row
      */
-    public static DMatrixRMaj maxRows(DMatrixSparseCSC input , @Nullable DMatrixRMaj output , @Nullable IGrowArray gw) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,1);
-        } else {
-            output.reshape(input.numRows,1);
-        }
+    public static DMatrixRMaj maxRows( DMatrixSparseCSC input, @Nullable DMatrixRMaj output, @Nullable IGrowArray gw ) {
+        output = reshapeOrDeclare(output, input.numRows, 1);
+        int[] w = adjust(gw, input.numRows, input.numRows);
 
-        if( gw == null )
-            gw = new IGrowArray(input.numRows);
-        else {
-            gw.reshape(input.numRows);
-            Arrays.fill(gw.data,0,input.numRows,0);
-        }
-        Arrays.fill(output.data,0,input.numRows,-Double.MAX_VALUE);
+        Arrays.fill(output.data, 0, input.numRows, -Double.MAX_VALUE);
 
         for (int col = 0; col < input.numCols; col++) {
             int idx0 = input.col_idx[col];
@@ -1529,16 +1428,17 @@ public class CommonOps_DSCC {
             for (int i = idx0; i < idx1; i++) {
                 int row = input.nz_rows[i];
                 double v = input.nz_values[i];
-                if( output.data[row] < v ) {
+                if (output.data[row] < v) {
                     output.data[row] = v;
                 }
-                gw.data[row]++;
+                w[row]++;
             }
         }
+
         for (int row = 0; row < input.numRows; row++) {
             // consider the zeros now if a row wasn't filled in all the way
-            if( gw.data[row] != input.numCols ) {
-                if( output.data[row] < 0 ) {
+            if (w[row] != input.numCols) {
+                if (output.data[row] < 0) {
                     output.data[row] = 0;
                 }
             }
@@ -1556,24 +1456,24 @@ public class CommonOps_DSCC {
      * @param col0 Start column.
      * @param col1 Stop column+1.
      */
-    public static void zero( DMatrixSparseCSC A , int row0, int row1, int col0, int col1 ) {
-        for (int col = col1-1; col >= col0; col--) {
+    public static void zero( DMatrixSparseCSC A, int row0, int row1, int col0, int col1 ) {
+        for (int col = col1 - 1; col >= col0; col--) {
             int numRemoved = 0;
 
-            int idx0 = A.col_idx[col], idx1 = A.col_idx[col+1];
+            int idx0 = A.col_idx[col], idx1 = A.col_idx[col + 1];
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
 
                 // if sorted a faster technique could be used
-                if( row >= row0 && row < row1 ) {
+                if (row >= row0 && row < row1) {
                     numRemoved++;
-                } else if( numRemoved > 0 ){
-                    A.nz_rows[i-numRemoved]=row;
-                    A.nz_values[i-numRemoved]=A.nz_values[i];
+                } else if (numRemoved > 0) {
+                    A.nz_rows[i - numRemoved] = row;
+                    A.nz_values[i - numRemoved] = A.nz_values[i];
                 }
             }
 
-            if( numRemoved > 0 ) {
+            if (numRemoved > 0) {
                 // this could be done more intelligently. Each time a column is adjusted all the columns are adjusted
                 // after it. Maybe accumulate the changes in each column and do it in one pass? Need an array to store
                 // those results though
@@ -1584,7 +1484,7 @@ public class CommonOps_DSCC {
                 }
                 A.nz_length -= numRemoved;
 
-                for (int i = col+1; i <= A.numCols; i++) {
+                for (int i = col + 1; i <= A.numCols; i++) {
                     A.col_idx[i] -= numRemoved;
                 }
             }
@@ -1602,10 +1502,9 @@ public class CommonOps_DSCC {
      * @param colB Column in B
      * @return Dot product
      */
-    public static double dotInnerColumns( DMatrixSparseCSC A , int colA , DMatrixSparseCSC B , int colB,
-                                          @Nullable IGrowArray gw , @Nullable DGrowArray gx)
-    {
-        return ImplSparseSparseMult_DSCC.dotInnerColumns(A,colA,B,colB,gw,gx);
+    public static double dotInnerColumns( DMatrixSparseCSC A, int colA, DMatrixSparseCSC B, int colB,
+                                          @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        return ImplSparseSparseMult_DSCC.dotInnerColumns(A, colA, B, colB, gw, gx);
     }
 
     /**
@@ -1633,30 +1532,28 @@ public class CommonOps_DSCC {
      * @param a (Input) A matrix that is m by n. Not modified.
      * @param b (Input) A matrix that is n by k. Not modified.
      * @param x (Output) A matrix that is m by k. Modified.
-     *
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean solve(DMatrixSparseCSC a ,
-                                DMatrixRMaj b ,
-                                DMatrixRMaj x )
-    {
-        x.reshape(a.numCols,b.numCols);
-        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
-        if( a.numRows > a.numCols ) {
+    public static boolean solve( DMatrixSparseCSC a,
+                                 DMatrixRMaj b,
+                                 DMatrixRMaj x ) {
+        x.reshape(a.numCols, b.numCols);
+        LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver;
+        if (a.numRows > a.numCols) {
             solver = LinearSolverFactory_DSCC.qr(FillReducing.NONE);// todo specify a filling that makes sense
         } else {
             solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
         }
 
         // Ensure that the input isn't modified
-        if( solver.modifiesA() )
+        if (solver.modifiesA())
             a = a.copy();
 
-        if( solver.modifiesB() )
+        if (solver.modifiesB())
             b = b.copy();
 
         // decompose then solve the matrix
-        if( !solver.setA(a) )
+        if (!solver.setA(a))
             return false;
 
         solver.solve(b, x);
@@ -1688,30 +1585,28 @@ public class CommonOps_DSCC {
      * @param a (Input) A matrix that is m by n. Not modified.
      * @param b (Input) A matrix that is n by k. Not modified.
      * @param x (Output) A matrix that is m by k. Modified.
-     *
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean solve(DMatrixSparseCSC a ,
-                                DMatrixSparseCSC b ,
-                                DMatrixSparseCSC x )
-    {
-        x.reshape(a.numCols,b.numCols);
-        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
-        if( a.numRows > a.numCols ) {
+    public static boolean solve( DMatrixSparseCSC a,
+                                 DMatrixSparseCSC b,
+                                 DMatrixSparseCSC x ) {
+        x.reshape(a.numCols, b.numCols);
+        LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver;
+        if (a.numRows > a.numCols) {
             solver = LinearSolverFactory_DSCC.qr(FillReducing.NONE);// todo specify a filling that makes sense
         } else {
             solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
         }
 
         // Ensure that the input isn't modified
-        if( solver.modifiesA() )
+        if (solver.modifiesA())
             a = a.copy();
 
-        if( solver.modifiesB() )
+        if (solver.modifiesB())
             b = b.copy();
 
         // decompose then solve the matrix
-        if( !solver.setA(a) )
+        if (!solver.setA(a))
             return false;
 
         solver.solveSparse(b, x);
@@ -1742,22 +1637,22 @@ public class CommonOps_DSCC {
      * @param inverse (Output) Where the inverse matrix is stored.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert(DMatrixSparseCSC A, DMatrixRMaj inverse ) {
-        if( A.numRows != A.numCols )
+    public static boolean invert( DMatrixSparseCSC A, DMatrixRMaj inverse ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("A must be a square matrix");
-        inverse.reshape(A.numRows,A.numCols);
+        inverse.reshape(A.numRows, A.numCols);
 
-        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> solver;
+        LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver;
         solver = LinearSolverFactory_DSCC.lu(FillReducing.NONE);
 
         // Ensure that the input isn't modified
-        if( solver.modifiesA() )
+        if (solver.modifiesA())
             A = A.copy();
 
         DMatrixRMaj I = CommonOps_DDRM.identity(A.numRows);
 
         // decompose then solve the matrix
-        if( !solver.setA(A) )
+        if (!solver.setA(A))
             return false;
 
         solver.solve(I, inverse);
@@ -1775,23 +1670,24 @@ public class CommonOps_DSCC {
     public static double det( DMatrixSparseCSC A ) {
         LUSparseDecomposition_F64<DMatrixSparseCSC> alg = DecompositionFactory_DSCC.lu(FillReducing.NONE);
 
-        if( alg.inputModified() ) {
+        if (alg.inputModified()) {
             A = A.copy();
         }
 
-        if( !alg.decompose(A) )
+        if (!alg.decompose(A))
             return 0.0;
         return alg.computeDeterminant().real;
     }
 
     /**
      * Copies all elements from input into output which are &gt; tol.
+     *
      * @param input (Input) input matrix. Not modified.
      * @param output (Output) Output matrix. Modified and shaped to match input.
      * @param tol Tolerance for defining zero
      */
-    public static void removeZeros( DMatrixSparseCSC input , DMatrixSparseCSC  output , double tol ) {
-        ImplCommonOps_DSCC.removeZeros(input,output,tol);
+    public static void removeZeros( DMatrixSparseCSC input, DMatrixSparseCSC output, double tol ) {
+        ImplCommonOps_DSCC.removeZeros(input, output, tol);
     }
 
     /**
@@ -1801,7 +1697,7 @@ public class CommonOps_DSCC {
      * @param A (Input/Output) input matrix. Modified.
      * @param tol Tolerance for defining zero
      */
-    public static void removeZeros( DMatrixSparseCSC A , double tol ) {
+    public static void removeZeros( DMatrixSparseCSC A, double tol ) {
         ImplCommonOps_DSCC.removeZeros(A, tol);
     }
 
@@ -1813,7 +1709,7 @@ public class CommonOps_DSCC {
      * @param A (Input/Output) input matrix. Modified.
      * @param work Nullable. Internal workspace array.
      */
-    public static void duplicatesAdd( DMatrixSparseCSC A , @Nullable IGrowArray work) {
+    public static void duplicatesAdd( DMatrixSparseCSC A, @Nullable IGrowArray work ) {
         ImplCommonOps_DSCC.duplicatesAdd(A, work);
     }
 
@@ -1824,12 +1720,12 @@ public class CommonOps_DSCC {
      * @param offset (Input) First index in values
      * @param A (Input/Output) Matrix. Modified.
      */
-    public static void multRows(double[] diag, int offset, DMatrixSparseCSC A) {
-        if( diag.length < A.numRows )
-            throw new IllegalArgumentException("Array is too small. "+diag.length+" < "+A.numCols);
+    public static void multRows( double[] diag, int offset, DMatrixSparseCSC A ) {
+        if (diag.length < A.numRows)
+            throw new IllegalArgumentException("Array is too small. " + diag.length + " < " + A.numCols);
 
         for (int i = 0; i < A.nz_length; i++) {
-            A.nz_values[i] *= diag[A.nz_rows[i+offset]];
+            A.nz_values[i] *= diag[A.nz_rows[i + offset]];
         }
     }
 
@@ -1840,12 +1736,12 @@ public class CommonOps_DSCC {
      * @param offset (Input) First index in values
      * @param A (Input/Output) Matrix. Modified.
      */
-    public static void divideRows(double[] diag, int offset, DMatrixSparseCSC A) {
-        if( diag.length < A.numRows )
-            throw new IllegalArgumentException("Array is too small. "+diag.length+" < "+A.numCols);
+    public static void divideRows( double[] diag, int offset, DMatrixSparseCSC A ) {
+        if (diag.length < A.numRows)
+            throw new IllegalArgumentException("Array is too small. " + diag.length + " < " + A.numCols);
 
         for (int i = 0; i < A.nz_length; i++) {
-            A.nz_values[i] /= diag[A.nz_rows[i+offset]];
+            A.nz_values[i] /= diag[A.nz_rows[i + offset]];
         }
     }
 
@@ -1862,13 +1758,13 @@ public class CommonOps_DSCC {
     public static double trace( DMatrixSparseCSC A ) {
         double output = 0;
 
-        int o = Math.min(A.numCols,A.numRows);
+        int o = Math.min(A.numCols, A.numRows);
         for (int col = 0; col < o; col++) {
             int idx0 = A.col_idx[col];
-            int idx1 = A.col_idx[col+1];
+            int idx1 = A.col_idx[col + 1];
 
             for (int i = idx0; i < idx1; i++) {
-                if( A.nz_rows[i] == col ) {
+                if (A.nz_rows[i] == col) {
                     output += A.nz_values[i];
                     break;
                 }
@@ -1883,12 +1779,12 @@ public class CommonOps_DSCC {
      *
      * B = f(A).   A and B can be the same instance.
      *
-     * @param input  (Input) input matrix. Not modified
-     * @param func   Unary function accepting a double
+     * @param input (Input) input matrix. Not modified
+     * @param func Unary function accepting a double
      * @param output (Output) Matrix. Modified.
      * @return The output matrix
      */
-    public static DMatrixSparseCSC apply(DMatrixSparseCSC input, DUnaryOperator func, @Nullable DMatrixSparseCSC output) {
+    public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DUnaryOperator func, @Nullable DMatrixSparseCSC output ) {
         if (output == null) {
             output = input.createLike();
         } else if (input != output) {
@@ -1902,7 +1798,7 @@ public class CommonOps_DSCC {
         return output;
     }
 
-    public static DMatrixSparseCSC apply(DMatrixSparseCSC input, DUnaryOperator func) {
+    public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DUnaryOperator func ) {
         return apply(input, func, input);
     }
 
@@ -1919,7 +1815,7 @@ public class CommonOps_DSCC {
      * @param func Accumulator function defining "+" for accumulator +=  cellValue
      * @return accumulated value
      */
-    public static double reduceScalar(DMatrixSparseCSC input, double initValue, DBinaryOperator func) {
+    public static double reduceScalar( DMatrixSparseCSC input, double initValue, DBinaryOperator func ) {
         double result = initValue;
 
         for (int i = 0; i < input.nz_length; i++) {
@@ -1929,7 +1825,7 @@ public class CommonOps_DSCC {
         return result;
     }
 
-    public static double reduceScalar(DMatrixSparseCSC input, DBinaryOperator func) {
+    public static double reduceScalar( DMatrixSparseCSC input, DBinaryOperator func ) {
         return reduceScalar(input, 0, func);
     }
 
@@ -1943,13 +1839,13 @@ public class CommonOps_DSCC {
      *   output[j] = result
      * </pre>
      *
-     * @param input     (Input) input matrix. Not modified
+     * @param input (Input) input matrix. Not modified
      * @param initValue initial value for accumulator
-     * @param func      Accumulator function defining "+" for accumulator +=  cellValue
-     * @param output    output (Output) Vector, where result can be stored in
+     * @param func Accumulator function defining "+" for accumulator +=  cellValue
+     * @param output output (Output) Vector, where result can be stored in
      * @return a column-vector, where v[i] == values of column i reduced to scalar based on `func`
      */
-    public static DMatrixRMaj reduceColumnWise(DMatrixSparseCSC input, double initValue, DBinaryOperator func, @Nullable DMatrixRMaj output) {
+    public static DMatrixRMaj reduceColumnWise( DMatrixSparseCSC input, double initValue, DBinaryOperator func, @Nullable DMatrixRMaj output ) {
         if (output == null) {
             output = new DMatrixRMaj(1, input.numCols);
         } else {
@@ -1982,13 +1878,14 @@ public class CommonOps_DSCC {
      *   output[j] = result
      * </pre>
      *
-     * @param input     (Input) input matrix. Not modified
+     * @param input (Input) input matrix. Not modified
      * @param initValue initial value for accumulator
-     * @param func      Accumulator function defining "+" for accumulator += cellValue
-     * @param output    output (Output) Vector, where result can be stored in
+     * @param func Accumulator function defining "+" for accumulator += cellValue
+     * @param output output (Output) Vector, where result can be stored in
      * @return a row-vector, where v[i] == values of row i reduced to scalar based on `func`
      */
-    public static DMatrixRMaj reduceRowWise(DMatrixSparseCSC input, double initValue, DBinaryOperator func, @Nullable DMatrixRMaj output) {
+    public static DMatrixRMaj reduceRowWise( DMatrixSparseCSC input, double initValue, DBinaryOperator func,
+                                             @Nullable DMatrixRMaj output ) {
         if (output == null) {
             output = new DMatrixRMaj(1, input.numRows);
         } else {

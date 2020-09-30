@@ -72,27 +72,6 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
         assertEquals(expected[1], found.get(0, 2));
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("sparseMatrixSources")
-    void mult_AT_B(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
-        DSemiRing semiRing = DSemiRings.PLUS_TIMES;
-
-        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.multTransA(matrix, otherMatrix, null, semiRing, null, null);
-        DMatrixSparseCSC expected = CommonOps_DSCC.multTransA(matrix, otherMatrix, null, null, null);
-
-        EjmlUnitTests.assertEquals(expected, found);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("sparseMatrixSources")
-    void mult_A_BT(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
-        DSemiRing semiRing = DSemiRings.PLUS_TIMES;
-
-        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.multTransB(matrix, otherMatrix, null, semiRing, null, null);
-        DMatrixSparseCSC expected = CommonOps_DSCC.multTransB(matrix, otherMatrix, null, null, null);
-
-        EjmlUnitTests.assertEquals(expected, found);
-    }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")

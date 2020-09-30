@@ -87,7 +87,7 @@ public class IntRangeObjectTask<T> extends ForkJoinTask<Void> {
 			}
 			// process the last segment in this thread
 			int index0 = step*stepLength + min;
-			consumer.accept(workspace.get(0),index0,max);
+			consumer.accept(workspace.get(N-1),index0,max);
 
 			// wait until all the other threads are done
 			while( root != null ) {
@@ -97,7 +97,7 @@ public class IntRangeObjectTask<T> extends ForkJoinTask<Void> {
 		} else {
 			int index0 = step*stepLength + min;
 			int index1 = index0 + stepLength;
-			consumer.accept(workspace.get(step+1),index0,index1);
+			consumer.accept(workspace.get(step),index0,index1);
 		}
 		return true;
 	}

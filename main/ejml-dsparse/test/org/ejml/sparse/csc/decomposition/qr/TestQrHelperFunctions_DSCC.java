@@ -74,7 +74,8 @@ public class TestQrHelperFunctions_DSCC {
         // C = (I - gamma*v*v<')*A
         // v'*A
         DMatrixSparseCSC vA = new DMatrixSparseCSC(1,A.numCols,0);
-        CommonOps_DSCC.multTransA(v,A,vA,null,null);
+        DMatrixSparseCSC v_t = CommonOps_DSCC.transpose(v,null,null);
+        CommonOps_DSCC.mult(v_t,A,vA,null,null);
         // B = -gamma*v*(v'*A)
         DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows,A.numCols,0);
         CommonOps_DSCC.mult(v,vA,B);

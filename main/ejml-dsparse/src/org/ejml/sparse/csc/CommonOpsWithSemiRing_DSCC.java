@@ -59,43 +59,6 @@ public class CommonOpsWithSemiRing_DSCC {
         return output;
     }
 
-    public static DMatrixSparseCSC multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output, DSemiRing semiRing,
-                                              @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
-        if (A.numRows != B.numRows)
-            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
-        output = reshapeOrDeclare(output, A, A.numCols, B.numCols);
-
-        ImplSparseSparseMultWithSemiRing_DSCC.multTransA(A, B, output, semiRing, gw, gx);
-
-        return output;
-    }
-
-    /**
-     * Performs matrix multiplication.  output = A*B<sup>T</sup>. B needs to be sorted and will be sorted if it
-     * has not already been sorted.
-     *
-     * @param A        (Input) Matrix. Not modified.
-     * @param B        (Input) Matrix. Value not modified but indicies will be sorted if not sorted already.
-     * @param output   (Output) Storage for results.  Data length is increased if insufficient.
-     * @param semiRing Semi-Ring to define + and *
-     * @param gw       (Optional) Storage for internal workspace.  Can be null.
-     * @param gx       (Optional) Storage for internal workspace.  Can be null.
-     */
-    public static DMatrixSparseCSC multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output, DSemiRing semiRing,
-                                              @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
-        if (A.numCols != B.numCols)
-            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
-        output = reshapeOrDeclare(output, A, A.numRows, B.numRows);
-
-        if (!B.isIndicesSorted())
-            B.sortIndices(null);
-
-        ImplSparseSparseMultWithSemiRing_DSCC.multTransB(A, B, output, semiRing, gw, gx);
-
-        return output;
-    }
-
-
     /**
      * Performs matrix multiplication.  output = A*B
      *

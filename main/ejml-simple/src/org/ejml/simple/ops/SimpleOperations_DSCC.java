@@ -82,7 +82,9 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output) {
-        CommonOps_DSCC.multTransA(A,B,output,gw,gx);
+        var At = new DMatrixSparseCSC(1,1);
+        CommonOps_DSCC.transpose(A,At,gw);
+        CommonOps_DSCC.mult(At,B,output,gw,gx);
     }
 
     @Override
