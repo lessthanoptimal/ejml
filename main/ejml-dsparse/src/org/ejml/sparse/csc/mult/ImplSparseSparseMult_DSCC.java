@@ -82,7 +82,6 @@ public class ImplSparseSparseMult_DSCC {
 
             idx0 = idx1;
         }
-
     }
 
     /**

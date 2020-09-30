@@ -42,7 +42,7 @@ public class ImplCommonOps_DSCC {
      * Performs a matrix transpose.
      *
      * @param A Original matrix.  Not modified.
-     * @param C Storage for transposed 'a'.  Reshaped.
+     * @param C Storage for transposed 'A'.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
     public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , @Nullable IGrowArray gw ) {
