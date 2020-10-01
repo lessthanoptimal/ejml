@@ -16,28 +16,19 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc;
+package org.ejml.sparse.csc.mult;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.fail;
+import org.ejml.data.DGrowArray;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 
 /**
+ * Workspace for concurrent algorithms.
+ *
  * @author Peter Abeles
  */
-class TestCommonOps_MT_DSCC {
-    @Test
-    void mult() {
-        fail("implement");
-    }
-
-    @Test
-    void innerProductLower() {
-        fail("implement");
-    }
-
-    @Test
-    void add() {
-        fail("implement");
-    }
+public class Workspace_MT_DSCC {
+    public final IGrowArray gw = new IGrowArray();
+    public final DGrowArray gx = new DGrowArray();
+    public final DMatrixSparseCSC mat = new DMatrixSparseCSC(1, 1);
 }

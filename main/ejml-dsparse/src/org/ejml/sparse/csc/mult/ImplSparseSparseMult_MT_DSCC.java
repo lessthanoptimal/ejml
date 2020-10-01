@@ -20,9 +20,7 @@ package org.ejml.sparse.csc.mult;
 
 import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.concurrency.GrowArray;
-import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.IGrowArray;
 import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.adjust;
@@ -46,13 +44,13 @@ public class ImplSparseSparseMult_MT_DSCC {
      * @param listWork (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                             @Nullable GrowArray<Workspace> listWork ) {
+                             @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
         if (listWork == null)
-            listWork = new GrowArray<>(Workspace::new);
+            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
 
         // Break the problem up into blocks of columns and process them independently
         EjmlConcurrency.loopBlocks(0, B.numCols, listWork, ( workspace, bj0, bj1 ) -> {
-            DMatrixSparseCSC workC = workspace.C;
+            DMatrixSparseCSC workC = workspace.mat;
             workC.reshape(A.numRows, bj1 - bj0, bj1 - bj0);
             workC.col_idx[0] = 0;
 
@@ -89,35 +87,102 @@ public class ImplSparseSparseMult_MT_DSCC {
         });
 
         // Stitch the output back together
-        C.reshape(A.numRows, B.numCols);
-        C.indicesSorted = false;
-        C.nz_length = 0;
+        stitchMatrix(C, A.numRows, B.numCols, listWork);
+    }
+
+    /**
+     * Compines results from independent blocks into a single matrix
+     */
+    public static void stitchMatrix( DMatrixSparseCSC out, int numRows, int numCols,
+                                     GrowArray<Workspace_MT_DSCC> listWork ) {
+        out.reshape(numRows, numCols);
+        out.indicesSorted = false;
+        out.nz_length = 0;
 
         for (int i = 0; i < listWork.size(); i++) {
-            C.nz_length += listWork.get(i).C.nz_length;
+            out.nz_length += listWork.get(i).mat.nz_length;
         }
-        C.growMaxLength(C.nz_length, false);
+        out.growMaxLength(out.nz_length, false);
 
-        C.nz_length = 0;
-        C.numCols = 0;
-        C.col_idx[0] = 0;
+        out.nz_length = 0;
+        out.numCols = 0;
+        out.col_idx[0] = 0;
         for (int i = 0; i < listWork.size(); i++) {
-            Workspace workspace = listWork.get(i);
+            Workspace_MT_DSCC workspace = listWork.get(i);
 
-            System.arraycopy(workspace.C.nz_rows, 0, C.nz_rows, C.nz_length, workspace.C.nz_length);
-            System.arraycopy(workspace.C.nz_values, 0, C.nz_values, C.nz_length, workspace.C.nz_length);
+            System.arraycopy(workspace.mat.nz_rows, 0, out.nz_rows, out.nz_length, workspace.mat.nz_length);
+            System.arraycopy(workspace.mat.nz_values, 0, out.nz_values, out.nz_length, workspace.mat.nz_length);
 
-            for (int col = 1; col <= workspace.C.numCols; col++) {
-                C.col_idx[++C.numCols] = C.nz_length + workspace.C.col_idx[col];
+            for (int col = 1; col <= workspace.mat.numCols; col++) {
+                out.col_idx[++out.numCols] = out.nz_length + workspace.mat.col_idx[col];
             }
 
-            C.nz_length += workspace.C.nz_length;
+            out.nz_length += workspace.mat.nz_length;
         }
     }
 
-    public static class Workspace {
-        IGrowArray gw = new IGrowArray();
-        DGrowArray gx = new DGrowArray();
-        DMatrixSparseCSC C = new DMatrixSparseCSC(1, 1);
+    /**
+     * Computes the inner product of A times A and stores the results in B. The inner product is symmetric and this
+     * function will only store the lower triangle. If the full matrix is needed then.
+     *
+     * <p>B = A<sup>T</sup>*A</sup>
+     *
+     * @param A (Input) Matrix
+     * @param B (Output) Storage for output.
+     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void innerProductLower(DMatrixSparseCSC A , DMatrixSparseCSC B ,
+                                         @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
+        if (listWork == null)
+            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
+
+        EjmlConcurrency.loopBlocks(0, A.numCols, listWork, ( workspace, bj0, bj1 ) -> {
+            DMatrixSparseCSC workB = workspace.mat;
+            workB.reshape(A.numCols, bj1 - bj0, bj1 - bj0);
+            workB.col_idx[0] = 0;
+
+            double[] x = adjust(workspace.gx, A.numRows);
+            int[] w = adjust(workspace.gw, A.numRows, A.numRows);
+
+            for (int colI = bj0; colI < bj1; colI++) {
+                int idx0 = A.col_idx[colI];
+                int idx1 = A.col_idx[colI + 1];
+
+                int mark = colI + 1;
+
+                // Sparse copy into dense vector
+                for (int i = idx0; i < idx1; i++) {
+                    int row = A.nz_rows[i];
+                    w[row] = mark;
+                    x[row] = A.nz_values[i];
+                }
+
+                // Compute dot product along each column
+                for (int colJ = colI; colJ < A.numCols; colJ++) {
+                    double sum = 0;
+                    idx0 = A.col_idx[colJ];
+                    idx1 = A.col_idx[colJ + 1];
+
+                    for (int i = idx0; i < idx1; i++) {
+                        int row = A.nz_rows[i];
+                        if (w[row] == mark) {
+                            sum += x[row]*A.nz_values[i];
+                        }
+                    }
+
+                    if (sum == 0)
+                        continue;
+
+                    if (workB.nz_length == workB.nz_values.length) {
+                        workB.growMaxLength(workB.nz_length*2 + 1, true);
+                    }
+                    workB.nz_values[workB.nz_length] = sum;
+                    workB.nz_rows[workB.nz_length++] = colJ;
+                }
+                workB.col_idx[colI + 1 - bj0] = workB.nz_length;
+            }
+        });
+
+        stitchMatrix(B,A.numCols, A.numCols, listWork);
     }
 }

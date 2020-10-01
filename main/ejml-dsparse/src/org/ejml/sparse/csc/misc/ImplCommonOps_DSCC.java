@@ -50,15 +50,8 @@ public class ImplCommonOps_DSCC {
         C.reshape(A.numCols,A.numRows,A.nz_length);
 
         // compute the histogram for each row in 'a'
-        int idx0 = A.col_idx[0];
-        for (int j = 1; j <= A.numCols; j++) {
-            int idx1 = A.col_idx[j];
-            for (int i = idx0; i < idx1; i++) {
-                if( A.nz_rows.length <= i)
-                    throw new RuntimeException("Egads");
-                work[A.nz_rows[i]]++;
-            }
-            idx0 = idx1;
+        for (int j = 0; j < A.nz_length; j++) {
+            work[A.nz_rows[j]]++;
         }
 
         // construct col_idx in the transposed matrix
@@ -66,10 +59,10 @@ public class ImplCommonOps_DSCC {
         System.arraycopy(C.col_idx,0,work,0,C.numCols);
 
         // fill in the row indexes
-        idx0 = A.col_idx[0];
+        int idx0 = A.col_idx[0];
         for (int j = 1; j <= A.numCols; j++) {
-            int col = j-1;
-            int idx1 = A.col_idx[j];
+            final int col = j-1;
+            final int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
                 int index = work[row]++;

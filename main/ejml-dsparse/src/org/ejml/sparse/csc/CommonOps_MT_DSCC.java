@@ -21,7 +21,9 @@ package org.ejml.sparse.csc;
 import org.ejml.MatrixDimensionException;
 import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.sparse.csc.misc.ImplCommonOps_MT_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_MT_DSCC;
+import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.reshapeOrDeclare;
@@ -33,8 +35,8 @@ import static org.ejml.UtilEjml.stringShapes;
  * @author Peter Abeles
  */
 public class CommonOps_MT_DSCC {
-    public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output ) {
-        return mult(A, B, output, null);
+    public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC outputC ) {
+        return mult(A, B, outputC, null);
     }
 
     /**
@@ -43,17 +45,57 @@ public class CommonOps_MT_DSCC {
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Not modified.
-     * @param output (Output) Storage for results.  Data length is increased if insufficient.
+     * @param outputC (Output) Storage for results.  Data length is increased if insufficient.
      * @param listWork (Optional) Storage for internal workspace.  Can be null.
      */
-    public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output,
-                                         @Nullable GrowArray<ImplSparseSparseMult_MT_DSCC.Workspace> listWork ) {
+    public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC outputC,
+                                         @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
         if (A.numCols != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
-        output = reshapeOrDeclare(output, A, A.numRows, B.numCols);
+        outputC = reshapeOrDeclare(outputC, A, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_MT_DSCC.mult(A, B, output, listWork);
+        ImplSparseSparseMult_MT_DSCC.mult(A, B, outputC, listWork);
 
-        return output;
+        return outputC;
+    }
+
+    /**
+     * Computes the inner product of A times A and stores the results in B. The inner product is symmetric and this
+     * function will only store the lower triangle. If the full matrix is needed then. If you need the full
+     * matrix use {@link CommonOps_DSCC#symmLowerToFull}.
+     *
+     * <p>B = A<sup>T</sup>*A</sup>
+     *
+     * @param A (Input) Matrix
+     * @param outputB (Output) Storage for output.
+     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static void innerProductLower( DMatrixSparseCSC A, DMatrixSparseCSC outputB,
+                                          @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
+        ImplSparseSparseMult_MT_DSCC.innerProductLower(A, outputB, listWork);
+    }
+
+    /**
+     * Performs matrix addition:<br>
+     *
+     * C = &alpha;A + &beta;B
+     *
+     * @param alpha scalar value multiplied against A
+     * @param A Matrix
+     * @param beta scalar value multiplied against B
+     * @param B Matrix
+     * @param outputC Output matrix.
+     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     */
+    public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B,
+                                        @Nullable DMatrixSparseCSC outputC,
+                                        @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
+        if (A.numRows != B.numRows || A.numCols != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A, A.numRows, A.numCols);
+
+        ImplCommonOps_MT_DSCC.add(alpha, A, beta, B, outputC, listWork);
+
+        return outputC;
     }
 }

@@ -16,14 +16,11 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse;
+package org.ejml.sparse.csc;
 
-import org.ejml.concurrency.GrowArray;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.CommonOps_MT_DSCC;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.ejml.sparse.csc.mult.ImplSparseSparseMult_MT_DSCC;
+import org.ejml.data.IGrowArray;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -42,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 2)
-public class BenchmarkMatrixMult_MT_DSCC {
+public class BenchmarkMatrixMult_DSCC {
 
     @Param({"100000"})
     private int dimension;
@@ -50,27 +47,43 @@ public class BenchmarkMatrixMult_MT_DSCC {
     @Param({"4000000"})
     private int elementCount;
 
-    GrowArray<ImplSparseSparseMult_MT_DSCC.Workspace> listWork = new GrowArray<>(ImplSparseSparseMult_MT_DSCC.Workspace::new);
-
     DMatrixSparseCSC A;
     DMatrixSparseCSC B;
     DMatrixSparseCSC C;
+
+    IGrowArray gw = new IGrowArray();
+    DGrowArray gx = new DGrowArray();
 
     @Setup
     public void setup() {
         A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
         B = CommonOps_DSCC.transpose(A, null, null);
-        C = new DMatrixSparseCSC(1,1);
+        C = new DMatrixSparseCSC(1, 1);
     }
 
     @Benchmark
     public void mult() {
-        CommonOps_MT_DSCC.mult(B, B, C,listWork);
+        CommonOps_DSCC.mult(B, B, C, gw, gx);
+    }
+
+    @Benchmark
+    public void innerProductLower() {
+        CommonOps_DSCC.innerProductLower(B, C, gw, gx);
+    }
+
+    @Benchmark
+    public void multTransA() {
+        CommonOps_DSCC.multTransA(A, B, C, gw, gx);
+    }
+
+    @Benchmark
+    public void multTransB() {
+        CommonOps_DSCC.multTransB(B, A, C, gw, gx);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkMatrixMult_MT_DSCC.class.getSimpleName())
+                .include(BenchmarkMatrixMult_DSCC.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

@@ -16,13 +16,11 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse;
+package org.ejml.sparse.csc;
 
-import org.ejml.data.DGrowArray;
+import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.IGrowArray;
-import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -41,20 +39,19 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 2)
-public class BenchmarkMatrixMult_DSCC {
+public class BenchmarkCommonOps_MT_DSCC {
 
     @Param({"100000"})
     private int dimension;
 
-    @Param({"4000000"})
+    @Param({"10000000"})
     private int elementCount;
 
     DMatrixSparseCSC A;
     DMatrixSparseCSC B;
     DMatrixSparseCSC C;
 
-    IGrowArray gw = new IGrowArray();
-    DGrowArray gx = new DGrowArray();
+    GrowArray<Workspace_MT_DSCC> listWork = new GrowArray<>(Workspace_MT_DSCC::new);
 
     @Setup
     public void setup() {
@@ -64,23 +61,13 @@ public class BenchmarkMatrixMult_DSCC {
     }
 
     @Benchmark
-    public void mult() {
-        CommonOps_DSCC.mult(B, B, C);
+    public void add() {
+        CommonOps_MT_DSCC.add(1.5, B, 2.5, B, C, listWork);
     }
-
-//    @Benchmark
-//    public void multTransA() {
-//        CommonOps_DSCC.multTransA(A, B, C, gw, gx);
-//    }
-//
-//    @Benchmark
-//    public void multTransB() {
-//        CommonOps_DSCC.multTransB(B, A, C, gw, gx);
-//    }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkMatrixMult_DSCC.class.getSimpleName())
+                .include(BenchmarkCommonOps_MT_DSCC.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

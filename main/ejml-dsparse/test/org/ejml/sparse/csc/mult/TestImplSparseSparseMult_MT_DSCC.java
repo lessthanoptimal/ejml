@@ -19,7 +19,9 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.IGrowArray;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -60,5 +62,27 @@ class TestImplSparseSparseMult_MT_DSCC {
         assertTrue(CommonOps_DSCC.checkStructure(found));
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(expected, found, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void innerProductLower() {
+        IGrowArray gw = new IGrowArray();
+        DGrowArray gx = new DGrowArray();
+
+        for (int mc = 0; mc < 50; mc++) {
+            int numRows = rand.nextInt(10)+1;
+            int numCols = rand.nextInt(10)+1;
+
+            int A_nz = RandomMatrices_DSCC.nonzero(numRows,numCols,0.1,0.9,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(numRows,numCols,A_nz,rand);
+            DMatrixSparseCSC expected = new DMatrixSparseCSC(numCols,numCols);
+            DMatrixSparseCSC found = new DMatrixSparseCSC(numCols,numCols);
+
+            ImplSparseSparseMult_DSCC.innerProductLower(A,expected,gw,gx);
+            ImplSparseSparseMult_MT_DSCC.innerProductLower(A,found,null);
+            assertTrue(CommonOps_DSCC.checkStructure(found));
+
+            assertTrue(MatrixFeatures_DSCC.isEqualsSort(expected, found, UtilEjml.TEST_F64));
+        }
     }
 }
