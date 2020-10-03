@@ -36,50 +36,50 @@ import static org.ejml.UtilEjml.permutationSign;
  *
  * <p>NOTE: Based mostly on the algorithm described on page 86 in csparse. cs_lu</p>
  * <p>NOTE: See in code comment for a modification from csparse.</p>
+ *
  * @author Peter Abeles
  */
 public class LuUpLooking_DSCC
-    implements LUSparseDecomposition_F64<DMatrixSparseCSC>
-{
-    private ApplyFillReductionPermutation_DSCC applyReduce;
+        implements LUSparseDecomposition_F64<DMatrixSparseCSC> {
+    private final ApplyFillReductionPermutation_DSCC applyReduce;
 
     // storage for LU decomposition
-    private DMatrixSparseCSC L = new DMatrixSparseCSC(0,0,0);
-    private DMatrixSparseCSC U = new DMatrixSparseCSC(0,0,0);
+    private final DMatrixSparseCSC L = new DMatrixSparseCSC(0, 0, 0);
+    private final DMatrixSparseCSC U = new DMatrixSparseCSC(0, 0, 0);
 
     // row pivot matrix, for numerical stability
     private int[] pinv = new int[0];
 
     // work space variables
     private double[] x = new double[0];
-    private IGrowArray gxi = new IGrowArray(); // storage for non-zero pattern
-    private IGrowArray gw = new IGrowArray();
+    private final IGrowArray gxi = new IGrowArray(); // storage for non-zero pattern
+    private final IGrowArray gw = new IGrowArray();
 
     // true if a singular matrix is detected
     private boolean singular;
 
-    public LuUpLooking_DSCC(@Nullable ComputePermutation<DMatrixSparseCSC> reduceFill) {
-        this.applyReduce = new ApplyFillReductionPermutation_DSCC(reduceFill,false);
+    public LuUpLooking_DSCC( @Nullable ComputePermutation<DMatrixSparseCSC> reduceFill ) {
+        this.applyReduce = new ApplyFillReductionPermutation_DSCC(reduceFill, false);
     }
 
     @Override
-    public boolean decompose(DMatrixSparseCSC A) {
+    public boolean decompose( DMatrixSparseCSC A ) {
         initialize(A);
         return performLU(applyReduce.apply(A));
     }
 
-    private void initialize(DMatrixSparseCSC A) {
+    private void initialize( DMatrixSparseCSC A ) {
         int m = A.numRows;
         int n = A.numCols;
-        int o = Math.min(m,n);
+        int o = Math.min(m, n);
         // number of non-zero elements can only be easily estimated because of pivots
-        L.reshape(m,m,4*A.nz_length+o);
+        L.reshape(m, m, 4*A.nz_length + o);
         L.nz_length = 0;
-        U.reshape(m,n,4*A.nz_length+o);
+        U.reshape(m, n, 4*A.nz_length + o);
         U.nz_length = 0;
 
         singular = false;
-        if( pinv.length != m ) {
+        if (pinv.length != m) {
             pinv = new int[m];
             x = new double[m];
         }
@@ -90,12 +90,12 @@ public class LuUpLooking_DSCC
         }
     }
 
-    private boolean performLU(DMatrixSparseCSC A ) {
+    private boolean performLU( DMatrixSparseCSC A ) {
         int m = A.numRows;
         int n = A.numCols;
         int[] q = applyReduce.getArrayP();
 
-        int[] w = UtilEjml.adjust(gw,m*2, m);
+        int[] w = UtilEjml.adjust(gw, m*2, m);
 
         // main loop for computing L and U
         for (int k = 0; k < n; k++) {
@@ -104,14 +104,14 @@ public class LuUpLooking_DSCC
             U.col_idx[k] = U.nz_length;
 
             // grow storage in L and U if needed
-            if( L.nz_length+n > L.nz_values.length )
-                L.growMaxLength(2*L.nz_values.length+n, true);
-            if( U.nz_length+n > U.nz_values.length )
-                U.growMaxLength(2*U.nz_values.length+n, true);
+            if (L.nz_length + n > L.nz_values.length)
+                L.growMaxLength(2*L.nz_values.length + n, true);
+            if (U.nz_length + n > U.nz_values.length)
+                U.growMaxLength(2*U.nz_values.length + n, true);
 
             int col = q != null ? q[k] : k;
-            int top = TriangularSolver_DSCC.solveColB(L,true,A,col,x,pinv,gxi,w);
-            int []xi = gxi.data;
+            int top = TriangularSolver_DSCC.solveColB(L, true, A, col, x, pinv, gxi, w);
+            int[] xi = gxi.data;
 
             //--------- Find the Next Pivot. That will be the row with the largest value
             //
@@ -119,9 +119,9 @@ public class LuUpLooking_DSCC
             double a = -Double.MAX_VALUE;
             for (int p = top; p < n; p++) {
                 int i = xi[p];                  // x(i) is nonzero
-                if( pinv[i]< 0 ) {
+                if (pinv[i] < 0) {
                     double t;
-                    if( (t = Math.abs(x[i])) > a ) {
+                    if ((t = Math.abs(x[i])) > a) {
                         a = t;
                         ipiv = i;
                     }
@@ -130,7 +130,7 @@ public class LuUpLooking_DSCC
                     U.nz_values[U.nz_length++] = x[i];
                 }
             }
-            if( ipiv == -1 || a <= 0 ) {
+            if (ipiv == -1 || a <= 0) {
                 singular = true;
                 return false;
             }
@@ -152,7 +152,7 @@ public class LuUpLooking_DSCC
 
             for (int p = top; p < n; p++) {
                 int i = xi[p];
-                if( pinv[i] < 0 ) {                  // x(i) is entry in L(:,k)
+                if (pinv[i] < 0) {                  // x(i) is entry in L(:,k)
                     L.nz_rows[L.nz_length] = i;
                     L.nz_values[L.nz_length++] = x[i]/pivot;
                 }
@@ -163,7 +163,7 @@ public class LuUpLooking_DSCC
         L.col_idx[n] = L.nz_length;
         U.col_idx[n] = U.nz_length;
         for (int p = 0; p < L.nz_length; p++) {
-            L.nz_rows[p] = pinv[ L.nz_rows[p]];
+            L.nz_rows[p] = pinv[L.nz_rows[p]];
         }
 
 //        System.out.println("  reduce "+(reduceFill!=null));
@@ -180,41 +180,41 @@ public class LuUpLooking_DSCC
     public Complex_F64 computeDeterminant() {
         // see dense algorithm. There is probably a faster way to compute the sign while decomposing
         // the matrix.
-        double value = permutationSign(pinv,U.numCols,gw.data);
+        double value = permutationSign(pinv, U.numCols, gw.data);
         for (int i = 0; i < U.numCols; i++) {
-            value *= U.nz_values[U.col_idx[i+1]-1];
+            value *= U.nz_values[U.col_idx[i + 1] - 1];
         }
-        return new Complex_F64(value,0);
+        return new Complex_F64(value, 0);
     }
 
     @Override
-    public DMatrixSparseCSC getLower(@Nullable DMatrixSparseCSC lower) {
-        if( lower == null )
-            lower = new DMatrixSparseCSC(1,1,0);
+    public DMatrixSparseCSC getLower( @Nullable DMatrixSparseCSC lower ) {
+        if (lower == null)
+            lower = new DMatrixSparseCSC(1, 1, 0);
         lower.set(L);
         return lower;
     }
 
     @Override
-    public DMatrixSparseCSC getUpper(@Nullable DMatrixSparseCSC upper) {
-        if( upper == null )
-            upper = new DMatrixSparseCSC(1,1,0);
+    public DMatrixSparseCSC getUpper( @Nullable DMatrixSparseCSC upper ) {
+        if (upper == null)
+            upper = new DMatrixSparseCSC(1, 1, 0);
         upper.set(U);
         return upper;
     }
 
     @Override
-    public DMatrixSparseCSC getRowPivot(@Nullable DMatrixSparseCSC pivot) {
-        if( pivot == null )
-            pivot = new DMatrixSparseCSC(L.numRows,L.numRows,0);
-        pivot.reshape(L.numRows,L.numRows,L.numRows);
-        CommonOps_DSCC.permutationMatrix(pinv, true, L.numRows,pivot);
+    public DMatrixSparseCSC getRowPivot( @Nullable DMatrixSparseCSC pivot ) {
+        if (pivot == null)
+            pivot = new DMatrixSparseCSC(L.numRows, L.numRows, 0);
+        pivot.reshape(L.numRows, L.numRows, L.numRows);
+        CommonOps_DSCC.permutationMatrix(pinv, true, L.numRows, pivot);
         return pivot;
     }
 
     @Override
-    public int[] getRowPivotV(@Nullable IGrowArray pivot) {
-        return UtilEjml.pivotVector(pinv,L.numRows,pivot);
+    public int[] getRowPivotV( @Nullable IGrowArray pivot ) {
+        return UtilEjml.pivotVector(pinv, L.numRows, pivot);
     }
 
     @Override
@@ -253,21 +253,21 @@ public class LuUpLooking_DSCC
 
     public ComputePermutation<DMatrixSparseCSC> getReduceFill() {
         ComputePermutation<DMatrixSparseCSC> ret = applyReduce.getFillReduce();
-        if( ret == null )
+        if (ret == null)
             throw new RuntimeException("Check to see if there is any fill reduce ordering to apply first");
         return ret;
     }
 
     public int[] getReducePermutation() {
-        int[]  ret = applyReduce.getArrayP();
-        if( ret == null )
+        int[] ret = applyReduce.getArrayP();
+        if (ret == null)
             throw new RuntimeException("Check to see if there is any fill reduce ordering to apply first");
         return ret;
     }
 
     @Override
     public void setStructureLocked( boolean locked ) {
-        if( locked )
+        if (locked)
             throw new RuntimeException("Can't lock a LU decomposition. Pivots change depending on numerical values and not just" +
                     "the matrix's structure");
     }

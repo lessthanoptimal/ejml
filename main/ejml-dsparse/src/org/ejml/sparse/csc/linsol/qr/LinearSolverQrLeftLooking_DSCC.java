@@ -36,25 +36,25 @@ import static org.ejml.UtilEjml.adjust;
  *
  * @author Peter Abeles
  */
-public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> {
+public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> {
 
-    private QrLeftLookingDecomposition_DSCC qr;
-    private int m,n;
+    private final QrLeftLookingDecomposition_DSCC qr;
+    private int m, n;
 
-    private DGrowArray gb = new DGrowArray();
-    private DGrowArray gbp = new DGrowArray();
-    private DGrowArray gx = new DGrowArray();
-    private IGrowArray gw = new IGrowArray();
+    private final DGrowArray gb = new DGrowArray();
+    private final DGrowArray gbp = new DGrowArray();
+    private final DGrowArray gx = new DGrowArray();
+    private final IGrowArray gw = new IGrowArray();
 
-    private DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
+    private final DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
-    public LinearSolverQrLeftLooking_DSCC(QrLeftLookingDecomposition_DSCC qr) {
+    public LinearSolverQrLeftLooking_DSCC( QrLeftLookingDecomposition_DSCC qr ) {
         this.qr = qr;
     }
 
     @Override
-    public boolean setA(DMatrixSparseCSC A) {
-        if( A.numCols > A.numRows )
+    public boolean setA( DMatrixSparseCSC A ) {
+        if (A.numCols > A.numRows)
             throw new IllegalArgumentException("Can't handle wide matrices");
         this.m = A.numRows;
         this.n = A.numCols;
@@ -67,7 +67,9 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     }
 
     @Override
-    public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+    public void solveSparse( DMatrixSparseCSC B, DMatrixSparseCSC X ) {
+        X.reshape(m, B.numCols, X.numRows);
+
         IGrowArray gw1 = qr.getGwork();
 
         // Don't modify the input
@@ -77,8 +79,8 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         DMatrixSparseCSC swap;
 
         // Apply permutation to B
-        int pinv[] = qr.getStructure().getPinv();
-        CommonOps_DSCC.permuteRowInv(pinv,B,B_tmp);
+        int[] pinv = qr.getStructure().getPinv();
+        CommonOps_DSCC.permuteRowInv(pinv, B, B_tmp);
         swap = B_tmp;
         B_tmp = B;
         B = swap;
@@ -86,7 +88,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         // Apply house holders to B
         DMatrixSparseCSC V = qr.getV();
         for (int i = 0; i < n; i++) {
-            QrHelperFunctions_DSCC.rank1UpdateMultR(V,i,qr.getBeta(i),B,B_tmp,gw,gx);
+            QrHelperFunctions_DSCC.rank1UpdateMultR(V, i, qr.getBeta(i), B, B_tmp, gw, gx);
             swap = B_tmp;
             B_tmp = B;
             B = swap;
@@ -94,12 +96,12 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
 
         // Solve for X
         DMatrixSparseCSC R = qr.getR();
-        TriangularSolver_DSCC.solve(R,false,B,X,null,gx,gw,gw1);
+        TriangularSolver_DSCC.solve(R, false, B, X, null, gx, gw, gw1);
     }
 
     @Override
     public void setStructureLocked( boolean locked ) {
-        qr.setStructureLocked( locked );
+        qr.setStructureLocked(locked);
     }
 
     @Override
@@ -108,31 +110,33 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     }
 
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        double[] b = adjust(gb,B.numRows);
-        double[] bp = adjust(gbp,B.numRows);
-        double[] x = adjust(gx,n);
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        X.reshape(m, B.numCols);
+
+        double[] b = adjust(gb, B.numRows);
+        double[] bp = adjust(gbp, B.numRows);
+        double[] x = adjust(gx, n);
 
         int[] pinv = qr.getStructure().getPinv();
 
         // process each column in X and B individually
         for (int colX = 0; colX < B.numCols; colX++) {
             int index = colX;
-            for( int i = 0; i < B.numRows; i++ , index += X.numCols ) b[i] = B.data[index];
+            for (int i = 0; i < B.numRows; i++, index += X.numCols) b[i] = B.data[index];
 
             // apply row pivots
             CommonOps_DSCC.permuteInv(pinv, b, bp, m);
 
             // apply Householder reflectors
             for (int j = 0; j < n; j++) {
-                QrHelperFunctions_DSCC.applyHouseholder(qr.getV(),j,qr.getBeta(j),bp);
+                QrHelperFunctions_DSCC.applyHouseholder(qr.getV(), j, qr.getBeta(j), bp);
             }
             // Solve for R*x = b
-            TriangularSolver_DSCC.solveU(qr.getR(),bp);
+            TriangularSolver_DSCC.solveU(qr.getR(), bp);
 
             // undo the permutation
-            double out[];
-            if( qr.isFillPermutated()) {
+            double[] out;
+            if (qr.isFillPermutated()) {
                 CommonOps_DSCC.permute(qr.getFillPermutation(), bp, x, X.numRows);
                 out = x;
             } else {
@@ -140,7 +144,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
             }
 
             index = colX;
-            for( int i = 0; i < X.numRows; i++ , index += X.numCols ) X.data[index] = out[i];
+            for (int i = 0; i < X.numRows; i++, index += X.numCols) X.data[index] = out[i];
         }
     }
 

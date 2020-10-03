@@ -36,15 +36,15 @@ public class ApplyFillReductionPermutation_DSCC {
     private @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce;
 
     // storage for permuted A matrix
-    DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1,1,0);
-    int [] pinv = new int[1]; // inverse row pivots
+    DMatrixSparseCSC Aperm = new DMatrixSparseCSC(1, 1, 0);
+    int[] pinv = new int[1]; // inverse row pivots
 
     IGrowArray gw = new IGrowArray();
 
     boolean symmetric;
 
-    public ApplyFillReductionPermutation_DSCC(@Nullable ComputePermutation<DMatrixSparseCSC> fillReduce,
-                                              boolean symmetric ) {
+    public ApplyFillReductionPermutation_DSCC( @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce,
+                                               boolean symmetric ) {
         this.fillReduce = fillReduce;
         this.symmetric = symmetric;
     }
@@ -52,25 +52,26 @@ public class ApplyFillReductionPermutation_DSCC {
     /**
      * Computes and applies the fill reduction permutation. Either A is returned (unmodified) or the permutated
      * version of A.
+     *
      * @param A Input matrix. unmodified.
      * @return A permuted matrix. Might be A or a different matrix.
      */
     public DMatrixSparseCSC apply( DMatrixSparseCSC A ) {
-        if( fillReduce == null )
+        if (fillReduce == null)
             return A;
         fillReduce.process(A);
 
         IGrowArray gp = fillReduce.getRow();
-        if( gp == null )
+        if (gp == null)
             throw new RuntimeException("No row permutation matrix");
 
-        if( pinv.length < gp.length)
-            pinv = new int[ gp.length ];
+        if (pinv.length < gp.length)
+            pinv = new int[gp.length];
         CommonOps_DSCC.permutationInverse(gp.data, pinv, gp.length);
-        if( symmetric )
+        if (symmetric)
             CommonOps_DSCC.permuteSymmetric(A, pinv, Aperm, gw);
         else
-            CommonOps_DSCC.permuteRowInv(pinv, A ,Aperm);
+            CommonOps_DSCC.permuteRowInv(pinv, A, Aperm);
         return Aperm;
     }
 
@@ -92,7 +93,7 @@ public class ApplyFillReductionPermutation_DSCC {
         return gw;
     }
 
-    public void setGw(IGrowArray gw) {
+    public void setGw( IGrowArray gw ) {
         this.gw = gw;
     }
 

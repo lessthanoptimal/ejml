@@ -45,9 +45,9 @@ public class ImplCommonOps_DSCC {
      * @param C Storage for transposed 'A'.  Reshaped.
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void transpose(DMatrixSparseCSC A , DMatrixSparseCSC C , @Nullable IGrowArray gw ) {
-        int []work = adjust(gw,A.numRows,A.numRows);
-        C.reshape(A.numCols,A.numRows,A.nz_length);
+    public static void transpose( DMatrixSparseCSC A, DMatrixSparseCSC C, @Nullable IGrowArray gw ) {
+        int[] work = adjust(gw, A.numRows, A.numRows);
+        C.reshape(A.numCols, A.numRows, A.nz_length);
 
         // compute the histogram for each row in 'a'
         for (int j = 0; j < A.nz_length; j++) {
@@ -56,12 +56,12 @@ public class ImplCommonOps_DSCC {
 
         // construct col_idx in the transposed matrix
         C.histogramToStructure(work);
-        System.arraycopy(C.col_idx,0,work,0,C.numCols);
+        System.arraycopy(C.col_idx, 0, work, 0, C.numCols);
 
         // fill in the row indexes
         int idx0 = A.col_idx[0];
         for (int j = 1; j <= A.numCols; j++) {
-            final int col = j-1;
+            final int col = j - 1;
             final int idx1 = A.col_idx[j];
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
@@ -85,11 +85,10 @@ public class ImplCommonOps_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                           @Nullable IGrowArray gw, @Nullable DGrowArray gx)
-    {
-        double []x = adjust(gx,A.numRows);
-        int []w = adjust(gw,A.numRows,A.numRows);
+    public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
+                            @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        double[] x = adjust(gx, A.numRows);
+        int[] w = adjust(gw, A.numRows, A.numRows);
 
         C.indicesSorted = false;
         C.nz_length = 0;
@@ -97,12 +96,12 @@ public class ImplCommonOps_DSCC {
         for (int col = 0; col < A.numCols; col++) {
             C.col_idx[col] = C.nz_length;
 
-            multAddColA(A,col,alpha,C,col+1,x,w);
-            multAddColA(B,col,beta,C,col+1,x,w);
+            multAddColA(A, col, alpha, C, col + 1, x, w);
+            multAddColA(B, col, beta, C, col + 1, x, w);
 
             // take the values in the dense vector 'x' and put them into 'C'
             int idxC0 = C.col_idx[col];
-            int idxC1 = C.col_idx[col+1];
+            int idxC1 = C.col_idx[col + 1];
 
             for (int i = idxC0; i < idxC1; i++) {
                 C.nz_values[i] = x[C.nz_rows[i]];
@@ -124,22 +123,21 @@ public class ImplCommonOps_DSCC {
      * @param C Column in C
      * @param gw workspace
      */
-    public static void addColAppend(double alpha, DMatrixSparseCSC A, int colA, double beta, DMatrixSparseCSC B, int colB,
-                                    DMatrixSparseCSC C, @Nullable IGrowArray gw)
-    {
-        if( A.numRows != B.numRows || A.numRows != C.numRows)
+    public static void addColAppend( double alpha, DMatrixSparseCSC A, int colA, double beta, DMatrixSparseCSC B, int colB,
+                                     DMatrixSparseCSC C, @Nullable IGrowArray gw ) {
+        if (A.numRows != B.numRows || A.numRows != C.numRows)
             throw new IllegalArgumentException("Number of rows in A, B, and C do not match");
 
         int idxA0 = A.col_idx[colA];
-        int idxA1 = A.col_idx[colA+1];
+        int idxA1 = A.col_idx[colA + 1];
         int idxB0 = B.col_idx[colB];
-        int idxB1 = B.col_idx[colB+1];
+        int idxB1 = B.col_idx[colB + 1];
 
-        C.growMaxColumns(++C.numCols,true);
-        C.growMaxLength(C.nz_length+idxA1-idxA0+idxB1-idxB0,true);
+        C.growMaxColumns(++C.numCols, true);
+        C.growMaxLength(C.nz_length + idxA1 - idxA0 + idxB1 - idxB0, true);
 
-        int []w = adjust(gw,A.numRows);
-        Arrays.fill(w,0,A.numRows,-1);
+        int[] w = adjust(gw, A.numRows);
+        Arrays.fill(w, 0, A.numRows, -1);
 
         for (int i = idxA0; i < idxA1; i++) {
             int row = A.nz_rows[i];
@@ -150,7 +148,7 @@ public class ImplCommonOps_DSCC {
 
         for (int i = idxB0; i < idxB1; i++) {
             int row = B.nz_rows[i];
-            if( w[row] != -1 ) {
+            if (w[row] != -1) {
                 C.nz_values[w[row]] += beta*B.nz_values[i];
             } else {
                 C.nz_values[C.nz_length] = beta*B.nz_values[i];
@@ -171,28 +169,27 @@ public class ImplCommonOps_DSCC {
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx)
-    {
-        double []x = adjust(gx,A.numRows);
-        int []w = adjust(gw,A.numRows);
-        Arrays.fill(w,0,A.numRows,-1); // fill with -1. This will be a value less than column
+                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        double[] x = adjust(gx, A.numRows);
+        int[] w = adjust(gw, A.numRows);
+        Arrays.fill(w, 0, A.numRows, -1); // fill with -1. This will be a value less than column
 
-        C.growMaxLength(Math.min(A.nz_length,B.nz_length),false);
+        C.growMaxLength(Math.min(A.nz_length, B.nz_length), false);
         C.indicesSorted = false; // Hmm I think if B is storted then C will be sorted...
         C.nz_length = 0;
 
         for (int col = 0; col < A.numCols; col++) {
             int idxA0 = A.col_idx[col];
-            int idxA1 = A.col_idx[col+1];
+            int idxA1 = A.col_idx[col + 1];
             int idxB0 = B.col_idx[col];
-            int idxB1 = B.col_idx[col+1];
+            int idxB1 = B.col_idx[col + 1];
 
             // compute the maximum number of elements that there can be in this row
-            int maxInRow = Math.min(idxA1-idxA0,idxB1-idxB0);
+            int maxInRow = Math.min(idxA1 - idxA0, idxB1 - idxB0);
 
             // make sure there are enough non-zero elements in C
-            if( C.nz_length+maxInRow > C.nz_values.length )
-                C.growMaxLength(C.nz_values.length+maxInRow,true);
+            if (C.nz_length + maxInRow > C.nz_values.length)
+                C.growMaxLength(C.nz_values.length + maxInRow, true);
 
             // update the structure of C
             C.col_idx[col] = C.nz_length;
@@ -207,7 +204,7 @@ public class ImplCommonOps_DSCC {
             // If a row appears in A and B, multiply and set as an element in C
             for (int i = idxB0; i < idxB1; i++) {
                 int row = B.nz_rows[i];
-                if( w[row] == col ) {
+                if (w[row] == col) {
                     C.nz_values[C.nz_length] = x[row]*B.nz_values[i];
                     C.nz_rows[C.nz_length++] = row;
                 }
@@ -216,7 +213,7 @@ public class ImplCommonOps_DSCC {
         C.col_idx[C.numCols] = C.nz_length;
     }
 
-    public static void removeZeros( DMatrixSparseCSC input , DMatrixSparseCSC  output , double tol ) {
+    public static void removeZeros( DMatrixSparseCSC input, DMatrixSparseCSC output, double tol ) {
         output.reshape(input.numRows, input.numCols, input.nz_length);
         output.nz_length = 0;
 
@@ -224,11 +221,11 @@ public class ImplCommonOps_DSCC {
             output.col_idx[i] = output.nz_length;
 
             int idx0 = input.col_idx[i];
-            int idx1 = input.col_idx[i+1];
+            int idx1 = input.col_idx[i + 1];
 
             for (int j = idx0; j < idx1; j++) {
                 double val = input.nz_values[j];
-                if( Math.abs(val) > tol ) {
+                if (Math.abs(val) > tol) {
                     output.nz_rows[output.nz_length] = input.nz_rows[j];
                     output.nz_values[output.nz_length++] = val;
                 }
@@ -237,35 +234,35 @@ public class ImplCommonOps_DSCC {
         output.col_idx[output.numCols] = output.nz_length;
     }
 
-    public static void removeZeros( DMatrixSparseCSC A , double tol ) {
+    public static void removeZeros( DMatrixSparseCSC A, double tol ) {
 
         int offset = 0;
         for (int i = 0; i < A.numCols; i++) {
-            int idx0 = A.col_idx[i]+offset;
-            int idx1 = A.col_idx[i+1];
+            int idx0 = A.col_idx[i] + offset;
+            int idx1 = A.col_idx[i + 1];
 
             for (int j = idx0; j < idx1; j++) {
                 double val = A.nz_values[j];
-                if( Math.abs(val) > tol ) {
-                    A.nz_rows[j-offset] = A.nz_rows[j];
-                    A.nz_values[j-offset] = val;
+                if (Math.abs(val) > tol) {
+                    A.nz_rows[j - offset] = A.nz_rows[j];
+                    A.nz_values[j - offset] = val;
                 } else {
                     offset++;
                 }
             }
-            A.col_idx[i+1] -= offset;
+            A.col_idx[i + 1] -= offset;
         }
         A.nz_length -= offset;
     }
 
-    public static void duplicatesAdd( DMatrixSparseCSC A , @Nullable IGrowArray work ) {
+    public static void duplicatesAdd( DMatrixSparseCSC A, @Nullable IGrowArray work ) {
         // Look up table from row to nz index
-        int[] table = UtilEjml.adjustFill(work,A.numRows,-1);
+        int[] table = UtilEjml.adjustFill(work, A.numRows, -1);
 
         int offset = 0;
         for (int i = 0; i < A.numCols; i++) {
-            int idx0 = A.col_idx[i]+offset;
-            int idx1 = A.col_idx[i+1];
+            int idx0 = A.col_idx[i] + offset;
+            int idx1 = A.col_idx[i + 1];
 
             // When a row is first encountered note the element it's at
             for (int j = idx0; j < idx1; j++) {
@@ -275,25 +272,25 @@ public class ImplCommonOps_DSCC {
             }
 
             // Set then add each element
-            for (int j = idx0; j < idx1; j++){
+            for (int j = idx0; j < idx1; j++) {
                 int row = A.nz_rows[j];
 
                 // First or only time it's encountered, copy the value
                 if (table[row] == j) {
-                    A.nz_rows[j-offset] = row;
-                    A.nz_values[j-offset] = A.nz_values[j];
-                    table[row] = j-offset; // Update the table to include the offset location
+                    A.nz_rows[j - offset] = row;
+                    A.nz_values[j - offset] = A.nz_values[j];
+                    table[row] = j - offset; // Update the table to include the offset location
                 } else {
                     // Each time it's encountered after this add the value and increase the offset
                     A.nz_values[table[row]] += A.nz_values[j];
                     offset++;
                 }
             }
-            A.col_idx[i+1] -= offset;
+            A.col_idx[i + 1] -= offset;
 
             // Need to do a second pass to undo the markings in the lookup table
             idx1 -= offset;
-            for (int j = A.col_idx[i]; j < idx1; j++){
+            for (int j = A.col_idx[i]; j < idx1; j++) {
                 table[A.nz_rows[j]] = -1;
             }
         }
@@ -308,20 +305,19 @@ public class ImplCommonOps_DSCC {
      * @param B (Output) Symmetric matrix.
      * @param gw (Optional) Workspace. Can be null.
      */
-    public static void symmLowerToFull( DMatrixSparseCSC A , DMatrixSparseCSC B , @Nullable IGrowArray gw )
-    {
-        if( A.numCols != A.numRows )
+    public static void symmLowerToFull( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable IGrowArray gw ) {
+        if (A.numCols != A.numRows)
             throw new IllegalArgumentException("Must be a lower triangular square matrix");
 
         int N = A.numCols;
-        int[] w = adjust(gw,N,N);
-        B.reshape(N,N,A.nz_length*2);
+        int[] w = adjust(gw, N, N);
+        B.reshape(N, N, A.nz_length*2);
         B.indicesSorted = false;
 
         //=== determine the row counts of the full matrix
         for (int col = 0; col < N; col++) {
             int idx0 = A.col_idx[col];
-            int idx1 = A.col_idx[col+1];
+            int idx1 = A.col_idx[col + 1];
 
             // We know the length of the lower part of this column already
             w[col] += idx1 - idx0;
@@ -329,7 +325,7 @@ public class ImplCommonOps_DSCC {
             // add elements to the top of the other columns along row with index 'col'
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
-                if( row > col ) {
+                if (row > col) {
                     w[row]++;
                 }
             }
@@ -339,31 +335,30 @@ public class ImplCommonOps_DSCC {
         B.histogramToStructure(w);
 
         // Zero W again. It's being used to keep track of how many elements have been added to a column already
-        Arrays.fill(w,0,N,0);
+        Arrays.fill(w, 0, N, 0);
         // Fill in matrix
         for (int col = 0; col < N; col++) {
 
             int idx0 = A.col_idx[col];
-            int idx1 = A.col_idx[col+1];
+            int idx1 = A.col_idx[col + 1];
 
             int lengthA = idx1 - idx0;
-            int lengthB = B.col_idx[col+1] - B.col_idx[col];
+            int lengthB = B.col_idx[col + 1] - B.col_idx[col];
 
             // Copy the non-zero values from A into B along the columns while taking in account the upper
             // elements already copied
-            System.arraycopy(A.nz_values,idx0,B.nz_values,B.col_idx[col]+lengthB-lengthA,lengthA);
-            System.arraycopy(A.nz_rows,idx0,B.nz_rows,B.col_idx[col]+lengthB-lengthA,lengthA);
+            System.arraycopy(A.nz_values, idx0, B.nz_values, B.col_idx[col] + lengthB - lengthA, lengthA);
+            System.arraycopy(A.nz_rows, idx0, B.nz_rows, B.col_idx[col] + lengthB - lengthA, lengthA);
 
             // Copy this column into the upper portion of B
             for (int i = idx0; i < idx1; i++) {
                 int row = A.nz_rows[i];
-                if( row > col ) {
+                if (row > col) {
                     int indexB = B.col_idx[row] + w[row]++;
                     B.nz_rows[indexB] = col;
                     B.nz_values[indexB] = A.nz_values[i];
                 }
             }
         }
-
     }
 }

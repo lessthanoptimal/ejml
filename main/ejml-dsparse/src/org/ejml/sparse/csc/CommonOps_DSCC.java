@@ -538,8 +538,8 @@ public class CommonOps_DSCC {
      * @param A (Input) Matrix
      * @param outputB (Output) storage for column max abs
      */
-    public static void maxAbsCols( DMatrixSparseCSC A, @Nullable DMatrixRMaj outputB) {
-        outputB = reshapeOrDeclare(outputB,1,A.numCols);
+    public static void maxAbsCols( DMatrixSparseCSC A, @Nullable DMatrixRMaj outputB ) {
+        outputB = reshapeOrDeclare(outputB, 1, A.numCols);
 
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];

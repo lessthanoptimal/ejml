@@ -38,7 +38,7 @@ import static org.ejml.UtilEjml.adjust;
  *
  * @author Peter Abeles
  */
-public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> {
+public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> {
 
     CholeskyUpLooking_DSCC cholesky;
 
@@ -48,15 +48,19 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     DGrowArray gx = new DGrowArray();
     IGrowArray gw = new IGrowArray();
 
-    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1,1);
+    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
-    public LinearSolverCholesky_DSCC(CholeskyUpLooking_DSCC cholesky , @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce) {
+    // Number of rows in A
+    int numRows;
+
+    public LinearSolverCholesky_DSCC( CholeskyUpLooking_DSCC cholesky, @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce ) {
         this.cholesky = cholesky;
-        this.reduce = new ApplyFillReductionPermutation_DSCC(fillReduce,true);
+        this.reduce = new ApplyFillReductionPermutation_DSCC(fillReduce, true);
     }
 
     @Override
-    public boolean setA(DMatrixSparseCSC A) {
+    public boolean setA( DMatrixSparseCSC A ) {
+        this.numRows = A.numRows;
         DMatrixSparseCSC C = reduce.apply(A);
         return cholesky.decompose(C);
     }
@@ -67,16 +71,18 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     }
 
     @Override
-    public void solveSparse(DMatrixSparseCSC B, DMatrixSparseCSC X) {
+    public void solveSparse( DMatrixSparseCSC B, DMatrixSparseCSC X ) {
+        X.reshape(numRows, B.numCols, X.numRows);
+
         IGrowArray gw1 = cholesky.getGw();
 
         DMatrixSparseCSC L = cholesky.getL();
 
-        tmp.reshape(L.numRows,B.numCols,1);
+        tmp.reshape(L.numRows, B.numCols, 1);
         int[] Pinv = reduce.getArrayPinv();
 
-        TriangularSolver_DSCC.solve(L,true,B,tmp,Pinv,gx,gw,gw1);
-        TriangularSolver_DSCC.solveTran(L,true,tmp,X,null,gx,gw,gw1);
+        TriangularSolver_DSCC.solve(L, true, B, tmp, Pinv, gx, gw, gw1);
+        TriangularSolver_DSCC.solveTran(L, true, tmp, X, null, gx, gw, gw1);
     }
 
     @Override
@@ -90,22 +96,23 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     }
 
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        X.reshape(numRows, B.numCols);
 
         DMatrixSparseCSC L = cholesky.getL();
 
         int N = L.numRows;
 
-        double[] b = adjust(gb,N);
-        double[] x = adjust(gx,N);
+        double[] b = adjust(gb, N);
+        double[] x = adjust(gx, N);
 
         int[] Pinv = reduce.getArrayPinv();
 
         for (int col = 0; col < B.numCols; col++) {
             int index = col;
-            for( int i = 0; i < N; i++ , index += B.numCols ) b[i] = B.data[index];
+            for (int i = 0; i < N; i++, index += B.numCols) b[i] = B.data[index];
 
-            if( Pinv != null ) {
+            if (Pinv != null) {
                 CommonOps_DSCC.permuteInv(Pinv, b, x, N);
                 TriangularSolver_DSCC.solveL(L, x);
                 TriangularSolver_DSCC.solveTranL(L, x);
@@ -116,7 +123,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
             }
 
             index = col;
-            for( int i = 0; i < N; i++ , index += X.numCols ) X.data[index] = b[i];
+            for (int i = 0; i < N; i++, index += X.numCols) X.data[index] = b[i];
         }
     }
 

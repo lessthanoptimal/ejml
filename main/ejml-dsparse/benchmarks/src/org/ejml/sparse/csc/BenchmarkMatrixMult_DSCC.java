@@ -41,31 +41,50 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 2)
 public class BenchmarkMatrixMult_DSCC {
 
-    @Param({"100000"})
-    private int dimension;
-
-    @Param({"4000000"})
-    private int elementCount;
-
-    DMatrixSparseCSC A;
-    DMatrixSparseCSC B;
-    DMatrixSparseCSC C;
-    DMatrixSparseCSC tmp = new DMatrixSparseCSC(1,1);
-
     IGrowArray gw = new IGrowArray();
     DGrowArray gx = new DGrowArray();
 
-    @Setup
-    public void setup() {
-        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
-        B = CommonOps_DSCC.transpose(A, null, null);
-        C = new DMatrixSparseCSC(1, 1);
+    @State(Scope.Benchmark)
+    public static class StateMult {
+        @Param({"100000"})
+        private int dimension;
+
+        @Param({"4000000"})
+        private int elementCount;
+
+        DMatrixSparseCSC A, B, C;
+
+        @Setup
+        public void setup() {
+            Random rand = new Random(345);
+            A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+            B = CommonOps_DSCC.transpose(A, null, null);
+            C = new DMatrixSparseCSC(1, 1);
+        }
     }
 
-    @Benchmark
-    public void mult() {
-        CommonOps_DSCC.mult(B, B, C, gw, gx);
+    @State(Scope.Benchmark)
+    public static class StateSolve {
+        @Param({"1000"})
+        private int dimension;
+
+        @Param({"10000"})
+        private int elementCount;
+
+        DMatrixSparseCSC A, B, X;
+
+        @Setup
+        public void setup() {
+            Random rand = new Random(345);
+            A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+            B = RandomMatrices_DSCC.rectangle(dimension, 3, elementCount, rand);
+            X = new DMatrixSparseCSC(1, 1);
+        }
     }
+
+    @Benchmark public void mult( StateMult s ) { CommonOps_DSCC.mult(s.B, s.B, s.C, gw, gx); }
+    @Benchmark public void solve( StateSolve s ) { CommonOps_DSCC.solve(s.A, s.B, s.X); }
+    @Benchmark public void det( StateSolve s ) { CommonOps_DSCC.det(s.A); }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
