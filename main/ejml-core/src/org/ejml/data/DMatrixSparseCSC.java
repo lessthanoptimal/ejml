@@ -216,12 +216,16 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         int col0 = col_idx[col];
         int col1 = col_idx[col + 1];
 
-        for (int i = col0; i < col1; i++) {
-            if (nz_rows[i] == row) {
-                return i;
+        if (this.indicesSorted) {
+            return Arrays.binarySearch(nz_rows, col0, col1, row);
+        } else {
+            for (int i = col0; i < col1; i++) {
+                if (nz_rows[i] == row) {
+                    return i;
+                }
             }
+            return -1;
         }
-        return -1;
     }
 
     @Override
