@@ -40,7 +40,7 @@ public interface IntegerSequence {
      *
      * @param maxIndex Largest possible value in the sequence. or &lt; 0 if unknown
      */
-    void initialize(int maxIndex);
+    void initialize( int maxIndex );
 
     int next();
 
@@ -65,11 +65,11 @@ public interface IntegerSequence {
         List<VariableInteger> sequence = new ArrayList<VariableInteger>();
         int where;
 
-        public Explicit(TokenList.Token start , TokenList.Token end) {
+        public Explicit( TokenList.Token start, TokenList.Token end ) {
             TokenList.Token t = start;
-            while( true ) {
-                sequence.add( (VariableInteger)t.getVariable() );
-                if( t == end ) {
+            while (true) {
+                sequence.add((VariableInteger)t.getVariable());
+                if (t == end) {
                     break;
                 } else {
                     t = t.next;
@@ -77,8 +77,8 @@ public interface IntegerSequence {
             }
         }
 
-        public Explicit(TokenList.Token single ) {
-            sequence.add( (VariableInteger)single.getVariable() );
+        public Explicit( TokenList.Token single ) {
+            sequence.add((VariableInteger)single.getVariable());
         }
 
         @Override
@@ -87,7 +87,7 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize(int maxIndex) {
+        public void initialize( int maxIndex ) {
             where = 0;
         }
 
@@ -133,7 +133,7 @@ public interface IntegerSequence {
         int where;
         int length;
 
-        public For(TokenList.Token start, @Nullable TokenList.Token step, TokenList.Token end) {
+        public For( TokenList.Token start, @Nullable TokenList.Token step, TokenList.Token end ) {
             this.start = (VariableInteger)start.getVariable();
             this.step = step == null ? null : (VariableInteger)step.getVariable();
             this.end = (VariableInteger)end.getVariable();
@@ -145,25 +145,24 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize(int maxIndex) {
+        public void initialize( int maxIndex ) {
             valStart = start.value;
             valEnd = end.value;
-            if( step == null ) {
+            if (step == null) {
                 valStep = 1;
             } else {
                 valStep = step.value;
             }
 
-            if( valStep <= 0 ) {
+            if (valStep <= 0) {
                 throw new IllegalArgumentException("step size must be a positive integer");
             }
-            if( valEnd < valStart ) {
+            if (valEnd < valStart) {
                 throw new IllegalArgumentException("end value must be >= the start value");
             }
 
             where = 0;
-            length = (valEnd-valStart)/valStep  + 1;
-
+            length = (valEnd - valStart)/valStep + 1;
         }
 
         @Override
@@ -208,19 +207,19 @@ public interface IntegerSequence {
 
         int which;
 
-        public Combined(TokenList.Token start, TokenList.Token end) {
+        public Combined( TokenList.Token start, TokenList.Token end ) {
 
             TokenList.Token t = start;
             do {
-                if( t.getVariable().getType() == VariableType.SCALAR ) {
-                    sequences.add( new Explicit(t));
-                } else if( t.getVariable().getType() == VariableType.INTEGER_SEQUENCE ) {
-                    sequences.add( ((VariableIntegerSequence)t.getVariable()).sequence );
+                if (t.getVariable().getType() == VariableType.SCALAR) {
+                    sequences.add(new Explicit(t));
+                } else if (t.getVariable().getType() == VariableType.INTEGER_SEQUENCE) {
+                    sequences.add(((VariableIntegerSequence)t.getVariable()).sequence);
                 } else {
                     throw new RuntimeException("Unexpected token type");
                 }
                 t = t.next;
-            } while( t != null && t.previous != end);
+            } while (t != null && t.previous != end);
         }
 
         @Override
@@ -233,7 +232,7 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize(int maxIndex) {
+        public void initialize( int maxIndex ) {
             which = 0;
             for (int i = 0; i < sequences.size(); i++) {
                 sequences.get(i).initialize(maxIndex);
@@ -244,7 +243,7 @@ public interface IntegerSequence {
         public int next() {
             int output = sequences.get(which).next();
 
-            if( !sequences.get(which).hasNext() ) {
+            if (!sequences.get(which).hasNext()) {
                 which++;
             }
 
@@ -264,7 +263,7 @@ public interface IntegerSequence {
         @Override
         public boolean requiresMaxIndex() {
             for (int i = 0; i < sequences.size(); i++) {
-                if( sequences.get(i).requiresMaxIndex() )
+                if (sequences.get(i).requiresMaxIndex())
                     return true;
             }
             return false;
@@ -291,7 +290,7 @@ public interface IntegerSequence {
         int where;
         int length;
 
-        public Range(@Nullable TokenList.Token start, @Nullable TokenList.Token step ) {
+        public Range( @Nullable TokenList.Token start, @Nullable TokenList.Token step ) {
             this.start = start == null ? null : (VariableInteger)start.getVariable();
             this.step = step == null ? null : (VariableInteger)step.getVariable();
         }
@@ -302,29 +301,28 @@ public interface IntegerSequence {
         }
 
         @Override
-        public void initialize(int maxIndex) {
-            if( maxIndex < 0 )
+        public void initialize( int maxIndex ) {
+            if (maxIndex < 0)
                 throw new IllegalArgumentException("Range sequence being used inside an object without a known upper limit");
             valEnd = maxIndex;
 
-            if( start != null )
+            if (start != null)
                 valStart = start.value;
             else
                 valStart = 0;
 
-            if( step == null ) {
+            if (step == null) {
                 valStep = 1;
             } else {
                 valStep = step.value;
             }
 
-            if( valStep <= 0 ) {
+            if (valStep <= 0) {
                 throw new IllegalArgumentException("step size must be a positive integer");
             }
 
             where = 0;
-            length = (valEnd-valStart)/valStep  + 1;
-
+            length = (valEnd - valStart)/valStep + 1;
         }
 
         @Override

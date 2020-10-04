@@ -36,7 +36,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-
 /**
  * Parent of {@link SimpleMatrix} implements all the standard matrix operations and uses
  * generics to allow the returned matrix type to be changed.  This class should be extended
@@ -44,8 +43,8 @@ import java.lang.reflect.Method;
  *
  * @author Peter Abeles
  */
-@SuppressWarnings({"unchecked","NullAway.Init"})
-public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializable {
+@SuppressWarnings({"unchecked", "NullAway.Init"})
+public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializable {
 
     static final long serialVersionUID = 2342556642L;
 
@@ -57,13 +56,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     protected transient AutomaticSimpleMatrixConvert convertType = new AutomaticSimpleMatrixConvert();
 
-    protected SimpleBase( int numRows , int numCols ) {
+    protected SimpleBase( int numRows, int numCols ) {
         setMatrix(new DMatrixRMaj(numRows, numCols));
     }
 
     protected SimpleBase() {}
 
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject( java.io.ObjectInputStream in )
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         convertType = new AutomaticSimpleMatrixConvert();
@@ -79,7 +78,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param type Type of matrix it should create
      * @return A new matrix.
      */
-    protected abstract T createMatrix(int numRows, int numCols, MatrixType type);
+    protected abstract T createMatrix( int numRows, int numCols, MatrixType type );
 
     protected abstract T wrapMatrix( Matrix m );
 
@@ -120,18 +119,23 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     }
 
     protected static SimpleOperations lookupOps( MatrixType type ) {
-        switch( type ) {
-            case DDRM: return new SimpleOperations_DDRM();
-            case FDRM: return new SimpleOperations_FDRM();
-            case ZDRM: return new SimpleOperations_ZDRM();
-            case CDRM: return new SimpleOperations_CDRM();
-            case DSCC: return new SimpleOperations_DSCC();
-            case FSCC: return new SimpleOperations_FSCC();
+        switch (type) {
+            case DDRM:
+                return new SimpleOperations_DDRM();
+            case FDRM:
+                return new SimpleOperations_FDRM();
+            case ZDRM:
+                return new SimpleOperations_ZDRM();
+            case CDRM:
+                return new SimpleOperations_CDRM();
+            case DSCC:
+                return new SimpleOperations_DSCC();
+            case FSCC:
+                return new SimpleOperations_FSCC();
             default:
-                throw new RuntimeException("Unknown Matrix Type. "+type);
+                throw new RuntimeException("Unknown Matrix Type. " + type);
         }
     }
-
 
     /**
      * <p>
@@ -139,14 +143,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * a<sup>T</sup>
      * </p>
      *
-     * @see CommonOps_DDRM#transpose(DMatrixRMaj, DMatrixRMaj)
-     *
      * @return A matrix that is n by m.
+     * @see CommonOps_DDRM#transpose(DMatrixRMaj, DMatrixRMaj)
      */
     public T transpose() {
-        T ret = createMatrix(mat.getNumCols(),mat.getNumRows(), mat.getType());
+        T ret = createMatrix(mat.getNumCols(), mat.getNumRows(), mat.getType());
 
-        ops.transpose(mat,ret.mat);
+        ops.transpose(mat, ret.mat);
 
         return ret;
     }
@@ -160,21 +163,19 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
-     *
      * @param B A matrix that is n by bn. Not modified.
-     *
      * @return The results of this operation.
+     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
     public T mult( T B ) {
-        convertType.specify(this,B);
+        convertType.specify(this, B);
 
         // Look to see if there is a special function for handling this case
-        if( this.mat.getType() != B.getType() ) {
-            Method m = findAlternative("mult",mat,B.mat,convertType.commonType.getClassType());
-            if( m != null ) {
-                T ret = wrapMatrix(convertType.commonType.create(1,1));
-                invoke(m,this.mat,B.mat,ret.mat);
+        if (this.mat.getType() != B.getType()) {
+            Method m = findAlternative("mult", mat, B.mat, convertType.commonType.getClassType());
+            if (m != null) {
+                T ret = wrapMatrix(convertType.commonType.create(1, 1));
+                invoke(m, this.mat, B.mat, ret.mat);
                 return ret;
             }
         }
@@ -183,9 +184,9 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        T ret = A.createMatrix(mat.getNumRows(),B.getMatrix().getNumCols(), A.getType());
+        T ret = A.createMatrix(mat.getNumRows(), B.getMatrix().getNumCols(), A.getType());
 
-        A.ops.mult(A.mat,B.mat,ret.mat);
+        A.ops.mult(A.mat, B.mat, ret.mat);
 
         return ret;
     }
@@ -196,20 +197,19 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * <br>
      * C = kron(A,B)
      * </p>
-
-     * @see CommonOps_DDRM#kron(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
      *
      * @param B The right matrix in the operation. Not modified.
      * @return Kronecker product between this matrix and B.
+     * @see CommonOps_DDRM#kron(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
      */
     public T kron( T B ) {
-        convertType.specify(this,B);
+        convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        T ret = A.createMatrix(mat.getNumRows()*B.numRows(),mat.getNumCols()*B.numCols(), A.getType());
+        T ret = A.createMatrix(mat.getNumRows()*B.numRows(), mat.getNumCols()*B.numCols(), A.getType());
 
-        A.ops.kron(A.mat,B.mat,ret.mat);
+        A.ops.kron(A.mat, B.mat, ret.mat);
 
         return ret;
     }
@@ -223,20 +223,18 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
-     *
      * @param B m by n matrix. Not modified.
-     *
      * @return The results of this operation.
+     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
     public T plus( T B ) {
-        convertType.specify(this,B);
+        convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        T ret = A.createMatrix(mat.getNumRows(),mat.getNumCols(), A.getType());
+        T ret = A.createMatrix(mat.getNumRows(), mat.getNumCols(), A.getType());
 
-        A.ops.plus(A.mat,B.mat,ret.mat);
+        A.ops.plus(A.mat, B.mat, ret.mat);
 
         return ret;
     }
@@ -250,19 +248,17 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#subtract(DMatrixD1, DMatrixD1, DMatrixD1)
-     *
      * @param B m by n matrix. Not modified.
-     *
      * @return The results of this operation.
+     * @see CommonOps_DDRM#subtract(DMatrixD1, DMatrixD1, DMatrixD1)
      */
     public T minus( T B ) {
-        convertType.specify(this,B);
+        convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
         T ret = A.createLike();
 
-        A.ops.minus(A.mat,B.mat,ret.mat);
+        A.ops.minus(A.mat, B.mat, ret.mat);
         return ret;
     }
 
@@ -275,15 +271,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
-     * @see CommonOps_DDRM#subtract(DMatrixD1, double , DMatrixD1)
-     *
      * @param b Value subtracted from each element
-     *
      * @return The results of this operation.
+     * @see CommonOps_DDRM#subtract(DMatrixD1, double, DMatrixD1)
      */
     public T minus( double b ) {
         T ret = createLike();
-        ops.minus(mat,b,ret.mat);
+        ops.minus(mat, b, ret.mat);
         return ret;
     }
 
@@ -296,15 +290,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
-     * @see CommonOps_DDRM#add( DMatrixD1, double , DMatrixD1)
-     *
      * @param b Value added to each element
-     *
      * @return A matrix that contains the results.
+     * @see CommonOps_DDRM#add(DMatrixD1, double, DMatrixD1)
      */
     public T plus( double b ) {
         T ret = createLike();
-        ops.plus(mat,b,ret.mat);
+        ops.plus(mat, b, ret.mat);
         return ret;
     }
 
@@ -317,19 +309,17 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#add( DMatrixD1, double , DMatrixD1, DMatrixD1)
-     *
      * @param B m by n matrix. Not modified.
-     *
      * @return A matrix that contains the results.
+     * @see CommonOps_DDRM#add(DMatrixD1, double, DMatrixD1, DMatrixD1)
      */
-    public T plus( double beta , T B ) {
-        convertType.specify(this,B);
+    public T plus( double beta, T B ) {
+        convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
         T ret = A.createLike();
-        A.ops.plus(A.mat,beta,B.mat,ret.mat);
+        A.ops.plus(A.mat, beta, B.mat, ret.mat);
         return ret;
     }
 
@@ -340,17 +330,17 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @return dot product
      */
     public double dot( T v ) {
-        convertType.specify(this,v);
+        convertType.specify(this, v);
         T A = convertType.convert(this);
         v = convertType.convert(v);
 
-        if( !isVector() ) {
+        if (!isVector()) {
             throw new IllegalArgumentException("'this' matrix is not a vector.");
-        } else if( !v.isVector() ) {
+        } else if (!v.isVector()) {
             throw new IllegalArgumentException("'v' matrix is not a vector.");
         }
 
-        return A.ops.dot(A.mat,v.getMatrix());
+        return A.ops.dot(A.mat, v.getMatrix());
     }
 
     /**
@@ -369,14 +359,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * b<sub>i,j</sub> = val*a<sub>i,j</sub>
      * </p>
      *
-     * @see CommonOps_DDRM#scale(double, DMatrixD1)
-     *
      * @param val The multiplication factor.
      * @return The scaled matrix.
+     * @see CommonOps_DDRM#scale(double, DMatrixD1)
      */
     public T scale( double val ) {
         T ret = createLike();
-        ops.scale(mat,val,ret.getMatrix());
+        ops.scale(mat, val, ret.getMatrix());
         return ret;
     }
 
@@ -386,14 +375,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * b<sub>i,j</sub> = a<sub>i,j</sub>/val
      * </p>
      *
-     * @see CommonOps_DDRM#divide(DMatrixD1,double)
-     *
      * @param val Divisor.
      * @return Matrix with its elements divided by the specified value.
+     * @see CommonOps_DDRM#divide(DMatrixD1, double)
      */
     public T divide( double val ) {
         T ret = createLike();
-        ops.divide(mat,val,ret.getMatrix());
+        ops.divide(mat, val, ret.getMatrix());
         return ret;
     }
 
@@ -409,18 +397,15 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * if no exception is thrown the matrix could still be singular or nearly singular.
      * </p>
      *
-     * @see CommonOps_DDRM#invert(DMatrixRMaj, DMatrixRMaj)
-     *
-     * @throws SingularMatrixException
-     *
      * @return The inverse of this matrix.
+     * @see CommonOps_DDRM#invert(DMatrixRMaj, DMatrixRMaj)
      */
     public T invert() {
         T ret = createLike();
 
-        if( !ops.invert(mat,ret.mat))
+        if (!ops.invert(mat, ret.mat))
             throw new SingularMatrixException();
-        if( ops.hasUncountable(ret.mat))
+        if (ops.hasUncountable(ret.mat))
             throw new SingularMatrixException("Solution contains uncountable numbers");
 
         return ret;
@@ -435,7 +420,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      */
     public T pseudoInverse() {
         T ret = createLike();
-        ops.pseudoInverse(mat,ret.mat);
+        ops.pseudoInverse(mat, ret.mat);
         return ret;
     }
 
@@ -453,23 +438,19 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * if no exception is thrown 'a' could still be singular or nearly singular.
      * </p>
      *
-     * @see CommonOps_DDRM#solve(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
-     *
-     * @throws SingularMatrixException
-     *
      * @param B n by p matrix. Not modified.
      * @return The solution for 'x' that is n by p.
+     * @see CommonOps_DDRM#solve(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
      */
-    public T solve( T B )
-    {
-        convertType.specify(this,B);
+    public T solve( T B ) {
+        convertType.specify(this, B);
 
         // Look to see if there is a special function for handling this case
-        if( this.mat.getType() != B.getType() ) {
-            Method m = findAlternative("solve",mat,B.mat,convertType.commonType.getClassType());
-            if( m != null ) {
-                T ret = wrapMatrix(convertType.commonType.create(1,1));
-                invoke(m,this.mat,B.mat,ret.mat); // TODO handle boolean return from solve
+        if (this.mat.getType() != B.getType()) {
+            Method m = findAlternative("solve", mat, B.mat, convertType.commonType.getClassType());
+            if (m != null) {
+                T ret = wrapMatrix(convertType.commonType.create(1, 1));
+                invoke(m, this.mat, B.mat, ret.mat); // TODO handle boolean return from solve
                 return ret;
             }
         }
@@ -477,16 +458,15 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        T x = A.createMatrix(mat.getNumCols(),B.getMatrix().getNumCols(), A.getType());
+        T x = A.createMatrix(mat.getNumCols(), B.getMatrix().getNumCols(), A.getType());
 
-        if( !A.ops.solve(A.mat,x.mat,B.mat))
+        if (!A.ops.solve(A.mat, x.mat, B.mat))
             throw new SingularMatrixException();
-        if( A.ops.hasUncountable(x.mat))
+        if (A.ops.hasUncountable(x.mat))
             throw new SingularMatrixException("Solution contains uncountable numbers");
 
         return x;
     }
-
 
     /**
      * Sets the elements in this matrix to be equal to the elements in the passed in matrix.
@@ -495,13 +475,12 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param a The matrix whose value this matrix is being set to.
      */
     public void set( T a ) {
-        if( a.getType() == getType() )
+        if (a.getType() == getType())
             mat.set(a.getMatrix());
         else {
             setMatrix(a.mat.copy());
         }
     }
-
 
     /**
      * <p>
@@ -510,14 +489,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * a<sub>ij</sub> = val<br>
      * </p>
      *
-     * @see CommonOps_DDRM#fill(DMatrixD1, double)
-     *
      * @param val The value each element is set to.
+     * @see CommonOps_DDRM#fill(DMatrixD1, double)
      */
-    public void fill(double val ) {
+    public void fill( double val ) {
         try {
             ops.fill(mat, val);
-        } catch( ConvertToDenseException e) {
+        } catch (ConvertToDenseException e) {
             convertToDense();
             fill(val);
         }
@@ -539,9 +517,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
      * </p>
      *
-     * @see NormOps_DDRM#normF(DMatrixD1)
-     *
      * @return The matrix's Frobenius normal.
+     * @see NormOps_DDRM#normF(DMatrixD1)
      */
     public double normF() {
         return ops.normF(mat);
@@ -553,9 +530,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.
      * </p>
      *
-     * @see NormOps_DDRM#conditionP2(DMatrixRMaj)
-     *
      * @return The condition number.
+     * @see NormOps_DDRM#conditionP2(DMatrixRMaj)
      */
     public double conditionP2() {
         return ops.conditionP2(mat);
@@ -564,9 +540,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
     /**
      * Computes the determinant of the matrix.
      *
-     * @see CommonOps_DDRM#det(DMatrixRMaj)
-     *
      * @return The determinant.
+     * @see CommonOps_DDRM#det(DMatrixRMaj)
      */
     public double determinant() {
         double ret = ops.determinant(mat);
@@ -580,9 +555,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Computes the trace of the matrix.
      * </p>
      *
-     * @see CommonOps_DDRM#trace(DMatrix1Row)
-     *
      * @return The trace of the matrix.
+     * @see CommonOps_DDRM#trace(DMatrix1Row)
      */
     public double trace() {
         return ops.trace(mat);
@@ -599,13 +573,12 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * This is equivalent to calling A.getMatrix().reshape(numRows,numCols,false).
      * </p>
      *
-     * @see DMatrixRMaj#reshape(int,int,boolean)
-     *
      * @param numRows The new number of rows in the matrix.
      * @param numCols The new number of columns in the matrix.
+     * @see DMatrixRMaj#reshape(int, int, boolean)
      */
-    public void reshape( int numRows , int numCols ) {
-        if( mat.getType().isFixed() ) {
+    public void reshape( int numRows, int numCols ) {
+        if (mat.getType().isFixed()) {
             throw new IllegalArgumentException("Can't reshape a fixed sized matrix");
         } else {
             ((ReshapeMatrix)mat).reshape(numRows, numCols);
@@ -620,7 +593,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param col The column of the element.
      * @param value The element's new value.
      */
-    public void set( int row , int col , double value ) {
+    public void set( int row, int col, double value ) {
         ops.set(mat, row, col, value);
     }
 
@@ -630,11 +603,11 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param index The matrix element that is being assigned a value.
      * @param value The element's new value.
      */
-    public void set( int index , double value ) {
-        if( mat.getType() == MatrixType.DDRM ) {
-            ((DMatrixRMaj) mat).set(index, value);
-        } else if( mat.getType() == MatrixType.FDRM ) {
-            ((FMatrixRMaj) mat).set(index, (float)value);
+    public void set( int index, double value ) {
+        if (mat.getType() == MatrixType.DDRM) {
+            ((DMatrixRMaj)mat).set(index, value);
+        } else if (mat.getType() == MatrixType.FDRM) {
+            ((FMatrixRMaj)mat).set(index, (float)value);
         } else {
             throw new RuntimeException("Not supported yet for this matrix type");
         }
@@ -642,16 +615,17 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     /**
      * Used to set the complex value of a matrix element.
+     *
      * @param row The row of the element.
      * @param col The column of the element.
      * @param real Real component of assigned value
      * @param imaginary Imaginary component of assigned value
      */
-    public void set( int row , int col , double real , double imaginary ) {
-        if( imaginary == 0 ) {
-            set(row,col,real);
+    public void set( int row, int col, double real, double imaginary ) {
+        if (imaginary == 0) {
+            set(row, col, real);
         } else {
-            ops.set(mat,row,col, real, imaginary);
+            ops.set(mat, row, col, real, imaginary);
         }
     }
 
@@ -666,8 +640,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param startColumn The initial column that the array is written to.
      * @param values Values which are to be written to the row in a matrix.
      */
-    public void setRow( int row , int startColumn , double ...values ) {
-        ops.setRow(mat,row,startColumn,values);
+    public void setRow( int row, int startColumn, double... values ) {
+        ops.setRow(mat, row, startColumn, values);
     }
 
     /**
@@ -681,8 +655,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param startRow The initial column that the array is written to.
      * @param values Values which are to be written to the row in a matrix.
      */
-    public void setColumn( int column , int startRow , double ...values ) {
-        ops.setColumn(mat,column,startRow,values);
+    public void setColumn( int column, int startRow, double... values ) {
+        ops.setColumn(mat, column, startRow, values);
     }
 
     /**
@@ -695,26 +669,25 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param col The column of the element.
      * @return The value of the element.
      */
-    public double get( int row , int col ) {
-        return ops.get(mat,row,col);
+    public double get( int row, int col ) {
+        return ops.get(mat, row, col);
     }
 
     /**
      * Returns the value of the matrix at the specified index of the 1D row major array.
      *
-     * @see DMatrixRMaj#get(int)
-     *
      * @param index The element's index whose value is to be returned
      * @return The value of the specified element.
+     * @see DMatrixRMaj#get(int)
      */
     public double get( int index ) {
         MatrixType type = mat.getType();
 
-        if( type.isReal()) {
+        if (type.isReal()) {
             if (type.getBits() == 64) {
-                return ((DMatrixRMaj) mat).data[index];
+                return ((DMatrixRMaj)mat).data[index];
             } else {
-                return ((FMatrixRMaj) mat).data[index];
+                return ((FMatrixRMaj)mat).data[index];
             }
         } else {
             throw new IllegalArgumentException("Complex matrix. Call get(int,Complex64F) instead");
@@ -723,25 +696,25 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     /**
      * Used to get the complex value of a matrix element.
+     *
      * @param row The row of the element.
      * @param col The column of the element.
      * @param output Storage for the value
      */
-    public void get( int row , int col , Complex_F64 output ) {
-        ops.get(mat,row,col,output);
+    public void get( int row, int col, Complex_F64 output ) {
+        ops.get(mat, row, col, output);
     }
 
     /**
      * Returns the index in the matrix's array.
      *
-     * @see DMatrixRMaj#getIndex(int, int)
-     *
      * @param row The row number.
      * @param col The column number.
      * @return The index of the specified element.
+     * @see DMatrixRMaj#getIndex(int, int)
      */
-    public int getIndex( int row , int col ) {
-        return row * mat.getNumCols() + col;
+    public int getIndex( int row, int col ) {
+        return row*mat.getNumCols() + col;
     }
 
     /**
@@ -756,9 +729,8 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public DMatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
-    {
-        return new DMatrixIterator((DMatrixRMaj)mat,rowMajor, minRow, minCol, maxRow, maxCol);
+    public DMatrixIterator iterator( boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol ) {
+        return new DMatrixIterator((DMatrixRMaj)mat, rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     /**
@@ -814,7 +786,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * </p>
      */
     public void print( String format ) {
-        ops.print(System.out,mat,format);
+        ops.print(System.out, mat, format);
     }
 
     /**
@@ -830,7 +802,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PrintStream p = new PrintStream(stream);
 
-        MatrixIO.print(p,mat);
+        MatrixIO.print(p, mat);
 
         return stream.toString();
     }
@@ -857,13 +829,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param x1 Stop column + 1.
      * @return The submatrix.
      */
-    public T extractMatrix(int y0 , int y1, int x0 , int x1 ) {
-        if( y0 == SimpleMatrix.END ) y0 = mat.getNumRows();
-        if( y1 == SimpleMatrix.END ) y1 = mat.getNumRows();
-        if( x0 == SimpleMatrix.END ) x0 = mat.getNumCols();
-        if( x1 == SimpleMatrix.END ) x1 = mat.getNumCols();
+    public T extractMatrix( int y0, int y1, int x0, int x1 ) {
+        if (y0 == SimpleMatrix.END) y0 = mat.getNumRows();
+        if (y1 == SimpleMatrix.END) y1 = mat.getNumRows();
+        if (x0 == SimpleMatrix.END) x0 = mat.getNumCols();
+        if (x1 == SimpleMatrix.END) x1 = mat.getNumCols();
 
-        T ret = createMatrix(y1-y0,x1-x0, mat.getType());
+        T ret = createMatrix(y1 - y0, x1 - x0, mat.getType());
 
         ops.extract(mat, y0, y1, x0, x1, ret.mat, 0, 0);
 
@@ -880,12 +852,11 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param element The row or column the vector is contained in.
      * @return Extracted vector.
      */
-    public T extractVector( boolean extractRow , int element )
-    {
-        if( extractRow ) {
-            return extractMatrix(element,element+1,0,SimpleMatrix.END);
+    public T extractVector( boolean extractRow, int element ) {
+        if (extractRow) {
+            return extractMatrix(element, element + 1, 0, SimpleMatrix.END);
         } else {
-            return extractMatrix(0,SimpleMatrix.END,element,element+1);
+            return extractMatrix(0, SimpleMatrix.END, element, element + 1);
         }
     }
 
@@ -894,11 +865,10 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * If a vector then a square matrix is returned if a matrix then a vector of diagonal ements is returned
      * </p>
      *
-     * @see CommonOps_DDRM#extractDiag(DMatrixRMaj, DMatrixRMaj)
      * @return Diagonal elements inside a vector or a square matrix with the same diagonal elements.
+     * @see CommonOps_DDRM#extractDiag(DMatrixRMaj, DMatrixRMaj)
      */
-    public T diag()
-    {
+    public T diag() {
         return wrapMatrix(ops.diag(mat));
     }
 
@@ -910,10 +880,10 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param tol How similar they must be to be equals.
      * @return If they are equal within tolerance of each other.
      */
-    public boolean isIdentical(T a, double tol) {
-        if( a.getType() != getType() )
+    public boolean isIdentical( T a, double tol ) {
+        if (a.getType() != getType())
             return false;
-        return ops.isIdentical(mat,a.mat,tol);
+        return ops.isIdentical(mat, a.mat, tol);
     }
 
     /**
@@ -932,7 +902,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @return SVD
      */
     public SimpleSVD<T> svd() {
-        return new SimpleSVD(mat,false);
+        return new SimpleSVD(mat, false);
     }
 
     /**
@@ -941,7 +911,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @return SVD of this matrix.
      */
     public SimpleSVD<T> svd( boolean compact ) {
-        return new SimpleSVD(mat,compact);
+        return new SimpleSVD(mat, compact);
     }
 
     /**
@@ -958,21 +928,21 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param insertCol First column the matrix is to be inserted into.
      * @param B The matrix that is being inserted.
      */
-    public void insertIntoThis(int insertRow, int insertCol, T B) {
-        convertType.specify(this,B);
+    public void insertIntoThis( int insertRow, int insertCol, T B ) {
+        convertType.specify(this, B);
         B = convertType.convert(B);
 
         // See if this type's need to be changed or not
-        if( convertType.commonType == getType() ) {
-            insert(B.mat,mat,insertRow,insertCol);
+        if (convertType.commonType == getType()) {
+            insert(B.mat, mat, insertRow, insertCol);
         } else {
             T A = convertType.convert(this);
-            A.insert(B.mat,A.mat,insertRow,insertCol);
+            A.insert(B.mat, A.mat, insertRow, insertCol);
             setMatrix(A.mat);
         }
     }
 
-    void insert( Matrix src , Matrix dst , int destY0 , int destX0 ) {
+    void insert( Matrix src, Matrix dst, int destY0, int destX0 ) {
         ops.extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dst, destY0, destX0);
     }
 
@@ -998,16 +968,16 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param B The matrix that is written into A.
      * @return A new combined matrix.
      */
-    public T combine( int insertRow, int insertCol, T B) {
-        convertType.specify(this,B);
+    public T combine( int insertRow, int insertCol, T B ) {
+        convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        if( insertRow == SimpleMatrix.END ) {
+        if (insertRow == SimpleMatrix.END) {
             insertRow = mat.getNumRows();
         }
 
-        if( insertCol == SimpleMatrix.END ) {
+        if (insertCol == SimpleMatrix.END) {
             insertCol = mat.getNumCols();
         }
 
@@ -1016,17 +986,17 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
         T ret;
 
-        if( maxRow > mat.getNumRows() || maxCol > mat.getNumCols()) {
-            int M = Math.max(maxRow,mat.getNumRows());
-            int N = Math.max(maxCol,mat.getNumCols());
+        if (maxRow > mat.getNumRows() || maxCol > mat.getNumCols()) {
+            int M = Math.max(maxRow, mat.getNumRows());
+            int N = Math.max(maxCol, mat.getNumCols());
 
-            ret = A.createMatrix(M,N, A.getType());
-            ret.insertIntoThis(0,0,A);
+            ret = A.createMatrix(M, N, A.getType());
+            ret.insertIntoThis(0, 0, A);
         } else {
             ret = A.copy();
         }
 
-        ret.insertIntoThis(insertRow,insertCol,B);
+        ret.insertIntoThis(insertRow, insertCol, B);
 
         return ret;
     }
@@ -1050,7 +1020,6 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         return ops.elementMinAbs(mat);
     }
 
-
     /**
      * Computes the sum of all the elements in the matrix.
      *
@@ -1069,14 +1038,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param b A simple matrix.
      * @return The element by element multiplication of 'this' and 'b'.
      */
-    public T elementMult( T b )
-    {
-        convertType.specify(this,b);
+    public T elementMult( T b ) {
+        convertType.specify(this, b);
         T A = convertType.convert(this);
         b = convertType.convert(b);
 
         T c = A.createLike();
-        A.ops.elementMult(A.mat,b.mat,c.mat);
+        A.ops.elementMult(A.mat, b.mat, c.mat);
         return c;
     }
 
@@ -1089,14 +1057,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param b A simple matrix.
      * @return The element by element division of 'this' and 'b'.
      */
-    public T elementDiv( T b )
-    {
-        convertType.specify(this,b);
+    public T elementDiv( T b ) {
+        convertType.specify(this, b);
         T A = convertType.convert(this);
         b = convertType.convert(b);
 
         T c = A.createLike();
-        A.ops.elementDiv(A.mat,b.mat,c.mat);
+        A.ops.elementDiv(A.mat, b.mat, c.mat);
         return c;
     }
 
@@ -1109,14 +1076,13 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param b A simple matrix.
      * @return The element by element power of 'this' and 'b'.
      */
-    public T elementPower( T b )
-    {
-        convertType.specify(this,b);
+    public T elementPower( T b ) {
+        convertType.specify(this, b);
         T A = convertType.convert(this);
         b = convertType.convert(b);
 
         T c = A.createLike();
-        A.ops.elementPower(A.mat,b.mat,c.mat);
+        A.ops.elementPower(A.mat, b.mat, c.mat);
         return c;
     }
 
@@ -1129,10 +1095,9 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param b Scalar
      * @return The element by element power of 'this' and 'b'.
      */
-    public T elementPower( double b )
-    {
+    public T elementPower( double b ) {
         T c = createLike();
-        ops.elementPower(mat,b,c.mat);
+        ops.elementPower(mat, b, c.mat);
         return c;
     }
 
@@ -1144,10 +1109,9 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      *
      * @return The element by element power of 'this' and 'b'.
      */
-    public T elementExp()
-    {
+    public T elementExp() {
         T c = createLike();
-        ops.elementExp(mat,c.mat);
+        ops.elementExp(mat, c.mat);
         return c;
     }
 
@@ -1159,10 +1123,9 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      *
      * @return The element by element power of 'this' and 'b'.
      */
-    public T elementLog()
-    {
+    public T elementLog() {
         T c = createLike();
-        ops.elementLog(mat,c.mat);
+        ops.elementLog(mat, c.mat);
         return c;
     }
 
@@ -1201,52 +1164,52 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param equation String representing the symbol equation
      * @param variables List of variable names and variables
      */
-    public void equation(String equation , Object ...variables ) {
-        if( variables.length >= 25 )
+    public void equation( String equation, Object... variables ) {
+        if (variables.length >= 25)
             throw new IllegalArgumentException("Too many variables!  At most 25");
 
-        if( !(mat instanceof DMatrixRMaj))
+        if (!(mat instanceof DMatrixRMaj))
             return;
 
         Equation eq = new Equation();
 
         String nameThis = "A";
         int offset = 0;
-        if( variables.length > 0 && variables[0] instanceof String ) {
+        if (variables.length > 0 && variables[0] instanceof String) {
             nameThis = (String)variables[0];
             offset = 1;
 
-            if( variables.length%2 != 1 )
+            if (variables.length%2 != 1)
                 throw new IllegalArgumentException("Expected and odd length for variables");
         } else {
-            if( variables.length%2 != 0 )
+            if (variables.length%2 != 0)
                 throw new IllegalArgumentException("Expected and even length for variables");
         }
-        eq.alias((DMatrixRMaj)mat,nameThis);
+        eq.alias((DMatrixRMaj)mat, nameThis);
 
-        for( int i = offset; i < variables.length; i += 2 ) {
-            if( !(variables[i+1] instanceof String))
-                throw new IllegalArgumentException("String expected at variables index "+i);
+        for (int i = offset; i < variables.length; i += 2) {
+            if (!(variables[i + 1] instanceof String))
+                throw new IllegalArgumentException("String expected at variables index " + i);
             Object o = variables[i];
-            String name = (String)variables[i+1];
+            String name = (String)variables[i + 1];
 
-            if( SimpleBase.class.isAssignableFrom(o.getClass())) {
-                eq.alias(((SimpleBase)o).getDDRM(),name);
-            } else if( o instanceof DMatrixRMaj) {
+            if (SimpleBase.class.isAssignableFrom(o.getClass())) {
+                eq.alias(((SimpleBase)o).getDDRM(), name);
+            } else if (o instanceof DMatrixRMaj) {
                 eq.alias((DMatrixRMaj)o, name);
-            } else if( o instanceof Double ){
-                eq.alias((Double)o,name);
-            } else if( o instanceof Integer ){
-                eq.alias((Integer)o,name);
+            } else if (o instanceof Double) {
+                eq.alias((Double)o, name);
+            } else if (o instanceof Integer) {
+                eq.alias((Integer)o, name);
             } else {
                 String type = o == null ? "null" : o.getClass().getSimpleName();
-                throw new IllegalArgumentException("Variable type not supported by Equation! "+type);
+                throw new IllegalArgumentException("Variable type not supported by Equation! " + type);
             }
         }
 
         // see if the assignment is implicit
-        if( !equation.contains("=")) {
-            equation = nameThis+" = "+equation;
+        if (!equation.contains("=")) {
+            equation = nameThis + " = " + equation;
         }
 
         eq.process(equation);
@@ -1257,14 +1220,10 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Saves this matrix to a file as a serialized binary object.
      * </p>
      *
-     * @see MatrixIO#saveBin( DMatrix, String)
-     *
-     * @param fileName
-     * @throws java.io.IOException
+     * @see MatrixIO#saveBin(DMatrix, String)
      */
     public void saveToFileBinary( String fileName )
-            throws IOException
-    {
+            throws IOException {
         MatrixIO.saveBin((DMatrixRMaj)mat, fileName);
     }
 
@@ -1273,22 +1232,20 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Loads a new matrix from a serialized binary file.
      * </p>
      *
-     * @see MatrixIO#loadBin(String)
-     *
      * @param fileName File which is to be loaded.
      * @return The matrix.
-     * @throws IOException
+     * @see MatrixIO#loadBin(String)
      */
     public static SimpleMatrix loadBinary( String fileName )
             throws IOException {
         DMatrix mat = MatrixIO.loadBin(fileName);
 
         // see if its a DMatrixRMaj
-        if( mat instanceof DMatrixRMaj) {
+        if (mat instanceof DMatrixRMaj) {
             return SimpleMatrix.wrap((DMatrixRMaj)mat);
         } else {
             // if not convert it into one and wrap it
-            return SimpleMatrix.wrap( new DMatrixRMaj(mat));
+            return SimpleMatrix.wrap(new DMatrixRMaj(mat));
         }
     }
 
@@ -1297,14 +1254,10 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Saves this matrix to a file in a CSV format.  For the file format see {@link MatrixIO}.
      * </p>
      *
-     * @see MatrixIO#saveBin( DMatrix, String)
-     *
-     * @param fileName
-     * @throws java.io.IOException
+     * @see MatrixIO#saveBin(DMatrix, String)
      */
     public void saveToFileCSV( String fileName )
-            throws IOException
-    {
+            throws IOException {
         MatrixIO.saveDenseCSV((DMatrixRMaj)mat, fileName);
     }
 
@@ -1313,16 +1266,15 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Loads a new matrix from a CSV file.  For the file format see {@link MatrixIO}.
      * </p>
      *
-     * @see MatrixIO#loadCSV(String,boolean)
-     *
      * @param fileName File which is to be loaded.
      * @return The matrix.
+     * @see MatrixIO#loadCSV(String, boolean)
      */
     public T loadCSV( String fileName )
             throws IOException {
-        DMatrix mat = MatrixIO.loadCSV(fileName,true);
+        DMatrix mat = MatrixIO.loadCSV(fileName, true);
 
-        T ret = createMatrix(1,1, mat.getType());
+        T ret = createMatrix(1, 1, mat.getType());
 
         ret.setMatrix(mat);
 
@@ -1336,7 +1288,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param col Column index.
      * @return true if it is a valid element in the matrix.
      */
-    public boolean isInBounds(int row, int col) {
+    public boolean isInBounds( int row, int col ) {
         return row >= 0 && col >= 0 && row < mat.getNumRows() && col < mat.getNumCols();
     }
 
@@ -1344,7 +1296,7 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Prints the number of rows and column in this matrix.
      */
     public void printDimensions() {
-        System.out.println("[rows = "+numRows()+" , cols = "+numCols()+" ]");
+        System.out.println("[rows = " + numRows() + " , cols = " + numCols() + " ]");
     }
 
     /**
@@ -1363,26 +1315,27 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param matrices Set of matrices
      * @return Resulting matrix
      */
-    public T concatColumns( SimpleBase ...matrices ) {
-        convertType.specify0(this,matrices);
+    public T concatColumns( SimpleBase... matrices ) {
+        convertType.specify0(this, matrices);
         T A = convertType.convert(this);
 
         int numCols = A.numCols();
         int numRows = A.numRows();
         for (int i = 0; i < matrices.length; i++) {
-            numRows = Math.max(numRows,matrices[i].numRows());
+            numRows = Math.max(numRows, matrices[i].numRows());
             numCols += matrices[i].numCols();
         }
 
-        SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows,numCols));
+        SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows, numCols));
 
-        A.ops.extract(A.mat,0,A.numRows(),0,A.numCols(),combined.mat,0,0);
+        A.ops.extract(A.mat, 0, A.numRows(), 0, A.numCols(), combined.mat, 0, 0);
         int col = A.numCols();
         for (int i = 0; i < matrices.length; i++) {
             Matrix m = convertType.convert(matrices[i]).mat;
             int cols = m.getNumCols();
-            int rows = m.getNumRows();;
-            A.ops.extract(m,0,rows,0,cols,combined.mat,0,col);
+            int rows = m.getNumRows();
+            ;
+            A.ops.extract(m, 0, rows, 0, cols, combined.mat, 0, col);
             col += cols;
         }
 
@@ -1398,26 +1351,27 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * @param matrices Set of matrices
      * @return Resulting matrix
      */
-    public T concatRows( SimpleBase ... matrices ) {
-        convertType.specify0(this,matrices);
+    public T concatRows( SimpleBase... matrices ) {
+        convertType.specify0(this, matrices);
         T A = convertType.convert(this);
 
         int numCols = A.numCols();
         int numRows = A.numRows();
         for (int i = 0; i < matrices.length; i++) {
             numRows += matrices[i].numRows();
-            numCols = Math.max(numCols,matrices[i].numCols());
+            numCols = Math.max(numCols, matrices[i].numCols());
         }
 
-        SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows,numCols));
+        SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows, numCols));
 
-        A.ops.extract(A.mat,0,A.numRows(),0,A.numCols(),combined.mat,0,0);
+        A.ops.extract(A.mat, 0, A.numRows(), 0, A.numCols(), combined.mat, 0, 0);
         int row = A.numRows();
         for (int i = 0; i < matrices.length; i++) {
             Matrix m = convertType.convert(matrices[i]).mat;
             int cols = m.getNumCols();
-            int rows = m.getNumRows();;
-            A.ops.extract(m,0,rows,0,cols,combined.mat,row,0);
+            int rows = m.getNumRows();
+            ;
+            A.ops.extract(m, 0, rows, 0, cols, combined.mat, row, 0);
             row += rows;
         }
 
@@ -1426,22 +1380,24 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     /**
      * Extracts the specified rows from the matrix.
+     *
      * @param begin First row.  Inclusive.
      * @param end Last row + 1.
      * @return Submatrix that contains the specified rows.
      */
-    public T rows( int begin , int end ) {
-        return extractMatrix(begin,end,0,SimpleMatrix.END);
+    public T rows( int begin, int end ) {
+        return extractMatrix(begin, end, 0, SimpleMatrix.END);
     }
 
     /**
      * Extracts the specified rows from the matrix.
+     *
      * @param begin First row.  Inclusive.
      * @param end Last row + 1.
      * @return Submatrix that contains the specified rows.
      */
-    public T cols( int begin , int end ) {
-        return extractMatrix(0,SimpleMatrix.END, begin, end);
+    public T cols( int begin, int end ) {
+        return extractMatrix(0, SimpleMatrix.END, begin, end);
     }
 
     /**
@@ -1453,10 +1409,11 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
 
     /**
      * Creates a matrix that is the same type and shape
+     *
      * @return New matrix
      */
     public T createLike() {
-        return createMatrix(numRows(),numCols(),getType());
+        return createMatrix(numRows(), numCols(), getType());
     }
 
     protected void setMatrix( Matrix mat ) {
@@ -1464,40 +1421,39 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
         this.ops = lookupOps(mat.getType());
     }
 
-
-    @Nullable Method findAlternative(String method , Object... arguments ) {
+    @Nullable Method findAlternative( String method, Object... arguments ) {
         Method[] methods = ops.getClass().getMethods();
         for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
             if (!methods[methodIdx].getName().equals(method))
                 continue;
 
             Class<?>[] paramTypes = methods[methodIdx].getParameterTypes();
-            if( paramTypes.length != arguments.length )
+            if (paramTypes.length != arguments.length)
                 continue;
 
             // look for an exact match only
             boolean match = true;
             for (int j = 0; j < paramTypes.length; j++) {
-                if( arguments[j] instanceof Class ) {
-                    if( paramTypes[j] != arguments[j]) {
+                if (arguments[j] instanceof Class) {
+                    if (paramTypes[j] != arguments[j]) {
                         match = false;
                         break;
                     }
-                } else if( paramTypes[j] != arguments[j].getClass() ) {
+                } else if (paramTypes[j] != arguments[j].getClass()) {
                     match = false;
                     break;
                 }
             }
-            if( match ) {
+            if (match) {
                 return methods[methodIdx];
             }
         }
         return null;
     }
 
-    public void invoke( Method m , Object... inputs ) {
+    public void invoke( Method m, Object... inputs ) {
         try {
-            m.invoke(ops,inputs);
+            m.invoke(ops, inputs);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -1507,17 +1463,19 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Switches from a dense to sparse matrix
      */
     public void convertToSparse() {
-        switch ( mat.getType() ) {
+        switch (mat.getType()) {
             case DDRM: {
                 DMatrixSparseCSC m = new DMatrixSparseCSC(mat.getNumRows(), mat.getNumCols());
-                ConvertDMatrixStruct.convert((DMatrixRMaj) mat, m,0);
+                ConvertDMatrixStruct.convert((DMatrixRMaj)mat, m, 0);
                 setMatrix(m);
-            } break;
+            }
+            break;
             case FDRM: {
                 FMatrixSparseCSC m = new FMatrixSparseCSC(mat.getNumRows(), mat.getNumCols());
-                ConvertFMatrixStruct.convert((FMatrixRMaj) mat, m,0);
+                ConvertFMatrixStruct.convert((FMatrixRMaj)mat, m, 0);
                 setMatrix(m);
-            } break;
+            }
+            break;
 
             case DSCC:
             case FSCC:
@@ -1531,17 +1489,19 @@ public abstract class SimpleBase <T extends SimpleBase<T>> implements Serializab
      * Switches from a sparse to dense matrix
      */
     public void convertToDense() {
-        switch ( mat.getType() ) {
+        switch (mat.getType()) {
             case DSCC: {
                 DMatrix m = new DMatrixRMaj(mat.getNumRows(), mat.getNumCols());
-                ConvertDMatrixStruct.convert((DMatrix) mat, m);
+                ConvertDMatrixStruct.convert((DMatrix)mat, m);
                 setMatrix(m);
-            } break;
+            }
+            break;
             case FSCC: {
                 FMatrix m = new FMatrixRMaj(mat.getNumRows(), mat.getNumCols());
-                ConvertFMatrixStruct.convert((FMatrix) mat, m);
+                ConvertFMatrixStruct.convert((FMatrix)mat, m);
                 setMatrix(m);
-            } break;
+            }
+            break;
             case DDRM:
             case FDRM:
             case ZDRM:

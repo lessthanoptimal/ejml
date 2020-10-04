@@ -37,21 +37,21 @@ public class Macro {
         TokenList output = new TokenList();
 
         TokenList.Token t = tokens.getFirst();
-        while( t != null ) {
-            if( t.word != null ) {
+        while (t != null) {
+            if (t.word != null) {
                 boolean matched = false;
                 for (int i = 0; i < inputs.size(); i++) {
-                    if( inputs.get(i).equals(t.word)) {
-                        output.insert(output.last,replacements.get(i).copy());
+                    if (inputs.get(i).equals(t.word)) {
+                        output.insert(output.last, replacements.get(i).copy());
                         matched = true;
                         break;
                     }
                 }
-                if( !matched ) {
-                    output.insert(output.last,t.copy());
+                if (!matched) {
+                    output.insert(output.last, t.copy());
                 }
             } else {
-                output.insert(output.last,t.copy());
+                output.insert(output.last, t.copy());
             }
             t = t.next;
         }
@@ -60,19 +60,20 @@ public class Macro {
 
     public class Assign extends Operation {
 
-        HashMap<String,Macro> macros;
-        protected Assign( HashMap<String,Macro> macros ) {
-            super("Macro:"+Macro.this.name);
+        HashMap<String, Macro> macros;
+
+        protected Assign( HashMap<String, Macro> macros ) {
+            super("Macro:" + Macro.this.name);
             this.macros = macros;
         }
 
         @Override
         public void process() {
-            macros.put(Macro.this.name,Macro.this);
+            macros.put(Macro.this.name, Macro.this);
         }
     }
 
-    public Operation createOperation(HashMap<String,Macro> macros ) {
+    public Operation createOperation( HashMap<String, Macro> macros ) {
         return new Assign(macros);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,8 +26,8 @@ package org.ejml.equation;
 public class VariableDouble extends VariableScalar {
     public double value;
 
-    public VariableDouble(double value) {
-        super( Type.DOUBLE );
+    public VariableDouble( double value ) {
+        super(Type.DOUBLE);
         this.value = value;
     }
 

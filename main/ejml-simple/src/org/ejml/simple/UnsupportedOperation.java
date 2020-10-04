@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,17 +20,18 @@ package org.ejml.simple;
 
 /**
  * This operation isn't supported yet
+ *
  * @author Peter Abeles
  */
 public class UnsupportedOperation extends RuntimeException {
     public UnsupportedOperation() {
     }
 
-    public UnsupportedOperation(String message) {
+    public UnsupportedOperation( String message ) {
         super(message);
     }
 
-    public UnsupportedOperation(String message, Throwable cause) {
+    public UnsupportedOperation( String message, Throwable cause ) {
         super(message, cause);
     }
 }

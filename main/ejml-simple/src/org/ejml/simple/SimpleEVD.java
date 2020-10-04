@@ -29,32 +29,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Wrapper around EigenDecomposition for SimpleMatrix
  *
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked"})
-public class SimpleEVD <T extends SimpleBase>
-{
+public class SimpleEVD<T extends SimpleBase> {
     private EigenDecomposition eig;
 
     Matrix mat;
-    boolean is64;
 
-    public SimpleEVD( Matrix mat )
-    {
+    public SimpleEVD( Matrix mat ) {
         this.mat = mat;
-        this.is64 = mat instanceof DMatrixRMaj;
 
-        if( is64) {
-            eig = DecompositionFactory_DDRM.eig(mat.getNumCols(), true);
-        } else {
-            eig = DecompositionFactory_FDRM.eig(mat.getNumCols(), true);
-
+        switch (mat.getType()) {
+            case DDRM: eig = DecompositionFactory_DDRM.eig(mat.getNumCols(), true); break;
+            case FDRM: eig = DecompositionFactory_FDRM.eig(mat.getNumCols(), true); break;
+            default: throw new IllegalArgumentException("Matrix type not yet supported. " + mat.getType());
         }
-        if( !eig.decompose(mat))
+
+        if (!eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
     }
 
@@ -62,9 +57,9 @@ public class SimpleEVD <T extends SimpleBase>
      * Returns a list of all the eigenvalues
      */
     public List<Complex_F64> getEigenvalues() {
-        List<Complex_F64> ret = new ArrayList<Complex_F64>();
+        List<Complex_F64> ret = new ArrayList<>();
 
-        if( is64 ) {
+        if (mat.getType().getBits() == 64) {
             EigenDecomposition_F64 d = (EigenDecomposition_F64)eig;
             for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
                 ret.add(d.getEigenvalue(i));
@@ -104,8 +99,8 @@ public class SimpleEVD <T extends SimpleBase>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return An eigenvalue.
      */
-    public Complex_F64 getEigenvalue(int index ) {
-        if( is64 )
+    public Complex_F64 getEigenvalue( int index ) {
+        if (mat.getType().getBits() == 64)
             return ((EigenDecomposition_F64)eig).getEigenvalue(index);
         else {
             Complex_F64 c = ((EigenDecomposition_F64)eig).getEigenvalue(index);
@@ -122,9 +117,9 @@ public class SimpleEVD <T extends SimpleBase>
      * @param index Index of the eigenvalue eigenvector pair.
      * @return If the associated eigenvalue is real then an eigenvector is returned, null otherwise.
      */
-    public @Nullable T getEigenVector(int index ) {
+    public @Nullable T getEigenVector( int index ) {
         Matrix v = eig.getEigenVector(index);
-        if( v == null )
+        if (v == null)
             return null;
         return (T)SimpleMatrix.wrap(v);
     }
@@ -143,7 +138,7 @@ public class SimpleEVD <T extends SimpleBase>
      * @return Quality of the decomposition.
      */
     public /**/double quality() {
-        if (is64) {
+        if (mat.getType().getBits() == 64) {
             return DecompositionFactory_DDRM.quality((DMatrixRMaj)mat, (EigenDecomposition_F64)eig);
         } else {
             return DecompositionFactory_FDRM.quality((FMatrixRMaj)mat, (EigenDecomposition_F32)eig);
@@ -169,9 +164,9 @@ public class SimpleEVD <T extends SimpleBase>
         double max = getEigenvalue(0).getMagnitude2();
 
         final int N = getNumberOfEigenvalues();
-        for( int i = 1; i < N; i++ ) {
+        for (int i = 1; i < N; i++) {
             double m = getEigenvalue(i).getMagnitude2();
-            if( m > max ) {
+            if (m > max) {
                 max = m;
                 indexMax = i;
             }
@@ -190,9 +185,9 @@ public class SimpleEVD <T extends SimpleBase>
         double min = getEigenvalue(0).getMagnitude2();
 
         final int N = getNumberOfEigenvalues();
-        for( int i = 1; i < N; i++ ) {
+        for (int i = 1; i < N; i++) {
             double m = getEigenvalue(i).getMagnitude2();
-            if( m < min ) {
+            if (m < min) {
                 min = m;
                 indexMin = i;
             }
