@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,6 @@ import org.ejml.ops.ConvertDMatrixStruct;
 import java.util.Arrays;
 import java.util.Random;
 
-
 /**
  * @author Peter Abeles
  */
@@ -45,18 +44,18 @@ public class RandomMatrices_DSCC {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total ,
-                                             double min , double max , Random rand ) {
+    public static DMatrixSparseCSC rectangle( int numRows, int numCols, int nz_total,
+                                              double min, double max, Random rand ) {
 
-        nz_total = Math.min(numCols*numRows,nz_total);
+        nz_total = Math.min(numCols*numRows, nz_total);
         int[] selected = UtilEjml.shuffled(numRows*numCols, nz_total, rand);
-        Arrays.sort(selected,0,nz_total);
+        Arrays.sort(selected, 0, nz_total);
 
-        DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows,numCols,nz_total);
+        DMatrixSparseCSC ret = new DMatrixSparseCSC(numRows, numCols, nz_total);
         ret.indicesSorted = true;
 
         // compute the number of elements in each column
-        int hist[] = new int[ numCols ];
+        int[] hist = new int[numCols];
         for (int i = 0; i < nz_total; i++) {
             hist[selected[i]/numRows]++;
         }
@@ -68,15 +67,14 @@ public class RandomMatrices_DSCC {
             int row = selected[i]%numRows;
 
             ret.nz_rows[i] = row;
-            ret.nz_values[i] = rand.nextDouble()*(max-min)+min;
+            ret.nz_values[i] = rand.nextDouble()*(max - min) + min;
         }
 
         return ret;
     }
 
-
-    public static DMatrixSparseCSC rectangle(int numRows , int numCols , int nz_total , Random rand ) {
-        return rectangle(numRows, numCols, nz_total, -1,1,rand);
+    public static DMatrixSparseCSC rectangle( int numRows, int numCols, int nz_total, Random rand ) {
+        return rectangle(numRows, numCols, nz_total, -1, 1, rand);
     }
 
     /**
@@ -90,42 +88,42 @@ public class RandomMatrices_DSCC {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static DMatrixSparseCSC symmetric( int N , int nz_total ,
-                                              double min , double max , Random rand) {
+    public static DMatrixSparseCSC symmetric( int N, int nz_total,
+                                              double min, double max, Random rand ) {
 
         // compute the number of elements in the triangle, including diagonal
-        int Ntriagle = (N*N+N)/2;
+        int Ntriagle = (N*N + N)/2;
         // create a list of open elements
-        int open[] = new int[Ntriagle];
+        int[] open = new int[Ntriagle];
         for (int row = 0, index = 0; row < N; row++) {
             for (int col = row; col < N; col++, index++) {
-                open[index] = row*N+col;
+                open[index] = row*N + col;
             }
         }
 
         // perform a random draw
-        UtilEjml.shuffle(open,open.length,0,nz_total,rand);
-        Arrays.sort(open,0,nz_total);
+        UtilEjml.shuffle(open, open.length, 0, nz_total, rand);
+        Arrays.sort(open, 0, nz_total);
 
         // construct the matrix
-        DMatrixSparseTriplet A = new DMatrixSparseTriplet(N,N,nz_total*2);
+        DMatrixSparseTriplet A = new DMatrixSparseTriplet(N, N, nz_total*2);
         for (int i = 0; i < nz_total; i++) {
             int index = open[i];
             int row = index/N;
             int col = index%N;
 
-            double value = rand.nextDouble()*(max-min)+min;
+            double value = rand.nextDouble()*(max - min) + min;
 
-            if( row == col ) {
-                A.addItem(row,col,value);
+            if (row == col) {
+                A.addItem(row, col, value);
             } else {
-                A.addItem(row,col,value);
-                A.addItem(col,row,value);
+                A.addItem(row, col, value);
+                A.addItem(col, row, value);
             }
         }
 
-        DMatrixSparseCSC B = new DMatrixSparseCSC(N,N,A.nz_length);
-        ConvertDMatrixStruct.convert(A,B);
+        DMatrixSparseCSC B = new DMatrixSparseCSC(N, N, A.nz_length);
+        ConvertDMatrixStruct.convert(A, B);
 
         return B;
     }
@@ -142,43 +140,44 @@ public class RandomMatrices_DSCC {
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static DMatrixSparseCSC triangleLower(int dimen , int hessenberg, int nz_total,
-                                                 double min , double max , Random rand ) {
+    public static DMatrixSparseCSC triangleLower( int dimen, int hessenberg, int nz_total,
+                                                  double min, double max, Random rand ) {
 
         // number of elements which are along the diagonal
-        int diag_total = dimen-hessenberg;
+        int diag_total = dimen - hessenberg;
 
         // pre compute element count in each row
-        int rowStart[] = new int[dimen];
-        int rowEnd[] = new int[dimen];
+        int[] rowStart = new int[dimen];
+        int[] rowEnd = new int[dimen];
         // diagonal is manditory and these indexes refer to a triangle -1 dimension
         int N = 0;
         for (int i = 0; i < dimen; i++) {
-            if( i < dimen-1+hessenberg) rowStart[i] = N;
-            N += i < hessenberg ? dimen : dimen-1-i+hessenberg;;
-            if( i < dimen-1+hessenberg) rowEnd[i] = N;
+            if (i < dimen - 1 + hessenberg) rowStart[i] = N;
+            N += i < hessenberg ? dimen : dimen - 1 - i + hessenberg;
+            ;
+            if (i < dimen - 1 + hessenberg) rowEnd[i] = N;
         }
-        N += dimen-hessenberg;
+        N += dimen - hessenberg;
 
         // contrain the total number of non-zero elements
-        nz_total = Math.min(N,nz_total);
-        nz_total = Math.max(diag_total,nz_total);
+        nz_total = Math.min(N, nz_total);
+        nz_total = Math.max(diag_total, nz_total);
 
         // number of elements which are not the diagonal elements
-        int off_total = nz_total-diag_total;
+        int off_total = nz_total - diag_total;
 
-        int[] selected = UtilEjml.shuffled(N-diag_total, off_total, rand);
-        Arrays.sort(selected,0,off_total);
+        int[] selected = UtilEjml.shuffled(N - diag_total, off_total, rand);
+        Arrays.sort(selected, 0, off_total);
 
-        DMatrixSparseCSC L = new DMatrixSparseCSC(dimen,dimen,nz_total);
+        DMatrixSparseCSC L = new DMatrixSparseCSC(dimen, dimen, nz_total);
 
         // compute the number of elements in each column
-        int hist[] = new int[ dimen ];
+        int[] hist = new int[dimen];
         int s_index = 0;
         for (int col = 0; col < dimen; col++) {
-            if( col >= hessenberg )
+            if (col >= hessenberg)
                 hist[col]++;
-            while( s_index < off_total && selected[s_index] < rowEnd[col]  ) {
+            while (s_index < off_total && selected[s_index] < rowEnd[col]) {
                 hist[col]++;
                 s_index++;
             }
@@ -190,39 +189,39 @@ public class RandomMatrices_DSCC {
         int nz_index = 0;
         s_index = 0;
         for (int col = 0; col < dimen; col++) {
-            int offset = col >= hessenberg ? col - hessenberg+1 : 0;
+            int offset = col >= hessenberg ? col - hessenberg + 1 : 0;
 
             // assign the diagonal element a value
-            if( col >= hessenberg ) {
-                L.nz_rows[nz_index] = col-hessenberg;
-                L.nz_values[nz_index++] = rand.nextDouble() * (max - min) + min;
+            if (col >= hessenberg) {
+                L.nz_rows[nz_index] = col - hessenberg;
+                L.nz_values[nz_index++] = rand.nextDouble()*(max - min) + min;
             }
 
             // assign the other elements values
-            while( s_index < off_total && selected[s_index] < rowEnd[col]  ) {
+            while (s_index < off_total && selected[s_index] < rowEnd[col]) {
                 // the extra + 1 is because random elements were not allowed along the diagonal
                 int row = selected[s_index++] - rowStart[col] + offset;
 
                 L.nz_rows[nz_index] = row;
-                L.nz_values[nz_index++] = rand.nextDouble()*(max-min)+min;
+                L.nz_values[nz_index++] = rand.nextDouble()*(max - min) + min;
             }
         }
 
         return L;
     }
 
-    public static DMatrixSparseCSC triangleUpper(int dimen , int hessenberg, int nz_total,
-                                                 double min , double max , Random rand ) {
+    public static DMatrixSparseCSC triangleUpper( int dimen, int hessenberg, int nz_total,
+                                                  double min, double max, Random rand ) {
         DMatrixSparseCSC L = triangleLower(dimen, hessenberg, nz_total, min, max, rand);
         DMatrixSparseCSC U = L.createLike();
 
-        CommonOps_DSCC.transpose(L,U,null);
+        CommonOps_DSCC.transpose(L, U, null);
         return U;
     }
 
-    public static int nonzero( int numRows , int numCols , double minFill , double maxFill , Random rand  ) {
+    public static int nonzero( int numRows, int numCols, double minFill, double maxFill, Random rand ) {
         int N = numRows*numCols;
-        return (int)(N*(rand.nextDouble()*(maxFill-minFill)+minFill)+0.5);
+        return (int)(N*(rand.nextDouble()*(maxFill - minFill) + minFill) + 0.5);
     }
 
     /**
@@ -235,13 +234,13 @@ public class RandomMatrices_DSCC {
      * @param rand random number generator
      * @return Random matrix
      */
-    public static DMatrixSparseCSC triangle( boolean upper , int N , double minFill , double maxFill , Random rand ) {
-        int nz = (int)(((N-1)*(N-1)/2)*(rand.nextDouble()*(maxFill-minFill)+minFill))+N;
+    public static DMatrixSparseCSC triangle( boolean upper, int N, double minFill, double maxFill, Random rand ) {
+        int nz = (int)(((N - 1)*(N - 1)/2)*(rand.nextDouble()*(maxFill - minFill) + minFill)) + N;
 
-        if( upper ) {
-            return triangleUpper(N,0,nz,-1,1,rand);
+        if (upper) {
+            return triangleUpper(N, 0, nz, -1, 1, rand);
         } else {
-            return triangleLower(N,0,nz,-1,1,rand);
+            return triangleLower(N, 0, nz, -1, 1, rand);
         }
     }
 
@@ -253,27 +252,27 @@ public class RandomMatrices_DSCC {
      * @param rand random number generator
      * @return Random matrix
      */
-    public static DMatrixSparseCSC symmetricPosDef( int width , double probabilityZero , Random rand ) {
-        if( probabilityZero < 0 || probabilityZero > 1.0 )
+    public static DMatrixSparseCSC symmetricPosDef( int width, double probabilityZero, Random rand ) {
+        if (probabilityZero < 0 || probabilityZero > 1.0)
             throw new IllegalArgumentException("Invalid value for probabilityZero");
 
         // This is not formally proven to work.  It just seems to work.
-        DMatrixRMaj a = new DMatrixRMaj(width,1);
-        DMatrixRMaj b = new DMatrixRMaj(width,width);
+        DMatrixRMaj a = new DMatrixRMaj(width, 1);
+        DMatrixRMaj b = new DMatrixRMaj(width, width);
 
-        for( int i = 1; i < width; i++ ) {
-            if( rand.nextDouble() >= probabilityZero)
-                a.set(i,0,rand.nextDouble()*2-1.0);
+        for (int i = 1; i < width; i++) {
+            if (rand.nextDouble() >= probabilityZero)
+                a.set(i, 0, rand.nextDouble()*2 - 1.0);
         }
 
-        CommonOps_DDRM.multTransB(a,a,b);
+        CommonOps_DDRM.multTransB(a, a, b);
 
-        for( int i = 0; i < width; i++ ) {
-            b.add(i,i,1.0 + (double)(rand.nextDouble()*0.1) );
+        for (int i = 0; i < width; i++) {
+            b.add(i, i, 1.0 + (double)(rand.nextDouble()*0.1));
         }
 
-        DMatrixSparseCSC out = new DMatrixSparseCSC(width, width,width);
-        ConvertDMatrixStruct.convert(b,out, UtilEjml.TEST_F64);
+        DMatrixSparseCSC out = new DMatrixSparseCSC(width, width, width);
+        ConvertDMatrixStruct.convert(b, out, UtilEjml.TEST_F64);
 
         return out;
     }
@@ -281,17 +280,17 @@ public class RandomMatrices_DSCC {
     /**
      * Modies the matrix to make sure that at least one element in each column has a value
      */
-    public static void ensureNotSingular( DMatrixSparseCSC A , Random rand ) {
+    public static void ensureNotSingular( DMatrixSparseCSC A, Random rand ) {
 //        if( A.numRows < A.numCols ) {
 //            throw new IllegalArgumentException("Fewer equations than variables");
 //        }
 
-        int []s = UtilEjml.shuffled(A.numRows,rand);
+        int[] s = UtilEjml.shuffled(A.numRows, rand);
         Arrays.sort(s);
 
-        int N = Math.min(A.numCols,A.numRows);
+        int N = Math.min(A.numCols, A.numRows);
         for (int col = 0; col < N; col++) {
-            A.set(s[col],col,rand.nextDouble()+0.5);
+            A.set(s[col], col, rand.nextDouble() + 0.5);
         }
     }
 }

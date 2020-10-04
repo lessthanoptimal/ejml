@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,19 +23,18 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 
 import java.util.Random;
 
-
 /**
  * @author Peter Abeles
  */
 public class BenchmarkEigenDecomposition {
-    public static long watched(DMatrixRMaj orig , int numTrials ) {
+    public static long watched( DMatrixRMaj orig, int numTrials ) {
 
         long prev = System.currentTimeMillis();
 
         WatchedDoubleStepQRDecomposition_DDRM alg = new WatchedDoubleStepQRDecomposition_DDRM(true);
 
-        for( long i = 0; i < numTrials; i++ ) {
-            if( !alg.decompose(orig) ) {
+        for (long i = 0; i < numTrials; i++) {
+            if (!alg.decompose(orig)) {
                 throw new RuntimeException("Bad matrix");
             }
         }
@@ -43,26 +42,25 @@ public class BenchmarkEigenDecomposition {
         return System.currentTimeMillis() - prev;
     }
 
-    private static void runAlgorithms(DMatrixRMaj mat , int numTrials )
-    {
-        System.out.println("Watched            = "+ watched(mat,numTrials));
+    private static void runAlgorithms( DMatrixRMaj mat, int numTrials ) {
+        System.out.println("Watched            = " + watched(mat, numTrials));
     }
 
-    public static void main( String args [] ) {
+    public static void main( String[] args ) {
         Random rand = new Random(23423);
 
-        int size[] = new int[]{2,4,10,100,200};
-        int trials[] = new int[]{200000,40000,8000,50,10};
+        int[] size = new int[]{2, 4, 10, 100, 200};
+        int[] trials = new int[]{200000, 40000, 8000, 50, 10};
 
         // results vary significantly depending if it starts from a small or large matrix
-        for( int i = 0; i < size.length; i++ ) {
+        for (int i = 0; i < size.length; i++) {
             int w = size[i];
 
-            System.out.printf("Decomposing size %3d for %12d trials\n",w,trials[i]);
+            System.out.printf("Decomposing size %3d for %12d trials\n", w, trials[i]);
 
-            DMatrixRMaj symMat = RandomMatrices_DDRM.rectangle(w,w,rand);
+            DMatrixRMaj symMat = RandomMatrices_DDRM.rectangle(w, w, rand);
 
-            runAlgorithms(symMat,trials[i]);
+            runAlgorithms(symMat, trials[i]);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,23 +36,23 @@ public class TestRandomMatrices_DSCC {
     int numCols = 7;
 
     @Test
-    public void uniform() {
+    void uniform() {
 
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,10,-1,1,rand);
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows, numCols, 10, -1, 1, rand);
 
-        assertEquals(numRows,a.numRows);
-        assertEquals(numCols,a.numCols);
-        assertEquals(10,a.nz_length);
+        assertEquals(numRows, a.numRows);
+        assertEquals(numCols, a.numCols);
+        assertEquals(10, a.nz_length);
         assertTrue(CommonOps_DSCC.checkStructure(a));
 
         int count = 0;
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                double value = a.get(row,col);
+                double value = a.get(row, col);
 
-                if( value == 0 )
+                if (value == 0)
                     continue;
-                if( value > 1 || value < -1 )
+                if (value > 1 || value < -1)
                     fail("Out of expected range");
                 count++;
             }
@@ -63,20 +63,20 @@ public class TestRandomMatrices_DSCC {
     }
 
     @Test
-    public void createLowerTriangular() {
+    void createLowerTriangular() {
         DMatrixSparseCSC L;
         for (int trial = 0; trial < 20; trial++) {
-            for( int length : new int[]{0,2,6,12,20} ) {
-                L = RandomMatrices_DSCC.triangleLower(6, 0, length,-1,1, rand);
+            for (int length : new int[]{0, 2, 6, 12, 20}) {
+                L = RandomMatrices_DSCC.triangleLower(6, 0, length, -1, 1, rand);
 
-                assertEquals(Math.max(6,length),L.nz_length);
+                assertEquals(Math.max(6, length), L.nz_length);
                 assertTrue(CommonOps_DSCC.checkStructure(L));
-                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, 0.0 ));
+                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L, 0, 0.0));
 
-                L = RandomMatrices_DSCC.triangleLower(6, 1, length,-1,1, rand);
-                assertEquals(Math.max(5,length),L.nz_length);
+                L = RandomMatrices_DSCC.triangleLower(6, 1, length, -1, 1, rand);
+                assertEquals(Math.max(5, length), L.nz_length);
                 assertTrue(CommonOps_DSCC.checkStructure(L));
-                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, 0.0 ));
+                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L, 1, 0.0));
 
                 assertFalse(CommonOps_DSCC.checkDuplicateElements(L));
             }
@@ -84,25 +84,25 @@ public class TestRandomMatrices_DSCC {
     }
 
     @Test
-    public void symmetric() {
+    void symmetric() {
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
-                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N,  nz,-1,1, rand);
+                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5 + 0.1) + 0.5);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N, nz, -1, 1, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
 
                 // Check the matrix properties
-                assertTrue(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_DSCC.isSymmetric(A, UtilEjml.TEST_F64));
             }
         }
     }
 
     @Test
-    public void symmetricPosDef() {
+    void symmetricPosDef() {
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N, 0.25, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
 

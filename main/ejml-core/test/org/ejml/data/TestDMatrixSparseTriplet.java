@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,66 +30,66 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestDMatrixSparseTriplet extends GenericTestsDMatrixSparse {
 
     @Test
-    public void constructor() {
-        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1,1,10);
+    void constructor() {
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1, 1, 10);
 
-        assertEquals(0,m.getLength());
-        assertEquals(10,m.nz_value.data.length);
-        assertEquals(20,m.nz_rowcol.data.length);
+        assertEquals(0, m.getLength());
+        assertEquals(10, m.nz_value.data.length);
+        assertEquals(20, m.nz_rowcol.data.length);
     }
 
     @Test
-    public void addItem() {
-        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1,1,2);
+    void addItem() {
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(1, 1, 2);
 
-        m.addItem(1,2,3);
-        m.addItem(1,3,4);
+        m.addItem(1, 2, 3);
+        m.addItem(1, 3, 4);
 
-        assertEquals(2,m.nz_length);
+        assertEquals(2, m.nz_length);
         assertTrue(2 <= m.nz_value.data.length);
         assertTrue(4 <= m.nz_rowcol.data.length);
 
-        check(m,0,1,2,3);
-        check(m,1,1,3,4);
+        check(m, 0, 1, 2, 3);
+        check(m, 1, 1, 3, 4);
 
         // now force it to grow
-        m.addItem(2,3,5);
-        assertEquals(3,m.nz_length);
+        m.addItem(2, 3, 5);
+        assertEquals(3, m.nz_length);
         assertTrue(m.nz_value.data.length >= 3);
 
-        check(m,0,1,2,3);
-        check(m,1,1,3,4);
-        check(m,2,2,3,5);
+        check(m, 0, 1, 2, 3);
+        check(m, 1, 1, 3, 4);
+        check(m, 2, 2, 3, 5);
     }
 
-    private void check(DMatrixSparseTriplet m , int index , int row , int col , double value ) {
-        assertEquals(row,m.nz_rowcol.data[index*2]);
-        assertEquals(col,m.nz_rowcol.data[index*2+1]);
-        assertEquals(value,m.nz_value.data[index], UtilEjml.TEST_F64);
+    private void check( DMatrixSparseTriplet m, int index, int row, int col, double value ) {
+        assertEquals(row, m.nz_rowcol.data[index*2]);
+        assertEquals(col, m.nz_rowcol.data[index*2 + 1]);
+        assertEquals(value, m.nz_value.data[index], UtilEjml.TEST_F64);
     }
 
     @Test
-    public void findItem() {
-        DMatrixSparseTriplet m = new DMatrixSparseTriplet(3,4, 5);
+    void findItem() {
+        DMatrixSparseTriplet m = new DMatrixSparseTriplet(3, 4, 5);
 
-        m.addItem(1,2, 5);
+        m.addItem(1, 2, 5);
 
         assertEquals(-1, m.nz_index(0, 1));
-        check( m, m.nz_index(1,2), 1,2,5);
+        check(m, m.nz_index(1, 2), 1, 2, 5);
     }
 
     @Override
-    public DMatrixSparse createSparse(int numRows, int numCols) {
-        return new DMatrixSparseTriplet(numRows,numCols,10);
+    public DMatrixSparse createSparse( int numRows, int numCols ) {
+        return new DMatrixSparseTriplet(numRows, numCols, 10);
     }
 
     @Override
-    public DMatrixSparse createSparse(DMatrixSparseTriplet orig) {
+    public DMatrixSparse createSparse( DMatrixSparseTriplet orig ) {
         return new DMatrixSparseTriplet(orig);
     }
 
     @Override
-    public boolean isStructureValid(DMatrixSparse m) {
+    public boolean isStructureValid( DMatrixSparse m ) {
         return true;
     }
 }
