@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,6 +43,7 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String preamble = 
                 "import org.ejml.MatrixDimensionException;\n" +
                 "import org.ejml.data.DMatrix1Row;\n" +
+                "import org.ejml.UtilEjml;\n" +
                 "import org.ejml.dense.row.CommonOps_DDRM;\n" +
                 "import org.jetbrains.annotations.Nullable;\n" +
                 "//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;\n" +
@@ -60,10 +61,10 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                 " *\n" +
                 " * <p>\n" +
                 " * Algorithms that are labeled as 'reorder' are designed to avoid caching jumping issues, some times at the cost\n" +
-                " * of increasing the number of operations. This is important for large matrices. The straight forward \n" +
+                " * of increasing the number of operations. This is important for large matrices. The straight forward\n" +
                 " * implementation seems to be faster for small matrices.\n" +
                 " * </p>\n" +
-                " * \n" +
+                " *\n" +
                 " * <p>\n" +
                 " * Algorithms that are labeled as 'aux' use an auxiliary array of length n. This array is used to create\n" +
                 " * a copy of an out of sequence column vector that is referenced several times. This reduces the number\n" +
@@ -114,22 +115,19 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String b_numRows = tranB ? "B.numCols" : "B.numRows";
 
         String ret =
-                        "        if( A == C || B == C )\n" +
-                        "            throw new IllegalArgumentException(\"Neither 'A' or 'B' can be the same matrix as 'C'\");\n"+
-                        "        else if( "+a_numCols+" != "+b_numRows+" ) {\n" +
-                        "            throw new MatrixDimensionException(\"The 'A' and 'B' matrices do not have compatible dimensions\");\n" +
-                        "        }\n";
+                "        UtilEjml.assertTrue(A != C && B != C, \"Neither 'A' or 'B' can be the same matrix as 'C'\");\n" +
+                "        UtilEjml.assertShape("+a_numCols+", "+b_numRows+", \"The 'A' and 'B' matrices do not have compatible dimensions\");\n";
         if( reshape)
-            ret += "        C.reshape("+a_numRows+","+b_numCols+");\n";
+            ret += "        C.reshape("+a_numRows+", "+b_numCols+");\n";
         else {
-            ret +=  "        if( " + a_numRows + " != C.numRows || " + b_numCols + " != C.numCols)\n" +
-                    "            throw new MatrixDimensionException(\"C is not compatible with A and B\");";
+            ret += "        UtilEjml.assertShape(" + a_numRows + " == C.numRows && " + b_numCols +
+                    " == C.numCols, \"C is not compatible with A and B\");\n";
         }
-                        
+
         ret += "\n";
 
         if( auxLength != null ) {
-            ret += "        if( aux == null ) aux = new double[ "+auxLength+" ];\n\n";
+            ret += "        if (aux == null) aux = new double["+auxLength+"];\n\n";
         }
 
         return ret;
@@ -137,10 +135,10 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
     private String handleZeros( boolean add ) {
 
-        String fill = add ? "" : "            CommonOps_DDRM.fill(C,0);\n";
+        String fill = add ? "" : "            CommonOps_DDRM.fill(C, 0);\n";
 
         String ret =
-                "        if( A.numCols == 0 || A.numRows == 0 ) {\n" +
+                "        if (A.numCols == 0 || A.numRows == 0) {\n" +
                 fill +
                 "            return;\n" +
                 "        }\n";
@@ -150,7 +148,7 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
     private String makeComment( String nameOp , boolean hasAlpha )
     {
         String a = hasAlpha ? "double, " : "";
-        String inputs = "("+a+" org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)";
+        String inputs = "("+a+"org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)";
 
 
         String ret =
@@ -181,15 +179,13 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         if( variant != null ) ret += "_"+variant+"( ";
         else ret += "( ";
 
-        if( hasAlpha ) ret += "double alpha , ";
+        if( hasAlpha ) ret += "double alpha, ";
 
         if( hasAux ) {
-            ret += "DMatrix1Row A , DMatrix1Row B , DMatrix1Row C , @Nullable double []aux )\n";
+            ret += "DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {\n";
         } else {
-            ret += "DMatrix1Row A , DMatrix1Row B , DMatrix1Row C )\n";
+            ret += "DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {\n";
         }
-
-        ret += "    {\n";
 
         return ret;
     }
@@ -212,8 +208,8 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "        final int endOfKLoop = B.numRows*B.numCols;\n"+
                         "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
-                        "        for( int i = 0; i < A.numRows; i++ ) {\n" +
-                        "            int indexCbase= i*C.numCols;\n" +
+                        "        for (int i = 0; i < A.numRows; i++) {\n" +
+                        "            int indexCbase = i*C.numCols;\n" +
                         "            int indexA = i*A.numCols;\n" +
                         "\n"+
                         "            // need to assign C.data to a value initially\n" +
@@ -223,18 +219,18 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                         "\n" +
                         "            double "+valLine +
                         "\n" +
-                        "            while( indexB < end ) {\n" +
-                        "                C."+assignment+"(indexC++ , valA*B.data[indexB++]);\n" +
+                        "            while (indexB < end) {\n" +
+                        "                C."+assignment+"(indexC++, valA*B.data[indexB++]);\n" +
                         "            }\n" +
                         "\n" +
                         "            // now add to it\n"+
-                        "            while( indexB != endOfKLoop ) { // k loop\n"+
+                        "            while (indexB != endOfKLoop) { // k loop\n"+
                         "                indexC = indexCbase;\n" +
                         "                end = indexB + B.numCols;\n" +
                         "\n" +
                         "                "+valLine+
                         "\n" +
-                        "                while( indexB < end ) { // j loop\n" +
+                        "                while (indexB < end) { // j loop\n" +
                         "                    C.data[indexC++] += valA*B.data[indexB++];\n" +
                         "                }\n" +
                         "            }\n" +
@@ -253,26 +249,25 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "                C."+assignment+"( cIndex++ , alpha*total );\n";
+            valLine = "                C."+assignment+"(cIndex++, alpha*total);\n";
         } else {
-            valLine = "                C."+assignment+"( cIndex++ , total );\n";
+            valLine = "                C."+assignment+"(cIndex++, total);\n";
         }
 
         String foo =
                 header + makeBoundsCheck(false,false, null,!add)+
-                        "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
-                        "        for( int i = 0; i < A.numRows; i++ ) {\n" +
+                        "        for (int i = 0; i < A.numRows; i++) {\n" +
                         "            int cIndex = i*B.numCols;\n" +
                         "            int aIndexStart = i*A.numCols;\n" +
-                        "            for( int j = 0; j < B.numCols; j++ ) {\n" +
+                        "            for (int j = 0; j < B.numCols; j++) {\n" +
                         "                double total = 0;\n" +
                         "\n" +
                         "                int indexA = aIndexStart;\n" +
                         "                int indexB = j;\n" +
                         "                int end = indexA + B.numRows;\n" +
-                        "                while( indexA < end ) {\n" +
-                        "                    total += A.data[indexA++] * B.data[indexB];\n" +
+                        "                while (indexA < end) {\n" +
+                        "                    total += A.data[indexA++]*B.data[indexB];\n" +
                         "                    indexB += B.numCols;\n" +
                         "                }\n" +
                         "\n" +
@@ -292,23 +287,23 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "                C."+assignment+"( i*C.numCols+j , alpha*total );\n";
+            valLine = "                C."+assignment+"(i*C.numCols + j, alpha*total);\n";
         } else {
-            valLine = "                C."+assignment+"( i*C.numCols+j , total );\n";
+            valLine = "                C."+assignment+"(i*C.numCols + j, total);\n";
         }
 
         String foo =
                 header + makeBoundsCheck(false,false, "B.numRows",!add)+
-                        "        for( int j = 0; j < B.numCols; j++ ) {\n" +
+                        "        for (int j = 0; j < B.numCols; j++) {\n" +
                         "            // create a copy of the column in B to avoid cache issues\n" +
-                        "            for( int k = 0; k < B.numRows; k++ ) {\n" +
-                        "                aux[k] = B.unsafe_get(k,j);\n" +
+                        "            for (int k = 0; k < B.numRows; k++) {\n" +
+                        "                aux[k] = B.unsafe_get(k, j);\n" +
                         "            }\n" +
                         "\n" +
                         "            int indexA = 0;\n" +
-                        "            for( int i = 0; i < A.numRows; i++ ) {\n" +
+                        "            for (int i = 0; i < A.numRows; i++) {\n" +
                         "                double total = 0;\n" +
-                        "                for( int k = 0; k < B.numRows; ) {\n" +
+                        "                for (int k = 0; k < B.numRows; ) {\n" +
                         "                    total += A.data[indexA++]*aux[k++];\n" +
                         "                }\n" +
                         valLine +
@@ -329,34 +324,33 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         if( alpha ) {
             valLine1 = "valA = alpha*A.data[i];\n";
-            valLine2 = "valA = alpha*A.unsafe_get(k,i);\n";
+            valLine2 = "valA = alpha*A.unsafe_get(k, i);\n";
         } else {
             valLine1 = "valA = A.data[i];\n";
-            valLine2 = "valA = A.unsafe_get(k,i);\n";
+            valLine2 = "valA = A.unsafe_get(k, i);\n";
         }
 
         String foo =
                 header + makeBoundsCheck(true,false, null,!add)+handleZeros(add)+
-                        "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
-                        "        for( int i = 0; i < A.numCols; i++ ) {\n" +
+                        "        for (int i = 0; i < A.numCols; i++) {\n" +
                         "            int indexC_start = i*C.numCols;\n" +
                         "\n" +
                         "            // first assign R\n" +
                         "            double " +valLine1+
                         "            int indexB = 0;\n" +
-                        "            int end = indexB+B.numCols;\n" +
+                        "            int end = indexB + B.numCols;\n" +
                         "            int indexC = indexC_start;\n" +
-                        "            while( indexB<end ) {\n" +
-                        "                C."+assignment+"( indexC++ , valA*B.data[indexB++]);\n" +
+                        "            while (indexB < end) {\n" +
+                        "                C."+assignment+"(indexC++, valA*B.data[indexB++]);\n" +
                         "            }\n" +
                         "            // now increment it\n" +
-                        "            for( int k = 1; k < A.numRows; k++ ) {\n" +
+                        "            for (int k = 1; k < A.numRows; k++) {\n" +
                         "                " +valLine2+
-                        "                end = indexB+B.numCols;\n" +
+                        "                end = indexB + B.numCols;\n" +
                         "                indexC = indexC_start;\n" +
                         "                // this is the loop for j\n" +
-                        "                while( indexB<end ) {\n" +
+                        "                while (indexB < end) {\n" +
                         "                    C.data[indexC++] += valA*B.data[indexB++];\n" +
                         "                }\n" +
                         "            }\n" +
@@ -381,20 +375,18 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(true,false, null,!add)+
-                        "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {\n" +
-                        "        for( int i = 0; i < A.numCols; i++ ) {\n" +
+                        "        for (int i = 0; i < A.numCols; i++) {\n" +
                         "            int cIndex = i*B.numCols;\n" +
-                        "            for( int j = 0; j < B.numCols; j++ ) {\n" +
+                        "            for (int j = 0; j < B.numCols; j++) {\n" +
                         "                int indexA = i;\n" +
                         "                int indexB = j;\n" +
                         "                int end = indexB + B.numRows*B.numCols;\n" +
                         "\n" +
                         "                double total = 0;\n" +
-                        "\n" +
                         "                // loop for k\n" +
-                        "                for(; indexB < end; indexB += B.numCols ) {\n" +
-                        "                    total += A.data[indexA] * B.data[indexB];\n" +
+                        "                for (; indexB < end; indexB += B.numCols) {\n" +
+                        "                    total += A.data[indexA]*B.data[indexB];\n" +
                         "                    indexA += A.numCols;\n" +
                         "                }\n" +
                         "\n" +
@@ -415,27 +407,25 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "C."+assignment+"( cIndex++ , alpha*total );\n";
+            valLine = "C."+assignment+"(cIndex++, alpha*total);\n";
         } else {
-            valLine = "C."+assignment+"( cIndex++ , total );\n";
+            valLine = "C."+assignment+"(cIndex++, total);\n";
         }
 
         String foo =
                 header + makeBoundsCheck(false,true, null,!add)+
-                        "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {\n" +
-                        "        for( int xA = 0; xA < A.numRows; xA++ ) {\n" +
+                        "        for (int xA = 0; xA < A.numRows; xA++) {\n" +
                         "            int cIndex = xA*B.numRows;\n" +
                         "            int aIndexStart = xA*B.numCols;\n" +
                         "            int end = aIndexStart + B.numCols;\n" +
                         "            int indexB = 0;\n"+
-                        "            for( int xB = 0; xB < B.numRows; xB++ ) {\n" +
+                        "            for (int xB = 0; xB < B.numRows; xB++) {\n" +
                         "                int indexA = aIndexStart;\n" +
                         "\n" +
                         "                double total = 0;\n" +
-                        "\n" +
-                        "                while( indexA<end ) {\n" +
-                        "                    total += A.data[indexA++] * B.data[indexB++];\n" +
+                        "                while (indexA < end) {\n" +
+                        "                    total += A.data[indexA++]*B.data[indexB++];\n" +
                         "                }\n" +
                         "\n" +
                         "                "+valLine +
@@ -454,26 +444,26 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "C."+assignment+"( cIndex++ , alpha*total );\n";
+            valLine = "C."+assignment+"(cIndex++, alpha*total);\n";
         } else {
-            valLine = "C."+assignment+"( cIndex++ , total );\n";
+            valLine = "C."+assignment+"(cIndex++, total);\n";
         }
 
         String foo =
                 header + makeBoundsCheck(true,true, null,!add)+
                         "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {\n" +
-                        "        for( int i = 0; i < A.numCols; i++ ) {\n" +
+                        "        for (int i = 0; i < A.numCols; i++) {\n" +
                         "            int cIndex = i*B.numRows;\n" +
                         "            int indexB = 0;\n"+
-                        "            for( int j = 0; j < B.numRows; j++ ) {\n" +
+                        "            for (int j = 0; j < B.numRows; j++) {\n" +
                         "                int indexA = i;\n" +
                         "                int end = indexB + B.numCols;\n" +
                         "\n" +
                         "                double total = 0;\n" +
                         "\n" +
-                        "                for( ;indexB<end; ) {\n" +
-                        "                    total += A.data[indexA] * B.data[indexB++];\n" +
+                        "                while (indexB < end) {\n" +
+                        "                    total += A.data[indexA]*B.data[indexB++];\n" +
                         "                    indexA += A.numCols;\n" +
                         "                }\n" +
                         "\n" +
@@ -493,24 +483,24 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "C."+assignment+"( indexC++ , alpha*total );\n";
+            valLine = "C."+assignment+"(indexC++, alpha*total);\n";
         } else {
-            valLine = "C."+assignment+"( indexC++ , total );\n";
+            valLine = "C."+assignment+"(indexC++, total);\n";
         }
 
         String foo =
                 header + makeBoundsCheck(true,true, "A.numRows",!add)+handleZeros(add)+
                         "        int indexC = 0;\n" +
-                        "        for( int i = 0; i < A.numCols; i++ ) {\n" +
-                        "            for( int k = 0; k < B.numCols; k++ ) {\n" +
-                        "                aux[k] = A.unsafe_get(k,i);\n" +
+                        "        for (int i = 0; i < A.numCols; i++) {\n" +
+                        "            for (int k = 0; k < B.numCols; k++) {\n" +
+                        "                aux[k] = A.unsafe_get(k, i);\n" +
                         "            }\n" +
                         "\n" +
-                        "            for( int j = 0; j < B.numRows; j++ ) {\n" +
+                        "            for (int j = 0; j < B.numRows; j++) {\n" +
                         "                double total = 0;\n" +
                         "\n" +
-                        "                for( int k = 0; k < B.numCols; k++ ) {\n" +
-                        "                    total += aux[k] * B.unsafe_get(j,k);\n" +
+                        "                for (int k = 0; k < B.numCols; k++) {\n" +
+                        "                    total += aux[k]*B.unsafe_get(j, k);\n" +
                         "                }\n" +
                         "                "+valLine +
                         "            }\n" +

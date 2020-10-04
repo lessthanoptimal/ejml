@@ -633,4 +633,51 @@ public class UtilEjml {
     public interface Process {
         void process();
     }
+
+    /**
+     * Intended for checking preconditions. Throws an exception if the two values are not equal.
+     */
+    public static void assertEq( int valA, int valB ) {
+        assertEq(valA, valB, "");
+    }
+
+    /**
+     * Intended for checking preconditions. Throws an exception if the two values are not equal.
+     */
+    public static void assertEq( int valA, int valB, String message ) {
+        if (valA != valB)
+            throw new IllegalArgumentException(valA + " != " + valB + " " + message);
+    }
+
+    /**
+     * Intended for checking preconditions. Throws an exception if the input is not true
+     */
+    public static void assertTrue( boolean value, String message ) {
+        if (!value)
+            throw new IllegalArgumentException(message);
+    }
+
+    /**
+     * Intended for checking preconditions. Throws an exception if the input is not true
+     */
+    public static void assertTrue( boolean value ) {
+        if (!value)
+            throw new IllegalArgumentException("Expected true");
+    }
+
+    /**
+     * Intended for checking matrix shape preconditions. Throws an exception if the two values are not equal.
+     */
+    public static void assertShape( int valA, int valB, String message ) {
+        if (valA != valB)
+            throw new MatrixDimensionException(valA + " != " + valB + " " + message);
+    }
+
+    /**
+     * Intended for checking matrix shape preconditions. Throws an exception if the input is not true
+     */
+    public static void assertShape( boolean value, String message ) {
+        if (!value)
+            throw new MatrixDimensionException(message);
+    }
 }

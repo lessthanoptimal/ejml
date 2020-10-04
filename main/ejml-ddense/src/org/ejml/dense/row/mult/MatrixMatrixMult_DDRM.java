@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.MatrixDimensionException;
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix1Row;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.jetbrains.annotations.Nullable;
@@ -64,11 +64,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#mult(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void mult_reorder( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numCols);
 
         if (A.numCols == 0 || A.numRows == 0) {
@@ -112,13 +109,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#mult(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void mult_small( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numCols);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numRows; i++) {
@@ -147,11 +140,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#mult(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void mult_aux( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numCols);
 
         if (aux == null) aux = new double[B.numRows];
@@ -178,18 +168,14 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransA(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransA_reorder( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numCols);
 
         if (A.numCols == 0 || A.numRows == 0) {
             CommonOps_DDRM.fill(C, 0);
             return;
         }
-
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
@@ -220,13 +206,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransA(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransA_small( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numCols);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -237,7 +219,6 @@ public class MatrixMatrixMult_DDRM {
                 int end = indexB + B.numRows*B.numCols;
 
                 double total = 0;
-
                 // loop for k
                 for (; indexB < end; indexB += B.numCols) {
                     total += A.data[indexA]*B.data[indexB];
@@ -254,11 +235,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransAB(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransAB( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numRows);
 
 
@@ -272,7 +250,7 @@ public class MatrixMatrixMult_DDRM {
 
                 double total = 0;
 
-                for (; indexB < end; ) {
+                while (indexB < end) {
                     total += A.data[indexA]*B.data[indexB++];
                     indexA += A.numCols;
                 }
@@ -289,11 +267,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransAB(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransAB_aux( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numRows);
 
         if (aux == null) aux = new double[A.numRows];
@@ -324,13 +299,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransB(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransB( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numRows);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for (int xA = 0; xA < A.numRows; xA++) {
@@ -342,7 +313,6 @@ public class MatrixMatrixMult_DDRM {
                 int indexA = aIndexStart;
 
                 double total = 0;
-
                 while (indexA < end) {
                     total += A.data[indexA++]*B.data[indexB++];
                 }
@@ -357,13 +327,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAdd(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAdd_reorder( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
+
         if (A.numCols == 0 || A.numRows == 0) {
             return;
         }
@@ -404,13 +371,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAdd(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAdd_small( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numRows; i++) {
@@ -439,13 +402,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAdd(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAdd_aux( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
+
         if (aux == null) aux = new double[B.numRows];
 
         for (int j = 0; j < B.numCols; j++) {
@@ -470,17 +430,13 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransA(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransA_reorder( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
+
         if (A.numCols == 0 || A.numRows == 0) {
             return;
         }
-
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
@@ -511,13 +467,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransA(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransA_small( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -528,7 +480,6 @@ public class MatrixMatrixMult_DDRM {
                 int end = indexB + B.numRows*B.numCols;
 
                 double total = 0;
-
                 // loop for k
                 for (; indexB < end; indexB += B.numCols) {
                     total += A.data[indexA]*B.data[indexB];
@@ -545,13 +496,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransAB(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransAB( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numRows != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
+
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -563,7 +511,7 @@ public class MatrixMatrixMult_DDRM {
 
                 double total = 0;
 
-                for (; indexB < end; ) {
+                while (indexB < end) {
                     total += A.data[indexA]*B.data[indexB++];
                     indexA += A.numCols;
                 }
@@ -580,13 +528,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransAB(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransAB_aux( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numRows != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
+
         if (aux == null) aux = new double[A.numRows];
 
         if (A.numCols == 0 || A.numRows == 0) {
@@ -614,13 +559,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransB(org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransB( DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numRows != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for (int xA = 0; xA < A.numRows; xA++) {
@@ -632,7 +573,6 @@ public class MatrixMatrixMult_DDRM {
                 int indexA = aIndexStart;
 
                 double total = 0;
-
                 while (indexA < end) {
                     total += A.data[indexA++]*B.data[indexB++];
                 }
@@ -647,11 +587,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#mult(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void mult_reorder( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numCols);
 
         if (A.numCols == 0 || A.numRows == 0) {
@@ -695,13 +632,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#mult(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void mult_small( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numCols);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numRows; i++) {
@@ -730,11 +663,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#mult(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void mult_aux( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numCols);
 
         if (aux == null) aux = new double[B.numRows];
@@ -761,18 +691,14 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransA(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransA_reorder( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numCols);
 
         if (A.numCols == 0 || A.numRows == 0) {
             CommonOps_DDRM.fill(C, 0);
             return;
         }
-
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
@@ -803,13 +729,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransA(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransA_small( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numCols);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -820,7 +742,6 @@ public class MatrixMatrixMult_DDRM {
                 int end = indexB + B.numRows*B.numCols;
 
                 double total = 0;
-
                 // loop for k
                 for (; indexB < end; indexB += B.numCols) {
                     total += A.data[indexA]*B.data[indexB];
@@ -837,11 +758,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransAB(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransAB( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numRows);
 
 
@@ -855,7 +773,7 @@ public class MatrixMatrixMult_DDRM {
 
                 double total = 0;
 
-                for (; indexB < end; ) {
+                while (indexB < end) {
                     total += A.data[indexA]*B.data[indexB++];
                     indexA += A.numCols;
                 }
@@ -872,11 +790,8 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransAB(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransAB_aux( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numRows);
 
         if (aux == null) aux = new double[A.numRows];
@@ -907,13 +822,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multTransB(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multTransB( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numRows, B.numRows);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for (int xA = 0; xA < A.numRows; xA++) {
@@ -925,7 +836,6 @@ public class MatrixMatrixMult_DDRM {
                 int indexA = aIndexStart;
 
                 double total = 0;
-
                 while (indexA < end) {
                     total += A.data[indexA++]*B.data[indexB++];
                 }
@@ -940,13 +850,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAdd(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAdd_reorder( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
+
         if (A.numCols == 0 || A.numRows == 0) {
             return;
         }
@@ -987,13 +894,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAdd(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAdd_small( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numRows; i++) {
@@ -1022,13 +925,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAdd(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAdd_aux( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
+
         if (aux == null) aux = new double[B.numRows];
 
         for (int j = 0; j < B.numCols; j++) {
@@ -1053,17 +953,13 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransA(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransA_reorder( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
+
         if (A.numCols == 0 || A.numRows == 0) {
             return;
         }
-
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
@@ -1094,13 +990,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransA(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransA_small( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numRows) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numCols != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numRows, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numCols == C.numCols, "C is not compatible with A and B");
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -1111,7 +1003,6 @@ public class MatrixMatrixMult_DDRM {
                 int end = indexB + B.numRows*B.numCols;
 
                 double total = 0;
-
                 // loop for k
                 for (; indexB < end; indexB += B.numCols) {
                     total += A.data[indexA]*B.data[indexB];
@@ -1128,13 +1019,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransAB(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransAB( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numRows != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
+
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -1146,7 +1034,7 @@ public class MatrixMatrixMult_DDRM {
 
                 double total = 0;
 
-                for (; indexB < end; ) {
+                while (indexB < end) {
                     total += A.data[indexA]*B.data[indexB++];
                     indexA += A.numCols;
                 }
@@ -1163,13 +1051,10 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransAB(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransAB_aux( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C, @Nullable double[] aux ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numRows != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numCols != C.numRows || B.numRows != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numCols == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
+
         if (aux == null) aux = new double[A.numRows];
 
         if (A.numCols == 0 || A.numRows == 0) {
@@ -1197,13 +1082,9 @@ public class MatrixMatrixMult_DDRM {
      * @see CommonOps_DDRM#multAddTransB(double, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
      */
     public static void multAddTransB( double alpha, DMatrix1Row A, DMatrix1Row B, DMatrix1Row C ) {
-        if (A == C || B == C)
-            throw new IllegalArgumentException("Neither 'A' or 'B' can be the same matrix as 'C'");
-        else if (A.numCols != B.numCols) {
-            throw new MatrixDimensionException("The 'A' and 'B' matrices do not have compatible dimensions");
-        }
-        if (A.numRows != C.numRows || B.numRows != C.numCols)
-            throw new MatrixDimensionException("C is not compatible with A and B");
+        UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
+        UtilEjml.assertShape(A.numCols, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
+        UtilEjml.assertShape(A.numRows == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, xA -> {
         for (int xA = 0; xA < A.numRows; xA++) {
@@ -1215,7 +1096,6 @@ public class MatrixMatrixMult_DDRM {
                 int indexA = aIndexStart;
 
                 double total = 0;
-
                 while (indexA < end) {
                     total += A.data[indexA++]*B.data[indexB++];
                 }
@@ -1226,4 +1106,3 @@ public class MatrixMatrixMult_DDRM {
         //CONCURRENT_ABOVE });
     }
 }
-
