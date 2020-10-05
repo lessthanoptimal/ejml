@@ -26,7 +26,9 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Peter Abeles
@@ -284,6 +286,86 @@ public class RandomMatrices_DSCC {
         ConvertDMatrixStruct.convert(b, out, UtilEjml.TEST_F64);
 
         return out;
+    }
+
+    /**
+     * Creates a random matrix where each column has exactly `nzEntriesPerColumn` non-zero entries.
+     * Compared to {@link #rectangle} this method can generate larger sparse matrices.
+     *
+     * @param numRows Number of rows
+     * @param numCols Number of columns
+     * @param nzEntriesPerColumn Amount of nz-entries per column
+     * @param min Minimum element value, inclusive
+     * @param max Maximum element value, inclusive
+     * @param rand Random number generator
+     * @return Randomly generated matrix
+     */
+    public static DMatrixSparseCSC generateUniform( int numRows, int numCols, int nzEntriesPerColumn,
+                                                    double min, double max, Random rand ) {
+        if (nzEntriesPerColumn > numRows) {
+            throw new IllegalArgumentException("numRows must be greater than nzEntriesPerColumn");
+        }
+
+        int nz_total = Math.toIntExact(nzEntriesPerColumn*numCols);
+
+        DMatrixSparseCSC matrix = new DMatrixSparseCSC(numRows, numCols, nz_total);
+        matrix.indicesSorted = true;
+
+        if (nzEntriesPerColumn == 0) {
+            return matrix;
+        }
+
+        int[] nz_hist = new int[numCols];
+        Arrays.fill(nz_hist, nzEntriesPerColumn);
+        matrix.histogramToStructure(nz_hist);
+
+        BitSet selectedRows = new BitSet(numRows);
+
+        // if the density is high enough, picking random rows will be very slow
+        // in this case we unselect (numRows-nzEntriesPerColumn) rows
+        boolean dropRows = (numRows/(float)nzEntriesPerColumn) > 0.5;
+
+        for (int col = 0; col < numCols; col++) {
+            if (dropRows) {
+                // select all rows at first
+                selectedRows.set(0, numRows);
+            } else {
+                selectedRows.clear();
+            }
+
+            // selecting rows
+            if (dropRows) {
+                for (int colEntry = 0; colEntry < (numRows - nzEntriesPerColumn); colEntry++) {
+                    int row = rand.nextInt(numRows);
+
+                    while (!selectedRows.get(row)) {
+                        row = rand.nextInt(numRows);
+                    }
+
+                    selectedRows.clear(row);
+                }
+            } else {
+                for (int colEntry = 0; colEntry < nzEntriesPerColumn; colEntry++) {
+                    int row = rand.nextInt(numRows);
+                    // avoid duplicate entries
+
+                    while (selectedRows.get(row)) {
+                        row = rand.nextInt(numRows);
+                    }
+                    selectedRows.set(row);
+                }
+            }
+
+            AtomicInteger i = new AtomicInteger(col*nzEntriesPerColumn);
+            selectedRows.stream().forEach(row -> {
+                int index = i.get();
+                matrix.nz_rows[index] = row;
+                matrix.nz_values[index] = rand.nextDouble()*(max - min) + min;
+                i.incrementAndGet();
+            });
+        }
+
+        return matrix;
     }
 
     /**

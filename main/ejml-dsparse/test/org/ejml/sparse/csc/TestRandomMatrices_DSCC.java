@@ -21,8 +21,12 @@ package org.ejml.sparse.csc;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,11 +36,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestRandomMatrices_DSCC {
     Random rand = new Random(324);
 
-    int numRows = 6;
-    int numCols = 7;
-
     @Test
-    void rectangle() {
+    void uniform() {
+        int numRows = 6;
+        int numCols = 7;
+
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows, numCols, 10, -1, 1, rand);
 
         assertEquals(numRows, a.numRows);
@@ -70,6 +74,33 @@ public class TestRandomMatrices_DSCC {
                 RandomMatrices_DSCC.rectangle(1_000_000, 1_000_000, 10, -1, 1, rand));
     }
 
+    private static Stream<Arguments> randomMatrixDimensions() {
+        int[] rowCounts = {1, 10, 15, 100, 1000};
+        int[] colCounts = {1, 10, 15, 100, 1000};
+        double[] densities = {1, 0.8, 0.2, 0.01};
+
+        Stream.Builder<Arguments> streamBuilder = Stream.builder();
+
+        for (int rowCount : rowCounts) {
+            for (int colCount : colCounts) {
+                for (double density : densities) {
+                    streamBuilder.accept(Arguments.of(rowCount, colCount, (int)Math.round(density*rowCount)));
+                }
+            }
+        }
+
+        return streamBuilder.build();
+    }
+
+    @ParameterizedTest
+    @MethodSource("randomMatrixDimensions")
+    void generateUniform( int numRows, int numCols, int entriesPerColumn ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.generateUniform(numRows, numCols, entriesPerColumn, -1, 1, rand);
+
+        assertEquals(entriesPerColumn*numCols, a.nz_length);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+    }
+
     @Test
     void createLowerTriangular() {
         DMatrixSparseCSC L;
@@ -96,7 +127,7 @@ public class TestRandomMatrices_DSCC {
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
                 int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5 + 0.1) + 0.5);
-                nz = Math.max(1,nz);
+                nz = Math.max(1, nz);
                 DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N, nz, -1, 1, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
@@ -130,7 +161,7 @@ public class TestRandomMatrices_DSCC {
                 assertTrue(CommonOps_DSCC.checkStructure(A));
 
                 // The upper limit is  bit fuzzy. This really just checks to see if it's exceeded by an extreme amount
-                assertTrue(A.nz_length <= (int)Math.ceil(N*N*(1.0-probabilityZero))+N);
+                assertTrue(A.nz_length <= (int)Math.ceil(N*N*(1.0 - probabilityZero)) + N);
 
                 // Extremely crude check to see if the size is above a lower limit. In theory it could be full of
                 // zeros and that would still be valid.
