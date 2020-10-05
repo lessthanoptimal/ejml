@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,6 @@ package org.ejml.dense.row.decompose.lu;
 
 import org.ejml.data.ZMatrixRMaj;
 
-
 /**
  * <p>
  * An LU decomposition algorithm that originally came from Jama.  In general this is faster than
@@ -40,22 +39,21 @@ public class LUDecompositionAlt_ZDRM extends LUDecompositionBase_ZDRM {
      * @return true If the matrix can be decomposed and false if it can not.
      */
     @Override
-    public boolean decompose( ZMatrixRMaj a )
-    {
+    public boolean decompose( ZMatrixRMaj a ) {
         decomposeCommonInit(a);
 
-        double LUcolj[] = vv;
+        double[] LUcolj = vv;
 
-        for( int j = 0; j < n; j++ ) {
+        for (int j = 0; j < n; j++) {
 
             // make a copy of the column to avoid cache jumping issues
-            for( int i = 0; i < m; i++) {
+            for (int i = 0; i < m; i++) {
                 LUcolj[i*2] = dataLU[i*stride + j*2];
-                LUcolj[i*2+1] = dataLU[i*stride + j*2+1];
+                LUcolj[i*2 + 1] = dataLU[i*stride + j*2 + 1];
             }
 
             // Apply previous transformations.
-            for( int i = 0; i < m; i++ ) {
+            for (int i = 0; i < m; i++) {
                 int rowIndex = i*stride;
 
                 // Most of the time is spent in the following dot product.
@@ -64,26 +62,26 @@ public class LUDecompositionAlt_ZDRM extends LUDecompositionBase_ZDRM {
                 double imgS = 0.0;
 
                 for (int k = 0; k < kmax; k++) {
-                    double realD = dataLU[rowIndex+k*2];
-                    double imgD  = dataLU[rowIndex+k*2+1];
+                    double realD = dataLU[rowIndex + k*2];
+                    double imgD = dataLU[rowIndex + k*2 + 1];
 
                     double realCol = LUcolj[k*2];
-                    double imgCol  = LUcolj[k*2+1];
+                    double imgCol = LUcolj[k*2 + 1];
 
                     realS += realD*realCol - imgD*imgCol;
                     imgS += realD*imgCol + imgD*realCol;
                 }
 
-                dataLU[rowIndex+j*2]   = LUcolj[i*2]   -= realS;
-                dataLU[rowIndex+j*2+1] = LUcolj[i*2+1] -= imgS;
+                dataLU[rowIndex + j*2] = LUcolj[i*2] -= realS;
+                dataLU[rowIndex + j*2 + 1] = LUcolj[i*2 + 1] -= imgS;
             }
 
             // Find pivot and exchange if necessary.
             int p = j;
-            double max = mag(LUcolj, p * 2);
-            for (int i = j+1; i < m; i++) {
-                double v = mag(LUcolj, i * 2);
-                if ( v > max) {
+            double max = mag(LUcolj, p*2);
+            for (int i = j + 1; i < m; i++) {
+                double v = mag(LUcolj, i*2);
+                if (v > max) {
                     p = i;
                     max = v;
                 }
@@ -98,32 +96,34 @@ public class LUDecompositionAlt_ZDRM extends LUDecompositionBase_ZDRM {
 //                }
                 int rowP = p*stride;
                 int rowJ = j*stride;
-                int endP = rowP+stride;
-                for (;rowP < endP; rowP++,rowJ++) {
+                int endP = rowP + stride;
+                for (; rowP < endP; rowP++, rowJ++) {
                     double t = dataLU[rowP];
-                    dataLU[rowP]   = dataLU[rowJ];
-                    dataLU[rowJ]   = t;
+                    dataLU[rowP] = dataLU[rowJ];
+                    dataLU[rowJ] = t;
                 }
-                int k = pivot[p]; pivot[p] = pivot[j]; pivot[j] = k;
+                int k = pivot[p];
+                pivot[p] = pivot[j];
+                pivot[j] = k;
                 pivsign = -pivsign;
             }
             indx[j] = p;
 
             // Compute multipliers.
-            if (j < m ) {
-                double realLujj = dataLU[j*stride+j*2];
-                double imgLujj  = dataLU[j*stride+j*2+1];
+            if (j < m) {
+                double realLujj = dataLU[j*stride + j*2];
+                double imgLujj = dataLU[j*stride + j*2 + 1];
 
                 double magLujj = realLujj*realLujj + imgLujj*imgLujj;
 
-                if( realLujj != 0 || imgLujj != 0) {
-                    for (int i = j+1; i < m; i++) {
+                if (realLujj != 0 || imgLujj != 0) {
+                    for (int i = j + 1; i < m; i++) {
 
-                        double realLU = dataLU[i*stride+j*2];
-                        double imagLU = dataLU[i*stride+j*2+1];
+                        double realLU = dataLU[i*stride + j*2];
+                        double imagLU = dataLU[i*stride + j*2 + 1];
 
-                        dataLU[i*stride+j*2]   = (realLU*realLujj + imagLU*imgLujj)/magLujj;
-                        dataLU[i*stride+j*2+1] = (imagLU*realLujj - realLU*imgLujj)/magLujj;
+                        dataLU[i*stride + j*2] = (realLU*realLujj + imagLU*imgLujj)/magLujj;
+                        dataLU[i*stride + j*2 + 1] = (imagLU*realLujj - realLU*imgLujj)/magLujj;
                     }
                 }
             }
@@ -132,9 +132,9 @@ public class LUDecompositionAlt_ZDRM extends LUDecompositionBase_ZDRM {
         return true;
     }
 
-    private static double mag( double d[] , int index ) {
+    private static double mag( double[] d, int index ) {
         double r = d[index];
-        double i = d[index+1];
+        double i = d[index + 1];
         return r*r + i*i;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,6 @@ package org.ejml.dense.row.linsol.lu;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.decompose.lu.LUDecompositionBase_ZDRM;
 
-
 /**
  * For each column in the B matrix it makes a copy, which is then solved for and
  * writen into X.  By making a copy of the column cpu cache issues are reduced.
@@ -30,44 +29,41 @@ import org.ejml.dense.row.decompose.lu.LUDecompositionBase_ZDRM;
  */
 public class LinearSolverLu_ZDRM extends LinearSolverLuBase_ZDRM {
 
-    public LinearSolverLu_ZDRM(LUDecompositionBase_ZDRM decomp) {
+    public LinearSolverLu_ZDRM( LUDecompositionBase_ZDRM decomp ) {
         super(decomp);
     }
 
-
-
     @Override
-    public void solve(ZMatrixRMaj b, ZMatrixRMaj x) {
-        if( b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
+    public void solve( ZMatrixRMaj b, ZMatrixRMaj x ) {
+        if (b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
 
         int bnumCols = b.numCols;
         int bstride = b.getRowStride();
 
-        double dataB[] = b.data;
-        double dataX[] = x.data;
+        double[] dataB = b.data;
+        double[] dataX = x.data;
 
-        double []vv = decomp._getVV();
+        double[] vv = decomp._getVV();
 
 //        for( int j = 0; j < numCols; j++ ) {
 //            for( int i = 0; i < this.numCols; i++ ) vv[i] = dataB[i*numCols+j];
 //            decomp._solveVectorInternal(vv);
 //            for( int i = 0; i < this.numCols; i++ ) dataX[i*numCols+j] = vv[i];
 //        }
-        for( int j = 0; j < bnumCols; j++ ) {
+        for (int j = 0; j < bnumCols; j++) {
             int index = j*2;
-            for( int i = 0; i < numRows; i++ , index += bstride ) {
-                vv[i*2]   = dataB[index];
-                vv[i*2+1] = dataB[index+1];
+            for (int i = 0; i < numRows; i++, index += bstride) {
+                vv[i*2] = dataB[index];
+                vv[i*2 + 1] = dataB[index + 1];
             }
             decomp._solveVectorInternal(vv);
             index = j*2;
-            for( int i = 0; i < numRows; i++ , index += bstride ) {
-                dataX[index]   = vv[i*2];
-                dataX[index+1] = vv[i*2+1];
+            for (int i = 0; i < numRows; i++, index += bstride) {
+                dataX[index] = vv[i*2];
+                dataX[index + 1] = vv[i*2 + 1];
             }
         }
-
     }
 }

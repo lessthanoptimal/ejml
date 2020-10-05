@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,7 +39,7 @@ public class LinearSolverFactory_ZDRM {
      * @param matrixSize Approximate of rows and columns
      * @return Linear solver
      */
-    public static LinearSolverDense<ZMatrixRMaj> lu(int matrixSize ) {
+    public static LinearSolverDense<ZMatrixRMaj> lu( int matrixSize ) {
         return new LinearSolverLu_ZDRM(new LUDecompositionAlt_ZDRM());
     }
 
@@ -49,7 +49,7 @@ public class LinearSolverFactory_ZDRM {
      * @param matrixSize Approximate of rows and columns
      * @return Linear solver
      */
-    public static LinearSolverDense<ZMatrixRMaj> chol(int matrixSize ) {
+    public static LinearSolverDense<ZMatrixRMaj> chol( int matrixSize ) {
         return new LinearSolverChol_ZDRM(new CholeskyDecompositionInner_ZDRM());
     }
 
@@ -60,7 +60,7 @@ public class LinearSolverFactory_ZDRM {
      * @param numCols Approximate of columns
      * @return Linear solver
      */
-    public static LinearSolverDense<ZMatrixRMaj> qr(int numRows , int numCols ) {
+    public static LinearSolverDense<ZMatrixRMaj> qr( int numRows, int numCols ) {
         return new LinearSolverQrHouseCol_ZDRM();
     }
 }

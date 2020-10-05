@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,9 +45,8 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static Complex_F64 innerProd(ZMatrixRMaj x, ZMatrixRMaj y , @Nullable Complex_F64 output )
-    {
-        if( output == null )
+    public static Complex_F64 innerProd( ZMatrixRMaj x, ZMatrixRMaj y, @Nullable Complex_F64 output ) {
+        if (output == null)
             output = new Complex_F64();
         else {
             output.real = output.imaginary = 0;
@@ -55,12 +54,12 @@ public class VectorVectorMult_ZDRM {
 
         int m = x.getDataLength();
 
-        for( int i = 0; i < m; i += 2 ) {
+        for (int i = 0; i < m; i += 2) {
             double realX = x.data[i];
-            double imagX = x.data[i+1];
+            double imagX = x.data[i + 1];
 
             double realY = y.data[i];
-            double imagY = y.data[i+1];
+            double imagY = y.data[i + 1];
 
             output.real += realX*realY - imagX*imagY;
             output.imaginary += realX*imagY + imagX*realY;
@@ -87,9 +86,8 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @return The inner product of the two vectors.
      */
-    public static Complex_F64 innerProdH(ZMatrixRMaj x, ZMatrixRMaj y , @Nullable Complex_F64 output )
-    {
-        if( output == null )
+    public static Complex_F64 innerProdH( ZMatrixRMaj x, ZMatrixRMaj y, @Nullable Complex_F64 output ) {
+        if (output == null)
             output = new Complex_F64();
         else {
             output.real = output.imaginary = 0;
@@ -97,12 +95,12 @@ public class VectorVectorMult_ZDRM {
 
         int m = x.getDataLength();
 
-        for( int i = 0; i < m; i += 2 ) {
+        for (int i = 0; i < m; i += 2) {
             double realX = x.data[i];
-            double imagX = x.data[i+1];
+            double imagX = x.data[i + 1];
 
             double realY = y.data[i];
-            double imagY = -y.data[i+1];
+            double imagY = -y.data[i + 1];
 
             output.real += realX*realY - imagX*imagY;
             output.imaginary += realX*imagY + imagX*realY;
@@ -127,17 +125,17 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProd(ZMatrixRMaj x, ZMatrixRMaj y, ZMatrixRMaj A ) {
+    public static void outerProd( ZMatrixRMaj x, ZMatrixRMaj y, ZMatrixRMaj A ) {
         int m = A.numRows;
         int n = A.numCols;
 
         int index = 0;
-        for( int i = 0; i < m; i++ ) {
+        for (int i = 0; i < m; i++) {
             double realX = x.data[i*2];
-            double imagX = x.data[i*2+1];
+            double imagX = x.data[i*2 + 1];
 
             int indexY = 0;
-            for( int j = 0; j < n; j++ ) {
+            for (int j = 0; j < n; j++) {
                 double realY = y.data[indexY++];
                 double imagY = y.data[indexY++];
 
@@ -163,17 +161,17 @@ public class VectorVectorMult_ZDRM {
      * @param y A vector with n elements. Not modified.
      * @param A A Matrix with m by n elements. Modified.
      */
-    public static void outerProdH(ZMatrixRMaj x, ZMatrixRMaj y, ZMatrixRMaj A ) {
+    public static void outerProdH( ZMatrixRMaj x, ZMatrixRMaj y, ZMatrixRMaj A ) {
         int m = A.numRows;
         int n = A.numCols;
 
         int index = 0;
-        for( int i = 0; i < m; i++ ) {
+        for (int i = 0; i < m; i++) {
             double realX = x.data[i*2];
-            double imagX = x.data[i*2+1];
+            double imagX = x.data[i*2 + 1];
 
             int indexY = 0;
-            for( int j = 0; j < n; j++ ) {
+            for (int j = 0; j < n; j++) {
                 double realY = y.data[indexY++];
                 double imagY = -y.data[indexY++];
 
