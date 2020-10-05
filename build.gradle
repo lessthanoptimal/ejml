@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,7 +76,7 @@ subprojects {
             java { srcDir 'generate' }
         }
 
-        benchmark {
+        benchmarks {
             java { srcDir 'benchmarks/src' }
             resources { srcDir 'benchmarks/resources' }
         }
@@ -108,20 +108,20 @@ subprojects {
         annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
         annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
 
-        errorprone "com.google.errorprone:error_prone_core:2.4.0"   // adds benchmark/generated to sourceSet
+        errorprone "com.google.errorprone:error_prone_core:2.4.0"   // adds benchmarks/generated to sourceSet
         errorproneJavac "com.google.errorprone:javac:9+181-r4173-1" // annoying...
 
-        benchmarkImplementation project.sourceSets.main.runtimeClasspath
-        benchmarkImplementation project.sourceSets.main.compileClasspath
+        benchmarksImplementation project.sourceSets.main.runtimeClasspath
+        benchmarksImplementation project.sourceSets.main.compileClasspath
         ['1.19'].each { String a->// don't upgrade to 1.21! much slower
-            benchmarkCompile('org.openjdk.jmh:jmh-core:'+a)
-            benchmarkAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:'+a
+            benchmarksCompile('org.openjdk.jmh:jmh-core:'+a)
+            benchmarksAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:'+a
         }
 
         // even if it's not used you still need to include the dependency
         annotationProcessor "com.uber.nullaway:nullaway:0.8.0"
         testAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
-        benchmarkAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
+        benchmarksAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
         generateAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
     }
 
@@ -141,7 +141,7 @@ subprojects {
     // for vectors or scalars. Perhaps a more verbose name should be used but it's disabled for now to reduce build spam
     tasks.withType(JavaCompile).configureEach {
         options.errorprone.enabled = false
-        if( path.contains("benchmark") )
+        if( path.contains("benchmarks") )
             return
         if( path.contains("example") )
             return
