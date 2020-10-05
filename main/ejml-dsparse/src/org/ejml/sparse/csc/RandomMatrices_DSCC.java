@@ -26,6 +26,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Random;
 
 /**
@@ -285,6 +286,62 @@ public class RandomMatrices_DSCC {
         ConvertDMatrixStruct.convert(b, out, UtilEjml.TEST_F64);
 
         return out;
+    }
+
+    /**
+     * Creates a random matrix where each column has exactly `nzEntriesPerColumn` non-zero entries.
+     * Compared to {@link #rectangle} this method can generate larger sparse matrices.
+     *
+     * @param numRows Number of rows
+     * @param numCols Number of columns
+     * @param nzEntriesPerColumn Amount of nz-entries per column
+     * @param min Minimum element value, inclusive
+     * @param max Maximum element value, inclusive
+     * @param sorted Whether the nz-entries should be sorted
+     * @param rand Random number generator
+     * @return Randomly generated matrix
+     */
+    public static DMatrixSparseCSC generateUniform(int numCols, int numRows, int nzEntriesPerColumn,
+                                                   double min, double max, boolean sorted, Random rand) {
+        if (nzEntriesPerColumn > numRows) {
+            throw new IllegalArgumentException("numRows must be greater than nzEntriesPerColumn");
+        }
+
+        int nz_total = Math.toIntExact(nzEntriesPerColumn * numCols);
+
+        DMatrixSparseCSC matrix = new DMatrixSparseCSC(numCols, numRows, nz_total);
+        matrix.indicesSorted = sorted;
+
+
+        int[] nz_hist = new int[numCols];
+        Arrays.fill(nz_hist, nzEntriesPerColumn);
+        matrix.histogramToStructure(nz_hist);
+
+        BitSet existingRows = new BitSet(numRows);
+
+        for (int i = 0; i < nz_total; i++) {
+            if (i % nzEntriesPerColumn == 0) {
+                existingRows.clear();
+            }
+
+            int row = rand.nextInt(numRows);
+            // avoid duplicate entries
+            while(existingRows.get(row)) {
+                row = rand.nextInt(numRows);
+            }
+            matrix.nz_rows[i] = row;
+            existingRows.set(row);
+
+            matrix.nz_values[i] = rand.nextDouble() * (max - min) + min;
+        }
+
+        if (sorted) {
+            for (int i = 1; i <= numCols; i++) {
+                Arrays.sort(matrix.nz_rows, nzEntriesPerColumn * (i - 1), nzEntriesPerColumn * i);
+            }
+        }
+
+        return matrix;
     }
 
     /**
