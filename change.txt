@@ -14,7 +14,7 @@ Date format: year/month/day
   * Updated auto code generator to mark code as auto generated for better static analysis
 - Strictly enforce usage of @Nullable to public API
   * https://github.com/uber/NullAway
-  * Private class fields mostly have NullAway disabled because it doesn't model how they are coupled resulting in extremely and pointlessly verbose code
+  * Private class fields mostly have NullAway disabled because it doesn't model how they are coupled resulting in pointlessly verbose code
 - Fixed build task oneJarBin.
   * Thanks liuyang0717 for the bug report
 - Added reduce operations for sparse matrices.
@@ -29,6 +29,8 @@ Date format: year/month/day
   * Removed the functions below since they had a runtime complexity of O(N^2) relative to matrix size instead of O(N)
     - multTransA(S,S,S), multTransB(S,S,S), innerProductLower(S,S,S)
     - Thanks Florentin Dörre for first noticing the performance issue
+- DMatrixSparseCSC
+  * If sorted a binary search is used to lookup rows. Thanks Florentin Dörre.
 - ReadMatrixCsv
   * Thanks DEDZTBH for fixing an indexing error when reading complex data types
 - Added Concurrent Algorithms
@@ -40,6 +42,8 @@ Date format: year/month/day
   * New concurrency example
   * New block matrix example
   * New Graph path finding example
+- Benchmark
+  * Improved coverage of JMH benchmarks as part of an effort to automate the detection of runtime regressions
 
 Future
 - TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
