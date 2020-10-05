@@ -28,6 +28,7 @@ import org.ejml.ops.ConvertDMatrixStruct;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Peter Abeles
@@ -297,48 +298,75 @@ public class RandomMatrices_DSCC {
      * @param nzEntriesPerColumn Amount of nz-entries per column
      * @param min Minimum element value, inclusive
      * @param max Maximum element value, inclusive
-     * @param sorted Whether the nz-entries should be sorted
      * @param rand Random number generator
      * @return Randomly generated matrix
      */
-    public static DMatrixSparseCSC generateUniform(int numCols, int numRows, int nzEntriesPerColumn,
-                                                   double min, double max, boolean sorted, Random rand) {
+    public static DMatrixSparseCSC generateUniform( int numRows, int numCols, int nzEntriesPerColumn,
+                                                    double min, double max, Random rand ) {
         if (nzEntriesPerColumn > numRows) {
             throw new IllegalArgumentException("numRows must be greater than nzEntriesPerColumn");
         }
 
-        int nz_total = Math.toIntExact(nzEntriesPerColumn * numCols);
+        int nz_total = Math.toIntExact(nzEntriesPerColumn*numCols);
 
-        DMatrixSparseCSC matrix = new DMatrixSparseCSC(numCols, numRows, nz_total);
-        matrix.indicesSorted = sorted;
+        DMatrixSparseCSC matrix = new DMatrixSparseCSC(numRows, numCols, nz_total);
+        matrix.indicesSorted = true;
+
+        if (nzEntriesPerColumn == 0) {
+            return matrix;
+        }
 
 
         int[] nz_hist = new int[numCols];
         Arrays.fill(nz_hist, nzEntriesPerColumn);
         matrix.histogramToStructure(nz_hist);
 
-        BitSet existingRows = new BitSet(numRows);
+        BitSet selectedRows = new BitSet(numRows);
 
-        for (int i = 0; i < nz_total; i++) {
-            if (i % nzEntriesPerColumn == 0) {
-                existingRows.clear();
+        // if the density is high enough, picking random rows will be very slow
+        // in this case we unselect (numRows-nzEntriesPerColumn) rows
+        boolean dropRows = (numRows/(float)nzEntriesPerColumn) > 0.5;
+
+        for (int col = 0; col < numCols; col++) {
+            if (dropRows) {
+                // select all rows at first
+                selectedRows.set(0, numRows);
+            } else {
+                selectedRows.clear();
             }
 
-            int row = rand.nextInt(numRows);
-            // avoid duplicate entries
-            while(existingRows.get(row)) {
-                row = rand.nextInt(numRows);
-            }
-            matrix.nz_rows[i] = row;
-            existingRows.set(row);
+            // selecting rows
+            if (dropRows) {
+                for (int colEntry = 0; colEntry < (numRows - nzEntriesPerColumn); colEntry++) {
+                    int i = (col + 1)*nzEntriesPerColumn + colEntry;
+                    int row = rand.nextInt(numRows);
 
-            matrix.nz_values[i] = rand.nextDouble() * (max - min) + min;
-        }
+                    while (!selectedRows.get(row)) {
+                        row = rand.nextInt(numRows);
+                    }
 
-        if (sorted) {
-            for (int i = 1; i <= numCols; i++) {
-                Arrays.sort(matrix.nz_rows, nzEntriesPerColumn * (i - 1), nzEntriesPerColumn * i);
+                    selectedRows.clear(row);
+                }
+            } else {
+                for (int colEntry = 0; colEntry < nzEntriesPerColumn; colEntry++) {
+                    int i = (col + 1)*nzEntriesPerColumn + colEntry;
+                    int row = rand.nextInt(numRows);
+                    // avoid duplicate entries
+
+                    while (selectedRows.get(row)) {
+                        row = rand.nextInt(numRows);
+                    }
+                    selectedRows.set(row);
+                }
             }
+
+            AtomicInteger i = new AtomicInteger(col*nzEntriesPerColumn);
+            selectedRows.stream().forEach(row -> {
+                int index = i.get();
+                matrix.nz_rows[index] = row;
+                matrix.nz_values[index] = rand.nextDouble()*(max - min) + min;
+                i.incrementAndGet();
+            });
         }
 
         return matrix;

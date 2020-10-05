@@ -22,10 +22,11 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,11 +36,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestRandomMatrices_DSCC {
     Random rand = new Random(324);
 
-    int numRows = 6;
-    int numCols = 7;
-
     @Test
-    void rectangle() {
+    void uniform() {
+        int numRows = 6;
+        int numCols = 7;
+
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows, numCols, 10, -1, 1, rand);
 
         assertEquals(numRows, a.numRows);
@@ -72,6 +73,34 @@ public class TestRandomMatrices_DSCC {
         assertThrows(IllegalArgumentException.class, () ->
                 RandomMatrices_DSCC.rectangle(1_000_000, 1_000_000, 10, -1, 1, rand));
     }
+    
+    private static Stream<Arguments> randomMatrixDimensions() {
+        int[] rowCounts = {1, 10, 15, 100, 1000};
+        int[] colCounts = {1, 10, 15, 100, 1000};
+        double[] densities = {1, 0.8, 0.2, 0.01};
+
+        Stream.Builder<Arguments> streamBuilder = Stream.builder();
+
+        for (int rowCount : rowCounts) {
+            for (int colCount : colCounts) {
+                for (double density : densities) {
+                    streamBuilder.accept(Arguments.of(rowCount, colCount, Math.round(density*rowCount)));
+                }
+            }
+        }
+
+        return streamBuilder.build();
+    }
+
+    @ParameterizedTest
+    @MethodSource("randomMatrixDimensions")
+    void generateUniform( int numRows, int numCols, int entriesPerColumn ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.generateUniform(numRows, numCols, entriesPerColumn, -1, 1, rand);
+
+        assertEquals(entriesPerColumn*numCols, a.nz_length);
+        assertTrue(CommonOps_DSCC.checkStructure(a));
+    }
+
 
     @Test
     void createLowerTriangular() {
