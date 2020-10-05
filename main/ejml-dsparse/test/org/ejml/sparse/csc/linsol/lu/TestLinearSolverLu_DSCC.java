@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,25 +45,25 @@ public class TestLinearSolverLu_DSCC extends GenericLinearSolverSparseTests_DSCC
     }
 
     @Override
-    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillReducing permutation) {
+    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver( FillReducing permutation ) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         LuUpLooking_DSCC lu = new LuUpLooking_DSCC(cp);
         return new LinearSolverLu_DSCC(lu);
     }
 
     @Override
-    public DMatrixSparseCSC createA(int size) {
+    public DMatrixSparseCSC createA( int size ) {
         // easy to make a matrix which is square and not singular or nearly if it's SPD
-        return RandomMatrices_DSCC.symmetricPosDef(size,0.25,rand);
+        return RandomMatrices_DSCC.symmetricPosDef(size, 0.25, rand);
     }
 
     @Test
     public void testCase0() {
-        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(A0_dense,(DMatrixSparseCSC)null,0);
+        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(A0_dense, (DMatrixSparseCSC)null, 0);
 
         // sparse solvers appear to be more sensitive to numerical issues than their dense counter parts
         // skip this test if single precision
-        if( A.getType().getBits() == 32 )
+        if (A.getType().getBits() == 32)
             return;
 
         LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(FillReducing.NONE);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,18 +31,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * Compare concurrent vs non-concurrent functions in CommonOps
  */
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode({Mode.AverageTime,Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 2)
 public class BenchmarkCommonOps_MT_DDRM {
-    @Param({"true", "false"})
-    public boolean concurrent;
 
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000"})
+    @Param({"5","1000"})
     public int size;
 
     public DMatrixRMaj A = new DMatrixRMaj(1, 1);
@@ -62,95 +60,23 @@ public class BenchmarkCommonOps_MT_DDRM {
         RandomMatrices_DDRM.fillUniform(C, -1, 1, rand);
     }
 
-    @Benchmark
-    public void mult() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.mult(A, B, C);
-        } else {
-            CommonOps_DDRM.mult(A, B, C);
-        }
-    }
+    @Benchmark public void mult_AAA() {CommonOps_MT_DDRM.mult(A, B, C);}
+    @Benchmark public void mult_sAAA() { CommonOps_MT_DDRM.mult(1.2, A, B, C); }
+    @Benchmark public void multAdd_AAA() { CommonOps_MT_DDRM.multAdd(A, B, C); }
+    @Benchmark public void multAdd_sAAA() { CommonOps_MT_DDRM.multAdd(1.2,A, B, C); }
+    @Benchmark public void multTransA_AAA() { CommonOps_MT_DDRM.multTransA(A, B, C); }
+    @Benchmark public void multTransA_sAAA() { CommonOps_MT_DDRM.multTransA(1.2,A, B, C); }
+    @Benchmark public void multAddTransA_AAA() { CommonOps_MT_DDRM.multAddTransA(A, B, C);}
+    @Benchmark public void multAddTransA_sAAA() { CommonOps_MT_DDRM.multAddTransA(1.2,A, B, C);}
+    @Benchmark public void multTransAB_AAA() { CommonOps_MT_DDRM.multTransAB(A, B, C); }
+    @Benchmark public void multTransAB_sAAA() { CommonOps_MT_DDRM.multTransAB(1.2,A, B, C); }
+    @Benchmark public void multAddTransAB_AAA() { CommonOps_MT_DDRM.multAddTransAB(A, B, C); }
+    @Benchmark public void multAddTransAB_sAAA() { CommonOps_MT_DDRM.multAddTransAB(1.2,A, B, C); }
+    @Benchmark public void multTransB_AAA() {  CommonOps_MT_DDRM.multTransB(A, B, C); }
+    @Benchmark public void multTransB_sAAA() {  CommonOps_MT_DDRM.multTransB(1.2,A, B, C); }
+    @Benchmark public void transpose_inplace() {  CommonOps_MT_DDRM.transpose(A); }
+    @Benchmark public void transpose() { CommonOps_MT_DDRM.transpose(A, B); }
 
-    @Benchmark
-    public void multAdd() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.multAdd(A, B, C);
-        } else {
-            CommonOps_DDRM.multAdd(A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void mult_alpha() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.mult(2.1, A, B, C);
-        } else {
-            CommonOps_DDRM.mult(2.1, A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void multTransA() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.multTransA(A, B, C);
-        } else {
-            CommonOps_DDRM.multTransA(A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void multAddTransA() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.multAddTransA(A, B, C);
-        } else {
-            CommonOps_DDRM.multAddTransA(A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void multTransAB() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.multTransAB(A, B, C);
-        } else {
-            CommonOps_DDRM.multTransAB(A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void multAddTransAB() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.multAddTransAB(A, B, C);
-        } else {
-            CommonOps_DDRM.multAddTransAB(A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void multTransB() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.multTransB(A, B, C);
-        } else {
-            CommonOps_DDRM.multTransB(A, B, C);
-        }
-    }
-
-    @Benchmark
-    public void transpose_inplace() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.transpose(A);
-        } else {
-            CommonOps_DDRM.transpose(A);
-        }
-    }
-
-    @Benchmark
-    public void transpose() {
-        if (concurrent) {
-            CommonOps_MT_DDRM.transpose(A, B);
-        } else {
-            CommonOps_DDRM.transpose(A, B);
-        }
-    }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

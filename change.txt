@@ -29,23 +29,22 @@ Date format: year/month/day
   * Removed the functions below since they had a runtime complexity of O(N^2) relative to matrix size instead of O(N)
     - multTransA(S,S,S), multTransB(S,S,S), innerProductLower(S,S,S)
     - Thanks Florentin Dörre for first noticing the performance issue
-  * TODO add all functions to benchmark
 - ReadMatrixCsv
   * Thanks DEDZTBH for fixing an indexing error when reading complex data types
 - Added Concurrent Algorithms
   * First pass at adding this capability. Decompositions and other items need more optimization.
   * Control threads with EjmlConcurrency
-  * Must call concurrent functions from CommonOps_MT_****
+  * Must call concurrent functions and factories directly. E.g. CommonOps_DDRM -> CommonOps_MT_DDRM
   * Thanks to mroodschild for getting this effort started with the proof of concept
 - Examples
   * New concurrency example
   * New block matrix example
-- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
+  * New Graph path finding example
 
 Future
 - TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
 - TODO Concurrency for Complex Matrices
-
+- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
 
 ----- Version 0.39
 2020/04/06

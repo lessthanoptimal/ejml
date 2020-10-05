@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,14 +40,14 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
     }
 
     @Override
-    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillReducing permutation) {
+    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver( FillReducing permutation ) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         QrLeftLookingDecomposition_DSCC qr = new QrLeftLookingDecomposition_DSCC(cp);
         return new LinearSolverQrLeftLooking_DSCC(qr);
     }
 
     @Override
-    public DMatrixSparseCSC createA(int size) {
+    public DMatrixSparseCSC createA( int size ) {
         int cols = size;
         int rows = size + rand.nextInt(6);
 
@@ -56,13 +56,13 @@ public class TestLinearSolverQrLeftLooking_DSCC extends GenericLinearSolverSpars
 //        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows,cols,nz,rand);
 //        RandomMatrices_DSCC.ensureNotSingular(A,rand);
 
-        DMatrixSparseCSC spd = RandomMatrices_DSCC.symmetricPosDef(cols,0.25,rand);
-        DMatrixSparseCSC top = new DMatrixSparseCSC(rows-cols,cols);
+        DMatrixSparseCSC spd = RandomMatrices_DSCC.symmetricPosDef(cols, 0.25, rand);
+        DMatrixSparseCSC top = new DMatrixSparseCSC(rows - cols, cols);
         for (int i = cols; i < rows; i++) {
-            top.set(i-cols,i%cols,1.0 + (double)(rand.nextDouble()*0.1) );
+            top.set(i - cols, i%cols, 1.0 + (double)(rand.nextDouble()*0.1));
         }
-        DMatrixSparseCSC rect = new DMatrixSparseCSC(rows,cols);
-        CommonOps_DSCC.concatRows(spd,top,rect);
+        DMatrixSparseCSC rect = new DMatrixSparseCSC(rows, cols);
+        CommonOps_DSCC.concatRows(spd, top, rect);
         return rect;
     }
 }

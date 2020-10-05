@@ -99,11 +99,12 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
                 printMultTransAB_aux(alpha,add);
                 out.print("\n");
                 printMultTransB(alpha,add);
-                out.print("\n");
+                // don't print if very last one to avoid extra space at end
+                if( i != 1 || j != 1)
+                    out.print("\n");
             }
         }
-        out.print("}\n");
-        out.println();
+        out.println("}");
         out.close();
     }
 
@@ -451,7 +452,6 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(true,true, null,!add)+
-                        "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {\n" +
                         "        for (int i = 0; i < A.numCols; i++) {\n" +
                         "            int cIndex = i*B.numRows;\n" +

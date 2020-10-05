@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -51,7 +51,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
     // Number of rows in A
-    int numRows;
+    int AnumCols;
 
     public LinearSolverCholesky_DSCC( CholeskyUpLooking_DSCC cholesky, @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce ) {
         this.cholesky = cholesky;
@@ -60,7 +60,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public boolean setA( DMatrixSparseCSC A ) {
-        this.numRows = A.numRows;
+        this.AnumCols = A.numCols;
         DMatrixSparseCSC C = reduce.apply(A);
         return cholesky.decompose(C);
     }
@@ -72,7 +72,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public void solveSparse( DMatrixSparseCSC B, DMatrixSparseCSC X ) {
-        X.reshape(numRows, B.numCols, X.numRows);
+        X.reshape(AnumCols, B.numCols, X.numRows);
 
         IGrowArray gw1 = cholesky.getGw();
 
@@ -97,7 +97,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        X.reshape(numRows, B.numCols);
+        X.reshape(AnumCols, B.numCols);
 
         DMatrixSparseCSC L = cholesky.getL();
 

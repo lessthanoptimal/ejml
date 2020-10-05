@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,11 +16,13 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.chol;
+package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
+import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
+import org.ejml.dense.row.linsol.lu.LinearSolverLuKJI_DDRM;
+import org.ejml.dense.row.linsol.lu.LinearSolverLu_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -33,41 +35,50 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Peter Abeles
  */
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode({Mode.AverageTime, Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 2)
-public class BenchmarkLinearSolverChol_DDRM {
+public class BenchmarkLinearSolverLu_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000", "2000"})
+    @Param({"10", "2000"})
     public int size;
 
     public DMatrixRMaj A, X, B;
 
-    LinearSolverChol_DDRM inner = new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true));
+    LinearSolverLu_DDRM standard = new LinearSolverLu_DDRM(new LUDecompositionAlt_DDRM());
+    LinearSolverLuKJI_DDRM kji = new LinearSolverLuKJI_DDRM(new LUDecompositionAlt_DDRM());
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
-        A = RandomMatrices_DDRM.symmetricPosDef(size, rand);
+        A = RandomMatrices_DDRM.rectangle(size, size, rand);
         B = RandomMatrices_DDRM.rectangle(A.numRows, 20, -1, 1, rand);
         X = new DMatrixRMaj(A.numRows, B.numCols);
     }
 
     @Benchmark
-    public void inner() {
-        DMatrixRMaj A = inner.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRMaj B = inner.modifiesB() ? this.B.copy() : this.B;
-        inner.setA(A);
-        inner.solve(B, X);
+    public void standard() {
+        DMatrixRMaj A = standard.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRMaj B = standard.modifiesB() ? this.B.copy() : this.B;
+        standard.setA(A);
+        standard.solve(B, X);
+    }
+
+    @Benchmark
+    public void kji() {
+        DMatrixRMaj A = kji.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRMaj B = kji.modifiesB() ? this.B.copy() : this.B;
+        kji.setA(A);
+        kji.solve(B, X);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkLinearSolverChol_DDRM.class.getSimpleName())
+                .include(BenchmarkLinearSolverLu_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -918,7 +918,7 @@ public class CommonOps_DDRM {
      * @param A Matrix.  Not modified.
      * @return An array of vectors.
      */
-    public static DMatrixRMaj[] rowsToVector( DMatrixRMaj A, DMatrixRMaj[] v ) {
+    public static DMatrixRMaj[] rowsToVector( DMatrixRMaj A, @Nullable DMatrixRMaj[] v ) {
         DMatrixRMaj[] ret;
         if (v == null || v.length < A.numRows) {
             ret = new DMatrixRMaj[A.numRows];
@@ -1076,15 +1076,13 @@ public class CommonOps_DDRM {
      *
      * @param A The left matrix in the operation. Not modified.
      * @param B The right matrix in the operation. Not modified.
-     * @param C Where the results of the operation are stored. Modified.
+     * @param C Where the results of the operation are stored. Nullable. Modified.
      */
-    public static void kron( DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj C ) {
+    public static DMatrixRMaj kron( DMatrixRMaj A, DMatrixRMaj B, @Nullable DMatrixRMaj C ) {
         int numColsC = A.numCols*B.numCols;
         int numRowsC = A.numRows*B.numRows;
 
-        if (C.numCols != numColsC || C.numRows != numRowsC) {
-            throw new MatrixDimensionException("C does not have the expected dimensions");
-        }
+        C = reshapeOrDeclare(C,numRowsC, numColsC);
 
         // TODO see comment below
         // this will work well for small matrices
@@ -1096,11 +1094,13 @@ public class CommonOps_DDRM {
                 for (int rowB = 0; rowB < B.numRows; rowB++) {
                     for (int colB = 0; colB < B.numCols; colB++) {
                         double val = a*B.get(rowB, colB);
-                        C.set(i*B.numRows + rowB, j*B.numCols + colB, val);
+                        C.unsafe_set(i*B.numRows + rowB, j*B.numCols + colB, val);
                     }
                 }
             }
         }
+
+        return C;
     }
 
     /**
@@ -1231,11 +1231,10 @@ public class CommonOps_DDRM {
      * @param colsSize maximum element in column array
      * @param dst output matrix.  Must be correct shape.
      */
-    public static void extract( DMatrixRMaj src,
-                                int[] rows, int rowsSize,
-                                int[] cols, int colsSize, DMatrixRMaj dst ) {
-        if (rowsSize != dst.numRows || colsSize != dst.numCols)
-            throw new MatrixDimensionException("Unexpected number of rows and/or columns in dst matrix");
+    public static DMatrixRMaj extract( DMatrixRMaj src,
+                                       int[] rows, int rowsSize,
+                                       int[] cols, int colsSize, @Nullable DMatrixRMaj dst ) {
+        dst = reshapeOrDeclare(dst, rowsSize, colsSize);
 
         int indexDst = 0;
         for (int i = 0; i < rowsSize; i++) {
@@ -1244,6 +1243,8 @@ public class CommonOps_DDRM {
                 dst.data[indexDst++] = src.data[indexSrcRow + cols[j]];
             }
         }
+
+        return dst;
     }
 
     /**
@@ -1254,15 +1255,17 @@ public class CommonOps_DDRM {
      * @param length maximum element in row array
      * @param dst output matrix.  Must be a vector of the correct length.
      */
-    public static void extract( DMatrixRMaj src, int[] indexes, int length, DMatrixRMaj dst ) {
-        if (!MatrixFeatures_DDRM.isVector(dst))
-            throw new MatrixDimensionException("Dst must be a vector");
-        if (length != dst.getNumElements())
-            throw new MatrixDimensionException("Unexpected number of elements in dst vector");
+    public static DMatrixRMaj extract( DMatrixRMaj src, int[] indexes, int length, @Nullable DMatrixRMaj dst ) {
+        if (dst==null)
+            dst = new DMatrixRMaj(length,1);
+        else if (!MatrixFeatures_DDRM.isVector(dst) || length != dst.getNumElements())
+            throw new MatrixDimensionException("Dst must be a vector and have 'length' elements");
 
         for (int i = 0; i < length; i++) {
             dst.data[i] = src.data[indexes[i]];
         }
+
+        return dst;
     }
 
     /**
@@ -1275,7 +1278,7 @@ public class CommonOps_DDRM {
      *
      * @param src Source matrix. Not modified.
      * @param dst output matrix.  Must be correct shape.
-     * @param rows array of row indexes
+     * @param rows array of row indexes.
      * @param rowsSize maximum element in row array
      * @param cols array of column indexes
      * @param colsSize maximum element in column array
@@ -1284,8 +1287,8 @@ public class CommonOps_DDRM {
                                DMatrixRMaj dst,
                                int[] rows, int rowsSize,
                                int[] cols, int colsSize ) {
-        if (rowsSize != src.numRows || colsSize != src.numCols)
-            throw new MatrixDimensionException("Unexpected number of rows and/or columns in dst matrix");
+        UtilEjml.assertEq(rowsSize, src.numRows, "src's rows don't match rowsSize");
+        UtilEjml.assertEq(colsSize, src.numCols, "src's columns don't match colsSize");
 
         int indexSrc = 0;
         for (int i = 0; i < rowsSize; i++) {
@@ -1305,16 +1308,22 @@ public class CommonOps_DDRM {
      * @param src Matrix whose diagonal elements are being extracted. Not modified.
      * @param dst A vector the results will be written into. Modified.
      */
-    public static void extractDiag( DMatrixRMaj src, DMatrixRMaj dst ) {
+    public static DMatrixRMaj extractDiag( DMatrixRMaj src, @Nullable DMatrixRMaj dst ) {
         int N = Math.min(src.numRows, src.numCols);
 
-        if (!MatrixFeatures_DDRM.isVector(dst) || dst.numCols*dst.numCols != N) {
-            dst.reshape(N, 1);
+        if( dst == null ) {
+            dst = new DMatrixRMaj(N,1);
+        } else {
+            if (!MatrixFeatures_DDRM.isVector(dst) || dst.numCols*dst.numCols != N) {
+                dst.reshape(N, 1);
+            }
         }
 
         for (int i = 0; i < N; i++) {
             dst.set(i, src.unsafe_get(i, i));
         }
+
+        return dst;
     }
 
     /**
@@ -1329,7 +1338,7 @@ public class CommonOps_DDRM {
         if (out == null)
             out = new DMatrixRMaj(1, a.numCols);
         else if (!MatrixFeatures_DDRM.isVector(out) || out.getNumElements() != a.numCols)
-            throw new MatrixDimensionException("Output must be a vector of length " + a.numCols);
+            out.reshape(1, a.numCols);
 
         System.arraycopy(a.data, a.getIndex(row, 0), out.data, 0, a.numCols);
 
@@ -1348,7 +1357,7 @@ public class CommonOps_DDRM {
         if (out == null)
             out = new DMatrixRMaj(a.numRows, 1);
         else if (!MatrixFeatures_DDRM.isVector(out) || out.getNumElements() != a.numRows)
-            throw new MatrixDimensionException("Output must be a vector of length " + a.numRows);
+            out.reshape(a.numRows, 1);
 
         int index = column;
         for (int i = 0; i < a.numRows; i++, index += a.numCols) {
@@ -1365,11 +1374,8 @@ public class CommonOps_DDRM {
      * @param col1 Last column, inclusive.
      */
     public static void removeColumns( DMatrixRMaj A, int col0, int col1 ) {
-        if (col1 < col0) {
-            throw new IllegalArgumentException("col1 must be >= col0");
-        } else if (col0 >= A.numCols || col1 >= A.numCols) {
-            throw new IllegalArgumentException("Columns which are to be removed must be in bounds");
-        }
+        UtilEjml.assertTrue(col0 < col1, "col1 must be >= col0");
+        UtilEjml.assertTrue(col0 >= 0 && col1 <= A.numCols,"Columns which are to be removed must be in bounds");
 
         int step = col1 - col0 + 1;
         int offset = 0;
@@ -2600,15 +2606,17 @@ public class CommonOps_DDRM {
     /**
      * output = [a , b]
      */
-    public static void concatColumns( DMatrixRMaj a, DMatrixRMaj b, DMatrixRMaj output ) {
+    public static DMatrixRMaj concatColumns( DMatrixRMaj a, DMatrixRMaj b, @Nullable DMatrixRMaj output ) {
         int rows = Math.max(a.numRows, b.numRows);
         int cols = a.numCols + b.numCols;
 
-        output.reshape(rows, cols);
+        output = reshapeOrDeclare(output,rows,cols);
         output.zero();
 
         insert(a, output, 0, 0);
         insert(b, output, 0, a.numCols);
+
+        return output;
     }
 
     /**

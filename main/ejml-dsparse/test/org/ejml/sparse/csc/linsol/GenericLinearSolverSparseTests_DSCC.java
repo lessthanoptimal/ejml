@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -78,7 +78,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
 
-            for (int N : new int[]{1, 2, 5, 10, 20}) {
+            for (int N : new int[]{10, 20}) {
                 for (int mc = 0; mc < 30; mc++) {
 //                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                     DMatrixSparseCSC A = createA(N);
@@ -92,6 +92,8 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     DMatrixRMaj B_cpy = B.copy();
 
                     assertTrue(solver.setA(A));
+                    // it should resize X, so let's mess it up
+                    X.reshape(1,1);
                     solver.solve(B, X);
                     CommonOps_DSCC.mult(A, X, foundB);
 
@@ -132,6 +134,8 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 //                    System.out.println("--- A");
 //                    A.print();
                     assertTrue(solver.setA(A));
+                    // it should resize X, so let's mess it up
+                    foundX.reshape(1,1);
                     solver.solveSparse(B, foundX);
                     assertTrue(CommonOps_DSCC.checkStructure(foundX));
 

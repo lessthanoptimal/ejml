@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.qr;
+package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Peter Abeles
  */
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode({Mode.AverageTime, Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 2)
 public class BenchmarkLinearSolverQR_MT_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000", "2000"})
+    @Param({"10", "2000"})
     public int size;
 
     public DMatrixRMaj A, X, B;

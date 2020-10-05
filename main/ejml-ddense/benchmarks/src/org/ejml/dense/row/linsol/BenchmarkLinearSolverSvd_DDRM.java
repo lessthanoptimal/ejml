@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,10 +16,11 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.linsol.qr;
+package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -32,20 +33,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Peter Abeles
  */
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode({Mode.AverageTime, Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 2)
-public class BenchmarkLinearSolverQR_DDRM {
+public class BenchmarkLinearSolverSvd_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000", "2000"})
+    @Param({"10", "1000"})
     public int size;
 
     public DMatrixRMaj A, X, B;
 
-    LinearSolverQrHouseCol_DDRM houseCol = new LinearSolverQrHouseCol_DDRM();
+    SolvePseudoInverseSvd_DDRM pinv = new SolvePseudoInverseSvd_DDRM();
 
     @Setup
     public void setup() {
@@ -57,16 +58,16 @@ public class BenchmarkLinearSolverQR_DDRM {
     }
 
     @Benchmark
-    public void houseCol() {
-        DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
-        houseCol.setA(A);
-        houseCol.solve(B, X);
+    public void pinv() {
+        DMatrixRMaj A = pinv.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRMaj B = pinv.modifiesB() ? this.B.copy() : this.B;
+        pinv.setA(A);
+        pinv.solve(B, X);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkLinearSolverQR_DDRM.class.getSimpleName())
+                .include(BenchmarkLinearSolverSvd_DDRM.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

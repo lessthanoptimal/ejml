@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,7 +46,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
     // Number of rows in A
-    int numRows;
+    int AnumCols;
 
     public LinearSolverLu_DSCC( LuUpLooking_DSCC decomposition ) {
         this.decomposition = decomposition;
@@ -54,7 +54,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
     @Override
     public boolean setA( DMatrixSparseCSC A ) {
-        this.numRows = A.numRows;
+        this.AnumCols = A.numCols;
         return decomposition.decompose(A);
     }
 
@@ -65,7 +65,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
     @Override
     public void solveSparse( DMatrixSparseCSC B, DMatrixSparseCSC X ) {
-        X.reshape(numRows, B.numCols, X.numRows);
+        X.reshape(AnumCols, B.numCols, X.numRows);
 
         DMatrixSparseCSC L = decomposition.getL();
         DMatrixSparseCSC U = decomposition.getU();
@@ -97,7 +97,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     @Override
     @SuppressWarnings("NullAway") // Compiler isn't smart enough to realize null condition is impossible
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        X.reshape(numRows, B.numCols);
+        X.reshape(AnumCols, B.numCols);
 
         int[] pinv = decomposition.getPinv();
         double[] x = adjust(gx, X.numRows);

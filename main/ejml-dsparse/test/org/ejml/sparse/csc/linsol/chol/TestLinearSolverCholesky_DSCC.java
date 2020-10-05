@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,16 +44,16 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
     }
 
     @Override
-    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver(FillReducing permutation) {
+    public LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver( FillReducing permutation ) {
         ComputePermutation<DMatrixSparseCSC> cp = FillReductionFactory_DSCC.create(permutation);
         CholeskyUpLooking_DSCC cholesky = new CholeskyUpLooking_DSCC();
-        return new LinearSolverCholesky_DSCC(cholesky,cp);
+        return new LinearSolverCholesky_DSCC(cholesky, cp);
     }
 
     @Override
-    public DMatrixSparseCSC createA(int N) {
+    public DMatrixSparseCSC createA( int N ) {
         // turns out it's not trivial to create a SPD matrix with elements randomly zero that isn't nearly singular
         // this was messing up tests
-        return RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
+        return RandomMatrices_DSCC.symmetricPosDef(N, 0.25, rand);
     }
 }

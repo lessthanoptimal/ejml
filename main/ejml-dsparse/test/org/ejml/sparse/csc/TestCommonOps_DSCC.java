@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1276,8 +1276,8 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(m, n, m*n/2, rand);
         RandomMatrices_DSCC.ensureNotSingular(A, rand);
         DMatrixRMaj X = new DMatrixRMaj(1, 1); // arbitrary size
-        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(n, 5, rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m, 5, rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(n, 4, rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(m, 4, rand);
 
         CommonOps_DSCC.mult(A, expected, B);
         assertTrue(CommonOps_DSCC.solve(A, B, X));
