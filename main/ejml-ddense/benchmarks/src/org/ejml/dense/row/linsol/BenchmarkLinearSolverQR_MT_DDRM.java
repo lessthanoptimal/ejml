@@ -20,8 +20,7 @@ package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
-import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRM;
+import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_MT_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -47,7 +46,7 @@ public class BenchmarkLinearSolverQR_MT_DDRM {
 
     public DMatrixRMaj A, X, B;
 
-    LinearSolverChol_DDRM houseCol = new LinearSolverChol_DDRM(new CholeskyDecompositionInner_DDRM(true));
+    LinearSolverQrHouseCol_MT_DDRM houseCol = new LinearSolverQrHouseCol_MT_DDRM();
 
     @Setup
     public void setup() {

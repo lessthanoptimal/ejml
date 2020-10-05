@@ -113,7 +113,7 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void kron() { CommonOps_DDRM.kron(A, B, C); }
     @Benchmark public void extract_a() { CommonOps_DDRM.extract(A, 1, size - 1, 1, size - 1, B, 0, 1); }
     @Benchmark public void extract_b() { CommonOps_DDRM.extract(A, 1, size - 1, 1, size - 1, B); }
-    @Benchmark public void extract_c() {  B.reshape(A.numRows - 2, A.numCols - 2); CommonOps_DDRM.extract(A, 1, 1, B); }
+    @Benchmark public void extract_c() { B.reshape(A.numRows - 2, A.numCols - 2); CommonOps_DDRM.extract(A, 1, 1, B); }
     @Benchmark public void extract_d() { CommonOps_DDRM.extract(A, 1, size - 1, 1, size - 1); }
     @Benchmark public void extract_e() { CommonOps_DDRM.extract(A, new int[]{1, 3, 4}, 3, new int[]{0, 1, 3}, 3, C); }
     @Benchmark public void extract_vector() { CommonOps_DDRM.extract(Va, new int[]{1, 3, 4}, 3, Vb); }
