@@ -91,13 +91,13 @@ public class GenerateFixedFeatures extends GenerateFixed {
         out.print("    public static boolean hasUncountable("+nameMatrix+" a ) {\n");
 
         for( int y = 1; y <= dimen; y++ ) {
-            String row = "";
+            StringBuilder row = new StringBuilder();
 
             for( int x = 1; x <= dimen; x++ ) {
                 String n = y+""+x;
                 if( x > 1 )
-                    row += "+ ";
-                row += "a.a"+n;
+                    row.append("+ ");
+                row.append("a.a").append(n);
             }
             out.print("        if( UtilEjml.isUncountable("+row+"))\n"+
                     "            return true;\n");
