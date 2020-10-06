@@ -54,6 +54,6 @@ public class NormOps_ZDRM {
             total += real*real + imag*imag;
         }
 
-        return scale*Math.sqrt(total);
+        return scale * (double)Math.sqrt(total);
     }
 }
