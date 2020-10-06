@@ -150,9 +150,9 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase{
     }
 
     private void printFunctionParam( int spaces, int dimen ) {
-        StringBuilder s = new StringBuilder();
+        String s = "";
         for (int i = 0; i < spaces; i++) {
-            s.append(" ");
+            s += " ";
         }
         for( int y = 1; y <= dimen; y++ ) {
             if( y == 1 )
