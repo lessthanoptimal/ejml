@@ -94,12 +94,10 @@ public class BenchmarkCommonOps_ZDRM {
     @Benchmark public void multAddTransB_alpha() {CommonOps_ZDRM.multAddTransB(2.1, 1.5, A, B, C);}
     @Benchmark public void solve() {B.reshape(A.numRows, 5); check(CommonOps_ZDRM.solve(A, B, C));}
     @Benchmark public void det() {CommonOps_ZDRM.det(A);}
-    @Benchmark public void invert_one() {check(CommonOps_ZDRM.invert(A));}
-    @Benchmark public void invert_two() {check(CommonOps_ZDRM.invert(A, C));}
     @Benchmark public void diag() {CommonOps_ZDRM.diag(array_v);}
     @Benchmark public void setIdentity() {CommonOps_ZDRM.setIdentity(A);}
-    @Benchmark public void identity_one() {CommonOps_ZDRM.identity(size);}
-    @Benchmark public void identity_two() {CommonOps_ZDRM.identity(size, size/2);}
+    @Benchmark public void identity_A() {CommonOps_ZDRM.identity(size);}
+    @Benchmark public void identity_AA() {CommonOps_ZDRM.identity(size, size/2);}
     @Benchmark public void extractDiag() {CommonOps_ZDRM.extractDiag(A, C);}
     @Benchmark public void stripReal() {CommonOps_ZDRM.stripReal(A, R);}
     @Benchmark public void stripImaginary() {CommonOps_ZDRM.stripImaginary(A, R);}
@@ -109,13 +107,13 @@ public class BenchmarkCommonOps_ZDRM {
     @Benchmark public void add() {CommonOps_ZDRM.add(A, B, C);}
     @Benchmark public void subtract() {CommonOps_ZDRM.subtract(A, B, C);}
     @Benchmark public void scale() {C.set(A); CommonOps_ZDRM.scale(-0.5, 1.2, C);}
-    @Benchmark public void transpose() {CommonOps_ZDRM.transpose(A);}
-    @Benchmark public void transposeConjugate() {CommonOps_ZDRM.transposeConjugate(A);}
+    @Benchmark public void transpose_A() {CommonOps_ZDRM.transpose(A);}
+    @Benchmark public void transposeConjugate_A() {CommonOps_ZDRM.transposeConjugate(A);}
     @Benchmark public void transpose_AA() {CommonOps_ZDRM.transpose(A, C);}
     @Benchmark public void transposeConjugate_AA() {CommonOps_ZDRM.transposeConjugate(A, C);}
-    @Benchmark public void invert() {check(CommonOps_ZDRM.invert(A));}
+    @Benchmark public void invert_A() {check(CommonOps_ZDRM.invert(A));}
     @Benchmark public void invert_AA() {check(CommonOps_ZDRM.invert(A, C));}
-    @Benchmark public void elementMultiply() {CommonOps_ZDRM.elementMultiply(A, 1.2, -0.5, C);}
+    @Benchmark public void elementMultiply_As() {CommonOps_ZDRM.elementMultiply(A, 1.2, -0.5, C);}
     @Benchmark public void elementDivide_As() {CommonOps_ZDRM.elementDivide(A, 1.2, -0.5, C);}
     @Benchmark public void elementDivide_sA() {CommonOps_ZDRM.elementDivide(1.2, -0.5, A, C);}
     @Benchmark public void elementMinReal() {CommonOps_ZDRM.elementMinReal(A);}
