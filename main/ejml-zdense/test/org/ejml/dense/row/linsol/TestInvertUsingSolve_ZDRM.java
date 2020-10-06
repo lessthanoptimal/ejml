@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,7 +32,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 /**
  * @author Peter Abeles
  */
@@ -46,19 +45,19 @@ public class TestInvertUsingSolve_ZDRM {
      */
     @Test
     public void invert() {
-        ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 0,0, 1,0, 2,0, -2,0, 4,0, 9,0, 0.5,0, 0,0, 5,0);
+        ZMatrixRMaj A = new ZMatrixRMaj(3, 3, true, 0, 0, 1, 0, 2, 0, -2, 0, 4, 0, 9, 0, 0.5, 0, 0, 0, 5, 0);
         ZMatrixRMaj A_inv = RandomMatrices_ZDRM.rectangle(3, 3, rand);
 
         LUDecompositionAlt_ZDRM decomp = new LUDecompositionAlt_ZDRM();
         LinearSolverDense<ZMatrixRMaj> solver = new LinearSolverLu_ZDRM(decomp);
 
         solver.setA(A);
-        InvertUsingSolve_ZDRM.invert(solver,A,A_inv);
+        InvertUsingSolve_ZDRM.invert(solver, A, A_inv);
 
-        ZMatrixRMaj I = RandomMatrices_ZDRM.rectangle(3,3,rand);
+        ZMatrixRMaj I = RandomMatrices_ZDRM.rectangle(3, 3, rand);
 
         CommonOps_ZDRM.mult(A, A_inv, I);
 
-        assertTrue(MatrixFeatures_ZDRM.isIdentity(I,tol));
+        assertTrue(MatrixFeatures_ZDRM.isIdentity(I, tol));
     }
 }

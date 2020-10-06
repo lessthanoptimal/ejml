@@ -162,12 +162,8 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj stripReal( ZMatrixD1 input, DMatrixRMaj output ) {
-        if (output == null) {
-            output = new DMatrixRMaj(input.numRows, input.numCols);
-        } else if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static DMatrixRMaj stripReal( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
@@ -183,12 +179,8 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj stripImaginary( ZMatrixD1 input, DMatrixRMaj output ) {
-        if (output == null) {
-            output = new DMatrixRMaj(input.numRows, input.numCols);
-        } else if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static DMatrixRMaj stripImaginary( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
@@ -210,9 +202,7 @@ public class CommonOps_ZDRM {
      * @param output real matrix. Modified.
      */
     public static void magnitude( ZMatrixD1 input, DMatrixD1 output ) {
-        if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+        output.reshape(input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
@@ -235,10 +225,8 @@ public class CommonOps_ZDRM {
      * @param input Input matrix.  Not modified.
      * @param output The complex conjugate of the input matrix.  Modified.
      */
-    public static void conjugate( ZMatrixD1 input, ZMatrixD1 output ) {
-        if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static ZMatrixD1 conjugate( ZMatrixD1 input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
@@ -246,6 +234,8 @@ public class CommonOps_ZDRM {
             output.data[i] = input.data[i];
             output.data[i + 1] = -input.data[i + 1];
         }
+
+        return output;
     }
 
     /**
@@ -283,10 +273,8 @@ public class CommonOps_ZDRM {
      * @param c A Matrix where the results are stored. Modified.
      */
     public static void add( ZMatrixD1 a, ZMatrixD1 b, ZMatrixD1 c ) {
-        if (a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+        UtilEjml.checkSameShape(a, b, true);
+        c.reshape(a.numRows, b.numCols);
 
         final int length = a.getDataLength();
 
@@ -311,10 +299,8 @@ public class CommonOps_ZDRM {
      * @param c A Matrix where the results are stored. Modified.
      */
     public static void subtract( ZMatrixD1 a, ZMatrixD1 b, ZMatrixD1 c ) {
-        if (a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+        UtilEjml.checkSameShape(a, b, true);
+        c.reshape(a.numRows, b.numCols);
 
         final int length = a.getDataLength();
 
@@ -729,12 +715,8 @@ public class CommonOps_ZDRM {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static ZMatrixRMaj transpose( ZMatrixRMaj input, ZMatrixRMaj output ) {
-        if (output == null) {
-            output = new ZMatrixRMaj(input.numCols, input.numRows);
-        } else if (input.numCols != output.numRows || input.numRows != output.numCols) {
-            throw new IllegalArgumentException("Input and output shapes are not compatible");
-        }
+    public static ZMatrixRMaj transpose( ZMatrixRMaj input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numCols, input.numRows);
 
         TransposeAlgs_ZDRM.standard(input, output);
 
@@ -754,12 +736,8 @@ public class CommonOps_ZDRM {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static ZMatrixRMaj transposeConjugate( ZMatrixRMaj input, ZMatrixRMaj output ) {
-        if (output == null) {
-            output = new ZMatrixRMaj(input.numCols, input.numRows);
-        } else if (input.numCols != output.numRows || input.numRows != output.numCols) {
-            throw new IllegalArgumentException("Input and output shapes are not compatible");
-        }
+    public static ZMatrixRMaj transposeConjugate( ZMatrixRMaj input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numCols, input.numRows);
 
         TransposeAlgs_ZDRM.standardConjugate(input, output);
 
@@ -906,10 +884,8 @@ public class CommonOps_ZDRM {
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementMultiply( ZMatrixD1 input, double real, double imaginary, ZMatrixD1 output ) {
-        if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
-        }
+    public static ZMatrixRMaj elementMultiply( ZMatrixD1 input, double real, double imaginary, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         int N = input.getDataLength();
         for (int i = 0; i < N; i += 2) {
@@ -919,6 +895,8 @@ public class CommonOps_ZDRM {
             output.data[i] = inReal*real - intImag*imaginary;
             output.data[i + 1] = inReal*imaginary + intImag*real;
         }
+
+        return output;
     }
 
     /**
@@ -932,10 +910,8 @@ public class CommonOps_ZDRM {
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDivide( ZMatrixD1 input, double real, double imaginary, ZMatrixD1 output ) {
-        if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
-        }
+    public static ZMatrixRMaj elementDivide( ZMatrixD1 input, double real, double imaginary, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         double norm = real*real + imaginary*imaginary;
 
@@ -947,6 +923,8 @@ public class CommonOps_ZDRM {
             output.data[i] = (inReal*real + inImag*imaginary)/norm;
             output.data[i + 1] = (inImag*real - inReal*imaginary)/norm;
         }
+
+        return output;
     }
 
     /**
@@ -960,10 +938,8 @@ public class CommonOps_ZDRM {
      * @param input The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDivide( double real, double imaginary, ZMatrixD1 input, ZMatrixD1 output ) {
-        if (input.numCols != output.numCols || input.numRows != output.numRows) {
-            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
-        }
+    public static ZMatrixRMaj elementDivide( double real, double imaginary, ZMatrixD1 input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         int N = input.getDataLength();
         for (int i = 0; i < N; i += 2) {
@@ -975,6 +951,8 @@ public class CommonOps_ZDRM {
             output.data[i] = (real*inReal + imaginary*inImag)/norm;
             output.data[i + 1] = (imaginary*inReal - real*inImag)/norm;
         }
+
+        return output;
     }
 
     /**

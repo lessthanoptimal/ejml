@@ -29,15 +29,13 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Compare concurrent vs non-concurrent functions in CommonOps
- */
+@SuppressWarnings("ALL")
 @BenchmarkMode({Mode.AverageTime, Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value = 2)
+@Fork(value = 1)
 public class BenchmarkCommonOps_DDRM {
 
     //    @Param({"100", "500", "1000", "5000", "10000"})
@@ -79,6 +77,7 @@ public class BenchmarkCommonOps_DDRM {
         }
     }
 
+    // @formatter:off
     @Benchmark public void mult() {CommonOps_DDRM.mult(A, B, C);}
     @Benchmark public void multAdd() { CommonOps_DDRM.multAdd(A, B, C); }
     @Benchmark public void mult_alpha() { CommonOps_DDRM.mult(2.1, A, B, C); }
@@ -92,10 +91,11 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void multAddTransB() { CommonOps_DDRM.multAddTransB(A, B, C); }
     @Benchmark public void multAddTransB_alpha() { CommonOps_DDRM.multAddTransB(2.1, A, B, C); }
     @Benchmark public void transpose_inplace() { CommonOps_DDRM.transpose(A); }
+    @Benchmark public void transpose() { CommonOps_DDRM.transpose(A,C); }
     @Benchmark public void dot() { CommonOps_DDRM.dot(Va, Vb); }
     @Benchmark public void multInner() { CommonOps_DDRM.multInner(A, C); }
     @Benchmark public void multOuter() { CommonOps_DDRM.multOuter(A, C); }
-    @Benchmark public void solve() { B.reshape(A.numRows, 5); CommonOps_DDRM.solve(A, B, C);  }
+    @Benchmark public void solve() { B.reshape(A.numRows, 5); check(CommonOps_DDRM.solve(A, B, C));  }
     //    @Benchmark public void solveSPD() { B.reshape(A.numRows,5);CommonOps_DDRM.solveSPD(A, B, C); }
     @Benchmark public void trace() { CommonOps_DDRM.trace(A); }
     @Benchmark public void det() { CommonOps_DDRM.det(A); }
@@ -190,6 +190,7 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void symmUpperToFull() { CommonOps_DDRM.symmUpperToFull(A); }
     @Benchmark public void apply_div() { CommonOps_DDRM.apply(A, ( v ) -> v/1.2, C); }
     @Benchmark public void apply_abs() { CommonOps_DDRM.apply(A, Math::abs); }
+    // @formatter:on
 
     public static void check( boolean result ) { if (!result) throw new RuntimeException("Must be true"); }
 

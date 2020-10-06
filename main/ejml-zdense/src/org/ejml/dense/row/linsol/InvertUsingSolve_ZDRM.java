@@ -33,9 +33,7 @@ public class InvertUsingSolve_ZDRM {
 
     public static void invert( LinearSolverDense<ZMatrixRMaj> solver, ZMatrixRMaj A, ZMatrixRMaj A_inv, ZMatrixRMaj storage ) {
 
-        if (A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
-            throw new IllegalArgumentException("A and A_inv must have the same dimensions");
-        }
+        A_inv.reshape(A.numRows, A.numCols);
 
         CommonOps_ZDRM.setIdentity(storage);
 
@@ -44,9 +42,7 @@ public class InvertUsingSolve_ZDRM {
 
     public static void invert( LinearSolverDense<ZMatrixRMaj> solver, ZMatrixRMaj A, ZMatrixRMaj A_inv ) {
 
-        if (A.numRows != A_inv.numRows || A.numCols != A_inv.numCols) {
-            throw new IllegalArgumentException("A and A_inv must have the same dimensions");
-        }
+        A_inv.reshape(A.numRows, A.numCols);
 
         CommonOps_ZDRM.setIdentity(A_inv);
 

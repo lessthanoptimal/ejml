@@ -82,9 +82,9 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
      */
     @Override
     public void solve( ZMatrixRMaj B, ZMatrixRMaj X ) {
-        if (B.numCols != X.numCols || B.numRows != n || X.numRows != n) {
-            throw new IllegalArgumentException("Unexpected matrix size");
-        }
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for B");
+        X.reshape(numCols, B.numCols);
 
         int numCols = B.numCols;
 

@@ -103,10 +103,9 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
      */
     @Override
     public void solve( ZMatrixRMaj B, ZMatrixRMaj X ) {
-        if (X.numRows != numCols)
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numCols);
-        else if (B.numRows != numRows || B.numCols != X.numCols)
+        if (B.numRows != numRows)
             throw new IllegalArgumentException("Unexpected dimensions for B");
+        X.reshape(numCols, B.numCols);
 
         U = decomposer.getR(U, true);
         final double[] gammas = decomposer.getGammas();

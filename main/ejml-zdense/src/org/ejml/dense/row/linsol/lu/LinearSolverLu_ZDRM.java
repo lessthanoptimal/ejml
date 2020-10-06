@@ -34,16 +34,16 @@ public class LinearSolverLu_ZDRM extends LinearSolverLuBase_ZDRM {
     }
 
     @Override
-    public void solve( ZMatrixRMaj b, ZMatrixRMaj x ) {
-        if (b.numCols != x.numCols || b.numRows != numRows || x.numRows != numCols) {
-            throw new IllegalArgumentException("Unexpected matrix size");
-        }
+    public void solve( ZMatrixRMaj B, ZMatrixRMaj X ) {
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for B");
+        X.reshape(numCols, B.numCols);
 
-        int bnumCols = b.numCols;
-        int bstride = b.getRowStride();
+        int bnumCols = B.numCols;
+        int bstride = B.getRowStride();
 
-        double[] dataB = b.data;
-        double[] dataX = x.data;
+        double[] dataB = B.data;
+        double[] dataX = X.data;
 
         double[] vv = decomp._getVV();
 

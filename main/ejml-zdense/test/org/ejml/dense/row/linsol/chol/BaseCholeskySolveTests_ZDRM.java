@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,10 +31,9 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
-* @author Peter Abeles
-*/
+ * @author Peter Abeles
+ */
 public abstract class BaseCholeskySolveTests_ZDRM {
 
     Random rand = new Random(0x45);
@@ -64,7 +63,8 @@ public abstract class BaseCholeskySolveTests_ZDRM {
             ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4, 5, rand);
             assertTrue(solver.setA(A));
             fail("Should have thrown an exception");
-        } catch( RuntimeException ignore ) {}
+        } catch (RuntimeException ignore) {
+        }
     }
 
     @Test
@@ -75,26 +75,13 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(4, rand);
         assertTrue(solver.setA(A));
 
-        try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(4,3,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(4,2,rand);
-            solver.solve(b,x);
-            fail("Should have thrown an exception");
-        } catch( RuntimeException ignore ) {}
+        ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(4, 3, rand);
 
         try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(5,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(4,2,rand);
-            solver.solve(b,x);
+            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5, 2, rand);
+            solver.solve(b, x);
             fail("Should have thrown an exception");
-        } catch( RuntimeException ignore ) {}
-
-        try {
-            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(5,2,rand);
-            ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5,2,rand);
-            solver.solve(b,x);
-            fail("Should have thrown an exception");
-        } catch( RuntimeException ignore ) {}
+        } catch (RuntimeException ignore) {}
     }
 
     @Test
@@ -103,24 +90,24 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         LinearSolverDense<ZMatrixRMaj> solver = createSolver();
 
         for (int N = 1; N <= 4; N++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N,rand);
-            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(N,1,rand);
-            ZMatrixRMaj b = new ZMatrixRMaj(N,1);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N, rand);
+            ZMatrixRMaj x = RandomMatrices_ZDRM.rectangle(N, 1, rand);
+            ZMatrixRMaj b = new ZMatrixRMaj(N, 1);
             ZMatrixRMaj x_expected = x.copy();
 
-            CommonOps_ZDRM.mult(A,x_expected,b);
+            CommonOps_ZDRM.mult(A, x_expected, b);
 
             ZMatrixRMaj A_orig = A.copy();
             ZMatrixRMaj B_orig = b.copy();
 
             assertTrue(solver.setA(A));
-            solver.solve(b,x);
+            solver.solve(b, x);
 
             assertTrue(MatrixFeatures_ZDRM.isIdentical(x, x_expected, UtilEjml.TEST_F64));
 
             // see if input was modified
-            assertEquals(!solver.modifiesA(), MatrixFeatures_ZDRM.isIdentical(A,A_orig,UtilEjml.TEST_F64));
-            assertEquals(!solver.modifiesB(), MatrixFeatures_ZDRM.isIdentical(b,B_orig,UtilEjml.TEST_F64));
+            assertEquals(!solver.modifiesA(), MatrixFeatures_ZDRM.isIdentical(A, A_orig, UtilEjml.TEST_F64));
+            assertEquals(!solver.modifiesB(), MatrixFeatures_ZDRM.isIdentical(b, B_orig, UtilEjml.TEST_F64));
         }
     }
 
@@ -130,19 +117,19 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         LinearSolverDense<ZMatrixRMaj> solver = createSolver();
 
         for (int N = 1; N <= 5; N++) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N,rand);
+            ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(N, rand);
             ZMatrixRMaj A_orig = A.copy();
-            ZMatrixRMaj A_inv = new ZMatrixRMaj(N,N);
-            ZMatrixRMaj found = new ZMatrixRMaj(N,N);
+            ZMatrixRMaj A_inv = new ZMatrixRMaj(N, N);
+            ZMatrixRMaj found = new ZMatrixRMaj(N, N);
 
             assertTrue(solver.setA(A));
             solver.invert(A_inv);
 
-            CommonOps_ZDRM.mult(A_inv,A_orig,found);
+            CommonOps_ZDRM.mult(A_inv, A_orig, found);
             assertTrue(MatrixFeatures_ZDRM.isIdentity(found, UtilEjml.TEST_F64));
 
             // see if input was modified
-            assertEquals(!solver.modifiesA(), MatrixFeatures_ZDRM.isIdentical(A,A_orig,UtilEjml.TEST_F64));
+            assertEquals(!solver.modifiesA(), MatrixFeatures_ZDRM.isIdentical(A, A_orig, UtilEjml.TEST_F64));
         }
     }
 
@@ -151,8 +138,8 @@ public abstract class BaseCholeskySolveTests_ZDRM {
 
         LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver();
 
-        ZMatrixRMaj A = CommonOps_ZDRM.diag(3,0, 2,0, 1,0    );
-        ZMatrixRMaj B = CommonOps_ZDRM.diag(3,0, 2,0, 0.001,0);
+        ZMatrixRMaj A = CommonOps_ZDRM.diag(3, 0, 2, 0, 1, 0);
+        ZMatrixRMaj B = CommonOps_ZDRM.diag(3, 0, 2, 0, 0.001, 0);
 
         assertTrue(solver.setA(A));
         double qualityA = (double)solver.quality();
@@ -168,9 +155,9 @@ public abstract class BaseCholeskySolveTests_ZDRM {
 
         LinearSolverDense<ZMatrixRMaj> solver = createSafeSolver();
 
-        ZMatrixRMaj A = CommonOps_ZDRM.diag(3,0 ,2,0 ,1,0);
+        ZMatrixRMaj A = CommonOps_ZDRM.diag(3, 0, 2, 0, 1, 0);
         ZMatrixRMaj B = A.copy();
-        CommonOps_ZDRM.elementMultiply(B,0.001,0,B);
+        CommonOps_ZDRM.elementMultiply(B, 0.001, 0, B);
 
         assertTrue(solver.setA(A));
         double qualityA = (double)solver.quality();
@@ -178,6 +165,6 @@ public abstract class BaseCholeskySolveTests_ZDRM {
         assertTrue(solver.setA(B));
         double qualityB = (double)solver.quality();
 
-        assertEquals(qualityB,qualityA,UtilEjml.TEST_F64);
+        assertEquals(qualityB, qualityA, UtilEjml.TEST_F64);
     }
 }

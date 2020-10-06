@@ -52,8 +52,7 @@ public abstract class LinearSolverLuBase_ZDRM extends LinearSolverAbstract_ZDRM 
         double[] vv = decomp._getVV();
         ZMatrixRMaj LU = decomp.getLU();
 
-        if (A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows)
-            throw new IllegalArgumentException("Unexpected matrix dimension");
+        A_inv.reshape(LU.numRows, LU.numCols);
 
         int n = A.numCols;
 
