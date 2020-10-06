@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ package org.ejml.equation;
 public class Variable {
     public VariableType type;
 
-    protected Variable(VariableType type) {
+    protected Variable( VariableType type ) {
         this.type = type;
     }
 
@@ -36,6 +36,6 @@ public class Variable {
 
     @Override
     public String toString() {
-        return "VAR_"  + type;
+        return "VAR_" + type;
     }
 }

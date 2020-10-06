@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,6 @@ import org.ejml.dense.row.linsol.LinearSolverAbstract_ZDRM;
 
 import java.util.Arrays;
 
-
 /**
  * @author Peter Abeles
  */
@@ -32,13 +31,12 @@ public abstract class LinearSolverLuBase_ZDRM extends LinearSolverAbstract_ZDRM 
 
     protected LUDecompositionBase_ZDRM decomp;
 
-    protected LinearSolverLuBase_ZDRM(LUDecompositionBase_ZDRM decomp) {
+    protected LinearSolverLuBase_ZDRM( LUDecompositionBase_ZDRM decomp ) {
         this.decomp = decomp;
-
     }
 
     @Override
-    public boolean setA(ZMatrixRMaj A) {
+    public boolean setA( ZMatrixRMaj A ) {
         _setA(A);
 
         return decomp.decompose(A);
@@ -50,30 +48,29 @@ public abstract class LinearSolverLuBase_ZDRM extends LinearSolverAbstract_ZDRM 
     }
 
     @Override
-    public void invert(ZMatrixRMaj A_inv) {
-        double []vv = decomp._getVV();
+    public void invert( ZMatrixRMaj A_inv ) {
+        double[] vv = decomp._getVV();
         ZMatrixRMaj LU = decomp.getLU();
 
-        if( A_inv.numCols != LU.numCols || A_inv.numRows != LU.numRows )
-            throw new IllegalArgumentException("Unexpected matrix dimension");
+        A_inv.reshape(LU.numRows, LU.numCols);
 
         int n = A.numCols;
 
         double dataInv[] = A_inv.data;
         int strideAinv = A_inv.getRowStride();
 
-        for( int j = 0; j < n; j++ ) {
+        for (int j = 0; j < n; j++) {
             // don't need to change inv into an identity matrix before hand
-            Arrays.fill(vv,0,n*2,0);
+            Arrays.fill(vv, 0, n*2, 0);
             vv[j*2] = 1;
-            vv[j*2+1] = 0;
+            vv[j*2 + 1] = 0;
 
             decomp._solveVectorInternal(vv);
 //            for( int i = 0; i < n; i++ ) dataInv[i* n +j] = vv[i];
             int index = j*2;
-            for( int i = 0; i < n; i++ , index += strideAinv) {
+            for (int i = 0; i < n; i++, index += strideAinv) {
                 dataInv[index] = vv[i*2];
-                dataInv[index+1] = vv[i*2+1];
+                dataInv[index + 1] = vv[i*2 + 1];
             }
         }
     }

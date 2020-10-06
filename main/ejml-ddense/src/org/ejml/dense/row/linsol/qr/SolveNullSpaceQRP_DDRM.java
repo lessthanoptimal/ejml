@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,6 @@ package org.ejml.dense.row.linsol.qr;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_DDRM;
 import org.ejml.interfaces.SolveNullSpace;
 
@@ -36,29 +35,30 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
     CustomizedQRP decomposition = new CustomizedQRP();
 
     // Storage for Q matrix
-    DMatrixRMaj Q = new DMatrixRMaj(1,1);
+    DMatrixRMaj Q = new DMatrixRMaj(1, 1);
 
     /**
      * Finds the null space of A
+     *
      * @param A (Input) Matrix. Modified
      * @param numSingularValues Number of singular values
      * @param nullspace Storage for null-space
      * @return true if successful or false if it failed
      */
     @Override
-    public boolean process(DMatrixRMaj A , int numSingularValues, DMatrixRMaj nullspace ) {
+    public boolean process( DMatrixRMaj A, int numSingularValues, DMatrixRMaj nullspace ) {
         decomposition.decompose(A);
 
-        if( A.numRows > A.numCols ) {
-            Q.reshape(A.numCols,Math.min(A.numRows,A.numCols));
+        if (A.numRows > A.numCols) {
+            Q.reshape(A.numCols, Math.min(A.numRows, A.numCols));
             decomposition.getQ(Q, true);
         } else {
             Q.reshape(A.numCols, A.numCols);
             decomposition.getQ(Q, false);
         }
 
-        nullspace.reshape(Q.numRows,numSingularValues);
-        CommonOps_DDRM.extract(Q,0,Q.numRows,Q.numCols-numSingularValues,Q.numCols,nullspace,0,0);
+        nullspace.reshape(Q.numRows, numSingularValues);
+        CommonOps_DDRM.extract(Q, 0, Q.numRows, Q.numCols - numSingularValues, Q.numCols, nullspace, 0, 0);
 
         return true;
     }
@@ -74,9 +74,9 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
     private static class CustomizedQRP extends QRColPivDecompositionHouseholderColumn_DDRM {
 
         @Override
-        protected void convertToColumnMajor(DMatrixRMaj A) {
-            for( int x = 0; x < numCols; x++ ) {
-                System.arraycopy(A.data,x*A.numCols,dataQR[x],0,numRows);
+        protected void convertToColumnMajor( DMatrixRMaj A ) {
+            for (int x = 0; x < numCols; x++) {
+                System.arraycopy(A.data, x*A.numCols, dataQR[x], 0, numRows);
             }
         }
 
@@ -89,7 +89,7 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
         public boolean decompose( DMatrixRMaj A ) {
             // Unlike the QR decomposition the entire matrix has to be considered because any of the columns
             // could be pivoted in
-            setExpectedMaxSize(A.numCols,A.numRows);
+            setExpectedMaxSize(A.numCols, A.numRows);
 
             convertToColumnMajor(A);
 
@@ -110,7 +110,6 @@ public class SolveNullSpaceQRP_DDRM implements SolveNullSpace<DMatrixRMaj> {
 
             return true;
         }
-
     }
 
     public DMatrixRMaj getQ() {

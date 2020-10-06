@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -47,7 +47,7 @@ public class DecompositionFactory_ZDRM {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return LUDecomposition
      */
-    public static LUDecomposition_F64<ZMatrixRMaj> lu(int numRows , int numCols ) {
+    public static LUDecomposition_F64<ZMatrixRMaj> lu( int numRows, int numCols ) {
         return new LUDecompositionAlt_ZDRM();
     }
 
@@ -60,7 +60,7 @@ public class DecompositionFactory_ZDRM {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRDecomposition
      */
-    public static QRDecomposition<ZMatrixRMaj> qr(int numRows , int numCols ) {
+    public static QRDecomposition<ZMatrixRMaj> qr( int numRows, int numCols ) {
         return new QRDecompositionHouseholderColumn_ZDRM();
     }
 
@@ -73,16 +73,16 @@ public class DecompositionFactory_ZDRM {
      * @param lower if true then it will be a lower cholesky.  false for upper.  Try lower.
      * @return QRDecomposition
      */
-    public static CholeskyDecomposition_F64<ZMatrixRMaj> chol(int size , boolean lower ) {
+    public static CholeskyDecomposition_F64<ZMatrixRMaj> chol( int size, boolean lower ) {
         return new CholeskyDecompositionInner_ZDRM(lower);
     }
 
     /**
      * Decomposes the input matrix 'a' and makes sure it isn't modified.
      */
-    public static boolean decomposeSafe(DecompositionInterface<ZMatrixRMaj> decomposition, ZMatrixRMaj a) {
+    public static boolean decomposeSafe( DecompositionInterface<ZMatrixRMaj> decomposition, ZMatrixRMaj a ) {
 
-        if( decomposition.inputModified() ) {
+        if (decomposition.inputModified()) {
             a = a.copy();
         }
         return decomposition.decompose(a);

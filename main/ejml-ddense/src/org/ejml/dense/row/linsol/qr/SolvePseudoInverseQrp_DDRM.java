@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,10 +34,10 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 public class SolvePseudoInverseQrp_DDRM extends BaseLinearSolverQrp_DDRM {
 
     // stores the orthogonal Q matrix from QR decomposition
-    private DMatrixRMaj Q=new DMatrixRMaj(1,1);
+    private DMatrixRMaj Q = new DMatrixRMaj(1, 1);
 
     // storage for basic solution
-    private DMatrixRMaj x_basic =new DMatrixRMaj(1,1);
+    private DMatrixRMaj x_basic = new DMatrixRMaj(1, 1);
 
     /**
      * Configure and provide decomposition
@@ -45,14 +45,14 @@ public class SolvePseudoInverseQrp_DDRM extends BaseLinearSolverQrp_DDRM {
      * @param decomposition Decomposition used.
      * @param norm2Solution If true the basic solution will be returned, false the minimal 2-norm solution.
      */
-    public SolvePseudoInverseQrp_DDRM(QRPDecomposition_F64<DMatrixRMaj> decomposition,
-                                     boolean norm2Solution) {
-        super(decomposition,norm2Solution);
+    public SolvePseudoInverseQrp_DDRM( QRPDecomposition_F64<DMatrixRMaj> decomposition,
+                                       boolean norm2Solution ) {
+        super(decomposition, norm2Solution);
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
-        if( !super.setA(A))
+    public boolean setA( DMatrixRMaj A ) {
+        if (!super.setA(A))
             return false;
 
         Q.reshape(A.numRows, A.numRows);
@@ -63,25 +63,25 @@ public class SolvePseudoInverseQrp_DDRM extends BaseLinearSolverQrp_DDRM {
     }
 
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        if( B.numRows != numRows )
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
-        X.reshape(numCols,B.numCols);
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numCols);
+        X.reshape(numCols, B.numCols);
 
 
         int BnumCols = B.numCols;
 
         // get the pivots and transpose them
         int pivots[] = decomposition.getColPivots();
-        
+
         // solve each column one by one
-        for( int colB = 0; colB < BnumCols; colB++ ) {
+        for (int colB = 0; colB < BnumCols; colB++) {
             x_basic.reshape(numRows, 1);
-            Y.reshape(numRows,1);
+            Y.reshape(numRows, 1);
 
             // make a copy of this column in the vector
-            for( int i = 0; i < numRows; i++ ) {
-                Y.data[i] = B.get(i,colB);
+            for (int i = 0; i < numRows; i++) {
+                Y.data[i] = B.get(i, colB);
             }
 
             // Solve Q*a=b => a = Q'*b
@@ -92,15 +92,15 @@ public class SolvePseudoInverseQrp_DDRM extends BaseLinearSolverQrp_DDRM {
 
             // finish the basic solution by filling in zeros
             x_basic.reshape(numCols, 1, true);
-            for( int i = rank; i < numCols; i++)
+            for (int i = rank; i < numCols; i++)
                 x_basic.data[i] = 0;
-            
-            if( norm2Solution && rank < numCols )
+
+            if (norm2Solution && rank < numCols)
                 upgradeSolution(x_basic);
-            
+
             // save the results
-            for( int i = 0; i < numCols; i++ ) {
-                X.set(pivots[i],colB,x_basic.data[i]);
+            for (int i = 0; i < numCols; i++) {
+                X.set(pivots[i], colB, x_basic.data[i]);
             }
         }
     }

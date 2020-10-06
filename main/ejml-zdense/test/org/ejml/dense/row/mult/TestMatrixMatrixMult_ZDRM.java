@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,7 +45,7 @@ public class TestMatrixMatrixMult_ZDRM {
         int numChecked = 0;
         Method methods[] = MatrixMatrixMult_ZDRM.class.getMethods();
 
-        for( Method method : methods ) {
+        for (Method method : methods) {
             String name = method.getName();
 
             // only look at function which perform matrix multiplications
@@ -60,12 +60,12 @@ public class TestMatrixMatrixMult_ZDRM {
             boolean hasAlpha = double.class == params[0];
             boolean transA = name.contains("TransA");
             boolean transB = name.contains("TransB");
-            if( name.contains("TransAB"))
+            if (name.contains("TransAB"))
                 transA = transB = true;
 
             try {
 //                System.out.println("add "+add+" alpha "+hasAlpha+" TA "+transA+" TB "+transB+"  "+name);
-                check(method,add,hasAlpha,transA,transB);
+                check(method, add, hasAlpha, transA, transB);
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -74,11 +74,11 @@ public class TestMatrixMatrixMult_ZDRM {
             numChecked++;
         }
 
-        assertEquals(28,numChecked);
+        assertEquals(28, numChecked);
     }
 
-    public static void check( Method method , boolean isAdd , boolean hasAlpha,
-                              boolean transA , boolean transB ) throws InvocationTargetException, IllegalAccessException {
+    public static void check( Method method, boolean isAdd, boolean hasAlpha,
+                              boolean transA, boolean transB ) throws InvocationTargetException, IllegalAccessException {
         Random rand = new Random(234);
 
         double realAlpha = 2.3;
@@ -87,64 +87,64 @@ public class TestMatrixMatrixMult_ZDRM {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
                 for (int k = 1; k <= 4; k++) {
-                    ZMatrixRMaj A = transA ? RandomMatrices_ZDRM.rectangle(j,i,-1,1,rand) :
-                            RandomMatrices_ZDRM.rectangle(i,j,-1,1,rand);
-                    ZMatrixRMaj B = transB ? RandomMatrices_ZDRM.rectangle(k,j,-1,1,rand) :
-                            RandomMatrices_ZDRM.rectangle(j,k,-1,1,rand);
-                    ZMatrixRMaj C = RandomMatrices_ZDRM.rectangle(i,k,-1,1,rand);
+                    ZMatrixRMaj A = transA ? RandomMatrices_ZDRM.rectangle(j, i, -1, 1, rand) :
+                            RandomMatrices_ZDRM.rectangle(i, j, -1, 1, rand);
+                    ZMatrixRMaj B = transB ? RandomMatrices_ZDRM.rectangle(k, j, -1, 1, rand) :
+                            RandomMatrices_ZDRM.rectangle(j, k, -1, 1, rand);
+                    ZMatrixRMaj C = RandomMatrices_ZDRM.rectangle(i, k, -1, 1, rand);
 
-                    ZMatrixRMaj AB = multiply(A,B,transA,transB);
-                    ZMatrixRMaj expected = new ZMatrixRMaj(i,k);
+                    ZMatrixRMaj AB = multiply(A, B, transA, transB);
+                    ZMatrixRMaj expected = new ZMatrixRMaj(i, k);
 
-                    if( hasAlpha ) {
-                        CommonOps_ZDRM.elementMultiply(AB,realAlpha,imgAlpha,AB);
+                    if (hasAlpha) {
+                        CommonOps_ZDRM.elementMultiply(AB, realAlpha, imgAlpha, AB);
                     }
 
-                    if( isAdd ) {
-                        CommonOps_ZDRM.add(C,AB,expected);
+                    if (isAdd) {
+                        CommonOps_ZDRM.add(C, AB, expected);
                     } else {
                         expected.set(AB);
                     }
 
-                    invoke(method,realAlpha,imgAlpha,A,B,C);
+                    invoke(method, realAlpha, imgAlpha, A, B, C);
 
-                    assertTrue(MatrixFeatures_ZDRM.isEquals(expected,C, UtilEjml.TEST_F64),i+" "+j+" "+k);
+                    assertTrue(MatrixFeatures_ZDRM.isEquals(expected, C, UtilEjml.TEST_F64), i + " " + j + " " + k);
                 }
             }
         }
     }
 
-    public static void invoke(Method func,
-                              double realAlpha, double imgAlpha,
-                              ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c)
+    public static void invoke( Method func,
+                               double realAlpha, double imgAlpha,
+                               ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c )
             throws IllegalAccessException, InvocationTargetException {
-        if( func.getParameterTypes().length == 3 ) {
+        if (func.getParameterTypes().length == 3) {
             func.invoke(null, a, b, c);
         } else {
-            if( func.getParameterTypes()[0] == double.class ) {
-                if( func.getParameterTypes().length == 5 )
-                    func.invoke(null,realAlpha, imgAlpha, a, b, c);
+            if (func.getParameterTypes()[0] == double.class) {
+                if (func.getParameterTypes().length == 5)
+                    func.invoke(null, realAlpha, imgAlpha, a, b, c);
                 else
-                    func.invoke(null,realAlpha, imgAlpha, a, b, c,null);
+                    func.invoke(null, realAlpha, imgAlpha, a, b, c, null);
             } else {
-                func.invoke(null, a, b, c,null);
+                func.invoke(null, a, b, c, null);
             }
         }
     }
 
-    public static ZMatrixRMaj multiply(ZMatrixRMaj A , ZMatrixRMaj B, boolean transA, boolean transB ) {
+    public static ZMatrixRMaj multiply( ZMatrixRMaj A, ZMatrixRMaj B, boolean transA, boolean transB ) {
 
-        if( transA ) {
+        if (transA) {
             ZMatrixRMaj A_h = new ZMatrixRMaj(A.numCols, A.numRows);
-            CommonOps_ZDRM.transposeConjugate(A,A_h);
+            CommonOps_ZDRM.transposeConjugate(A, A_h);
             A = A_h;
         }
-        if( transB ) {
+        if (transB) {
             ZMatrixRMaj B_h = new ZMatrixRMaj(B.numCols, B.numRows);
-            CommonOps_ZDRM.transposeConjugate(B,B_h);
+            CommonOps_ZDRM.transposeConjugate(B, B_h);
             B = B_h;
         }
-        ZMatrixRMaj C = new ZMatrixRMaj(A.numRows,B.numCols);
+        ZMatrixRMaj C = new ZMatrixRMaj(A.numRows, B.numCols);
 
         Complex_F64 a = new Complex_F64();
         Complex_F64 b = new Complex_F64();
@@ -155,15 +155,15 @@ public class TestMatrixMatrixMult_ZDRM {
                 Complex_F64 sum = new Complex_F64();
 
                 for (int k = 0; k < A.numCols; k++) {
-                    A.get(i,k,a);
-                    B.get(k,j,b);
+                    A.get(i, k, a);
+                    B.get(k, j, b);
 
-                    ComplexMath_F64.multiply(a,b,m);
+                    ComplexMath_F64.multiply(a, b, m);
                     sum.real += m.real;
                     sum.imaginary += m.imaginary;
                 }
 
-                C.set(i,j,sum.real,sum.imaginary);
+                C.set(i, j, sum.real, sum.imaginary);
             }
         }
 

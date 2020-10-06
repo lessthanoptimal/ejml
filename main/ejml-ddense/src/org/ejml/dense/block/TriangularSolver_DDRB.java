@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,11 +18,17 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.concurrency.GrowArray;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
+import org.jetbrains.annotations.Nullable;
 
-import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultMinus;
+import java.util.Arrays;
 
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+
+//CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
 
 /**
  * <p>
@@ -40,120 +46,132 @@ import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultMinus;
 public class TriangularSolver_DDRB {
 
     /**
-     * Inverts an upper or lower triangular block submatrix.
+     * Inverts an upper or lower triangular block submatrix. Uses a row-oriented approach.
      *
-     * @param blockLength
      * @param upper Is it upper or lower triangular.
-     * @param T Triangular matrix that is to be inverted.  Must be block aligned.  Not Modified.
-     * @param T_inv Where the inverse is stored.  This can be the same as T.  Modified.
-     * @param temp Work space variable that is size blockLength*blockLength.  
+     * @param T Triangular matrix that is to be inverted. Must be block aligned. Not Modified.
+     * @param T_inv Where the inverse is stored. This can be the same as T. Modified.
+     * @param workspace Work space variable that is size blockLength*blockLength.
      */
-    public static void invert( final int blockLength ,
-                               final boolean upper ,
-                               final DSubmatrixD1 T ,
-                               final DSubmatrixD1 T_inv ,
-                               final double temp[] )
-    {
-        if( upper )
+    public static void invert( final int blockLength,
+                               final boolean upper,
+                               final DSubmatrixD1 T,
+                               final DSubmatrixD1 T_inv,
+                               @Nullable GrowArray<DGrowArray> workspace ) {
+        if (upper)
             throw new IllegalArgumentException("Upper triangular matrices not supported yet");
 
-        if( temp.length < blockLength*blockLength )
-            throw new IllegalArgumentException("Temp must be at least blockLength*blockLength long.");
+        //CONCURRENT_INLINE if (T.original == T_inv.original)
+        //CONCURRENT_INLINE    throw new IllegalArgumentException("Same instance not allowed for concurrent");
 
-        if( T.row0 != T_inv.row0 || T.row1 != T_inv.row1 || T.col0 != T_inv.col0 || T.col1 != T_inv.col1)
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
+        else
+            workspace.reset();
+
+        if (T.row0 != T_inv.row0 || T.row1 != T_inv.row1 || T.col0 != T_inv.col0 || T.col1 != T_inv.col1)
             throw new IllegalArgumentException("T and T_inv must be at the same elements in the matrix");
 
-        final int M = T.row1-T.row0;
+        final int blockSize = blockLength*blockLength;
+        //CONCURRENT_REMOVE_BELOW
+        double[] temp = workspace.grow().reshape(blockSize).data;
 
-        final double dataT[] = T.original.data;
-        final double dataX[] = T_inv.original.data;
+        final int M = T.row1 - T.row0;
 
-        final int offsetT = T.row0*T.original.numCols+M*T.col0;
+        final double[] dataT = T.original.data;
+        final double[] dataX = T_inv.original.data;
 
-        for( int i = 0; i < M; i += blockLength ) {
-            int heightT = Math.min(T.row1-(i+T.row0),blockLength);
+        final int offsetT = T.row0*T.original.numCols + M*T.col0;
 
-            int indexII = offsetT + T.original.numCols*(i+T.row0) + heightT*(i+T.col0);
+        for (int rowT = 0; rowT < M; rowT += blockLength) {
+            final int _rowT = rowT; // Needed for concurrent lambdas
+            final int heightT = Math.min(T.row1 - (rowT + T.row0), blockLength);
 
-            for( int j = 0; j < i; j += blockLength ) {
-                int widthX = Math.min(T.col1-(j+T.col0),blockLength);
+            final int indexII = offsetT + T.original.numCols*(rowT + T.row0) + heightT*(rowT + T.col0);
 
-                for( int w = 0; w < temp.length; w++ ) {
-                    temp[w] = 0;
+            //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, rowT, blockLength, workspace, ( work, colT ) -> {
+            for (int colT = 0; colT < rowT; colT += blockLength) {
+                //CONCURRENT_INLINE double[] temp = work.reshape(blockSize).data;
+                int widthX = Math.min(T.col1 - (colT + T.col0), blockLength);
+
+                Arrays.fill(temp, 0);
+
+                for (int k = colT; k < _rowT; k += blockLength) {
+                    int widthT = Math.min(T.col1 - (k + T.col0), blockLength);
+
+                    int indexL = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(k + T.col0);
+                    int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(colT + T.col0);
+
+                    InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, indexL, indexX, 0, heightT, widthT, widthX);
                 }
 
-                for( int k = j; k < i; k += blockLength ) {
-                    int widthT = Math.min(T.col1-(k+T.col0),blockLength);
+                int indexX = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(colT + T.col0);
 
-                    int indexL = offsetT + T.original.numCols*(i+T.row0) + heightT*(k+T.col0);
-                    int indexX = offsetT + T.original.numCols*(k+T.row0) + widthT*(j+T.col0);
-
-                    blockMultMinus(dataT,dataX,temp,indexL,indexX,0,heightT,widthT,widthX);
-                }
-
-                int indexX = offsetT + T.original.numCols*(i+T.row0) + heightT*(j+T.col0);
-
-                InnerTriangularSolver_DDRB.solveL(dataT,temp,heightT,widthX,heightT,indexII,0);
-                System.arraycopy(temp,0,dataX,indexX,widthX*heightT);
+                InnerTriangularSolver_DDRB.solveL(dataT, temp, heightT, widthX, heightT, indexII, 0);
+                System.arraycopy(temp, 0, dataX, indexX, widthX*heightT);
             }
-            InnerTriangularSolver_DDRB.invertLower(dataT,dataX,heightT,indexII,indexII);
+            //CONCURRENT_ABOVE });
+            InnerTriangularSolver_DDRB.invertLower(dataT, dataX, heightT, indexII, indexII);
         }
     }
+
+    //CONCURRENT_OMIT_BEGIN
 
     /**
-     * Inverts an upper or lower triangular block submatrix.
+     * Inverts an upper or lower triangular block submatrix. Uses a row oriented approach.
      *
-     * @param blockLength
      * @param upper Is it upper or lower triangular.
-     * @param T Triangular matrix that is to be inverted.  Overwritten with solution.  Modified.
-     * @param temp Work space variable that is size blockLength*blockLength.
+     * @param T Triangular matrix that is to be inverted. Overwritten with solution. Modified.
+     * @param workspace Work space variable that is size blockLength*blockLength.
      */
-    public static void invert( final int blockLength ,
-                               final boolean upper ,
-                               final DSubmatrixD1 T ,
-                               final double temp[] )
-    {
-        if( upper )
+    public static void invert( final int blockLength,
+                               final boolean upper,
+                               final DSubmatrixD1 T,
+                               @Nullable GrowArray<DGrowArray> workspace ) {
+        if (upper)
             throw new IllegalArgumentException("Upper triangular matrices not supported yet");
 
-        if( temp.length < blockLength*blockLength )
-            throw new IllegalArgumentException("Temp must be at least blockLength*blockLength long.");
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
+        else
+            workspace.reset();
 
-        final int M = T.row1-T.row0;
+        final int blockSize = blockLength*blockLength;
+        double[] temp = workspace.grow().reshape(blockSize).data;
 
-        final double dataT[] = T.original.data;
-        final int offsetT = T.row0*T.original.numCols+M*T.col0;
+        final int M = T.row1 - T.row0;
 
-        for( int i = 0; i < M; i += blockLength ) {
-            int heightT = Math.min(T.row1-(i+T.row0),blockLength);
+        final double[] dataT = T.original.data;
+        final int offsetT = T.row0*T.original.numCols + M*T.col0;
 
-            int indexII = offsetT + T.original.numCols*(i+T.row0) + heightT*(i+T.col0);
+        for (int i = 0; i < M; i += blockLength) {
+            int heightT = Math.min(T.row1 - (i + T.row0), blockLength);
 
-            for( int j = 0; j < i; j += blockLength ) {
-                int widthX = Math.min(T.col1-(j+T.col0),blockLength);
+            int indexII = offsetT + T.original.numCols*(i + T.row0) + heightT*(i + T.col0);
 
-                for( int w = 0; w < temp.length; w++ ) {
-                    temp[w] = 0;
+            for (int j = 0; j < i; j += blockLength) {
+                int widthX = Math.min(T.col1 - (j + T.col0), blockLength);
+
+                Arrays.fill(temp, 0);
+
+                for (int k = j; k < i; k += blockLength) {
+                    int widthT = Math.min(T.col1 - (k + T.col0), blockLength);
+
+                    int indexL = offsetT + T.original.numCols*(i + T.row0) + heightT*(k + T.col0);
+                    int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(j + T.col0);
+
+                    InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, indexL, indexX, 0, heightT, widthT, widthX);
                 }
 
-                for( int k = j; k < i; k += blockLength ) {
-                    int widthT = Math.min(T.col1-(k+T.col0),blockLength);
+                int indexX = offsetT + T.original.numCols*(i + T.row0) + heightT*(j + T.col0);
 
-                    int indexL = offsetT + T.original.numCols*(i+T.row0) + heightT*(k+T.col0);
-                    int indexX = offsetT + T.original.numCols*(k+T.row0) + widthT*(j+T.col0);
-
-                    blockMultMinus(dataT,dataT,temp,indexL,indexX,0,heightT,widthT,widthX);
-                }
-
-                int indexX = offsetT + T.original.numCols*(i+T.row0) + heightT*(j+T.col0);
-
-                InnerTriangularSolver_DDRB.solveL(dataT,temp,heightT,widthX,heightT,indexII,0);
-                System.arraycopy(temp,0,dataT,indexX,widthX*heightT);
+                InnerTriangularSolver_DDRB.solveL(dataT, temp, heightT, widthX, heightT, indexII, 0);
+                System.arraycopy(temp, 0, dataT, indexX, widthX*heightT);
             }
-            InnerTriangularSolver_DDRB.invertLower(dataT,heightT,indexII);
+            InnerTriangularSolver_DDRB.invertLower(dataT, heightT, indexII);
         }
     }
-
+    //CONCURRENT_OMIT_END
 
     /**
      * <p>
@@ -161,7 +179,7 @@ public class TriangularSolver_DDRB {
      * <br>
      * B = T<sup>-1</sup> B<br>
      * <br>
-     * where T is a triangular matrix. T or B can be transposed.  T is a square matrix of arbitrary
+     * where T is a triangular matrix. T or B can be transposed. T is a square matrix of arbitrary
      * size and B has the same number of rows as T and an arbitrary number of columns.
      * </p>
      *
@@ -170,19 +188,18 @@ public class TriangularSolver_DDRB {
      * @param T An upper or lower triangular matrix. Not modified.
      * @param B A matrix whose height is the same as T's width. Solution is written here. Modified.
      */
-    public static void solve( final int blockLength ,
-                              final boolean upper ,
-                              final DSubmatrixD1 T ,
-                              final DSubmatrixD1 B ,
+    public static void solve( final int blockLength,
+                              final boolean upper,
+                              final DSubmatrixD1 T,
+                              final DSubmatrixD1 B,
                               final boolean transT ) {
 
-        if( upper ) {
-            solveR(blockLength,T,B,transT);
+        if (upper) {
+            solveR(blockLength, T, B, transT);
         } else {
-            solveL(blockLength,T,B,transT);
+            solveL(blockLength, T, B, transT);
         }
     }
-
 
     /**
      * <p>
@@ -190,7 +207,7 @@ public class TriangularSolver_DDRB {
      * <br>
      * B = T<sup>-1</sup> B<br>
      * <br>
-     * where T is a triangular matrix contained in an inner block. T or B can be transposed.  T must be a single complete inner block
+     * where T is a triangular matrix contained in an inner block. T or B can be transposed. T must be a single complete inner block
      * and B is either a column block vector or row block vector.
      * </p>
      *
@@ -201,78 +218,87 @@ public class TriangularSolver_DDRB {
      * @param transT If T is transposed or not.
      * @param transB If B is transposed or not.
      */
-    public static void solveBlock( final int blockLength ,
-                                   final boolean upper , final DSubmatrixD1 T ,
-                                   final DSubmatrixD1 B ,
-                                   final boolean transT ,final boolean transB )
-    {
-        int Trows = T.row1-T.row0;
-        if( Trows > blockLength )
+    public static void solveBlock( final int blockLength,
+                                   final boolean upper, final DSubmatrixD1 T,
+                                   final DSubmatrixD1 B,
+                                   final boolean transT, final boolean transB ) {
+        int Trows = T.row1 - T.row0;
+        if (Trows > blockLength)
             throw new IllegalArgumentException("T can be at most the size of a block");
-        // number of rows in a block.  The submatrix can be smaller than a block
-        final int blockT_rows = Math.min(blockLength,T.original.numRows-T.row0);
-        final int blockT_cols = Math.min(blockLength,T.original.numCols-T.col0);
+        // number of rows in a block. The submatrix can be smaller than a block
+        final int blockT_rows = Math.min(blockLength, T.original.numRows - T.row0);
+        final int blockT_cols = Math.min(blockLength, T.original.numCols - T.col0);
 
-        int offsetT = T.row0*T.original.numCols+blockT_rows*T.col0;
+        int offsetT = T.row0*T.original.numCols + blockT_rows*T.col0;
 
-        final double dataT[] = T.original.data;
-        final double dataB[] = B.original.data;
+        final double[] dataT = T.original.data;
+        final double[] dataB = B.original.data;
 
-        if( transB ) {
-            if( upper ) {
-                if ( transT ) {
+        if (transB) {
+            if (upper) {
+                if (transT) {
                     throw new IllegalArgumentException("Operation not yet supported");
                 } else {
                     throw new IllegalArgumentException("Operation not yet supported");
                 }
             } else {
-                if ( transT ) {
+                if (transT) {
                     throw new IllegalArgumentException("Operation not yet supported");
                 } else {
-                    for( int i = B.row0; i < B.row1; i += blockLength ) {
-                        int N = Math.min(B.row1 , i + blockLength ) - i;
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.row0, B.row1, blockLength, i -> {
+                    for (int i = B.row0; i < B.row1; i += blockLength) {
+                        int N = Math.min(B.row1, i + blockLength) - i;
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.solveLTransB(dataT,dataB,blockT_rows,N,blockT_rows,offsetT,offsetB);
+                        InnerTriangularSolver_DDRB.solveLTransB(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
                     }
+                    //CONCURRENT_ABOVE });
                 }
             }
         } else {
-            if( Trows != B.row1-B.row0 )
+            if (Trows != B.row1 - B.row0)
                 throw new IllegalArgumentException("T and B must have the same number of rows.");
 
-            if( upper ) {
-                if ( transT ) {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+            if (upper) {
+                if (transT) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, i -> {
+                    for (int i = B.col0; i < B.col1; i += blockLength) {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        InnerTriangularSolver_DDRB.solveTransU(dataT,dataB,Trows,N,Trows,offsetT,offsetB);
+                        int N = Math.min(B.col1, i + blockLength) - i;
+                        InnerTriangularSolver_DDRB.solveTransU(dataT, dataB, Trows, N, Trows, offsetT, offsetB);
                     }
+                    //CONCURRENT_ABOVE });
                 } else {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, i -> {
+                    for (int i = B.col0; i < B.col1; i += blockLength) {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        InnerTriangularSolver_DDRB.solveU(dataT,dataB,Trows,N,Trows,offsetT,offsetB);
+                        int N = Math.min(B.col1, i + blockLength) - i;
+                        InnerTriangularSolver_DDRB.solveU(dataT, dataB, Trows, N, Trows, offsetT, offsetB);
                     }
+                    //CONCURRENT_ABOVE });
                 }
             } else {
-                if ( transT ) {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+                if (transT) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, i -> {
+                    for (int i = B.col0; i < B.col1; i += blockLength) {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        InnerTriangularSolver_DDRB.solveTransL(dataT,dataB,Trows,N,blockT_cols,offsetT,offsetB);
+                        int N = Math.min(B.col1, i + blockLength) - i;
+                        InnerTriangularSolver_DDRB.solveTransL(dataT, dataB, Trows, N, blockT_cols, offsetT, offsetB);
                     }
+                    //CONCURRENT_ABOVE });
                 } else {
-                    for( int i = B.col0; i < B.col1; i += blockLength ) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, i -> {
+                    for (int i = B.col0; i < B.col1; i += blockLength) {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
-                        int N = Math.min(B.col1 , i + blockLength ) - i;
-                        InnerTriangularSolver_DDRB.solveL(dataT,dataB,Trows,N,blockT_cols,offsetT,offsetB);
+                        int N = Math.min(B.col1, i + blockLength) - i;
+                        InnerTriangularSolver_DDRB.solveL(dataT, dataB, Trows, N, blockT_cols, offsetT, offsetB);
                     }
+                    //CONCURRENT_ABOVE });
                 }
             }
         }
@@ -288,14 +314,13 @@ public class TriangularSolver_DDRB {
      *
      * <p> Reverse or forward substitution is used depending upon L being transposed or not. </p>
      *
-     * @param blockLength
-     * @param L Lower triangular with dimensions m by m.  Not modified.
-     * @param B A matrix with dimensions m by n.  Solution is written into here. Modified.
+     * @param L Lower triangular with dimensions m by m. Not modified.
+     * @param B A matrix with dimensions m by n. Solution is written into here. Modified.
      * @param transL Is the triangular matrix transposed?
      */
-    public static void solveL( final int blockLength ,
+    public static void solveL( final int blockLength,
                                final DSubmatrixD1 L,
-                               final DSubmatrixD1 B ,
+                               final DSubmatrixD1 B,
                                boolean transL ) {
 
         DSubmatrixD1 Y = new DSubmatrixD1(B.original);
@@ -305,11 +330,11 @@ public class TriangularSolver_DDRB {
 
         int lengthL = B.row1 - B.row0;
 
-        int startI,stepI;
+        int startI, stepI;
 
-        if( transL ) {
-            startI = lengthL - lengthL % blockLength;
-            if( startI == lengthL && lengthL >= blockLength )
+        if (transL) {
+            startI = lengthL - lengthL%blockLength;
+            if (startI == lengthL && lengthL >= blockLength)
                 startI -= blockLength;
 
             stepI = -blockLength;
@@ -318,37 +343,41 @@ public class TriangularSolver_DDRB {
             stepI = blockLength;
         }
 
-        for( int i = startI; ; i += stepI ) {
-            if( transL ) {
-                if( i < 0 ) break;
+        for (int i = startI; ; i += stepI) {
+            if (transL) {
+                if (i < 0) break;
             } else {
-                if( i >= lengthL ) break;
+                if (i >= lengthL) break;
             }
 
             // width and height of the inner T(i,i) block
-            int widthT = Math.min(blockLength, lengthL-i);
+            int widthT = Math.min(blockLength, lengthL - i);
 
-            Linner.col0 = L.col0 + i;    Linner.col1 = Linner.col0 + widthT;
-            Linner.row0 = L.row0 + i;    Linner.row1 = Linner.row0 + widthT;
+            Linner.col0 = L.col0 + i;
+            Linner.col1 = Linner.col0 + widthT;
+            Linner.row0 = L.row0 + i;
+            Linner.row1 = Linner.row0 + widthT;
 
-            Binner.col0 = B.col0;       Binner.col1 = B.col1;
-            Binner.row0 = B.row0 + i;   Binner.row1 = Binner.row0 + widthT;
+            Binner.col0 = B.col0;
+            Binner.col1 = B.col1;
+            Binner.row0 = B.row0 + i;
+            Binner.row1 = Binner.row0 + widthT;
 
             // solve the top row block
             // B(i,:) = T(i,i)^-1 Y(i,:)
-            solveBlock(blockLength,false, Linner,Binner,transL,false);
+            solveBlock(blockLength, false, Linner, Binner, transL, false);
 
             boolean updateY;
-            if( transL ) {
+            if (transL) {
                 updateY = Linner.row0 > 0;
             } else {
                 updateY = Linner.row1 < L.row1;
             }
-            if( updateY ) {
+            if (updateY) {
                 // Y[i,:] = Y[i,:] - sum j=1:i-1 { T[i,j] B[j,i] }
                 // where i is the next block down
                 // The summation is a block inner product
-                if( transL ) {
+                if (transL) {
                     Linner.col1 = Linner.col0;
                     Linner.col0 = Linner.col1 - blockLength;
                     Linner.row1 = L.row1;
@@ -357,11 +386,11 @@ public class TriangularSolver_DDRB {
 //                    Binner.row0 = Binner.row0;
                     Binner.row1 = B.row1;
 
-                    Y.row0 = Binner.row0-blockLength;
+                    Y.row0 = Binner.row0 - blockLength;
                     Y.row1 = Binner.row0;
                 } else {
                     Linner.row0 = Linner.row1;
-                    Linner.row1 = Math.min(Linner.row0+blockLength, L.row1);
+                    Linner.row1 = Math.min(Linner.row0 + blockLength, L.row1);
                     Linner.col0 = L.col0;
                     //Tinner.col1 = Tinner.col1;
 
@@ -369,25 +398,25 @@ public class TriangularSolver_DDRB {
                     //Binner.row1 = Binner.row1;
 
                     Y.row0 = Binner.row1;
-                    Y.row1 = Math.min(Y.row0+blockLength,B.row1);
+                    Y.row1 = Math.min(Y.row0 + blockLength, B.row1);
                 }
 
                 // step through each block column
-                for( int k = B.col0; k < B.col1; k += blockLength ) {
+                for (int k = B.col0; k < B.col1; k += blockLength) {
 
                     Binner.col0 = k;
-                    Binner.col1 = Math.min(k+blockLength,B.col1);
+                    Binner.col1 = Math.min(k + blockLength, B.col1);
 
                     Y.col0 = Binner.col0;
                     Y.col1 = Binner.col1;
 
-                    if( transL ) {
+                    if (transL) {
                         // Y = Y - T^T * B
-                        MatrixMult_DDRB.multMinusTransA(blockLength, Linner,Binner,Y);
+                        MatrixMult_DDRB.multMinusTransA(blockLength, Linner, Binner, Y);
                     } else {
 
                         // Y = Y - T * B
-                        MatrixMult_DDRB.multMinus(blockLength, Linner,Binner,Y);
+                        MatrixMult_DDRB.multMinus(blockLength, Linner, Binner, Y);
                     }
                 }
             }
@@ -402,24 +431,23 @@ public class TriangularSolver_DDRB {
      * <br>
      * </p>
      *
-     * <p>Only the first B.numRows rows in R will be processed.  Lower triangular elements are ignored.<p>
+     * <p>Only the first B.numRows rows in R will be processed. Lower triangular elements are ignored.<p>
      *
      * <p> Reverse or forward substitution is used depending upon L being transposed or not. </p>
      *
-     * @param blockLength
-     * @param R Upper triangular with dimensions m by m.  Not modified.
-     * @param B A matrix with dimensions m by n.  Solution is written into here. Modified.
+     * @param R Upper triangular with dimensions m by m. Not modified.
+     * @param B A matrix with dimensions m by n. Solution is written into here. Modified.
      * @param transR Is the triangular matrix transposed?
      */
-    public static void solveR( final int blockLength ,
+    public static void solveR( final int blockLength,
                                final DSubmatrixD1 R,
-                               final DSubmatrixD1 B ,
+                               final DSubmatrixD1 B,
                                boolean transR ) {
 
         int lengthR = B.row1 - B.row0;
-        if( R.getCols() != lengthR ) {
+        if (R.getCols() != lengthR) {
             throw new IllegalArgumentException("Number of columns in R must be equal to the number of rows in B");
-        } else if( R.getRows() != lengthR ) {
+        } else if (R.getRows() != lengthR) {
             throw new IllegalArgumentException("Number of rows in R must be equal to the number of rows in B");
         }
 
@@ -428,52 +456,56 @@ public class TriangularSolver_DDRB {
         DSubmatrixD1 Rinner = new DSubmatrixD1(R.original);
         DSubmatrixD1 Binner = new DSubmatrixD1(B.original);
 
-        int startI,stepI;
+        int startI, stepI;
 
-        if( transR ) {
+        if (transR) {
             startI = 0;
             stepI = blockLength;
         } else {
-            startI = lengthR - lengthR % blockLength;
-            if( startI == lengthR && lengthR >= blockLength )
+            startI = lengthR - lengthR%blockLength;
+            if (startI == lengthR && lengthR >= blockLength)
                 startI -= blockLength;
 
             stepI = -blockLength;
         }
 
-        for( int i = startI; ; i += stepI ) {
-            if( transR ) {
-                if( i >= lengthR ) break;
+        for (int i = startI; ; i += stepI) {
+            if (transR) {
+                if (i >= lengthR) break;
             } else {
-                if( i < 0 ) break;
+                if (i < 0) break;
             }
 
             // width and height of the inner T(i,i) block
-            int widthT = Math.min(blockLength, lengthR-i);
+            int widthT = Math.min(blockLength, lengthR - i);
 
-            Rinner.col0 = R.col0 + i;    Rinner.col1 = Rinner.col0 + widthT;
-            Rinner.row0 = R.row0 + i;    Rinner.row1 = Rinner.row0 + widthT;
+            Rinner.col0 = R.col0 + i;
+            Rinner.col1 = Rinner.col0 + widthT;
+            Rinner.row0 = R.row0 + i;
+            Rinner.row1 = Rinner.row0 + widthT;
 
-            Binner.col0 = B.col0;       Binner.col1 = B.col1;
-            Binner.row0 = B.row0 + i;   Binner.row1 = Binner.row0 + widthT;
+            Binner.col0 = B.col0;
+            Binner.col1 = B.col1;
+            Binner.row0 = B.row0 + i;
+            Binner.row1 = Binner.row0 + widthT;
 
             // solve the top row block
             // B(i,:) = T(i,i)^-1 Y(i,:)
-            solveBlock(blockLength,true, Rinner,Binner,transR,false);
+            solveBlock(blockLength, true, Rinner, Binner, transR, false);
 
             boolean updateY;
-            if( transR ) {
+            if (transR) {
                 updateY = Rinner.row1 < R.row1;
             } else {
                 updateY = Rinner.row0 > 0;
             }
-            if( updateY ) {
+            if (updateY) {
                 // Y[i,:] = Y[i,:] - sum j=1:i-1 { T[i,j] B[j,i] }
                 // where i is the next block down
                 // The summation is a block inner product
-                if( transR ) {
+                if (transR) {
                     Rinner.col0 = Rinner.col1;
-                    Rinner.col1 = Math.min(Rinner.col0+blockLength, R.col1);
+                    Rinner.col1 = Math.min(Rinner.col0 + blockLength, R.col1);
                     Rinner.row0 = R.row0;
                     //Rinner.row1 = Rinner.row1;
 
@@ -481,7 +513,7 @@ public class TriangularSolver_DDRB {
                     //Binner.row1 = Binner.row1;
 
                     Y.row0 = Binner.row1;
-                    Y.row1 = Math.min(Y.row0+blockLength,B.row1);
+                    Y.row1 = Math.min(Y.row0 + blockLength, B.row1);
                 } else {
                     Rinner.row1 = Rinner.row0;
                     Rinner.row0 = Rinner.row1 - blockLength;
@@ -490,25 +522,25 @@ public class TriangularSolver_DDRB {
 //                    Binner.row0 = Binner.row0;
                     Binner.row1 = B.row1;
 
-                    Y.row0 = Binner.row0-blockLength;
+                    Y.row0 = Binner.row0 - blockLength;
                     Y.row1 = Binner.row0;
                 }
 
                 // step through each block column
-                for( int k = B.col0; k < B.col1; k += blockLength ) {
+                for (int k = B.col0; k < B.col1; k += blockLength) {
 
                     Binner.col0 = k;
-                    Binner.col1 = Math.min(k+blockLength,B.col1);
+                    Binner.col1 = Math.min(k + blockLength, B.col1);
 
                     Y.col0 = Binner.col0;
                     Y.col1 = Binner.col1;
 
-                    if( transR ) {
+                    if (transR) {
                         // Y = Y - T^T * B
-                        MatrixMult_DDRB.multMinusTransA(blockLength, Rinner,Binner,Y);
+                        MatrixMult_DDRB.multMinusTransA(blockLength, Rinner, Binner, Y);
                     } else {
                         // Y = Y - T * B
-                        MatrixMult_DDRB.multMinus(blockLength, Rinner,Binner,Y);
+                        MatrixMult_DDRB.multMinus(blockLength, Rinner, Binner, Y);
                     }
                 }
             }

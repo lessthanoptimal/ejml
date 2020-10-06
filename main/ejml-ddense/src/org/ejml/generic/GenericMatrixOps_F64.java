@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,16 +35,15 @@ public class GenericMatrixOps_F64 {
 //        return ret;
 //    }
 
-    public static boolean isEquivalent(DMatrix a , DMatrix b , double tol )
-    {
-        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
+    public static boolean isEquivalent( DMatrix a, DMatrix b, double tol ) {
+        if (a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols())
             return false;
 
-        for( int i = 0; i < a.getNumRows(); i++ ) {
-            for( int j = 0; j < a.getNumCols(); j++ ) {
-                double diff = Math.abs(a.get(i,j) - b.get(i,j));
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++) {
+                double diff = Math.abs(a.get(i, j) - b.get(i, j));
 
-                if( diff > tol )
+                if (diff > tol)
                     return false;
             }
         }
@@ -60,15 +59,14 @@ public class GenericMatrixOps_F64 {
      * @param tol How close to zero or one each element needs to be.
      * @return If it is within tolerance to an identity matrix.
      */
-    public static boolean isIdentity(DMatrix a , double tol )
-    {
-        for( int i = 0; i < a.getNumRows(); i++ ) {
-            for( int j = 0; j < a.getNumCols(); j++ ) {
-                if( i == j ) {
-                    if( Math.abs(a.get(i,j)-1.0) > tol )
+    public static boolean isIdentity( DMatrix a, double tol ) {
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++) {
+                if (i == j) {
+                    if (Math.abs(a.get(i, j) - 1.0) > tol)
                         return false;
                 } else {
-                    if( Math.abs(a.get(i,j)) > tol )
+                    if (Math.abs(a.get(i, j)) > tol)
                         return false;
                 }
             }
@@ -76,26 +74,25 @@ public class GenericMatrixOps_F64 {
         return true;
     }
 
-    public static boolean isEquivalentTriangle(boolean upper , DMatrix a , DMatrix b , double tol )
-    {
-        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
+    public static boolean isEquivalentTriangle( boolean upper, DMatrix a, DMatrix b, double tol ) {
+        if (a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols())
             return false;
 
-        if( upper ) {
-            for( int i = 0; i < a.getNumRows(); i++ ) {
-                for( int j = i; j < a.getNumCols(); j++ ) {
-                    double diff = Math.abs(a.get(i,j) - b.get(i,j));
+        if (upper) {
+            for (int i = 0; i < a.getNumRows(); i++) {
+                for (int j = i; j < a.getNumCols(); j++) {
+                    double diff = Math.abs(a.get(i, j) - b.get(i, j));
 
-                    if( diff > tol )
+                    if (diff > tol)
                         return false;
                 }
             }
         } else {
-            for( int j = 0; j < a.getNumCols(); j++ ) {
-                for( int i = j; i < a.getNumRows(); i++ ) {
-                    double diff = Math.abs(a.get(i,j) - b.get(i,j));
+            for (int j = 0; j < a.getNumCols(); j++) {
+                for (int i = j; i < a.getNumRows(); i++) {
+                    double diff = Math.abs(a.get(i, j) - b.get(i, j));
 
-                    if( diff > tol )
+                    if (diff > tol)
                         return false;
                 }
             }
@@ -104,24 +101,22 @@ public class GenericMatrixOps_F64 {
         return true;
     }
 
-    public static void copy(DMatrix from , DMatrix to )
-    {
+    public static void copy( DMatrix from, DMatrix to ) {
         int numCols = from.getNumCols();
         int numRows = from.getNumRows();
 
-        for( int i = 0; i < numRows; i++ ) {
-            for( int j = 0; j < numCols; j++ ) {
-                to.set(i,j,from.get(i,j));
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                to.set(i, j, from.get(i, j));
             }
         }
     }
 
-    public static void setRandom(DMatrix a , double min , double max , Random rand )
-    {
-        for( int i = 0; i < a.getNumRows(); i++ ) {
-            for( int j = 0; j < a.getNumCols(); j++ ) {
-                double val = rand.nextDouble()*(max-min)+min;
-                a.set(i,j,val);
+    public static void setRandom( DMatrix a, double min, double max, Random rand ) {
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++) {
+                double val = rand.nextDouble()*(max - min) + min;
+                a.set(i, j, val);
             }
         }
     }

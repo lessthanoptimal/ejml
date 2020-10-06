@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,6 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
 /**
  * <p>
  * The pseudo-inverse is typically used to solve over determined system for which there is no unique solution.<br>
@@ -48,13 +47,13 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
     private SingularValueDecomposition_F64<DMatrixRMaj> svd;
 
     // the results of the pseudo-inverse
-    private DMatrixRMaj pinv = new DMatrixRMaj(1,1);
+    private DMatrixRMaj pinv = new DMatrixRMaj(1, 1);
 
     // relative threshold used to select singular values
     private double threshold = UtilEjml.EPS;
 
     // Internal workspace
-    private DMatrixRMaj U_t=new DMatrixRMaj(1,1),V=new DMatrixRMaj(1,1);
+    private DMatrixRMaj U_t = new DMatrixRMaj(1, 1), V = new DMatrixRMaj(1, 1);
 
     /**
      * Creates a new solver targeted at the specified matrix size.
@@ -62,84 +61,84 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
      * @param maxRows The expected largest matrix it might have to process.  Can be larger.
      * @param maxCols The expected largest matrix it might have to process.  Can be larger.
      */
-    public SolvePseudoInverseSvd_DDRM(int maxRows, int maxCols) {
+    public SolvePseudoInverseSvd_DDRM( int maxRows, int maxCols ) {
 
-        svd = DecompositionFactory_DDRM.svd(maxRows,maxCols,true,true,true);
+        svd = DecompositionFactory_DDRM.svd(maxRows, maxCols, true, true, true);
     }
 
     /**
      * Creates a solver targeted at matrices around 100x100
      */
     public SolvePseudoInverseSvd_DDRM() {
-        this(100,100);
+        this(100, 100);
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
-        pinv.reshape(A.numCols,A.numRows,false);
+    public boolean setA( DMatrixRMaj A ) {
+        pinv.reshape(A.numCols, A.numRows, false);
 
-        if( !svd.decompose(A) )
+        if (!svd.decompose(A))
             return false;
 
-        svd.getU(U_t,true);
-        svd.getV(V,false);
-        double []S = svd.getSingularValues();
-        int N = Math.min(A.numRows,A.numCols);
+        svd.getU(U_t, true);
+        svd.getV(V, false);
+        double[] S = svd.getSingularValues();
+        int N = Math.min(A.numRows, A.numCols);
 
         // compute the threshold for singular values which are to be zeroed
         double maxSingular = 0;
-        for( int i = 0; i < N; i++ ) {
-            if( S[i] > maxSingular )
+        for (int i = 0; i < N; i++) {
+            if (S[i] > maxSingular)
                 maxSingular = S[i];
         }
 
-        double tau = threshold*Math.max(A.numCols,A.numRows)*maxSingular;
+        double tau = threshold*Math.max(A.numCols, A.numRows)*maxSingular;
 
         // computer the pseudo inverse of A
-        if( maxSingular != 0.0 ) {
+        if (maxSingular != 0.0) {
             for (int i = 0; i < N; i++) {
                 double s = S[i];
                 if (s < tau)
                     S[i] = 0;
                 else
-                    S[i] = 1.0 / S[i];
+                    S[i] = 1.0/S[i];
             }
         }
 
         // V*W
-        for( int i = 0; i < V.numRows; i++ ) {
+        for (int i = 0; i < V.numRows; i++) {
             int index = i*V.numCols;
-            for( int j = 0; j < V.numCols; j++ ) {
+            for (int j = 0; j < V.numCols; j++) {
                 V.data[index++] *= S[j];
             }
         }
 
         // V*W*U^T
-        CommonOps_DDRM.mult(V,U_t, pinv);
+        CommonOps_DDRM.mult(V, U_t, pinv);
 
         return true;
     }
 
     @Override
     public /**/double quality() {
-        double []S = svd.getSingularValues();
-        int N = Math.min(pinv.numRows,pinv.numCols);
+        double[] S = svd.getSingularValues();
+        int N = Math.min(pinv.numRows, pinv.numCols);
         double min = S[0];
         double max = min;
         for (int i = 0; i < N; i++) {
-            min = Math.min(min,S[i]);
-            max = Math.max(max,S[i]);
+            min = Math.min(min, S[i]);
+            max = Math.max(max, S[i]);
         }
         return min/max;
     }
 
     @Override
-    public void solve(DMatrixRMaj b, DMatrixRMaj x) {
-        CommonOps_DDRM.mult(pinv,b,x);
+    public void solve( DMatrixRMaj b, DMatrixRMaj x ) {
+        CommonOps_DDRM.mult(pinv, b, x);
     }
 
     @Override
-    public void invert(DMatrixRMaj A_inv) {
+    public void invert( DMatrixRMaj A_inv ) {
         A_inv.set(pinv);
     }
 
@@ -160,9 +159,10 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
 
     /**
      * Specify the relative threshold used to select singular values.  By default it's UtilEjml.EPS.
+     *
      * @param threshold The singular value threshold
      */
-    public void setThreshold(double threshold) {
+    public void setThreshold( double threshold ) {
         this.threshold = threshold;
     }
 

@@ -22,7 +22,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * <p>
  * The effects of adding and removing rows from the A matrix in a QR decomposition can
@@ -36,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  * Q &isin; &real; <sup>m &times; m</sup> is orthogonal, and R &isin; &real; <sup>m &times; n</sup> is
  * upper triangular.
  * </p>
- * 
+ *
  * <p>
  * ** IMPORTANT USAGE NOTE ** If auto grow is set to true then the internal data structures will grow automatically
  * to accommodate the matrices passed in.  When adding elements to the decomposition the matrices must have enough
@@ -48,26 +47,27 @@ import org.jetbrains.annotations.Nullable;
  * It is also possible to add and remove columns efficiently, but this is less common and is not supported at
  * this time.
  * </p>
+ *
  * @author Peter Abeles
  */
 @SuppressWarnings("NullAway")
 public class QrUpdate_DDRM {
 
     // the decomposition that is being adjusted
-    private @Nullable DMatrixRMaj Q,R;
+    private @Nullable DMatrixRMaj Q, R;
     // product of planar multiplications
     private DMatrixRMaj U_tran; // using transpose of U reduces cache misses
     private DMatrixRMaj Qm;
 
     // used to temporarially store data
-    private double r_row[];
+    private double[] r_row;
 
     // it can process matrices up to this size
     private int maxCols;
     private int maxRows;
 
     // number of rows and columns in the original A matrix that was decomposed
-    private int m,n;
+    private int m, n;
     // number of rows in the adjusted matrices
     private int m_m;
 
@@ -79,7 +79,7 @@ public class QrUpdate_DDRM {
      * Creates an update which can decompose matrices up to the specified size.  Autogrow
      * is set to false.
      */
-    public QrUpdate_DDRM(int maxRows , int maxCols ) {
+    public QrUpdate_DDRM( int maxRows, int maxCols ) {
         autoGrow = false;
         declareInternalData(maxRows, maxCols);
     }
@@ -88,7 +88,7 @@ public class QrUpdate_DDRM {
      * Creates an update which can decompose matrices up to the specified size.  Autogrow
      * is configurable.
      */
-    public QrUpdate_DDRM(int maxRows , int maxCols , boolean autoGrow ) {
+    public QrUpdate_DDRM( int maxRows, int maxCols, boolean autoGrow ) {
         this.autoGrow = autoGrow;
         declareInternalData(maxRows, maxCols);
     }
@@ -96,21 +96,21 @@ public class QrUpdate_DDRM {
     /**
      * Does not predeclare data and it will autogrow.
      */
-    public QrUpdate_DDRM(){
+    public QrUpdate_DDRM() {
         autoGrow = true;
     }
 
     /**
      * Declares the internal data structures so that it can process matrices up to the specified size.
      */
-    public void declareInternalData(int maxRows, int maxCols) {
+    public void declareInternalData( int maxRows, int maxCols ) {
         this.maxRows = maxRows;
         this.maxCols = maxCols;
 
-        U_tran = new DMatrixRMaj(maxRows,maxRows);
-        Qm = new DMatrixRMaj(maxRows,maxRows);
+        U_tran = new DMatrixRMaj(maxRows, maxRows);
+        Qm = new DMatrixRMaj(maxRows, maxRows);
 
-        r_row = new double[ maxCols ];
+        r_row = new double[maxCols];
     }
 
     /**
@@ -134,21 +134,21 @@ public class QrUpdate_DDRM {
      * @param rowIndex Which row index it is to be inserted at.
      * @param resizeR Should the number of rows in R be changed?  The additional rows are all zero.
      */
-    public void addRow(DMatrixRMaj Q , DMatrixRMaj R , double []row , int rowIndex , boolean resizeR ) {
+    public void addRow( DMatrixRMaj Q, DMatrixRMaj R, double[] row, int rowIndex, boolean resizeR ) {
         // memory management and check precoditions
-        setQR(Q,R,1);
-        m_m = m+1;
+        setQR(Q, R, 1);
+        m_m = m + 1;
 
-        if( Q.data.length < m_m*m_m )
+        if (Q.data.length < m_m*m_m)
             throw new IllegalArgumentException("Q matrix does not have enough data to grow");
 
-        if( resizeR && R.data.length < m_m*n )
+        if (resizeR && R.data.length < m_m*n)
             throw new IllegalArgumentException("R matrix does not have enough data to grow");
 
-        if( resizeR )
-            R.reshape(m_m,n, false);
+        if (resizeR)
+            R.reshape(m_m, n, false);
 
-        U_tran.reshape(m_m,m_m, false);
+        U_tran.reshape(m_m, m_m, false);
 
         // apply givens rotation to the first two rows of the augmented R matrix
         applyFirstGivens(row);
@@ -176,18 +176,18 @@ public class QrUpdate_DDRM {
      * @param rowIndex Which index of the row that is being removed.
      * @param resizeR should the shape of R be adjusted?
      */
-    public void deleteRow(DMatrixRMaj Q , DMatrixRMaj R , int rowIndex , boolean resizeR ) {
-        setQR(Q,R,0);
-        if( m - 1 < n ) {
+    public void deleteRow( DMatrixRMaj Q, DMatrixRMaj R, int rowIndex, boolean resizeR ) {
+        setQR(Q, R, 0);
+        if (m - 1 < n) {
             throw new IllegalArgumentException("Removing any row would make the system under determined.");
         }
 
         m_m = m - 1;
-        U_tran.reshape(m,m, false);
+        U_tran.reshape(m, m, false);
 
-        if( resizeR )
-            R.reshape(m_m,n, false);
-        
+        if (resizeR)
+            R.reshape(m_m, n, false);
+
         computeRemoveGivens(rowIndex);
         updateRemoveQ(rowIndex);
 
@@ -200,12 +200,12 @@ public class QrUpdate_DDRM {
     /**
      * Provides the results of a QR decomposition.  These will be modified by adding or removing
      * rows from the original 'A' matrix.
-     * 
+     *
      * @param Q The Q matrix which is to be modified.  Is modified later and reference saved.
      * @param R The R matrix which is to be modified.  Is modified later and reference saved.
      */
-    private void setQR(DMatrixRMaj Q , DMatrixRMaj R , int growRows ) {
-        if( Q.numRows != Q.numCols ) {
+    private void setQR( DMatrixRMaj Q, DMatrixRMaj R, int growRows ) {
+        if (Q.numRows != Q.numCols) {
             throw new IllegalArgumentException("Q should be square.");
         }
 
@@ -215,9 +215,9 @@ public class QrUpdate_DDRM {
         m = Q.numRows;
         n = R.numCols;
 
-        if( m+growRows > maxRows || n > maxCols ) {
-            if( autoGrow ) {
-                declareInternalData(m+growRows,n);
+        if (m + growRows > maxRows || n > maxCols) {
+            if (autoGrow) {
+                declareInternalData(m + growRows, n);
             } else {
                 throw new IllegalArgumentException("Autogrow has been set to false and the maximum number of rows" +
                         " or columns has been exceeded.");
@@ -232,29 +232,29 @@ public class QrUpdate_DDRM {
      */
     private void updateInsertQ( int rowIndex ) {
         Qm.set(Q);
-        Q.reshape(m_m,m_m, false);
+        Q.reshape(m_m, m_m, false);
 
-        for( int i = 0; i < rowIndex; i++ ) {
-            for( int j = 0; j < m_m; j++ ) {
+        for (int i = 0; i < rowIndex; i++) {
+            for (int j = 0; j < m_m; j++) {
                 double sum = 0;
-                for( int k = 0; k < m; k++ ) {
-                    sum += Qm.data[i*m+k]* U_tran.data[j*m_m+k+1];
+                for (int k = 0; k < m; k++) {
+                    sum += Qm.data[i*m + k]*U_tran.data[j*m_m + k + 1];
                 }
-                Q.data[i*m_m+j] = sum;
+                Q.data[i*m_m + j] = sum;
             }
         }
 
-        for( int j = 0; j < m_m; j++ ) {
-            Q.data[rowIndex*m_m+j] = U_tran.data[j*m_m];
+        for (int j = 0; j < m_m; j++) {
+            Q.data[rowIndex*m_m + j] = U_tran.data[j*m_m];
         }
 
-        for( int i = rowIndex+1; i < m_m; i++ ) {
-            for( int j = 0; j < m_m; j++ ) {
+        for (int i = rowIndex + 1; i < m_m; i++) {
+            for (int j = 0; j < m_m; j++) {
                 double sum = 0;
-                for( int k = 0; k < m; k++ ) {
-                    sum += Qm.data[(i-1)*m+k]* U_tran.data[j*m_m+k+1];
+                for (int k = 0; k < m; k++) {
+                    sum += Qm.data[(i - 1)*m + k]*U_tran.data[j*m_m + k + 1];
                 }
-                Q.data[i*m_m+j] = sum;
+                Q.data[i*m_m + j] = sum;
             }
         }
     }
@@ -265,25 +265,25 @@ public class QrUpdate_DDRM {
      */
     private void updateRemoveQ( int rowIndex ) {
         Qm.set(Q);
-        Q.reshape(m_m,m_m, false);
+        Q.reshape(m_m, m_m, false);
 
-        for( int i = 0; i < rowIndex; i++ ) {
-            for( int j = 1; j < m; j++ ) {
+        for (int i = 0; i < rowIndex; i++) {
+            for (int j = 1; j < m; j++) {
                 double sum = 0;
-                for( int k = 0; k < m; k++ ) {
-                    sum += Qm.data[i*m+k]* U_tran.data[j*m+k];
+                for (int k = 0; k < m; k++) {
+                    sum += Qm.data[i*m + k]*U_tran.data[j*m + k];
                 }
-                Q.data[i*m_m+j-1] = sum;
+                Q.data[i*m_m + j - 1] = sum;
             }
         }
 
-        for( int i = rowIndex+1; i < m; i++ ) {
-            for( int j = 1; j < m; j++ ) {
+        for (int i = rowIndex + 1; i < m; i++) {
+            for (int j = 1; j < m; j++) {
                 double sum = 0;
-                for( int k = 0; k < m; k++ ) {
-                    sum += Qm.data[i*m+k]* U_tran.data[j*m+k];
+                for (int k = 0; k < m; k++) {
+                    sum += Qm.data[i*m + k]*U_tran.data[j*m + k];
                 }
-                Q.data[(i-1)*m_m+j-1] = sum;
+                Q.data[(i - 1)*m_m + j - 1] = sum;
             }
         }
     }
@@ -292,35 +292,34 @@ public class QrUpdate_DDRM {
      * Updates the R matrix to take in account the removed row.
      */
     private void updateRemoveR() {
-        for( int i = 1; i < n+1; i++ ) {
-            for( int j = 0; j < n; j++ ) {
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < n; j++) {
                 double sum = 0;
-                for( int k = i-1; k <= j; k++ ) {
-                    sum += U_tran.data[i*m+k] * R.data[k*n+j];
+                for (int k = i - 1; k <= j; k++) {
+                    sum += U_tran.data[i*m + k]*R.data[k*n + j];
                 }
-                R.data[(i-1)*n+j] = sum;
+                R.data[(i - 1)*n + j] = sum;
             }
         }
     }
 
-    private void applyFirstGivens(double[] row) {
-        double c,s;
+    private void applyFirstGivens( double[] row ) {
+        double c, s;
         double xi = row[0];
         double xj = R.data[0];
 
         double r = xi*xi + xj*xj;
-        if( r != 0 ) {
+        if (r != 0) {
             r = Math.sqrt(r);
             c = xi/r;
             s = xj/r;
-
         } else {
             c = 1;
             s = 0;
         }
 
         R.data[0] = r;
-        for( int col = 1; col < n; col++ ) {
+        for (int col = 1; col < n; col++) {
             double vali = row[col];
             double valj = R.data[col];
 
@@ -333,62 +332,59 @@ public class QrUpdate_DDRM {
         U_tran.data[0] = c;
         U_tran.data[1] = s;
         U_tran.data[m_m] = -s;
-        U_tran.data[m_m+1] = c;
+        U_tran.data[m_m + 1] = c;
     }
 
-    private void applyLaterGivens()
-    {
-        for( int row = 1; row < n; row++ ) {
+    private void applyLaterGivens() {
+        for (int row = 1; row < n; row++) {
             // first compute the rotation
-            double c,s;
+            double c, s;
             double xi = r_row[row];
-            double xj = R.data[n*row+row];
+            double xj = R.data[n*row + row];
 
             double r = xi*xi + xj*xj;
-            if( r != 0 ) {
+            if (r != 0) {
                 r = Math.sqrt(r);
                 c = xi/r;
                 s = xj/r;
-
             } else {
                 c = 1;
                 s = 0;
             }
 
             // update R matrix
-            R.data[n*row+row] = r;
-            for( int col = row+1; col < n; col++ ) {
+            R.data[n*row + row] = r;
+            for (int col = row + 1; col < n; col++) {
                 double vali = r_row[col];
-                double valj = R.data[n*row+col];
+                double valj = R.data[n*row + col];
 
-                R.data[n*row+col] = c*vali + s*valj;
+                R.data[n*row + col] = c*vali + s*valj;
                 r_row[col] = c*valj - s*vali;
             }
 
             // compute U^T = U^T_(x+1) * U^T_x
-            for( int col = 0; col <= row+1; col++ ) {
-                double q1 = U_tran.data[row*m_m+col];
-                double q2 = U_tran.data[(row+1)*m_m+col];
+            for (int col = 0; col <= row + 1; col++) {
+                double q1 = U_tran.data[row*m_m + col];
+                double q2 = U_tran.data[(row + 1)*m_m + col];
 
-                U_tran.data[row*m_m+col] = c*q1 + s*q2;
-                U_tran.data[(row+1)*m_m+col] = c*q2 - s*q1;
+                U_tran.data[row*m_m + col] = c*q1 + s*q2;
+                U_tran.data[(row + 1)*m_m + col] = c*q2 - s*q1;
             }
         }
     }
 
-    private void computeRemoveGivens(int selectedRow )
-    {
+    private void computeRemoveGivens( int selectedRow ) {
         CommonOps_DDRM.setIdentity(U_tran);
 
-        double xj = Q.data[selectedRow*m+m-1];
+        double xj = Q.data[selectedRow*m + m - 1];
 
-        for( int j = m-2; j >= 0; j-- ) {
+        for (int j = m - 2; j >= 0; j--) {
             // first compute the rotation
-            double c,s;
-            double xi = Q.data[selectedRow*m+j];
+            double c, s;
+            double xi = Q.data[selectedRow*m + j];
 
             double r = xi*xi + xj*xj;
-            if( r != 0 ) {
+            if (r != 0) {
                 r = Math.sqrt(r);
                 c = xi/r;
                 s = xj/r;
@@ -401,12 +397,12 @@ public class QrUpdate_DDRM {
             xj = r;
 
             // compute U^T = U^T_(x+1) * U^T_x
-            for( int col = j; col < m; col++ ) {
-                double q1 = U_tran.data[j*m+col];
-                double q2 = U_tran.data[(j+1)*m+col];
+            for (int col = j; col < m; col++) {
+                double q1 = U_tran.data[j*m + col];
+                double q2 = U_tran.data[(j + 1)*m + col];
 
-                U_tran.data[j*m+col] = c*q1 + s*q2;
-                U_tran.data[(j+1)*m+col] = c*q2 - s*q1;
+                U_tran.data[j*m + col] = c*q1 + s*q2;
+                U_tran.data[(j + 1)*m + col] = c*q2 - s*q1;
             }
         }
     }

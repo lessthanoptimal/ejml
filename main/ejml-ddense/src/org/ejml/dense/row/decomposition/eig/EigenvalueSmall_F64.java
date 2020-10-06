@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,6 @@ package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.data.Complex_F64;
 
-
 /**
  * @author Peter Abeles
  */
@@ -30,21 +29,20 @@ public class EigenvalueSmall_F64 {
     public Complex_F64 value1 = new Complex_F64();
 
     // if |a11-a22| >> |a12+a21| there might be a better way.  see pg371
-    public void value2x2( double a11 , double a12, double a21 , double a22 )
-    {
+    public void value2x2( double a11, double a12, double a21, double a22 ) {
         // apply a rotators such that th a11 and a22 elements are the same
-        double c,s;
+        double c, s;
 
-        if( a12 + a21 == 0 ) { // is this pointless since
+        if (a12 + a21 == 0) { // is this pointless since
             c = s = 1.0 / Math.sqrt(2);
         } else {
-            double aa = (a11-a22);
-            double bb = (a12+a21);
+            double aa = (a11 - a22);
+            double bb = (a12 + a21);
 
             double t_hat = aa/bb;
-            double t = t_hat/(1.0 + Math.sqrt(1.0+t_hat*t_hat));
+            double t = t_hat/(1.0 + Math.sqrt(1.0 + t_hat*t_hat));
 
-            c = 1.0/ Math.sqrt(1.0+t*t);
+            c = 1.0 / Math.sqrt(1.0 + t*t);
             s = c*t;
         }
 
@@ -52,19 +50,19 @@ public class EigenvalueSmall_F64 {
         double s2 = s*s;
         double cs = c*s;
 
-        double b11 = c2*a11 + s2*a22 - cs*(a12+a21);
-        double b12 = c2*a12 - s2*a21 + cs*(a11-a22);
-        double b21 = c2*a21 - s2*a12 + cs*(a11-a22);
+        double b11 = c2*a11 + s2*a22 - cs*(a12 + a21);
+        double b12 = c2*a12 - s2*a21 + cs*(a11 - a22);
+        double b21 = c2*a21 - s2*a12 + cs*(a11 - a22);
 //        double b22 = c2*a22 + s2*a11 + cs*(a12+a21);
 
         // apply second rotator to make A upper triangular if real eigenvalues
-        if( b21*b12 >= 0 ) {
-            if( b12 == 0 ) {
+        if (b21*b12 >= 0) {
+            if (b12 == 0) {
                 c = 0;
                 s = 1;
             } else {
-                s = Math.sqrt(b21/(b12+b21));
-                c = Math.sqrt(b12/(b12+b21));
+                s = Math.sqrt(b21/(b12 + b21));
+                c = Math.sqrt(b12/(b12 + b21));
             }
 
 //            c2 = b12;//c*c;
@@ -80,7 +78,6 @@ public class EigenvalueSmall_F64 {
             value1.real = a22;
 
             value0.imaginary = value1.imaginary = 0;
-
         } else {
             value0.real = value1.real = b11;
             value0.imaginary = Math.sqrt(-b21*b12);
@@ -92,19 +89,18 @@ public class EigenvalueSmall_F64 {
      * Computes the eigenvalues of a 2 by 2 matrix using a faster but more prone to errors method.  This
      * is the typical method.
      */
-    public void value2x2_fast( double a11 , double a12, double a21 , double a22 )
-    {
-        double left = (a11+a22)/2.0;
-        double inside = 4.0*a12*a21 + (a11-a22)*(a11-a22);
+    public void value2x2_fast( double a11, double a12, double a21, double a22 ) {
+        double left = (a11 + a22)/2.0;
+        double inside = 4.0*a12*a21 + (a11 - a22)*(a11 - a22);
 
-        if( inside < 0 ) {
+        if (inside < 0) {
             value0.real = value1.real = left;
             value0.imaginary = Math.sqrt(-inside)/2.0;
             value1.imaginary = -value0.imaginary;
         } else {
             double right = Math.sqrt(inside)/2.0;
-            value0.real = (left+right);
-            value1.real = (left-right);
+            value0.real = (left + right);
+            value1.real = (left - right);
             value0.imaginary = value1.imaginary = 0.0;
         }
     }
@@ -113,8 +109,7 @@ public class EigenvalueSmall_F64 {
      * Compute the symmetric eigenvalue using a slightly safer technique
      */
     // See page 385 of Fundamentals of Matrix Computations 2nd
-    public void symm2x2_fast( double a11 , double a12, double a22 )
-    {
+    public void symm2x2_fast( double a11, double a12, double a22 ) {
 //        double p = (a11 - a22)*0.5;
 //        double r = Math.sqrt(p*p + a12*a12);
 //
@@ -124,11 +119,10 @@ public class EigenvalueSmall_F64 {
 //
 //    public void symm2x2_std( double a11 , double a12, double a22 )
 //    {
-        double left  = (a11+a22)*0.5;
-        double b     = (a11-a22)*0.5;
-        double right = Math.sqrt(b*b+a12*a12);
+        double left = (a11 + a22)*0.5;
+        double b = (a11 - a22)*0.5;
+        double right = Math.sqrt(b*b + a12*a12);
         value0.real = left + right;
         value1.real = left - right;
     }
-
 }

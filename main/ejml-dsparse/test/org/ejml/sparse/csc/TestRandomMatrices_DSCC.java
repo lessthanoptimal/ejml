@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,23 +36,22 @@ public class TestRandomMatrices_DSCC {
     int numCols = 7;
 
     @Test
-    public void uniform() {
+    void rectangle() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows, numCols, 10, -1, 1, rand);
 
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows,numCols,10,-1,1,rand);
-
-        assertEquals(numRows,a.numRows);
-        assertEquals(numCols,a.numCols);
-        assertEquals(10,a.nz_length);
+        assertEquals(numRows, a.numRows);
+        assertEquals(numCols, a.numCols);
+        assertEquals(10, a.nz_length);
         assertTrue(CommonOps_DSCC.checkStructure(a));
 
         int count = 0;
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                double value = a.get(row,col);
+                double value = a.get(row, col);
 
-                if( value == 0 )
+                if (value == 0)
                     continue;
-                if( value > 1 || value < -1 )
+                if (value > 1 || value < -1)
                     fail("Out of expected range");
                 count++;
             }
@@ -62,21 +61,30 @@ public class TestRandomMatrices_DSCC {
         assertTrue(CommonOps_DSCC.checkSortedFlag(a));
     }
 
+    /**
+     * There was a bug where the rows and columns multiplied together caused an overflow
+     */
     @Test
-    public void createLowerTriangular() {
+    void rectangle_large() {
+        assertThrows(IllegalArgumentException.class, () ->
+                RandomMatrices_DSCC.rectangle(1_000_000, 1_000_000, 10, -1, 1, rand));
+    }
+
+    @Test
+    void createLowerTriangular() {
         DMatrixSparseCSC L;
         for (int trial = 0; trial < 20; trial++) {
-            for( int length : new int[]{0,2,6,12,20} ) {
-                L = RandomMatrices_DSCC.triangleLower(6, 0, length,-1,1, rand);
+            for (int length : new int[]{0, 2, 6, 12, 20}) {
+                L = RandomMatrices_DSCC.triangleLower(6, 0, length, -1, 1, rand);
 
-                assertEquals(Math.max(6,length),L.nz_length);
+                assertEquals(Math.max(6, length), L.nz_length);
                 assertTrue(CommonOps_DSCC.checkStructure(L));
-                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, 0.0 ));
+                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L, 0, 0.0));
 
-                L = RandomMatrices_DSCC.triangleLower(6, 1, length,-1,1, rand);
-                assertEquals(Math.max(5,length),L.nz_length);
+                L = RandomMatrices_DSCC.triangleLower(6, 1, length, -1, 1, rand);
+                assertEquals(Math.max(5, length), L.nz_length);
                 assertTrue(CommonOps_DSCC.checkStructure(L));
-                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, 0.0 ));
+                assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L, 1, 0.0));
 
                 assertFalse(CommonOps_DSCC.checkDuplicateElements(L));
             }
@@ -84,27 +92,49 @@ public class TestRandomMatrices_DSCC {
     }
 
     @Test
-    public void symmetric() {
+    void symmetric() {
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
-                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5+0.1)+0.5);
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N,  nz,-1,1, rand);
+                int nz = (int)(N*N*0.5*(rand.nextDouble()*0.5 + 0.1) + 0.5);
+                nz = Math.max(1,nz);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetric(N, nz, -1, 1, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
 
+                // Sanity check to see if it's obeying the requested number of non-zero elements
+                assertTrue(A.nz_length >= nz && A.nz_length <= 2*nz);
+
                 // Check the matrix properties
-                assertTrue(MatrixFeatures_DSCC.isSymmetric(A,UtilEjml.TEST_F64));
+                assertTrue(MatrixFeatures_DSCC.isSymmetric(A, UtilEjml.TEST_F64));
             }
         }
     }
 
+    /**
+     * There was a bug where the rows and columns multiplied together caused an overflow
+     */
     @Test
-    public void symmetricPosDef() {
+    void symmetric_large() {
+        assertThrows(IllegalArgumentException.class, () ->
+                RandomMatrices_DSCC.symmetric(1_000_000, 10, -1, 1, rand));
+    }
+
+    @Test
+    void symmetricPosDef() {
+        double probabilityZero = 0.25;
+
         for (int N = 1; N <= 10; N++) {
             for (int mc = 0; mc < 30; mc++) {
-                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N,0.25,rand);
+                DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(N, probabilityZero, rand);
 
                 assertTrue(CommonOps_DSCC.checkStructure(A));
+
+                // The upper limit is  bit fuzzy. This really just checks to see if it's exceeded by an extreme amount
+                assertTrue(A.nz_length <= (int)Math.ceil(N*N*(1.0-probabilityZero))+N);
+
+                // Extremely crude check to see if the size is above a lower limit. In theory it could be full of
+                // zeros and that would still be valid.
+                assertTrue(A.nz_length >= N*N*(probabilityZero/5.0));
 
                 assertTrue(MatrixFeatures_DSCC.isPositiveDefinite(A));
             }

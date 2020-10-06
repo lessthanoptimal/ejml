@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -74,23 +74,18 @@ subprojects {
 
         generate {
             java { srcDir 'generate' }
-//            compileClasspath += sourceSets.main.runtimeClasspath
         }
 
-        benchmark {
+        benchmarks {
             java { srcDir 'benchmarks/src' }
             resources { srcDir 'benchmarks/resources' }
-            compileClasspath += sourceSets.main.runtimeClasspath
         }
 
         test {
             java {
                 srcDir 'test'
-                srcDir 'benchmarks/test'
             }
             resources { srcDir 'resources/test' }
-            compileClasspath += sourceSets.benchmark.runtimeClasspath
-
         }
     }
 
@@ -103,26 +98,30 @@ subprojects {
         testImplementation( 'org.junit.jupiter:junit-jupiter-params:5.4.0' )
         testRuntimeOnly( 'org.junit.jupiter:junit-jupiter-engine:5.4.0' )
 
-        ['core','generator-annprocess'].each { String a->
-            benchmarkCompile('org.openjdk.jmh:jmh-'+a+':1.19')
-        }
         generateCompile project(':main:autocode')
 
         // needed to use Java 11+ syntax with Java 1.8 byte code
-        annotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.2.0'){
+        annotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.2.0') {
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
         annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
         annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
 
-        errorprone "com.google.errorprone:error_prone_core:2.4.0"
-        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+        errorprone "com.google.errorprone:error_prone_core:2.4.0"   // adds benchmarks/generated to sourceSet
+        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1" // annoying...
+
+        benchmarksImplementation project.sourceSets.main.runtimeClasspath
+        benchmarksImplementation project.sourceSets.main.compileClasspath
+        ['1.19'].each { String a->// don't upgrade to 1.21! much slower
+            benchmarksCompile('org.openjdk.jmh:jmh-core:'+a)
+            benchmarksAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:'+a
+        }
 
         // even if it's not used you still need to include the dependency
         annotationProcessor "com.uber.nullaway:nullaway:0.8.0"
         testAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
-        benchmarkAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
+        benchmarksAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
         generateAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
     }
 
@@ -142,7 +141,7 @@ subprojects {
     // for vectors or scalars. Perhaps a more verbose name should be used but it's disabled for now to reduce build spam
     tasks.withType(JavaCompile).configureEach {
         options.errorprone.enabled = false
-        if( path.contains("experimental") )
+        if( path.contains("benchmarks") )
             return
         if( path.contains("example") )
             return

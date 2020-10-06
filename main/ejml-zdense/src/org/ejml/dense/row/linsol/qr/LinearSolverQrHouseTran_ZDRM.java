@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,6 @@ import org.ejml.dense.row.decompose.qr.QRDecompositionHouseholderTran_ZDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_ZDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
-
 /**
  * <p>
  * QR decomposition can be used to solve for systems.  However, this is not as computationally efficient
@@ -47,9 +46,9 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 @SuppressWarnings("NullAway.Init")
 public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
 
-    private QRDecompositionHouseholderTran_ZDRM decomposer;
+    private final QRDecompositionHouseholderTran_ZDRM decomposer;
 
-    private double []a;
+    private double[] a;
 
     protected int maxRows = -1;
     protected int maxCols = -1;
@@ -64,11 +63,11 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
         decomposer = new QRDecompositionHouseholderTran_ZDRM();
     }
 
-    public void setMaxSize( int maxRows , int maxCols )
-    {
-        this.maxRows = maxRows; this.maxCols = maxCols;
+    public void setMaxSize( int maxRows, int maxCols ) {
+        this.maxRows = maxRows;
+        this.maxCols = maxCols;
 
-        a = new double[ maxRows*2 ];
+        a = new double[maxRows*2];
     }
 
     /**
@@ -77,12 +76,12 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
      * @param A not modified.
      */
     @Override
-    public boolean setA(ZMatrixRMaj A) {
-        if( A.numRows > maxRows || A.numCols > maxCols )
-            setMaxSize(A.numRows,A.numCols);
+    public boolean setA( ZMatrixRMaj A ) {
+        if (A.numRows > maxRows || A.numCols > maxCols)
+            setMaxSize(A.numRows, A.numCols);
 
         _setA(A);
-        if( !decomposer.decompose(A) )
+        if (!decomposer.decompose(A))
             return false;
 
         QR = decomposer.getQR();
@@ -103,26 +102,25 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
      * @param X An n by m matrix where the solution is written to.  Modified.
      */
     @Override
-    public void solve(ZMatrixRMaj B, ZMatrixRMaj X) {
-        if( X.numRows != numCols )
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
-        else if( B.numRows != numRows || B.numCols != X.numCols )
+    public void solve( ZMatrixRMaj B, ZMatrixRMaj X ) {
+        if (B.numRows != numRows)
             throw new IllegalArgumentException("Unexpected dimensions for B");
+        X.reshape(numCols, B.numCols);
 
-        U = decomposer.getR(U,true);
+        U = decomposer.getR(U, true);
         final double[] gammas = decomposer.getGammas();
         final double[] dataQR = QR.data;
 
         final int BnumCols = B.numCols;
 
         // solve each column one by one
-        for( int colB = 0; colB < BnumCols; colB++ ) {
+        for (int colB = 0; colB < BnumCols; colB++) {
 
             // make a copy of this column in the vector
-            for( int i = 0; i < numRows; i++ ) {
+            for (int i = 0; i < numRows; i++) {
                 int indexB = (i*BnumCols + colB)*2;
-                a[i*2]   = B.data[indexB];
-                a[i*2+1] = B.data[indexB+1];
+                a[i*2] = B.data[indexB];
+                a[i*2 + 1] = B.data[indexB + 1];
             }
 
             // Solve Qa=b
@@ -130,19 +128,19 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
             // a = Q_{n-1}...Q_2*Q_1*b
             //
             // Q_n*b = (I-gamma*u*u^H)*b = b - u*(gamma*U^H*b)
-            for( int n = 0; n < numCols; n++ ) {
+            for (int n = 0; n < numCols; n++) {
                 int indexU = (n*numRows + n + 1)*2;
 
                 double realUb = a[n*2];
-                double imagUb = a[n*2+1];
+                double imagUb = a[n*2 + 1];
 
                 // U^H*b
-                for( int i = n+1; i < numRows; i++ ) {
+                for (int i = n + 1; i < numRows; i++) {
                     double realU = dataQR[indexU++];
                     double imagU = -dataQR[indexU++];
 
                     double realB = a[i*2];
-                    double imagB = a[i*2+1];
+                    double imagB = a[i*2 + 1];
 
                     realUb += realU*realB - imagU*imagB;
                     imagUb += realU*imagB + imagU*realB;
@@ -152,16 +150,16 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
                 realUb *= gammas[n];
                 imagUb *= gammas[n];
 
-                a[n*2]   -= realUb;
-                a[n*2+1] -= imagUb;
+                a[n*2] -= realUb;
+                a[n*2 + 1] -= imagUb;
 
                 indexU = (n*numRows + n + 1)*2;
-                for( int i = n+1; i < numRows; i++) {
+                for (int i = n + 1; i < numRows; i++) {
                     double realU = dataQR[indexU++];
                     double imagU = dataQR[indexU++];
 
-                    a[i*2]   -= realU*realUb - imagU*imagUb;
-                    a[i*2+1] -= realU*imagUb + imagU*realUb;
+                    a[i*2] -= realU*realUb - imagU*imagUb;
+                    a[i*2 + 1] -= realU*imagUb + imagU*realUb;
                 }
             }
 
@@ -170,11 +168,11 @@ public class LinearSolverQrHouseTran_ZDRM extends LinearSolverAbstract_ZDRM {
 
             // save the results
 
-            for( int i = 0; i < numCols; i++ ) {
-                int indexX = (i*X.numCols+colB)*2;
+            for (int i = 0; i < numCols; i++) {
+                int indexX = (i*X.numCols + colB)*2;
 
-                X.data[indexX]   = a[i*2];
-                X.data[indexX+1] = a[i*2+1];
+                X.data[indexX] = a[i*2];
+                X.data[indexX + 1] = a[i*2 + 1];
             }
         }
     }

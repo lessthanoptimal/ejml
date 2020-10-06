@@ -22,7 +22,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * <p>
  * An abstract class that provides some common functionality and a default implementation
@@ -33,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  * The extending class must explicity call {@link #_setA(DMatrixRMaj)}
  * inside of its {@link #setA} function.
  * </p>
- * 
+ *
  * @author Peter Abeles
  */
 public abstract class LinearSolverAbstract_DDRM implements LinearSolverDense<DMatrixRMaj> {
@@ -46,16 +45,16 @@ public abstract class LinearSolverAbstract_DDRM implements LinearSolverDense<DMa
         return A;
     }
 
-    protected void _setA(DMatrixRMaj A) {
+    protected void _setA( DMatrixRMaj A ) {
         this.A = A;
         this.numRows = A.numRows;
         this.numCols = A.numCols;
     }
 
     @Override
-    public void invert(DMatrixRMaj A_inv) {
-        if( A == null )
+    public void invert( DMatrixRMaj A_inv ) {
+        if (A == null)
             throw new RuntimeException("Must call setA() first");
-        InvertUsingSolve_DDRM.invert(this,A,A_inv);
+        InvertUsingSolve_DDRM.invert(this, A, A_inv);
     }
 }

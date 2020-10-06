@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,25 +16,16 @@
  * limitations under the License.
  */
 
-package org.ejml.simple;
+package org.ejml.dense.row.mult;
 
-import org.ejml.data.DMatrixRBlock;
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.CheckMultiThreadAgainstSingleThread;
 
 /**
  * @author Peter Abeles
  */
-public class UtilSimpleMatrix {
-    /**
-     * <p>Converts the block matrix into a SimpleMatrix.</p>
-     *
-     * @param A Block matrix that is being converted.  Not modified.
-     * @return Equivalent SimpleMatrix.
-     */
-    public static SimpleMatrix convertSimple( DMatrixRBlock A ) {
-        DMatrixRMaj B = ConvertDMatrixStruct.convert(A, null);
-
-        return SimpleMatrix.wrap(B);
+public class TestMatrixMatrixMult_MT_DDRM extends CheckMultiThreadAgainstSingleThread
+{
+    public TestMatrixMatrixMult_MT_DDRM() {
+        super(MatrixMatrixMult_DDRM.class, MatrixMatrixMult_MT_DDRM.class, 24);
     }
 }

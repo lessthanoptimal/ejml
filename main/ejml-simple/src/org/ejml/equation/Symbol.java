@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,7 +49,7 @@ public enum Symbol {
     SEMICOLON;
 
     public static Symbol lookup( char c ) {
-        switch( c ) {
+        switch (c) {
             case '.': return PERIOD;
             case ',': return COMMA;
             case '\'': return TRANSPOSE;
@@ -69,15 +69,15 @@ public enum Symbol {
             case ':': return COLON;
             case ';': return SEMICOLON;
         }
-        throw new RuntimeException("Unknown type "+c);
+        throw new RuntimeException("Unknown type " + c);
     }
 
     public static Symbol lookupElementWise( char c ) {
-        switch( c ) {
+        switch (c) {
             case '*': return ELEMENT_TIMES;
             case '/': return ELEMENT_DIVIDE;
             case '^': return ELEMENT_POWER;
         }
-        throw new RuntimeException("Unknown element-wise type "+c);
+        throw new RuntimeException("Unknown element-wise type " + c);
     }
 }

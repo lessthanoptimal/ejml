@@ -108,9 +108,9 @@ public abstract class GenericQrCheck_DDRM {
         // get the results from a provided matrix
         DMatrixRMaj Q_provided = RandomMatrices_DDRM.rectangle(height,height,rand);
         DMatrixRMaj R_provided = RandomMatrices_DDRM.rectangle(height,width,rand);
-        
-        assertTrue(R_provided == alg.getR(R_provided, false));
-        assertTrue(Q_provided == alg.getQ(Q_provided, false));
+
+        assertSame(R_provided, alg.getR(R_provided, false));
+        assertSame(Q_provided, alg.getQ(Q_provided, false));
 
         // get the results when no matrix is provided
         DMatrixRMaj Q_null = alg.getQ(null, false);
@@ -138,8 +138,8 @@ public abstract class GenericQrCheck_DDRM {
         alg.decompose((DMatrixRMaj)A.getMatrix());
 
         // check the case where it creates the matrix first
-        assertTrue(alg.getR(null,true).numRows == width);
-        assertTrue(alg.getR(null,false).numRows == height);
+        assertEquals(width, alg.getR(null, true).numRows);
+        assertEquals(height, alg.getR(null, false).numRows);
 
         // check the case where a matrix is provided
         alg.getR(new DMatrixRMaj(width,width),true);
@@ -185,10 +185,9 @@ public abstract class GenericQrCheck_DDRM {
 
         // try to extract it with the wrong dimensions
         Q = new SimpleMatrix(height,height, DMatrixRMaj.class);
-        try {
-            alg.getQ((DMatrixRMaj)Q.getMatrix(), true);
-            fail("Didn't fail");
-        } catch( RuntimeException e ) {}
+        alg.getQ((DMatrixRMaj)Q.getMatrix(), true);
+        assertEquals(height,Q.numRows());
+        assertEquals(width,Q.numCols());
     }
 
 }

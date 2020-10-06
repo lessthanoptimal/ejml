@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,19 +27,16 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
  * @author Peter Abeles
  */
 @SuppressWarnings("FloatingPointLiteralPrecision")
 public class TestUtilEjml {
-
     Random rand = new Random(23423);
 
-
     @Test
-    public void max_array() {
-        double[] a = new double[]{-1,2,3,4,5,6,3,4,5,7,8,2,3,-5,-6};
+    void max_array() {
+        double[] a = new double[]{-1, 2, 3, 4, 5, 6, 3, 4, 5, 7, 8, 2, 3, -5, -6};
 
         assertEquals(UtilEjml.max(a, 0, a.length), 8);
         assertEquals(UtilEjml.max(a, 6, 3), 5);
@@ -50,147 +47,154 @@ public class TestUtilEjml {
      * the results against the expect answer
      */
     @Test
-    public void parse_DDRM() {
+    void parse_DDRM() {
         String a = "-0.779094   1.682750\n" +
-                 "   1.304014  -1.880739\n";
+                "   1.304014  -1.880739\n";
 
-        DMatrixRMaj m = UtilEjml.parse_DDRM(a,2);
+        DMatrixRMaj m = UtilEjml.parse_DDRM(a, 2);
 
-        assertEquals(2,m.numCols);
-        assertEquals(2,m.numRows);
-        assertEquals(-0.779094 , m.get(0,0) , UtilEjml.TEST_F64);
-        assertEquals(1.682750  , m.get(0,1) , UtilEjml.TEST_F64);
-        assertEquals(1.304014  , m.get(1,0) , UtilEjml.TEST_F64);
-        assertEquals(-1.880739 , m.get(1,1) , UtilEjml.TEST_F64);
+        assertEquals(2, m.numCols);
+        assertEquals(2, m.numRows);
+        assertEquals(-0.779094, m.get(0, 0), UtilEjml.TEST_F64);
+        assertEquals(1.682750, m.get(0, 1), UtilEjml.TEST_F64);
+        assertEquals(1.304014, m.get(1, 0), UtilEjml.TEST_F64);
+        assertEquals(-1.880739, m.get(1, 1), UtilEjml.TEST_F64);
 
         // give it a matrix with a space in the first element, see if that screws it up
         a = " -0.779094   1.682750  5\n" +
-           "   1.304014  -1.880739  8\n";
+                "   1.304014  -1.880739  8\n";
 
-        m = UtilEjml.parse_DDRM(a,3);
-        assertEquals(3,m.numCols);
-        assertEquals(2,m.numRows);
-        assertEquals(-0.779094 , m.get(0,0) , UtilEjml.TEST_F64);
+        m = UtilEjml.parse_DDRM(a, 3);
+        assertEquals(3, m.numCols);
+        assertEquals(2, m.numRows);
+        assertEquals(-0.779094, m.get(0, 0), UtilEjml.TEST_F64);
     }
 
     @Test
-    public void parse_DSCC() {
+    void parse_DSCC() {
         String a = "-0.779094   1.682750\n" +
                 "   0  -1.880739\n";
 
         DMatrixSparseCSC m = UtilEjml.parse_DSCC(a, 2);
 
-        assertEquals(3,m.nz_length);
+        assertEquals(3, m.nz_length);
 
-        assertEquals(2,m.numCols);
-        assertEquals(2,m.numRows);
-        assertEquals(-0.779094 , m.get(0,0) , UtilEjml.TEST_F64);
-        assertEquals(1.682750  , m.get(0,1) , UtilEjml.TEST_F64);
-        assertEquals(0         , m.get(1,0) , UtilEjml.TEST_F64);
-        assertEquals(-1.880739 , m.get(1,1) , UtilEjml.TEST_F64);
+        assertEquals(2, m.numCols);
+        assertEquals(2, m.numRows);
+        assertEquals(-0.779094, m.get(0, 0), UtilEjml.TEST_F64);
+        assertEquals(1.682750, m.get(0, 1), UtilEjml.TEST_F64);
+        assertEquals(0, m.get(1, 0), UtilEjml.TEST_F64);
+        assertEquals(-1.880739, m.get(1, 1), UtilEjml.TEST_F64);
     }
 
     @Test
-    public void checkTooLarge() {
-        UtilEjml.checkTooLarge(0,0);
-        UtilEjml.checkTooLarge(1000,100);
+    void checkTooLarge() {
+        UtilEjml.checkTooLarge(0, 0);
+        UtilEjml.checkTooLarge(1000, 100);
 
         try {
-            UtilEjml.checkTooLarge(Integer.MAX_VALUE,600);
+            UtilEjml.checkTooLarge(Integer.MAX_VALUE, 600);
             fail("Exception should have been thrown");
         } catch( IllegalArgumentException ignore){}
     }
 
     @Test
-    public void checkTooLargeComplex() {
-        UtilEjml.checkTooLargeComplex(0,0);
-        UtilEjml.checkTooLargeComplex(1000,100);
-        UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2,1);
+    void checkTooLargeComplex() {
+        UtilEjml.checkTooLargeComplex(0, 0);
+        UtilEjml.checkTooLargeComplex(1000, 100);
+        UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2, 1);
 
         try {
-            UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2,2);
+            UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2, 2);
             fail("Exception should have been thrown");
-        } catch( IllegalArgumentException ignore){}
+        } catch (IllegalArgumentException ignore) {}
 
         try {
-            UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE,600);
+            UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE, 600);
             fail("Exception should have been thrown");
-        } catch( IllegalArgumentException ignore){}
+        } catch (IllegalArgumentException ignore) {}
     }
 
     @Test
-    public void shuffle() {
+    void shuffle() {
         int[] m = new int[200];
         for (int i = 0; i < m.length; i++) {
             m[i] = i;
         }
-        int N = m.length-5;
-        UtilEjml.shuffle(m,N,0,40,rand);
+        int N = m.length - 5;
+        UtilEjml.shuffle(m, N, 0, 40, rand);
 
         // end should be untouched
         for (int i = N; i < m.length; i++) {
-            assertEquals(i,m[i]);
+            assertEquals(i, m[i]);
         }
 
         // the order should be drastically changed
         int numOrdered = 0;
         for (int i = 0; i < 40; i++) {
-            if( m[i] == i ) {
+            if (m[i] == i) {
                 numOrdered++;
             }
         }
-        assertTrue(numOrdered<10);
+        assertTrue(numOrdered < 10);
     }
 
     @Test
-    public void fancyStringF() {
+    void fancyStringF() {
         DecimalFormat format = new DecimalFormat("#");
-        assertEquals("-0         ",UtilEjml.fancyStringF(-0.0,format,11, 4));
-        assertEquals(" 0         ",UtilEjml.fancyStringF(0.0,format,11, 4));
-        assertEquals("-1         ",UtilEjml.fancyStringF(-1,format,11, 4));
-        assertEquals(" 1         ",UtilEjml.fancyStringF(1,format,11, 4));
-        assertEquals("-12        ",UtilEjml.fancyStringF(-12,format,11, 4));
-        assertEquals(" 12        ",UtilEjml.fancyStringF(12,format,11, 4));
-        assertEquals("-1.1234    ",UtilEjml.fancyStringF(-1.1234,format,11, 4));
-        assertEquals(" 1.1234    ",UtilEjml.fancyStringF(1.1234,format,11, 4));
-        assertEquals("-1234.1234 ",UtilEjml.fancyStringF(-1234.1234,format,11, 4));
-        assertEquals(" 1234.1234 ",UtilEjml.fancyStringF(1234.1234,format,11, 4));
-        assertEquals("-1234.12343",UtilEjml.fancyStringF(-1234.123433,format,11, 4)); // check rounding here
-        assertEquals(" 1234.12343",UtilEjml.fancyStringF(1234.123433,format,11, 4));
-        assertEquals("-1234.12346",UtilEjml.fancyStringF(-1234.123456,format,11, 4)); // no rounding needed
-        assertEquals(" 1234.12346",UtilEjml.fancyStringF(1234.123456,format,11, 4));
-        assertEquals("-123456.123",UtilEjml.fancyStringF(-123456.123456,format,11, 4));
-        assertEquals(" 123456.123",UtilEjml.fancyStringF(123456.123456,format,11, 4));
-        assertEquals("-1.2346E+10",UtilEjml.fancyStringF(-12345678901.123456,format,11, 4));
-        assertEquals(" 1.2346E+10",UtilEjml.fancyStringF(12345678901.123456,format,11, 4));
-        assertEquals("-.1234     ",UtilEjml.fancyStringF(-0.1234,format,11, 4));
-        assertEquals(" .1234     ",UtilEjml.fancyStringF(0.1234,format,11, 4));
-        assertEquals("-.12345678 ",UtilEjml.fancyStringF(-0.12345678,format,11, 4));
-        assertEquals(" .12345678 ",UtilEjml.fancyStringF(0.12345678,format,11, 4));
-        assertEquals("-.123456789",UtilEjml.fancyStringF(-0.12345678901,format,11, 4));
-        assertEquals(" .123456789",UtilEjml.fancyStringF(0.12345678901,format,11, 4));
-        assertEquals("-.0000123  ",UtilEjml.fancyStringF(-0.0000123,format,11, 4));
-        assertEquals(" .0000123  ",UtilEjml.fancyStringF(0.0000123,format,11, 4));
-        assertEquals("-.000012345",UtilEjml.fancyStringF(-0.0000123451,format,11, 4));
-        assertEquals(" .000012345",UtilEjml.fancyStringF(0.0000123451,format,11, 4));
-        assertEquals("-.000012346",UtilEjml.fancyStringF(-0.0000123456,format,11, 4));
-        assertEquals(" .000012346",UtilEjml.fancyStringF(0.0000123456,format,11, 4));
-        assertEquals("-.000001235",UtilEjml.fancyStringF(-0.000001234567,format,11, 3)); // see if reduction of significant digits changes output
-        assertEquals(" .000001235",UtilEjml.fancyStringF(0.000001234567,format,11, 3));
-        assertEquals("-1.2345E-06",UtilEjml.fancyStringF(-0.0000012345,format,11, 4));
-        assertEquals(" 1.2345E-06",UtilEjml.fancyStringF(0.0000012345,format,11, 4));
-        assertEquals("-1.2346E-06",UtilEjml.fancyStringF(-0.00000123456,format,11, 4));
-        assertEquals(" 1.2346E-06",UtilEjml.fancyStringF(0.00000123456,format,11, 4));
-        assertEquals("-1.235E-07 ",UtilEjml.fancyStringF(-0.0000001234567,format,11, 3));
-        assertEquals(" 1.235E-07 ",UtilEjml.fancyStringF(0.0000001234567,format,11, 3));
-        assertEquals("-1.2346E-06",UtilEjml.fancyStringF(-0.000001234567,format,11, 4));
-        assertEquals(" 1.2346E-06",UtilEjml.fancyStringF(0.000001234567,format,11, 4));
-        assertEquals("-1.2346E-07",UtilEjml.fancyStringF(-0.0000001234567,format,11, 4));
-        assertEquals(" 1.2346E-07",UtilEjml.fancyStringF(0.0000001234567,format,11, 4));
-        assertEquals("-1.235E-102",UtilEjml.fancyStringF(-1.234567E-102,format,11, 4));
-        assertEquals(" 1.235E-102",UtilEjml.fancyStringF(1.234567E-102,format,11, 4));
-        assertEquals("-1.235E+102",UtilEjml.fancyStringF(-1.234567E102,format,11, 4));
-        assertEquals(" 1.235E+102",UtilEjml.fancyStringF(1.234567E102,format,11, 4));
+        assertEquals("-0         ", UtilEjml.fancyStringF(-0.0, format, 11, 4));
+        assertEquals(" 0         ", UtilEjml.fancyStringF(0.0, format, 11, 4));
+        assertEquals("-1         ", UtilEjml.fancyStringF(-1, format, 11, 4));
+        assertEquals(" 1         ", UtilEjml.fancyStringF(1, format, 11, 4));
+        assertEquals("-12        ", UtilEjml.fancyStringF(-12, format, 11, 4));
+        assertEquals(" 12        ", UtilEjml.fancyStringF(12, format, 11, 4));
+        assertEquals("-1.1234    ", UtilEjml.fancyStringF(-1.1234, format, 11, 4));
+        assertEquals(" 1.1234    ", UtilEjml.fancyStringF(1.1234, format, 11, 4));
+        assertEquals("-1234.1234 ", UtilEjml.fancyStringF(-1234.1234, format, 11, 4));
+        assertEquals(" 1234.1234 ", UtilEjml.fancyStringF(1234.1234, format, 11, 4));
+        assertEquals("-1234.12343", UtilEjml.fancyStringF(-1234.123433, format, 11, 4)); // check rounding here
+        assertEquals(" 1234.12343", UtilEjml.fancyStringF(1234.123433, format, 11, 4));
+        assertEquals("-1234.12346", UtilEjml.fancyStringF(-1234.123456, format, 11, 4)); // no rounding needed
+        assertEquals(" 1234.12346", UtilEjml.fancyStringF(1234.123456, format, 11, 4));
+        assertEquals("-123456.123", UtilEjml.fancyStringF(-123456.123456, format, 11, 4));
+        assertEquals(" 123456.123", UtilEjml.fancyStringF(123456.123456, format, 11, 4));
+        assertEquals("-1.2346E+10", UtilEjml.fancyStringF(-12345678901.123456, format, 11, 4));
+        assertEquals(" 1.2346E+10", UtilEjml.fancyStringF(12345678901.123456, format, 11, 4));
+        assertEquals("-.1234     ", UtilEjml.fancyStringF(-0.1234, format, 11, 4));
+        assertEquals(" .1234     ", UtilEjml.fancyStringF(0.1234, format, 11, 4));
+        assertEquals("-.12345678 ", UtilEjml.fancyStringF(-0.12345678, format, 11, 4));
+        assertEquals(" .12345678 ", UtilEjml.fancyStringF(0.12345678, format, 11, 4));
+        assertEquals("-.123456789", UtilEjml.fancyStringF(-0.12345678901, format, 11, 4));
+        assertEquals(" .123456789", UtilEjml.fancyStringF(0.12345678901, format, 11, 4));
+        assertEquals("-.0000123  ", UtilEjml.fancyStringF(-0.0000123, format, 11, 4));
+        assertEquals(" .0000123  ", UtilEjml.fancyStringF(0.0000123, format, 11, 4));
+        assertEquals("-.000012345", UtilEjml.fancyStringF(-0.0000123451, format, 11, 4));
+        assertEquals(" .000012345", UtilEjml.fancyStringF(0.0000123451, format, 11, 4));
+        assertEquals("-.000012346", UtilEjml.fancyStringF(-0.0000123456, format, 11, 4));
+        assertEquals(" .000012346", UtilEjml.fancyStringF(0.0000123456, format, 11, 4));
+        assertEquals("-.000001235", UtilEjml.fancyStringF(-0.000001234567, format, 11, 3)); // see if reduction of significant digits changes output
+        assertEquals(" .000001235", UtilEjml.fancyStringF(0.000001234567, format, 11, 3));
+        assertEquals("-1.2345E-06", UtilEjml.fancyStringF(-0.0000012345, format, 11, 4));
+        assertEquals(" 1.2345E-06", UtilEjml.fancyStringF(0.0000012345, format, 11, 4));
+        assertEquals("-1.2346E-06", UtilEjml.fancyStringF(-0.00000123456, format, 11, 4));
+        assertEquals(" 1.2346E-06", UtilEjml.fancyStringF(0.00000123456, format, 11, 4));
+        assertEquals("-1.235E-07 ", UtilEjml.fancyStringF(-0.0000001234567, format, 11, 3));
+        assertEquals(" 1.235E-07 ", UtilEjml.fancyStringF(0.0000001234567, format, 11, 3));
+        assertEquals("-1.2346E-06", UtilEjml.fancyStringF(-0.000001234567, format, 11, 4));
+        assertEquals(" 1.2346E-06", UtilEjml.fancyStringF(0.000001234567, format, 11, 4));
+        assertEquals("-1.2346E-07", UtilEjml.fancyStringF(-0.0000001234567, format, 11, 4));
+        assertEquals(" 1.2346E-07", UtilEjml.fancyStringF(0.0000001234567, format, 11, 4));
+        assertEquals("-1.235E-102", UtilEjml.fancyStringF(-1.234567E-102, format, 11, 4));
+        assertEquals(" 1.235E-102", UtilEjml.fancyStringF(1.234567E-102, format, 11, 4));
+        assertEquals("-1.235E+102", UtilEjml.fancyStringF(-1.234567E102, format, 11, 4));
+        assertEquals(" 1.235E+102", UtilEjml.fancyStringF(1.234567E102, format, 11, 4));
+    }
 
+    @Test
+    void exceedsMaxMatrixSize() {
+        assertFalse(UtilEjml.exceedsMaxMatrixSize(100, 200));
+        assertFalse(UtilEjml.exceedsMaxMatrixSize(1, 200));
+        assertFalse(UtilEjml.exceedsMaxMatrixSize(50, 0));
+        assertTrue(UtilEjml.exceedsMaxMatrixSize(1_000_000, 1_000_000));
     }
 }

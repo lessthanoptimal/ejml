@@ -57,8 +57,8 @@ public class HessenbergSimilarDecomposition_DDRM
     // the first element in the orthogonal vectors
     private double[] gammas;
     // temporary storage
-    private double[] b;
-    private double[] u;
+    protected double[] b;
+    protected double[] u;
 
     /**
      * Creates a decomposition that won't need to allocate new memory if it is passed matrices up to
@@ -66,10 +66,10 @@ public class HessenbergSimilarDecomposition_DDRM
      *
      * @param initialSize Expected size of the matrices it will decompose.
      */
-    public HessenbergSimilarDecomposition_DDRM(int initialSize) {
-        gammas = new double[ initialSize ];
-        b = new double[ initialSize ];
-        u = new double[ initialSize ];
+    public HessenbergSimilarDecomposition_DDRM( int initialSize ) {
+        gammas = new double[initialSize];
+        b = new double[initialSize];
+        u = new double[initialSize];
     }
 
     public HessenbergSimilarDecomposition_DDRM() {
@@ -79,25 +79,25 @@ public class HessenbergSimilarDecomposition_DDRM
     /**
      * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
      * false otherwise.
-     * @param A  The matrix that is being decomposed.  Not modified.
+     *
+     * @param A The matrix that is being decomposed.  Not modified.
      * @return If it detects any errors or not.
      */
     @Override
-    public boolean decompose( DMatrixRMaj A )
-    {
-        if( A.numRows != A.numCols )
+    public boolean decompose( DMatrixRMaj A ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("A must be square.");
-        if( A.numRows <= 0 )
+        if (A.numRows <= 0)
             return false;
 
         QH = A;
 
         N = A.numCols;
 
-        if( b.length < N ) {
-            b = new double[ N ];
-            gammas = new double[ N ];
-            u = new double[ N ];
+        if (b.length < N) {
+            b = new double[N];
+            gammas = new double[N];
+            u = new double[N];
         }
         return _decompose();
     }
@@ -122,15 +122,15 @@ public class HessenbergSimilarDecomposition_DDRM
      * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
-    public DMatrixRMaj getH(@Nullable DMatrixRMaj H ) {
-        H = UtilDecompositons_DDRM.checkZeros(H,N,N);
+    public DMatrixRMaj getH( @Nullable DMatrixRMaj H ) {
+        H = UtilDecompositons_DDRM.ensureZeros(H, N, N);
 
         // copy the first row
         System.arraycopy(QH.data, 0, H.data, 0, N);
 
-        for( int i = 1; i < N; i++ ) {
-            for( int j = i-1; j < N; j++ ) {
-                H.set(i,j, QH.get(i,j));
+        for (int i = 1; i < N; i++) {
+            for (int j = i - 1; j < N; j++) {
+                H.set(i, j, QH.get(i, j));
             }
         }
 
@@ -143,15 +143,15 @@ public class HessenbergSimilarDecomposition_DDRM
      * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
-    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q ) {
-        Q = UtilDecompositons_DDRM.checkIdentity(Q,N,N);
+    public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q ) {
+        Q = UtilDecompositons_DDRM.ensureIdentity(Q, N, N);
 
-        for( int j = N-2; j >= 0; j-- ) {
-            u[j+1] = 1;
-            for( int i = j+2; i < N; i++ ) {
-                u[i] = QH.get(i,j);
+        for (int j = N - 2; j >= 0; j--) {
+            u[j + 1] = 1;
+            for (int i = j + 2; i < N; i++) {
+                u[i] = QH.get(i, j);
             }
-            QrHelperFunctions_DDRM.rank1UpdateMultR(Q, u, gammas[j], j + 1, j + 1, N, b);
+            rank1UpdateMultR(Q, gammas[j], j + 1, j + 1, N);
         }
 
         return Q;
@@ -163,64 +163,70 @@ public class HessenbergSimilarDecomposition_DDRM
     private boolean _decompose() {
         double[] h = QH.data;
 
-        for( int k = 0; k < N-2; k++ ) {
+        for (int k = 0; k < N - 2; k++) {
             // find the largest value in this column
             // this is used to normalize the column and mitigate overflow/underflow
             double max = 0;
 
-            for( int i = k+1; i < N; i++ ) {
+            for (int i = k + 1; i < N; i++) {
                 // copy the householder vector to vector outside of the matrix to reduce caching issues
                 // big improvement on larger matrices and a relatively small performance hit on small matrices.
-                double val = u[i] = h[i*N+k];
+                double val = u[i] = h[i*N + k];
                 val = Math.abs(val);
-                if( val > max )
+                if (val > max)
                     max = val;
             }
 
-            if( max > 0 ) {
+            if (max > 0) {
                 // -------- set up the reflector Q_k
 
                 double tau = 0;
                 // normalize to reduce overflow/underflow
                 // and compute tau for the reflector
-                for( int i = k+1; i < N; i++ ) {
+                for (int i = k + 1; i < N; i++) {
                     double val = u[i] /= max;
                     tau += val*val;
                 }
 
                 tau = Math.sqrt(tau);
 
-                if( u[k+1] < 0 )
+                if (u[k + 1] < 0)
                     tau = -tau;
 
                 // write the reflector into the lower left column of the matrix
-                double nu = u[k+1] + tau;
-                u[k+1] = 1.0;
+                double nu = u[k + 1] + tau;
+                u[k + 1] = 1.0;
 
-                for( int i = k+2; i < N; i++ ) {
-                    h[i*N+k] = u[i] /= nu;
+                for (int i = k + 2; i < N; i++) {
+                    h[i*N + k] = u[i] /= nu;
                 }
 
                 double gamma = nu/tau;
                 gammas[k] = gamma;
 
                 // ---------- multiply on the left by Q_k
-                QrHelperFunctions_DDRM.rank1UpdateMultR(QH, u, gamma, k + 1, k + 1, N, b);
+                rank1UpdateMultR(QH, gamma, k + 1, k + 1, N);
 
                 // ---------- multiply on the right by Q_k
-                QrHelperFunctions_DDRM.rank1UpdateMultL(QH, u, gamma, 0, k + 1, N);
+                rank1UpdateMultL(QH, gamma, 0, k + 1, N);
 
                 // since the first element in the householder vector is known to be 1
                 // store the full upper hessenberg
-                h[(k+1)*N+k] = -tau*max;
-
+                h[(k + 1)*N + k] = -tau*max;
             } else {
                 gammas[k] = 0;
             }
-
         }
 
         return true;
+    }
+
+    protected void rank1UpdateMultL( DMatrixRMaj A, double gamma, int colA0, int w0, int w1 ) {
+        QrHelperFunctions_DDRM.rank1UpdateMultL(A, u, gamma, colA0, w0, w1);
+    }
+
+    protected void rank1UpdateMultR( DMatrixRMaj A, double gamma, int colA0, int w0, int w1 ) {
+        QrHelperFunctions_DDRM.rank1UpdateMultR(A, u, gamma, colA0, w0, w1, this.b);
     }
 
     public double[] getGammas() {

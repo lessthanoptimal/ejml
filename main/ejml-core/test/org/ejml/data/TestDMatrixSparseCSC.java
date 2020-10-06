@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,69 +31,69 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
 
     @Override
-    public DMatrixSparse createSparse(int numRows, int numCols) {
-        return new DMatrixSparseCSC(numRows,numCols,10);
+    public DMatrixSparse createSparse( int numRows, int numCols ) {
+        return new DMatrixSparseCSC(numRows, numCols, 10);
     }
 
     @Override
-    public DMatrixSparse createSparse(DMatrixSparseTriplet orig) {
-        return ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+    public DMatrixSparse createSparse( DMatrixSparseTriplet orig ) {
+        return ConvertDMatrixStruct.convert(orig, (DMatrixSparseCSC)null);
     }
 
     @Override
-    public boolean isStructureValid(DMatrixSparse m) {
+    public boolean isStructureValid( DMatrixSparse m ) {
         return CommonOps_DSCC.checkStructure((DMatrixSparseCSC)m);
     }
 
     @Test
-    public void constructor_veryLarge() {
-        DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000,100_000_000,4);
+    void constructor_veryLarge() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000, 100_000_000, 4);
 
-        assertEquals(0,a.nz_length);
-        assertEquals(1_000_000_000,a.numRows);
-        assertEquals(100_000_000,a.numCols);
-        assertEquals(4,a.nz_values.length);
-        assertEquals(4,a.nz_rows.length);
+        assertEquals(0, a.nz_length);
+        assertEquals(1_000_000_000, a.numRows);
+        assertEquals(100_000_000, a.numCols);
+        assertEquals(4, a.nz_values.length);
+        assertEquals(4, a.nz_rows.length);
     }
 
     @Test
-    public void growMaxLength_veryLarge() {
-        DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000,100_000_000,4);
+    void growMaxLength_veryLarge() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(1_000_000_000, 100_000_000, 4);
 
-        a.growMaxLength(10,false);
-        assertEquals(0,a.nz_length);
-        assertEquals(1_000_000_000,a.numRows);
-        assertEquals(100_000_000,a.numCols);
-        assertEquals(10,a.nz_values.length);
-        assertEquals(10,a.nz_rows.length);
+        a.growMaxLength(10, false);
+        assertEquals(0, a.nz_length);
+        assertEquals(1_000_000_000, a.numRows);
+        assertEquals(100_000_000, a.numCols);
+        assertEquals(10, a.nz_values.length);
+        assertEquals(10, a.nz_rows.length);
     }
 
     @Test
-    public void reshape_row_col_length() {
-        DMatrixSparseCSC a = new DMatrixSparseCSC(2,3,4);
+    void reshape_row_col_length() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(2, 3, 4);
 
-        a.reshape(1,2,3);
+        a.reshape(1, 2, 3);
         assertTrue(CommonOps_DSCC.checkStructure(a));
-        assertEquals(1,a.numRows);
-        assertEquals(2,a.numCols);
-        assertEquals(4,a.nz_values.length);
-        assertEquals(0,a.nz_length);
+        assertEquals(1, a.numRows);
+        assertEquals(2, a.numCols);
+        assertEquals(4, a.nz_values.length);
+        assertEquals(0, a.nz_length);
 
-        a.reshape(4,1,10);
+        a.reshape(4, 1, 10);
         assertTrue(CommonOps_DSCC.checkStructure(a));
-        assertEquals(4,a.numRows);
-        assertEquals(1,a.numCols);
-        assertEquals(10,a.nz_values.length);
-        assertEquals(0,a.nz_length);
+        assertEquals(4, a.numRows);
+        assertEquals(1, a.numCols);
+        assertEquals(10, a.nz_values.length);
+        assertEquals(0, a.nz_length);
     }
 
     @Test
-    public void sortIndices() {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
+    void sortIndices() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5, 4, 20, -1, 1, rand);
 
         // make sure it's not sorted correctly
-        a.nz_rows[0]=2;
-        a.nz_rows[2]=0;
+        a.nz_rows[0] = 2;
+        a.nz_rows[2] = 0;
         assertFalse(CommonOps_DSCC.checkIndicesSorted(a));
         a.indicesSorted = false;
 
@@ -105,52 +105,52 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
     }
 
     @Test
-    public void growMaxColumns() {
-        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5,4,20,-1,1,rand);
+    void growMaxColumns() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(5, 4, 20, -1, 1, rand);
         a.col_idx[0] = 5;
         a.col_idx[1] = 15;
 
         // grow when resize isn't needed
-        a.growMaxColumns(3,false);
-        assertEquals(5,a.col_idx[0]);
-        assertEquals(15,a.col_idx[1]);
+        a.growMaxColumns(3, false);
+        assertEquals(5, a.col_idx[0]);
+        assertEquals(15, a.col_idx[1]);
 
         // shouldn't declare a new array
-        a.growMaxColumns(4,false);
-        assertEquals(5,a.col_idx[0]);
-        assertEquals(15,a.col_idx[1]);
+        a.growMaxColumns(4, false);
+        assertEquals(5, a.col_idx[0]);
+        assertEquals(15, a.col_idx[1]);
 
         // resize is needed now
-        a.growMaxColumns(5,true);
-        assertEquals(5,a.col_idx[0]);
-        assertEquals(15,a.col_idx[1]);
+        a.growMaxColumns(5, true);
+        assertEquals(5, a.col_idx[0]);
+        assertEquals(15, a.col_idx[1]);
 
-        a.growMaxColumns(6,false);
-        assertEquals(0,a.col_idx[0]);
-        assertEquals(0,a.col_idx[1]);
+        a.growMaxColumns(6, false);
+        assertEquals(0, a.col_idx[0]);
+        assertEquals(0, a.col_idx[1]);
     }
 
     /**
      * The matrix is already sorted.  See if it is still sorted after set has been called.
      */
     @Test
-    public void set_sorted() {
-        DMatrixSparseCSC a = new DMatrixSparseCSC(4,5,0);
+    void set_sorted() {
+        DMatrixSparseCSC a = new DMatrixSparseCSC(4, 5, 0);
         a.indicesSorted = true;
 
-        a.set(1,2, 1);
+        a.set(1, 2, 1);
         assertTrue(a.indicesSorted);
         assertTrue(CommonOps_DSCC.checkStructure(a));
 
-        a.set(0,2, 1);
+        a.set(0, 2, 1);
         assertTrue(a.indicesSorted);
         assertTrue(CommonOps_DSCC.checkStructure(a));
 
-        a.set(3,2, 1);
+        a.set(3, 2, 1);
         assertTrue(a.indicesSorted);
         assertTrue(CommonOps_DSCC.checkStructure(a));
 
-        a.set(2,2, 1);
+        a.set(2, 2, 1);
         assertTrue(a.indicesSorted);
         assertTrue(CommonOps_DSCC.checkStructure(a));
     }

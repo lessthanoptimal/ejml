@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.ops.DSemiRing;
-import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.adjust;
@@ -81,122 +80,6 @@ public class ImplSparseSparseMultWithSemiRing_DSCC {
             idx0 = idx1;
         }
 
-    }
-
-    /**
-     * Performs matrix multiplication.  C = A<sup>T</sup></sup>*B
-     *
-     * @param A  Matrix
-     * @param B  Matrix
-     * @param C  Storage for results.  Data length is increased if increased if insufficient.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
-     */
-    public static void multTransA(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
-        double[] x = adjust(gx, A.numRows);
-        int[] w = adjust(gw, A.numRows, A.numRows);
-
-        C.growMaxLength(A.nz_length + B.nz_length, false);
-        C.indicesSorted = true;
-        C.nz_length = 0;
-        C.col_idx[0] = 0;
-
-        int idxB0 = B.col_idx[0];
-        for (int bj = 1; bj <= B.numCols; bj++) {
-            int idxB1 = B.col_idx[bj];
-            C.col_idx[bj] = C.nz_length;
-
-            if (idxB0 == idxB1) {
-                continue;
-            }
-
-            // convert the column of B into a dense format and mark which rows are used
-            for (int bi = idxB0; bi < idxB1; bi++) {
-                int rowB = B.nz_rows[bi];
-                x[rowB] = B.nz_values[bi];
-                w[rowB] = bj;
-            }
-
-            // C(colA,colB) = A(:,colA)*B(:,colB)
-            for (int colA = 0; colA < A.numCols; colA++) {
-                int idxA0 = A.col_idx[colA];
-                int idxA1 = A.col_idx[colA + 1];
-
-                double sum = semiRing.add.id;
-                for (int ai = idxA0; ai < idxA1; ai++) {
-                    int rowA = A.nz_rows[ai];
-                    if (w[rowA] == bj) {
-                        sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(x[rowA], A.nz_values[ai]));
-                    }
-                }
-
-                if (sum != semiRing.add.id) {
-                    if (C.nz_length == C.nz_values.length) {
-                        C.growMaxLength(C.nz_length * 2 + 1, true);
-                    }
-                    C.nz_values[C.nz_length] = sum;
-                    C.nz_rows[C.nz_length++] = colA;
-                }
-            }
-            C.col_idx[bj] = C.nz_length;
-            idxB0 = idxB1;
-        }
-    }
-
-    /**
-     * Performs matrix multiplication.  C = A*B<sup>T</sup></sup>
-     *
-     * @param A  Matrix
-     * @param B  Matrix
-     * @param C  Storage for results.  Data length is increased if increased if insufficient.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
-     */
-    public static void multTransB(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                                  @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
-        if (!B.isIndicesSorted())
-            throw new IllegalArgumentException("B must have its indices sorted.");
-        else if (!CommonOps_DSCC.checkIndicesSorted(B)) {
-            throw new IllegalArgumentException("Crap. Not really sorted");
-        }
-
-        double[] x = adjust(gx, A.numRows);
-        int[] w = adjust(gw, A.numRows + B.numCols, A.numRows);
-
-        C.growMaxLength(A.nz_length + B.nz_length, false);
-        C.indicesSorted = false;
-        C.nz_length = 0;
-        C.col_idx[0] = 0;
-
-        // initialize w is the first index in each column of B
-        int locationB = A.numRows;
-        System.arraycopy(B.col_idx, 0, w, locationB, B.numCols);
-
-        for (int colC = 0; colC < B.numRows; colC++) {
-            C.col_idx[colC + 1] = C.nz_length; // needs a value of B has nothing in the row
-
-            // find the column in the transposed B
-            int mark = colC + 1;
-            for (int colB = 0; colB < B.numCols; colB++) {
-                int bi = w[locationB + colB];
-                if (bi < B.col_idx[colB + 1]) {
-                    int row = B.nz_rows[bi];
-                    if (row == colC) {
-                        multAddColA(A, colB, B.nz_values[bi], C, mark, semiRing, x, w);
-                        w[locationB + colB]++;
-                    }
-                }
-            }
-
-            // take the values in the dense vector 'x' and put them into 'C'
-            int idxC0 = C.col_idx[colC];
-            int idxC1 = C.col_idx[colC + 1];
-
-            for (int i = idxC0; i < idxC1; i++) {
-                C.nz_values[i] = x[C.nz_rows[i]];
-            }
-        }
     }
 
     /**

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
@@ -37,30 +37,39 @@ public class TestUtilDecompositons_DDRM {
 
     @Test
     public void checkIdentity_null() {
-        DMatrixRMaj A = UtilDecompositons_DDRM.checkIdentity(null,4,3);
+        DMatrixRMaj A = UtilDecompositons_DDRM.ensureIdentity(null,4,3);
         assertTrue(MatrixFeatures_DDRM.isIdentity(A, UtilEjml.TEST_F64));
+        assertEquals(4,A.numRows);
+        assertEquals(3,A.numCols);
     }
 
     @Test
     public void checkIdentity_random() {
-        DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(4,3,rand);
-        DMatrixRMaj A = UtilDecompositons_DDRM.checkIdentity(orig,4,3);
+        DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(2,5,rand);
+        DMatrixRMaj A = UtilDecompositons_DDRM.ensureIdentity(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isIdentity(A, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertEquals(4,orig.numRows);
+        assertEquals(3,orig.numCols);
+        assertSame(A, orig);
     }
 
     @Test
     public void checkZeros_null() {
-        DMatrixRMaj A = UtilDecompositons_DDRM.checkZeros(null,4,3);
+        DMatrixRMaj A = UtilDecompositons_DDRM.ensureZeros(null,4,3);
         assertTrue(MatrixFeatures_DDRM.isZeros(A, UtilEjml.TEST_F64));
+        RandomMatrices_DDRM.fillUniform(A,rand);
+        assertEquals(4,A.numRows);
+        assertEquals(3,A.numCols);
     }
 
     @Test
     public void checkZeros_random() {
-        DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(4,3,rand);
-        DMatrixRMaj A = UtilDecompositons_DDRM.checkZeros(orig,4,3);
+        DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(2,5,rand);
+        DMatrixRMaj A = UtilDecompositons_DDRM.ensureZeros(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isZeros(A, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
+        assertEquals(4,A.numRows);
+        assertEquals(3,A.numCols);
     }
 
     @Test
@@ -74,7 +83,7 @@ public class TestUtilDecompositons_DDRM {
         DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(4,3,rand);
         DMatrixRMaj A = UtilDecompositons_DDRM.checkZerosLT(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isUpperTriangle(A, 0, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
     }
 
     @Test
@@ -88,6 +97,6 @@ public class TestUtilDecompositons_DDRM {
         DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(4,3,rand);
         DMatrixRMaj A = UtilDecompositons_DDRM.checkZerosUT(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isLowerTriangle(A, 0, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
     }
 }

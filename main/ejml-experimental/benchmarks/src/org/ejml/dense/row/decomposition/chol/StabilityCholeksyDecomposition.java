@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,6 @@ import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-
 /**
  * Compare the speed of various algorithms at inverting square matrices
  *
@@ -36,10 +35,9 @@ import java.util.Random;
  */
 public class StabilityCholeksyDecomposition {
 
+    public static double evaluate( CholeskyDecomposition_F64<DMatrixRMaj> alg, DMatrixRMaj orig ) {
 
-    public static double evaluate(CholeskyDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj orig ) {
-
-        if( !DecompositionFactory_DDRM.decomposeSafe(alg,orig)) {
+        if (!DecompositionFactory_DDRM.decomposeSafe(alg, orig)) {
             return Double.NaN;
         }
 
@@ -54,27 +52,25 @@ public class StabilityCholeksyDecomposition {
         return top/bottom;
     }
 
-    private static void runAlgorithms( DMatrixRMaj mat  )
-    {
-        System.out.println("basic             = "+ evaluate(new CholeskyDecompositionInner_DDRM(),mat));
-        System.out.println("block             = "+ evaluate(new CholeskyDecompositionBlock_DDRM(EjmlParameters.BLOCK_WIDTH_CHOL),mat));
-        System.out.println("block64           = "+ evaluate(new CholeskyDecomposition_DDRB_to_DDRM(true),mat));
-
+    private static void runAlgorithms( DMatrixRMaj mat ) {
+        System.out.println("basic             = " + evaluate(new CholeskyDecompositionInner_DDRM(), mat));
+        System.out.println("block             = " + evaluate(new CholeskyDecompositionBlock_DDRM(EjmlParameters.BLOCK_WIDTH_CHOL), mat));
+        System.out.println("block64           = " + evaluate(new CholeskyDecomposition_DDRB_to_DDRM(true), mat));
     }
 
-    public static void main( String args [] ) {
+    public static void main( String[] args ) {
         Random rand = new Random(23423);
 
-        EjmlParameters.BLOCK_SIZE = 5;
+        EjmlParameters.BLOCK_WIDTH = 5;
 
-        for( int size = 5; size <= 15; size += 5 ) {
-            double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-319,1e-320,1e-321,Double.MIN_VALUE};
+        for (int size = 5; size <= 15; size += 5) {
+            double[] scales = new double[]{1, 0.1, 1e-20, 1e-100, 1e-200, 1e-300, 1e-304, 1e-308, 1e-319, 1e-320, 1e-321, Double.MIN_VALUE};
 
             // results vary significantly depending if it starts from a small or large matrix
-            for( int i = 0; i < scales.length; i++ ) {
-                System.out.printf("Decomposition size %3d for %e scale\n",size,scales[i]);
-                DMatrixRMaj mat = RandomMatrices_DDRM.symmetricPosDef(size,rand);
-                CommonOps_DDRM.scale(scales[i],mat);
+            for (int i = 0; i < scales.length; i++) {
+                System.out.printf("Decomposition size %3d for %e scale\n", size, scales[i]);
+                DMatrixRMaj mat = RandomMatrices_DDRM.symmetricPosDef(size, rand);
+                CommonOps_DDRM.scale(scales[i], mat);
                 runAlgorithms(mat);
             }
         }

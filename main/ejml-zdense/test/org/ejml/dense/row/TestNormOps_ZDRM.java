@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,17 +32,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class TestNormOps_ZDRM {
 
-    Random rand = new Random(234);
+    private final Random rand = new Random(234);
 
     @Test
-    public void normF() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,7,rand);
+    void normF() {
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1, 7, rand);
 
         Complex_F64 b = new Complex_F64();
         double total = 0;
         for (int i = 0; i < a.numRows; i++) {
             for (int j = 0; j < a.numCols; j++) {
-                a.get(i,j,b);
+                a.get(i, j, b);
                 total += b.real*b.real + b.imaginary*b.imaginary;
             }
         }
@@ -50,6 +50,6 @@ public class TestNormOps_ZDRM {
         double expected = Math.sqrt(total);
         double found = NormOps_ZDRM.normF(a);
 
-        assertEquals(expected,found, UtilEjml.TEST_F64);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,6 @@ import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
-
 
 /**
  * <p>
@@ -71,13 +70,13 @@ public class NormOps_DDRM {
     public static void normalizeF( DMatrixRMaj A ) {
         double val = normF(A);
 
-        if( val == 0 )
+        if (val == 0)
             return;
 
         int size = A.getNumElements();
 
-        for( int i = 0; i < size; i++) {
-            A.div(i , val);
+        for (int i = 0; i < size; i++) {
+            A.div(i, val);
         }
     }
 
@@ -89,30 +88,30 @@ public class NormOps_DDRM {
      * &kappa;<sub>p</sub> = ||A||<sub>p</sub>||A<sup>-1</sup>||<sub>p</sub>
      * </p>
      * <p>
-     * If the matrix is not square then the condition of either A<sup>T</sup>A or AA<sup>T</sup> is computed. 
+     * If the matrix is not square then the condition of either A<sup>T</sup>A or AA<sup>T</sup> is computed.
      * <p>
+     *
      * @param A The matrix.
      * @param p p-norm
      * @return The condition number.
      */
-    public static double conditionP(DMatrixRMaj A , double p )
-    {
-        if( p == 2 ) {
+    public static double conditionP( DMatrixRMaj A, double p ) {
+        if (p == 2) {
             return conditionP2(A);
-        } else if( A.numRows == A.numCols ){
+        } else if (A.numRows == A.numCols) {
             // square matrices are the typical case
 
-            DMatrixRMaj A_inv = new DMatrixRMaj(A.numRows,A.numCols);
+            DMatrixRMaj A_inv = new DMatrixRMaj(A.numRows, A.numCols);
 
-            if( !CommonOps_DDRM.invert(A,A_inv) )
+            if (!CommonOps_DDRM.invert(A, A_inv))
                 throw new IllegalArgumentException("A can't be inverted.");
 
-            return normP(A,p) * normP(A_inv,p);
-        } else  {
-            DMatrixRMaj pinv = new DMatrixRMaj(A.numCols,A.numRows);
-            CommonOps_DDRM.pinv(A,pinv);
+            return normP(A, p)*normP(A_inv, p);
+        } else {
+            DMatrixRMaj pinv = new DMatrixRMaj(A.numCols, A.numRows);
+            CommonOps_DDRM.pinv(A, pinv);
 
-            return normP(A,p) * normP(pinv,p);
+            return normP(A, p)*normP(pinv, p);
         }
     }
 
@@ -130,25 +129,24 @@ public class NormOps_DDRM {
      * @param A The matrix.
      * @return The condition number.
      */
-    public static double conditionP2( DMatrixRMaj A )
-    {
-        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
+    public static double conditionP2( DMatrixRMaj A ) {
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows, A.numCols, false, false, true);
 
         svd.decompose(A);
 
         double[] singularValues = svd.getSingularValues();
 
-        int n = SingularOps_DDRM.rank(svd,UtilEjml.TEST_F64);
+        int n = SingularOps_DDRM.rank(svd, UtilEjml.TEST_F64);
 
-        if( n == 0 ) return 0;
+        if (n == 0) return 0;
 
         double smallest = Double.MAX_VALUE;
         double largest = Double.MIN_VALUE;
 
-        for( double s : singularValues ) {
-            if( s < smallest )
+        for (double s : singularValues) {
+            if (s < smallest)
                 smallest = s;
-            if( s > largest )
+            if (s > largest)
                 largest = s;
         }
 
@@ -169,7 +167,7 @@ public class NormOps_DDRM {
 
         int size = a.getNumElements();
 
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             double val = a.get(i);
             total += val*val;
         }
@@ -196,12 +194,12 @@ public class NormOps_DDRM {
 
         double scale = CommonOps_DDRM.elementMaxAbs(a);
 
-        if( scale == 0.0 )
+        if (scale == 0.0)
             return 0.0;
 
         final int size = a.getNumElements();
 
-        for( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             double val = a.get(i)/scale;
             total += val*val;
         }
@@ -224,28 +222,29 @@ public class NormOps_DDRM {
      * @param p p value.
      * @return The norm's value.
      */
-    public static double elementP(DMatrix1Row A , double p ) {
-        if( p == 1 ) {
+    public static double elementP( DMatrix1Row A, double p ) {
+        if (p == 1) {
             return CommonOps_DDRM.elementSumAbs(A);
-        } if( p == 2 ) {
+        }
+        if (p == 2) {
             return normF(A);
         } else {
             double max = CommonOps_DDRM.elementMaxAbs(A);
 
-            if( max == 0.0 )
+            if (max == 0.0)
                 return 0.0;
 
             double total = 0;
 
             int size = A.getNumElements();
 
-            for( int i = 0; i < size; i++ ) {
+            for (int i = 0; i < size; i++) {
                 double a = A.get(i)/max;
 
-                total += Math.pow(Math.abs(a),p);
+                total += Math.pow(Math.abs(a), p);
             }
 
-            return max* Math.pow(total,1.0/p);
+            return max * Math.pow(total, 1.0/p);
         }
     }
 
@@ -256,21 +255,21 @@ public class NormOps_DDRM {
      * @param p p value.
      * @return The norm's value.
      */
-    public static double fastElementP(DMatrixD1 A , double p ) {
-        if( p == 2 ) {
+    public static double fastElementP( DMatrixD1 A, double p ) {
+        if (p == 2) {
             return fastNormF(A);
         } else {
             double total = 0;
 
             int size = A.getNumElements();
 
-            for( int i = 0; i < size; i++ ) {
+            for (int i = 0; i < size; i++) {
                 double a = A.get(i);
 
-                total += Math.pow(Math.abs(a),p);
+                total += Math.pow(Math.abs(a), p);
             }
 
-            return Math.pow(total,1.0/p);
+            return Math.pow(total, 1.0/p);
         }
     }
 
@@ -282,16 +281,16 @@ public class NormOps_DDRM {
      * @param p The p value of the p-norm.
      * @return The computed norm.
      */
-    public static double normP(DMatrixRMaj A , double p ) {
-        if( p == 1 ) {
+    public static double normP( DMatrixRMaj A, double p ) {
+        if (p == 1) {
             return normP1(A);
-        } else if( p == 2 ) {
+        } else if (p == 2) {
             return normP2(A);
-        } else if( Double.isInfinite(p)) {
+        } else if (Double.isInfinite(p)) {
             return normPInf(A);
         }
-        if( MatrixFeatures_DDRM.isVector(A) ) {
-            return elementP(A,p);
+        if (MatrixFeatures_DDRM.isVector(A)) {
+            return elementP(A, p);
         } else {
             throw new IllegalArgumentException("Doesn't support induced norms yet.");
         }
@@ -305,16 +304,16 @@ public class NormOps_DDRM {
      * @param p The p value of the p-norm.
      * @return The computed norm.
      */
-    public static double fastNormP(DMatrixRMaj A , double p ) {
-        if( p == 1 ) {
+    public static double fastNormP( DMatrixRMaj A, double p ) {
+        if (p == 1) {
             return normP1(A);
-        } else if( p == 2 ) {
+        } else if (p == 2) {
             return fastNormP2(A);
-        } else if( Double.isInfinite(p)) {
+        } else if (Double.isInfinite(p)) {
             return normPInf(A);
         }
-        if( MatrixFeatures_DDRM.isVector(A) ) {
-            return fastElementP(A,p);
+        if (MatrixFeatures_DDRM.isVector(A)) {
+            return fastElementP(A, p);
         } else {
             throw new IllegalArgumentException("Doesn't support induced norms yet.");
         }
@@ -327,7 +326,7 @@ public class NormOps_DDRM {
      * @return The norm.
      */
     public static double normP1( DMatrixRMaj A ) {
-        if( MatrixFeatures_DDRM.isVector(A)) {
+        if (MatrixFeatures_DDRM.isVector(A)) {
             return CommonOps_DDRM.elementSumAbs(A);
         } else {
             return inducedP1(A);
@@ -341,7 +340,7 @@ public class NormOps_DDRM {
      * @return The norm.
      */
     public static double normP2( DMatrixRMaj A ) {
-        if( MatrixFeatures_DDRM.isVector(A)) {
+        if (MatrixFeatures_DDRM.isVector(A)) {
             return normF(A);
         } else {
             return inducedP2(A);
@@ -356,7 +355,7 @@ public class NormOps_DDRM {
      * @return The norm.
      */
     public static double fastNormP2( DMatrixRMaj A ) {
-        if( MatrixFeatures_DDRM.isVector(A)) {
+        if (MatrixFeatures_DDRM.isVector(A)) {
             return fastNormF(A);
         } else {
             return inducedP2(A);
@@ -370,7 +369,7 @@ public class NormOps_DDRM {
      * @return The norm.
      */
     public static double normPInf( DMatrixRMaj A ) {
-        if( MatrixFeatures_DDRM.isVector(A)) {
+        if (MatrixFeatures_DDRM.isVector(A)) {
             return CommonOps_DDRM.elementMaxAbs(A);
         } else {
             return inducedPInf(A);
@@ -393,12 +392,12 @@ public class NormOps_DDRM {
         int m = A.numRows;
         int n = A.numCols;
 
-        for( int j = 0; j < n; j++ ) {
+        for (int j = 0; j < n; j++) {
             double total = 0;
-            for( int i = 0; i < m; i++ ) {
-                total += Math.abs(A.get(i,j));
+            for (int i = 0; i < m; i++) {
+                total += Math.abs(A.get(i, j));
             }
-            if( total > max ) {
+            if (total > max) {
                 max = total;
             }
         }
@@ -415,15 +414,15 @@ public class NormOps_DDRM {
      * @return The norm.
      */
     public static double inducedP2( DMatrixRMaj A ) {
-        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows,A.numCols,false,false,true);
+        SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(A.numRows, A.numCols, false, false, true);
 
-        if( !svd.decompose(A) )
+        if (!svd.decompose(A))
             throw new RuntimeException("Decomposition failed");
 
         double[] singularValues = svd.getSingularValues();
 
         // the largest singular value is the induced p2 norm
-        return UtilEjml.max(singularValues,0,singularValues.length);
+        return UtilEjml.max(singularValues, 0, singularValues.length);
     }
 
     /**
@@ -442,17 +441,16 @@ public class NormOps_DDRM {
         int m = A.numRows;
         int n = A.numCols;
 
-        for( int i = 0; i < m; i++ ) {
+        for (int i = 0; i < m; i++) {
             double total = 0;
-            for( int j = 0; j < n; j++ ) {
-                total += Math.abs(A.get(i,j));
+            for (int j = 0; j < n; j++) {
+                total += Math.abs(A.get(i, j));
             }
-            if( total > max ) {
+            if (total > max) {
                 max = total;
             }
         }
 
         return max;
     }
-
 }

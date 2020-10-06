@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,10 +27,9 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 
 import java.util.Arrays;
 
-
 /**
-* @author Peter Abeles
-*/
+ * @author Peter Abeles
+ */
 @SuppressWarnings("NullAway.Init")
 public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
 
@@ -39,20 +38,20 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
     double[] vv = new double[0];
     double[] t;
 
-    public LinearSolverChol_ZDRM(CholeskyDecompositionCommon_ZDRM decomposer) {
+    public LinearSolverChol_ZDRM( CholeskyDecompositionCommon_ZDRM decomposer ) {
         this.decomposer = decomposer;
     }
 
     @Override
-    public boolean setA(ZMatrixRMaj A) {
-        if( A.numRows != A.numCols )
+    public boolean setA( ZMatrixRMaj A ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("Matrix must be square");
 
         _setA(A);
 
-        if( decomposer.decompose(A) ){
+        if (decomposer.decompose(A)) {
             n = A.numCols;
-            if( vv.length < n*2 )
+            if (vv.length < n*2)
                 vv = new double[n*2];
             t = decomposer._getT().data;
             return true;
@@ -82,26 +81,26 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(ZMatrixRMaj B , ZMatrixRMaj X ) {
-        if( B.numCols != X.numCols || B.numRows != n || X.numRows != n) {
-            throw new IllegalArgumentException("Unexpected matrix size");
-        }
+    public void solve( ZMatrixRMaj B, ZMatrixRMaj X ) {
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for B");
+        X.reshape(numCols, B.numCols);
 
         int numCols = B.numCols;
 
         double[] dataB = B.data;
         double[] dataX = X.data;
 
-        if(decomposer.isLower()) {
-            for( int j = 0; j < numCols; j++ ) {
-                for( int i = 0; i < n; i++ ) {
-                    vv[i*2]   = dataB[(i*numCols+j)*2];
-                    vv[i*2+1] = dataB[(i*numCols+j)*2+1];
+        if (decomposer.isLower()) {
+            for (int j = 0; j < numCols; j++) {
+                for (int i = 0; i < n; i++) {
+                    vv[i*2] = dataB[(i*numCols + j)*2];
+                    vv[i*2 + 1] = dataB[(i*numCols + j)*2 + 1];
                 }
                 solveInternalL();
-                for( int i = 0; i < n; i++ ) {
-                    dataX[(i*numCols+j)*2  ] = vv[i*2];
-                    dataX[(i*numCols+j)*2+1] = vv[i*2+1];
+                for (int i = 0; i < n; i++) {
+                    dataX[(i*numCols + j)*2] = vv[i*2];
+                    dataX[(i*numCols + j)*2 + 1] = vv[i*2 + 1];
                 }
             }
         } else {
@@ -129,14 +128,14 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
      */
     @Override
     public void invert( ZMatrixRMaj inv ) {
-        if( inv.numRows != n || inv.numCols != n ) {
+        if (inv.numRows != n || inv.numCols != n) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
-        if( inv.data == t ) {
+        if (inv.data == t) {
             throw new IllegalArgumentException("Passing in the same matrix that was decomposed.");
         }
 
-        if(decomposer.isLower()) {
+        if (decomposer.isLower()) {
             setToInverseL(inv.data);
         } else {
             throw new RuntimeException("Implement");
@@ -146,19 +145,19 @@ public class LinearSolverChol_ZDRM extends LinearSolverAbstract_ZDRM {
     /**
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
-    public void setToInverseL(double[] a) {
+    public void setToInverseL( double[] a ) {
 
         // the more direct method which takes full advantage of the sparsity of the data structures proved to
         // be difficult to get right due to the conjugates and reordering.
         // See comparable real number code for an example.
         for (int col = 0; col < n; col++) {
-            Arrays.fill(vv,0);
+            Arrays.fill(vv, 0);
             vv[col*2] = 1;
             TriangularSolver_ZDRM.solveL_diagReal(t, vv, n);
             TriangularSolver_ZDRM.solveConjTranL_diagReal(t, vv, n);
-            for( int i = 0; i < n; i++ ) {
-                a[(i*numCols+col)*2  ] = vv[i*2];
-                a[(i*numCols+col)*2+1] = vv[i*2+1];
+            for (int i = 0; i < n; i++) {
+                a[(i*numCols + col)*2] = vv[i*2];
+                a[(i*numCols + col)*2 + 1] = vv[i*2 + 1];
             }
         }
         // NOTE: If you want to make inverse faster take advantage of the sparsity

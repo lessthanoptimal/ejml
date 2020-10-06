@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,6 @@ import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_ZDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
 /**
  * @author Peter Abeles
  */
@@ -33,7 +32,7 @@ public class TestLinearSolverQrHouseTran_ZDRM extends GenericLinearSolverChecks_
     }
 
     @Override
-    protected LinearSolverDense<ZMatrixRMaj> createSolver(ZMatrixRMaj A ) {
+    protected LinearSolverDense<ZMatrixRMaj> createSolver( ZMatrixRMaj A ) {
         return new LinearSolverQrHouseTran_ZDRM();
     }
 }

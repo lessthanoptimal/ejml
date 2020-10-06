@@ -27,7 +27,7 @@ public abstract class VariableScalar extends Variable {
 
     Type type;
 
-    protected VariableScalar(Type type) {
+    protected VariableScalar( Type type ) {
         super(VariableType.SCALAR);
         this.type = type;
     }
@@ -36,15 +36,11 @@ public abstract class VariableScalar extends Variable {
 
     @Override
     public String toString() {
-        switch( type ) {
-            case INTEGER:
-                return "ScalarI";
-            case DOUBLE:
-                return "ScalarD";
-            case COMPLEX:
-                return "ScalarC";
-            default:
-                return "ScalarUnknown";
+        switch (type) {
+            case INTEGER: return "ScalarI";
+            case DOUBLE: return "ScalarD";
+            case COMPLEX: return "ScalarC";
+            default: return "ScalarUnknown";
         }
     }
 

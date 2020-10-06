@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,18 +41,17 @@ import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_DDRM
 import org.ejml.dense.row.decomposition.svd.SvdImplicitQrDecompose_DDRM;
 import org.ejml.interfaces.decomposition.*;
 
-
 /**
  * <p>
- * Contains operations related to creating and evaluating the quality of common matrix decompositions.  Except
+ * Contains operations related to creating and evaluating the quality of common matrix decompositions. Except
  * in specialized situations, matrix decompositions should be instantiated from this factory instead of being
- * directly constructed.  Low level implementations are more prone to changes and new algorithms will be
+ * directly constructed. Low level implementations are more prone to changes and new algorithms will be
  * automatically placed here.
  * </p>
  *
  * <p>
- * Several functions are also provided to evaluate the quality of a decomposition.  This is provided
- * as a way to sanity check a decomposition.  Often times a significant error in a decomposition will
+ * Several functions are also provided to evaluate the quality of a decomposition. This is provided
+ * as a way to sanity check a decomposition. Often times a significant error in a decomposition will
  * result in a poor (larger) quality value. Typically a quality value of around 1e-15 means it is within
  * machine precision.
  * </p>
@@ -70,11 +69,10 @@ public class DecompositionFactory_DDRM {
      * @param lower should a lower or upper triangular matrix be used. If not sure set to true.
      * @return A new CholeskyDecomposition.
      */
-    public static CholeskyDecomposition_F64<DMatrixRMaj> chol(int matrixSize , boolean lower )
-    {
-        if( matrixSize < EjmlParameters.SWITCH_BLOCK64_CHOLESKY ) {
+    public static CholeskyDecomposition_F64<DMatrixRMaj> chol( int matrixSize, boolean lower ) {
+        if (matrixSize < EjmlParameters.SWITCH_BLOCK64_CHOLESKY) {
             return new CholeskyDecompositionInner_DDRM(lower);
-        } else if( EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER ){
+        } else if (EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER) {
             return new CholeskyDecomposition_DDRB_to_DDRM(lower);
         } else {
             return new CholeskyDecompositionBlock_DDRM(EjmlParameters.BLOCK_WIDTH_CHOL);
@@ -83,11 +81,12 @@ public class DecompositionFactory_DDRM {
 
     /**
      * Returns a {@link CholeskyDecomposition_F64} that isn't specialized for any specific matrix size.
+     *
      * @param lower should a lower or upper triangular matrix be used. If not sure set to true.
      * @return A new CholeskyDecomposition.
      */
     public static CholeskyDecomposition_F64<DMatrixRMaj> chol( boolean lower ) {
-        return chol(100,lower);
+        return chol(100, lower);
     }
 
     /**
@@ -98,7 +97,7 @@ public class DecompositionFactory_DDRM {
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      * @return CholeskyLDLDecomposition_F64
      */
-    public static CholeskyLDLDecomposition_F64<DMatrixRMaj> cholLDL(int matrixSize ) {
+    public static CholeskyLDLDecomposition_F64<DMatrixRMaj> cholLDL( int matrixSize ) {
         return new CholeskyDecompositionLDL_DDRM();
     }
 
@@ -115,7 +114,7 @@ public class DecompositionFactory_DDRM {
      * @param numCol Shape of the matrix that the code should be targeted towards. Does not need to be exact.
      * @return LUDecomposition
      */
-    public static LUDecomposition_F64<DMatrixRMaj> lu(int numRows , int numCol ) {
+    public static LUDecomposition_F64<DMatrixRMaj> lu( int numRows, int numCol ) {
         return new LUDecompositionAlt_DDRM();
     }
 
@@ -133,13 +132,13 @@ public class DecompositionFactory_DDRM {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @param needU Should it compute the U matrix. If not sure set to true.
      * @param needV Should it compute the V matrix. If not sure set to true.
-     * @param compact Should it compute the SVD in compact form.  If not sure set to false.
+     * @param compact Should it compute the SVD in compact form. If not sure set to false.
      * @return SVD
      */
-    public static SingularValueDecomposition_F64<DMatrixRMaj> svd(int numRows , int numCols ,
-                                                                  boolean needU , boolean needV , boolean compact ) {
+    public static SingularValueDecomposition_F64<DMatrixRMaj> svd( int numRows, int numCols,
+                                                                   boolean needU, boolean needV, boolean compact ) {
         // Don't allow the tall decomposition by default since it *might* be less stable
-        return new SvdImplicitQrDecompose_DDRM(compact,needU,needV,false);
+        return new SvdImplicitQrDecompose_DDRM(compact, needU, needV, false);
     }
 
     /**
@@ -147,11 +146,11 @@ public class DecompositionFactory_DDRM {
      *
      * @param needU Should it compute the U matrix. If not sure set to true.
      * @param needV Should it compute the V matrix. If not sure set to true.
-     * @param compact Should it compute the SVD in compact form.  If not sure set to false.
+     * @param compact Should it compute the SVD in compact form. If not sure set to false.
      * @return SVD
      */
-    public static SingularValueDecomposition_F64<DMatrixRMaj> svd(boolean needU , boolean needV , boolean compact ) {
-        return svd(100,100,needU,needV,compact);
+    public static SingularValueDecomposition_F64<DMatrixRMaj> svd( boolean needU, boolean needV, boolean compact ) {
+        return svd(100, 100, needU, needV, compact);
     }
 
     /**
@@ -163,7 +162,7 @@ public class DecompositionFactory_DDRM {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRDecomposition
      */
-    public static QRDecomposition<DMatrixRMaj> qr(int numRows , int numCols ) {
+    public static QRDecomposition<DMatrixRMaj> qr( int numRows, int numCols ) {
         return new QRDecompositionHouseholderColumn_DDRM();
     }
 
@@ -180,7 +179,7 @@ public class DecompositionFactory_DDRM {
      * @param numCols Number of columns that the returned decomposition is optimized for.
      * @return QRPDecomposition_F64
      */
-    public static QRPDecomposition_F64<DMatrixRMaj> qrp(int numRows , int numCols ) {
+    public static QRPDecomposition_F64<DMatrixRMaj> qrp( int numRows, int numCols ) {
         return new QRColPivDecompositionHouseholderColumn_DDRM();
     }
 
@@ -196,15 +195,15 @@ public class DecompositionFactory_DDRM {
      * </p>
      *
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
-     * @param needVectors Should eigenvectors be computed or not.  If not sure set to true.
+     * @param needVectors Should eigenvectors be computed or not. If not sure set to true.
      * @return A new EigenDecomposition
      */
-    public static EigenDecomposition_F64<DMatrixRMaj> eig(int matrixSize , boolean needVectors ) {
+    public static EigenDecomposition_F64<DMatrixRMaj> eig( int matrixSize, boolean needVectors ) {
         return new SwitchingEigenDecomposition_DDRM(matrixSize, needVectors, UtilEjml.TEST_F64);
     }
 
-    public static EigenDecomposition_F64<DMatrixRMaj> eig(boolean needVectors ) {
-        return eig(100,needVectors);
+    public static EigenDecomposition_F64<DMatrixRMaj> eig( boolean needVectors ) {
+        return eig(100, needVectors);
     }
 
     /**
@@ -215,25 +214,26 @@ public class DecompositionFactory_DDRM {
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      * @param computeVectors Should it compute the eigenvectors or just eigenvalues.
      * @param isSymmetric If true then the returned algorithm is specialized only for symmetric matrices, if false
-     *                    then a general purpose algorithm is returned.
+     * then a general purpose algorithm is returned.
      * @return EVD for any matrix.
      */
-    public static EigenDecomposition_F64<DMatrixRMaj> eig(int matrixSize , boolean computeVectors ,
-                                                          boolean isSymmetric ) {
-        if( isSymmetric ) {
+    public static EigenDecomposition_F64<DMatrixRMaj> eig( int matrixSize, boolean computeVectors,
+                                                           boolean isSymmetric ) {
+        if (isSymmetric) {
             TridiagonalSimilarDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.tridiagonal(matrixSize);
-            return new SymmetricQRAlgorithmDecomposition_DDRM(decomp,computeVectors);
+            return new SymmetricQRAlgorithmDecomposition_DDRM(decomp, computeVectors);
         } else
             return new WatchedDoubleStepQRDecomposition_DDRM(computeVectors);
     }
-    public static EigenDecomposition_F64<DMatrixRMaj> eig( boolean computeVectors ,
+
+    public static EigenDecomposition_F64<DMatrixRMaj> eig( boolean computeVectors,
                                                            boolean isSymmetric ) {
-        return eig(100,computeVectors,isSymmetric);
+        return eig(100, computeVectors, isSymmetric);
     }
 
     /**
      * <p>
-     * Computes a metric which measures the the quality of a singular value decomposition.  If a
+     * Computes a metric which measures the the quality of a singular value decomposition. If a
      * value is returned that is close to or smaller than 1e-15 then it is within machine precision.
      * </p>
      *
@@ -248,54 +248,51 @@ public class DecompositionFactory_DDRM {
      * @param svd The decomposition after processing 'orig'. Not modified.
      * @return The quality of the decomposition.
      */
-    public static double quality(DMatrixRMaj orig , SingularValueDecomposition<DMatrixRMaj> svd )
-    {
-        return quality(orig,svd.getU(null,false),svd.getW(null),svd.getV(null,true));
+    public static double quality( DMatrixRMaj orig, SingularValueDecomposition<DMatrixRMaj> svd ) {
+        return quality(orig, svd.getU(null, false), svd.getW(null), svd.getV(null, true));
     }
 
-    public static double quality(DMatrixRMaj orig , DMatrixRMaj U , DMatrixRMaj W , DMatrixRMaj Vt )
-    {
+    public static double quality( DMatrixRMaj orig, DMatrixRMaj U, DMatrixRMaj W, DMatrixRMaj Vt ) {
         // foundA = U*W*Vt
-        DMatrixRMaj UW = new DMatrixRMaj(U.numRows,W.numCols);
-        CommonOps_DDRM.mult(U,W,UW);
-        DMatrixRMaj foundA = new DMatrixRMaj(UW.numRows,Vt.numCols);
-        CommonOps_DDRM.mult(UW,Vt,foundA);
+        DMatrixRMaj UW = new DMatrixRMaj(U.numRows, W.numCols);
+        CommonOps_DDRM.mult(U, W, UW);
+        DMatrixRMaj foundA = new DMatrixRMaj(UW.numRows, Vt.numCols);
+        CommonOps_DDRM.mult(UW, Vt, foundA);
 
         double normA = NormOps_DDRM.normF(foundA);
 
-        return SpecializedOps_DDRM.diffNormF(orig,foundA)/normA;
+        return SpecializedOps_DDRM.diffNormF(orig, foundA)/normA;
     }
 
     /**
      * <p>
-     * Computes a metric which measures the the quality of an eigen value decomposition.  If a
+     * Computes a metric which measures the the quality of an eigen value decomposition. If a
      * value is returned that is close to or smaller than 1e-15 then it is within machine precision.
      * </p>
      * <p>
      * EVD quality is defined as:<br>
      * <br>
      * Quality = ||A*V - V*D|| / ||A*V||.
-     *  </p>
+     * </p>
      *
      * @param orig The original matrix. Not modified.
      * @param eig EVD of the original matrix. Not modified.
      * @return The quality of the decomposition.
      */
-    public static double quality(DMatrixRMaj orig , EigenDecomposition_F64<DMatrixRMaj> eig )
-    {
+    public static double quality( DMatrixRMaj orig, EigenDecomposition_F64<DMatrixRMaj> eig ) {
         DMatrixRMaj A = orig;
         DMatrixRMaj V = EigenOps_DDRM.createMatrixV(eig);
         DMatrixRMaj D = EigenOps_DDRM.createMatrixD(eig);
 
         // L = A*V
-        DMatrixRMaj L = new DMatrixRMaj(A.numRows,V.numCols);
-        CommonOps_DDRM.mult(A,V,L);
+        DMatrixRMaj L = new DMatrixRMaj(A.numRows, V.numCols);
+        CommonOps_DDRM.mult(A, V, L);
         // R = V*D
-        DMatrixRMaj R = new DMatrixRMaj(V.numRows,D.numCols);
-        CommonOps_DDRM.mult(V,D,R);
+        DMatrixRMaj R = new DMatrixRMaj(V.numRows, D.numCols);
+        CommonOps_DDRM.mult(V, D, R);
 
-        DMatrixRMaj diff = new DMatrixRMaj(L.numRows,L.numCols);
-        CommonOps_DDRM.subtract(L,R,diff);
+        DMatrixRMaj diff = new DMatrixRMaj(L.numRows, L.numCols);
+        CommonOps_DDRM.subtract(L, R, diff);
 
         double top = NormOps_DDRM.normF(diff);
         double bottom = NormOps_DDRM.normF(L);
@@ -307,12 +304,12 @@ public class DecompositionFactory_DDRM {
 
     /**
      * Checks to see if the passed in tridiagonal decomposition is of the appropriate type
-     * for the matrix of the provided size.  Returns the same instance or a new instance.
+     * for the matrix of the provided size. Returns the same instance or a new instance.
      *
      * @param matrixSize Number of rows and columns that the returned decomposition is optimized for.
      */
-    public static TridiagonalSimilarDecomposition_F64<DMatrixRMaj> tridiagonal(int matrixSize ) {
-        if( matrixSize >= 1800 ) {
+    public static TridiagonalSimilarDecomposition_F64<DMatrixRMaj> tridiagonal( int matrixSize ) {
+        if (matrixSize >= 1800) {
             return new TridiagonalDecomposition_DDRB_to_DDRM();
         } else {
             return new TridiagonalDecompositionHouseholder_DDRM();
@@ -328,8 +325,8 @@ public class DecompositionFactory_DDRM {
      * @param <T> Matrix type.
      * @return If the decomposition was successful or not.
      */
-    public static <T extends DMatrix> boolean decomposeSafe(DecompositionInterface<T> decomp, T M ) {
-        if( decomp.inputModified() ) {
+    public static <T extends DMatrix> boolean decomposeSafe( DecompositionInterface<T> decomp, T M ) {
+        if (decomp.inputModified()) {
             return decomp.decompose(M.<T>copy());
         } else {
             return decomp.decompose(M);

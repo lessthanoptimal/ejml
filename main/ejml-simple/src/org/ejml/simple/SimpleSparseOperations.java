@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,11 +29,11 @@ import java.io.Serializable;
  * @author Peter Abeles
  */
 public interface SimpleSparseOperations<S extends MatrixSparse, D extends Matrix>
-        extends SimpleOperations<S> , Serializable {
+        extends SimpleOperations<S>, Serializable {
 
-    void extractDiag( S input , D output );
+    void extractDiag( S input, D output );
 
-    void multTransA(S A , D B , D output );
+    void multTransA( S A, D B, D output );
 
-    void mult(S A , D B , D output );
+    void mult( S A, D B, D output );
 }

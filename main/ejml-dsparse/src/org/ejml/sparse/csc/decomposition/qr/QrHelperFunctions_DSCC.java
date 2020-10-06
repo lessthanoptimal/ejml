@@ -45,10 +45,10 @@ public class QrHelperFunctions_DSCC {
      * @param beta scalar
      * @param x (Input and Output) vector that the Householder is applied to. Modified.
      */
-    public static void applyHouseholder(DMatrixSparseCSC V , int colV, double beta ,
-                                        double []x) {
+    public static void applyHouseholder( DMatrixSparseCSC V, int colV, double beta,
+                                         double[] x ) {
         int idx0 = V.col_idx[colV];
-        int idx1 = V.col_idx[colV+1];
+        int idx1 = V.col_idx[colV + 1];
 
         // Compute tau = v'*x
         double tau = 0;
@@ -79,11 +79,10 @@ public class QrHelperFunctions_DSCC {
      * to be made more generic.
      * </p>
      */
-    public static void rank1UpdateMultR(DMatrixSparseCSC V , int colV, double gamma ,
-                                        DMatrixSparseCSC A , DMatrixSparseCSC C,
-                                        @Nullable IGrowArray gw , @Nullable DGrowArray gx )
-    {
-        if( V.numRows != A.numRows )
+    public static void rank1UpdateMultR( DMatrixSparseCSC V, int colV, double gamma,
+                                         DMatrixSparseCSC A, DMatrixSparseCSC C,
+                                         @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+        if (V.numRows != A.numRows)
             throw new IllegalArgumentException("Number of rows in V and A must match");
 
         C.nz_length = 0;
@@ -91,8 +90,8 @@ public class QrHelperFunctions_DSCC {
         C.numCols = 0;
 
         for (int i = 0; i < A.numCols; i++) {
-            double tau = CommonOps_DSCC.dotInnerColumns(V,colV,A,i,gw,gx);
-            ImplCommonOps_DSCC.addColAppend(1.0,A,i,-gamma*tau,V,colV,C,gw);
+            double tau = CommonOps_DSCC.dotInnerColumns(V, colV, A, i, gw, gx);
+            ImplCommonOps_DSCC.addColAppend(1.0, A, i, -gamma*tau, V, colV, C, gw);
         }
     }
 
@@ -102,26 +101,27 @@ public class QrHelperFunctions_DSCC {
      * (I-gamma*v*v')*x = tau*e1
      *
      * <p>NOTE: Same as cs_house in csparse</p>
+     *
      * @param x (Input) Vector x (Output) Vector v. Modified.
      * @param xStart First index in X that is to be processed
      * @param xEnd Last + 1 index in x that is to be processed.
      * @param gamma (Output) Storage for computed gamma
      * @return variable tau
      */
-    public static double computeHouseholder(double []x , int xStart , int xEnd , double max , DScalar gamma ) {
+    public static double computeHouseholder( double[] x, int xStart, int xEnd, double max, DScalar gamma ) {
         double tau = 0;
-        for (int i = xStart; i < xEnd ; i++) {
+        for (int i = xStart; i < xEnd; i++) {
             double val = x[i] /= max;
             tau += val*val;
         }
         tau = Math.sqrt(tau);
-        if( x[xStart] < 0 ) {
+        if (x[xStart] < 0) {
             tau = -tau;
         }
         double u_0 = x[xStart] + tau;
         gamma.value = u_0/tau;
         x[xStart] = 1;
-        for (int i = xStart+1; i < xEnd ; i++) {
+        for (int i = xStart + 1; i < xEnd; i++) {
             x[i] /= u_0;
         }
 

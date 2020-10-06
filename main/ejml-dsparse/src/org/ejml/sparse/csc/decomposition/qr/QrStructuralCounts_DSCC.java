@@ -38,7 +38,7 @@ import java.util.Arrays;
 public class QrStructuralCounts_DSCC {
 
     DMatrixSparseCSC A; // reference to input matrix
-    int m,n; // short hand for number of rows and columns in A
+    int m, n; // short hand for number of rows and columns in A
     int[] leftmost = new int[0]; // left most column in each row
     int m2; // number of rows for QR after adding fictitious rows
     int[] pinv = new int[0]; // inverse permutation to ensure diagonal elements are all structurally nonzero
@@ -60,13 +60,14 @@ public class QrStructuralCounts_DSCC {
 
     /**
      * Examins the structure of A for QR decomposition
+     *
      * @param A matrix which is to be decomposed
      * @return true if the solution is valid or false if the decomposition can't be performed (i.e. requires column pivots)
      */
     public boolean process( DMatrixSparseCSC A ) {
         init(A);
 
-        TriangularSolver_DSCC.eliminationTree(A,true,parent,gwork);
+        TriangularSolver_DSCC.eliminationTree(A, true, parent, gwork);
 
         countNonZeroInR(parent);
         countNonZeroInV(parent);
@@ -74,9 +75,9 @@ public class QrStructuralCounts_DSCC {
         // if more columns than rows it's possible that Q*R != A. That's because a householder
         // would need to be created that's outside the  m by m Q matrix. In reality it has
         // a partial solution. Column pivot are needed.
-        if( m < n ) {
-            for (int row = 0; row <m; row++) {
-                if( gwork.data[head+row] < 0 ) {
+        if (m < n) {
+            for (int row = 0; row < m; row++) {
+                if (gwork.data[head + row] < 0) {
                     return false;
                 }
             }
@@ -97,39 +98,38 @@ public class QrStructuralCounts_DSCC {
         this.tail = m + n;
         this.nque = m + 2*n;
 
-        if( parent.length < n || leftmost.length < m) {
+        if (parent.length < n || leftmost.length < m) {
             parent = new int[n];
             post = new int[n];
-            pinv = new int[m+n];
+            pinv = new int[m + n];
             countsR = new int[n];
             leftmost = new int[m];
         }
-        gwork.reshape(m+3*n);
+        gwork.reshape(m + 3*n);
     }
-
 
     /**
      * Count the number of non-zero elements in R
      */
     void countNonZeroInR( int[] parent ) {
-        TriangularSolver_DSCC.postorder(parent,n,post,gwork);
-        columnCounts.process(A,parent,post,countsR);
+        TriangularSolver_DSCC.postorder(parent, n, post, gwork);
+        columnCounts.process(A, parent, post, countsR);
         nz_in_R = 0;
         for (int k = 0; k < n; k++) {
             nz_in_R += countsR[k];
         }
-        if( nz_in_R < 0)
+        if (nz_in_R < 0)
             throw new RuntimeException("Too many elements. Numerical overflow in R counts");
     }
 
     /**
      * Count the number of non-zero elements in V
      */
-    void countNonZeroInV( int []parent ) {
-        int []w = gwork.data;
+    void countNonZeroInV( int[] parent ) {
+        int[] w = gwork.data;
         findMinElementIndexInRows(leftmost);
-        createRowElementLinkedLists(leftmost,w);
-        countNonZeroUsingLinkedList(parent,w);
+        createRowElementLinkedLists(leftmost, w);
+        countNonZeroUsingLinkedList(parent, w);
     }
 
     /**
@@ -139,58 +139,61 @@ public class QrStructuralCounts_DSCC {
      * @param parent elimination tree
      * @param ll linked list for each row that specifies elements that are not zero
      */
-    void countNonZeroUsingLinkedList(int[] parent, int[] ll) {
+    void countNonZeroUsingLinkedList( int[] parent, int[] ll ) {
 
-        Arrays.fill(pinv,0,m,-1);
+        Arrays.fill(pinv, 0, m, -1);
         nz_in_V = 0;
         m2 = m;
 
         for (int k = 0; k < n; k++) {
-            int i = ll[head+k];           // remove row i from queue k
+            int i = ll[head + k];           // remove row i from queue k
             nz_in_V++;                    // count V(k,k) as nonzero
-            if( i < 0)                    // add a fictitious row since there are no nz elements
+            if (i < 0)                    // add a fictitious row since there are no nz elements
                 i = m2++;
             pinv[i] = k;                  // associate row i with V(:,k)
-            if( --ll[nque+k] <= 0 )
+            if (--ll[nque + k] <= 0)
                 continue;
-            nz_in_V += ll[nque+k];
+            nz_in_V += ll[nque + k];
             int pa;
-            if( (pa = parent[k]) != -1 ) { // move all rows to parent of k
-                if( ll[nque+pa] == 0)
-                    ll[tail+pa] = ll[tail+k];
-                ll[next+ll[tail+k]] = ll[head+pa];
-                ll[head+pa] = ll[next+i];
-                ll[nque+pa] += ll[nque+k];
+            if ((pa = parent[k]) != -1) { // move all rows to parent of k
+                if (ll[nque + pa] == 0)
+                    ll[tail + pa] = ll[tail + k];
+                ll[next + ll[tail + k]] = ll[head + pa];
+                ll[head + pa] = ll[next + i];
+                ll[nque + pa] += ll[nque + k];
             }
         }
         for (int i = 0, k = n; i < m; i++) {
-            if( pinv[i] < 0 )
+            if (pinv[i] < 0)
                 pinv[i] = k++;
         }
 
-        if( nz_in_V < 0)
+        if (nz_in_V < 0)
             throw new RuntimeException("Too many elements. Numerical overflow in V counts");
     }
 
     /**
      * Constructs a linked list in w that specifies which elements in each row are not zero (nz)
+     *
      * @param leftmost index first elements in each row
      * @param w work space array
      */
-    void createRowElementLinkedLists(int[] leftmost, int[] w) {
+    void createRowElementLinkedLists( int[] leftmost, int[] w ) {
         for (int k = 0; k < n; k++) {
-            w[head+k] = -1; w[tail+k] = -1;  w[nque+k] = 0;
+            w[head + k] = -1;
+            w[tail + k] = -1;
+            w[nque + k] = 0;
         }
 
         // scan rows in reverse order creating a linked list of nz element indexes in each row
-        for (int i = m-1; i >= 0; i--) {
+        for (int i = m - 1; i >= 0; i--) {
             int k = leftmost[i];      // 'k' = left most column in row 'i'
-            if( k == -1 )             // row 'i' is empty
+            if (k == -1)             // row 'i' is empty
                 continue;
-            if( w[nque+k]++ == 0 )
-                w[tail+k] = i;
-            w[next+i] = w[head+k];
-            w[head+k] = i;
+            if (w[nque + k]++ == 0)
+                w[tail + k] = i;
+            w[next + i] = w[head + k];
+            w[head + k] = i;
         }
     }
 
@@ -220,24 +223,24 @@ public class QrStructuralCounts_DSCC {
     /**
      * Computes leftmost[i] =  min(find(A[i,:))
      * *
+     *
      * @param leftmost (output) storage for left most elements
      */
-    void findMinElementIndexInRows(int[] leftmost)
-    {
-        Arrays.fill(leftmost,0,m,-1);
+    void findMinElementIndexInRows( int[] leftmost ) {
+        Arrays.fill(leftmost, 0, m, -1);
 
         // leftmost[i] = min(find(A(i,:)))
-        for (int k = n-1; k >= 0; k--) {
+        for (int k = n - 1; k >= 0; k--) {
             int idx0 = A.col_idx[k];
-            int idx1 = A.col_idx[k+1];
+            int idx1 = A.col_idx[k + 1];
 
-            for( int p = idx0; p < idx1; p++ ) {
+            for (int p = idx0; p < idx1; p++) {
                 leftmost[A.nz_rows[p]] = k;
             }
         }
     }
 
-    public void setGwork(IGrowArray gwork) {
+    public void setGwork( IGrowArray gwork ) {
         this.gwork = gwork;
     }
 

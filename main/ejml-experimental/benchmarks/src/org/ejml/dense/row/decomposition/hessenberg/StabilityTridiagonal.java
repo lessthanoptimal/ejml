@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -61,13 +61,13 @@ public class StabilityTridiagonal {
         System.out.println("block           = "+ evaluate(new TridiagonalDecomposition_DDRB_to_DDRM(),mat));
     }
 
-    public static void main( String args [] ) {
-        EjmlParameters.BLOCK_SIZE = 10;
+    public static void main( String[] args ) {
+        EjmlParameters.BLOCK_WIDTH = 10;
 
         Random rand = new Random(239454923);
 
         for( int size = 5; size <= 15; size += 5 ) {
-            double scales[] = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
+            double[] scales = new double[]{1,0.1,1e-20,1e-100,1e-200,1e-300,1e-304,1e-308,1e-310,1e-312,1e-319,1e-320,1e-321,Double.MIN_VALUE};
 
             System.out.println("Square matrix");
             DMatrixRMaj orig = RandomMatrices_DDRM.symmetric(size,-1,1,rand);

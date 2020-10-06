@@ -292,7 +292,7 @@ public class GeneratorBlockInnerMultiplication {
         }
     }
 
-    private static enum Operation
+    private enum Operation
     {
 
         /** Add results to output matrix */

@@ -21,13 +21,12 @@ package org.ejml.dense.row.decomposition.eig;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
 
-
 /**
  * @author Peter Abeles
  */
 public interface EigenvalueExtractor_DDRM {
 
-    boolean process(DMatrixRMaj A);
+    boolean process( DMatrixRMaj A );
 
     int getNumberOfEigenvalues();
 

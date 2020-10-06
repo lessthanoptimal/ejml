@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,65 +38,65 @@ public class TestVectorVectorMult_ZDRM {
     @Test
     public void innerProd() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,6,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1, 6, rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6, 1, rand);
 
-        ZMatrixRMaj c = new ZMatrixRMaj(1,1);
+        ZMatrixRMaj c = new ZMatrixRMaj(1, 1);
 
-        CommonOps_ZDRM.mult(a,b,c);
+        CommonOps_ZDRM.mult(a, b, c);
 
         Complex_F64 expected = new Complex_F64();
-        c.get(0,0,expected);
-        Complex_F64 found = VectorVectorMult_ZDRM.innerProd(a,b,null);
+        c.get(0, 0, expected);
+        Complex_F64 found = VectorVectorMult_ZDRM.innerProd(a, b, null);
 
-        EjmlUnitTests.assertEquals(expected,found, UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
     @Test
     public void innerProdH() {
 
-        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1,6,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6,1,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(1, 6, rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(6, 1, rand);
 
         Complex_F64 found = VectorVectorMult_ZDRM.innerProdH(a, b, null);
 
-        ZMatrixRMaj c = new ZMatrixRMaj(1,1);
+        ZMatrixRMaj c = new ZMatrixRMaj(1, 1);
 
-        CommonOps_ZDRM.conjugate(b,b);
-        CommonOps_ZDRM.mult(a,b,c);
+        CommonOps_ZDRM.conjugate(b, b);
+        CommonOps_ZDRM.mult(a, b, c);
 
         Complex_F64 expected = new Complex_F64();
-        c.get(0,0,expected);
+        c.get(0, 0, expected);
 
-        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
     @Test
     public void outerProd() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(6,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(1,6,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(6, 1, rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(1, 6, rand);
 
-        ZMatrixRMaj expected = new ZMatrixRMaj(6,6);
-        ZMatrixRMaj found = new ZMatrixRMaj(6,6);
+        ZMatrixRMaj expected = new ZMatrixRMaj(6, 6);
+        ZMatrixRMaj found = new ZMatrixRMaj(6, 6);
 
-        CommonOps_ZDRM.mult(a,b,expected);
-        VectorVectorMult_ZDRM.outerProd(a,b,found);
+        CommonOps_ZDRM.mult(a, b, expected);
+        VectorVectorMult_ZDRM.outerProd(a, b, found);
 
-        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
     @Test
     public void outerProdH() {
-        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(6,1,rand);
-        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(1,6,rand);
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(6, 1, rand);
+        ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(1, 6, rand);
 
-        ZMatrixRMaj expected = new ZMatrixRMaj(6,6);
-        ZMatrixRMaj found = new ZMatrixRMaj(6,6);
+        ZMatrixRMaj expected = new ZMatrixRMaj(6, 6);
+        ZMatrixRMaj found = new ZMatrixRMaj(6, 6);
 
         VectorVectorMult_ZDRM.outerProdH(a, b, found);
-        CommonOps_ZDRM.conjugate(b,b);
+        CommonOps_ZDRM.conjugate(b, b);
         CommonOps_ZDRM.mult(a, b, expected);
 
-        EjmlUnitTests.assertEquals(expected,found,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 }

@@ -34,18 +34,17 @@ public class MatrixConstructor {
     VariableMatrix output;
     List<Item> items = new ArrayList<Item>();
 
-
-    public MatrixConstructor(ManagerTempVariables manager) {
+    public MatrixConstructor( ManagerTempVariables manager ) {
         this.output = manager.createMatrix();
     }
 
-    public void addToRow(Variable variable) {
-        if( variable.getType() == VariableType.INTEGER_SEQUENCE ) {
-            if( ((VariableIntegerSequence)variable).sequence.requiresMaxIndex() )
+    public void addToRow( Variable variable ) {
+        if (variable.getType() == VariableType.INTEGER_SEQUENCE) {
+            if (((VariableIntegerSequence)variable).sequence.requiresMaxIndex())
                 throw new ParseError("Trying to create a matrix with an unbounded integer range." +
                         " Forgot a value after a colon?");
         }
-        items.add( new Item(variable));
+        items.add(new Item(variable));
     }
 
     public void endRow() {
@@ -54,7 +53,7 @@ public class MatrixConstructor {
 
     public void construct() {
         // make sure the last item is and end row
-        if( !items.get(items.size()-1).endRow )
+        if (!items.get(items.size() - 1).endRow)
             endRow();
 
         // have to initialize some variable types first to get the actual size
@@ -69,7 +68,7 @@ public class MatrixConstructor {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
 
-            if( item.endRow ) {
+            if (item.endRow) {
                 int expectedRows = 0;
                 int numCols = 0;
                 for (int j = 0; j < row.size(); j++) {
@@ -77,24 +76,24 @@ public class MatrixConstructor {
 
                     int numRows = v.getRows();
 
-                    if( j == 0 ) {
+                    if (j == 0) {
                         expectedRows = numRows;
-                    } else if( v.getRows() != expectedRows ){
-                        throw new RuntimeException("Row miss-matched. "+numRows+" "+v.getRows());
+                    } else if (v.getRows() != expectedRows) {
+                        throw new RuntimeException("Row miss-matched. " + numRows + " " + v.getRows());
                     }
 
-                    if( v.matrix ) {
-                        CommonOps_DDRM.insert(v.getMatrix(),output.matrix,matrixRow,numCols);
-                    } else if( v.variable.getType() == VariableType.SCALAR ){
-                        output.matrix.set(matrixRow,numCols,v.getValue());
-                    } else if( v.variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+                    if (v.matrix) {
+                        CommonOps_DDRM.insert(v.getMatrix(), output.matrix, matrixRow, numCols);
+                    } else if (v.variable.getType() == VariableType.SCALAR) {
+                        output.matrix.set(matrixRow, numCols, v.getValue());
+                    } else if (v.variable.getType() == VariableType.INTEGER_SEQUENCE) {
                         IntegerSequence sequence = ((VariableIntegerSequence)v.variable).sequence;
                         int col = numCols;
-                        while( sequence.hasNext() ) {
-                            output.matrix.set(matrixRow,col++,sequence.next());
+                        while (sequence.hasNext()) {
+                            output.matrix.set(matrixRow, col++, sequence.next());
                         }
                     } else {
-                        throw new ParseError("Can't insert a variable of type "+v.variable.getType()+" inside a matrix!");
+                        throw new ParseError("Can't insert a variable of type " + v.variable.getType() + " inside a matrix!");
                     }
                     numCols += v.getColumns();
                 }
@@ -105,7 +104,6 @@ public class MatrixConstructor {
                 row.add(item);
             }
         }
-
     }
 
     public VariableMatrix getOutput() {
@@ -121,22 +119,22 @@ public class MatrixConstructor {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
 
-            if( item.endRow ) {
+            if (item.endRow) {
                 Item v = row.get(0);
                 int numRows = v.getRows();
                 int numCols = v.getColumns();
                 for (int j = 1; j < row.size(); j++) {
                     v = row.get(j);
-                    if( v.getRows() != numRows)
-                        throw new RuntimeException("Row miss-matched. "+numRows+" "+v.getRows());
+                    if (v.getRows() != numRows)
+                        throw new RuntimeException("Row miss-matched. " + numRows + " " + v.getRows());
                     numCols += v.getColumns();
                 }
                 matrixRow += numRows;
 
-                if( matrixCol == 0 )
+                if (matrixCol == 0)
                     matrixCol = numCols;
-                else if( matrixCol != numCols )
-                    throw new ParseError("Row "+matrixRow+" has an unexpected number of columns; expected = "+matrixCol+" found = "+numCols);
+                else if (matrixCol != numCols)
+                    throw new ParseError("Row " + matrixRow + " has an unexpected number of columns; expected = " + matrixCol + " found = " + numCols);
 
                 row.clear();
             } else {
@@ -144,18 +142,16 @@ public class MatrixConstructor {
             }
         }
 
-        matrix.reshape(matrixRow,matrixCol);
+        matrix.reshape(matrixRow, matrixCol);
     }
 
-
     @SuppressWarnings("NullAway.Init")
-    private static class Item
-    {
+    private static class Item {
         Variable variable;
         boolean endRow;
         boolean matrix;
 
-        private Item(Variable variable) {
+        private Item( Variable variable ) {
             this.variable = variable;
             matrix = variable instanceof VariableMatrix;
         }
@@ -165,7 +161,7 @@ public class MatrixConstructor {
         }
 
         public int getRows() {
-            if( matrix ) {
+            if (matrix) {
                 return ((VariableMatrix)variable).matrix.numRows;
             } else {
                 return 1;
@@ -173,11 +169,11 @@ public class MatrixConstructor {
         }
 
         public int getColumns() {
-            if( matrix ) {
+            if (matrix) {
                 return ((VariableMatrix)variable).matrix.numCols;
-            } else if( variable.getType() == VariableType.SCALAR ){
+            } else if (variable.getType() == VariableType.SCALAR) {
                 return 1;
-            } else if( variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+            } else if (variable.getType() == VariableType.INTEGER_SEQUENCE) {
                 return ((VariableIntegerSequence)variable).sequence.length();
             } else {
                 throw new RuntimeException("BUG! Should have been caught earlier");
@@ -193,7 +189,7 @@ public class MatrixConstructor {
         }
 
         public void initialize() {
-            if( variable!=null && !matrix && variable.getType() == VariableType.INTEGER_SEQUENCE ) {
+            if (variable != null && !matrix && variable.getType() == VariableType.INTEGER_SEQUENCE) {
                 ((VariableIntegerSequence)variable).sequence.initialize(-1);
             }
         }

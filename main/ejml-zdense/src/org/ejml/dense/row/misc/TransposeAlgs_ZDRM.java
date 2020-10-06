@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,46 +32,44 @@ public class TransposeAlgs_ZDRM {
      *
      * @param mat The matrix that is transposed in-place.  Modified.
      */
-    public static void square( ZMatrixRMaj mat )
-    {
+    public static void square( ZMatrixRMaj mat ) {
         int index = 2;
         int rowStride = mat.getRowStride();
         int indexEnd = rowStride;
-        for( int i = 0; i < mat.numRows;
-             i++ , index += (i+1)*2 , indexEnd += rowStride ) {
+        for (int i = 0; i < mat.numRows;
+             i++, index += (i + 1)*2, indexEnd += rowStride) {
 
-            int indexOther = (i+1)*rowStride + i*2;
-            for( ; index < indexEnd; index += 2, indexOther += rowStride) {
-                double real = mat.data[ index ];
-                double img = mat.data[ index+1 ];
+            int indexOther = (i + 1)*rowStride + i*2;
+            for (; index < indexEnd; index += 2, indexOther += rowStride) {
+                double real = mat.data[index];
+                double img = mat.data[index + 1];
 
-                mat.data[ index ] = mat.data[ indexOther ];
-                mat.data[ index+1 ] = mat.data[ indexOther+1 ];
+                mat.data[index] = mat.data[indexOther];
+                mat.data[index + 1] = mat.data[indexOther + 1];
                 mat.data[indexOther] = real;
-                mat.data[indexOther+1] = img;
+                mat.data[indexOther + 1] = img;
             }
         }
     }
 
-    public static void squareConjugate( ZMatrixRMaj mat )
-    {
+    public static void squareConjugate( ZMatrixRMaj mat ) {
         int index = 2;
         int rowStride = mat.getRowStride();
         int indexEnd = rowStride;
-        for( int i = 0; i < mat.numRows;
-             i++ , index += (i+1)*2 , indexEnd += rowStride ) {
+        for (int i = 0; i < mat.numRows;
+             i++, index += (i + 1)*2, indexEnd += rowStride) {
 
-            mat.data[ index-1 ] = -mat.data[ index-1 ];
+            mat.data[index - 1] = -mat.data[index - 1];
 
-            int indexOther = (i+1)*rowStride + i*2;
-            for( ; index < indexEnd; index += 2, indexOther += rowStride) {
-                double real = mat.data[ index ];
-                double img = mat.data[ index+1 ];
+            int indexOther = (i + 1)*rowStride + i*2;
+            for (; index < indexEnd; index += 2, indexOther += rowStride) {
+                double real = mat.data[index];
+                double img = mat.data[index + 1];
 
-                mat.data[ index ] = mat.data[ indexOther ];
-                mat.data[ index+1 ] = -mat.data[ indexOther+1 ];
+                mat.data[index] = mat.data[indexOther];
+                mat.data[index + 1] = -mat.data[indexOther + 1];
                 mat.data[indexOther] = real;
-                mat.data[indexOther+1] = -img;
+                mat.data[indexOther + 1] = -img;
             }
         }
     }
@@ -82,18 +80,17 @@ public class TransposeAlgs_ZDRM {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standard(ZMatrixRMaj A, ZMatrixRMaj A_tran)
-    {
+    public static void standard( ZMatrixRMaj A, ZMatrixRMaj A_tran ) {
         int index = 0;
         int rowStrideTran = A_tran.getRowStride();
         int rowStride = A.getRowStride();
-        for( int i = 0; i < A_tran.numRows; i++ ) {
+        for (int i = 0; i < A_tran.numRows; i++) {
             int index2 = i*2;
 
             int end = index + rowStrideTran;
-            while( index < end ) {
-                A_tran.data[index++] = A.data[ index2 ];
-                A_tran.data[index++] = A.data[ index2+1 ];
+            while (index < end) {
+                A_tran.data[index++] = A.data[index2];
+                A_tran.data[index++] = A.data[index2 + 1];
                 index2 += rowStride;
             }
         }
@@ -105,18 +102,17 @@ public class TransposeAlgs_ZDRM {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standardConjugate(ZMatrixRMaj A, ZMatrixRMaj A_tran)
-    {
+    public static void standardConjugate( ZMatrixRMaj A, ZMatrixRMaj A_tran ) {
         int index = 0;
         int rowStrideTran = A_tran.getRowStride();
         int rowStride = A.getRowStride();
-        for( int i = 0; i < A_tran.numRows; i++ ) {
+        for (int i = 0; i < A_tran.numRows; i++) {
             int index2 = i*2;
 
             int end = index + rowStrideTran;
-            while( index < end ) {
-                A_tran.data[index++] = A.data[ index2 ];
-                A_tran.data[index++] = -A.data[ index2+1 ];
+            while (index < end) {
+                A_tran.data[index++] = A.data[index2];
+                A_tran.data[index++] = -A.data[index2 + 1];
                 index2 += rowStride;
             }
         }

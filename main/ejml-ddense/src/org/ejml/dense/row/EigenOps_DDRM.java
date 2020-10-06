@@ -29,7 +29,6 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * Additional functions related to eigenvalues and eigenvectors of a matrix.
  *
@@ -44,15 +43,13 @@ public class EigenOps_DDRM {
      * x<sup>T</sup>Ax / x<sup>T</sup>x
      * </p>
      *
-     *
      * @param A Matrix. Not modified.
      * @param eigenVector An eigen vector of A. Not modified.
      * @return The corresponding eigen value.
      */
-    public static double computeEigenValue(DMatrixRMaj A , DMatrixRMaj eigenVector )
-    {
-        double bottom = VectorVectorMult_DDRM.innerProd(eigenVector,eigenVector);
-        double top = VectorVectorMult_DDRM.innerProdA(eigenVector,A,eigenVector);
+    public static double computeEigenValue( DMatrixRMaj A, DMatrixRMaj eigenVector ) {
+        double bottom = VectorVectorMult_DDRM.innerProd(eigenVector, eigenVector);
+        double top = VectorVectorMult_DDRM.innerProdA(eigenVector, A, eigenVector);
 
         return top/bottom;
     }
@@ -62,8 +59,8 @@ public class EigenOps_DDRM {
      * Given an eigenvalue it computes an eigenvector using inverse iteration:
      * <br>
      * for i=1:MAX {<br>
-     *   (A - &mu;I)z<sup>(i)</sup> = q<sup>(i-1)</sup><br>
-     *   q<sup>(i)</sup> = z<sup>(i)</sup> / ||z<sup>(i)</sup>||<br>
+     * (A - &mu;I)z<sup>(i)</sup> = q<sup>(i-1)</sup><br>
+     * q<sup>(i)</sup> = z<sup>(i)</sup> / ||z<sup>(i)</sup>||<br>
      * &lambda;<sup>(i)</sup> =  q<sup>(i)</sup><sup>T</sup> A  q<sup>(i)</sup><br>
      * }<br>
      * </p>
@@ -72,28 +69,28 @@ public class EigenOps_DDRM {
      * is a chance of it converging towards that one instead.  The larger a matrix is the more
      * likely this is to happen.
      * </p>
+     *
      * @param A Matrix whose eigenvector is being computed.  Not modified.
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
-    public static @Nullable DEigenpair computeEigenVector(DMatrixRMaj A , double eigenvalue )
-    {
-        if( A.numRows != A.numCols )
+    public static @Nullable DEigenpair computeEigenVector( DMatrixRMaj A, double eigenvalue ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be a square matrix.");
 
-        DMatrixRMaj M = new DMatrixRMaj(A.numRows,A.numCols);
+        DMatrixRMaj M = new DMatrixRMaj(A.numRows, A.numCols);
 
-        DMatrixRMaj x = new DMatrixRMaj(A.numRows,1);
-        DMatrixRMaj b = new DMatrixRMaj(A.numRows,1);
+        DMatrixRMaj x = new DMatrixRMaj(A.numRows, 1);
+        DMatrixRMaj b = new DMatrixRMaj(A.numRows, 1);
 
         CommonOps_DDRM.fill(b, 1);
-        
+
         // perturb the eigenvalue slightly so that its not an exact solution the first time
 //        eigenvalue -= eigenvalue*UtilEjml.EPS*10;
 
         double origEigenvalue = eigenvalue;
 
-        SpecializedOps_DDRM.addIdentity(A,M,-eigenvalue);
+        SpecializedOps_DDRM.addIdentity(A, M, -eigenvalue);
 
         double threshold = NormOps_DDRM.normPInf(A)*UtilEjml.EPS;
 
@@ -104,64 +101,64 @@ public class EigenOps_DDRM {
 
         double perp = 0.0001;
 
-        for( int i = 0; i < 200; i++ ) {
+        for (int i = 0; i < 200; i++) {
             boolean failed = false;
             // if the matrix is singular then the eigenvalue is within machine precision
             // of the true value, meaning that x must also be.
-            if( !solver.setA(M) ) {
+            if (!solver.setA(M)) {
                 failed = true;
             } else {
-                solver.solve(b,x);
+                solver.solve(b, x);
             }
 
             // see if solve silently failed
-            if( MatrixFeatures_DDRM.hasUncountable(x)) {
+            if (MatrixFeatures_DDRM.hasUncountable(x)) {
                 failed = true;
             }
 
-            if( failed ) {
-                if( !hasWorked ) {
-                     // if it failed on the first trial try perturbing it some more
-                    double val = i % 2 == 0 ? 1.0-perp : 1.0 + perp;
+            if (failed) {
+                if (!hasWorked) {
+                    // if it failed on the first trial try perturbing it some more
+                    double val = i%2 == 0 ? 1.0 - perp : 1.0 + perp;
                     // maybe this should be turn into a parameter allowing the user
                     // to configure the wise of each step
 
-                    eigenvalue = origEigenvalue * Math.pow(val,i/2+1);
-                    SpecializedOps_DDRM.addIdentity(A,M,-eigenvalue);
+                    eigenvalue = origEigenvalue * Math.pow(val, i/2 + 1);
+                    SpecializedOps_DDRM.addIdentity(A, M, -eigenvalue);
                 } else {
                     // otherwise assume that it was so accurate that the matrix was singular
                     // and return that result
-                    return new DEigenpair(eigenvalue,b);
+                    return new DEigenpair(eigenvalue, b);
                 }
             } else {
                 hasWorked = true;
-                
+
                 b.set(x);
                 NormOps_DDRM.normalizeF(b);
 
                 // compute the residual
-                CommonOps_DDRM.mult(M,b,x);
+                CommonOps_DDRM.mult(M, b, x);
                 double error = NormOps_DDRM.normPInf(x);
 
-                if( error-prevError > UtilEjml.EPS*10) {
+                if (error - prevError > UtilEjml.EPS*10) {
                     // if the error increased it is probably converging towards a different
                     // eigenvalue
 //                    CommonOps.set(b,1);
                     prevError = Double.MAX_VALUE;
                     hasWorked = false;
-                    double val = i % 2 == 0 ? 1.0-perp : 1.0 + perp;
-                    eigenvalue = origEigenvalue * Math.pow(val,1);
+                    double val = i%2 == 0 ? 1.0 - perp : 1.0 + perp;
+                    eigenvalue = origEigenvalue * Math.pow(val, 1);
                 } else {
                     // see if it has converged
-                    if(error <= threshold || Math.abs(prevError-error) <= UtilEjml.EPS)
-                        return new DEigenpair(eigenvalue,b);
+                    if (error <= threshold || Math.abs(prevError - error) <= UtilEjml.EPS)
+                        return new DEigenpair(eigenvalue, b);
 
                     // update everything
                     prevError = error;
-                    eigenvalue = VectorVectorMult_DDRM.innerProdA(b,A,b);
+                    eigenvalue = VectorVectorMult_DDRM.innerProdA(b, A, b);
                 }
 
-                SpecializedOps_DDRM.addIdentity(A,M,-eigenvalue);
+                SpecializedOps_DDRM.addIdentity(A, M, -eigenvalue);
             }
         }
 
@@ -182,12 +179,12 @@ public class EigenOps_DDRM {
      * @param A A matrix.  Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
-    public static @Nullable DEigenpair dominantEigenpair(DMatrixRMaj A ) {
+    public static @Nullable DEigenpair dominantEigenpair( DMatrixRMaj A ) {
 
         EigenPowerMethod_DDRM power = new EigenPowerMethod_DDRM(A.numRows);
 
         // eh maybe 0.1 is a good value.  who knows.
-        if( !power.computeShiftInvert(A,0.1) )
+        if (!power.computeShiftInvert(A, 0.1))
             return null;
 
         throw new RuntimeException("Not yet implemented");
@@ -208,8 +205,8 @@ public class EigenOps_DDRM {
      * @param bound Where the results are stored.  If null then a matrix will be declared. Modified.
      * @return Lower and upper bound in the first and second elements respectively.
      */
-    public static double [] boundLargestEigenValue(DMatrixRMaj A , @Nullable double []bound ) {
-        if( A.numRows != A.numCols )
+    public static double[] boundLargestEigenValue( DMatrixRMaj A, @Nullable double[] bound ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("A must be a square matrix.");
 
         double min = Double.MAX_VALUE;
@@ -217,25 +214,25 @@ public class EigenOps_DDRM {
 
         int n = A.numRows;
 
-        for( int i = 0; i < n; i++ ) {
+        for (int i = 0; i < n; i++) {
             double total = 0;
-            for( int j = 0; j < n; j++ ) {
-                double v = A.get(i,j);
-                if( v < 0 ) throw new IllegalArgumentException("Matrix must be positive");
+            for (int j = 0; j < n; j++) {
+                double v = A.get(i, j);
+                if (v < 0) throw new IllegalArgumentException("Matrix must be positive");
 
                 total += v;
             }
 
-            if( total < min ) {
+            if (total < min) {
                 min = total;
             }
 
-            if( total > max ) {
+            if (total > max) {
                 max = total;
             }
         }
 
-        if( bound == null )
+        if (bound == null)
             bound = new double[2];
 
         bound[0] = min;
@@ -253,17 +250,16 @@ public class EigenOps_DDRM {
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return A diagonal matrix containing the eigenvalues.
      */
-    public static DMatrixRMaj createMatrixD(EigenDecomposition_F64<?> eig )
-    {
+    public static DMatrixRMaj createMatrixD( EigenDecomposition_F64<?> eig ) {
         int N = eig.getNumberOfEigenvalues();
 
-        DMatrixRMaj D = new DMatrixRMaj( N , N );
+        DMatrixRMaj D = new DMatrixRMaj(N, N);
 
-        for( int i = 0; i < N; i++ ) {
+        for (int i = 0; i < N; i++) {
             Complex_F64 c = eig.getEigenvalue(i);
 
-            if( c.isReal() ) {
-                D.set(i,i,c.real);
+            if (c.isReal()) {
+                D.set(i, i, c.real);
             }
         }
 
@@ -275,25 +271,24 @@ public class EigenOps_DDRM {
      * Puts all the real eigenvectors into the columns of a matrix.  If an eigenvalue is imaginary
      * then the corresponding eigenvector will have zeros in its column.
      * </p>
-     * 
+     *
      * @param eig An eigenvalue decomposition which has already decomposed a matrix.
      * @return An m by m matrix containing eigenvectors in its columns.
      */
-    public static DMatrixRMaj createMatrixV(EigenDecomposition_F64<DMatrixRMaj> eig )
-    {
+    public static DMatrixRMaj createMatrixV( EigenDecomposition_F64<DMatrixRMaj> eig ) {
         int N = eig.getNumberOfEigenvalues();
 
-        DMatrixRMaj V = new DMatrixRMaj( N , N );
+        DMatrixRMaj V = new DMatrixRMaj(N, N);
 
-        for( int i = 0; i < N; i++ ) {
+        for (int i = 0; i < N; i++) {
             Complex_F64 c = eig.getEigenvalue(i);
 
-            if( c.isReal() ) {
+            if (c.isReal()) {
                 DMatrixRMaj v = eig.getEigenVector(i);
 
-                if( v != null ) {
-                    for( int j = 0; j < N; j++ ) {
-                        V.set(j,i,v.get(j,0));
+                if (v != null) {
+                    for (int j = 0; j < N; j++) {
+                        V.set(j, i, v.get(j, 0));
                     }
                 }
             }

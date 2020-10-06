@@ -680,8 +680,8 @@ public class TestTriangularSolver_DSCC {
 //            System.out.println("mc = "+mc+"   N = "+N);
 
             DMatrixSparseCSC A = RandomMatrices_DSCC.triangle(true,N,0.1,0.5,rand);
-            DMatrixSparseCSC ATA = new DMatrixSparseCSC(N,N,0);
-            CommonOps_DSCC.multTransA(A,A,ATA,null,null);
+            DMatrixSparseCSC At = CommonOps_DSCC.transpose(A,null,null);
+            DMatrixSparseCSC ATA = CommonOps_DSCC.mult(At,A,null,null,null);
 
             int[] expected = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(ATA,false,expected,null);
@@ -707,7 +707,8 @@ public class TestTriangularSolver_DSCC {
             DMatrixSparseCSC tall = CommonOps_DSCC.concatRows(A,bottom,null);
 
             DMatrixSparseCSC ATA = new DMatrixSparseCSC(N,N,0);
-            CommonOps_DSCC.multTransA(tall,tall,ATA,null,null);
+            DMatrixSparseCSC tall_t = CommonOps_DSCC.transpose(tall,null,null);
+            CommonOps_DSCC.mult(tall_t,tall,ATA,null,null);
 
             int[] expected = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(ATA,false,expected,null);

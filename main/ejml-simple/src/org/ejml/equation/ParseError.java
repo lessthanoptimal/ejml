@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ package org.ejml.equation;
  * @author Peter Abeles
  */
 public class ParseError extends RuntimeException {
-    public ParseError(String message) {
+    public ParseError( String message ) {
         super(message);
     }
 }

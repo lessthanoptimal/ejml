@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,16 +28,15 @@ import org.ejml.data.DMatrixRMaj;
  * @author Peter Abeles
  */
 public class ImplCommonOps_DDMA {
-    public static void extract(DMatrix src,
-                               int srcY0, int srcX0,
-                               DMatrix dst,
-                               int dstY0, int dstX0,
-                               int numRows, int numCols )
-    {
-        for( int y = 0; y < numRows; y++ ) {
-            for( int x = 0; x < numCols; x++ ) {
-                double v = src.get(y+srcY0,x+srcX0);
-                dst.set(dstY0+y , dstX0 +x, v);
+    public static void extract( DMatrix src,
+                                int srcY0, int srcX0,
+                                DMatrix dst,
+                                int dstY0, int dstX0,
+                                int numRows, int numCols ) {
+        for (int y = 0; y < numRows; y++) {
+            for (int x = 0; x < numCols; x++) {
+                double v = src.get(y + srcY0, x + srcX0);
+                dst.set(dstY0 + y, dstX0 + x, v);
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,23 +20,22 @@ package org.ejml.interfaces.linsol;
 
 import org.ejml.data.Matrix;
 
-
 /**
-
  * @author Peter Abeles
  */
 // Ideas. Base linear solver will have two inputs
 //    Matrix type specific solvers, e.g. LinearSolver_DDRM implements LinearSolverDense<DMatrixRMaj,DMatrixRMaj>
 // have sparse solver extend LinearSolverDense but add functions to it
-public interface LinearSolverSparse<S extends Matrix, D extends Matrix> extends LinearSolver<S,D> {
+public interface LinearSolverSparse<S extends Matrix, D extends Matrix> extends LinearSolver<S, D> {
 
     /**
      * Solve against sparse matrices. A*X=B. In most situations its more desirable to solve against
      * a dense matrix because of fill in.
+     *
      * @param B Input. Never modified.
      * @param X Output. Never modified.
      */
-    void solveSparse(S B, S X);
+    void solveSparse( S B, S X );
 
     /**
      * <p>Save results from structural analysis step. This can reduce computations of a matrix with the exactly same
@@ -48,8 +47,8 @@ public interface LinearSolverSparse<S extends Matrix, D extends Matrix> extends 
 
     /**
      * Checks to see if the structure is locked.
+     *
      * @return true if locked or false if not locked.
      */
     boolean isStructureLocked();
-
 }

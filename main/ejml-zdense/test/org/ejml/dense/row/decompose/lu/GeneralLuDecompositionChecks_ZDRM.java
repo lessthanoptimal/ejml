@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 /**
  * @author Peter Abeles
  */
@@ -38,27 +37,26 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
 
     Random rand = new Random(0xff);
 
-    public abstract LUDecomposition<ZMatrixRMaj> create(int numRows , int numCols );
+    public abstract LUDecomposition<ZMatrixRMaj> create( int numRows, int numCols );
 
     @Test
-    public void testModifiedInput() {
+    void testModifiedInput() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4, 4, -1, 1, rand);
         ZMatrixRMaj A_orig = A.copy();
 
-        LUDecomposition<ZMatrixRMaj> alg = create(4,4);
+        LUDecomposition<ZMatrixRMaj> alg = create(4, 4);
         assertTrue(alg.decompose(A));
 
-        boolean modified = !MatrixFeatures_ZDRM.isEquals(A,A_orig);
+        boolean modified = !MatrixFeatures_ZDRM.isEquals(A, A_orig);
 
         assertEquals(modified, alg.inputModified());
     }
 
     @Test
-    public void testAllReal()
-    {
-        ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 5,0, 2,0, 3,0, 1.5,0, -2,0, 8,0, -3,0, 4.7,0, -0.5,0);
+    void testAllReal() {
+        ZMatrixRMaj A = new ZMatrixRMaj(3, 3, true, 5, 0, 2, 0, 3, 0, 1.5, 0, -2, 0, 8, 0, -3, 0, 4.7, 0, -0.5, 0);
 
-        LUDecomposition<ZMatrixRMaj> alg = create(3,3);
+        LUDecomposition<ZMatrixRMaj> alg = create(3, 3);
         assertTrue(alg.decompose(A.copy()));
 
         assertFalse(alg.isSingular());
@@ -67,22 +65,21 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
         ZMatrixRMaj U = alg.getUpper(null);
         ZMatrixRMaj P = alg.getRowPivot((ZMatrixRMaj)null);
 
-        ZMatrixRMaj P_tran = new ZMatrixRMaj(P.numCols,P.numRows);
-        ZMatrixRMaj PL = new ZMatrixRMaj(P.numRows,P.numCols);
-        ZMatrixRMaj A_found = new ZMatrixRMaj(A.numRows,A.numCols);
+        ZMatrixRMaj P_tran = new ZMatrixRMaj(P.numCols, P.numRows);
+        ZMatrixRMaj PL = new ZMatrixRMaj(P.numRows, P.numCols);
+        ZMatrixRMaj A_found = new ZMatrixRMaj(A.numRows, A.numCols);
 
-        CommonOps_ZDRM.transpose(P,P_tran);
+        CommonOps_ZDRM.transpose(P, P_tran);
         CommonOps_ZDRM.mult(P_tran, L, PL);
         CommonOps_ZDRM.mult(PL, U, A_found);
 
-        assertTrue(MatrixFeatures_ZDRM.isIdentical(A_found,A, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_ZDRM.isIdentical(A_found, A, UtilEjml.TEST_F64));
     }
 
     @Test
-    public void testDecomposition_square_real()
-    {
-        for( int i = 2; i <= 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,-1,1,rand);
+    void testDecomposition_square_real() {
+        for (int i = 2; i <= 20; i++) {
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, -1, 1, rand);
 
             for (int j = 1; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -93,10 +90,9 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
     }
 
     @Test
-    public void testDecomposition_square_imaginary()
-    {
-        for( int i = 2; i <= 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,-1,1,rand);
+    void testDecomposition_square_imaginary() {
+        for (int i = 2; i <= 20; i++) {
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, -1, 1, rand);
 
             for (int j = 0; j < A.getDataLength(); j += 2) {
                 A.data[j] = 0;
@@ -107,34 +103,33 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
     }
 
     @Test
-    public void testDecomposition_square()
-    {
-        for( int i = 2; i <= 20; i++ ) {
-            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i,i,-1,1,rand);
+    void testDecomposition_square() {
+        for (int i = 2; i <= 20; i++) {
+            ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, -1, 1, rand);
 
             checkDecomposition(A);
         }
     }
 
     @Test
-    public void testFat() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(2,3,-1,1,rand);
+    void testFat() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(2, 3, -1, 1, rand);
 
         checkDecomposition(A);
     }
 
     @Test
-    public void testTall() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3,2,rand);
+    void testTall() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3, 2, rand);
 
         checkDecomposition(A);
     }
 
     @Test
-    public void zeroMatrix() {
-        ZMatrixRMaj A = new ZMatrixRMaj(3,3);
+    void zeroMatrix() {
+        ZMatrixRMaj A = new ZMatrixRMaj(3, 3);
 
-        LUDecomposition<ZMatrixRMaj> alg = create(3,3);
+        LUDecomposition<ZMatrixRMaj> alg = create(3, 3);
 
         assertTrue(alg.decompose(A));
         assertTrue(alg.isSingular());
@@ -142,27 +137,27 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
         ZMatrixRMaj L = alg.getLower(null);
         ZMatrixRMaj U = alg.getUpper(null);
 
-        ZMatrixRMaj A_found = new ZMatrixRMaj(3,3);
+        ZMatrixRMaj A_found = new ZMatrixRMaj(3, 3);
         CommonOps_ZDRM.mult(L, U, A_found);
 
         assertFalse(MatrixFeatures_ZDRM.hasUncountable(A_found));
-        assertTrue(MatrixFeatures_ZDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_ZDRM.isIdentical(A_found, A, UtilEjml.TEST_F64));
     }
 
     @Test
-    public void testSingular(){
-        ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 1,1, 2,2, 3,3, 2,2, 4,4, 6,6, 4,4, 4,4, 0,0);
+    void testSingular() {
+        ZMatrixRMaj A = new ZMatrixRMaj(3, 3, true, 1, 1, 2, 2, 3, 3, 2, 2, 4, 4, 6, 6, 4, 4, 4, 4, 0, 0);
 
-        LUDecomposition<ZMatrixRMaj> alg = create(3,3);
+        LUDecomposition<ZMatrixRMaj> alg = create(3, 3);
         assertTrue(alg.decompose(A));
         assertTrue(alg.isSingular());
     }
 
     @Test
-    public void testNearlySingular(){
-        ZMatrixRMaj A = new ZMatrixRMaj(3,3, true, 1,1, 2,2, 3,3, 2,2, 4,4, 6.1,6.1, 4,4, 4,4, 0,0);
+    void testNearlySingular() {
+        ZMatrixRMaj A = new ZMatrixRMaj(3, 3, true, 1, 1, 2, 2, 3, 3, 2, 2, 4, 4, 6.1, 6.1, 4, 4, 4, 4, 0, 0);
 
-        LUDecomposition<ZMatrixRMaj> alg = create(3,3);
+        LUDecomposition<ZMatrixRMaj> alg = create(3, 3);
         assertTrue(alg.decompose(A));
         assertFalse(alg.isSingular());
     }
@@ -172,15 +167,15 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
      * a matrix being provided.
      */
     @Test
-    public void getLower_getUpper() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3,3,rand);
+    void getLower_getUpper() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3, 3, rand);
 
-        LUDecomposition<ZMatrixRMaj> alg = create(3,3);
+        LUDecomposition<ZMatrixRMaj> alg = create(3, 3);
 
         alg.decompose(A);
 
-        ZMatrixRMaj L_provided = RandomMatrices_ZDRM.rectangle(3,3,rand);
-        ZMatrixRMaj U_provided = RandomMatrices_ZDRM.rectangle(3,3,rand);
+        ZMatrixRMaj L_provided = RandomMatrices_ZDRM.rectangle(3, 3, rand);
+        ZMatrixRMaj U_provided = RandomMatrices_ZDRM.rectangle(3, 3, rand);
 
         assertTrue(L_provided == alg.getLower(L_provided));
         assertTrue(U_provided == alg.getUpper(U_provided));
@@ -188,23 +183,23 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
         ZMatrixRMaj L_ret = alg.getLower(null);
         ZMatrixRMaj U_ret = alg.getUpper(null);
 
-        assertTrue(MatrixFeatures_ZDRM.isEquals(L_provided,L_ret));
-        assertTrue(MatrixFeatures_ZDRM.isEquals(U_provided,U_ret));
+        assertTrue(MatrixFeatures_ZDRM.isEquals(L_provided, L_ret));
+        assertTrue(MatrixFeatures_ZDRM.isEquals(U_provided, U_ret));
     }
 
-    private void checkDecomposition(ZMatrixRMaj a) {
+    private void checkDecomposition( ZMatrixRMaj a ) {
         LUDecomposition<ZMatrixRMaj> alg = create(a.numRows, a.numCols);
         assertTrue(alg.decompose(a.copy()));
 
-        if( a.numRows <= a.numCols)
+        if (a.numRows <= a.numCols)
             assertFalse(alg.isSingular());
 
         ZMatrixRMaj L = alg.getLower(null);
         ZMatrixRMaj U = alg.getUpper(null);
         ZMatrixRMaj P = alg.getRowPivot(null);
 
-        ZMatrixRMaj P_tran  = new ZMatrixRMaj(P.numCols,P.numRows);
-        ZMatrixRMaj PL      = new ZMatrixRMaj(P_tran.numRows,L.numCols);
+        ZMatrixRMaj P_tran = new ZMatrixRMaj(P.numCols, P.numRows);
+        ZMatrixRMaj PL = new ZMatrixRMaj(P_tran.numRows, L.numCols);
         ZMatrixRMaj A_found = new ZMatrixRMaj(a.numRows, a.numCols);
 
         CommonOps_ZDRM.transpose(P, P_tran);
@@ -215,17 +210,17 @@ public abstract class GeneralLuDecompositionChecks_ZDRM {
     }
 
     @Test
-    public void testRowPivotVector() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4,5,rand);
-        LUDecomposition<ZMatrixRMaj> alg = create(A.numRows,A.numCols);
+    void testRowPivotVector() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(4, 5, rand);
+        LUDecomposition<ZMatrixRMaj> alg = create(A.numRows, A.numCols);
 
         assertTrue(alg.decompose(A));
 
-        int []pivot = alg.getRowPivotV(null);
+        int[] pivot = alg.getRowPivotV(null);
         ZMatrixRMaj P = alg.getRowPivot(null);
 
         for (int i = 0; i < A.numRows; i++) {
-            assertEquals(1,(int)P.getReal(i,pivot[i]));
+            assertEquals(1, (int)P.getReal(i, pivot[i]));
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,8 @@ package org.ejml.equation;
  */
 public class VariableIntegerSequence extends Variable {
     IntegerSequence sequence;
-    protected VariableIntegerSequence(IntegerSequence sequence) {
+
+    protected VariableIntegerSequence( IntegerSequence sequence ) {
         super(VariableType.INTEGER_SEQUENCE);
         this.sequence = sequence;
     }

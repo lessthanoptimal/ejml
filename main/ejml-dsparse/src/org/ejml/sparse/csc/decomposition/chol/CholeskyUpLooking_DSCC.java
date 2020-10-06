@@ -37,20 +37,19 @@ import static org.ejml.UtilEjml.adjust;
  * @author Peter Abeles
  */
 public class CholeskyUpLooking_DSCC implements
-        CholeskySparseDecomposition_F64<DMatrixSparseCSC>
-{
+        CholeskySparseDecomposition_F64<DMatrixSparseCSC> {
     private int N;
 
     // storage for decomposition
-    DMatrixSparseCSC L = new DMatrixSparseCSC(1,1,0);
+    DMatrixSparseCSC L = new DMatrixSparseCSC(1, 1, 0);
 
     // workspace storage
     IGrowArray gw = new IGrowArray(1);
     IGrowArray gs = new IGrowArray(1);
     DGrowArray gx = new DGrowArray(1);
-    int []parent = new int[1];
-    int []post = new int[1];
-    int []counts = new int[1];
+    int[] parent = new int[1];
+    int[] post = new int[1];
+    int[] counts = new int[1];
     ColumnCounts_DSCC columnCounter = new ColumnCounts_DSCC(false);
 
     // true if it has successfully decomposed a matrix
@@ -59,14 +58,14 @@ public class CholeskyUpLooking_DSCC implements
     private boolean locked = false;
 
     @Override
-    public boolean decompose(DMatrixSparseCSC orig) {
-        if( orig.numCols != orig.numRows )
+    public boolean decompose( DMatrixSparseCSC orig ) {
+        if (orig.numCols != orig.numRows)
             throw new IllegalArgumentException("Must be a square matrix");
 
-        if( !locked || !decomposed)
+        if (!locked || !decomposed)
             performSymbolic(orig);
 
-        if( performDecomposition(orig) ) {
+        if (performDecomposition(orig)) {
             decomposed = true;
             return true;
         } else {
@@ -74,19 +73,19 @@ public class CholeskyUpLooking_DSCC implements
         }
     }
 
-    public void performSymbolic(DMatrixSparseCSC A) {
+    public void performSymbolic( DMatrixSparseCSC A ) {
         init(A.numCols);
 
-        TriangularSolver_DSCC.eliminationTree(A,false,parent, gw);
-        TriangularSolver_DSCC.postorder(parent,N,post, gw);
-        columnCounter.process(A,parent,post,counts);
-        L.reshape(A.numRows,A.numCols,0);
+        TriangularSolver_DSCC.eliminationTree(A, false, parent, gw);
+        TriangularSolver_DSCC.postorder(parent, N, post, gw);
+        columnCounter.process(A, parent, post, counts);
+        L.reshape(A.numRows, A.numCols, 0);
         L.histogramToStructure(counts);
     }
 
     private void init( int N ) {
         this.N = N;
-        if( parent.length < N ) {
+        if (parent.length < N) {
             parent = new int[N];
             post = new int[N];
             counts = new int[N];
@@ -94,25 +93,25 @@ public class CholeskyUpLooking_DSCC implements
         }
     }
 
-    private boolean performDecomposition(DMatrixSparseCSC A) {
-        int []c = adjust(gw,N);
-        int []s = adjust(gs,N);
-        double []x = adjust(gx,N);
+    private boolean performDecomposition( DMatrixSparseCSC A ) {
+        int[] c = adjust(gw, N);
+        int[] s = adjust(gs, N);
+        double[] x = adjust(gx, N);
 
         System.arraycopy(L.col_idx, 0, c, 0, N);
 
         for (int k = 0; k < N; k++) {
             //----  Nonzero pattern of L(k,:)
-            int top = TriangularSolver_DSCC.searchNzRowsElim(A,k,parent,s,c);
+            int top = TriangularSolver_DSCC.searchNzRowsElim(A, k, parent, s, c);
 
             // x(0:k) is now zero
             x[k] = 0;
             int idx0 = A.col_idx[k];
-            int idx1 = A.col_idx[k+1];
+            int idx1 = A.col_idx[k + 1];
 
             // x = full(triu(C(:,k)))
             for (int p = idx0; p < idx1; p++) {
-                if( A.nz_rows[p] <= k) {
+                if (A.nz_rows[p] <= k) {
                     x[A.nz_rows[p]] = A.nz_values[p];
                 }
             }
@@ -120,11 +119,11 @@ public class CholeskyUpLooking_DSCC implements
             x[k] = 0; // clear x for k+1 iteration
 
             //---- Triangular Solve
-            for(; top < N; top++ ) {
+            for (; top < N; top++) {
                 int i = s[top];
                 double lki = x[i]/L.nz_values[L.col_idx[i]]; // L(k,i) = x(i) / L(i,i)
                 x[i] = 0;
-                for (int p = L.col_idx[i]+1; p < c[i]; p++) {
+                for (int p = L.col_idx[i] + 1; p < c[i]; p++) {
                     x[L.nz_rows[p]] -= L.nz_values[p]*lki;
                 }
                 d -= lki*lki; // d = d - L(k,i)**L(k,i)
@@ -134,7 +133,7 @@ public class CholeskyUpLooking_DSCC implements
             }
 
             //----- Compute L(k,k)
-            if( d <= 0 ) {
+            if (d <= 0) {
                 // it's not positive definite
                 return false;
             }
@@ -157,9 +156,9 @@ public class CholeskyUpLooking_DSCC implements
     }
 
     @Override
-    public DMatrixSparseCSC getT(@Nullable DMatrixSparseCSC T) {
-        if( T == null ) {
-            T = new DMatrixSparseCSC(L.numRows,L.numCols,L.nz_length);
+    public DMatrixSparseCSC getT( @Nullable DMatrixSparseCSC T ) {
+        if (T == null) {
+            T = new DMatrixSparseCSC(L.numRows, L.numCols, L.nz_length);
         }
         T.set(L);
         return T;
@@ -171,13 +170,12 @@ public class CholeskyUpLooking_DSCC implements
         for (int i = 0; i < N; i++) {
             value *= L.nz_values[L.col_idx[i]];
         }
-        return new Complex_F64(value*value,0);
+        return new Complex_F64(value*value, 0);
     }
 
     public DGrowArray getGx() {
         return gx;
     }
-
 
     public DMatrixSparseCSC getL() {
         return L;

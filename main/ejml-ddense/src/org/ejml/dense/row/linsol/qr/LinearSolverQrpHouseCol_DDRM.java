@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
  * Performs a pseudo inverse solver using the {@link org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_DDRM} decomposition
  * directly.  For details on how the pseudo inverse is computed see {@link BaseLinearSolverQrp_DDRM}.
  * </p>
- * 
+ *
  * @author Peter Abeles
  */
 public class LinearSolverQrpHouseCol_DDRM extends BaseLinearSolverQrp_DDRM {
@@ -37,43 +37,42 @@ public class LinearSolverQrpHouseCol_DDRM extends BaseLinearSolverQrp_DDRM {
     private QRColPivDecompositionHouseholderColumn_DDRM decomposition;
 
     // storage for basic solution
-    private DMatrixRMaj x_basic = new DMatrixRMaj(1,1);
+    private DMatrixRMaj x_basic = new DMatrixRMaj(1, 1);
 
-    public LinearSolverQrpHouseCol_DDRM(QRColPivDecompositionHouseholderColumn_DDRM decomposition,
-                                       boolean norm2Solution)
-    {
-        super(decomposition,norm2Solution);
+    public LinearSolverQrpHouseCol_DDRM( QRColPivDecompositionHouseholderColumn_DDRM decomposition,
+                                         boolean norm2Solution ) {
+        super(decomposition, norm2Solution);
         this.decomposition = decomposition;
     }
 
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        if( B.numRows != numRows )
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
-        X.reshape(numCols,B.numCols);
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numCols);
+        X.reshape(numCols, B.numCols);
 
         int BnumCols = B.numCols;
 
         // get the pivots and transpose them
-        int pivots[] = decomposition.getColPivots();
-        
-        double qr[][] = decomposition.getQR();
-        double gammas[] = decomposition.getGammas();
+        int[] pivots = decomposition.getColPivots();
+
+        double[][] qr = decomposition.getQR();
+        double[] gammas = decomposition.getGammas();
 
         // solve each column one by one
-        for( int colB = 0; colB < BnumCols; colB++ ) {
+        for (int colB = 0; colB < BnumCols; colB++) {
             x_basic.reshape(numRows, 1);
-            Y.reshape(numRows,1);
+            Y.reshape(numRows, 1);
 
             // make a copy of this column in the vector
-            for( int i = 0; i < numRows; i++ ) {
-                x_basic.data[i] = B.get(i,colB);
+            for (int i = 0; i < numRows; i++) {
+                x_basic.data[i] = B.get(i, colB);
             }
 
             // Solve Q*x=b => x = Q'*b
             // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
-            for( int i = 0; i < rank; i++ ) {
-                double u[] = qr[i];
+            for (int i = 0; i < rank; i++) {
+                double[] u = qr[i];
 
                 double vv = u[i];
                 u[i] = 1;
@@ -86,15 +85,15 @@ public class LinearSolverQrpHouseCol_DDRM extends BaseLinearSolverQrp_DDRM {
 
             // finish the basic solution by filling in zeros
             x_basic.reshape(numCols, 1, true);
-            for( int i = rank; i < numCols; i++)
+            for (int i = rank; i < numCols; i++)
                 x_basic.data[i] = 0;
 
-            if( norm2Solution && rank < numCols )
+            if (norm2Solution && rank < numCols)
                 upgradeSolution(x_basic);
 
             // save the results
-            for( int i = 0; i < numCols; i++ ) {
-                X.set(pivots[i],colB,x_basic.data[i]);
+            for (int i = 0; i < numCols; i++) {
+                X.set(pivots[i], colB, x_basic.data[i]);
             }
         }
     }

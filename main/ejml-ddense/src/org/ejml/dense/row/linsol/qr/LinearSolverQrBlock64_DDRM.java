@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,11 @@
 
 package org.ejml.dense.row.linsol.qr;
 
+import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.linsol.qr.QrHouseHolderSolver_DDRB;
 import org.ejml.dense.row.linsol.LinearSolver_DDRB_to_DDRM;
-
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * Wrapper around {@link QrHouseHolderSolver_DDRB} that allows it to process
@@ -33,5 +34,9 @@ public class LinearSolverQrBlock64_DDRM extends LinearSolver_DDRB_to_DDRM {
 
     public LinearSolverQrBlock64_DDRM() {
         super(new QrHouseHolderSolver_DDRB());
+    }
+
+    public LinearSolverQrBlock64_DDRM( LinearSolverDense<DMatrixRBlock> alg ) {
+        super(alg);
     }
 }

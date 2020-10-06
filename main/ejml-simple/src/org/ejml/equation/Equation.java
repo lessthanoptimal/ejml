@@ -236,8 +236,8 @@ import static org.ejml.equation.TokenList.Type;
 // TODO intelligently handle identity matrices
 @SuppressWarnings("NullAway") // Massive false positive rate
 public class Equation {
-    HashMap<String,Variable> variables = new HashMap<>();
-    HashMap<String,Macro> macros = new HashMap<>();
+    HashMap<String, Variable> variables = new HashMap<>();
+    HashMap<String, Macro> macros = new HashMap<>();
 
     // storage for a single word in the tokenizer
     char[] storage = new char[1024];
@@ -246,24 +246,24 @@ public class Equation {
     ManagerTempVariables managerTemp = new ManagerTempVariables();
 
     public Equation() {
-        alias(Math.PI,"pi");
-        alias(Math.E,"e");
+        alias(Math.PI, "pi");
+        alias(Math.E, "e");
     }
 
     /**
      * Consturctor which allows you to alias variables
      *
-     * @see #alias(Object...)
-     *
      * @param args arguments for alias
+     * @see #alias(Object...)
      */
-    public Equation(Object ...args) {
+    public Equation( Object... args ) {
         this();
         alias(args);
     }
 
     /**
      * Specifies the seed used in random number generators
+     *
      * @param seed New seed for random number generator
      */
     public void setSeed( long seed ) {
@@ -286,75 +286,77 @@ public class Equation {
      * @param variable Matrix which is to be assigned to name
      * @param name The name of the variable
      */
-    public void alias(DMatrixRMaj variable , String name ) {
-        if( isReserved(name))
+    public void alias( DMatrixRMaj variable, String name ) {
+        if (isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character");
         VariableMatrix old = (VariableMatrix)variables.get(name);
-        if( old == null ) {
+        if (old == null) {
             variables.put(name, new VariableMatrix(variable));
-        }else {
+        } else {
             old.matrix = variable;
         }
     }
 
-    public void alias(FMatrixRMaj variable , String name ) {
-        DMatrixRMaj f = new DMatrixRMaj(variable.numRows,variable.numCols);
-        ConvertMatrixData.convert(variable,f);
-        alias(f,name);
+    public void alias( FMatrixRMaj variable, String name ) {
+        DMatrixRMaj f = new DMatrixRMaj(variable.numRows, variable.numCols);
+        ConvertMatrixData.convert(variable, f);
+        alias(f, name);
     }
 
-    public void alias(DMatrixSparseCSC variable , String name ) {
-        DMatrixRMaj f = new DMatrixRMaj(variable.numRows,variable.numCols);
-        ConvertDMatrixStruct.convert(variable,f);
-        alias(f,name);
+    public void alias( DMatrixSparseCSC variable, String name ) {
+        DMatrixRMaj f = new DMatrixRMaj(variable.numRows, variable.numCols);
+        ConvertDMatrixStruct.convert(variable, f);
+        alias(f, name);
     }
 
-    public void alias( SimpleMatrix variable , String name ) {
-        alias((Object)variable.getMatrix(),name);
+    public void alias( SimpleMatrix variable, String name ) {
+        alias((Object)variable.getMatrix(), name);
     }
 
     /**
      * Adds a new floating point variable. If one already has the same name it is written over.
+     *
      * @param value Value of the number
      * @param name Name in code
      */
-    public void alias( double value , String name ) {
-        if( isReserved(name))
-            throw new RuntimeException("Reserved word or contains a reserved character. '"+name+"'");
+    public void alias( double value, String name ) {
+        if (isReserved(name))
+            throw new RuntimeException("Reserved word or contains a reserved character. '" + name + "'");
 
         VariableDouble old = (VariableDouble)variables.get(name);
-        if( old == null ) {
+        if (old == null) {
             variables.put(name, new VariableDouble(value));
-        }else {
+        } else {
             old.value = value;
         }
     }
 
     /**
      * Adds a new integer variable. If one already has the same name it is written over.
+     *
      * @param value Value of the number
      * @param name Name in code
      */
-    public void alias( int value , String name ) {
-        if( isReserved(name))
+    public void alias( int value, String name ) {
+        if (isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character");
 
         VariableInteger old = (VariableInteger)variables.get(name);
-        if( old == null ) {
+        if (old == null) {
             variables.put(name, new VariableInteger(value));
-        }else {
+        } else {
             old.value = value;
         }
     }
 
-    private void alias( IntegerSequence sequence , String name ) {
-        if( isReserved(name))
+    private void alias( IntegerSequence sequence, String name ) {
+        if (isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character");
 
         VariableIntegerSequence old = (VariableIntegerSequence)variables.get(name);
-        if( old == null ) {
+        if (old == null) {
             variables.put(name, new VariableIntegerSequence(sequence));
-        }else {
+        } else {
             old.sequence = sequence;
         }
     }
@@ -362,72 +364,74 @@ public class Equation {
     /**
      * Creates multiple aliases at once.
      */
-    public void alias( Object ...args ) {
-        if( args.length % 2 == 1 )
+    public void alias( Object... args ) {
+        if (args.length%2 == 1)
             throw new RuntimeException("Even number of arguments expected");
 
         for (int i = 0; i < args.length; i += 2) {
-            aliasGeneric( args[i], (String)args[i+1]);
+            aliasGeneric(args[i], (String)args[i + 1]);
         }
     }
 
     /**
      * Aliases variables with an unknown type.
+     *
      * @param variable The variable being aliased
      * @param name Name of the variable
      */
-    protected void aliasGeneric( Object variable , String name ) {
-        if( variable.getClass() == Integer.class ) {
-            alias(((Integer)variable).intValue(),name);
-        } else if( variable.getClass() == Double.class ) {
-            alias(((Double)variable).doubleValue(),name);
-        } else if( variable.getClass() == DMatrixRMaj.class ) {
-            alias((DMatrixRMaj)variable,name);
-        } else if( variable.getClass() == FMatrixRMaj.class ) {
-            alias((FMatrixRMaj)variable,name);
-        } else if( variable.getClass() == DMatrixSparseCSC.class ) {
-            alias((DMatrixSparseCSC)variable,name);
-        } else if( variable.getClass() == SimpleMatrix.class ) {
-            alias((SimpleMatrix) variable, name);
-        } else if( variable instanceof DMatrixFixed ) {
-            DMatrixRMaj M = new DMatrixRMaj(1,1);
-            ConvertDMatrixStruct.convert((DMatrixFixed)variable,M);
-            alias(M,name);
-        } else if( variable instanceof FMatrixFixed ) {
-            FMatrixRMaj M = new FMatrixRMaj(1,1);
-            ConvertFMatrixStruct.convert((FMatrixFixed)variable,M);
-            alias(M,name);
+    protected void aliasGeneric( Object variable, String name ) {
+        if (variable.getClass() == Integer.class) {
+            alias(((Integer)variable).intValue(), name);
+        } else if (variable.getClass() == Double.class) {
+            alias(((Double)variable).doubleValue(), name);
+        } else if (variable.getClass() == DMatrixRMaj.class) {
+            alias((DMatrixRMaj)variable, name);
+        } else if (variable.getClass() == FMatrixRMaj.class) {
+            alias((FMatrixRMaj)variable, name);
+        } else if (variable.getClass() == DMatrixSparseCSC.class) {
+            alias((DMatrixSparseCSC)variable, name);
+        } else if (variable.getClass() == SimpleMatrix.class) {
+            alias((SimpleMatrix)variable, name);
+        } else if (variable instanceof DMatrixFixed) {
+            DMatrixRMaj M = new DMatrixRMaj(1, 1);
+            ConvertDMatrixStruct.convert((DMatrixFixed)variable, M);
+            alias(M, name);
+        } else if (variable instanceof FMatrixFixed) {
+            FMatrixRMaj M = new FMatrixRMaj(1, 1);
+            ConvertFMatrixStruct.convert((FMatrixFixed)variable, M);
+            alias(M, name);
         } else {
-            throw new RuntimeException("Unknown value type of "+
-                    variable.getClass().getSimpleName()+" for variable "+name);
+            throw new RuntimeException("Unknown value type of " +
+                    variable.getClass().getSimpleName() + " for variable " + name);
         }
     }
 
     public Sequence compile( String equation ) {
-        return compile(equation,true,false);
+        return compile(equation, true, false);
     }
 
     /**
      * Parses the equation and compiles it into a sequence which can be executed later on
+     *
      * @param equation String in simple equation format.
      * @param assignment if true an assignment is expected and an exception if thrown if there is non
      * @param debug if true it will print out debugging information
      * @return Sequence of operations on the variables
      */
-    public Sequence compile( String equation , boolean assignment, boolean debug ) {
+    public Sequence compile( String equation, boolean assignment, boolean debug ) {
 
         functions.setManagerTemp(managerTemp);
 
         Sequence sequence = new Sequence();
-        TokenList tokens = extractTokens(equation,managerTemp);
+        TokenList tokens = extractTokens(equation, managerTemp);
 
-        if( tokens.size() < 3 )
+        if (tokens.size() < 3)
             throw new RuntimeException("Too few tokens");
 
         TokenList.Token t0 = tokens.getFirst();
 
-        if( t0.word != null && t0.word.compareToIgnoreCase("macro") == 0 ) {
-            parseMacro(tokens,sequence);
+        if (t0.word != null && t0.word.compareToIgnoreCase("macro") == 0) {
+            parseMacro(tokens, sequence);
         } else {
             insertFunctionsAndVariables(tokens);
             insertMacros(tokens);
@@ -439,18 +443,17 @@ public class Equation {
 
             // Get the results variable
             if (t0.getType() != Type.VARIABLE && t0.getType() != Type.WORD) {
-                compileTokens(sequence,tokens);
+                compileTokens(sequence, tokens);
                 // If there's no output then this is acceptable, otherwise it's assumed to be a bug
                 // If there's no output then a configuration was changed
                 Variable variable = tokens.getFirst().getVariable();
-                if( variable != null ) {
-                    if( assignment )
+                if (variable != null) {
+                    if (assignment)
                         throw new IllegalArgumentException("No assignment to an output variable could be found. Found " + t0);
                     else {
                         sequence.output = variable; // set this to be the output for print()
                     }
                 }
-
             } else {
                 compileAssignment(sequence, tokens, t0);
             }
@@ -469,7 +472,7 @@ public class Equation {
     /**
      * An assignment is being made to some output. looks something like: A = B
      */
-    private void compileAssignment(Sequence sequence, TokenList tokens, TokenList.Token t0) {
+    private void compileAssignment( Sequence sequence, TokenList tokens, TokenList.Token t0 ) {
         // see if it is assign or a range
         List<Variable> range = parseAssignRange(sequence, tokens, t0);
 
@@ -498,10 +501,10 @@ public class Equation {
         }
     }
 
-    private void compileTokens(Sequence sequence, TokenList tokens) {
+    private void compileTokens( Sequence sequence, TokenList tokens ) {
         checkForUnknownVariables(tokens);
         handleParentheses(tokens, sequence);
-        if( tokens.size() > 1 ) {
+        if (tokens.size() > 1) {
             parseBlockNoParentheses(tokens, sequence, false);
         }
 
@@ -510,58 +513,56 @@ public class Equation {
             throw new RuntimeException("BUG");
     }
 
-
     /**
      * Parse a macro defintion.
      *
      * "macro NAME( var0 , var1 ) = 5+var0+var1'
      */
-    private void parseMacro( TokenList tokens , Sequence sequence ) {
+    private void parseMacro( TokenList tokens, Sequence sequence ) {
         Macro macro = new Macro();
 
         TokenList.Token t = tokens.getFirst().next;
 
-        if( t.word == null ) {
-            throw new ParseError("Expected the macro's name after "+tokens.getFirst().word);
+        if (t.word == null) {
+            throw new ParseError("Expected the macro's name after " + tokens.getFirst().word);
         }
         List<TokenList.Token> variableTokens = new ArrayList<>();
 
         macro.name = t.word;
         t = t.next;
         t = parseMacroInput(variableTokens, t);
-        for( TokenList.Token a : variableTokens ) {
-            if( a.word == null) throw new ParseError("expected word in macro header");
+        for (TokenList.Token a : variableTokens) {
+            if (a.word == null) throw new ParseError("expected word in macro header");
             macro.inputs.add(a.word);
         }
         t = t.next;
-        if( t == null || t.getSymbol() != Symbol.ASSIGN)
+        if (t == null || t.getSymbol() != Symbol.ASSIGN)
             throw new ParseError("Expected assignment");
         t = t.next;
-        macro.tokens = new TokenList(t,tokens.last);
+        macro.tokens = new TokenList(t, tokens.last);
 
         sequence.addOperation(macro.createOperation(macros));
     }
 
-
-    private TokenList.Token parseMacroInput(List<TokenList.Token> variables, TokenList.Token t) {
-        if( t.getSymbol() != Symbol.PAREN_LEFT ) {
+    private TokenList.Token parseMacroInput( List<TokenList.Token> variables, TokenList.Token t ) {
+        if (t.getSymbol() != Symbol.PAREN_LEFT) {
             throw new ParseError("Expected (");
         }
         t = t.next;
         boolean expectWord = true;
-        while( t != null && t.getSymbol() != Symbol.PAREN_RIGHT ) {
-            if( expectWord ) {
+        while (t != null && t.getSymbol() != Symbol.PAREN_RIGHT) {
+            if (expectWord) {
                 variables.add(t);
                 expectWord = false;
             } else {
-                if( t.getSymbol() != Symbol.COMMA )
+                if (t.getSymbol() != Symbol.COMMA)
                     throw new ParseError("Expected comma");
                 expectWord = true;
             }
 
             t = t.next;
         }
-        if( t == null )
+        if (t == null)
             throw new ParseError("Token sequence ended unexpectedly");
         return t;
     }
@@ -569,11 +570,11 @@ public class Equation {
     /**
      * Examines the list of variables for any unknown variables and throws an exception if one is found
      */
-    private void checkForUnknownVariables(TokenList tokens) {
+    private void checkForUnknownVariables( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
-        while( t != null ) {
-            if( t.getType() == Type.WORD )
-                throw new ParseError("Unknown variable on right side. "+t.getWord());
+        while (t != null) {
+            if (t.getType() == Type.WORD)
+                throw new ParseError("Unknown variable on right side. " + t.getWord());
             t = t.next;
         }
     }
@@ -582,29 +583,29 @@ public class Equation {
      * Infer the type of and create a new output variable using the results from the right side of the equation.
      * If the type is already known just return that.
      */
-    private Variable createVariableInferred(TokenList.Token t0, Variable variableRight) {
+    private Variable createVariableInferred( TokenList.Token t0, Variable variableRight ) {
         Variable result;
 
-        if( t0.getType() == Type.WORD ) {
-            switch( variableRight.getType()) {
+        if (t0.getType() == Type.WORD) {
+            switch (variableRight.getType()) {
                 case MATRIX:
-                    alias(new DMatrixRMaj(1,1),t0.getWord());
+                    alias(new DMatrixRMaj(1, 1), t0.getWord());
                     break;
 
                 case SCALAR:
-                    if( variableRight instanceof VariableInteger) {
-                        alias(0,t0.getWord());
+                    if (variableRight instanceof VariableInteger) {
+                        alias(0, t0.getWord());
                     } else {
-                        alias(1.0,t0.getWord());
+                        alias(1.0, t0.getWord());
                     }
                     break;
 
                 case INTEGER_SEQUENCE:
-                    alias((IntegerSequence)null,t0.getWord());
+                    alias((IntegerSequence)null, t0.getWord());
                     break;
 
                 default:
-                    throw new RuntimeException("Type not supported for assignment: "+variableRight.getType());
+                    throw new RuntimeException("Type not supported for assignment: " + variableRight.getType());
             }
 
             result = variables.get(t0.getWord());
@@ -618,30 +619,30 @@ public class Equation {
      * See if a range for assignment is specified.  If so return the range, otherwise return null
      *
      * Example of assign range:
-     *    a(0:3,4:5) = blah
-     *    a((0+2):3,4:5) = blah
+     * a(0:3,4:5) = blah
+     * a((0+2):3,4:5) = blah
      */
-    private List<Variable> parseAssignRange(Sequence sequence, TokenList tokens, TokenList.Token t0) {
+    private List<Variable> parseAssignRange( Sequence sequence, TokenList tokens, TokenList.Token t0 ) {
         // find assignment symbol
         TokenList.Token tokenAssign = t0.next;
-        while( tokenAssign != null && tokenAssign.symbol != Symbol.ASSIGN ) {
+        while (tokenAssign != null && tokenAssign.symbol != Symbol.ASSIGN) {
             tokenAssign = tokenAssign.next;
         }
 
-        if( tokenAssign == null )
+        if (tokenAssign == null)
             throw new ParseError("Can't find assignment operator");
 
         // see if it is a sub matrix before
-        if( tokenAssign.previous.symbol == Symbol.PAREN_RIGHT ) {
+        if (tokenAssign.previous.symbol == Symbol.PAREN_RIGHT) {
             TokenList.Token start = t0.next;
-            if( start.symbol != Symbol.PAREN_LEFT )
+            if (start.symbol != Symbol.PAREN_LEFT)
                 throw new ParseError("Expected left param for assignment");
             TokenList.Token end = tokenAssign.previous;
-            TokenList subTokens = tokens.extractSubList(start,end);
+            TokenList subTokens = tokens.extractSubList(start, end);
             subTokens.remove(subTokens.getFirst());
             subTokens.remove(subTokens.getLast());
 
-            handleParentheses(subTokens,sequence);
+            handleParentheses(subTokens, sequence);
 
             List<TokenList.Token> inputs = parseParameterCommaBlock(subTokens, sequence);
 
@@ -650,7 +651,7 @@ public class Equation {
 
             List<Variable> range = new ArrayList<>();
             addSubMatrixVariables(inputs, range);
-            if( range.size() != 1 && range.size() != 2 ) {
+            if (range.size() != 1 && range.size() != 2) {
                 throw new ParseError("Unexpected number of range variables.  1 or 2 expected");
             }
             return range;
@@ -662,6 +663,7 @@ public class Equation {
     /**
      * Searches for pairs of parentheses and processes blocks inside of them.  Embedded parentheses are handled
      * with no problem.  On output only a single token should be in tokens.
+     *
      * @param tokens List of parsed tokens
      * @param sequence Sequence of operators
      */
@@ -671,43 +673,43 @@ public class Equation {
 
         // find all of them
         TokenList.Token t = tokens.first;
-        while( t != null ) {
+        while (t != null) {
             TokenList.Token next = t.next;
-            if( t.getType() == Type.SYMBOL ) {
-                if( t.getSymbol() == Symbol.PAREN_LEFT  )
+            if (t.getType() == Type.SYMBOL) {
+                if (t.getSymbol() == Symbol.PAREN_LEFT)
                     left.add(t);
-                else if( t.getSymbol() == Symbol.PAREN_RIGHT ) {
-                    if( left.isEmpty() )
+                else if (t.getSymbol() == Symbol.PAREN_RIGHT) {
+                    if (left.isEmpty())
                         throw new ParseError(") found with no matching (");
 
-                    TokenList.Token a = left.remove(left.size()-1);
+                    TokenList.Token a = left.remove(left.size() - 1);
 
                     // remember the element before so the new one can be inserted afterwards
                     TokenList.Token before = a.previous;
 
-                    TokenList sublist = tokens.extractSubList(a,t);
+                    TokenList sublist = tokens.extractSubList(a, t);
                     // remove parentheses
                     sublist.remove(sublist.first);
                     sublist.remove(sublist.last);
 
                     // if its a function before () then the () indicates its an input to a function
-                    if( before != null && before.getType() == Type.FUNCTION ) {
+                    if (before != null && before.getType() == Type.FUNCTION) {
                         List<TokenList.Token> inputs = parseParameterCommaBlock(sublist, sequence);
                         if (inputs.isEmpty())
                             throw new ParseError("Empty function input parameters");
                         else {
                             createFunction(before, inputs, tokens, sequence);
                         }
-                    } else if( before != null && before.getType() == Type.VARIABLE &&
-                            before.getVariable().getType() == VariableType.MATRIX ) {
+                    } else if (before != null && before.getType() == Type.VARIABLE &&
+                            before.getVariable().getType() == VariableType.MATRIX) {
                         // if it's a variable then that says it's a sub-matrix
-                        TokenList.Token extract = parseSubmatrixToExtract(before,sublist, sequence);
+                        TokenList.Token extract = parseSubmatrixToExtract(before, sublist, sequence);
                         // put in the extract operation
-                        tokens.insert(before,extract);
+                        tokens.insert(before, extract);
                         tokens.remove(before);
                     } else {
                         // if null then it was empty inside
-                        TokenList.Token output = parseBlockNoParentheses(sublist,sequence, false);
+                        TokenList.Token output = parseBlockNoParentheses(sublist, sequence, false);
                         if (output != null)
                             tokens.insert(before, output);
                     }
@@ -716,7 +718,7 @@ public class Equation {
             t = next;
         }
 
-        if( !left.isEmpty())
+        if (!left.isEmpty())
             throw new ParseError("Dangling ( parentheses");
     }
 
@@ -733,16 +735,20 @@ public class Equation {
         TokenList.Token token = tokens.first;
 
         int numBracket = 0;
-        while( token != null ) {
-            if( token.getType() == Type.SYMBOL ) {
-                switch( token.getSymbol() ) {
+        while (token != null) {
+            if (token.getType() == Type.SYMBOL) {
+                switch (token.getSymbol()) {
                     case COMMA:
-                        if( numBracket == 0)
+                        if (numBracket == 0)
                             commas.add(token);
-                    break;
+                        break;
 
-                    case BRACKET_LEFT: numBracket++; break;
-                    case BRACKET_RIGHT: numBracket--; break;
+                    case BRACKET_LEFT:
+                        numBracket++;
+                        break;
+                    case BRACKET_RIGHT:
+                        numBracket--;
+                        break;
                     default:
                 }
             }
@@ -750,23 +756,23 @@ public class Equation {
         }
 
         List<TokenList.Token> output = new ArrayList<>();
-        if( commas.isEmpty() ) {
+        if (commas.isEmpty()) {
             output.add(parseBlockNoParentheses(tokens, sequence, false));
         } else {
             TokenList.Token before = tokens.first;
             for (int i = 0; i < commas.size(); i++) {
                 TokenList.Token after = commas.get(i);
-                if( before == after )
+                if (before == after)
                     throw new ParseError("No empty function inputs allowed!");
                 TokenList.Token tmp = after.next;
-                TokenList sublist = tokens.extractSubList(before,after);
+                TokenList sublist = tokens.extractSubList(before, after);
                 sublist.remove(after);// remove the comma
                 output.add(parseBlockNoParentheses(sublist, sequence, false));
                 before = tmp;
             }
 
             // if the last character is a comma then after.next above will be null and thus before is null
-            if( before == null )
+            if (before == null)
                 throw new ParseError("No empty function inputs allowed!");
 
             TokenList.Token after = tokens.last;
@@ -779,10 +785,11 @@ public class Equation {
 
     /**
      * Converts a submatrix into an extract matrix operation.
+     *
      * @param variableTarget The variable in which the submatrix is extracted from
      */
-    protected TokenList.Token parseSubmatrixToExtract(TokenList.Token variableTarget,
-                                                      TokenList tokens, Sequence sequence) {
+    protected TokenList.Token parseSubmatrixToExtract( TokenList.Token variableTarget,
+                                                       TokenList tokens, Sequence sequence ) {
 
 
         List<TokenList.Token> inputs = parseParameterCommaBlock(tokens, sequence);
@@ -793,7 +800,7 @@ public class Equation {
         variables.add(variableTarget.getVariable());
 
         addSubMatrixVariables(inputs, variables);
-        if( variables.size() != 2 && variables.size() != 3 ) {
+        if (variables.size() != 2 && variables.size() != 3) {
             throw new ParseError("Unexpected number of variables.  1 or 2 expected");
         }
 
@@ -802,18 +809,18 @@ public class Equation {
 
         // only one variable means its referencing elements
         // two variables means its referencing a sub matrix
-        if( inputs.size() == 1 ) {
+        if (inputs.size() == 1) {
             Variable varA = variables.get(1);
-            if( varA.getType() == VariableType.SCALAR ) {
+            if (varA.getType() == VariableType.SCALAR) {
                 info = functions.create("extractScalar", variables);
             } else {
                 info = functions.create("extract", variables);
             }
-        } else if( inputs.size() == 2 ) {
+        } else if (inputs.size() == 2) {
             Variable varA = variables.get(1);
             Variable varB = variables.get(2);
 
-            if( varA.getType() == VariableType.SCALAR && varB.getType() == VariableType.SCALAR) {
+            if (varA.getType() == VariableType.SCALAR && varB.getType() == VariableType.SCALAR) {
                 info = functions.create("extractScalar", variables);
             } else {
                 info = functions.create("extract", variables);
@@ -831,13 +838,13 @@ public class Equation {
      * Goes through the token lists and adds all the variables which can be used to define a sub-matrix.  If anything
      * else is found an excpetion is thrown
      */
-    private void addSubMatrixVariables(List<TokenList.Token> inputs, List<Variable> variables) {
+    private void addSubMatrixVariables( List<TokenList.Token> inputs, List<Variable> variables ) {
         for (int i = 0; i < inputs.size(); i++) {
             TokenList.Token t = inputs.get(i);
-            if( t.getType() != Type.VARIABLE )
-                throw new ParseError("Expected variables only in sub-matrix input, not "+t.getType());
+            if (t.getType() != Type.VARIABLE)
+                throw new ParseError("Expected variables only in sub-matrix input, not " + t.getType());
             Variable v = t.getVariable();
-            if( v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t) ) {
+            if (v.getType() == VariableType.INTEGER_SEQUENCE || isVariableInteger(t)) {
                 variables.add(v);
             } else {
                 throw new ParseError("Expected an integer, integer sequence, or array range to define a submatrix");
@@ -849,15 +856,15 @@ public class Equation {
      * Parses a code block with no parentheses and no commas.  After it is done there should be a single token left,
      * which is returned.
      */
-    protected TokenList.Token parseBlockNoParentheses(TokenList tokens, Sequence sequence, boolean insideMatrixConstructor) {
+    protected TokenList.Token parseBlockNoParentheses( TokenList tokens, Sequence sequence, boolean insideMatrixConstructor ) {
 
         // search for matrix bracket operations
-        if( !insideMatrixConstructor ) {
+        if (!insideMatrixConstructor) {
             parseBracketCreateMatrix(tokens, sequence);
         }
 
         // First create sequences from anything involving a colon
-        parseSequencesWithColons(tokens, sequence );
+        parseSequencesWithColons(tokens, sequence);
 
         // process operators depending on their priority
         parseNegOp(tokens, sequence);
@@ -874,12 +881,12 @@ public class Equation {
         parseIntegerLists(tokens);
         parseCombineIntegerLists(tokens);
 
-        if( !insideMatrixConstructor ) {
+        if (!insideMatrixConstructor) {
             if (tokens.size() > 1) {
-                System.err.println("Remaining tokens: "+tokens.size);
+                System.err.println("Remaining tokens: " + tokens.size);
                 TokenList.Token t = tokens.first;
-                while( t != null ) {
-                    System.err.println("  "+t);
+                while (t != null) {
+                    System.err.println("  " + t);
                     t = t.next;
                 }
                 throw new RuntimeException("BUG in parser.  There should only be a single token left");
@@ -893,12 +900,12 @@ public class Equation {
     /**
      * Removes all commas from the token list
      */
-    private void stripCommas(TokenList tokens) {
+    private void stripCommas( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
 
-        while( t != null ) {
+        while (t != null) {
             TokenList.Token next = t.next;
-            if( t.getSymbol() == Symbol.COMMA ) {
+            if (t.getSymbol() == Symbol.COMMA) {
                 tokens.remove(t);
             }
             t = next;
@@ -917,10 +924,10 @@ public class Equation {
      * 2:
      * 2:4:
      */
-    protected void parseSequencesWithColons(TokenList tokens , Sequence sequence ) {
+    protected void parseSequencesWithColons( TokenList tokens, Sequence sequence ) {
 
         TokenList.Token t = tokens.getFirst();
-        if( t == null )
+        if (t == null)
             return;
 
         int state = 0;
@@ -930,65 +937,65 @@ public class Equation {
         TokenList.Token prev = t;
 
         boolean last = false;
-        while( true ) {
-            if( state == 0 ) {
-                if( isVariableInteger(t) && (t.next != null && t.next.getSymbol() == Symbol.COLON) ) {
+        while (true) {
+            if (state == 0) {
+                if (isVariableInteger(t) && (t.next != null && t.next.getSymbol() == Symbol.COLON)) {
                     start = t;
                     state = 1;
                     t = t.next;
-                } else if( t != null && t.getSymbol() == Symbol.COLON ) {
+                } else if (t != null && t.getSymbol() == Symbol.COLON) {
                     // If it starts with a colon then it must be 'all'  or a type-o
-                    IntegerSequence range = new IntegerSequence.Range(null,null);
+                    IntegerSequence range = new IntegerSequence.Range(null, null);
                     VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(range);
                     TokenList.Token n = new TokenList.Token(varSequence);
                     tokens.insert(t.previous, n);
                     tokens.remove(t);
                     t = n;
                 }
-            } else if( state == 1 ) {
+            } else if (state == 1) {
                 // var : ?
                 if (isVariableInteger(t)) {
                     state = 2;
                 } else {
                     // array range
-                    IntegerSequence range = new IntegerSequence.Range(start,null);
+                    IntegerSequence range = new IntegerSequence.Range(start, null);
                     VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(range);
                     replaceSequence(tokens, varSequence, start, prev);
                     state = 0;
                 }
-            } else if ( state == 2 ) {
+            } else if (state == 2) {
                 // var:var ?
-                if( t != null && t.getSymbol() == Symbol.COLON ) {
+                if (t != null && t.getSymbol() == Symbol.COLON) {
                     middle = prev;
                     state = 3;
                 } else {
                     // create for sequence with start and stop elements only
-                    IntegerSequence numbers = new IntegerSequence.For(start,null,prev);
+                    IntegerSequence numbers = new IntegerSequence.For(start, null, prev);
                     VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(numbers);
-                    replaceSequence(tokens, varSequence, start, prev );
-                    if( t != null )
+                    replaceSequence(tokens, varSequence, start, prev);
+                    if (t != null)
                         t = t.previous;
                     state = 0;
                 }
-            } else if ( state == 3 ) {
+            } else if (state == 3) {
                 // var:var: ?
-                if( isVariableInteger(t) ) {
+                if (isVariableInteger(t)) {
                     // create 'for' sequence with three variables
-                    IntegerSequence numbers = new IntegerSequence.For(start,middle,t);
+                    IntegerSequence numbers = new IntegerSequence.For(start, middle, t);
                     VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(numbers);
                     t = replaceSequence(tokens, varSequence, start, t);
                 } else {
                     // array range with 2 elements
-                    IntegerSequence numbers = new IntegerSequence.Range(start,middle);
+                    IntegerSequence numbers = new IntegerSequence.Range(start, middle);
                     VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(numbers);
                     replaceSequence(tokens, varSequence, start, prev);
                 }
                 state = 0;
             }
 
-            if( last ) {
+            if (last) {
                 break;
-            } else if( t.next == null ) {
+            } else if (t.next == null) {
                 // handle the case where it is the last token in the sequence
                 last = true;
             }
@@ -997,16 +1004,15 @@ public class Equation {
         }
     }
 
-
     /**
      * Searches for a sequence of integers
      *
      * example:
      * 1 2 3 4 6 7 -3
      */
-    protected void parseIntegerLists(TokenList tokens) {
+    protected void parseIntegerLists( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
-        if( t == null || t.next == null )
+        if (t == null || t.next == null)
             return;
 
         int state = 0;
@@ -1015,33 +1021,33 @@ public class Equation {
         TokenList.Token prev = t;
 
         boolean last = false;
-        while( true ) {
-            if( state == 0 ) {
-                if( isVariableInteger(t) ) {
+        while (true) {
+            if (state == 0) {
+                if (isVariableInteger(t)) {
                     start = t;
                     state = 1;
                 }
-            } else if( state == 1 ) {
+            } else if (state == 1) {
                 // var ?
-                if( isVariableInteger(t)) {                 // see if its explicit number sequence
+                if (isVariableInteger(t)) {                 // see if its explicit number sequence
                     state = 2;
                 } else {  // just scalar integer, skip
                     state = 0;
                 }
-            } else if ( state == 2 ) {
+            } else if (state == 2) {
                 // var var ....
-                if( !isVariableInteger(t) ) {
+                if (!isVariableInteger(t)) {
                     // create explicit list sequence
-                    IntegerSequence sequence = new IntegerSequence.Explicit(start,prev);
+                    IntegerSequence sequence = new IntegerSequence.Explicit(start, prev);
                     VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
                     replaceSequence(tokens, varSequence, start, prev);
                     state = 0;
                 }
             }
 
-            if( last ) {
+            if (last) {
                 break;
-            } else if( t.next == null ) {
+            } else if (t.next == null) {
                 // handle the case where it is the last token in the sequence
                 last = true;
             }
@@ -1053,9 +1059,9 @@ public class Equation {
     /**
      * Looks for sequences of integer lists and combine them into one big sequence
      */
-    protected void parseCombineIntegerLists(TokenList tokens) {
+    protected void parseCombineIntegerLists( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
-        if( t == null || t.next == null )
+        if (t == null || t.next == null)
             return;
 
         int numFound = 0;
@@ -1063,18 +1069,18 @@ public class Equation {
         TokenList.Token start = null;
         TokenList.Token end = null;
 
-        while( t != null ) {
-            if( t.getType() == Type.VARIABLE && (isVariableInteger(t) ||
-                    t.getVariable().getType() == VariableType.INTEGER_SEQUENCE )) {
-                if( numFound == 0 ) {
+        while (t != null) {
+            if (t.getType() == Type.VARIABLE && (isVariableInteger(t) ||
+                    t.getVariable().getType() == VariableType.INTEGER_SEQUENCE)) {
+                if (numFound == 0) {
                     numFound = 1;
                     start = end = t;
                 } else {
                     numFound++;
                     end = t;
                 }
-            } else if( numFound > 1 ) {
-                IntegerSequence sequence = new IntegerSequence.Combined(start,end);
+            } else if (numFound > 1) {
+                IntegerSequence sequence = new IntegerSequence.Combined(start, end);
                 VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
                 replaceSequence(tokens, varSequence, start, end);
                 numFound = 0;
@@ -1084,14 +1090,14 @@ public class Equation {
             t = t.next;
         }
 
-        if( numFound > 1 ) {
-            IntegerSequence sequence = new IntegerSequence.Combined(start,end);
+        if (numFound > 1) {
+            IntegerSequence sequence = new IntegerSequence.Combined(start, end);
             VariableIntegerSequence varSequence = functions.getManagerTemp().createIntegerSequence(sequence);
             replaceSequence(tokens, varSequence, start, end);
         }
     }
 
-    private TokenList.Token replaceSequence(TokenList tokens, Variable target, TokenList.Token start, TokenList.Token end) {
+    private TokenList.Token replaceSequence( TokenList tokens, Variable target, TokenList.Token start, TokenList.Token end ) {
         TokenList.Token tmp = new TokenList.Token(target);
         tokens.insert(start.previous, tmp);
         tokens.extractSubList(start, end);
@@ -1103,8 +1109,8 @@ public class Equation {
      *
      * @return true if integer or false if not
      */
-    private static boolean isVariableInteger(TokenList.Token t) {
-        if( t == null )
+    private static boolean isVariableInteger( TokenList.Token t ) {
+        if (t == null)
             return false;
 
         return t.getScalarType() == VariableScalar.Type.INTEGER;
@@ -1114,24 +1120,24 @@ public class Equation {
      * Searches for brackets which are only used to construct new matrices by concatenating
      * 1 or more matrices together
      */
-    protected void parseBracketCreateMatrix(TokenList tokens, Sequence sequence) {
+    protected void parseBracketCreateMatrix( TokenList tokens, Sequence sequence ) {
         List<TokenList.Token> left = new ArrayList<>();
 
         TokenList.Token t = tokens.getFirst();
 
-        while( t != null ) {
+        while (t != null) {
             TokenList.Token next = t.next;
-            if( t.getSymbol() == Symbol.BRACKET_LEFT ) {
+            if (t.getSymbol() == Symbol.BRACKET_LEFT) {
                 left.add(t);
-            } else if( t.getSymbol() == Symbol.BRACKET_RIGHT ) {
-                if( left.isEmpty() )
+            } else if (t.getSymbol() == Symbol.BRACKET_RIGHT) {
+                if (left.isEmpty())
                     throw new RuntimeException("No matching left bracket for right");
 
                 TokenList.Token start = left.remove(left.size() - 1);
 
                 // Compute everything inside the [ ], this will leave a
                 // series of variables and semi-colons hopefully
-                TokenList bracketLet = tokens.extractSubList(start.next,t.previous);
+                TokenList bracketLet = tokens.extractSubList(start.next, t.previous);
                 parseBlockNoParentheses(bracketLet, sequence, true);
                 MatrixConstructor constructor = constructMatrix(bracketLet);
 
@@ -1149,21 +1155,21 @@ public class Equation {
             t = next;
         }
 
-        if( !left.isEmpty() )
+        if (!left.isEmpty())
             throw new RuntimeException("Dangling [");
     }
 
-    private MatrixConstructor constructMatrix(TokenList bracketLet) {
+    private MatrixConstructor constructMatrix( TokenList bracketLet ) {
         // Go through the bracket and construct the matrix
         MatrixConstructor constructor = new MatrixConstructor(functions.getManagerTemp());
 
         TokenList.Token n = bracketLet.first;
 
-        while( n != null ) {
-            if( n.getType() == Type.VARIABLE ) {
+        while (n != null) {
+            if (n.getType() == Type.VARIABLE) {
                 constructor.addToRow(n.getVariable());
-            } else if( n.getType() == Type.SYMBOL ) {
-                if( n.getSymbol() == Symbol.SEMICOLON ) {
+            } else if (n.getType() == Type.SYMBOL) {
+                if (n.getSymbol() == Symbol.SEMICOLON) {
                     constructor.endRow();
                 }
             } else {
@@ -1180,36 +1186,36 @@ public class Equation {
      * sign with a variable to its right and no variable to its left
      *
      * Example:
-     *  a = - b * c
+     * a = - b * c
      */
-    protected void parseNegOp(TokenList tokens, Sequence sequence) {
-        if( tokens.size == 0 )
+    protected void parseNegOp( TokenList tokens, Sequence sequence ) {
+        if (tokens.size == 0)
             return;
 
         TokenList.Token token = tokens.first;
 
-        while( token != null ) {
+        while (token != null) {
             TokenList.Token next = token.next;
             escape:
-            if( token.getSymbol() == Symbol.MINUS ) {
-                if( token.previous != null && token.previous.getType() != Type.SYMBOL)
+            if (token.getSymbol() == Symbol.MINUS) {
+                if (token.previous != null && token.previous.getType() != Type.SYMBOL)
                     break escape;
-                if( token.previous != null && token.previous.getType() == Type.SYMBOL &&
+                if (token.previous != null && token.previous.getType() == Type.SYMBOL &&
                         (token.previous.symbol == Symbol.TRANSPOSE))
                     break escape;
-                if( token.next == null || token.next.getType() == Type.SYMBOL)
+                if (token.next == null || token.next.getType() == Type.SYMBOL)
                     break escape;
 
-                if( token.next.getType() != Type.VARIABLE )
+                if (token.next.getType() != Type.VARIABLE)
                     throw new RuntimeException("Crap bug rethink this function");
 
                 // create the operation
-                Operation.Info info = Operation.neg(token.next.getVariable(),functions.getManagerTemp());
+                Operation.Info info = Operation.neg(token.next.getVariable(), functions.getManagerTemp());
                 // add the operation to the sequence
                 sequence.addOperation(info.op);
                 // update the token list
                 TokenList.Token t = new TokenList.Token(info.output);
-                tokens.insert(token.next,t);
+                tokens.insert(token.next, t);
                 tokens.remove(token.next);
                 tokens.remove(token);
                 next = t;
@@ -1218,7 +1224,6 @@ public class Equation {
         }
     }
 
-
     /**
      * Parses operations where the input comes from variables to its left only.  Hard coded to only look
      * for transpose for now
@@ -1226,22 +1231,22 @@ public class Equation {
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperationsL(TokenList tokens, Sequence sequence) {
+    protected void parseOperationsL( TokenList tokens, Sequence sequence ) {
 
-        if( tokens.size == 0 )
+        if (tokens.size == 0)
             return;
 
         TokenList.Token token = tokens.first;
 
-        if( token.getType() != Type.VARIABLE )
-            throw new ParseError("The first token in an equation needs to be a variable and not "+token);
+        if (token.getType() != Type.VARIABLE)
+            throw new ParseError("The first token in an equation needs to be a variable and not " + token);
 
-        while( token != null ) {
-            if( token.getType() == Type.FUNCTION ) {
+        while (token != null) {
+            if (token.getType() == Type.FUNCTION) {
                 throw new ParseError("Function encountered with no parentheses");
-            } else if( token.getType() == Type.SYMBOL && token.getSymbol() == Symbol.TRANSPOSE) {
-                if( token.previous.getType() == Type.VARIABLE )
-                    token = insertTranspose(token.previous,tokens,sequence);
+            } else if (token.getType() == Type.SYMBOL && token.getSymbol() == Symbol.TRANSPOSE) {
+                if (token.previous.getType() == Type.VARIABLE)
+                    token = insertTranspose(token.previous, tokens, sequence);
                 else
                     throw new ParseError("Expected variable before transpose");
             }
@@ -1256,31 +1261,31 @@ public class Equation {
      * @param tokens List of all the tokens
      * @param sequence List of operation sequence
      */
-    protected void parseOperationsLR(Symbol[] ops, TokenList tokens, Sequence sequence) {
+    protected void parseOperationsLR( Symbol[] ops, TokenList tokens, Sequence sequence ) {
 
-        if( tokens.size == 0 )
+        if (tokens.size == 0)
             return;
 
         TokenList.Token token = tokens.first;
 
-        if( token.getType() != Type.VARIABLE )
-            throw new ParseError("The first token in an equation needs to be a variable and not "+token);
+        if (token.getType() != Type.VARIABLE)
+            throw new ParseError("The first token in an equation needs to be a variable and not " + token);
 
         boolean hasLeft = false;
-        while( token != null ) {
-            if( token.getType() == Type.FUNCTION ) {
+        while (token != null) {
+            if (token.getType() == Type.FUNCTION) {
                 throw new ParseError("Function encountered with no parentheses");
-            } else if( token.getType() == Type.VARIABLE ) {
-                if( hasLeft ) {
-                    if( isTargetOp(token.previous,ops)) {
-                        token = createOp(token.previous.previous,token.previous,token,tokens,sequence);
+            } else if (token.getType() == Type.VARIABLE) {
+                if (hasLeft) {
+                    if (isTargetOp(token.previous, ops)) {
+                        token = createOp(token.previous.previous, token.previous, token, tokens, sequence);
                     }
                 } else {
                     hasLeft = true;
                 }
             } else {
-                if( token.previous.getType() == Type.SYMBOL ) {
-                    throw new ParseError("Two symbols next to each other. "+token.previous+" and "+token);
+                if (token.previous.getType() == Type.SYMBOL) {
+                    throw new ParseError("Two symbols next to each other. " + token.previous + " and " + token);
                 }
             }
             token = token.next;
@@ -1291,10 +1296,9 @@ public class Equation {
      * Adds a new operation to the list from the operation and two variables.  The inputs are removed
      * from the token list and replaced by their output.
      */
-    protected TokenList.Token insertTranspose( TokenList.Token variable ,
-                                               TokenList tokens , Sequence sequence )
-    {
-        Operation.Info info = functions.create('\'',variable.getVariable());
+    protected TokenList.Token insertTranspose( TokenList.Token variable,
+                                               TokenList tokens, Sequence sequence ) {
+        Operation.Info info = functions.create('\'', variable.getVariable());
 
         sequence.addOperation(info.op);
 
@@ -1303,18 +1307,16 @@ public class Equation {
         // remove the transpose symbol
         tokens.remove(variable.next);
         // replace the variable with its transposed version
-        tokens.replace(variable,t);
+        tokens.replace(variable, t);
         return t;
-
     }
 
     /**
      * Adds a new operation to the list from the operation and two variables.  The inputs are removed
      * from the token list and replaced by their output.
      */
-    protected TokenList.Token createOp( TokenList.Token left , TokenList.Token op , TokenList.Token right ,
-                                      TokenList tokens , Sequence sequence )
-    {
+    protected TokenList.Token createOp( TokenList.Token left, TokenList.Token op, TokenList.Token right,
+                                        TokenList tokens, Sequence sequence ) {
         Operation.Info info = functions.create(op.symbol, left.getVariable(), right.getVariable());
 
         sequence.addOperation(info.op);
@@ -1323,26 +1325,24 @@ public class Equation {
         TokenList.Token t = new TokenList.Token(info.output);
         tokens.remove(left);
         tokens.remove(right);
-        tokens.replace(op,t);
+        tokens.replace(op, t);
         return t;
-
     }
 
     /**
      * Adds a new operation to the list from the operation and two variables.  The inputs are removed
      * from the token list and replaced by their output.
      */
-    protected TokenList.Token createFunction( TokenList.Token name , List<TokenList.Token> inputs , TokenList tokens , Sequence sequence )
-    {
+    protected TokenList.Token createFunction( TokenList.Token name, List<TokenList.Token> inputs, TokenList tokens, Sequence sequence ) {
         Operation.Info info;
-        if( inputs.size() == 1 )
-            info = functions.create(name.getFunction().getName(),inputs.get(0).getVariable());
+        if (inputs.size() == 1)
+            info = functions.create(name.getFunction().getName(), inputs.get(0).getVariable());
         else {
             List<Variable> vars = new ArrayList<>();
             for (int i = 0; i < inputs.size(); i++) {
                 vars.add(inputs.get(i).getVariable());
             }
-            info = functions.create(name.getFunction().getName(), vars );
+            info = functions.create(name.getFunction().getName(), vars);
         }
 
         sequence.addOperation(info.op);
@@ -1351,47 +1351,46 @@ public class Equation {
         TokenList.Token t = new TokenList.Token(info.output);
         tokens.replace(name, t);
         return t;
-
     }
 
     /**
      * Looks up a variable given its name.  If none is found then return null.
      */
-    public <T extends Variable> T lookupVariable(String token) {
+    public <T extends Variable> T lookupVariable( String token ) {
         Variable result = variables.get(token);
         return (T)result;
     }
 
-    public Macro lookupMacro(String token) {
+    public Macro lookupMacro( String token ) {
         return macros.get(token);
     }
 
-    public DMatrixRMaj lookupDDRM(String token) {
+    public DMatrixRMaj lookupDDRM( String token ) {
         return ((VariableMatrix)variables.get(token)).matrix;
     }
 
-    public FMatrixRMaj lookupFDRM(String token) {
+    public FMatrixRMaj lookupFDRM( String token ) {
         DMatrixRMaj d = ((VariableMatrix)variables.get(token)).matrix;
-        FMatrixRMaj f = new FMatrixRMaj(d.numRows,d.numCols);
-        ConvertMatrixData.convert(d,f);
+        FMatrixRMaj f = new FMatrixRMaj(d.numRows, d.numCols);
+        ConvertMatrixData.convert(d, f);
         return f;
     }
 
-    public int lookupInteger(String token) {
+    public int lookupInteger( String token ) {
         return ((VariableInteger)variables.get(token)).value;
     }
 
-    public double lookupDouble(String token) {
+    public double lookupDouble( String token ) {
         Variable v = variables.get(token);
 
-        if( v instanceof VariableMatrix ) {
+        if (v instanceof VariableMatrix) {
 //            if( ((VariableMatrix)v).matrix instanceof DMatrix ) {
-                DMatrix m = ((VariableMatrix) v).matrix;
-                if (m.getNumCols() == 1 && m.getNumRows() == 1) {
-                    return m.get(0, 0);
-                } else {
-                    throw new RuntimeException("Can only return 1x1 real matrices as doubles");
-                }
+            DMatrix m = ((VariableMatrix)v).matrix;
+            if (m.getNumCols() == 1 && m.getNumRows() == 1) {
+                return m.get(0, 0);
+            } else {
+                throw new RuntimeException("Can only return 1x1 real matrices as doubles");
+            }
 //            } else if( ((VariableMatrix)v).matrix instanceof FMatrix) {
 //                FMatrix m = ((VariableMatrix) v).matrix;
 //                if (m.getNumCols() == 1 && m.getNumRows() == 1) {
@@ -1407,7 +1406,7 @@ public class Equation {
     /**
      * Parses the text string to extract tokens.
      */
-    protected TokenList extractTokens(String equation , ManagerTempVariables managerTemp ) {
+    protected TokenList extractTokens( String equation, ManagerTempVariables managerTemp ) {
         // add a space to make sure everything is parsed when its done
         equation += " ";
 
@@ -1416,10 +1415,10 @@ public class Equation {
         int length = 0;
         boolean again; // process the same character twice
         TokenType type = TokenType.UNKNOWN;
-        for( int i = 0; i < equation.length(); i++ ) {
+        for (int i = 0; i < equation.length(); i++) {
             again = false;
             char c = equation.charAt(i);
-            if( type == TokenType.WORD ) {
+            if (type == TokenType.WORD) {
                 if (isLetter(c)) {
                     storage[length++] = c;
                 } else {
@@ -1429,70 +1428,70 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 }
-            } else if( type == TokenType.INTEGER ) { // Handle integer numbers.  Until proven to be a float
-                if( c == '.' ) {
+            } else if (type == TokenType.INTEGER) { // Handle integer numbers.  Until proven to be a float
+                if (c == '.') {
                     type = TokenType.FLOAT;
                     storage[length++] = c;
-                } else if( c == 'e' || c == 'E' ) {
+                } else if (c == 'e' || c == 'E') {
                     type = TokenType.FLOAT_EXP;
                     storage[length++] = c;
-                } else if( Character.isDigit(c) ) {
+                } else if (Character.isDigit(c)) {
                     storage[length++] = c;
-                } else if( isSymbol(c) || Character.isWhitespace(c) ) {
-                    int value = Integer.parseInt( new String(storage, 0, length));
+                } else if (isSymbol(c) || Character.isWhitespace(c)) {
+                    int value = Integer.parseInt(new String(storage, 0, length));
                     tokens.add(managerTemp.createInteger(value));
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 } else {
-                    throw new ParseError("Unexpected character at the end of an integer "+c);
+                    throw new ParseError("Unexpected character at the end of an integer " + c);
                 }
-            } else if( type == TokenType.FLOAT ) { // Handle floating point numbers
-                if( c == '.') {
+            } else if (type == TokenType.FLOAT) { // Handle floating point numbers
+                if (c == '.') {
                     throw new ParseError("Unexpected '.' in a float");
-                } else if( c == 'e' || c == 'E' ) {
+                } else if (c == 'e' || c == 'E') {
                     storage[length++] = c;
                     type = TokenType.FLOAT_EXP;
-                } else if( Character.isDigit(c) ) {
+                } else if (Character.isDigit(c)) {
                     storage[length++] = c;
-                } else if( isSymbol(c) || Character.isWhitespace(c) ) {
-                    double value = Double.parseDouble( new String(storage, 0, length));
+                } else if (isSymbol(c) || Character.isWhitespace(c)) {
+                    double value = Double.parseDouble(new String(storage, 0, length));
                     tokens.add(managerTemp.createDouble(value));
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 } else {
-                    throw new ParseError("Unexpected character at the end of an float "+c);
+                    throw new ParseError("Unexpected character at the end of an float " + c);
                 }
-            } else if( type == TokenType.FLOAT_EXP ) { // Handle floating point numbers in exponential format
+            } else if (type == TokenType.FLOAT_EXP) { // Handle floating point numbers in exponential format
                 boolean end = false;
-                if( c == '-' ) {
-                    char p = storage[length-1];
-                    if( p == 'e' || p == 'E') {
+                if (c == '-') {
+                    char p = storage[length - 1];
+                    if (p == 'e' || p == 'E') {
                         storage[length++] = c;
                     } else {
                         end = true;
                     }
-                } else if( Character.isDigit(c) ) {
+                } else if (Character.isDigit(c)) {
                     storage[length++] = c;
-                } else if( isSymbol(c) || Character.isWhitespace(c) ) {
+                } else if (isSymbol(c) || Character.isWhitespace(c)) {
                     end = true;
                 } else {
-                    throw new ParseError("Unexpected character at the end of an float "+c);
+                    throw new ParseError("Unexpected character at the end of an float " + c);
                 }
 
-                if( end ) {
-                    double value = Double.parseDouble( new String(storage, 0, length));
+                if (end) {
+                    double value = Double.parseDouble(new String(storage, 0, length));
                     tokens.add(managerTemp.createDouble(value));
                     type = TokenType.UNKNOWN;
                     again = true; // process the current character again since it was unexpected
                 }
             } else {
-                if( isSymbol(c) ) {
+                if (isSymbol(c)) {
                     boolean special = false;
-                    if( c == '-' ) {
+                    if (c == '-') {
                         // need to handle minus symbols carefully since it can be part of a number of a minus operator
                         // if next to a number it should be negative sign, unless there is no operator to its left
                         // then its a minus sign.
-                        if( i+1 < equation.length() && Character.isDigit(equation.charAt(i+1)) &&
+                        if (i + 1 < equation.length() && Character.isDigit(equation.charAt(i + 1)) &&
                                 (tokens.last == null || isOperatorLR(tokens.last.getSymbol()))) {
                             type = TokenType.INTEGER;
                             storage[0] = c;
@@ -1500,7 +1499,7 @@ public class Equation {
                             special = true;
                         }
                     }
-                    if( !special ) {
+                    if (!special) {
                         TokenList.Token t = tokens.add(Symbol.lookup(c));
                         if (t.previous != null && t.previous.getType() == Type.SYMBOL) {
                             // there should only be two symbols in a row if its an element-wise operation
@@ -1511,11 +1510,11 @@ public class Equation {
                             }
                         }
                     }
-                } else if( Character.isWhitespace(c) ) {
+                } else if (Character.isWhitespace(c)) {
                     continue;// ignore white space
                 } else {
                     // start adding to the word
-                    if( Character.isDigit(c) ) {
+                    if (Character.isDigit(c)) {
                         type = TokenType.INTEGER;
                     } else {
                         type = TokenType.WORD;
@@ -1525,7 +1524,7 @@ public class Equation {
                 }
             }
             // see if it should process the same character again
-            if( again )
+            if (again)
                 i--;
         }
 
@@ -1536,10 +1535,10 @@ public class Equation {
      * Search for WORDS in the token list.  Then see if the WORD is a function or a variable.  If so replace
      * the work with the function/variable
      */
-    void insertFunctionsAndVariables(TokenList tokens ) {
+    void insertFunctionsAndVariables( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
-        while( t != null ) {
-            if( t.getType() == Type.WORD ) {
+        while (t != null) {
+            if (t.getType() == Type.WORD) {
                 Variable v = lookupVariable(t.word);
                 if (v != null) {
                     t.variable = v;
@@ -1556,19 +1555,19 @@ public class Equation {
     /**
      * Checks to see if a WORD matches the name of a macro.  if it does it applies the macro at that location
      */
-    void insertMacros(TokenList tokens ) {
+    void insertMacros( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
-        while( t != null ) {
-            if( t.getType() == Type.WORD ) {
+        while (t != null) {
+            if (t.getType() == Type.WORD) {
                 Macro v = lookupMacro(t.word);
                 if (v != null) {
                     TokenList.Token before = t.previous;
                     List<TokenList.Token> inputs = new ArrayList<>();
-                    t = parseMacroInput(inputs,t.next);
+                    t = parseMacroInput(inputs, t.next);
 
                     TokenList sniplet = v.execute(inputs);
-                    tokens.extractSubList(before.next,t);
-                    tokens.insertAfter(before,sniplet);
+                    tokens.extractSubList(before.next, t);
+                    tokens.insertAfter(before, sniplet);
                     t = sniplet.last;
                 }
             }
@@ -1580,8 +1579,7 @@ public class Equation {
         return SimpleMatrix.wrap(lookupDDRM(token));
     }
 
-    protected enum TokenType
-    {
+    protected enum TokenType {
         WORD,
         INTEGER,
         FLOAT,
@@ -1591,32 +1589,33 @@ public class Equation {
 
     /**
      * Checks to see if the token is in the list of allowed character operations.  Used to apply order of operations
+     *
      * @param token Token being checked
      * @param ops List of allowed character operations
      * @return true for it being in the list and false for it not being in the list
      */
-    protected static boolean isTargetOp( TokenList.Token token , Symbol[] ops ) {
+    protected static boolean isTargetOp( TokenList.Token token, Symbol[] ops ) {
         Symbol c = token.symbol;
         for (int i = 0; i < ops.length; i++) {
-            if( c == ops[i])
+            if (c == ops[i])
                 return true;
         }
         return false;
     }
 
-    protected static boolean isSymbol(char c) {
+    protected static boolean isSymbol( char c ) {
         return c == '*' || c == '/' || c == '+' || c == '-' || c == '(' || c == ')' || c == '[' || c == ']' ||
-               c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';' || c == '\\' || c == '^';
+                c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';' || c == '\\' || c == '^';
     }
 
     /**
      * Operators which affect the variables to its left and right
      */
     protected static boolean isOperatorLR( Symbol s ) {
-        if( s == null )
+        if (s == null)
             return false;
 
-        switch( s ) {
+        switch (s) {
             case ELEMENT_DIVIDE:
             case ELEMENT_TIMES:
             case ELEMENT_POWER:
@@ -1645,11 +1644,11 @@ public class Equation {
      * or if it contains a restricted character.
      */
     protected boolean isReserved( String name ) {
-        if( functions.isFunctionName(name))
+        if (functions.isFunctionName(name))
             return true;
 
         for (int i = 0; i < name.length(); i++) {
-            if( !isLetter(name.charAt(i)) )
+            if (!isLetter(name.charAt(i)))
                 return true;
         }
         return false;
@@ -1670,8 +1669,8 @@ public class Equation {
      *
      * @param equation String in simple equation format
      */
-    public Equation process( String equation , boolean debug ) {
-        compile(equation,true,debug).perform();
+    public Equation process( String equation, boolean debug ) {
+        compile(equation, true, debug).perform();
         return this;
     }
 
@@ -1681,18 +1680,18 @@ public class Equation {
     public void print( String equation ) {
         // first assume it's just a variable
         Variable v = lookupVariable(equation);
-        if( v == null ) {
-            Sequence sequence = compile(equation,false,false);
+        if (v == null) {
+            Sequence sequence = compile(equation, false, false);
             sequence.perform();
             v = sequence.output;
         }
 
-        if( v instanceof VariableMatrix ) {
+        if (v instanceof VariableMatrix) {
             ((VariableMatrix)v).matrix.print();
-        } else if(v instanceof VariableScalar ) {
-            System.out.println("Scalar = "+((VariableScalar)v).getDouble() );
+        } else if (v instanceof VariableScalar) {
+            System.out.println("Scalar = " + ((VariableScalar)v).getDouble());
         } else {
-            System.out.println("Add support for "+v.getClass().getSimpleName());
+            System.out.println("Add support for " + v.getClass().getSimpleName());
         }
     }
 

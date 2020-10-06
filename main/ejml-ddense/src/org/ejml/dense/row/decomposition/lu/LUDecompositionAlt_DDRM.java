@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,6 @@ package org.ejml.dense.row.decomposition.lu;
 
 import org.ejml.data.DMatrixRMaj;
 
-
 /**
  * <p>
  * An LU decomposition algorithm that originally came from Jama.  In general this is faster than
@@ -40,39 +39,38 @@ public class LUDecompositionAlt_DDRM extends LUDecompositionBase_DDRM {
      * @return true If the matrix can be decomposed and false if it can not.
      */
     @Override
-    public boolean decompose( DMatrixRMaj a )
-    {
+    public boolean decompose( DMatrixRMaj a ) {
         decomposeCommonInit(a);
 
-        double LUcolj[] = vv;
+        double[] LUcolj = vv;
 
-        for( int j = 0; j < n; j++ ) {
+        for (int j = 0; j < n; j++) {
 
             // make a copy of the column to avoid cache jumping issues
-            for( int i = 0; i < m; i++) {
+            for (int i = 0; i < m; i++) {
                 LUcolj[i] = dataLU[i*n + j];
             }
 
             // Apply previous transformations.
-            for( int i = 0; i < m; i++ ) {
+            for (int i = 0; i < m; i++) {
                 int rowIndex = i*n;
 
                 // Most of the time is spent in the following dot product.
                 int kmax = i < j ? i : j;
                 double s = 0.0;
                 for (int k = 0; k < kmax; k++) {
-                    s += dataLU[rowIndex+k]*LUcolj[k];
+                    s += dataLU[rowIndex + k]*LUcolj[k];
                 }
 
-                dataLU[rowIndex+j] = LUcolj[i] -= s;
+                dataLU[rowIndex + j] = LUcolj[i] -= s;
             }
 
             // Find pivot and exchange if necessary.
             int p = j;
             double max = Math.abs(LUcolj[p]);
-            for (int i = j+1; i < m; i++) {
+            for (int i = j + 1; i < m; i++) {
                 double v = Math.abs(LUcolj[i]);
-                if ( v > max) {
+                if (v > max) {
                     p = i;
                     max = v;
                 }
@@ -87,23 +85,25 @@ public class LUDecompositionAlt_DDRM extends LUDecompositionBase_DDRM {
 //                }
                 int rowP = p*n;
                 int rowJ = j*n;
-                int endP = rowP+n;
-                for (;rowP < endP; rowP++,rowJ++) {
+                int endP = rowP + n;
+                for (; rowP < endP; rowP++, rowJ++) {
                     double t = dataLU[rowP];
                     dataLU[rowP] = dataLU[rowJ];
                     dataLU[rowJ] = t;
                 }
-                int k = pivot[p]; pivot[p] = pivot[j]; pivot[j] = k;
+                int k = pivot[p];
+                pivot[p] = pivot[j];
+                pivot[j] = k;
                 pivsign = -pivsign;
             }
             indx[j] = p;
 
             // Compute multipliers.
-            if (j < m ) {
-                double lujj = dataLU[j*n+j];
-                if( lujj != 0 ) {
-                    for (int i = j+1; i < m; i++) {
-                        dataLU[i*n+j] /= lujj;
+            if (j < m) {
+                double lujj = dataLU[j*n + j];
+                if (lujj != 0) {
+                    for (int i = j + 1; i < m; i++) {
+                        dataLU[i*n + j] /= lujj;
                     }
                 }
             }

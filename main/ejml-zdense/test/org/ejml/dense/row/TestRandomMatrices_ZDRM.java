@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,59 +30,59 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Peter Abeles
  */
 public class TestRandomMatrices_ZDRM {
-    
-    Random rand = new Random(234);
+
+    private final Random rand = new Random(234);
 
     @Test
-    public void rectangle_min_max() {
-        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(30,20,-1,1,rand);
+    void rectangle_min_max() {
+        ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(30, 20, -1, 1, rand);
 
         checkRandomRange(A);
     }
 
     @Test
-    public void fillUniform() {
-        ZMatrixRMaj A = new ZMatrixRMaj(5,4);
+    void fillUniform() {
+        ZMatrixRMaj A = new ZMatrixRMaj(5, 4);
 
-        RandomMatrices_ZDRM.fillUniform(A,rand);
+        RandomMatrices_ZDRM.fillUniform(A, rand);
 
         checkUniform1(A);
     }
 
-    private void checkUniform1(ZMatrixRMaj a) {
+    private void checkUniform1( ZMatrixRMaj a ) {
         assertEquals(5, a.numRows);
         assertEquals(4, a.numCols);
 
         double totalReal = 0;
         double totalImg = 0;
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < a.numCols; j++ ) {
-                double real = a.getReal(i,j);
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < a.numCols; j++) {
+                double real = a.getReal(i, j);
                 double img = a.getImag(i, j);
 
-                assertTrue( real >= 0);
-                assertTrue( real <= 1);
+                assertTrue(real >= 0);
+                assertTrue(real <= 1);
                 totalReal += real;
 
-                assertTrue( img >= 0);
-                assertTrue( img <= 1);
+                assertTrue(img >= 0);
+                assertTrue(img <= 1);
                 totalImg += img;
             }
         }
 
-        assertTrue(totalReal>0);
-        assertTrue(totalImg>0);
+        assertTrue(totalReal > 0);
+        assertTrue(totalImg > 0);
     }
 
     @Test
-    public void fillUniform_min_max() {
-        ZMatrixRMaj A = new ZMatrixRMaj(30,20);
-        RandomMatrices_ZDRM.fillUniform(A,-1,1,rand);
+    void fillUniform_min_max() {
+        ZMatrixRMaj A = new ZMatrixRMaj(30, 20);
+        RandomMatrices_ZDRM.fillUniform(A, -1, 1, rand);
 
         checkRandomRange(A);
     }
 
-    private void checkRandomRange(ZMatrixRMaj a) {
+    private void checkRandomRange( ZMatrixRMaj a ) {
         assertEquals(30, a.numRows);
         assertEquals(20, a.numCols);
 
@@ -91,40 +91,39 @@ public class TestRandomMatrices_ZDRM {
         int numImgNeg = 0;
         int numImgPos = 0;
 
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < a.numCols; j++ ) {
-                double real = a.getReal(i,j);
-                double img = a.getImag(i,j);
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < a.numCols; j++) {
+                double real = a.getReal(i, j);
+                double img = a.getImag(i, j);
 
-                if( real < 0 )
+                if (real < 0)
                     numRealNeg++;
                 else
                     numRealPos++;
 
-                if( Math.abs(real) > 1 )
+                if (Math.abs(real) > 1)
                     fail("Out of range");
 
-                if( img < 0 )
+                if (img < 0)
                     numImgNeg++;
                 else
                     numImgPos++;
 
-                if( Math.abs(img) > 1 )
+                if (Math.abs(img) > 1)
                     fail("Out of range");
             }
         }
 
-        assertTrue(numRealNeg>0);
-        assertTrue(numRealPos>0);
+        assertTrue(numRealNeg > 0);
+        assertTrue(numRealPos > 0);
 
-        assertTrue(numImgNeg>0);
-        assertTrue(numImgPos>0);
+        assertTrue(numImgNeg > 0);
+        assertTrue(numImgPos > 0);
     }
 
-
     @Test
-    public void hermitianPosDef() {
-        for( int i = 1; i < 20; i++ ) {
+    void hermitianPosDef() {
+        for (int i = 1; i < 20; i++) {
             ZMatrixRMaj A = RandomMatrices_ZDRM.hermitianPosDef(i, rand);
 
             assertTrue(MatrixFeatures_ZDRM.isPositiveDefinite(A));
@@ -132,7 +131,7 @@ public class TestRandomMatrices_ZDRM {
     }
 
     @Test
-    public void hermitian() {
+    void hermitian() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.hermitian(10, -1, 1, rand);
 
         assertTrue(MatrixFeatures_ZDRM.isHermitian(A, UtilEjml.TEST_F64));
@@ -142,17 +141,17 @@ public class TestRandomMatrices_ZDRM {
         double max = CommonOps_ZDRM.elementMaxReal(A);
 
         assertTrue(min < 0 && min >= -1);
-        assertTrue(max > 0 && max <=  1);
+        assertTrue(max > 0 && max <= 1);
 
         min = CommonOps_ZDRM.elementMinImaginary(A);
         max = CommonOps_ZDRM.elementMaxImaginary(A);
 
         assertTrue(min < 0 && min >= -1);
-        assertTrue(max > 0 && max <=  1);
+        assertTrue(max > 0 && max <= 1);
     }
 //
 //    @Test
-//    public void createUpperTriangle() {
+//    void createUpperTriangle() {
 //        for( int hess = 0; hess < 3; hess++ ) {
 //            ZMatrixRMaj A = RandomMatrices_ZDRM.createUpperTriangle(10,hess,-1,1,rand);
 //

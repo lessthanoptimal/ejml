@@ -38,15 +38,15 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * Performs matrix addition:<br>
      * C = A + B
      *
-     * @param A        Matrix
-     * @param B        Matrix
-     * @param C        Output matrix.
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Output matrix.
      * @param semiRing Semi-Ring to define + and *
-     * @param gw       (Optional) Storage for internal workspace.  Can be null.
-     * @param gx       (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void add(double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                           @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
+    public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
+                            @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
 
@@ -74,16 +74,16 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * Adds the results of adding a column in A and B as a new column in C.<br>
      * C(:,end+1) = A(:,colA) + B(:,colB)
      *
-     * @param A        matrix
-     * @param colA     column in A
-     * @param B        matrix
-     * @param colB     column in B
-     * @param C        Column in C
+     * @param A matrix
+     * @param colA column in A
+     * @param B matrix
+     * @param colB column in B
+     * @param C Column in C
      * @param semiRing Semi-Ring to define + and *
-     * @param gw       workspace
+     * @param gw workspace
      */
-    public static void addColAppend(DMatrixSparseCSC A, int colA, DMatrixSparseCSC B, int colB,
-                                    DMatrixSparseCSC C, DSemiRing semiRing, @Nullable IGrowArray gw) {
+    public static void addColAppend( DMatrixSparseCSC A, int colA, DMatrixSparseCSC B, int colB,
+                                     DMatrixSparseCSC C, DSemiRing semiRing, @Nullable IGrowArray gw ) {
         if (A.numRows != B.numRows || A.numRows != C.numRows)
             throw new IllegalArgumentException("Number of rows in A, B, and C do not match");
 
@@ -121,15 +121,15 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * Performs element-wise multiplication:<br>
      * C_ij = A_ij * B_ij
      *
-     * @param A        (Input) Matrix
-     * @param B        (Input) Matrix
-     * @param C        (Output) Matrix.
+     * @param A (Input) Matrix
+     * @param B (Input) Matrix
+     * @param C (Output) Matrix.
      * @param semiRing Semi-Ring to define + and *
-     * @param gw       (Optional) Storage for internal workspace.  Can be null.
-     * @param gx       (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                                   @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
+    public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
+                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows);
         Arrays.fill(w, 0, A.numRows, -1); // fill with -1. This will be a value less than column

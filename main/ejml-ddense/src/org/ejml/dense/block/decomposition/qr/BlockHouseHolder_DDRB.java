@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,18 @@
 
 package org.ejml.dense.block.decomposition.qr;
 
+import org.ejml.UtilEjml;
+import org.ejml.concurrency.GrowArray;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.InnerMultiplication_DDRB;
 import org.ejml.dense.block.VectorOps_DDRB;
+import org.jetbrains.annotations.Nullable;
+
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 /**
- *
  * <p>
  * Contains various helper functions for performing a block matrix QR decomposition.
  * </p>
@@ -42,25 +47,21 @@ public class BlockHouseHolder_DDRB {
 
     /**
      * Performs a standard QR decomposition on the specified submatrix that is one block wide.
-     *
-     * @param blockLength
-     * @param Y
-     * @param gamma
      */
-    public static boolean decomposeQR_block_col( final int blockLength ,
-                                                 final DSubmatrixD1 Y ,
-                                                 final double gamma[] )
-    {
-        int width = Y.col1-Y.col0;
-        int height = Y.row1-Y.row0;
-        int min = Math.min(width,height);
-        for( int i = 0; i < min; i++ ) {
+    public static boolean decomposeQR_block_col( final int blockLength,
+                                                 final DSubmatrixD1 Y,
+                                                 final double[] gamma ) {
+        int width = Y.col1 - Y.col0;
+        int height = Y.row1 - Y.row0;
+        int min = Math.min(width, height);
+
+        for (int i = 0; i < min; i++) {
             // compute the householder vector
             if (!computeHouseHolderCol(blockLength, Y, gamma, i))
                 return false;
 
             // apply to rest of the columns in the block
-            rank1UpdateMultR_Col(blockLength,Y,i,gamma[Y.col0+i]);
+            rank1UpdateMultR_Col(blockLength, Y, i, gamma[Y.col0 + i]);
         }
 
         return true;
@@ -84,24 +85,24 @@ public class BlockHouseHolder_DDRB {
      * @return If there was any problems or not. true = no problem.
      */
     public static boolean computeHouseHolderCol( final int blockLength, final DSubmatrixD1 Y,
-                                                 final double[] gamma, final int i) {
-        double max = BlockHouseHolder_DDRB.findMaxCol(blockLength,Y,i);
+                                                 final double[] gamma, final int i ) {
+        double max = BlockHouseHolder_DDRB.findMaxCol(blockLength, Y, i);
 
-        if( max == 0.0 ) {
+        if (max == 0.0) {
             return false;
         } else {
             // computes tau and normalizes u by max
             double tau = computeTauAndDivideCol(blockLength, Y, i, max);
 
             // divide u by u_0
-            double u_0 = Y.get(i,i) + tau;
-            divideElementsCol(blockLength,Y,i, u_0 );
+            double u_0 = Y.get(i, i) + tau;
+            divideElementsCol(blockLength, Y, i, u_0);
 
-            gamma[Y.col0+i] = u_0/tau;
+            gamma[Y.col0 + i] = u_0/tau;
             tau *= max;
 
             // after the reflector is applied the column would be all zeros but be -tau in the first element
-            Y.set(i,i,-tau);
+            Y.set(i, i, -tau);
         }
         return true;
     }
@@ -123,23 +124,23 @@ public class BlockHouseHolder_DDRB {
      * @return If there was any problems or not. true = no problem.
      */
     public static boolean computeHouseHolderRow( final int blockLength, final DSubmatrixD1 Y,
-                                                 final double[] gamma, final int i) {
-        double max = BlockHouseHolder_DDRB.findMaxRow(blockLength,Y,i,i+1);
+                                                 final double[] gamma, final int i ) {
+        double max = BlockHouseHolder_DDRB.findMaxRow(blockLength, Y, i, i + 1);
 
-        if( max == 0.0 ) {
+        if (max == 0.0) {
             return false;
         } else {
             // computes tau and normalizes u by max
-            double tau = computeTauAndDivideRow(blockLength, Y, i,i+1, max);
+            double tau = computeTauAndDivideRow(blockLength, Y, i, i + 1, max);
 
             // divide u by u_0
-            double u_0 = Y.get(i,i+1) + tau;
-            VectorOps_DDRB.div_row(blockLength,Y,i,u_0,Y,i,i+1,Y.col1-Y.col0);
+            double u_0 = Y.get(i, i + 1) + tau;
+            VectorOps_DDRB.div_row(blockLength, Y, i, u_0, Y, i, i + 1, Y.col1 - Y.col0);
 
-            gamma[Y.row0+i] = u_0/tau;
+            gamma[Y.row0 + i] = u_0/tau;
 
             // after the reflector is applied the column would be all zeros but be -tau in the first element
-            Y.set(i,i+1,-tau*max);
+            Y.set(i, i + 1, -tau*max);
         }
         return true;
     }
@@ -147,23 +148,22 @@ public class BlockHouseHolder_DDRB {
     /**
      * <p>
      * Applies a householder reflector stored in column 'col' to the remainder of the columns
-     * in the block after it.  Takes in account leading zeros and one.<br>
+     * in the block after it. Takes in account leading zeros and one.<br>
      * <br>
      * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
      * </p>
      *
      * @param A submatrix that is at most one block wide and aligned along inner blocks
      * @param col The column in A containing 'u'
-     *
      */
-    public static void rank1UpdateMultR_Col(final int blockLength ,
-                                            final DSubmatrixD1 A , final int col , final double gamma )
-    {
-        final int width = Math.min(blockLength,A.col1 - A.col0);
+    public static void rank1UpdateMultR_Col( final int blockLength,
+                                             final DSubmatrixD1 A, final int col, final double gamma ) {
+        final int width = Math.min(blockLength, A.col1 - A.col0);
 
-        final double dataA[] = A.original.data;
+        final double[] dataA = A.original.data;
 
-        for( int j = col+1; j < width; j++ ) {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(col + 1, width, j -> {
+        for (int j = col + 1; j < width; j++) {
 
             // total = U^T * A(:,j)
             double total = innerProdCol(blockLength, A, col, width, j, width);
@@ -171,79 +171,78 @@ public class BlockHouseHolder_DDRB {
             total *= gamma;
             // A(:,j) - gamma*U*total
 
-            for( int i = A.row0; i < A.row1; i += blockLength ) {
-                int height = Math.min( blockLength , A.row1 - i );
+            for (int i = A.row0; i < A.row1; i += blockLength) {
+                int height = Math.min(blockLength, A.row1 - i);
 
                 int indexU = i*A.original.numCols + height*A.col0 + col;
                 int indexA = i*A.original.numCols + height*A.col0 + j;
 
-                if( i == A.row0 ) {
-                    indexU += width*(col+1);
+                if (i == A.row0) {
+                    indexU += width*(col + 1);
                     indexA += width*col;
 
-                    dataA[ indexA ] -= total;
+                    dataA[indexA] -= total;
 
                     indexA += width;
 
-                    for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
-                        dataA[ indexA ] -= total*dataA[ indexU ];
+                    for (int k = col + 1; k < height; k++, indexU += width, indexA += width) {
+                        dataA[indexA] -= total*dataA[indexU];
                     }
                 } else {
                     int endU = indexU + width*height;
                     // for( int k = 0; k < height; k++
-                    for( ; indexU != endU; indexU += width, indexA += width ) {
-                        dataA[ indexA ] -= total*dataA[ indexU ];
+                    for (; indexU != endU; indexU += width, indexA += width) {
+                        dataA[indexA] -= total*dataA[indexU];
                     }
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
      * <p>
      * Applies a householder reflector stored in column 'col' to the top block row (excluding
-     * the first column) of A.  Takes in account leading zeros and one.<br>
+     * the first column) of A. Takes in account leading zeros and one.<br>
      * <br>
      * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
      * </p>
      *
      * @param A submatrix that is at most one block wide and aligned along inner blocks
      * @param col The column in A containing 'u'
-     *
      */
-    public static void rank1UpdateMultR_TopRow(final int blockLength ,
-                                               final DSubmatrixD1 A , final int col , final double gamma )
-    {
-        final double dataA[] = A.original.data;
+    public static void rank1UpdateMultR_TopRow( final int blockLength,
+                                                final DSubmatrixD1 A, final int col, final double gamma ) {
+        final double[] dataA = A.original.data;
 
-        final int widthCol = Math.min( blockLength , A.col1 - col );
+        final int widthCol = Math.min(blockLength, A.col1 - col);
 
         // step through columns in top block, skipping over the first block
-        for( int colStartJ = A.col0 + blockLength; colStartJ < A.col1; colStartJ += blockLength ) {
-            final int widthJ = Math.min( blockLength , A.col1 - colStartJ);
+        for (int colStartJ = A.col0 + blockLength; colStartJ < A.col1; colStartJ += blockLength) {
+            final int widthJ = Math.min(blockLength, A.col1 - colStartJ);
 
-            for( int j = 0; j < widthJ; j++ ) {
+            for (int j = 0; j < widthJ; j++) {
                 // total = U^T * A(:,j) * gamma
-                double total = innerProdCol(blockLength, A, col, widthCol, (colStartJ-A.col0)+j, widthJ)*gamma;
+                double total = innerProdCol(blockLength, A, col, widthCol, (colStartJ - A.col0) + j, widthJ)*gamma;
 
                 // A(:,j) - gamma*U*total
                 // just update the top most block
                 int i = A.row0;
-                int height = Math.min( blockLength , A.row1 - i );
+                int height = Math.min(blockLength, A.row1 - i);
 
                 int indexU = i*A.original.numCols + height*A.col0 + col;
                 int indexA = i*A.original.numCols + height*colStartJ + j;
 
                 // take in account zeros and one
-                indexU += widthCol*(col+1);
+                indexU += widthCol*(col + 1);
                 indexA += widthJ*col;
 
-                dataA[ indexA ] -= total;
+                dataA[indexA] -= total;
 
                 indexA += widthJ;
 
-                for( int k = col+1; k < height; k++ , indexU += widthCol, indexA += widthJ ) {
-                    dataA[ indexA ] -= total*dataA[ indexU ];
+                for (int k = col + 1; k < height; k++, indexU += widthCol, indexA += widthJ) {
+                    dataA[indexA] -= total*dataA[indexU];
                 }
             }
         }
@@ -252,7 +251,7 @@ public class BlockHouseHolder_DDRB {
     /**
      * <p>
      * Applies a householder reflector stored in row 'row' to the remainder of the row
-     * in the block after it.  Takes in account leading zeros and one.<br>
+     * in the block after it. Takes in account leading zeros and one.<br>
      * <br>
      * A = A*(I - &gamma;*u*u<sup>T</sup>)<br>
      * </p>
@@ -260,43 +259,41 @@ public class BlockHouseHolder_DDRB {
      * @param A submatrix that is block aligned
      * @param row The row in A containing 'u'
      * @param colStart First index in 'u' that the reflector starts at
-     *
      */
-    public static void rank1UpdateMultL_Row( final int blockLength ,
-                                             final DSubmatrixD1 A ,
-                                             final int row , final int colStart , final double gamma )
-    {
-        final int height = Math.min(blockLength,A.row1 - A.row0);
+    public static void rank1UpdateMultL_Row( final int blockLength,
+                                             final DSubmatrixD1 A,
+                                             final int row, final int colStart, final double gamma ) {
+        final int height = Math.min(blockLength, A.row1 - A.row0);
 
-        final double dataA[] = A.original.data;
+        final double[] dataA = A.original.data;
 
-        int zeroOffset = colStart-row;
+        int zeroOffset = colStart - row;
 
-        for( int i = row+1; i < height; i++ ) {
+        for (int i = row + 1; i < height; i++) {
             // total = U^T * A(i,:)
-            double total = innerProdRow(blockLength, A, row, A , i, zeroOffset );
+            double total = innerProdRow(blockLength, A, row, A, i, zeroOffset);
 
             total *= gamma;
             // A(i,:) - gamma*U*total
 
-            for( int j = A.col0; j < A.col1; j += blockLength ) {
-                int width = Math.min( blockLength , A.col1 - j );
+            for (int j = A.col0; j < A.col1; j += blockLength) {
+                int width = Math.min(blockLength, A.col1 - j);
 
                 int indexU = A.row0*A.original.numCols + height*j + row*width;
                 int indexA = A.row0*A.original.numCols + height*j + i*width;
 
-                if( j == A.col0 ) {
-                    indexU += colStart+1;
+                if (j == A.col0) {
+                    indexU += colStart + 1;
                     indexA += colStart;
 
                     dataA[indexA++] -= total;
 
-                    for( int k = colStart+1; k < width; k++ ) {
-                        dataA[ indexA++ ] -= total*dataA[ indexU++ ];
+                    for (int k = colStart + 1; k < width; k++) {
+                        dataA[indexA++] -= total*dataA[indexU++];
                     }
                 } else {
-                    for( int k = 0; k < width; k++ ) {
-                        dataA[ indexA++ ] -= total*dataA[ indexU++ ];
+                    for (int k = 0; k < width; k++) {
+                        dataA[indexA++] -= total*dataA[indexU++];
                     }
                 }
             }
@@ -314,24 +311,22 @@ public class BlockHouseHolder_DDRB {
      * @param A submatrix that is block aligned
      * @param row The row in A containing 'u'
      * @param zeroOffset How far off the diagonal is the first element in 'u'
-     *
      */
-    public static void rank1UpdateMultL_LeftCol( final int blockLength ,
-                                                 final DSubmatrixD1 A ,
-                                                 final int row , final double gamma , int zeroOffset )
-    {
-        final int heightU = Math.min(blockLength,A.row1 - A.row0);
-        final int width = Math.min(blockLength,A.col1-A.col0);
+    public static void rank1UpdateMultL_LeftCol( final int blockLength,
+                                                 final DSubmatrixD1 A,
+                                                 final int row, final double gamma, int zeroOffset ) {
+        final int heightU = Math.min(blockLength, A.row1 - A.row0);
+        final int width = Math.min(blockLength, A.col1 - A.col0);
 
-        final double data[] = A.original.data;
+        final double[] data = A.original.data;
 
-        for( int blockStart = A.row0+blockLength; blockStart < A.row1; blockStart += blockLength) {
-            final int heightA = Math.min(blockLength,A.row1 - blockStart);
+        for (int blockStart = A.row0 + blockLength; blockStart < A.row1; blockStart += blockLength) {
+            final int heightA = Math.min(blockLength, A.row1 - blockStart);
 
-            for( int i = 0; i < heightA; i++ ) {
+            for (int i = 0; i < heightA; i++) {
 
                 // total = U^T * A(i,:)
-                double total = innerProdRow(blockLength, A, row, A, i+(blockStart-A.row0), zeroOffset);
+                double total = innerProdRow(blockLength, A, row, A, i + (blockStart - A.row0), zeroOffset);
 
                 total *= gamma;
 
@@ -342,15 +337,14 @@ public class BlockHouseHolder_DDRB {
                 int indexA = blockStart*A.original.numCols + heightA*A.col0 + i*width;
 
                 // skip over zeros and assume first element in U is 1
-                indexU += zeroOffset+1;
+                indexU += zeroOffset + 1;
                 indexA += zeroOffset;
 
                 data[indexA++] -= total;
 
-                for( int k = zeroOffset+1; k < width; k++ ) {
-                    data[ indexA++ ] -= total*data[ indexU++ ];
+                for (int k = zeroOffset + 1; k < width; k++) {
+                    data[indexA++] -= total*data[indexU++];
                 }
-
             }
         }
     }
@@ -363,10 +357,9 @@ public class BlockHouseHolder_DDRB {
      * </p>
      *
      * <p>
-     * Column A is assumed to be a householder vector.  Element at 'colA' is one and previous ones are zero.
+     * Column A is assumed to be a householder vector. Element at 'colA' is one and previous ones are zero.
      * </p>
      *
-     * @param blockLength
      * @param A block aligned submatrix.
      * @param colA Column inside the block of first column vector.
      * @param widthA how wide the column block that colA is inside of.
@@ -375,26 +368,26 @@ public class BlockHouseHolder_DDRB {
      * @return dot product of the two vectors.
      */
     public static double innerProdCol( int blockLength, DSubmatrixD1 A,
-                                          int colA, int widthA,
-                                          int colB, int widthB ) {
+                                       int colA, int widthA,
+                                       int colB, int widthB ) {
         double total = 0;
 
-        final double data[] = A.original.data;
+        final double[] data = A.original.data;
         // first column in the blocks
-        final int colBlockA = A.col0 + colA - colA % blockLength;
-        final int colBlockB = A.col0 + colB - colB % blockLength;
-        colA = colA % blockLength;
-        colB = colB % blockLength;
+        final int colBlockA = A.col0 + colA - colA%blockLength;
+        final int colBlockB = A.col0 + colB - colB%blockLength;
+        colA = colA%blockLength;
+        colB = colB%blockLength;
 
         // compute dot product down column vectors
-        for( int i = A.row0; i < A.row1; i += blockLength ) {
+        for (int i = A.row0; i < A.row1; i += blockLength) {
 
-            int height = Math.min( blockLength , A.row1 - i );
+            int height = Math.min(blockLength, A.row1 - i);
 
             int indexA = i*A.original.numCols + height*colBlockA + colA;
             int indexB = i*A.original.numCols + height*colBlockB + colB;
 
-            if( i == A.row0 ) {
+            if (i == A.row0) {
                 // handle leading zeros
                 indexA += widthA*(colA + 1);
                 indexB += widthB*colA;
@@ -406,16 +399,16 @@ public class BlockHouseHolder_DDRB {
 
                 // standard vector dot product
                 int endA = indexA + (height - colA - 1)*widthA;
-                for( ; indexA != endA; indexA += widthA, indexB += widthB ) {
+                for (; indexA != endA; indexA += widthA, indexB += widthB) {
 //                    for( int k = col+1; k < height; k++ , indexU += width, indexA += width ) {
-                    total += data[indexA] * data[indexB];
+                    total += data[indexA]*data[indexB];
                 }
             } else {
                 // standard vector dot product
                 int endA = indexA + widthA*height;
 //                    for( int k = 0; k < height; k++ ) {
-                for( ; indexA != endA; indexA += widthA, indexB += widthB ) {
-                    total += data[indexA] * data[indexB];
+                for (; indexA != endA; indexA += widthA, indexB += widthB) {
+                    total += data[indexA]*data[indexB];
                 }
             }
         }
@@ -430,78 +423,78 @@ public class BlockHouseHolder_DDRB {
      * </p>
      *
      * <p>
-     * Row A is assumed to be a householder vector.  Element at 'colStartA' is one and previous elements are zero.
+     * Row A is assumed to be a householder vector. Element at 'colStartA' is one and previous elements are zero.
      * </p>
      *
-     * @param blockLength
      * @param A block aligned submatrix.
      * @param rowA Row index inside the sub-matrix of first row vector has zeros and ones..
      * @param rowB Row index inside the sub-matrix of second row vector.
      * @return dot product of the two vectors.
      */
-    public static double innerProdRow(int blockLength,
-                                      DSubmatrixD1 A,
-                                      int rowA,
-                                      DSubmatrixD1 B,
-                                      int rowB, int zeroOffset ) {
+    public static double innerProdRow( int blockLength,
+                                       DSubmatrixD1 A,
+                                       int rowA,
+                                       DSubmatrixD1 B,
+                                       int rowB, int zeroOffset ) {
         int offset = rowA + zeroOffset;
-        if( offset + B.col0 >= B.col1 )
+        if (offset + B.col0 >= B.col1)
             return 0;
 
         // take in account the one in 'A'
-        double total = B.get(rowB,offset);
+        double total = B.get(rowB, offset);
 
-        total += VectorOps_DDRB.dot_row(blockLength,A,rowA,B,rowB,offset+1,A.col1-A.col0);
+        total += VectorOps_DDRB.dot_row(blockLength, A, rowA, B, rowB, offset + 1, A.col1 - A.col0);
 
         return total;
     }
 
-    public static void add_row(final int blockLength ,
-                               DSubmatrixD1 A , int rowA , double alpha ,
-                               DSubmatrixD1 B , int rowB , double beta ,
-                               DSubmatrixD1 C , int rowC ,
-                               int zeroOffset , int end ) {
-        int offset = rowA+zeroOffset;
+    public static void add_row( final int blockLength,
+                                DSubmatrixD1 A, int rowA, double alpha,
+                                DSubmatrixD1 B, int rowB, double beta,
+                                DSubmatrixD1 C, int rowC,
+                                int zeroOffset, int end ) {
+        int offset = rowA + zeroOffset;
 
-        if( C.col0 + offset >= C.col1 )
+        if (C.col0 + offset >= C.col1)
             return;
         // handle leading one
-        C.set(rowC,offset,alpha+B.get(rowB,offset)*beta);
+        C.set(rowC, offset, alpha + B.get(rowB, offset)*beta);
 
-        VectorOps_DDRB.add_row(blockLength,A,rowA,alpha,B,rowB,beta,C,rowC,offset+1,end);
+        VectorOps_DDRB.add_row(blockLength, A, rowA, alpha, B, rowB, beta, C, rowC, offset + 1, end);
     }
 
     /**
-     * Divides the elements at the specified column by 'val'.  Takes in account
+     * Divides the elements at the specified column by 'val'. Takes in account
      * leading zeros and one.
      */
-    public static void divideElementsCol(final int blockLength ,
-                                         final DSubmatrixD1 Y , final int col , final double val ) {
-        final int width = Math.min(blockLength,Y.col1-Y.col0);
+    public static void divideElementsCol( final int blockLength,
+                                          final DSubmatrixD1 Y, final int col, final double val ) {
+        final int width = Math.min(blockLength, Y.col1 - Y.col0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
-        for( int i = Y.row0; i < Y.row1; i += blockLength ) {
-            int height = Math.min( blockLength , Y.row1 - i );
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(Y.row0, Y.row1, blockLength, i -> {
+        for (int i = Y.row0; i < Y.row1; i += blockLength) {
+            int height = Math.min(blockLength, Y.row1 - i);
 
             int index = i*Y.original.numCols + height*Y.col0 + col;
 
-            if( i == Y.row0 ) {
-                index += width*(col+1);
+            if (i == Y.row0) {
+                index += width*(col + 1);
 
-                for( int k = col+1; k < height; k++ , index += width ) {
+                for (int k = col + 1; k < height; k++, index += width) {
                     dataY[index] /= val;
                 }
             } else {
                 int endIndex = index + width*height;
                 //for( int k = 0; k < height; k++
-                for( ; index != endIndex; index += width ) {
+                for (; index != endIndex; index += width) {
                     dataY[index] /= val;
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
-
 
     /**
      * Scales the elements in the specified row starting at element colStart by 'val'.<br>
@@ -511,24 +504,24 @@ public class BlockHouseHolder_DDRB {
      *
      * @param zeroOffset How far off the diagonal is the first element in the vector.
      */
-    public static void scale_row( final int blockLength ,
-                                  final DSubmatrixD1 Y ,
-                                  final DSubmatrixD1 W ,
-                                  final int row ,
+    public static void scale_row( final int blockLength,
+                                  final DSubmatrixD1 Y,
+                                  final DSubmatrixD1 W,
+                                  final int row,
                                   final int zeroOffset,
                                   final double val ) {
 
 
-        int offset = row+zeroOffset;
+        int offset = row + zeroOffset;
 
-        if( offset >= W.col1-W.col0 )
+        if (offset >= W.col1 - W.col0)
             return;
-        
+
         // handle the one
-        W.set(row,offset,val);
+        W.set(row, offset, val);
 
         // scale rest of the vector
-        VectorOps_DDRB.scale_row(blockLength,Y,row,val,W,row,offset+1,Y.col1-Y.col0);
+        VectorOps_DDRB.scale_row(blockLength, Y, row, val, W, row, offset + 1, Y.col1 - Y.col0);
     }
 
     /**
@@ -546,36 +539,35 @@ public class BlockHouseHolder_DDRB {
      * if( Y[col][col] &lt; 0 )
      *    tau = -tau;
      * </pre>
-     *
      */
-    public static double computeTauAndDivideCol( final int blockLength ,
-                                                 final DSubmatrixD1 Y ,
-                                                 final int col , final double max ) {
-        final int width = Math.min(blockLength,Y.col1-Y.col0);
+    public static double computeTauAndDivideCol( final int blockLength,
+                                                 final DSubmatrixD1 Y,
+                                                 final int col, final double max ) {
+        final int width = Math.min(blockLength, Y.col1 - Y.col0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
-        double top=0;
+        double top = 0;
         double norm2 = 0;
 
-        for( int i = Y.row0; i < Y.row1; i += blockLength ) {
-            int height = Math.min( blockLength , Y.row1 - i );
+        for (int i = Y.row0; i < Y.row1; i += blockLength) {
+            int height = Math.min(blockLength, Y.row1 - i);
 
             int index = i*Y.original.numCols + height*Y.col0 + col;
 
-            if( i == Y.row0 ) {
+            if (i == Y.row0) {
                 index += width*col;
                 // save this value so that the sign can be determined later on
                 top = dataY[index] /= max;
                 norm2 += top*top;
                 index += width;
 
-                for( int k = col+1; k < height; k++ , index += width ) {
+                for (int k = col + 1; k < height; k++, index += width) {
                     double val = dataY[index] /= max;
                     norm2 += val*val;
                 }
             } else {
-                for( int k = 0; k < height; k++ , index += width ) {
+                for (int k = 0; k < height; k++, index += width) {
                     double val = dataY[index] /= max;
                     norm2 += val*val;
                 }
@@ -584,7 +576,7 @@ public class BlockHouseHolder_DDRB {
 
         norm2 = Math.sqrt(norm2);
 
-        if( top < 0 )
+        if (top < 0)
             norm2 = -norm2;
 
         return norm2;
@@ -609,39 +601,38 @@ public class BlockHouseHolder_DDRB {
      * @param row Which row in the block will be processed
      * @param colStart The first column that computation of tau will start at
      * @param max used to normalize and prevent buffer over flow
-     *
      */
-    public static double computeTauAndDivideRow( final int blockLength ,
-                                                 final DSubmatrixD1 Y ,
-                                                 final int row , int colStart , final double max ) {
-        final int height = Math.min(blockLength , Y.row1-Y.row0);
+    public static double computeTauAndDivideRow( final int blockLength,
+                                                 final DSubmatrixD1 Y,
+                                                 final int row, int colStart, final double max ) {
+        final int height = Math.min(blockLength, Y.row1 - Y.row0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
-        double top=0;
+        double top = 0;
         double norm2 = 0;
 
         int startJ = Y.col0 + colStart - colStart%blockLength;
         colStart = colStart%blockLength;
 
-        for( int j = startJ; j < Y.col1; j += blockLength ) {
-            int width = Math.min( blockLength , Y.col1 - j );
+        for (int j = startJ; j < Y.col1; j += blockLength) {
+            int width = Math.min(blockLength, Y.col1 - j);
 
             int index = Y.row0*Y.original.numCols + height*j + row*width;
 
-            if( j == startJ ) {
+            if (j == startJ) {
                 index += colStart;
                 // save this value so that the sign can be determined later on
                 top = dataY[index] /= max;
                 norm2 += top*top;
                 index++;
 
-                for( int k = colStart+1; k < width; k++ ) {
+                for (int k = colStart + 1; k < width; k++) {
                     double val = dataY[index++] /= max;
                     norm2 += val*val;
                 }
             } else {
-                for( int k = 0; k < width; k++ ) {
+                for (int k = 0; k < width; k++) {
                     double val = dataY[index++] /= max;
                     norm2 += val*val;
                 }
@@ -650,7 +641,7 @@ public class BlockHouseHolder_DDRB {
 
         norm2 = Math.sqrt(norm2);
 
-        if( top < 0 )
+        if (top < 0)
             norm2 = -norm2;
 
         return norm2;
@@ -660,31 +651,30 @@ public class BlockHouseHolder_DDRB {
      * Finds the element in the column with the largest absolute value. The offset
      * from zero is automatically taken in account based on the column.
      */
-    public static double findMaxCol(final int blockLength , final DSubmatrixD1 Y , final int col )
-    {
-        final int width = Math.min(blockLength,Y.col1-Y.col0);
+    public static double findMaxCol( final int blockLength, final DSubmatrixD1 Y, final int col ) {
+        final int width = Math.min(blockLength, Y.col1 - Y.col0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         double max = 0;
 
-        for( int i = Y.row0; i < Y.row1; i += blockLength ) {
-            int height = Math.min( blockLength , Y.row1 - i );
+        for (int i = Y.row0; i < Y.row1; i += blockLength) {
+            int height = Math.min(blockLength, Y.row1 - i);
 
             int index = i*Y.original.numCols + height*Y.col0 + col;
 
-            if( i == Y.row0 ) {
+            if (i == Y.row0) {
                 index += width*col;
-                for( int k = col; k < height; k++ , index += width ) {
+                for (int k = col; k < height; k++, index += width) {
                     double v = Math.abs(dataY[index]);
-                    if( v > max ) {
+                    if (v > max) {
                         max = v;
                     }
                 }
             } else {
-                for( int k = 0; k < height; k++ , index += width ) {
+                for (int k = 0; k < height; k++, index += width) {
                     double v = Math.abs(dataY[index]);
-                    if( v > max ) {
+                    if (v > max) {
                         max = v;
                     }
                 }
@@ -698,33 +688,33 @@ public class BlockHouseHolder_DDRB {
      * Finds the element in the column with the largest absolute value. The offset
      * from zero is automatically taken in account based on the column.
      */
-    public static double findMaxRow( final int blockLength ,
-                                          final DSubmatrixD1 Y ,
-                                          final int row , final int colStart ) {
-        final int height = Math.min(blockLength , Y.row1-Y.row0);
+    public static double findMaxRow( final int blockLength,
+                                     final DSubmatrixD1 Y,
+                                     final int row, final int colStart ) {
+        final int height = Math.min(blockLength, Y.row1 - Y.row0);
 
-        final double dataY[] = Y.original.data;
+        final double[] dataY = Y.original.data;
 
         double max = 0;
 
-        for( int j = Y.col0; j < Y.col1; j += blockLength ) {
-            int width = Math.min( blockLength , Y.col1 - j );
+        for (int j = Y.col0; j < Y.col1; j += blockLength) {
+            int width = Math.min(blockLength, Y.col1 - j);
 
             int index = Y.row0*Y.original.numCols + height*j + row*width;
 
-            if( j == Y.col0 ) {
+            if (j == Y.col0) {
                 index += colStart;
 
-                for( int k = colStart; k < width; k++ ) {
+                for (int k = colStart; k < width; k++) {
                     double v = Math.abs(dataY[index++]);
-                    if( v > max ) {
+                    if (v > max) {
                         max = v;
                     }
                 }
             } else {
-                for( int k = 0; k < width; k++ ) {
+                for (int k = 0; k < width; k++) {
                     double v = Math.abs(dataY[index++]);
-                    if( v > max ) {
+                    if (v > max) {
                         max = v;
                     }
                 }
@@ -749,7 +739,7 @@ public class BlockHouseHolder_DDRB {
      * &nbsp;&nbsp;Y = [Y v<sup>(j)</sup>]<br>
      * end<br>
      * <br>
-     * where v<sup>(.)</sup> are the house holder vectors, and r is the block length.  Note that
+     * where v<sup>(.)</sup> are the house holder vectors, and r is the block length. Note that
      * Y already contains the householder vectors so it does not need to be modified.
      * </p>
      *
@@ -757,28 +747,31 @@ public class BlockHouseHolder_DDRB {
      * Y and W are assumed to have the same number of rows and columns.
      * </p>
      *
-     * @param Y Input matrix containing householder vectors.  Not modified.
+     * @param Y Input matrix containing householder vectors. Not modified.
      * @param W Resulting W matrix. Modified.
-     * @param temp Used internally.  Must have W.numCols elements.
+     * @param workspace (Optional) Storage for workspace. Can be null.
      * @param beta Beta's for householder vectors.
      * @param betaIndex Index of first relevant beta.
      */
-    public static void computeW_Column(final int blockLength ,
-                                       final DSubmatrixD1 Y , final DSubmatrixD1 W ,
-                                       final double temp[], final double beta[] , int betaIndex ) {
+    public static void computeW_Column( final int blockLength,
+                                        final DSubmatrixD1 Y, final DSubmatrixD1 W,
+                                        @Nullable GrowArray<DGrowArray> workspace, final double[] beta, int betaIndex ) {
 
-        final int widthB = W.col1-W.col0;
+        workspace = UtilEjml.checkDeclare_F64(workspace);
+        final int widthB = W.col1 - W.col0;
 
         // set the first column in W
-        initializeW(blockLength, W, Y, widthB, beta[betaIndex++]);
+        initializeW(blockLength, W, Y, widthB, beta[betaIndex]);
 
-        final int min = Math.min(widthB,W.row1-W.row0);
+        final int min = Math.min(widthB, W.row1 - W.row0);
+
+        final double[] temp = workspace.grow().reshape(Y.col1 - Y.col0).data;
 
         // set up rest of the columns
-        for( int j = 1; j < min; j++ ) {
+        for (int j = 1; j < min; j++) {
             //compute the z vector and insert it into W
-            computeY_t_V(blockLength,Y,j,temp);
-            computeZ(blockLength,Y,W,j,temp,beta[betaIndex++]);
+            computeY_t_V(blockLength, Y, j, temp);
+            computeZ(blockLength, Y, W, j, temp, beta[betaIndex + j]);
         }
     }
 
@@ -797,33 +790,35 @@ public class BlockHouseHolder_DDRB {
      * @param widthB How wide the W block matrix is.
      * @param b beta
      */
-    public static void initializeW(final int blockLength,
-                                   final DSubmatrixD1 W, final DSubmatrixD1 Y,
-                                   final int widthB, final double b) {
+    public static void initializeW( final int blockLength,
+                                    final DSubmatrixD1 W, final DSubmatrixD1 Y,
+                                    final int widthB, final double b ) {
 
-        final double dataW[] = W.original.data;
-        final double dataY[] = Y.original.data;
+        final double[] dataW = W.original.data;
+        final double[] dataY = Y.original.data;
 
-        for( int i = W.row0; i < W.row1; i += blockLength ) {
-            int heightW = Math.min( blockLength , W.row1 - i );
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(W.row0, W.row1, blockLength, i -> {
+        for (int i = W.row0; i < W.row1; i += blockLength) {
+            final int heightW = Math.min(blockLength, W.row1 - i);
 
             int indexW = i*W.original.numCols + heightW*W.col0;
             int indexY = i*Y.original.numCols + heightW*Y.col0;
 
             // take in account the first element in V being 1
-            if( i == W.row0 ) {
+            if (i == W.row0) {
                 dataW[indexW] = -b;
                 indexW += widthB;
                 indexY += widthB;
-                for( int k = 1; k < heightW; k++ , indexW += widthB , indexY += widthB ) {
-                    dataW[indexW] = -b* dataY[indexY];
+                for (int k = 1; k < heightW; k++, indexW += widthB, indexY += widthB) {
+                    dataW[indexW] = -b*dataY[indexY];
                 }
             } else {
-                for( int k = 0; k < heightW; k++ , indexW += widthB , indexY += widthB ) {
-                    dataW[indexW] = -b* dataY[indexY];
+                for (int k = 0; k < heightW; k++, indexW += widthB, indexY += widthB) {
+                    dataW[indexW] = -b*dataY[indexY];
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -832,118 +827,122 @@ public class BlockHouseHolder_DDRB {
      * z = - &beta;<sub>j</sub>*(V<sup>j</sup> + W*h)<br>
      * <br>
      * where h is a vector of length 'col' and was computed using {@link #computeY_t_V}.
-     * V is a column in the Y matrix. Z is a column in the W matrix.  Both Z and V are
+     * V is a column in the Y matrix. Z is a column in the W matrix. Both Z and V are
      * column 'col'.
      */
-    public static void computeZ(final int blockLength , final DSubmatrixD1 Y , final DSubmatrixD1 W,
-                                final int col , final double []temp , final double beta )
-    {
-        final int width = Y.col1-Y.col0;
+    public static void computeZ( final int blockLength, final DSubmatrixD1 Y, final DSubmatrixD1 W,
+                                 final int col, final double[] temp, final double beta ) {
+        final int width = Y.col1 - Y.col0;
 
-        final double dataW[] = W.original.data;
-        final double dataY[] = Y.original.data;
+        final double[] dataW = W.original.data;
+        final double[] dataY = Y.original.data;
 
         final int colsW = W.original.numCols;
 
         final double beta_neg = -beta;
 
-        for( int i = Y.row0; i < Y.row1; i += blockLength ) {
-            int heightW = Math.min( blockLength , Y.row1 - i );
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(Y.row0, Y.row1, blockLength, i -> {
+        for (int i = Y.row0; i < Y.row1; i += blockLength) {
+            final int heightW = Math.min(blockLength, Y.row1 - i);
 
             int indexW = i*colsW + heightW*W.col0;
             int indexZ = i*colsW + heightW*W.col0 + col;
             int indexV = i*Y.original.numCols + heightW*Y.col0 + col;
 
-            if( i == Y.row0 ) {
+            if (i == Y.row0) {
                 // handle the triangular portion with the leading zeros and the one
-                for( int k = 0; k < heightW; k++ , indexZ += width, indexW += width , indexV += width ) {
+                for (int k = 0; k < heightW; k++, indexZ += width, indexW += width, indexV += width) {
                     // compute the rows of W * h
                     double total = 0;
 
-                    for( int j = 0; j < col; j++ ) {
-                        total += dataW[indexW+j] * temp[j];
+                    for (int j = 0; j < col; j++) {
+                        total += dataW[indexW + j]*temp[j];
                     }
 
                     // add the two vectors together and multiply by -beta
-                    if( k < col ) {  // zeros
+                    if (k < col) {  // zeros
                         dataW[indexZ] = -beta*total;
-                    } else if( k == col ) { // one
+                    } else if (k == col) { // one
                         dataW[indexZ] = beta_neg*(1.0 + total);
                     } else { // normal data
                         dataW[indexZ] = beta_neg*(dataY[indexV] + total);
                     }
                 }
             } else {
-                int endZ = indexZ + width*heightW;
+                final int endZ = indexZ + width*heightW;
 //                for( int k = 0; k < heightW; k++ ,
-                while( indexZ != endZ ) {
+                while (indexZ != endZ) {
                     // compute the rows of W * h
                     double total = 0;
 
-                    for( int j = 0; j < col; j++ ) {
-                        total += dataW[indexW+j] * temp[j];
+                    for (int j = 0; j < col; j++) {
+                        total += dataW[indexW + j]*temp[j];
                     }
 
                     // add the two vectors together and multiply by -beta
                     dataW[indexZ] = beta_neg*(dataY[indexV] + total);
 
-                    indexZ += width; indexW += width; indexV += width;
+                    indexZ += width;
+                    indexW += width;
+                    indexV += width;
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
-     * Computes Y<sup>T</sup>v<sup>(j)</sup>.  Where Y are the columns before 'col' and v is the column
-     * at 'col'.  The zeros and ones are taken in account.  The solution is a vector with 'col' elements.
+     * Computes Y<sup>T</sup>v<sup>(j)</sup>. Where Y are the columns before 'col' and v is the column
+     * at 'col'. The zeros and ones are taken in account. The solution is a vector with 'col' elements.
      *
      * width of Y must be along the block of original matrix A
      *
      * @param temp Temporary storage of least length 'col'
      */
-    public static void computeY_t_V( final int blockLength , final DSubmatrixD1 Y ,
-                                     final int col , final double []temp )
-    {
-        final int widthB = Y.col1-Y.col0;
+    public static void computeY_t_V( final int blockLength, final DSubmatrixD1 Y,
+                                     final int col, final double[] temp ) {
+        final int widthB = Y.col1 - Y.col0;
 
-        for( int j = 0; j < col; j++ ) {
-            temp[j] = innerProdCol(blockLength,Y,col,widthB,j,widthB);
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, col, j -> {
+        for (int j = 0; j < col; j++) {
+            temp[j] = innerProdCol(blockLength, Y, col, widthB, j, widthB);
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
      * Special multiplication that takes in account the zeros and one in Y, which
      * is the matrix that stores the householder vectors.
-     *
      */
-    public static void multAdd_zeros(final int blockLength ,
-                                     final DSubmatrixD1 Y , final DSubmatrixD1 B ,
-                                     final DSubmatrixD1 C )
-    {
-        int widthY = Y.col1 - Y.col0;
+    public static void multAdd_zeros( final int blockLength,
+                                      final DSubmatrixD1 Y, final DSubmatrixD1 B,
+                                      final DSubmatrixD1 C ) {
+        final int widthY = Y.col1 - Y.col0;
 
-        for( int i = Y.row0; i < Y.row1; i += blockLength ) {
-            int heightY = Math.min( blockLength , Y.row1 - i );
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(Y.row0, Y.row1, blockLength, i -> {
+        for (int i = Y.row0; i < Y.row1; i += blockLength) {
+            final int heightY = Math.min(blockLength, Y.row1 - i);
 
-            for( int j = B.col0; j < B.col1; j += blockLength ) {
-                int widthB = Math.min( blockLength , B.col1 - j );
+            for (int j = B.col0; j < B.col1; j += blockLength) {
+                final int widthB = Math.min(blockLength, B.col1 - j);
 
-                int indexC = (i-Y.row0+C.row0)*C.original.numCols + (j-B.col0+C.col0)*heightY;
+                int indexC = (i - Y.row0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*heightY;
 
-                for( int k = Y.col0; k < Y.col1; k += blockLength ) {
+                for (int k = Y.col0; k < Y.col1; k += blockLength) {
                     int indexY = i*Y.original.numCols + k*heightY;
-                    int indexB = (k-Y.col0+B.row0)*B.original.numCols + j*widthY;
+                    int indexB = (k - Y.col0 + B.row0)*B.original.numCols + j*widthY;
 
-                    if( i == Y.row0 ) {
-                        multBlockAdd_zerosone(Y.original.data,B.original.data,C.original.data,
-                            indexY,indexB,indexC,heightY,widthY,widthB);
+                    if (i == Y.row0) {
+                        multBlockAdd_zerosone(Y.original.data, B.original.data, C.original.data,
+                                indexY, indexB, indexC, heightY, widthY, widthB);
                     } else {
-                        InnerMultiplication_DDRB.blockMultPlus(Y.original.data,B.original.data,C.original.data,
-                                indexY,indexB,indexC,heightY,widthY,widthB);
+                        InnerMultiplication_DDRB.blockMultPlus(Y.original.data, B.original.data, C.original.data,
+                                indexY, indexB, indexC, heightY, widthY, widthB);
                     }
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -954,61 +953,67 @@ public class BlockHouseHolder_DDRB {
      * C = C + A * B
      * </p>
      */
-    public static void multBlockAdd_zerosone( double[] dataA, double []dataB, double []dataC,
+    public static void multBlockAdd_zerosone( double[] dataA, double[] dataB, double[] dataC,
                                               int indexA, int indexB, int indexC,
-                                              final int heightA, final int widthA, final int widthC) {
+                                              final int heightA, final int widthA, final int widthC ) {
 
 
-        for( int i = 0; i < heightA; i++ ) {
-            for( int j = 0; j < widthC; j++ ) {
-                double val = i < widthA ? dataB[i*widthC+j+indexB] : 0;
+        for (int i = 0; i < heightA; i++) {
+            for (int j = 0; j < widthC; j++) {
+                double val = i < widthA ? dataB[i*widthC + j + indexB] : 0;
 
-                int end = Math.min(i,widthA);
+                int end = Math.min(i, widthA);
+                int innerIndexA = i*widthA + indexA;
+                int innerOffsetB = j + indexB;
+                final int endA = innerIndexA + end;
 
-                for( int k = 0; k < end; k++ ) {
-                    val += dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                for (int k = 0; k < end; k++) {
+                while (innerIndexA != endA) {
+                    val += dataA[innerIndexA++]*dataB[innerOffsetB];
+                    innerOffsetB += widthC;
                 }
 
-                dataC[ i*widthC + j + indexC ] += val;
+                dataC[i*widthC + j + indexC] += val;
             }
         }
     }
 
     /**
      * <p>
-     * Performs a matrix multiplication on the block aligned submatrices.  A is
+     * Performs a matrix multiplication on the block aligned submatrices. A is
      * assumed to be block column vector that is lower triangular with diagonal elements set to 1.<br>
      * <br>
      * C = A^T * B
      * </p>
      */
-    public static void multTransA_vecCol(final int blockLength ,
-                                         DSubmatrixD1 A , DSubmatrixD1 B ,
-                                         DSubmatrixD1 C )
-    {
+    public static void multTransA_vecCol( final int blockLength,
+                                          DSubmatrixD1 A, DSubmatrixD1 B,
+                                          DSubmatrixD1 C ) {
         int widthA = A.col1 - A.col0;
-        if( widthA > blockLength )
+        if (widthA > blockLength)
             throw new IllegalArgumentException("A is expected to be at most one block wide.");
 
-        for( int j = B.col0; j < B.col1; j += blockLength ) {
-            int widthB = Math.min( blockLength , B.col1 - j );
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, j -> {
+        for (int j = B.col0; j < B.col1; j += blockLength) {
+            int widthB = Math.min(blockLength, B.col1 - j);
 
-            int indexC = C.row0*C.original.numCols + (j-B.col0+C.col0)*widthA;
+            int indexC = C.row0*C.original.numCols + (j - B.col0 + C.col0)*widthA;
 
-            for( int k = A.row0; k < A.row1; k += blockLength ) {
-                int heightA = Math.min( blockLength , A.row1 - k );
+            for (int k = A.row0; k < A.row1; k += blockLength) {
+                int heightA = Math.min(blockLength, A.row1 - k);
 
                 int indexA = k*A.original.numCols + A.col0*heightA;
-                int indexB = (k-A.row0+B.row0)*B.original.numCols + j*heightA;
+                int indexB = (k - A.row0 + B.row0)*B.original.numCols + j*heightA;
 
-                if( k == A.row0 )
-                    multTransABlockSet_lowerTriag(A.original.data,B.original.data,C.original.data,
-                            indexA,indexB,indexC,heightA,widthA,widthB);
+                if (k == A.row0)
+                    multTransABlockSet_lowerTriag(A.original.data, B.original.data, C.original.data,
+                            indexA, indexB, indexC, heightA, widthA, widthB);
                 else
-                    InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data,B.original.data,C.original.data,
-                            indexA,indexB,indexC,heightA,widthA,widthB);
+                    InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
+                            indexA, indexB, indexC, heightA, widthA, widthB);
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -1017,18 +1022,18 @@ public class BlockHouseHolder_DDRB {
      * <br>
      * C = A^T * B
      */
-    protected static void multTransABlockSet_lowerTriag( double[] dataA, double []dataB, double []dataC,
+    protected static void multTransABlockSet_lowerTriag( double[] dataA, double[] dataB, double[] dataC,
                                                          int indexA, int indexB, int indexC,
-                                                         final int heightA, final int widthA, final int widthC) {
-        for( int i = 0; i < widthA; i++ ) {
-            for( int j = 0; j < widthC; j++ ) {
+                                                         final int heightA, final int widthA, final int widthC ) {
+        for (int i = 0; i < widthA; i++) {
+            for (int j = 0; j < widthC; j++) {
                 double val = i < heightA ? dataB[i*widthC + j + indexB] : 0;
 
-                for( int k = i+1; k < heightA; k++ ) {
-                    val += dataA[k*widthA + i + indexA] * dataB[k*widthC + j + indexB];
+                for (int k = i + 1; k < heightA; k++) {
+                    val += dataA[k*widthA + i + indexA]*dataB[k*widthC + j + indexB];
                 }
 
-                dataC[ i*widthC + j + indexC ] = val;
+                dataC[i*widthC + j + indexC] = val;
             }
         }
     }

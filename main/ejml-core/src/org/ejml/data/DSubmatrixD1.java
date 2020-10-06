@@ -31,14 +31,7 @@ import org.ejml.ops.MatrixIO;
  * 
  * @author Peter Abeles
  */
-public class DSubmatrixD1 {
-    @SuppressWarnings("NullAway.Init")
-    public DMatrixD1 original;
-
-    // bounding rows and columns
-    public int row0,col0;
-    public int row1,col1;
-
+public class DSubmatrixD1 extends Submatrix<DMatrixD1> {
     public DSubmatrixD1() {}
 
     public DSubmatrixD1(DMatrixD1 original) {
@@ -48,29 +41,6 @@ public class DSubmatrixD1 {
     public DSubmatrixD1(DMatrixD1 original,
                         int row0, int row1, int col0, int col1) {
         set(original,row0,row1,col0,col1);
-    }
-
-    public void set(DMatrixD1 original,
-                    int row0, int row1, int col0, int col1) {
-        this.original = original;
-        this.row0 = row0;
-        this.col0 = col0;
-        this.row1 = row1;
-        this.col1 = col1;
-    }
-
-    public void set(DMatrixD1 original) {
-        this.original = original;
-        row1 = original.numRows;
-        col1 = original.numCols;
-    }
-
-    public int getRows() {
-        return row1 - row0;
-    }
-
-    public int getCols() {
-        return col1 - col0;
     }
 
     @SuppressWarnings("NullAway") // Checking could have a performance hit
@@ -95,6 +65,7 @@ public class DSubmatrixD1 {
         return ret;
     }
 
+    @Override
     public void print() {
         if( original == null )
             throw new RuntimeException("Uninitialized submatrix");

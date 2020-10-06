@@ -36,7 +36,7 @@ public class BenchmarkInstanceOf {
 
     public interface Stuff
     {
-        public void process( Stuff a, DMatrix M );
+        void process(Stuff a, DMatrix M);
     }
 
     public static class StuffA implements Stuff

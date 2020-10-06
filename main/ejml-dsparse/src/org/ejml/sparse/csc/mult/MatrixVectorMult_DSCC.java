@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,12 +35,11 @@ public class MatrixVectorMult_DSCC {
      * @param c (Output) vector
      * @param offsetC (Output) first index in vector c
      */
-    public static void mult(DMatrixSparseCSC A ,
-                            double b[] , int offsetB ,
-                            double c[] , int offsetC )
-    {
-        Arrays.fill(c,offsetC,offsetC+A.numRows,0);
-        multAdd(A,b,offsetB,c,offsetC);
+    public static void mult( DMatrixSparseCSC A,
+                             double[] b, int offsetB,
+                             double[] c, int offsetC ) {
+        Arrays.fill(c, offsetC, offsetC + A.numRows, 0);
+        multAdd(A, b, offsetB, c, offsetC);
     }
 
     /**
@@ -52,21 +51,20 @@ public class MatrixVectorMult_DSCC {
      * @param c (Output) vector
      * @param offsetC (Output) first index in vector c
      */
-    public static void multAdd(DMatrixSparseCSC A ,
-                               double b[] , int offsetB ,
-                               double c[] , int offsetC )
-    {
-        if( b.length-offsetB < A.numCols)
+    public static void multAdd( DMatrixSparseCSC A,
+                                double[] b, int offsetB,
+                                double[] c, int offsetC ) {
+        if (b.length - offsetB < A.numCols)
             throw new IllegalArgumentException("Length of 'b' isn't long enough");
-        if( c.length-offsetC < A.numRows)
+        if (c.length - offsetC < A.numRows)
             throw new IllegalArgumentException("Length of 'c' isn't long enough");
 
         for (int k = 0; k < A.numCols; k++) {
-            int idx0 = A.col_idx[k  ];
-            int idx1 = A.col_idx[k+1];
+            int idx0 = A.col_idx[k];
+            int idx1 = A.col_idx[k + 1];
 
             for (int indexA = idx0; indexA < idx1; indexA++) {
-                c[offsetC+A.nz_rows[indexA]] += A.nz_values[indexA]*b[offsetB+k];
+                c[offsetC + A.nz_rows[indexA]] += A.nz_values[indexA]*b[offsetB + k];
             }
         }
     }
@@ -75,29 +73,28 @@ public class MatrixVectorMult_DSCC {
      * c = a<sup>T</sup>*B
      *
      * @param a (Input) vector
-     * @param offsetA  Input) first index in vector a
+     * @param offsetA Input) first index in vector a
      * @param B (Input) Matrix
      * @param c (Output) vector
      * @param offsetC (Output) first index in vector c
      */
-    public static void mult( double a[] , int offsetA ,
-                             DMatrixSparseCSC B ,
-                             double c[] , int offsetC )
-    {
-        if( a.length-offsetA < B.numRows)
+    public static void mult( double[] a, int offsetA,
+                             DMatrixSparseCSC B,
+                             double[] c, int offsetC ) {
+        if (a.length - offsetA < B.numRows)
             throw new IllegalArgumentException("Length of 'a' isn't long enough");
-        if( c.length-offsetC < B.numCols)
+        if (c.length - offsetC < B.numCols)
             throw new IllegalArgumentException("Length of 'c' isn't long enough");
 
         for (int k = 0; k < B.numCols; k++) {
-            int idx0 = B.col_idx[k  ];
-            int idx1 = B.col_idx[k+1];
+            int idx0 = B.col_idx[k];
+            int idx1 = B.col_idx[k + 1];
 
             double sum = 0;
             for (int indexB = idx0; indexB < idx1; indexB++) {
-                sum += a[offsetA+B.nz_rows[indexB]]*B.nz_values[indexB];
+                sum += a[offsetA + B.nz_rows[indexB]]*B.nz_values[indexB];
             }
-            c[offsetC+k] = sum;
+            c[offsetC + k] = sum;
         }
     }
 
@@ -105,31 +102,30 @@ public class MatrixVectorMult_DSCC {
      * scalar = A<sup>T</sup>*B*C
      *
      * @param a (Input) vector
-     * @param offsetA  Input) first index in vector a
+     * @param offsetA Input) first index in vector a
      * @param B (Input) Matrix
      * @param c (Output) vector
      * @param offsetC (Output) first index in vector c
      */
-    public static double innerProduct( double a[] , int offsetA ,
-                                       DMatrixSparseCSC B ,
-                                       double c[] , int offsetC )
-    {
-        if( a.length-offsetA < B.numRows)
+    public static double innerProduct( double[] a, int offsetA,
+                                       DMatrixSparseCSC B,
+                                       double[] c, int offsetC ) {
+        if (a.length - offsetA < B.numRows)
             throw new IllegalArgumentException("Length of 'a' isn't long enough");
-        if( c.length-offsetC < B.numCols)
+        if (c.length - offsetC < B.numCols)
             throw new IllegalArgumentException("Length of 'c' isn't long enough");
 
         double output = 0;
 
         for (int k = 0; k < B.numCols; k++) {
-            int idx0 = B.col_idx[k  ];
-            int idx1 = B.col_idx[k+1];
+            int idx0 = B.col_idx[k];
+            int idx1 = B.col_idx[k + 1];
 
             double sum = 0;
             for (int indexB = idx0; indexB < idx1; indexB++) {
-                sum += a[offsetA+B.nz_rows[indexB]]*B.nz_values[indexB];
+                sum += a[offsetA + B.nz_rows[indexB]]*B.nz_values[indexB];
             }
-            output += sum*c[offsetC+k];
+            output += sum*c[offsetC + k];
         }
 
         return output;

@@ -60,7 +60,7 @@ public abstract class CodeGeneratorBase {
 
     protected String standardClassDocClosing(String ...authors) {
         return  " *\n" +
-                " * <p>DO NOT MODIFY.  Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
+                " * <p>DO NOT MODIFY. Automatically generated code created by "+getClass().getSimpleName()+"</p>\n" +
                 " *\n" +
                 " * @author "+authors[0]+"\n" + // yes I was lazy here..
                 " */\n" +

@@ -28,9 +28,8 @@ gversion {
 }
 
 task(autogenerate, dependsOn: 'classes', type: JavaExec) {
-    main = 'org.ejml.GenerateCode32'
+    main = 'org.ejml.MasterCodeGenerator'
     classpath = sourceSets.main.runtimeClasspath
 }
-
 // Create the EjmlVersion file only when the autogenerate command is called. This speeds up build time significantly.
 project.autogenerate.dependsOn(createVersionFile)

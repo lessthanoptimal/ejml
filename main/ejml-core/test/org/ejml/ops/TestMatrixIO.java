@@ -154,7 +154,7 @@ public class TestMatrixIO {
         mat.set(0,0,1.1);
         mat.set(1,0,-2.2);
 
-        MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);;
+        MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);
         out.flush();
 
         // On windows \r is added to the string
@@ -177,7 +177,7 @@ public class TestMatrixIO {
         mat.set(0,0,1,1.5);
         mat.set(1,0,2.0,-2.5);
 
-        MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);;
+        MatrixIO.print(out,mat,MatrixIO.DEFAULT_FLOAT_FORMAT);
         out.flush();
 
         // On windows \r is added to the string
@@ -200,7 +200,7 @@ public class TestMatrixIO {
         mat.set(0,0,1.1);
         mat.set(1,0,-2.2);
 
-        MatrixIO.printFancy(out,mat,11);;
+        MatrixIO.printFancy(out,mat,11);
         out.flush();
 
         // On windows \r is added to the string
@@ -223,7 +223,7 @@ public class TestMatrixIO {
         mat.set(0,0,1,1.5);
         mat.set(1,0,2.0,-2.5);
 
-        MatrixIO.printFancy(out,mat,11);;
+        MatrixIO.printFancy(out,mat,11);
         out.flush();
 
         // On windows \r is added to the string

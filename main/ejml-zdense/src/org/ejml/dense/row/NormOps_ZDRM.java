@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,18 +42,18 @@ public class NormOps_ZDRM {
 
         double scale = CommonOps_ZDRM.elementMaxAbs(a);
 
-        if( scale == 0.0 )
+        if (scale == 0.0)
             return 0.0;
 
         final int size = a.getDataLength();
 
-        for( int i = 0; i < size; i += 2 ) {
+        for (int i = 0; i < size; i += 2) {
             double real = a.data[i]/scale;
-            double imag = a.data[i+1]/scale;
+            double imag = a.data[i + 1]/scale;
 
             total += real*real + imag*imag;
         }
 
-        return scale* Math.sqrt(total);
+        return scale * (double)Math.sqrt(total);
     }
 }

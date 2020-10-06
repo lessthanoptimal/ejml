@@ -25,7 +25,6 @@ import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholder_DDRM;
 import org.ejml.dense.row.linsol.LinearSolverAbstract_DDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
-
 /**
  * <p>
  * QR decomposition can be used to solve for systems.  However, this is not as computationally efficient
@@ -45,7 +44,7 @@ public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
 
     private final QRDecompositionHouseholder_DDRM decomposer;
 
-    private double []a,u;
+    private double[] a, u;
 
     private int maxRows = -1;
 
@@ -62,8 +61,8 @@ public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
     public void setMaxSize( int maxRows ) {
         this.maxRows = maxRows;
 
-        a = new double[ maxRows ];
-        u = new double[ maxRows ];
+        a = new double[maxRows];
+        u = new double[maxRows];
     }
 
     /**
@@ -72,15 +71,15 @@ public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
      * @param A not modified.
      */
     @Override
-    public boolean setA(DMatrixRMaj A) {
-        if( A.numRows > maxRows ) {
+    public boolean setA( DMatrixRMaj A ) {
+        if (A.numRows > maxRows) {
             setMaxSize(A.numRows);
         }
 
         _setA(A);
-        if( !decomposer.decompose(A) )
+        if (!decomposer.decompose(A))
             return false;
-        
+
         gammas = decomposer.getGammas();
         QR = decomposer.getQR();
 
@@ -99,18 +98,18 @@ public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        if( B.numRows != numRows )
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = "+X.numRows+" expected = "+numCols);
-        X.reshape(numCols,B.numCols);
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numRows != numRows)
+            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numCols);
+        X.reshape(numCols, B.numCols);
 
         int BnumCols = B.numCols;
 
         // solve each column one by one
-        for( int colB = 0; colB < BnumCols; colB++ ) {
+        for (int colB = 0; colB < BnumCols; colB++) {
 
             // make a copy of this column in the vector
-            for( int i = 0; i < numRows; i++ ) {
+            for (int i = 0; i < numRows; i++) {
                 a[i] = B.data[i*BnumCols + colB];
             }
 
@@ -119,28 +118,28 @@ public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
             // a = Q_{n-1}...Q_2*Q_1*b
             //
             // Q_n*b = (I-gamma*u*u^T)*b = b - u*(gamma*U^T*b)
-            for( int n = 0; n < numCols; n++ ) {
+            for (int n = 0; n < numCols; n++) {
                 u[n] = 1;
                 double ub = a[n];
                 // U^T*b
-                for( int i = n+1; i < numRows; i++ ) {
-                    ub += (u[i] = QR.unsafe_get(i,n))*a[i];
+                for (int i = n + 1; i < numRows; i++) {
+                    ub += (u[i] = QR.unsafe_get(i, n))*a[i];
                 }
 
                 // gamma*U^T*b
                 ub *= gammas[n];
- 
-                for( int i = n; i < numRows; i++ ) {
+
+                for (int i = n; i < numRows; i++) {
                     a[i] -= u[i]*ub;
                 }
             }
 
             // solve for Rx = b using the standard upper triangular solver
-            TriangularSolver_DDRM.solveU(QR.data,a,numCols);
+            TriangularSolver_DDRM.solveU(QR.data, a, numCols);
 
             // save the results
-            for( int i = 0; i < numCols; i++ ) {
-                X.data[i*X.numCols+colB] = a[i];
+            for (int i = 0; i < numCols; i++) {
+                X.data[i*X.numCols + colB] = a[i];
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.dense.row;
 
 import org.ejml.EjmlParameters;
 import org.ejml.LinearSolverSafe;
+import org.ejml.UtilEjml;
 import org.ejml.data.*;
 import org.ejml.dense.row.decompose.lu.LUDecompositionAlt_ZDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_ZDRM;
@@ -48,11 +49,11 @@ public class CommonOps_ZDRM {
      * @param width The width and height of the identity matrix.
      * @return A new instance of an identity matrix.
      */
-    public static ZMatrixRMaj identity(int width ) {
-        ZMatrixRMaj A = new ZMatrixRMaj(width,width);
+    public static ZMatrixRMaj identity( int width ) {
+        ZMatrixRMaj A = new ZMatrixRMaj(width, width);
 
         for (int i = 0; i < width; i++) {
-            A.set(i,i,1,0);
+            A.set(i, i, 1, 0);
         }
 
         return A;
@@ -70,12 +71,12 @@ public class CommonOps_ZDRM {
      * @param height The height of the identity matrix.
      * @return A new instance of an identity matrix.
      */
-    public static ZMatrixRMaj identity(int width , int height) {
-        ZMatrixRMaj A = new ZMatrixRMaj(width,height);
+    public static ZMatrixRMaj identity( int width, int height ) {
+        ZMatrixRMaj A = new ZMatrixRMaj(width, height);
 
-        int m = Math.min(width,height);
+        int m = Math.min(width, height);
         for (int i = 0; i < m; i++) {
-            A.set(i,i,1,0);
+            A.set(i, i, 1, 0);
         }
 
         return A;
@@ -93,19 +94,19 @@ public class CommonOps_ZDRM {
      * @param data Contains the values of the diagonal elements of the resulting matrix.
      * @return A new complex matrix.
      */
-    public static ZMatrixRMaj diag(double... data ) {
-        if( data.length%2 == 1 )
+    public static ZMatrixRMaj diag( double... data ) {
+        if (data.length%2 == 1)
             throw new IllegalArgumentException("must be an even number of arguments");
 
-        return diag(new ZMatrixRMaj(1,1),data.length/2,data);
+        return diag(new ZMatrixRMaj(1, 1), data.length/2, data);
     }
 
-    public static ZMatrixRMaj diag(ZMatrixRMaj output , int N, double... data ) {
-        output.reshape(N,N);
+    public static ZMatrixRMaj diag( @Nullable ZMatrixRMaj output, int N, double... data ) {
+        output = UtilEjml.reshapeOrDeclare(output, N, N);
 
         int index = 0;
         for (int i = 0; i < N; i++) {
-            output.set(i,i,data[index++],data[index++]);
+            output.set(i, i, data[index++], data[index++]);
         }
 
         return output;
@@ -120,19 +121,18 @@ public class CommonOps_ZDRM {
      * @param src Matrix whose diagonal elements are being extracted. Not modified.
      * @param dst A vector the results will be written into. Modified.
      */
-    public static void extractDiag(ZMatrixRMaj src, ZMatrixRMaj dst )
-    {
+    public static void extractDiag( ZMatrixRMaj src, ZMatrixRMaj dst ) {
         int N = Math.min(src.numRows, src.numCols);
 
         // reshape if it's not the right size
-        if( !MatrixFeatures_ZDRM.isVector(dst) || dst.numCols*dst.numCols != N ) {
-            dst.reshape(N,1);
+        if (!MatrixFeatures_ZDRM.isVector(dst) || dst.numCols*dst.numCols != N) {
+            dst.reshape(N, 1);
         }
 
-        for( int i = 0; i < N; i++ ) {
-            int index = src.getIndex(i,i);
-            dst.data[i*2]   = src.data[index];
-            dst.data[i*2+1] = src.data[index+1];
+        for (int i = 0; i < N; i++) {
+            int index = src.getIndex(i, i);
+            dst.data[i*2] = src.data[index];
+            dst.data[i*2 + 1] = src.data[index + 1];
         }
     }
 
@@ -142,8 +142,8 @@ public class CommonOps_ZDRM {
      * @param input Real matrix. Not modified.
      * @param output Complex matrix. Modified.
      */
-    public static void convert(DMatrixD1 input , ZMatrixD1 output ) {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
+    public static void convert( DMatrixD1 input, ZMatrixD1 output ) {
+        if (input.numCols != output.numCols || input.numRows != output.numRows) {
             throw new IllegalArgumentException("The matrices are not all the same dimension.");
         }
 
@@ -151,7 +151,7 @@ public class CommonOps_ZDRM {
 
         final int length = output.getDataLength();
 
-        for( int i = 0; i < length; i += 2 ) {
+        for (int i = 0; i < length; i += 2) {
             output.data[i] = input.data[i/2];
         }
     }
@@ -162,16 +162,12 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj stripReal(ZMatrixD1 input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,input.numCols);
-        } else if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static DMatrixRMaj stripReal( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
-        for( int i = 0; i < length; i += 2 ) {
+        for (int i = 0; i < length; i += 2) {
             output.data[i/2] = input.data[i];
         }
         return output;
@@ -183,16 +179,12 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj stripImaginary(ZMatrixD1 input , DMatrixRMaj output ) {
-        if( output == null ) {
-            output = new DMatrixRMaj(input.numRows,input.numCols);
-        } else if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static DMatrixRMaj stripImaginary( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
-        for( int i = 1; i < length; i += 2 ) {
+        for (int i = 1; i < length; i += 2) {
             output.data[i/2] = input.data[i];
         }
         return output;
@@ -209,16 +201,14 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static void magnitude(ZMatrixD1 input , DMatrixD1 output ) {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static void magnitude( ZMatrixD1 input, DMatrixD1 output ) {
+        output.reshape(input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
-        for( int i = 0; i < length; i += 2 ) {
+        for (int i = 0; i < length; i += 2) {
             double real = input.data[i];
-            double imaginary = input.data[i+1];
+            double imaginary = input.data[i + 1];
 
             output.data[i/2] = Math.sqrt(real*real + imaginary*imaginary);
         }
@@ -235,17 +225,17 @@ public class CommonOps_ZDRM {
      * @param input Input matrix.  Not modified.
      * @param output The complex conjugate of the input matrix.  Modified.
      */
-    public static void conjugate(ZMatrixD1 input , ZMatrixD1 output ) {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static ZMatrixD1 conjugate( ZMatrixD1 input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
-        for( int i = 0; i < length; i += 2 ) {
+        for (int i = 0; i < length; i += 2) {
             output.data[i] = input.data[i];
-            output.data[i+1] = -input.data[i+1];
+            output.data[i + 1] = -input.data[i + 1];
         }
+
+        return output;
     }
 
     /**
@@ -259,12 +249,11 @@ public class CommonOps_ZDRM {
      * @param real The real component
      * @param imaginary The imaginary component
      */
-    public static void fill(ZMatrixD1 a, double real, double imaginary)
-    {
+    public static void fill( ZMatrixD1 a, double real, double imaginary ) {
         int N = a.getDataLength();
         for (int i = 0; i < N; i += 2) {
             a.data[i] = real;
-            a.data[i+1] = imaginary;
+            a.data[i + 1] = imaginary;
         }
     }
 
@@ -283,17 +272,14 @@ public class CommonOps_ZDRM {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add(ZMatrixD1 a , ZMatrixD1 b , ZMatrixD1 c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static void add( ZMatrixD1 a, ZMatrixD1 b, ZMatrixD1 c ) {
+        UtilEjml.checkSameShape(a, b, true);
+        c.reshape(a.numRows, b.numCols);
 
         final int length = a.getDataLength();
 
-        for( int i = 0; i < length; i++ ) {
-            c.data[i] = a.data[i]+b.data[i];
+        for (int i = 0; i < length; i++) {
+            c.data[i] = a.data[i] + b.data[i];
         }
     }
 
@@ -312,17 +298,14 @@ public class CommonOps_ZDRM {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void subtract(ZMatrixD1 a , ZMatrixD1 b , ZMatrixD1 c )
-    {
-        if( a.numCols != b.numCols || a.numRows != b.numRows
-                || a.numCols != c.numCols || a.numRows != c.numRows ) {
-            throw new IllegalArgumentException("The matrices are not all the same dimension.");
-        }
+    public static void subtract( ZMatrixD1 a, ZMatrixD1 b, ZMatrixD1 c ) {
+        UtilEjml.checkSameShape(a, b, true);
+        c.reshape(a.numRows, b.numCols);
 
         final int length = a.getDataLength();
 
-        for( int i = 0; i < length; i++ ) {
-            c.data[i] = a.data[i]-b.data[i];
+        for (int i = 0; i < length; i++) {
+            c.data[i] = a.data[i] - b.data[i];
         }
     }
 
@@ -337,18 +320,17 @@ public class CommonOps_ZDRM {
      * @param alphaReal real component of scale factor
      * @param alphaImag imaginary component of scale factor
      */
-    public static void scale( double alphaReal, double alphaImag , ZMatrixD1 a )
-    {
+    public static void scale( double alphaReal, double alphaImag, ZMatrixD1 a ) {
         // on very small matrices (2 by 2) the call to getNumElements() can slow it down
         // slightly compared to other libraries since it involves an extra multiplication.
         final int size = a.getNumElements()*2;
 
-        for( int i = 0; i < size; i += 2 ) {
+        for (int i = 0; i < size; i += 2) {
             double real = a.data[i];
-            double imag = a.data[i+1];
+            double imag = a.data[i + 1];
 
             a.data[i] = real*alphaReal - imag*alphaImag;
-            a.data[i+1] = real*alphaImag + imag*alphaReal;
+            a.data[i + 1] = real*alphaImag + imag*alphaReal;
         }
     }
 
@@ -364,9 +346,8 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c)
-    {
-        if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
+    public static void mult( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.mult_reorder(a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.mult_small(a, b, c);
@@ -387,12 +368,11 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult(double realAlpha , double imgAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult_ZDRM.mult_reorder(realAlpha,imgAlpha,a,b,c);
+    public static void mult( double realAlpha, double imgAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
+            MatrixMatrixMult_ZDRM.mult_reorder(realAlpha, imgAlpha, a, b, c);
         } else {
-            MatrixMatrixMult_ZDRM.mult_small(realAlpha,imgAlpha,a,b,c);
+            MatrixMatrixMult_ZDRM.mult_small(realAlpha, imgAlpha, a, b, c);
         }
     }
 
@@ -408,12 +388,11 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH ) {
+    public static void multAdd( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multAdd_reorder(a, b, c);
         } else {
-            MatrixMatrixMult_ZDRM.multAdd_small(a,b,c);
+            MatrixMatrixMult_ZDRM.multAdd_small(a, b, c);
         }
     }
 
@@ -431,12 +410,11 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd(double realAlpha , double imgAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
-            MatrixMatrixMult_ZDRM.multAdd_reorder(realAlpha,imgAlpha,a,b,c);
+    public static void multAdd( double realAlpha, double imgAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
+            MatrixMatrixMult_ZDRM.multAdd_reorder(realAlpha, imgAlpha, a, b, c);
         } else {
-            MatrixMatrixMult_ZDRM.multAdd_small(realAlpha,imgAlpha,a,b,c);
+            MatrixMatrixMult_ZDRM.multAdd_small(realAlpha, imgAlpha, a, b, c);
         }
     }
 
@@ -452,10 +430,9 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
-                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
+    public static void multTransA( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multTransA_reorder(a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.multTransA_small(a, b, c);
@@ -476,18 +453,17 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransA(double realAlpha , double imagAlpha, ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multTransA( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         // TODO add a matrix vectory multiply here
-        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
-                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
+        if (a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multTransA_reorder(realAlpha, imagAlpha, a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.multTransA_small(realAlpha, imagAlpha, a, b, c);
         }
     }
 
-        /**
+    /**
      * <p>
      * Performs the following operation:<br>
      * <br>
@@ -499,8 +475,7 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multTransB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         MatrixMatrixMult_ZDRM.multTransB(a, b, c);
     }
 
@@ -518,13 +493,12 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransB(double realAlpha , double imagAlpha, ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multTransB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         // TODO add a matrix vectory multiply here
-        MatrixMatrixMult_ZDRM.multTransB(realAlpha,imagAlpha,a,b,c);
+        MatrixMatrixMult_ZDRM.multTransB(realAlpha, imagAlpha, a, b, c);
     }
 
-        /**
+    /**
      * <p>
      * Performs the following operation:<br>
      * <br>
@@ -536,9 +510,8 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
+    public static void multTransAB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multTransAB_aux(a, b, c, null);
         } else {
             MatrixMatrixMult_ZDRM.multTransAB(a, b, c);
@@ -559,10 +532,9 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multTransAB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multTransAB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         // TODO add a matrix vectory multiply here
-        if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
+        if (a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multTransAB_aux(realAlpha, imagAlpha, a, b, c, null);
         } else {
             MatrixMatrixMult_ZDRM.multTransAB(realAlpha, imagAlpha, a, b, c);
@@ -581,10 +553,9 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
-                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH  ) {
+    public static void multAddTransA( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multAddTransA_reorder(a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.multAddTransA_small(a, b, c);
@@ -605,17 +576,15 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransA(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multAddTransA( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         // TODO add a matrix vectory multiply here
-        if( a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
-                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ) {
+        if (a.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH ||
+                b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multAddTransA_reorder(realAlpha, imagAlpha, a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.multAddTransA_small(realAlpha, imagAlpha, a, b, c);
         }
     }
-
 
     /**
      * <p>
@@ -629,9 +598,8 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        MatrixMatrixMult_ZDRM.multAddTransB(a,b,c);
+    public static void multAddTransB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        MatrixMatrixMult_ZDRM.multAddTransB(a, b, c);
     }
 
     /**
@@ -648,10 +616,9 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multAddTransB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         // TODO add a matrix vectory multiply here
-        MatrixMatrixMult_ZDRM.multAddTransB(realAlpha,imagAlpha,a,b,c);
+        MatrixMatrixMult_ZDRM.multAddTransB(realAlpha, imagAlpha, a, b, c);
     }
 
     /**
@@ -666,12 +633,11 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
-        if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
-            MatrixMatrixMult_ZDRM.multAddTransAB_aux(a,b,c,null);
+    public static void multAddTransAB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH) {
+            MatrixMatrixMult_ZDRM.multAddTransAB_aux(a, b, c, null);
         } else {
-            MatrixMatrixMult_ZDRM.multAddTransAB(a,b,c);
+            MatrixMatrixMult_ZDRM.multAddTransAB(a, b, c);
         }
     }
 
@@ -689,13 +655,12 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not Modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAddTransAB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c )
-    {
+    public static void multAddTransAB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         // TODO add a matrix vectory multiply here
-        if( a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH ) {
-            MatrixMatrixMult_ZDRM.multAddTransAB_aux(realAlpha,imagAlpha, a, b, c, null);
+        if (a.numCols >= EjmlParameters.CMULT_TRANAB_COLUMN_SWITCH) {
+            MatrixMatrixMult_ZDRM.multAddTransAB_aux(realAlpha, imagAlpha, a, b, c, null);
         } else {
-            MatrixMatrixMult_ZDRM.multAddTransAB(realAlpha,imagAlpha, a, b, c);
+            MatrixMatrixMult_ZDRM.multAddTransAB(realAlpha, imagAlpha, a, b, c);
         }
     }
 
@@ -711,10 +676,10 @@ public class CommonOps_ZDRM {
      * @param mat The matrix that is to be transposed. Modified.
      */
     public static void transpose( ZMatrixRMaj mat ) {
-        if( mat.numCols == mat.numRows ){
+        if (mat.numCols == mat.numRows) {
             TransposeAlgs_ZDRM.square(mat);
         } else {
-            ZMatrixRMaj b = new ZMatrixRMaj(mat.numCols,mat.numRows);
+            ZMatrixRMaj b = new ZMatrixRMaj(mat.numCols, mat.numRows);
             transpose(mat, b);
             mat.reshape(b.numRows, b.numCols);
             mat.set(b);
@@ -724,15 +689,14 @@ public class CommonOps_ZDRM {
     /**
      * <p>Performs an "in-place" conjugate transpose.</p>
      *
-     * @see #transpose(ZMatrixRMaj)
-     *
      * @param mat The matrix that is to be transposed. Modified.
+     * @see #transpose(ZMatrixRMaj)
      */
     public static void transposeConjugate( ZMatrixRMaj mat ) {
-        if( mat.numCols == mat.numRows ){
+        if (mat.numCols == mat.numRows) {
             TransposeAlgs_ZDRM.squareConjugate(mat);
         } else {
-            ZMatrixRMaj b = new ZMatrixRMaj(mat.numCols,mat.numRows);
+            ZMatrixRMaj b = new ZMatrixRMaj(mat.numCols, mat.numRows);
             transposeConjugate(mat, b);
             mat.reshape(b.numRows, b.numCols);
             mat.set(b);
@@ -751,15 +715,10 @@ public class CommonOps_ZDRM {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static ZMatrixRMaj transpose(ZMatrixRMaj input , ZMatrixRMaj output )
-    {
-        if( output == null ) {
-            output = new ZMatrixRMaj(input.numCols,input.numRows);
-        } else if( input.numCols != output.numRows || input.numRows != output.numCols ) {
-            throw new IllegalArgumentException("Input and output shapes are not compatible");
-        }
+    public static ZMatrixRMaj transpose( ZMatrixRMaj input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numCols, input.numRows);
 
-        TransposeAlgs_ZDRM.standard(input,output);
+        TransposeAlgs_ZDRM.standard(input, output);
 
         return output;
     }
@@ -777,13 +736,8 @@ public class CommonOps_ZDRM {
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
-    public static ZMatrixRMaj transposeConjugate(ZMatrixRMaj input , ZMatrixRMaj output )
-    {
-        if( output == null ) {
-            output = new ZMatrixRMaj(input.numCols,input.numRows);
-        } else if( input.numCols != output.numRows || input.numRows != output.numCols ) {
-            throw new IllegalArgumentException("Input and output shapes are not compatible");
-        }
+    public static ZMatrixRMaj transposeConjugate( ZMatrixRMaj input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numCols, input.numRows);
 
         TransposeAlgs_ZDRM.standardConjugate(input, output);
 
@@ -807,11 +761,10 @@ public class CommonOps_ZDRM {
      * @param A The matrix that is to be inverted.  Results are stored here.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert( ZMatrixRMaj A )
-    {
+    public static boolean invert( ZMatrixRMaj A ) {
         LinearSolverDense<ZMatrixRMaj> solver = LinearSolverFactory_ZDRM.lu(A.numRows);
 
-        if( solver.setA(A) ) {
+        if (solver.setA(A)) {
             solver.invert(A);
         } else {
             return false;
@@ -843,14 +796,13 @@ public class CommonOps_ZDRM {
      * @param output Where the inverse matrix is stored.  Modified.
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean invert(ZMatrixRMaj input , ZMatrixRMaj output )
-    {
+    public static boolean invert( ZMatrixRMaj input, ZMatrixRMaj output ) {
         LinearSolverDense<ZMatrixRMaj> solver = LinearSolverFactory_ZDRM.lu(input.numRows);
 
-        if( solver.modifiesA() )
+        if (solver.modifiesA())
             input = input.copy();
 
-        if( !solver.setA(input))
+        if (!solver.setA(input))
             return false;
         solver.invert(output);
         return true;
@@ -881,13 +833,11 @@ public class CommonOps_ZDRM {
      * @param a A matrix that is m by n. Not modified.
      * @param b A matrix that is n by k. Not modified.
      * @param x A matrix that is m by k. Modified.
-     *
      * @return true if it could invert the matrix false if it could not.
      */
-    public static boolean solve(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj x )
-    {
+    public static boolean solve( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj x ) {
         LinearSolverDense<ZMatrixRMaj> solver;
-        if( a.numCols == a.numRows ) {
+        if (a.numCols == a.numRows) {
             solver = LinearSolverFactory_ZDRM.lu(a.numRows);
         } else {
             solver = LinearSolverFactory_ZDRM.qr(a.numRows, a.numCols);
@@ -896,10 +846,10 @@ public class CommonOps_ZDRM {
         // make sure the inputs 'a' and 'b' are not modified
         solver = new LinearSolverSafe<ZMatrixRMaj>(solver);
 
-        if( !solver.setA(a) )
+        if (!solver.setA(a))
             return false;
 
-        solver.solve(b,x);
+        solver.solve(b, x);
         return true;
     }
 
@@ -911,15 +861,14 @@ public class CommonOps_ZDRM {
      * @param mat The matrix whose determinant is to be computed.  Not modified.
      * @return The determinant.
      */
-    public static Complex_F64 det(ZMatrixRMaj mat  )
-    {
+    public static Complex_F64 det( ZMatrixRMaj mat ) {
         LUDecompositionAlt_ZDRM alg = new LUDecompositionAlt_ZDRM();
 
-        if( alg.inputModified() ) {
+        if (alg.inputModified()) {
             mat = mat.copy();
         }
 
-        if( !alg.decompose(mat) )
+        if (!alg.decompose(mat))
             return new Complex_F64();
         return alg.computeDeterminant();
     }
@@ -929,25 +878,25 @@ public class CommonOps_ZDRM {
      * <br>
      * output<sub>ij</sub> = input<sub>ij</sub> * (real + imaginary*i) <br>
      * </p>
+     *
      * @param input The left matrix in the multiplication operation. Not modified.
      * @param real Real component of the number it is multiplied by
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementMultiply(ZMatrixD1 input , double real , double imaginary, ZMatrixD1 output )
-    {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
-        }
+    public static ZMatrixRMaj elementMultiply( ZMatrixD1 input, double real, double imaginary, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         int N = input.getDataLength();
-        for (int i = 0; i < N; i += 2 ) {
+        for (int i = 0; i < N; i += 2) {
             double inReal = input.data[i];
-            double intImag = input.data[i+1];
+            double intImag = input.data[i + 1];
 
             output.data[i] = inReal*real - intImag*imaginary;
-            output.data[i+1] = inReal*imaginary + intImag*real;
+            output.data[i + 1] = inReal*imaginary + intImag*real;
         }
+
+        return output;
     }
 
     /**
@@ -955,27 +904,27 @@ public class CommonOps_ZDRM {
      * <br>
      * output<sub>ij</sub> = input<sub>ij</sub> / (real + imaginary*i) <br>
      * </p>
+     *
      * @param input The left matrix in the multiplication operation. Not modified.
      * @param real Real component of the number it is multiplied by
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDivide(ZMatrixD1 input , double real , double imaginary, ZMatrixD1 output )
-    {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
-        }
+    public static ZMatrixRMaj elementDivide( ZMatrixD1 input, double real, double imaginary, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         double norm = real*real + imaginary*imaginary;
 
         int N = input.getDataLength();
-        for (int i = 0; i < N; i += 2 ) {
+        for (int i = 0; i < N; i += 2) {
             double inReal = input.data[i];
-            double inImag = input.data[i+1];
+            double inImag = input.data[i + 1];
 
-            output.data[i]   = (inReal*real + inImag*imaginary)/norm;
-            output.data[i+1] = (inImag*real - inReal*imaginary)/norm;
+            output.data[i] = (inReal*real + inImag*imaginary)/norm;
+            output.data[i + 1] = (inImag*real - inReal*imaginary)/norm;
         }
+
+        return output;
     }
 
     /**
@@ -983,27 +932,27 @@ public class CommonOps_ZDRM {
      * <br>
      * output<sub>ij</sub> = (real + imaginary*i) / input<sub>ij</sub> <br>
      * </p>
+     *
      * @param real Real component of the number it is multiplied by
      * @param imaginary Imaginary component of the number it is multiplied by
      * @param input The right matrix in the multiplication operation. Not modified.
      * @param output Where the results of the operation are stored. Modified.
      */
-    public static void elementDivide(double real , double imaginary, ZMatrixD1 input , ZMatrixD1 output )
-    {
-        if( input.numCols != output.numCols || input.numRows != output.numRows ) {
-            throw new IllegalArgumentException("The 'input' and 'output' matrices do not have compatible dimensions");
-        }
+    public static ZMatrixRMaj elementDivide( double real, double imaginary, ZMatrixD1 input, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         int N = input.getDataLength();
-        for (int i = 0; i < N; i += 2 ) {
+        for (int i = 0; i < N; i += 2) {
             double inReal = input.data[i];
-            double inImag = input.data[i+1];
+            double inImag = input.data[i + 1];
 
             double norm = inReal*inReal + inImag*inImag;
 
-            output.data[i]   = (real*inReal + imaginary*inImag)/norm;
-            output.data[i+1] = (imaginary*inReal - real*inImag)/norm;
+            output.data[i] = (real*inReal + imaginary*inImag)/norm;
+            output.data[i + 1] = (imaginary*inReal - real*inImag)/norm;
         }
+
+        return output;
     }
 
     /**
@@ -1020,9 +969,9 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double min = a.data[0];
-        for( int i = 2; i < size; i += 2 ) {
+        for (int i = 2; i < size; i += 2) {
             double val = a.data[i];
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }
@@ -1044,9 +993,9 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double min = a.data[1];
-        for( int i = 3; i < size; i += 2 ) {
+        for (int i = 3; i < size; i += 2) {
             double val = a.data[i];
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }
@@ -1068,9 +1017,9 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double max = a.data[0];
-        for( int i = 2; i < size; i += 2 ) {
+        for (int i = 2; i < size; i += 2) {
             double val = a.data[i];
-            if( val > max ) {
+            if (val > max) {
                 max = val;
             }
         }
@@ -1092,9 +1041,9 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double max = a.data[1];
-        for( int i = 3; i < size; i += 2 ) {
+        for (int i = 3; i < size; i += 2) {
             double val = a.data[i];
-            if( val > max ) {
+            if (val > max) {
                 max = val;
             }
         }
@@ -1116,13 +1065,13 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double max = 0;
-        for( int i = 0; i < size; ) {
+        for (int i = 0; i < size; ) {
             double real = a.data[i++];
             double imaginary = a.data[i++];
 
             double m = real*real + imaginary*imaginary;
 
-            if( m > max ) {
+            if (m > max) {
                 max = m;
             }
         }
@@ -1136,16 +1085,15 @@ public class CommonOps_ZDRM {
      *
      * @param mat A square matrix.
      */
-    public static void setIdentity( ZMatrixRMaj mat )
-    {
+    public static void setIdentity( ZMatrixRMaj mat ) {
         int width = mat.numRows < mat.numCols ? mat.numRows : mat.numCols;
 
-        Arrays.fill(mat.data,0,mat.getDataLength(),0);
+        Arrays.fill(mat.data, 0, mat.getDataLength(), 0);
 
         int index = 0;
         int stride = mat.getRowStride();
 
-        for( int i = 0; i < width; i++ , index += stride + 2) {
+        for (int i = 0; i < width; i++, index += stride + 2) {
             mat.data[index] = 1;
         }
     }
@@ -1168,19 +1116,18 @@ public class CommonOps_ZDRM {
      * @param srcY1 Stop row+1.
      * @return Extracted submatrix.
      */
-    public static ZMatrixRMaj extract(ZMatrixRMaj src,
-                                        int srcY0, int srcY1,
-                                        int srcX0, int srcX1 )
-    {
-        if( srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows )
+    public static ZMatrixRMaj extract( ZMatrixRMaj src,
+                                       int srcY0, int srcY1,
+                                       int srcX0, int srcX1 ) {
+        if (srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows)
             throw new IllegalArgumentException("srcY1 <= srcY0 || srcY0 < 0 || srcY1 > src.numRows");
-        if( srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols )
+        if (srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols)
             throw new IllegalArgumentException("srcX1 <= srcX0 || srcX0 < 0 || srcX1 > src.numCols");
 
-        int w = srcX1-srcX0;
-        int h = srcY1-srcY0;
+        int w = srcX1 - srcX0;
+        int h = srcY1 - srcY0;
 
-        ZMatrixRMaj dst = new ZMatrixRMaj(h,w);
+        ZMatrixRMaj dst = new ZMatrixRMaj(h, w);
 
         extract(src, srcY0, srcY1, srcX0, srcX1, dst, 0, 0);
 
@@ -1207,19 +1154,18 @@ public class CommonOps_ZDRM {
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
-    public static void extract(ZMatrixRMaj src,
-                               int srcY0, int srcY1,
-                               int srcX0, int srcX1,
-                               ZMatrixRMaj dst,
-                               int dstY0, int dstX0 )
-    {
+    public static void extract( ZMatrixRMaj src,
+                                int srcY0, int srcY1,
+                                int srcX0, int srcX1,
+                                ZMatrixRMaj dst,
+                                int dstY0, int dstX0 ) {
         int numRows = srcY1 - srcY0;
         int stride = (srcX1 - srcX0)*2;
 
-        for( int y = 0; y < numRows; y++ ) {
-            int indexSrc = src.getIndex(y+srcY0,srcX0);
-            int indexDst = dst.getIndex(y+dstY0,dstX0);
-            System.arraycopy(src.data,indexSrc,dst.data,indexDst, stride);
+        for (int y = 0; y < numRows; y++) {
+            int indexSrc = src.getIndex(y + srcY0, srcX0);
+            int indexDst = dst.getIndex(y + dstY0, dstX0);
+            System.arraycopy(src.data, indexSrc, dst.data, indexDst, stride);
         }
     }
 
@@ -1230,27 +1176,26 @@ public class CommonOps_ZDRM {
      * @param v Optional storage for columns.
      * @return An array of vectors.
      */
-    public static ZMatrixRMaj[] columnsToVector(ZMatrixRMaj A, @Nullable ZMatrixRMaj[] v)
-    {
-        ZMatrixRMaj[]ret;
-        if( v == null || v.length < A.numCols ) {
-            ret = new ZMatrixRMaj[ A.numCols ];
+    public static ZMatrixRMaj[] columnsToVector( ZMatrixRMaj A, @Nullable ZMatrixRMaj[] v ) {
+        ZMatrixRMaj[] ret;
+        if (v == null || v.length < A.numCols) {
+            ret = new ZMatrixRMaj[A.numCols];
         } else {
             ret = v;
         }
 
-        for( int i = 0; i < ret.length; i++ ) {
-            if( ret[i] == null ) {
-                ret[i] = new ZMatrixRMaj(A.numRows,1);
+        for (int i = 0; i < ret.length; i++) {
+            if (ret[i] == null) {
+                ret[i] = new ZMatrixRMaj(A.numRows, 1);
             } else {
-                ret[i].reshape(A.numRows,1);
+                ret[i].reshape(A.numRows, 1);
             }
 
             ZMatrixRMaj u = ret[i];
 
             int indexU = 0;
-            for( int j = 0; j < A.numRows; j++ ) {
-                int indexA = A.getIndex(j,i);
+            for (int j = 0; j < A.numRows; j++) {
+                int indexA = A.getIndex(j, i);
                 u.data[indexU++] = A.data[indexA++];
                 u.data[indexU++] = A.data[indexA];
             }
@@ -1273,13 +1218,13 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double max = 0;
-        for( int i = 0; i < size; i += 2 ) {
+        for (int i = 0; i < size; i += 2) {
             double real = a.data[i];
-            double imag = a.data[i+1];
+            double imag = a.data[i + 1];
 
             double val = real*real + imag*imag;
 
-            if( val > max ) {
+            if (val > max) {
                 max = val;
             }
         }
@@ -1301,13 +1246,13 @@ public class CommonOps_ZDRM {
         final int size = a.getDataLength();
 
         double min = Double.MAX_VALUE;
-        for( int i = 0; i < size; i += 2 ) {
+        for (int i = 0; i < size; i += 2) {
             double real = a.data[i];
-            double imag = a.data[i+1];
+            double imag = a.data[i + 1];
 
             double val = real*real + imag*imag;
 
-            if( val < min ) {
+            if (val < min) {
                 min = val;
             }
         }

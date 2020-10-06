@@ -21,6 +21,7 @@ package org.ejml.dense.row.decomposition.qr;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.decomposition.UtilDecompositons_DDRM;
 import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +47,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("NullAway.Init")
 public class QRColPivDecompositionHouseholderColumn_DDRM
         extends QRDecompositionHouseholderColumn_DDRM
-        implements QRPDecomposition_F64<DMatrixRMaj>
-{
+        implements QRPDecomposition_F64<DMatrixRMaj> {
     // the ordering of each column, the current column i is the original column pivots[i]
     protected int[] pivots;
     // F-norm  squared for each column
@@ -68,7 +68,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      *
      * @param singularThreshold The singular threshold.
      */
-    public QRColPivDecompositionHouseholderColumn_DDRM(double singularThreshold) {
+    public QRColPivDecompositionHouseholderColumn_DDRM( double singularThreshold ) {
         this.singularThreshold = singularThreshold;
     }
 
@@ -81,10 +81,10 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     }
 
     @Override
-    public void setExpectedMaxSize( int numRows , int numCols ) {
-        super.setExpectedMaxSize(numRows,numCols);
+    public void setExpectedMaxSize( int numRows, int numCols ) {
+        super.setExpectedMaxSize(numRows, numCols);
 
-        if( pivots == null || pivots.length < numCols  ) {
+        if (pivots == null || pivots.length < numCols) {
             pivots = new int[numCols];
             normsCol = new double[numCols];
         }
@@ -97,30 +97,14 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      * @param Q The orthogonal Q matrix.
      */
     @Override
-    public DMatrixRMaj getQ(@Nullable DMatrixRMaj Q , boolean compact ) {
-        if( compact ) {
-            if( Q == null ) {
-                Q = CommonOps_DDRM.identity(numRows,minLength);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != minLength ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps_DDRM.setIdentity(Q);
-                }
-            }
+    public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q, boolean compact ) {
+        if (compact) {
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q, numRows, minLength);
         } else {
-            if( Q == null ) {
-                Q = CommonOps_DDRM.identity(numRows);
-            } else {
-                if( Q.numRows != numRows || Q.numCols != numRows ) {
-                    throw new IllegalArgumentException("Unexpected matrix dimension.");
-                } else {
-                    CommonOps_DDRM.setIdentity(Q);
-                }
-            }
+            Q = UtilDecompositons_DDRM.ensureIdentity(Q, numRows, numRows);
         }
 
-        for( int j = rank-1; j >= 0; j-- ) {
+        for (int j = rank - 1; j >= 0; j--) {
             double[] u = dataQR[j];
 
             double vv = u[j];
@@ -155,15 +139,15 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         setupPivotInfo();
 
         // go through each column and perform the decomposition
-        for( int j = 0; j < minLength; j++ ) {
-            if( j > 0 )
+        for (int j = 0; j < minLength; j++) {
+            if (j > 0)
                 updateNorms(j);
             swapColumns(j);
             // if its degenerate stop processing
-            if( !householderPivot(j) )
+            if (!householderPivot(j))
                 break;
             updateA(j);
-            rank = j+1;
+            rank = j + 1;
         }
 
         return true;
@@ -173,11 +157,11 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      * Sets the initial pivot ordering and compute the F-norm squared for each column
      */
     protected void setupPivotInfo() {
-        for( int col = 0; col < numCols; col++ ) {
+        for (int col = 0; col < numCols; col++) {
             pivots[col] = col;
             double[] c = dataQR[col];
             double norm = 0;
-            for( int row = 0; row < numRows; row++ ) {
+            for (int row = 0; row < numRows; row++) {
                 double element = c[row];
                 norm += element*element;
             }
@@ -185,17 +169,16 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         }
     }
 
-
     /**
      * Performs an efficient update of each columns' norm
      */
     protected void updateNorms( int j ) {
         boolean foundNegative = false;
-        for( int col = j; col < numCols; col++ ) {
-            double e = dataQR[col][j-1];
+        for (int col = j; col < numCols; col++) {
+            double e = dataQR[col][j - 1];
             double v = normsCol[col] -= e*e;
 
-            if( v < 0 ) {
+            if (v < 0) {
                 foundNegative = true;
                 break;
             }
@@ -203,11 +186,11 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
 
         // if a negative sum has been found then clearly too much precision has been lost
         // and it should recompute the column norms from scratch
-        if( foundNegative ) {
-            for( int col = j; col < numCols; col++ ) {
+        if (foundNegative) {
+            for (int col = j; col < numCols; col++) {
                 double[] u = dataQR[col];
                 double actual = 0;
-                for( int i=j; i < numRows; i++ ) {
+                for (int i = j; i < numRows; i++) {
                     double v = u[i];
                     actual += v*v;
                 }
@@ -226,15 +209,15 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
         // find the column with the largest norm
         int largestIndex = j;
         double largestNorm = normsCol[j];
-        for( int col = j+1; col < numCols; col++ ) {
+        for (int col = j + 1; col < numCols; col++) {
             double n = normsCol[col];
-            if( n > largestNorm ) {
+            if (n > largestNorm) {
                 largestNorm = n;
                 largestIndex = col;
             }
         }
         // swap the columns
-        double []tempC = dataQR[j];
+        double[] tempC = dataQR[j];
         dataQR[j] = dataQR[largestIndex];
         dataQR[largestIndex] = tempC;
         double tempN = normsCol[j];
@@ -260,20 +243,19 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
      * @param j Which submatrix to work off of.
      * @return false if it is degenerate
      */
-    protected boolean householderPivot(int j)
-    {
+    protected boolean householderPivot( int j ) {
         final double[] u = dataQR[j];
 
         // find the largest value in this column
         // this is used to normalize the column and mitigate overflow/underflow
         final double max = QrHelperFunctions_DDRM.findMax(u, j, numRows - j);
 
-        if( max <= singularThreshold*maxValueAbs ) {
+        if (max <= singularThreshold*maxValueAbs) {
             return false;
         } else {
             // computes tau and normalizes u by max
             tau = QrHelperFunctions_DDRM.computeTauAndDivide(j, numRows, u, max);
-            
+
             // divide u by u_0
             double u_0 = u[j] + tau;
             QrHelperFunctions_DDRM.divideElements(j + 1, numRows, u, u_0);
@@ -300,19 +282,19 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     }
 
     @Override
-    public DMatrixRMaj getColPivotMatrix(@Nullable DMatrixRMaj P) {
-        if( P == null )
-            P = new DMatrixRMaj(numCols,numCols);
-        else if( P.numRows != numCols )
-            throw new IllegalArgumentException("Number of rows must be "+numCols);
-        else if( P.numCols != numCols )
-            throw new IllegalArgumentException("Number of columns must be "+numCols);
+    public DMatrixRMaj getColPivotMatrix( @Nullable DMatrixRMaj P ) {
+        if (P == null)
+            P = new DMatrixRMaj(numCols, numCols);
+        else if (P.numRows != numCols)
+            throw new IllegalArgumentException("Number of rows must be " + numCols);
+        else if (P.numCols != numCols)
+            throw new IllegalArgumentException("Number of columns must be " + numCols);
         else {
             P.zero();
         }
 
-        for( int i = 0; i < numCols; i++ ) {
-            P.set(pivots[i],i,1);
+        for (int i = 0; i < numCols; i++) {
+            P.set(pivots[i], i, 1);
         }
 
         return P;

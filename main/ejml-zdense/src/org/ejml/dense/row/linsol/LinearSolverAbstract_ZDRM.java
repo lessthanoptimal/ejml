@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,6 @@ package org.ejml.dense.row.linsol;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
 /**
  * <p>
  * An abstract class that provides some common functionality and a default implementation
@@ -32,7 +31,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  * The extending class must explicity call {@link #_setA(ZMatrixRMaj)}
  * inside of its {@link #setA} function.
  * </p>
- * 
+ *
  * @author Peter Abeles
  */
 @SuppressWarnings("NullAway.Init")
@@ -47,7 +46,7 @@ public abstract class LinearSolverAbstract_ZDRM implements LinearSolverDense<ZMa
         return A;
     }
 
-    protected void _setA(ZMatrixRMaj A) {
+    protected void _setA( ZMatrixRMaj A ) {
         this.A = A;
         this.numRows = A.numRows;
         this.numCols = A.numCols;
@@ -55,7 +54,7 @@ public abstract class LinearSolverAbstract_ZDRM implements LinearSolverDense<ZMa
     }
 
     @Override
-    public void invert(ZMatrixRMaj A_inv) {
-        InvertUsingSolve_ZDRM.invert(this,A,A_inv);
+    public void invert( ZMatrixRMaj A_inv ) {
+        InvertUsingSolve_ZDRM.invert(this, A, A_inv);
     }
 }

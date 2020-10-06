@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,11 +34,10 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
  * @author Peter Abeles
  */
 // TODO make left looking just regular QR
-    // TODO move row pivot matrix into generic header
-    // TODO update unit tests
+// TODO move row pivot matrix into generic header
+// TODO update unit tests
 public interface QrpSparseDecomposition<T extends Matrix>
-        extends QRDecomposition<T>
-{
+        extends QRDecomposition<T> {
     /**
      * Returns the rank as determined by the algorithm.  This is dependent upon a fixed threshold
      * and might not be appropriate for some applications.
@@ -60,7 +59,7 @@ public interface QrpSparseDecomposition<T extends Matrix>
      * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
      * @return The pivot matrix.
      */
-    T getColPivotMatrix(T P);
+    T getColPivotMatrix( T P );
 
     /**
      * Ordering of each row after pivoting.   The current row i was original at row pivot[i].
@@ -75,7 +74,7 @@ public interface QrpSparseDecomposition<T extends Matrix>
      * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
      * @return The pivot matrix.
      */
-    T getRowPivotMatrix(T P);
+    T getRowPivotMatrix( T P );
 
     boolean isColumnPivot();
 

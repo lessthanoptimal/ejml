@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,21 +29,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public class UtilDecompositons_ZDRM {
 
-    public static ZMatrixRMaj checkIdentity(@Nullable ZMatrixRMaj A, int numRows, int numCols) {
-        if( A == null ) {
-            return CommonOps_ZDRM.identity(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
+    public static ZMatrixRMaj checkIdentity( @Nullable ZMatrixRMaj A, int numRows, int numCols ) {
+        if (A == null) {
+            return CommonOps_ZDRM.identity(numRows, numCols);
+        } else if (numRows != A.numRows || numCols != A.numCols)
+            throw new IllegalArgumentException("Input is not " + numRows + " x " + numCols + " matrix");
         else
             CommonOps_ZDRM.setIdentity(A);
         return A;
     }
 
-    public static ZMatrixRMaj checkZeros(@Nullable ZMatrixRMaj A , int numRows , int numCols) {
-        if( A == null ) {
-            return new ZMatrixRMaj(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
+    public static ZMatrixRMaj checkZeros( @Nullable ZMatrixRMaj A, int numRows, int numCols ) {
+        if (A == null) {
+            return new ZMatrixRMaj(numRows, numCols);
+        } else if (numRows != A.numRows || numCols != A.numCols)
+            throw new IllegalArgumentException("Input is not " + numRows + " x " + numCols + " matrix");
         else
             A.zero();
         return A;
@@ -53,16 +53,16 @@ public class UtilDecompositons_ZDRM {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the lower triangular portion with zeros.
      */
-    public static ZMatrixRMaj checkZerosLT(@Nullable ZMatrixRMaj A , int numRows , int numCols) {
-        if( A == null ) {
-            return new ZMatrixRMaj(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
+    public static ZMatrixRMaj checkZerosLT( @Nullable ZMatrixRMaj A, int numRows, int numCols ) {
+        if (A == null) {
+            return new ZMatrixRMaj(numRows, numCols);
+        } else if (numRows != A.numRows || numCols != A.numCols)
+            throw new IllegalArgumentException("Input is not " + numRows + " x " + numCols + " matrix");
         else {
-            for( int i = 0; i < A.numRows; i++ ) {
+            for (int i = 0; i < A.numRows; i++) {
                 int index = i*A.numCols*2;
-                int end = index + Math.min(i,A.numCols)*2;;
-                while( index < end ) {
+                int end = index + Math.min(i, A.numCols)*2;
+                while (index < end) {
                     A.data[index++] = 0;
                 }
             }
@@ -74,22 +74,21 @@ public class UtilDecompositons_ZDRM {
      * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
      * the upper triangular portion with zeros.
      */
-    public static ZMatrixRMaj checkZerosUT(@Nullable ZMatrixRMaj A , int numRows , int numCols) {
-        if( A == null ) {
-            return new ZMatrixRMaj(numRows,numCols);
-        } else if( numRows != A.numRows || numCols != A.numCols )
-            throw new IllegalArgumentException("Input is not "+numRows+" x "+numCols+" matrix");
+    public static ZMatrixRMaj checkZerosUT( @Nullable ZMatrixRMaj A, int numRows, int numCols ) {
+        if (A == null) {
+            return new ZMatrixRMaj(numRows, numCols);
+        } else if (numRows != A.numRows || numCols != A.numCols)
+            throw new IllegalArgumentException("Input is not " + numRows + " x " + numCols + " matrix");
         else {
-            int maxRows = Math.min(A.numRows,A.numCols);
-            for( int i = 0; i < maxRows; i++ ) {
-                int index = (i*A.numCols + i+1)*2;
+            int maxRows = Math.min(A.numRows, A.numCols);
+            for (int i = 0; i < maxRows; i++) {
+                int index = (i*A.numCols + i + 1)*2;
                 int end = (i*A.numCols + A.numCols)*2;
-                while( index < end ) {
+                while (index < end) {
                     A.data[index++] = 0;
                 }
             }
         }
         return A;
     }
-
 }

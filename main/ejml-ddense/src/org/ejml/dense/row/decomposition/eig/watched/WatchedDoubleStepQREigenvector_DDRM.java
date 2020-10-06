@@ -30,7 +30,6 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 
 import java.util.Arrays;
 
-
 /**
  * @author Peter Abeles
  */
@@ -41,7 +40,6 @@ public class WatchedDoubleStepQREigenvector_DDRM {
 
     // Q matrix from double step QR
     DMatrixRMaj Q;
-
 
     DMatrixRMaj[] eigenvectors;
 
@@ -55,29 +53,28 @@ public class WatchedDoubleStepQREigenvector_DDRM {
     int[] splits;
     int numSplits;
 
-    int x1,x2;
+    int x1, x2;
 
     int indexVal;
     boolean onscript;
 
-    public boolean process(WatchedDoubleStepQREigen_DDRM implicit , DMatrixRMaj A , DMatrixRMaj Q_h )
-    {
+    public boolean process( WatchedDoubleStepQREigen_DDRM implicit, DMatrixRMaj A, DMatrixRMaj Q_h ) {
         this.implicit = implicit;
 
-        if( N != A.numRows ) {
+        if (N != A.numRows) {
             N = A.numRows;
-            Q = new DMatrixRMaj(N,N);
+            Q = new DMatrixRMaj(N, N);
             splits = new int[N];
             origEigenvalues = new Complex_F64[N];
             eigenvectors = new DMatrixRMaj[N];
-            eigenvectorTemp = new DMatrixRMaj(N,1);
+            eigenvectorTemp = new DMatrixRMaj(N, 1);
 
             solver = LinearSolverFactory_DDRM.linear(0);
         } else {
 //            UtilEjml.setnull(eigenvectors);
             eigenvectors = new DMatrixRMaj[N];
         }
-        System.arraycopy(implicit.eigenvalues,0,origEigenvalues,0,N);
+        System.arraycopy(implicit.eigenvalues, 0, origEigenvalues, 0, N);
 
         implicit.setup(A);
         implicit.setQ(Q);
@@ -87,7 +84,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
 //        System.out.println("Orig A");
 //        A.print("%12.10f");
 
-        if( !findQandR() )
+        if (!findQandR())
             return false;
 
         return extractVectors(Q_h);
@@ -99,26 +96,26 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         // extract eigenvectors from the shur matrix
         // start at the top left corner of the matrix
         boolean triangular = true;
-        for( int i = 0; i < N; i++ ) {
+        for (int i = 0; i < N; i++) {
 
-            Complex_F64 c = implicit.eigenvalues[N-i-1];
+            Complex_F64 c = implicit.eigenvalues[N - i - 1];
 
-            if( triangular && !c.isReal() )
+            if (triangular && !c.isReal())
                 triangular = false;
 
-            if( c.isReal() && eigenvectors[N-i-1] == null) {
-                solveEigenvectorDuplicateEigenvalue(c.real,i,triangular);
+            if (c.isReal() && eigenvectors[N - i - 1] == null) {
+                solveEigenvectorDuplicateEigenvalue(c.real, i, triangular);
             }
         }
 
         // translate the eigenvectors into the frame of the original matrix
-        if( Q_h != null ) {
-            DMatrixRMaj temp = new DMatrixRMaj(N,1);
-            for( int i = 0; i < N; i++ ) {
+        if (Q_h != null) {
+            DMatrixRMaj temp = new DMatrixRMaj(N, 1);
+            for (int i = 0; i < N; i++) {
                 DMatrixRMaj v = eigenvectors[i];
 
-                if( v != null ) {
-                    CommonOps_DDRM.mult(Q_h,v,temp);
+                if (v != null) {
+                    CommonOps_DDRM.mult(Q_h, v, temp);
                     eigenvectors[i] = temp;
                     temp = v;
                 }
@@ -128,33 +125,33 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         return true;
     }
 
-    private void solveEigenvectorDuplicateEigenvalue( double real , int first , boolean isTriangle ) {
+    private void solveEigenvectorDuplicateEigenvalue( double real, int first, boolean isTriangle ) {
 
         double scale = Math.abs(real);
-        if( scale == 0 ) scale = 1;
+        if (scale == 0) scale = 1;
 
-        eigenvectorTemp.reshape(N,1, false);
+        eigenvectorTemp.reshape(N, 1, false);
         eigenvectorTemp.zero();
 
-        if( first > 0 ) {
-            if( isTriangle ) {
-                solveUsingTriangle(real, first , eigenvectorTemp);
+        if (first > 0) {
+            if (isTriangle) {
+                solveUsingTriangle(real, first, eigenvectorTemp);
             } else {
-                solveWithLU(real, first , eigenvectorTemp);
+                solveWithLU(real, first, eigenvectorTemp);
             }
         }
 
-        eigenvectorTemp.reshape(N,1, false);
+        eigenvectorTemp.reshape(N, 1, false);
 
-        for( int i = first; i < N; i++ ) {
-            Complex_F64 c = implicit.eigenvalues[N-i-1];
+        for (int i = first; i < N; i++) {
+            Complex_F64 c = implicit.eigenvalues[N - i - 1];
 
-            if( c.isReal() && Math.abs(c.real-real)/scale < 100.0*UtilEjml.EPS ) {
+            if (c.isReal() && Math.abs(c.real - real)/scale < 100.0*UtilEjml.EPS) {
                 eigenvectorTemp.data[i] = 1;
 
-                DMatrixRMaj v = new DMatrixRMaj(N,1);
-                CommonOps_DDRM.multTransA(Q,eigenvectorTemp,v);
-                eigenvectors[N-i-1] = v;
+                DMatrixRMaj v = new DMatrixRMaj(N, 1);
+                CommonOps_DDRM.multTransA(Q, eigenvectorTemp, v);
+                eigenvectors[N - i - 1] = v;
                 NormOps_DDRM.normalizeF(v);
 
                 eigenvectorTemp.data[i] = 0;
@@ -162,50 +159,50 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         }
     }
 
-    private void solveUsingTriangle(double real, int index, DMatrixRMaj r ) {
-        for( int i = 0; i < index; i++ ) {
-            implicit.A.add(i,i,-real);
+    private void solveUsingTriangle( double real, int index, DMatrixRMaj r ) {
+        for (int i = 0; i < index; i++) {
+            implicit.A.add(i, i, -real);
         }
 
-        SpecializedOps_DDRM.subvector(implicit.A,0,index,index,false,0,r);
+        SpecializedOps_DDRM.subvector(implicit.A, 0, index, index, false, 0, r);
         CommonOps_DDRM.changeSign(r);
 
-        TriangularSolver_DDRM.solveU(implicit.A.data,r.data,implicit.A.numRows,0,index);
+        TriangularSolver_DDRM.solveU(implicit.A.data, r.data, implicit.A.numRows, 0, index);
 
-        for( int i = 0; i < index; i++ ) {
-            implicit.A.add(i,i,real);
+        for (int i = 0; i < index; i++) {
+            implicit.A.add(i, i, real);
         }
     }
 
-    private void solveWithLU(double real, int index, DMatrixRMaj r ) {
-        DMatrixRMaj A = new DMatrixRMaj(index,index);
+    private void solveWithLU( double real, int index, DMatrixRMaj r ) {
+        DMatrixRMaj A = new DMatrixRMaj(index, index);
 
-        CommonOps_DDRM.extract(implicit.A,0,index,0,index,A,0,0);
+        CommonOps_DDRM.extract(implicit.A, 0, index, 0, index, A, 0, 0);
 
-        for( int i = 0; i < index; i++ ) {
-            A.add(i,i,-real);
+        for (int i = 0; i < index; i++) {
+            A.add(i, i, -real);
         }
 
-        r.reshape(index,1, false);
+        r.reshape(index, 1, false);
 
-        SpecializedOps_DDRM.subvector(implicit.A,0,index,index,false,0,r);
+        SpecializedOps_DDRM.subvector(implicit.A, 0, index, index, false, 0, r);
         CommonOps_DDRM.changeSign(r);
 
         // TODO this must be very inefficient
-        if( !solver.setA(A))
+        if (!solver.setA(A))
             throw new RuntimeException("Solve failed");
-        solver.solve(r,r);
+        solver.solve(r, r);
     }
 
     public boolean findQandR() {
         CommonOps_DDRM.setIdentity(Q);
 
         x1 = 0;
-        x2 = N-1;
+        x2 = N - 1;
 
         // use the already computed eigenvalues to recompute the Q and R matrices
         indexVal = 0;
-        while( indexVal < N ) {
+        while (indexVal < N) {
             if (!findNextEigenvalue()) {
                 return false;
             }
@@ -220,29 +217,29 @@ public class WatchedDoubleStepQREigenvector_DDRM {
 
     private boolean findNextEigenvalue() {
         boolean foundEigen = false;
-        while( !foundEigen && implicit.steps < implicit.maxIterations ) {
+        while (!foundEigen && implicit.steps < implicit.maxIterations) {
 //            implicit.A.print();
             implicit.incrementSteps();
 
-            if( x2 < x1 ) {
+            if (x2 < x1) {
                 moveToNextSplit();
-            } else if( x2-x1 == 0 ) {
+            } else if (x2 - x1 == 0) {
                 implicit.addEigenAt(x1);
                 x2--;
                 indexVal++;
                 foundEigen = true;
-            } else if( x2-x1 == 1 && !implicit.isReal2x2(x1,x2)) {
-                implicit.addComputedEigen2x2(x1,x2);
+            } else if (x2 - x1 == 1 && !implicit.isReal2x2(x1, x2)) {
+                implicit.addComputedEigen2x2(x1, x2);
                 x2 -= 2;
                 indexVal += 2;
                 foundEigen = true;
-            } else if( implicit.steps-implicit.lastExceptional > implicit.exceptionalThreshold ) {
+            } else if (implicit.steps - implicit.lastExceptional > implicit.exceptionalThreshold) {
 //                implicit.A.print("%e");
                 //System.err.println("If it needs to do an exceptional shift then something went very bad.");
 //                return false;
-                implicit.exceptionalShift(x1,x2);
+                implicit.exceptionalShift(x1, x2);
                 implicit.lastExceptional = implicit.steps;
-            } else if( implicit.isZero(x2,x2-1)) {
+            } else if (implicit.isZero(x2, x2 - 1)) {
                 // check for convergence
                 implicit.addEigenAt(x2);
                 foundEigen = true;
@@ -255,51 +252,49 @@ public class WatchedDoubleStepQREigenvector_DDRM {
         return foundEigen;
     }
 
-
     private void checkSplitPerformImplicit() {
         // check for splits
-        for( int i = x2; i > x1; i-- ) {
-            if( implicit.isZero(i,i-1)) {
+        for (int i = x2; i > x1; i--) {
+            if (implicit.isZero(i, i - 1)) {
                 x1 = i;
-                splits[numSplits++] = i-1;
+                splits[numSplits++] = i - 1;
                 // reduce the scope of what it is looking at
                 return;
             }
         }
         // first try using known eigenvalues in the same order they were originally found
-        if( onscript) {
-            if( implicit.steps > implicit.exceptionalThreshold/2  ) {
+        if (onscript) {
+            if (implicit.steps > implicit.exceptionalThreshold/2) {
                 onscript = false;
             } else {
                 Complex_F64 a = origEigenvalues[indexVal];
 
                 // if no splits are found perform an implicit step
-                if( a.isReal() ) {
-                    implicit.performImplicitSingleStep(x1,x2, a.getReal());
-                } else if( x2-x1 >= 1 && x1+2 < N ) {
-                    implicit.performImplicitDoubleStep(x1,x2, a.real,a.imaginary);
+                if (a.isReal()) {
+                    implicit.performImplicitSingleStep(x1, x2, a.getReal());
+                } else if (x2 - x1 >= 1 && x1 + 2 < N) {
+                    implicit.performImplicitDoubleStep(x1, x2, a.real, a.imaginary);
                 } else {
                     onscript = false;
                 }
             }
         } else {
             // that didn't work so try a modified order
-            if( x2-x1 >= 1 && x1+2 < N )
-                implicit.implicitDoubleStep(x1,x2);
+            if (x2 - x1 >= 1 && x1 + 2 < N)
+                implicit.implicitDoubleStep(x1, x2);
             else
-                implicit.performImplicitSingleStep(x1,x2,implicit.A.get(x2,x2));
+                implicit.performImplicitSingleStep(x1, x2, implicit.A.get(x2, x2));
         }
     }
 
-
     private void moveToNextSplit() {
-        if( numSplits <= 0 )
+        if (numSplits <= 0)
             throw new RuntimeException("bad");
 
         x2 = splits[--numSplits];
 
-        if( numSplits > 0 ) {
-            x1 = splits[numSplits-1]+1;
+        if (numSplits > 0) {
+            x1 = splits[numSplits - 1] + 1;
         } else {
             x1 = 0;
         }

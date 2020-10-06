@@ -14,13 +14,41 @@ Date format: year/month/day
   * Updated auto code generator to mark code as auto generated for better static analysis
 - Strictly enforce usage of @Nullable to public API
   * https://github.com/uber/NullAway
-  * Private class fields mostly have NullAway disabled because it doesn't model how they are coupled resulting in extremely and pointlessly verbose code
-- Fixed build task oneJarBin. Thanks liuyang0717 for the bug report
-- Added reduce operations for sparse matrices. Thanks Florentin Dörre for the donation
+  * Private class fields mostly have NullAway disabled because it doesn't model how they are coupled resulting in pointlessly verbose code
+- Fixed build task oneJarBin.
+  * Thanks liuyang0717 for the bug report
+- Added reduce operations for sparse matrices.
+  * Thanks Florentin Dörre for the donation
+- Added Semirings for Graph Operations
+  * Thanks Florentin Dörre for the donation
+  * Thanks Gabor Szarnyas and @breandan for reviewing
 - CommonOps_DDRM and CommonOps_DSCC
   * Updating functions to return output if null and use common input sanity check functions
 - CommonOps_DSCC
-  * duplicatesAdd() is a function which will add element that is duplicated and turn it into a valid matrix again
+  * duplicatesAdd() is a function which will add elements that are duplicated, turning it into a valid matrix again
+  * Removed the functions below since they had a runtime complexity of O(N^2) relative to matrix size instead of O(N)
+    - multTransA(S,S,S), multTransB(S,S,S), innerProductLower(S,S,S)
+    - Thanks Florentin Dörre for first noticing the performance issue
+- DMatrixSparseCSC
+  * If sorted a binary search is used to lookup rows. Thanks Florentin Dörre.
+- ReadMatrixCsv
+  * Thanks DEDZTBH for fixing an indexing error when reading complex data types
+- Added Concurrent Algorithms
+  * First pass at adding this capability. Decompositions and other items need more optimization.
+  * Control threads with EjmlConcurrency
+  * Must call concurrent functions and factories directly. E.g. CommonOps_DDRM -> CommonOps_MT_DDRM
+  * Thanks to mroodschild for getting this effort started with the proof of concept
+- Examples
+  * New concurrency example
+  * New block matrix example
+  * New Graph path finding example
+- Benchmark
+  * Improved coverage of JMH benchmarks as part of an effort to automate the detection of runtime regressions
+
+Future
+- TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
+- TODO Concurrency for Complex Matrices
+- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
 
 ----- Version 0.39
 2020/04/06

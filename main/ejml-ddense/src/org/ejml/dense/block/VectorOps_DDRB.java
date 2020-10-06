@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,6 @@
 package org.ejml.dense.block;
 
 import org.ejml.data.DSubmatrixD1;
-
 
 /**
  * <p>
@@ -54,45 +53,44 @@ public class VectorOps_DDRB {
      * @param offset Index at which the vectors start at.
      * @param end Index at which the vectors end at.
      */
-    public static void scale_row(final int blockLength,
-                                 DSubmatrixD1 A, int rowA,
-                                 double alpha, DSubmatrixD1 B, int rowB,
-                                 int offset, int end)
-    {
-        final double dataA[] = A.original.data;
-        final double dataB[] = B.original.data;
+    public static void scale_row( final int blockLength,
+                                  DSubmatrixD1 A, int rowA,
+                                  double alpha, DSubmatrixD1 B, int rowB,
+                                  int offset, int end ) {
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
 
         // handle the case where offset is more than a block
-        int startI = offset - offset % blockLength;
-        offset = offset % blockLength;
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
 
         // handle rows in any block
-        int rowBlockA = A.row0 + rowA - rowA % blockLength;
-        rowA = rowA % blockLength;
-        int rowBlockB = B.row0 + rowB - rowB % blockLength;
-        rowB = rowB % blockLength;
+        int rowBlockA = A.row0 + rowA - rowA%blockLength;
+        rowA = rowA%blockLength;
+        int rowBlockB = B.row0 + rowB - rowB%blockLength;
+        rowB = rowB%blockLength;
 
-        final int heightA = Math.min(blockLength,A.row1-rowBlockA);
-        final int heightB = Math.min(blockLength,B.row1-rowBlockB);
+        final int heightA = Math.min(blockLength, A.row1 - rowBlockA);
+        final int heightB = Math.min(blockLength, B.row1 - rowBlockB);
 
-        for( int i = startI; i < end; i += blockLength ) {
-            int segment = Math.min(blockLength,end-i);
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
 
-            int widthA = Math.min(blockLength,A.col1-A.col0-i);
-            int widthB = Math.min(blockLength,B.col1-B.col0-i);
+            int widthA = Math.min(blockLength, A.col1 - A.col0 - i);
+            int widthB = Math.min(blockLength, B.col1 - B.col0 - i);
 
-            int indexA = rowBlockA*A.original.numCols + (A.col0+i)*heightA + rowA*widthA;
-            int indexB = rowBlockB*B.original.numCols + (B.col0+i)*heightB + rowB*widthB;
+            int indexA = rowBlockA*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
+            int indexB = rowBlockB*B.original.numCols + (B.col0 + i)*heightB + rowB*widthB;
 
-            if( i == startI ) {
+            if (i == startI) {
                 indexA += offset;
                 indexB += offset;
 
-                for( int j = offset; j < segment; j++ ) {
+                for (int j = offset; j < segment; j++) {
                     dataB[indexB++] = alpha*dataA[indexA++];
                 }
             } else {
-                for( int j = 0; j < segment; j++ ) {
+                for (int j = 0; j < segment; j++) {
                     dataB[indexB++] = alpha*dataA[indexA++];
                 }
             }
@@ -113,45 +111,44 @@ public class VectorOps_DDRB {
      * @param offset Index at which the vectors start at.
      * @param end Index at which the vectors end at.
      */
-    public static void div_row(final int blockLength,
-                               DSubmatrixD1 A, int rowA,
-                               double alpha, DSubmatrixD1 B, int rowB,
-                               int offset, int end)
-    {
-        final double dataA[] = A.original.data;
-        final double dataB[] = B.original.data;
+    public static void div_row( final int blockLength,
+                                DSubmatrixD1 A, int rowA,
+                                double alpha, DSubmatrixD1 B, int rowB,
+                                int offset, int end ) {
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
 
         // handle the case where offset is more than a block
-        int startI = offset - offset % blockLength;
-        offset = offset % blockLength;
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
 
         // handle rows in any block
-        int rowBlockA = A.row0 + rowA - rowA % blockLength;
-        rowA = rowA % blockLength;
-        int rowBlockB = B.row0 + rowB - rowB % blockLength;
-        rowB = rowB % blockLength;
+        int rowBlockA = A.row0 + rowA - rowA%blockLength;
+        rowA = rowA%blockLength;
+        int rowBlockB = B.row0 + rowB - rowB%blockLength;
+        rowB = rowB%blockLength;
 
-        final int heightA = Math.min(blockLength,A.row1-rowBlockA);
-        final int heightB = Math.min(blockLength,B.row1-rowBlockB);
+        final int heightA = Math.min(blockLength, A.row1 - rowBlockA);
+        final int heightB = Math.min(blockLength, B.row1 - rowBlockB);
 
-        for( int i = startI; i < end; i += blockLength ) {
-            int segment = Math.min(blockLength,end-i);
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
 
-            int widthA = Math.min(blockLength,A.col1-A.col0-i);
-            int widthB = Math.min(blockLength,B.col1-B.col0-i);
+            int widthA = Math.min(blockLength, A.col1 - A.col0 - i);
+            int widthB = Math.min(blockLength, B.col1 - B.col0 - i);
 
-            int indexA = rowBlockA*A.original.numCols + (A.col0+i)*heightA + rowA*widthA;
-            int indexB = rowBlockB*B.original.numCols + (B.col0+i)*heightB + rowB*widthB;
+            int indexA = rowBlockA*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
+            int indexB = rowBlockB*B.original.numCols + (B.col0 + i)*heightB + rowB*widthB;
 
-            if( i == startI ) {
+            if (i == startI) {
                 indexA += offset;
                 indexB += offset;
 
-                for( int j = offset; j < segment; j++ ) {
+                for (int j = offset; j < segment; j++) {
                     dataB[indexB++] = dataA[indexA++]/alpha;
                 }
             } else {
-                for( int j = 0; j < segment; j++ ) {
+                for (int j = 0; j < segment; j++) {
                     dataB[indexB++] = dataA[indexA++]/alpha;
                 }
             }
@@ -177,44 +174,44 @@ public class VectorOps_DDRB {
      * @param offset Index at which the vectors start at.
      * @param end Index at which the vectors end at.
      */
-    public static void add_row(final int blockLength ,
-                               DSubmatrixD1 A , int rowA , double alpha ,
-                               DSubmatrixD1 B , int rowB , double beta ,
-                               DSubmatrixD1 C , int rowC ,
-                               int offset , int end ) {
-        final int heightA = Math.min(blockLength,A.row1-A.row0);
-        final int heightB = Math.min(blockLength,B.row1-B.row0);
-        final int heightC = Math.min(blockLength,C.row1-C.row0);
+    public static void add_row( final int blockLength,
+                                DSubmatrixD1 A, int rowA, double alpha,
+                                DSubmatrixD1 B, int rowB, double beta,
+                                DSubmatrixD1 C, int rowC,
+                                int offset, int end ) {
+        final int heightA = Math.min(blockLength, A.row1 - A.row0);
+        final int heightB = Math.min(blockLength, B.row1 - B.row0);
+        final int heightC = Math.min(blockLength, C.row1 - C.row0);
 
         // handle the case where offset is more than a block
-        int startI = offset - offset % blockLength;
-        offset = offset % blockLength;
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
 
-        final double dataA[] = A.original.data;
-        final double dataB[] = B.original.data;
-        final double dataC[] = C.original.data;
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
+        final double[] dataC = C.original.data;
 
-        for( int i = startI; i < end; i += blockLength ) {
-            int segment = Math.min(blockLength,end-i);
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
 
-            int widthA = Math.min(blockLength,A.col1-A.col0-i);
-            int widthB = Math.min(blockLength,B.col1-B.col0-i);
-            int widthC = Math.min(blockLength,C.col1-C.col0-i);
+            int widthA = Math.min(blockLength, A.col1 - A.col0 - i);
+            int widthB = Math.min(blockLength, B.col1 - B.col0 - i);
+            int widthC = Math.min(blockLength, C.col1 - C.col0 - i);
 
-            int indexA = A.row0*A.original.numCols + (A.col0+i)*heightA + rowA*widthA;
-            int indexB = B.row0*B.original.numCols + (B.col0+i)*heightB + rowB*widthB;
-            int indexC = C.row0*C.original.numCols + (C.col0+i)*heightC + rowC*widthC;
+            int indexA = A.row0*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
+            int indexB = B.row0*B.original.numCols + (B.col0 + i)*heightB + rowB*widthB;
+            int indexC = C.row0*C.original.numCols + (C.col0 + i)*heightC + rowC*widthC;
 
-            if( i == startI ) {
+            if (i == startI) {
                 indexA += offset;
                 indexB += offset;
                 indexC += offset;
 
-                for( int j = offset; j < segment; j++ ) {
+                for (int j = offset; j < segment; j++) {
                     dataC[indexC++] = alpha*dataA[indexA++] + beta*dataB[indexB++];
                 }
             } else {
-                for( int j = 0; j < segment; j++ ) {
+                for (int j = 0; j < segment; j++) {
                     dataC[indexC++] = alpha*dataA[indexA++] + beta*dataB[indexB++];
                 }
             }
@@ -236,51 +233,51 @@ public class VectorOps_DDRB {
      * @param end Index at which the vectors end at.
      * @return Results of the dot product.
      */
-    public static double dot_row(final int blockLength,
-                                 DSubmatrixD1 A, int rowA,
-                                 DSubmatrixD1 B, int rowB,
-                                 int offset, int end) {
+    public static double dot_row( final int blockLength,
+                                  DSubmatrixD1 A, int rowA,
+                                  DSubmatrixD1 B, int rowB,
+                                  int offset, int end ) {
 
 
         // handle the case where offset is more than a block
-        int startI = offset - offset % blockLength;
-        offset = offset % blockLength;
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
 
-        final double dataA[] = A.original.data;
-        final double dataB[] = B.original.data;
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
 
         double total = 0;
 
         // handle rows in any block
-        int rowBlockA = A.row0 + rowA - rowA % blockLength;
-        rowA = rowA % blockLength;
-        int rowBlockB = B.row0 + rowB - rowB % blockLength;
-        rowB = rowB % blockLength;
+        int rowBlockA = A.row0 + rowA - rowA%blockLength;
+        rowA = rowA%blockLength;
+        int rowBlockB = B.row0 + rowB - rowB%blockLength;
+        rowB = rowB%blockLength;
 
-        final int heightA = Math.min(blockLength,A.row1-rowBlockA);
-        final int heightB = Math.min(blockLength,B.row1-rowBlockB);
+        final int heightA = Math.min(blockLength, A.row1 - rowBlockA);
+        final int heightB = Math.min(blockLength, B.row1 - rowBlockB);
 
-        if( A.col1 - A.col0 != B.col1 - B.col0 )
+        if (A.col1 - A.col0 != B.col1 - B.col0)
             throw new RuntimeException();
 
-        for( int i = startI; i < end; i += blockLength ) {
-            int segment = Math.min(blockLength,end-i);
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
 
-            int widthA = Math.min(blockLength,A.col1-A.col0-i);
-            int widthB = Math.min(blockLength,B.col1-B.col0-i);
+            int widthA = Math.min(blockLength, A.col1 - A.col0 - i);
+            int widthB = Math.min(blockLength, B.col1 - B.col0 - i);
 
-            int indexA = rowBlockA*A.original.numCols + (A.col0+i)*heightA + rowA*widthA;
-            int indexB = rowBlockB*B.original.numCols + (B.col0+i)*heightB + rowB*widthB;
+            int indexA = rowBlockA*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
+            int indexB = rowBlockB*B.original.numCols + (B.col0 + i)*heightB + rowB*widthB;
 
-            if( i == startI ) {
+            if (i == startI) {
                 indexA += offset;
                 indexB += offset;
 
-                for( int j = offset; j < segment; j++ ) {
+                for (int j = offset; j < segment; j++) {
                     total += dataB[indexB++]*dataA[indexA++];
                 }
             } else {
-                for( int j = 0; j < segment; j++ ) {
+                for (int j = 0; j < segment; j++) {
                     total += dataB[indexB++]*dataA[indexA++];
                 }
             }
@@ -304,51 +301,51 @@ public class VectorOps_DDRB {
      * @param end Index at which the vectors end at.
      * @return Results of the dot product.
      */
-    public static double dot_row_col(final int blockLength,
-                                     DSubmatrixD1 A, int rowA,
-                                     DSubmatrixD1 B, int colB,
-                                     int offset, int end) {
+    public static double dot_row_col( final int blockLength,
+                                      DSubmatrixD1 A, int rowA,
+                                      DSubmatrixD1 B, int colB,
+                                      int offset, int end ) {
 
 
         // handle the case where offset is more than a block
-        int startI = offset - offset % blockLength;
-        offset = offset % blockLength;
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
 
-        final double dataA[] = A.original.data;
-        final double dataB[] = B.original.data;
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
 
         double total = 0;
 
         // handle rows in any block
-        int rowBlockA = A.row0 + rowA - rowA % blockLength;
-        rowA = rowA % blockLength;
-        int colBlockB = B.col0 + colB - colB % blockLength;
-        colB = colB % blockLength;
+        int rowBlockA = A.row0 + rowA - rowA%blockLength;
+        rowA = rowA%blockLength;
+        int colBlockB = B.col0 + colB - colB%blockLength;
+        colB = colB%blockLength;
 
-        final int heightA = Math.min(blockLength,A.row1-rowBlockA);
-        final int widthB = Math.min(blockLength,B.col1-colBlockB);
+        final int heightA = Math.min(blockLength, A.row1 - rowBlockA);
+        final int widthB = Math.min(blockLength, B.col1 - colBlockB);
 
-        if( A.col1 - A.col0 != B.col1 - B.col0 )
+        if (A.col1 - A.col0 != B.col1 - B.col0)
             throw new RuntimeException();
 
-        for( int i = startI; i < end; i += blockLength ) {
-            int segment = Math.min(blockLength,end-i);
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
 
-            int widthA = Math.min(blockLength,A.col1-A.col0-i);
-            int heightB = Math.min(blockLength,B.row1-B.row0-i);
+            int widthA = Math.min(blockLength, A.col1 - A.col0 - i);
+            int heightB = Math.min(blockLength, B.row1 - B.row0 - i);
 
-            int indexA = rowBlockA*A.original.numCols + (A.col0+i)*heightA + rowA*widthA;
-            int indexB = (B.row0+i)*B.original.numCols + colBlockB*heightB + colB;
+            int indexA = rowBlockA*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
+            int indexB = (B.row0 + i)*B.original.numCols + colBlockB*heightB + colB;
 
-            if( i == startI ) {
+            if (i == startI) {
                 indexA += offset;
                 indexB += offset*widthB;
 
-                for( int j = offset; j < segment; j++ , indexB += widthB) {
+                for (int j = offset; j < segment; j++, indexB += widthB) {
                     total += dataB[indexB]*dataA[indexA++];
                 }
             } else {
-                for( int j = 0; j < segment; j++ , indexB += widthB) {
+                for (int j = 0; j < segment; j++, indexB += widthB) {
                     total += dataB[indexB]*dataA[indexA++];
                 }
             }

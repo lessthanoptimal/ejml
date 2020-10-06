@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.dense.row.misc;
 
 import org.ejml.data.DMatrix1Row;
 
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 /**
  * Low level transpose algorithms.  No sanity checks are performed.    Take a look at BenchmarkTranspose to
@@ -33,21 +34,22 @@ public class TransposeAlgs_DDRM {
      * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
      * algorithm, but on most modern computers it's slower than block transpose.
      *
-     * @param mat The matrix that is transposed in-place.  Modified.
+     * @param A The matrix that is transposed in-place.  Modified.
      */
-    public static void square( DMatrix1Row mat )
-    {
-        int index = 1;
-        int indexEnd = mat.numCols;
-        for( int i = 0; i < mat.numRows;
-             i++ , index += i+1 , indexEnd += mat.numCols ) {
-            int indexOther = (i+1)*mat.numCols + i;
-            for( ; index < indexEnd; index++, indexOther += mat.numCols) {
-                double val = mat.data[ index ];
-                mat.data[ index ] = mat.data[ indexOther ];
-                mat.data[indexOther] = val;
+    public static void square( DMatrix1Row A ) {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        for (int i = 0; i < A.numRows; i++) {
+            int index = i*A.numCols + i + 1;
+            int indexEnd = (i + 1)*A.numCols;
+
+            int indexOther = (i + 1)*A.numCols + i;
+            for (; index < indexEnd; index++, indexOther += A.numCols) {
+                double val = A.data[index];
+                A.data[index] = A.data[indexOther];
+                A.data[indexOther] = val;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -62,36 +64,39 @@ public class TransposeAlgs_DDRM {
      * @param A_tran Transposed matrix.  Modified.
      * @param blockLength Length of a block.
      */
-    public static void block(DMatrix1Row A , DMatrix1Row A_tran ,
-                             final int blockLength )
-    {
-        for( int i = 0; i < A.numRows; i += blockLength ) {
-            int blockHeight = Math.min( blockLength , A.numRows - i);
+    public static void block( DMatrix1Row A, DMatrix1Row A_tran,
+                              final int blockLength ) {
+        //CONCURRENT_BELOW EjmlConcurrency.loopBlocks(0, A.numRows,blockLength, (idx0,idx1) -> {
+        for (int idx0 = 0; idx0 < A.numRows; idx0 += blockLength) {
+            //CONCURRENT_REMOVE_BELOW
+            int idx1 = Math.min(A.numRows, idx0 + blockLength);
+            int blockHeight = idx1 - idx0;
 
-            int indexSrc = i*A.numCols;
-            int indexDst = i;
+            int indexSrc = idx0*A.numCols;
+            int indexDst = idx0;
 
-            for( int j = 0; j < A.numCols; j += blockLength ) {
-                int blockWidth = Math.min( blockLength , A.numCols - j);
+            for (int j = 0; j < A.numCols; j += blockLength) {
+                int blockWidth = Math.min(blockLength, A.numCols - j);
 
 //                int indexSrc = i*A.numCols + j;
 //                int indexDst = j*A_tran.numCols + i;
 
                 int indexSrcEnd = indexSrc + blockWidth;
 //                for( int l = 0; l < blockWidth; l++ , indexSrc++ ) {
-                for( ; indexSrc < indexSrcEnd;  indexSrc++ ) {
+                for (; indexSrc < indexSrcEnd; indexSrc++) {
                     int rowSrc = indexSrc;
                     int rowDst = indexDst;
                     int end = rowDst + blockHeight;
 //                    for( int k = 0; k < blockHeight; k++ , rowSrc += A.numCols ) {
-                    for( ; rowDst < end; rowSrc += A.numCols ) {
+                    for (; rowDst < end; rowSrc += A.numCols) {
                         // faster to write in sequence than to read in sequence
-                        A_tran.data[ rowDst++ ] = A.data[ rowSrc ];
+                        A_tran.data[rowDst++] = A.data[rowSrc];
                     }
                     indexDst += A_tran.numCols;
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     /**
@@ -100,17 +105,18 @@ public class TransposeAlgs_DDRM {
      * @param A Original matrix.  Not modified.
      * @param A_tran Transposed matrix.  Modified.
      */
-    public static void standard(DMatrix1Row A, DMatrix1Row A_tran)
-    {
-        int index = 0;
-        for( int i = 0; i < A_tran.numRows; i++ ) {
+    public static void standard( DMatrix1Row A, DMatrix1Row A_tran ) {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A_tran.numRows, i -> {
+        for (int i = 0; i < A_tran.numRows; i++) {
+            int index = i*A_tran.numCols;
             int index2 = i;
 
             int end = index + A_tran.numCols;
-            while( index < end ) {
-                A_tran.data[index++ ] = A.data[ index2 ];
+            while (index < end) {
+                A_tran.data[index++] = A.data[index2];
                 index2 += A.numCols;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 }

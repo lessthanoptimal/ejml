@@ -22,7 +22,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionBase_DDRM;
 
-
 /**
  * To avoid cpu cache issues the order in which the arrays are traversed have been changed.
  * There seems to be no performance benit relative to {@link LinearSolverLu_DDRM} in this approach
@@ -33,16 +32,15 @@ import org.ejml.dense.row.decomposition.lu.LUDecompositionBase_DDRM;
 @SuppressWarnings("NullAway.Init")
 public class LinearSolverLuKJI_DDRM extends LinearSolverLuBase_DDRM {
 
-    private double []dataLU;
+    private double[] dataLU;
     private int[] pivot;
 
-    public LinearSolverLuKJI_DDRM(LUDecompositionBase_DDRM decomp) {
+    public LinearSolverLuKJI_DDRM( LUDecompositionBase_DDRM decomp ) {
         super(decomp);
-
     }
 
     @Override
-    public boolean setA(DMatrixRMaj A) {
+    public boolean setA( DMatrixRMaj A ) {
         boolean ret = super.setA(A);
 
         pivot = decomp.getPivot();
@@ -60,14 +58,14 @@ public class LinearSolverLuKJI_DDRM extends LinearSolverLuBase_DDRM {
      * @param X An n by m matrix where the solution is writen to.  Modified.
      */
     @Override
-    public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-        if( B.numRows != numRows) {
+    public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+        if (B.numRows != numRows) {
             throw new IllegalArgumentException("Unexpected matrix size");
         }
-        X.reshape(numCols,B.numCols);
+        X.reshape(numCols, B.numCols);
 
-        if( B != X ) {
-            SpecializedOps_DDRM.copyChangeRow(pivot,B,X);
+        if (B != X) {
+            SpecializedOps_DDRM.copyChangeRow(pivot, B, X);
         } else {
             throw new IllegalArgumentException("Current doesn't support using the same matrix instance");
         }
@@ -78,20 +76,20 @@ public class LinearSolverLuKJI_DDRM extends LinearSolverLuBase_DDRM {
 
         // Solve L*Y = B(piv,:)
         for (int k = 0; k < numCols; k++) {
-            for (int i = k+1; i < numCols; i++) {
+            for (int i = k + 1; i < numCols; i++) {
                 for (int j = 0; j < nx; j++) {
-                    dataX[i*nx+j] -= dataX[k*nx+j]*dataLU[i* numCols +k];
+                    dataX[i*nx + j] -= dataX[k*nx + j]*dataLU[i*numCols + k];
                 }
             }
         }
         // Solve U*X = Y;
-        for (int k = numCols -1; k >= 0; k--) {
+        for (int k = numCols - 1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
-                dataX[k*nx+j] /= dataLU[k* numCols +k];
+                dataX[k*nx + j] /= dataLU[k*numCols + k];
             }
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < nx; j++) {
-                    dataX[i*nx+j] -= dataX[k*nx+j]*dataLU[i* numCols +k];
+                    dataX[i*nx + j] -= dataX[k*nx + j]*dataLU[i*numCols + k];
                 }
             }
         }

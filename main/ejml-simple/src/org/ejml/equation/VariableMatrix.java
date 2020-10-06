@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,15 +36,16 @@ public class VariableMatrix extends Variable {
     /**
      * Initializes the matrix variable.  If null then the variable will be a reference one.  If not null then
      * it will be assignment.
+     *
      * @param matrix Matrix.
      */
-    public VariableMatrix(DMatrixRMaj matrix) {
+    public VariableMatrix( DMatrixRMaj matrix ) {
         super(VariableType.MATRIX);
         this.matrix = matrix;
     }
 
     public static VariableMatrix createTemp() {
-        VariableMatrix ret = new VariableMatrix(new DMatrixRMaj(1,1));
+        VariableMatrix ret = new VariableMatrix(new DMatrixRMaj(1, 1));
         ret.setTemp(true);
         return ret;
     }
@@ -53,7 +54,7 @@ public class VariableMatrix extends Variable {
         return temp;
     }
 
-    public void setTemp(boolean temp) {
+    public void setTemp( boolean temp ) {
         this.temp = temp;
     }
 }
