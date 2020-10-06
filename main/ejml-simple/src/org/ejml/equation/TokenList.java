@@ -243,13 +243,13 @@ class TokenList {
      */
     @Override
     public String toString() {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         Token t = first;
         while (t != null) {
-            ret += t + " ";
+            ret.append(t).append(" ");
             t = t.next;
         }
-        return ret;
+        return ret.toString();
     }
 
     /**

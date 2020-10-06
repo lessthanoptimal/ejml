@@ -235,9 +235,9 @@ public class AutocodeConcurrentApp {
 			}
 		}
 
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		for (int i = packagePath.size() - 1; i >= 0; i--) {
-			output += packagePath.get(i) + ".";
+			output.append(packagePath.get(i)).append(".");
 		}
 		return output.substring(0, output.length() - 1);
 	}
@@ -257,14 +257,14 @@ public class AutocodeConcurrentApp {
 		String pattern = "//CONCURRENT_CLASS_NAME ";
 		int where = text.indexOf(pattern);
 		if( where < 0 ) {
-			String name = className(original);
-			String[] words = name.split("_");
-			name = words[0];
+			StringBuilder name = new StringBuilder(className(original));
+			String[] words = name.toString().split("_");
+			name = new StringBuilder(words[0]);
 			for (int i = 1; i < words.length; i++) {
 				if( i == words.length-1) {
-					name += "_MT";
+					name.append("_MT");
 				}
-				name += "_" + words[i];
+				name.append("_").append(words[i]);
 			}
 			return new File(original.getParent(),name+".java");
 		}
