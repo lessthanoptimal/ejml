@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
+@SuppressWarnings("UnusedMethod")
 public class TestRandomMatrices_DSCC {
     Random rand = new Random(324);
 

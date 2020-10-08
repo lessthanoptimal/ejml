@@ -26,9 +26,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
 
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Peter Abeles
@@ -319,50 +317,58 @@ public class RandomMatrices_DSCC {
         Arrays.fill(nz_hist, nzEntriesPerColumn);
         matrix.histogramToStructure(nz_hist);
 
-        BitSet selectedRows = new BitSet(numRows);
+        boolean[] selectedRows = new boolean[numRows];
 
         // if the density is high enough, picking random rows will be very slow
         // in this case we unselect (numRows-nzEntriesPerColumn) rows
-        boolean dropRows = (numRows/(float)nzEntriesPerColumn) > 0.5;
+        boolean dropRows = ((float)nzEntriesPerColumn/numRows) > 0.5;
 
         for (int col = 0; col < numCols; col++) {
             if (dropRows) {
                 // select all rows at first
-                selectedRows.set(0, numRows);
+                Arrays.fill(selectedRows, true);
             } else {
-                selectedRows.clear();
+                Arrays.fill(selectedRows, false);
             }
+
+            int nz_index = col*nzEntriesPerColumn;
 
             // selecting rows
             if (dropRows) {
                 for (int colEntry = 0; colEntry < (numRows - nzEntriesPerColumn); colEntry++) {
                     int row = rand.nextInt(numRows);
 
-                    while (!selectedRows.get(row)) {
+                    while (!selectedRows[row]) {
                         row = rand.nextInt(numRows);
                     }
 
-                    selectedRows.clear(row);
+                    selectedRows[row] = false;
+                }
+
+                for (int row = 0; row < selectedRows.length; row++) {
+                    if (selectedRows[row]) {
+                        matrix.nz_rows[nz_index] = row;
+                        matrix.nz_values[nz_index] = rand.nextDouble()*(max - min) + min;
+                        nz_index++;
+                    }
                 }
             } else {
                 for (int colEntry = 0; colEntry < nzEntriesPerColumn; colEntry++) {
                     int row = rand.nextInt(numRows);
                     // avoid duplicate entries
 
-                    while (selectedRows.get(row)) {
+                    while (selectedRows[row]) {
                         row = rand.nextInt(numRows);
                     }
-                    selectedRows.set(row);
-                }
-            }
 
-            AtomicInteger i = new AtomicInteger(col*nzEntriesPerColumn);
-            selectedRows.stream().forEach(row -> {
-                int index = i.get();
-                matrix.nz_rows[index] = row;
-                matrix.nz_values[index] = rand.nextDouble()*(max - min) + min;
-                i.incrementAndGet();
-            });
+                    selectedRows[row] = true;
+                    matrix.nz_rows[nz_index] = row;
+                    matrix.nz_values[nz_index] = rand.nextDouble()*(max - min) + min;
+                    nz_index++;
+                }
+
+                Arrays.sort(matrix.nz_rows, nz_index - nzEntriesPerColumn, nz_index);
+            }
         }
 
         return matrix;
