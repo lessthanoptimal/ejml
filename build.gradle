@@ -51,7 +51,6 @@ subprojects {
     }
 
     test {
-        ignoreFailures true
         reports.html.enabled = false
         useJUnitPlatform {
             includeEngines 'junit-jupiter'

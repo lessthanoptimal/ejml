@@ -3,5 +3,4 @@ jdk:
   - openjdk11
 install:
   - ./gradlew autogenerate
-  - ./gradlew build
-script:
+  - ./gradlew assemble
