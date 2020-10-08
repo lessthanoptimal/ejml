@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,7 +41,7 @@ class TestImplCommonOps_MT_DSCC {
         double beta = 2.3;
 
         for (int numRows : new int[]{2, 4, 6, 10}) {
-            for (int numCols : new int[]{2, 4, 6, 10}) {
+            for (int numCols : new int[]{2, 4, 6, 10, 17}) {
                 DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(numRows, numCols, 7, -1, 1, rand);
                 DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(numRows, numCols, 8, -1, 1, rand);
                 DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(numRows, numCols, 3, -1, 1, rand);
@@ -49,8 +49,8 @@ class TestImplCommonOps_MT_DSCC {
 
                 ImplCommonOps_DSCC.add(alpha, a, beta, b, c, null, null);
                 ImplCommonOps_MT_DSCC.add(alpha, a, beta, b, cc, null);
-                assertTrue(CommonOps_DSCC.checkStructure(cc));
 
+                assertTrue(CommonOps_DSCC.checkStructure(cc));
                 assertTrue(MatrixFeatures_DSCC.isEqualsSort(c, cc, UtilEjml.TEST_F64));
             }
         }

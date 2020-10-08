@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.mult;
 
+import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DMatrixSparseCSC;
@@ -119,5 +120,9 @@ public class ImplSparseSparseMult_MT_DSCC {
 
             out.nz_length += workspace.mat.nz_length;
         }
+
+        // Sanity check the stitching
+        UtilEjml.assertEq(out.numCols, numCols);
+        UtilEjml.assertEq(out.col_idx[numCols], out.nz_length);
     }
 }

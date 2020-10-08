@@ -51,10 +51,9 @@ subprojects {
     }
 
     test {
+        useJUnitPlatform()
         reports.html.enabled = false
-        useJUnitPlatform {
-            includeEngines 'junit-jupiter'
-        }
+        testLogging.showStandardStreams = true // Useful for debugging on Travis and there should be no stdout spam
     }
 
     repositories {
