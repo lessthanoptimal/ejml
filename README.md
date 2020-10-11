@@ -14,16 +14,18 @@ Efficient Java Matrix Library (EJML) is a linear algebra library for manipulatin
 EJML has three distinct ways to interact with it: 1) Operations, 2) SimpleMatrix, and 3) Equations. Operations provides all capabilities of EJML and almost complete control over memory creation, speed, and specific algorithms with a procedural API. SimpleMatrix provides a simplified subset of the core capabilities in an easy to use flow styled object-oriented API, inspired by Jama. Equations is a symbolic interface, similar in spirit to Matlab and other CAS, that provides a compact way of writing equations.
 The following functionality is provided:
 
-* Basic operators (addition, multiplication, ...)
+* Basic Operators (addition, multiplication, ...)
 * Matrix Manipulation (extract, insert, combine, ...)
 * Linear Solvers (linear, least squares,incremental, ...)
 * Decompositions (LU, QR, Cholesky, SVD, Eigenvalue, ...)
 * Matrix Features (rank, symmetric, definitiveness, ...)
 * Random Matrices (covariance, orthogonal, symmetric, ...)
 * Different Internal Formats (row-major, block, sparse, ...)
+* Graph BLAS (Semirings)
+* Single Thread and Concurrent Implementations
 * Unit Testing
 
-Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and Java Matrix Benchmark are both used to ensure the speed of this library.
+Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and [Java Matrix Benchmark](https://lessthanoptimal.github.io/Java-Matrix-Benchmark/) are both used to ensure the speed of this library.
 
 ---------------------------------------------------------------------------
 ## Documentation
@@ -64,14 +66,20 @@ This will add the entire library.  Alternatively, you can include the required m
 
 ## Building
 
-Gradle is the official build environment for EJML. Before the project can build you must run autogenerate
-to create the 32-bit code.
+Unless you need a bleeding edge new feature or are contributing to EJML you probably don't need to build it yourself
+since pre-build jars are readily available on Maven Central.  Gradle is the official tool environment for EJML. Java 11
+or higher is required to build EJML, but it will generate Java 8 (a.k.a. Java 1.8) byte code. This is because it uses
+a few recent language features.
+
+To build EJML from the command line use the following commands. These will generate all the source code and install
+it in your local Maven repository. 
 ```bash
 cd ejml
 ./gradlew autogenerate
 ./gradlew install
 ```
-After invoking those commands EJML will build and be in your local maven repo and can be included by other applications. Below is a list of custom Gradle commands that might be of use to you.
+
+Here are a few other useful Gradle commands:
 
 * createLibraryDirectory : To build all the modules as jars and save them in ejml/libraries
 * oneJar : To compile all the modules into a single jar at ejml/EJML.jar
