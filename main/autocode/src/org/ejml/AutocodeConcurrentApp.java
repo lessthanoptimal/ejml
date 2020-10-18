@@ -183,7 +183,7 @@ public class AutocodeConcurrentApp {
 			}
 		}
 		file = new File(file, pathRootToTest);
-		for (int i = packagePath.size() - 2; i >= 0; i--) {
+		for (int i = packagePath.size() - 1; i >= 0; i--) {
 			file = new File(file, packagePath.get(i));
 		}
 		file = new File(file, fileName);
