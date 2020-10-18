@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,12 +19,12 @@
 package org.ejml.dense.row.linsol.qr;
 
 import org.ejml.concurrency.EjmlConcurrency;
-import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderColumn_MT_DDRM;
 import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
+import pabeles.concurrency.GrowArray;
 
 /**
  * <p>

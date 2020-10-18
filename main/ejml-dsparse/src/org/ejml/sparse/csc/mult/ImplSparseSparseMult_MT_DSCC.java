@@ -20,9 +20,9 @@ package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
-import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.jetbrains.annotations.Nullable;
+import pabeles.concurrency.GrowArray;
 
 import static org.ejml.UtilEjml.adjust;
 import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;

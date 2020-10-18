@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,6 @@
 
 package org.ejml.sparse.csc;
 
-import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.openjdk.jmh.annotations.*;
@@ -26,6 +25,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;

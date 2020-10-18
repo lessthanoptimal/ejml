@@ -18,7 +18,6 @@
 
 package org.ejml;
 
-import org.ejml.concurrency.GrowArray;
 import org.ejml.data.*;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.interfaces.linsol.LinearSolverDense;
@@ -26,6 +25,7 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.ConvertDMatrixStruct;
 import org.ejml.ops.ConvertFMatrixStruct;
 import org.jetbrains.annotations.Nullable;
+import pabeles.concurrency.GrowArray;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

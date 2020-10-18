@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.concurrency;
+package pabeles.concurrency;
 
 import org.jetbrains.annotations.Nullable;
 

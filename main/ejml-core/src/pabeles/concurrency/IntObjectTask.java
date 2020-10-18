@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.concurrency;
+package pabeles.concurrency;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -77,6 +77,7 @@ public class IntObjectTask<T> extends ForkJoinTask<Void> {
             int numThreads = Math.min(numIterations, maxThreads);
 
             // Declare all the workspace variables
+            workspace.reset();
             workspace.resize(numThreads);
 
             // this is the first task, spawn all the others
@@ -84,7 +85,7 @@ public class IntObjectTask<T> extends ForkJoinTask<Void> {
             IntObjectTask<T> previous = null;
 
             for (int threadId = 0; threadId < numThreads-1; threadId++) {
-                int segment0 = idx0 + computeIndex(threadId,numThreads,numIterations);
+                int segment0 = computeIndex(threadId,numThreads,numIterations);
                 int segment1 = computeIndex(threadId+1,numThreads,numIterations);
                 var task = new IntObjectTask<>(segment0, segment1, step, -1, threadId, workspace, consumer);
                 if (root == null) {

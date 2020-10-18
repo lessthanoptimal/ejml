@@ -19,10 +19,10 @@
 package org.ejml.sparse.csc.misc;
 
 import org.ejml.concurrency.EjmlConcurrency;
-import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.jetbrains.annotations.Nullable;
+import pabeles.concurrency.GrowArray;
 
 import static org.ejml.UtilEjml.adjust;
 import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;

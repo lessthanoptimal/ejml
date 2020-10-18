@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ejml.concurrency;
+package pabeles.concurrency;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,17 +28,17 @@ import java.lang.reflect.Array;
  * @author Peter Abeles
  */
 public class GrowArray<D> {
-    EjmlConcurrency.NewInstance<D> factory;
-    EjmlConcurrency.Reset<D> reset;
+    ConcurrencyOps.NewInstance<D> factory;
+    ConcurrencyOps.Reset<D> reset;
 
     D[] array;
     int size;
 
-    public GrowArray( EjmlConcurrency.NewInstance<D> factory ) {
+    public GrowArray( ConcurrencyOps.NewInstance<D> factory ) {
         this(factory,(o)->{});
     }
 
-    public GrowArray( EjmlConcurrency.NewInstance<D> factory , EjmlConcurrency.Reset<D> reset ) {
+    public GrowArray( ConcurrencyOps.NewInstance<D> factory , ConcurrencyOps.Reset<D> reset ) {
         this.factory = factory;
         this.reset = reset;
 

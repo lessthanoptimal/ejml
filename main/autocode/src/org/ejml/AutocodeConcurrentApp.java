@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,6 +40,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  *     <li>//CONCURRENT_BELOW TEXT  will replace the line below with the text</li>
  *     <li>//CONCURRENT_REMOVE_BELOW will remove the line below</li>
  *     <li>//CONCURRENT_REMOVE_ABOVE will remove the line above</li>
+ *     <li>//CONCURRENT_REMOVE_LINE will remove the line it is placed on</li>
  *     <li>//CONCURRENT_MACRO NAME TEXT creates a macro that can be used instead of text</li>
  *     <li>//CONCURRENT_OMIT_BEGIN It will omit everything until it finds an OMIT_END</li>
  *     <li>//CONCURRENT_OMIT_END It will stop omitting when this is encountered.</li>
@@ -55,6 +56,8 @@ public class AutocodeConcurrentApp {
 	private static final String prefix = "//CONCURRENT_";
 	private static final String tab = "    ";
 	private static final FindProjectRoot findRootDirectory = ()-> new File(GenerateCode32.findPathToProjectRoot());
+	private static final String sourceRootName = "src";
+	private static final String pathRootToTest = "../test";
 
 	/**
 	 * Converts the file from single thread into concurrent implementation
@@ -128,6 +131,8 @@ public class AutocodeConcurrentApp {
 				case "REMOVE_BELOW":
 					i += 1; // skip next line
 					break;
+				case "REMOVE_LINE":
+					break;
 				case "OMIT_BEGIN":
 					omit = true;
 					break;
@@ -155,38 +160,39 @@ public class AutocodeConcurrentApp {
 		}
 		out.close();
 
-		createTestIfNotThere(outputFile);
+		createTestIfNotThere(outputFile, sourceRootName, pathRootToTest);
 	}
 
 	/**
 	 * If a test class doesn't exist it will create one. This is to remind the user to do it
 	 */
-	private static void createTestIfNotThere( File file ) {
+	private static void createTestIfNotThere( File file, String sourceRootName, String pathRootToTest ) {
 		String fileName = "Test" + file.getName();
-		String parent = file.getParent().replaceAll("src", "test");
 
-//		List<String> packagePath = new ArrayList<>();
-//		while( true ) {
-//			String parent = file.getParentFile().getName();
-//			if( parent == null ) {
-//				throw new IllegalArgumentException("Problem! Can't find 'src/main' directory");
-//			} else if( parent.equals("main") ) {
-//				file = file.getParentFile();
-//				break;
-//			} else {
-//				packagePath.add(parent);
-//				file = file.getParentFile();
-//			}
-//		}
-//		file = new File(file.getParent(),"test/java");
-//		for (int i = packagePath.size()-2; i >= 0; i--) {
-//			file = new File(file,packagePath.get(i));
-//		}
-		file = new File(parent, fileName);
+		List<String> packagePath = new ArrayList<>();
+		while (true) {
+			if (file.getParentFile() == null) {
+				throw new IllegalArgumentException("Problem! Can't find '" + sourceRootName + "' directory");
+			}
+			String parentName = file.getParentFile().getName();
+			file = file.getParentFile();
+			if (parentName.equals(sourceRootName)) {
+				break;
+			} else {
+				packagePath.add(parentName);
+			}
+		}
+		file = new File(file, pathRootToTest);
+		for (int i = packagePath.size() - 2; i >= 0; i--) {
+			file = new File(file, packagePath.get(i));
+		}
+		file = new File(file, fileName);
+		// only create it if it doesn't exist
 		if (file.exists()) {
 			return;
 		}
-		createTestFile(file);
+		// Simplify the path before passing it in
+		createTestFile(file.toPath().toAbsolutePath().normalize().toFile());
 	}
 
 	private static void createTestFile( File path ) {
@@ -235,9 +241,9 @@ public class AutocodeConcurrentApp {
 			}
 		}
 
-		StringBuilder output = new StringBuilder();
+		String output = "";
 		for (int i = packagePath.size() - 1; i >= 0; i--) {
-			output.append(packagePath.get(i)).append(".");
+			output += packagePath.get(i) + ".";
 		}
 		return output.substring(0, output.length() - 1);
 	}
@@ -338,8 +344,7 @@ public class AutocodeConcurrentApp {
 		return lines;
 	}
 
-	public interface FindProjectRoot
-	{
+	public interface FindProjectRoot {
 		File findPathToRoot();
 	}
 

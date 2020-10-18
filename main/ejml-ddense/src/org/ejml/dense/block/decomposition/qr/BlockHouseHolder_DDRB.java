@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,13 +19,13 @@
 package org.ejml.dense.block.decomposition.qr;
 
 import org.ejml.UtilEjml;
-import org.ejml.concurrency.GrowArray;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.InnerMultiplication_DDRB;
 import org.ejml.dense.block.VectorOps_DDRB;
 import org.jetbrains.annotations.Nullable;
+import pabeles.concurrency.GrowArray;
 
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 

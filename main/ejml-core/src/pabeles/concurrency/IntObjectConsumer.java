@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,12 +16,14 @@
  * limitations under the License.
  */
 
-package org.ejml.concurrency;
+package pabeles.concurrency;
 
 /**
+ * Processes a value and is provided workspace
+ *
  * @author Peter Abeles
  */
-public interface WorkArrays {
-	void reset( int length );
-	int length();
+@FunctionalInterface
+public interface IntObjectConsumer<T> {
+	void accept(T workspace, int value);
 }

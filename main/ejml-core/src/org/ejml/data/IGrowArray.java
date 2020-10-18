@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ package org.ejml.data;
  * @author Peter Abeles
  */
 public class IGrowArray {
-    public int data[];
+    public int[] data;
     public int length;
 
     public IGrowArray(int length) {
@@ -58,7 +58,7 @@ public class IGrowArray {
      * @param amount Number of elements added to the internal array's length
      */
     public void growInternal(int amount ) {
-        int tmp[] = new int[ data.length + amount ];
+        int[] tmp = new int[ data.length + amount ];
 
         System.arraycopy(data,0,tmp,0,data.length);
         this.data = tmp;
@@ -80,6 +80,17 @@ public class IGrowArray {
         if( index< 0 || index >= length )
             throw new IllegalArgumentException("Out of bounds");
         data[index] = value;
+    }
+
+    public void add( int value ) {
+        if (length==data.length) {
+            growInternal( Math.min( 10_000, 1+ data.length));
+        }
+        data[length++] = value;
+    }
+
+    public void clear() {
+        length = 0;
     }
 
     public void free() {

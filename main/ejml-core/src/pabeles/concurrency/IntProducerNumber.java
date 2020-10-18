@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package org.ejml.concurrency;
+package pabeles.concurrency;
 
 /**
- * Processes a range of integer numbers
+ * Processes an integer and returns a number
  *
  * @author Peter Abeles
  */
 @FunctionalInterface
-public interface IntRangeObjectConsumer<T> {
-	void accept(T workspace, int minInclusive, int maxExclusive);
+public interface IntProducerNumber {
+	Number accept(int value );
 }
