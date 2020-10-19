@@ -27,6 +27,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.IDBinaryOperator;
 import org.ejml.sparse.csc.mult.CheckMatrixMultShape_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
@@ -1485,6 +1486,30 @@ public class TestCommonOps_DSCC {
         assertTrue(Arrays.equals(A.col_idx, B.col_idx));
         assertTrue(Arrays.equals(A.nz_rows, B.nz_rows));
         assertTrue(Arrays.equals(expectedResult, B.nz_values));
+    }
+
+    @Test
+    public void applyRowWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+        double[] v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        IDBinaryOperator applyFunc = ( row, val ) -> val/v[row];
+        DMatrixSparseCSC B = CommonOps_DSCC.applyRowIdx(A, applyFunc, null);
+
+        A.createCoordinateIterator()
+                .forEachRemaining(entry -> assertEquals(B.get(entry.row, entry.col), applyFunc.apply(entry.row, entry.value)));
+    }
+
+    @Test
+    public void applyColumnWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+        double[] v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        IDBinaryOperator applyFunc = ( row, val ) -> val/v[row];
+        DMatrixSparseCSC B = CommonOps_DSCC.applyColumnIdx(A, applyFunc, null);
+
+        A.createCoordinateIterator()
+                .forEachRemaining(entry -> assertEquals(B.get(entry.row, entry.col) ,applyFunc.apply(entry.col, entry.value)));
     }
 
     @Test
