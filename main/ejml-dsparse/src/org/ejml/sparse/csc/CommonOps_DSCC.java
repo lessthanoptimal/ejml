@@ -28,6 +28,7 @@ import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.DBinaryOperator;
 import org.ejml.ops.DUnaryOperator;
+import org.ejml.ops.IDBinaryOperator;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
@@ -1787,7 +1788,8 @@ public class CommonOps_DSCC {
     public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DUnaryOperator func, @Nullable DMatrixSparseCSC output ) {
         if (output == null) {
             output = input.createLike();
-        } else if (input != output) {
+        }
+        if (input != output) {
             output.copyStructure(input);
         }
 
@@ -1800,6 +1802,58 @@ public class CommonOps_DSCC {
 
     public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DUnaryOperator func ) {
         return apply(input, func, input);
+    }
+
+    /**
+     * This applies a given unary function on every nz row,value stored in the matrix
+     *
+     * B = f(A).   A and B can be the same instance.
+     *
+     * @param input (Input) input matrix. Not modified
+     * @param func Binary function accepting (row-index, value)
+     * @param output (Output) Matrix. Modified.
+     * @return The output matrix
+     */
+    public static DMatrixSparseCSC applyRowIdx( DMatrixSparseCSC input, IDBinaryOperator func, @Nullable DMatrixSparseCSC output ) {
+        if (output == null) {
+            output = input.createLike();
+        }
+        if (input != output) {
+            output.copyStructure(input);
+        }
+
+        for (int i = 0; i < input.nz_length; i++) {
+            output.nz_values[i] = func.apply(input.nz_rows[i], input.nz_values[i]);
+        }
+
+        return output;
+    }
+
+    /**
+     * This applies a given unary function on every non-zero column, value stored in the matrix
+     *
+     * B = f(A).   A and B can be the same instance.
+     *
+     * @param input (Input) input matrix. Not modified
+     * @param func Binary function accepting (column-index, value)
+     * @param output (Output) Matrix. Modified.
+     * @return The output matrix
+     */
+    public static DMatrixSparseCSC applyColumnIdx( DMatrixSparseCSC input, IDBinaryOperator func, @Nullable DMatrixSparseCSC output ) {
+        if (output == null) {
+            output = input.createLike();
+        }
+        if (input != output) {
+            output.copyStructure(input);
+        }
+
+        for (int col = 0; col < input.numCols; col++) {
+            for (int i = input.col_idx[col]; i < input.col_idx[col + 1]; i++) {
+                output.nz_values[i] = func.apply(col, input.nz_values[i]);
+            }
+        }
+
+        return output;
     }
 
     /**
@@ -1861,7 +1915,6 @@ public class CommonOps_DSCC {
                 acc = func.apply(acc, input.nz_values[i]);
             }
 
-            // TODO: allow optional resultAccumulator function (use tmp_result array to save reduce result and than combine arrays f.i. 2nd func)
             output.data[col] = acc;
         }
 
@@ -1891,7 +1944,7 @@ public class CommonOps_DSCC {
         } else {
             output.reshape(1, input.numCols);
         }
-        // TODO: allow optional resultAccumulator function (use tmp_result array to save reduce result and than combine arrays f.i. 2nd func)
+
         Arrays.fill(output.data, initValue);
 
         for (int col = 0; col < input.numCols; col++) {
