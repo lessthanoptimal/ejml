@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,16 @@
 
 package org.ejml.dense.fixed;
 
-import javax.annotation.Generated;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix6;
 import org.ejml.data.DMatrix6x6;
 
+import javax.annotation.Generated;
+
 /**
  * <p>Common matrix operations for fixed sized matrices which are 6 x 6 or 6 element vectors.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateCommonOps_DDF</p>
+ *
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateCommonOps_DDF</p>
  *
  * @author Peter Abeles
  */
@@ -324,7 +326,7 @@ public class CommonOps_DDF6 {
     }
 
     /**
-     * Performs an in-place transpose.  This algorithm is only efficient for square
+     * Performs an in-place transpose. This algorithm is only efficient for square
      * matrices.
      *
      * @param m The matrix that is to be transposed. Modified.
@@ -356,7 +358,7 @@ public class CommonOps_DDF6 {
      * where 'b' is the transpose of 'a'.
      * </p>
      *
-     * @param input The original matrix.  Not modified.
+     * @param input The original matrix. Not modified.
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
@@ -1387,7 +1389,7 @@ public class CommonOps_DDF6 {
      * Performs a lower Cholesky decomposition of matrix 'A' and stores result in A.
      *
      * @param A (Input) SPD Matrix. (Output) lower cholesky.
-     * @return true if it was successful or false if it failed.  Not always reliable.
+     * @return true if it was successful or false if it failed. Not always reliable.
      */
     public static boolean cholL( DMatrix6x6 A ) {
 
@@ -1434,7 +1436,7 @@ public class CommonOps_DDF6 {
      * Performs an upper Cholesky decomposition of matrix 'A' and stores result in A.
      *
      * @param A (Input) SPD Matrix. (Output) upper cholesky.
-     * @return true if it was successful or false if it failed.  Not always reliable.
+     * @return true if it was successful or false if it failed. Not always reliable.
      */
     public static boolean cholU( DMatrix6x6 A ) {
 
@@ -1487,7 +1489,7 @@ public class CommonOps_DDF6 {
      * The trace is only defined for square matrices.
      * </p>
      *
-     * @param a A square matrix.  Not modified.
+     * @param a A square matrix. Not modified.
      */
     public static double trace( DMatrix6x6 a ) {
         return a.a11 + a.a22 + a.a33 + a.a44 + a.a55 + a.a66;
@@ -1500,8 +1502,8 @@ public class CommonOps_DDF6 {
      * </p>
      *
      *
-     * @param input Matrix.  Not modified.
-     * @param out Vector containing diagonal elements.  Modified.
+     * @param input Matrix. Not modified.
+     * @param out Vector containing diagonal elements. Modified.
      */
     public static void diag( DMatrix6x6 input , DMatrix6 out ) {
         out.a1 = input.a11;
@@ -1949,7 +1951,7 @@ public class CommonOps_DDF6 {
      * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix that is to be scaled.  Modified.
+     * @param a The matrix that is to be scaled. Modified.
      * @param alpha the amount each element is multiplied by.
      */
     public static void scale( double alpha , DMatrix6x6 a ) {
@@ -1968,7 +1970,7 @@ public class CommonOps_DDF6 {
      * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The vector that is to be scaled.  Modified.
+     * @param a The vector that is to be scaled. Modified.
      * @param alpha the amount each element is multiplied by.
      */
     public static void scale( double alpha , DMatrix6 a ) {
@@ -1988,7 +1990,7 @@ public class CommonOps_DDF6 {
      * </p>
      *
      * @param alpha the amount each element is multiplied by.
-     * @param a The matrix that is to be scaled.  Not modified.
+     * @param a The matrix that is to be scaled. Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
     public static void scale( double alpha , DMatrix6x6 a , DMatrix6x6 b ) {
@@ -2008,7 +2010,7 @@ public class CommonOps_DDF6 {
      * </p>
      *
      * @param alpha the amount each element is multiplied by.
-     * @param a The vector that is to be scaled.  Not modified.
+     * @param a The vector that is to be scaled. Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
     public static void scale( double alpha , DMatrix6 a , DMatrix6 b ) {
@@ -2027,7 +2029,7 @@ public class CommonOps_DDF6 {
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
      * </p>
      *
-     * @param a The matrix whose elements are to be divided.  Modified.
+     * @param a The matrix whose elements are to be divided. Modified.
      * @param alpha the amount each element is divided by.
      */
     public static void divide( DMatrix6x6 a , double alpha ) {
@@ -2046,7 +2048,7 @@ public class CommonOps_DDF6 {
      * a<sub>i</sub> = a<sub>i</sub>/&alpha;
      * </p>
      *
-     * @param a The vector whose elements are to be divided.  Modified.
+     * @param a The vector whose elements are to be divided. Modified.
      * @param alpha the amount each element is divided by.
      */
     public static void divide( DMatrix6 a , double alpha ) {
@@ -2060,13 +2062,13 @@ public class CommonOps_DDF6 {
 
     /**
      * <p>
-     * Performs an element by element scalar division.  Scalar denominator.<br>
+     * Performs an element by element scalar division. Scalar denominator.<br>
      * <br>
      * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;
      * </p>
      *
      * @param alpha the amount each element is divided by.
-     * @param a The matrix whose elements are to be divided.  Not modified.
+     * @param a The matrix whose elements are to be divided. Not modified.
      * @param b Where the results are stored. Modified.
      */
     public static void divide( DMatrix6x6 a , double alpha , DMatrix6x6 b ) {
@@ -2080,13 +2082,13 @@ public class CommonOps_DDF6 {
 
     /**
      * <p>
-     * Performs an element by element scalar division.  Scalar denominator.<br>
+     * Performs an element by element scalar division. Scalar denominator.<br>
      * <br>
      * b<sub>i</sub> = a<sub>i</sub> /&alpha;
      * </p>
      *
      * @param alpha the amount each element is divided by.
-     * @param a The vector whose elements are to be divided.  Not modified.
+     * @param a The vector whose elements are to be divided. Not modified.
      * @param b Where the results are stored. Modified.
      */
     public static void divide( DMatrix6 a , double alpha , DMatrix6 b ) {
@@ -2233,7 +2235,7 @@ public class CommonOps_DDF6 {
                 out.a6 = a.a66;
             break;
             default:
-                throw new IllegalArgumentException("Out of bounds row.  row = "+row);
+                throw new IllegalArgumentException("Out of bounds row. row = "+row);
         }
         return out;
     }
@@ -2297,7 +2299,7 @@ public class CommonOps_DDF6 {
                 out.a6 = a.a66;
             break;
             default:
-                throw new IllegalArgumentException("Out of bounds column.  column = "+column);
+                throw new IllegalArgumentException("Out of bounds column. column = "+column);
         }
         return out;
     }

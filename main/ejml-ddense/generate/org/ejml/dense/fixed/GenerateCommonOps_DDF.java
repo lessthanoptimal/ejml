@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -761,9 +761,9 @@ public class GenerateCommonOps_DDF extends GenerateFixed {
                 "     *\n" +
                 "     * WARNING: Potentially less stable than using LU decomposition.\n" +
                 "     *\n" +
-                "     * @param a Input matrix. Not modified.\n" +
-                "     * @param inv Inverted output matrix. Modified.\n" +
-                "     * @return true if it was successful or false if it failed. Not always reliable.\n" +
+                "     * @param a (Input) Matrix.\n" +
+                "     * @param inv (Output) Inverted matrix. Can be the same as 'a'.\n" +
+                "     * @return true if it was successful or false if it failed. Not reliable.\n" +
                 "     */\n" +
                 "    public static boolean invert( " + nameMatrix + " a , " + nameMatrix + " inv ) {\n" +
                 "\n" +
