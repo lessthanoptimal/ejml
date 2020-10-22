@@ -16,38 +16,26 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.misc;
+package org.ejml.data;
 
-import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Mostly blank because most tests are handled inside of {@link org.ejml.dense.row.TestCommonOps_DDRM}
- *
- * @author Peter Abeles
- */
-public class TestImplCommonOps_DDRM {
-
-    Random rand = new Random(234324);
+public class TestElementLocation {
+    @Test
+    void set_row_col() {
+        var loc = new ElementLocation();
+        loc.set(1, 2);
+        assertEquals(1, loc.row);
+        assertEquals(2, loc.col);
+    }
 
     @Test
-    public void extract() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
-
-        DMatrixRMaj B = new DMatrixRMaj(3,3);
-
-        ImplCommonOps_DDRM.extract(A, 1, 2, B, 1, 0,2,3);
-
-        for( int i = 1; i < 3; i++ ) {
-            for( int j = 2; j < 5; j++ ) {
-                assertEquals(A.get(i,j),B.get(i,j-2), UtilEjml.TEST_F64);
-            }
-        }
+    void set_loc() {
+        var loc = new ElementLocation();
+        loc.set(new ElementLocation(1, 2));
+        assertEquals(1, loc.row);
+        assertEquals(2, loc.col);
     }
 }

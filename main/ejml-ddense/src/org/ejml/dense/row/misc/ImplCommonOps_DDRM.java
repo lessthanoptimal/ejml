@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.dense.row.misc;
 
 import org.ejml.data.DMatrixD1;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ElementLocation;
 import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.checkSameShape;
@@ -44,57 +45,85 @@ public class ImplCommonOps_DDRM {
         }
     }
 
-    public static double elementMax( DMatrixD1 a ) {
+    public static double elementMax( DMatrixD1 a, @Nullable ElementLocation loc ) {
         final int size = a.getNumElements();
 
+        int bestIndex = 0;
         double max = a.get(0);
         for (int i = 1; i < size; i++) {
             double val = a.get(i);
             if (val >= max) {
+                bestIndex = i;
                 max = val;
             }
+        }
+
+        if (loc != null) {
+            loc.row = bestIndex/a.numCols;
+            loc.col = bestIndex%a.numCols;
         }
 
         return max;
     }
 
-    public static double elementMaxAbs( DMatrixD1 a ) {
+    public static double elementMaxAbs( DMatrixD1 a, @Nullable ElementLocation loc ) {
         final int size = a.getNumElements();
 
+        int bestIndex = 0;
         double max = 0;
         for (int i = 0; i < size; i++) {
             double val = Math.abs(a.get(i));
             if (val > max) {
+                bestIndex = i;
                 max = val;
             }
+        }
+
+        if (loc != null) {
+            loc.row = bestIndex/a.numCols;
+            loc.col = bestIndex%a.numCols;
         }
 
         return max;
     }
 
-    public static double elementMin( DMatrixD1 a ) {
+    public static double elementMin( DMatrixD1 a, @Nullable ElementLocation loc ) {
         final int size = a.getNumElements();
 
+        int bestIndex = 0;
         double min = a.get(0);
         for (int i = 1; i < size; i++) {
             double val = a.get(i);
             if (val < min) {
+                bestIndex = i;
                 min = val;
             }
+        }
+
+        if (loc != null) {
+            loc.row = bestIndex/a.numCols;
+            loc.col = bestIndex%a.numCols;
         }
 
         return min;
     }
 
-    public static double elementMinAbs( DMatrixD1 a ) {
+    public static double elementMinAbs( DMatrixD1 a, @Nullable ElementLocation loc ) {
         final int size = a.getNumElements();
 
+        int bestIndex = 0;
         double min = Double.MAX_VALUE;
         for (int i = 0; i < size; i++) {
             double val = Math.abs(a.get(i));
             if (val < min) {
+                bestIndex = i;
                 min = val;
             }
+        }
+
+        if (loc != null) {
+            loc.row = bestIndex/a.numCols;
+            loc.col = bestIndex%a.numCols;
         }
 
         return min;
