@@ -27,7 +27,7 @@ public class IGrowArray {
     public int[] data;
     public int length;
 
-    public IGrowArray(int length) {
+    public IGrowArray( int length ) {
         this.data = new int[length];
         this.length = length;
     }
@@ -41,7 +41,7 @@ public class IGrowArray {
     }
 
     public void reshape( int length ) {
-        if( data.length < length ) {
+        if (data.length < length) {
             data = new int[length];
         }
         this.length = length;
@@ -54,37 +54,35 @@ public class IGrowArray {
      *
      * this.data = new data_type[ data.length + amount ]
      *
-     *
      * @param amount Number of elements added to the internal array's length
      */
-    public void growInternal(int amount ) {
-        int[] tmp = new int[ data.length + amount ];
+    public void growInternal( int amount ) {
+        int[] tmp = new int[data.length + amount];
 
-        System.arraycopy(data,0,tmp,0,data.length);
+        System.arraycopy(data, 0, tmp, 0, data.length);
         this.data = tmp;
     }
 
     public void set( IGrowArray original ) {
         reshape(original.length);
-        System.arraycopy(original.data,0,data,0,original.length);
+        System.arraycopy(original.data, 0, data, 0, original.length);
     }
 
-
     public int get( int index ) {
-        if( index < 0 || index >= length )
+        if (index < 0 || index >= length)
             throw new IllegalArgumentException("Out of bounds");
         return data[index];
     }
 
-    public void set( int index , int value ) {
-        if( index< 0 || index >= length )
+    public void set( int index, int value ) {
+        if (index < 0 || index >= length)
             throw new IllegalArgumentException("Out of bounds");
         data[index] = value;
     }
 
     public void add( int value ) {
-        if (length==data.length) {
-            growInternal( Math.min( 10_000, 1+ data.length));
+        if (length == data.length) {
+            growInternal(Math.min(10_000, 1 + data.length));
         }
         data[length++] = value;
     }

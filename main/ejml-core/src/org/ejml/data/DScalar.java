@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,19 +18,14 @@
 
 package org.ejml.data;
 
+import lombok.Data;
+
 /**
  * Scalar value. Useful when a function needs more than one output.
  *
  * @author Peter Abeles
  */
+@Data
 public class DScalar {
     public double value;
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
 }

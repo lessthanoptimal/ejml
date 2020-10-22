@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,8 @@
 
 package org.ejml.data;
 
+import lombok.Data;
 import org.ejml.ops.ComplexMath_F64;
-
-import java.io.Serializable;
 
 /**
  * <p>
@@ -28,21 +27,17 @@ import java.io.Serializable;
  * a real and imaginary components.
  * </p>
  */
-public class Complex_F64 implements Serializable {
+@Data
+public class Complex_F64 {
     public double real;
     public double imaginary;
 
-    public Complex_F64(double real, double imaginary) {
+    public Complex_F64( double real, double imaginary ) {
         this.real = real;
         this.imaginary = imaginary;
     }
 
-    public Complex_F64() {
-    }
-
-    public double getReal() {
-        return real;
-    }
+    public Complex_F64() {}
 
     public double getMagnitude() {
         return Math.sqrt(real*real + imaginary*imaginary);
@@ -52,24 +47,12 @@ public class Complex_F64 implements Serializable {
         return real*real + imaginary*imaginary;
     }
 
-    public void setReal(double real) {
-        this.real = real;
-    }
-
-    public double getImaginary() {
-        return imaginary;
-    }
-
-    public void setImaginary(double imaginary) {
-        this.imaginary = imaginary;
-    }
-
-    public void set(double real, double imaginary) {
+    public void set( double real, double imaginary ) {
         this.real = real;
         this.imaginary = imaginary;
     }
 
-    public void set(Complex_F64 a) {
+    public void set( Complex_F64 a ) {
         this.real = a.real;
         this.imaginary = a.imaginary;
     }
@@ -78,36 +61,36 @@ public class Complex_F64 implements Serializable {
         return imaginary == 0.0;
     }
 
-    @Override
-    public String toString() {
-        if( imaginary == 0 ) {
-            return ""+real;
-        } else {
-            return real+" "+imaginary+"i";
-        }
-    }
-
-    public Complex_F64 plus(Complex_F64 a ) {
+    public Complex_F64 plus( Complex_F64 a ) {
         Complex_F64 ret = new Complex_F64();
-        ComplexMath_F64.plus(this,a,ret);
+        ComplexMath_F64.plus(this, a, ret);
         return ret;
     }
 
-    public Complex_F64 minus(Complex_F64 a ) {
+    public Complex_F64 minus( Complex_F64 a ) {
         Complex_F64 ret = new Complex_F64();
         ComplexMath_F64.minus(this, a, ret);
         return ret;
     }
 
-    public Complex_F64 times(Complex_F64 a ) {
+    public Complex_F64 times( Complex_F64 a ) {
         Complex_F64 ret = new Complex_F64();
-        ComplexMath_F64.multiply(this,a,ret);
+        ComplexMath_F64.multiply(this, a, ret);
         return ret;
     }
 
-    public Complex_F64 divide(Complex_F64 a ) {
+    public Complex_F64 divide( Complex_F64 a ) {
         Complex_F64 ret = new Complex_F64();
-        ComplexMath_F64.divide(this,a,ret);
+        ComplexMath_F64.divide(this, a, ret);
         return ret;
+    }
+
+    @Override
+    public String toString() {
+        if (imaginary == 0) {
+            return "" + real;
+        } else {
+            return real + " " + imaginary + "i";
+        }
     }
 }

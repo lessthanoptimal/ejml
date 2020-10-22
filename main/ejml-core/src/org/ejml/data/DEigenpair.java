@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import lombok.Data;
 
 /**
  * An eigenpair is a set composed of an eigenvalue and an eigenvector.  In this library since only real
@@ -25,11 +26,12 @@ package org.ejml.data;
  *
  * @author Peter Abeles
  */
+@Data
 public class DEigenpair {
     public double value;
     public DMatrixRMaj vector;
 
-    public DEigenpair(double value, DMatrixRMaj vector) {
+    public DEigenpair( double value, DMatrixRMaj vector ) {
         this.value = value;
         this.vector = vector;
     }

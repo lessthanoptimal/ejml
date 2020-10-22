@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,10 +24,10 @@ package org.ejml.data;
  * @author Peter Abeles
  */
 public class DGrowArray {
-    public double data[];
+    public double[] data;
     public int length;
 
-    public DGrowArray(int length) {
+    public DGrowArray( int length ) {
         this.data = new double[length];
         this.length = length;
     }
@@ -48,7 +48,7 @@ public class DGrowArray {
      * @param length New array length
      */
     public DGrowArray reshape( int length ) {
-        if( data.length < length ) {
+        if (data.length < length) {
             data = new double[length];
         }
         this.length = length;
@@ -62,29 +62,28 @@ public class DGrowArray {
      *
      * this.data = new data_type[ data.length + amount ]
      *
-     *
      * @param amount Number of elements added to the internal array's length
      */
-    public void growInternal(int amount ) {
-        double tmp[] = new double[ data.length + amount ];
+    public void growInternal( int amount ) {
+        double[] tmp = new double[data.length + amount];
 
-        System.arraycopy(data,0,tmp,0,data.length);
+        System.arraycopy(data, 0, tmp, 0, data.length);
         this.data = tmp;
     }
 
     public void set( DGrowArray original ) {
         reshape(original.length);
-        System.arraycopy(original.data,0,data,0,original.length);
+        System.arraycopy(original.data, 0, data, 0, original.length);
     }
 
     public double get( int index ) {
-        if( index < 0 || index >= length )
+        if (index < 0 || index >= length)
             throw new IllegalArgumentException("Out of bounds");
         return data[index];
     }
 
-    public void set( int index , double value ) {
-        if( index< 0 || index >= length )
+    public void set( int index, double value ) {
+        if (index < 0 || index >= length)
             throw new IllegalArgumentException("Out of bounds");
         data[index] = value;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import lombok.Data;
 import org.ejml.ops.ComplexMath_F64;
 
 /**
@@ -26,48 +27,33 @@ import org.ejml.ops.ComplexMath_F64;
  * z = r*(cos(&theta;) + i*sin(&theta;))<br>
  * where r and &theta; are polar coordinate parameters
  * </p>
+ *
  * @author Peter Abeles
  */
+@Data
 public class ComplexPolar_F64 {
     public double r;
-	public double theta;
+    public double theta;
 
-	public ComplexPolar_F64(double r, double theta) {
-		this.r = r;
-		this.theta = theta;
-	}
-
-	public ComplexPolar_F64(Complex_F64 n ) {
-		ComplexMath_F64.convert(n, this);
-	}
-
-	public ComplexPolar_F64() {
-	}
-
-	public Complex_F64 toStandard() {
-		Complex_F64 ret = new Complex_F64();
-		ComplexMath_F64.convert(this, ret);
-		return ret;
-	}
-
-    public double getR() {
-        return r;
-    }
-
-    public void setR(double r) {
+    public ComplexPolar_F64( double r, double theta ) {
         this.r = r;
-    }
-
-    public double getTheta() {
-        return theta;
-    }
-
-    public void setTheta(double theta) {
         this.theta = theta;
+    }
+
+    public ComplexPolar_F64( Complex_F64 n ) {
+        ComplexMath_F64.convert(n, this);
+    }
+
+    public ComplexPolar_F64() { }
+
+    public Complex_F64 toStandard() {
+        Complex_F64 ret = new Complex_F64();
+        ComplexMath_F64.convert(this, ret);
+        return ret;
     }
 
     @Override
     public String toString() {
-		return "( r = "+r+" theta = "+theta+" )";
-	}
+        return "( r = " + r + " theta = " + theta + " )";
+    }
 }

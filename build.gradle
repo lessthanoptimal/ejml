@@ -88,6 +88,7 @@ subprojects {
     }
 
     dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.10'
         compileOnly 'org.jetbrains:annotations:20.0.0' // @Nullable
         compileOnly 'javax.annotation:jsr250-api:1.0'  // @Generated
         testCompileOnly project.sourceSets.main.compileClasspath
@@ -103,6 +104,8 @@ subprojects {
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
+
+        annotationProcessor 'org.projectlombok:lombok:1.18.10'  // @Getter @Setter
         annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
         annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
 
