@@ -20,6 +20,7 @@ package org.ejml.dense.row;
 
 import org.ejml.data.BMatrixRMaj;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.ElementLocation;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -49,6 +50,7 @@ public class BenchmarkCommonOps_DDRM {
     public DMatrixRMaj Vb = new DMatrixRMaj(1, 1);
     public BMatrixRMaj binary = new BMatrixRMaj(1, 1);
     public double[] array_v;
+    public ElementLocation loc = new ElementLocation();
 
     @Setup
     public void setup() {
@@ -127,6 +129,10 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void elementMaxAbs() { CommonOps_DDRM.elementMaxAbs(A); }
     @Benchmark public void elementMin() { CommonOps_DDRM.elementMin(A); }
     @Benchmark public void elementMinAbs() { CommonOps_DDRM.elementMinAbs(A); }
+    @Benchmark public void elementMax_loc() { CommonOps_DDRM.elementMax(A, loc); }
+    @Benchmark public void elementMaxAbs_loc() { CommonOps_DDRM.elementMaxAbs(A, loc); }
+    @Benchmark public void elementMin_loc() { CommonOps_DDRM.elementMin(A, loc); }
+    @Benchmark public void elementMinAbs_loc() { CommonOps_DDRM.elementMinAbs(A, loc); }
     @Benchmark public void elementMult_AB() { CommonOps_DDRM.elementMult(A, B); }
     @Benchmark public void elementMult_ABC() { CommonOps_DDRM.elementMult(A, B, C); }
     @Benchmark public void elementDiv_AB() { CommonOps_DDRM.elementDiv(A, B); }

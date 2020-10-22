@@ -1415,7 +1415,22 @@ public class CommonOps_DDRM {
      * @return The max element value of the matrix.
      */
     public static double elementMax( DMatrixD1 a ) {
-        return ImplCommonOps_DDRM.elementMax(a);
+        return ImplCommonOps_DDRM.elementMax(a, null);
+    }
+
+    /**
+     * <p>
+     * Returns the value of the element in the matrix that has the largest value.<br>
+     * <br>
+     * Max{ a<sub>ij</sub> } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param loc (Output) Location of selected element.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMax( DMatrixD1 a, ElementLocation loc ) {
+        return ImplCommonOps_DDRM.elementMax(a, loc);
     }
 
     /**
@@ -1429,7 +1444,22 @@ public class CommonOps_DDRM {
      * @return The max abs element value of the matrix.
      */
     public static double elementMaxAbs( DMatrixD1 a ) {
-        return ImplCommonOps_DDRM.elementMaxAbs(a);
+        return ImplCommonOps_DDRM.elementMaxAbs(a, null);
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the largest absolute value.<br>
+     * <br>
+     * Max{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param loc (Output) Location of element element.
+     * @return The max abs element value of the matrix.
+     */
+    public static double elementMaxAbs( DMatrixD1 a, ElementLocation loc  ) {
+        return ImplCommonOps_DDRM.elementMaxAbs(a, loc);
     }
 
     /**
@@ -1443,7 +1473,22 @@ public class CommonOps_DDRM {
      * @return The value of element in the matrix with the minimum value.
      */
     public static double elementMin( DMatrixD1 a ) {
-        return ImplCommonOps_DDRM.elementMin(a);
+        return ImplCommonOps_DDRM.elementMin(a, null);
+    }
+
+    /**
+     * <p>
+     * Returns the value of the element in the matrix that has the minimum value.<br>
+     * <br>
+     * Min{ a<sub>ij</sub> } for all i and j<br>
+     * </p>
+     *
+     * @param a A matrix. Not modified.
+     * @param loc (Output) Location of selected element.
+     * @return The value of element in the matrix with the minimum value.
+     */
+    public static double elementMin( DMatrixD1 a, ElementLocation loc  ) {
+        return ImplCommonOps_DDRM.elementMin(a, loc);
     }
 
     /**
@@ -1457,7 +1502,22 @@ public class CommonOps_DDRM {
      * @return The max element value of the matrix.
      */
     public static double elementMinAbs( DMatrixD1 a ) {
-        return ImplCommonOps_DDRM.elementMinAbs(a);
+        return ImplCommonOps_DDRM.elementMinAbs(a, null);
+    }
+
+    /**
+     * <p>
+     * Returns the absolute value of the element in the matrix that has the smallest absolute value.<br>
+     * <br>
+     * Min{ |a<sub>ij</sub>| } for all i and j<br>
+     * </p>
+     *
+     * @param a (Input) A matrix. Not modified.
+     * @param loc (Output) Location of selected element.
+     * @return The max element value of the matrix.
+     */
+    public static double elementMinAbs( DMatrixD1 a, ElementLocation loc ) {
+        return ImplCommonOps_DDRM.elementMinAbs(a, loc);
     }
 
     /**
