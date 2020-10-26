@@ -21,6 +21,8 @@ package pabeles.concurrency;
 import org.ejml.UtilEjml;
 import org.ejml.data.IGrowArray;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,198 +31,240 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TestConcurrencyOps {
 
-	final int numThreads = 4;
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopFor( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-	TestConcurrencyOps() {
-		// need to know the max number of threads for many of these checks
-		ConcurrencyOps.setMaxThreads(numThreads);
-	}
+        Counter counter = new Counter();
+        ConcurrencyOps.loopFor(10, 100, i -> {
+            counter.increment();
+        });
 
-	@Test void loopFor() {
-		Counter counter = new Counter();
-		ConcurrencyOps.loopFor(10,100,i->{
-			counter.increment();
-		});
+        assertEquals(90, counter.value);
+    }
 
-		assertEquals(90,counter.value);
-	}
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopFor_step( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-	@Test void loopFor_step() {
-		final Counter counter = new Counter();
-		ConcurrencyOps.loopFor(10,100, 10,i->{
-			synchronized (counter) {
-				counter.value += i;
-			}
-		});
+        final Counter counter = new Counter();
+        ConcurrencyOps.loopFor(10, 100, 10, i -> {
+            synchronized (counter) {
+                counter.value += i;
+            }
+        });
 
-		int expected = 0;
-		for (int i = 1; i < 10; i++) {
-			expected += i*10;
-		}
-		assertEquals(expected,counter.value);
-	}
+        int expected = 0;
+        for (int i = 1; i < 10; i++) {
+            expected += i*10;
+        }
+        assertEquals(expected, counter.value);
+    }
 
-	@Test void loopFor_step_workspace() {
-		// Don't clear the array each time
-		GrowArray<IGrowArray> workspace = new GrowArray<>(IGrowArray::new);
-		workspace.grow();
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopFor_step_workspace( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-		ConcurrencyOps.loopFor(10,100,10,workspace, IGrowArray::add);
+        // Don't clear the array each time
+        GrowArray<IGrowArray> workspace = new GrowArray<>(IGrowArray::new);
+        workspace.grow();
 
-		assertEquals(numThreads,workspace.size);
-		int total = 0;
-		for (int i = 0; i < workspace.size; i++) {
-			total += workspace.get(i).length;
-		}
-		assertEquals( 9,total);
-	}
+        ConcurrencyOps.loopFor(10, 100, 10, workspace, IGrowArray::add);
 
+        assertEquals(numThreads, workspace.size);
+        int total = 0;
+        for (int i = 0; i < workspace.size; i++) {
+            total += workspace.get(i).length;
+        }
+        assertEquals(9, total);
+    }
 
-	@Test void loopBlocks() {
-		IGrowArray found = new IGrowArray();
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopBlocks( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-		ConcurrencyOps.loopBlocks(10,100,new BlockTask(found));
+        IGrowArray found = new IGrowArray();
 
-		assertEquals(8,found.length);
-		// the timing was set up so that they should be approximately in reverse order, if run in parallel
-		assertTrue(found.data[0] != 10 && found.data[2] != 32 );
-		findPair(found,10,32);
-		findPair(found,32,54);
-		findPair(found,54,76);
-		findPair(found,76,100);
-	}
+        ConcurrencyOps.loopBlocks(10, 100, new BlockTask(found));
 
-	@Test void loopBlocks_minBlock() {
-		IGrowArray found = new IGrowArray();
+        assertEquals(numThreads*2, found.length);
 
-		ConcurrencyOps.loopBlocks(10,100,12,new BlockTask(found));
+        // see if the provided range covers all numbers
+        boolean[] included = new boolean[90];
+        for (int i = 0; i < found.length; i += 2) {
+            int idx0 = found.get(i);
+            int idx1 = found.get(i + 1);
+            for (int j = idx0; j < idx1; j++) {
+                included[j-10] = true;
+            }
+        }
+        for (boolean v : included) {
+            assertTrue(v);
+        }
+    }
 
-		assertEquals(8,found.length);
-		// the timing was set up so that they should be approximately in reverse order, if run in parallel
-		assertTrue(found.data[0] != 10 && found.data[2] != 32 );
-		findPair(found,10,32);
-		findPair(found,32,54);
-		findPair(found,54,76);
-		findPair(found,76,100);
-	}
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopBlocks_minBlock( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-	@Test void loopBlocks_workspace() {
-		GrowArray<IGrowArray> workspace = new GrowArray<>(IGrowArray::new,IGrowArray::clear);
-		workspace.grow().add(123);
-		ConcurrencyOps.loopBlocks(10, 100, workspace, ( work, idx0, idx1 ) -> {
-			for (int i = idx0; i < idx1; i++) {
-				work.add(i);
-			}
-		});
-		assertTrue(workspace.size > 0);
-		IGrowArray results = new IGrowArray();
-		for (int i = 0; i < workspace.size; i++) {
-			IGrowArray w = workspace.get(i);
-			assertTrue(w.length >= 12);
-			for (int j = 0; j < w.length; j++) {
-				results.add(w.get(j));
-			}
-		}
-		assertEquals(90, results.length);
-		for (int i = 0; i < results.length; i++) {
-			assertEquals(i+10,results.get(i));
-		}
-	}
+        IGrowArray found = new IGrowArray();
 
-	@Test void loopBlocks_minBlock_workspace() {
-		GrowArray<IGrowArray> workspace = new GrowArray<>(IGrowArray::new,IGrowArray::clear);
-		workspace.grow().add(123);
-		ConcurrencyOps.loopBlocks(10, 100, 12, workspace, ( work, idx0, idx1 ) -> {
-			for (int i = idx0; i < idx1; i++) {
-				work.add(i);
-			}
-		});
-		assertTrue(workspace.size > 0);
-		IGrowArray results = new IGrowArray();
-		for (int i = 0; i < workspace.size; i++) {
-			IGrowArray w = workspace.get(i);
-			assertTrue(w.length >= 12);
-			for (int j = 0; j < w.length; j++) {
-				results.add(w.get(j));
-			}
-		}
-		assertEquals(90, results.length);
-		for (int i = 0; i < results.length; i++) {
-			assertEquals(i+10,results.get(i));
-		}
-	}
+        ConcurrencyOps.loopBlocks(10, 50, 15, new BlockTask(found));
 
-	private void findPair( IGrowArray found , int val0 , int val1 ) {
-		for (int i = 0; i < found.length; i += 2) {
-			if( found.get(i) == val0 && found.get(i+1) == val1 ) {
-				return;
-			}
-		}
-		fail("Couldn't find pair "+val0+" "+val1);
-	}
+        int expectedLength = Math.min(numThreads,40/15)*2;
+        assertEquals(expectedLength, found.length);
 
-	@Test void selectBlockSize() {
-		assertEquals(10,ConcurrencyOps.selectBlockSize(100,5,10));
-		assertEquals(20,ConcurrencyOps.selectBlockSize(100,20,10));
-		assertEquals(16,ConcurrencyOps.selectBlockSize(100,15,10));
-		assertEquals(100,ConcurrencyOps.selectBlockSize(100,80,10));
+        // see if the provided range covers all numbers
+        boolean[] included = new boolean[40];
+        for (int i = 0; i < found.length; i += 2) {
+            int idx0 = found.get(i);
+            int idx1 = found.get(i + 1);
+            for (int j = idx0; j < idx1; j++) {
+                included[j-10] = true;
+            }
+        }
+        for (boolean v : included) {
+            assertTrue(v);
+        }
+    }
 
-		assertEquals(22,ConcurrencyOps.selectBlockSize(90,12,4));
-	}
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopBlocks_workspace( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-	static class BlockTask implements IntRangeConsumer {
+        GrowArray<IGrowArray> workspace = new GrowArray<>(IGrowArray::new, IGrowArray::clear);
+        workspace.grow().add(123);
+        ConcurrencyOps.loopBlocks(10, 100, workspace, ( work, idx0, idx1 ) -> {
+            for (int i = idx0; i < idx1; i++) {
+                work.add(i);
+            }
+        });
+        assertTrue(workspace.size > 0);
+        IGrowArray results = new IGrowArray();
+        for (int i = 0; i < workspace.size; i++) {
+            IGrowArray w = workspace.get(i);
+            assertTrue(w.length >= 12);
+            for (int j = 0; j < w.length; j++) {
+                results.add(w.get(j));
+            }
+        }
+        assertEquals(90, results.length);
+        for (int i = 0; i < results.length; i++) {
+            assertEquals(i + 10, results.get(i));
+        }
+    }
 
-		final IGrowArray found;
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void loopBlocks_minBlock_workspace( int numThreads ) {
+        ConcurrencyOps.setMaxThreads(numThreads);
 
-		BlockTask(IGrowArray found) { this.found = found; }
+        GrowArray<IGrowArray> workspace = new GrowArray<>(IGrowArray::new, IGrowArray::clear);
+        workspace.grow().add(123);
+        ConcurrencyOps.loopBlocks(10, 100, 12, workspace, ( work, idx0, idx1 ) -> {
+            for (int i = idx0; i < idx1; i++) {
+                work.add(i);
+            }
+        });
+        assertTrue(workspace.size > 0);
+        IGrowArray results = new IGrowArray();
+        for (int i = 0; i < workspace.size; i++) {
+            IGrowArray w = workspace.get(i);
+            assertTrue(w.length >= 12);
+            for (int j = 0; j < w.length; j++) {
+                results.add(w.get(j));
+            }
+        }
+        assertEquals(90, results.length);
+        for (int i = 0; i < results.length; i++) {
+            assertEquals(i + 10, results.get(i));
+        }
+    }
 
-		@Override
-		public void accept(int minInclusive, int maxExclusive) {
-			// sleep such that they will be out of order. This is manually checked to make sure it is in parallel
-			sleep(100+(100-minInclusive));
-			synchronized (found) {
-				found.add(minInclusive);
-				found.add(maxExclusive);
-			}
-		}
-	}
+    private void findPair( IGrowArray found, int val0, int val1 ) {
+        for (int i = 0; i < found.length; i += 2) {
+            if (found.get(i) == val0 && found.get(i + 1) == val1) {
+                return;
+            }
+        }
+        fail("Couldn't find pair " + val0 + " " + val1);
+    }
 
-	@Test void sum() {
-		int foundI = ConcurrencyOps.sum(5,10,int.class,i->i+2).intValue();
-		assertEquals(45,foundI);
+    @Test void selectBlockSize() {
+        assertEquals(10, ConcurrencyOps.selectBlockSize(100, 5, 10));
+        assertEquals(20, ConcurrencyOps.selectBlockSize(100, 20, 10));
+        assertEquals(16, ConcurrencyOps.selectBlockSize(100, 15, 10));
+        assertEquals(100, ConcurrencyOps.selectBlockSize(100, 80, 10));
 
-		double foundD = ConcurrencyOps.sum(5,10,double.class,i->i+2.5).doubleValue();
-		assertEquals(47.5,foundD, UtilEjml.TEST_F64);
-	}
+        assertEquals(22, ConcurrencyOps.selectBlockSize(90, 12, 4));
+    }
 
-	@Test void max() {
-		int foundI = ConcurrencyOps.max(5,10,int.class,i->i+2).intValue();
-		assertEquals(9+2,foundI);
+    static class BlockTask implements IntRangeConsumer {
 
-		double foundD = ConcurrencyOps.max(5,10,double.class,i->i+2.5).doubleValue();
-		assertEquals(9.0+2.5,foundD, UtilEjml.TEST_F64);
-	}
+        final IGrowArray found;
 
-	@Test void min() {
-		int foundI = ConcurrencyOps.min(5,10,int.class,i->i+2).intValue();
-		assertEquals(5+2,foundI);
+        BlockTask( IGrowArray found ) { this.found = found; }
 
-		double foundD = ConcurrencyOps.min(5,10,double.class,i->i+2.5).doubleValue();
-		assertEquals(5.0+2.5,foundD, UtilEjml.TEST_F64);
-	}
+        @Override
+        public void accept( int minInclusive, int maxExclusive ) {
+            // sleep such that they will be out of order. This is manually checked to make sure it is in parallel
+            sleep(100 + (100 - minInclusive));
+            synchronized (found) {
+                found.add(minInclusive);
+                found.add(maxExclusive);
+            }
+        }
+    }
 
-	private static class Counter {
-		int value = 0;
-		public synchronized void increment() {
-			value++;
-		}
-	}
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void sum() {
+        int foundI = ConcurrencyOps.sum(5, 10, int.class, i -> i + 2).intValue();
+        assertEquals(45, foundI);
 
-	public static void sleep( long milli ) {
-		try {
-			Thread.sleep(milli);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+        double foundD = ConcurrencyOps.sum(5, 10, double.class, i -> i + 2.5).doubleValue();
+        assertEquals(47.5, foundD, UtilEjml.TEST_F64);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void max() {
+        int foundI = ConcurrencyOps.max(5, 10, int.class, i -> i + 2).intValue();
+        assertEquals(9 + 2, foundI);
+
+        double foundD = ConcurrencyOps.max(5, 10, double.class, i -> i + 2.5).doubleValue();
+        assertEquals(9.0 + 2.5, foundD, UtilEjml.TEST_F64);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void min() {
+        int foundI = ConcurrencyOps.min(5, 10, int.class, i -> i + 2).intValue();
+        assertEquals(5 + 2, foundI);
+
+        double foundD = ConcurrencyOps.min(5, 10, double.class, i -> i + 2.5).doubleValue();
+        assertEquals(5.0 + 2.5, foundD, UtilEjml.TEST_F64);
+    }
+
+    private static class Counter {
+        int value = 0;
+
+        public synchronized void increment() {
+            value++;
+        }
+    }
+
+    public static void sleep( long milli ) {
+        try {
+            Thread.sleep(milli);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

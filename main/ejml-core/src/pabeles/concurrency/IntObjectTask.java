@@ -84,9 +84,9 @@ public class IntObjectTask<T> extends ForkJoinTask<Void> {
             IntObjectTask<T> root = null;
             IntObjectTask<T> previous = null;
 
-            for (int threadId = 0; threadId < numThreads-1; threadId++) {
-                int segment0 = computeIndex(threadId,numThreads,numIterations);
-                int segment1 = computeIndex(threadId+1,numThreads,numIterations);
+            for (int threadId = 0; threadId < numThreads - 1; threadId++) {
+                int segment0 = computeIndex(threadId, numThreads, numIterations);
+                int segment1 = computeIndex(threadId + 1, numThreads, numIterations);
                 var task = new IntObjectTask<>(segment0, segment1, step, -1, threadId, workspace, consumer);
                 if (root == null) {
                     root = previous = task;
@@ -97,8 +97,8 @@ public class IntObjectTask<T> extends ForkJoinTask<Void> {
                 task.fork();
             }
             // process the last segment in this thread
-            for (int index = computeIndex(numThreads-1,numThreads,numIterations); index < idx1; index += step) {
-                consumer.accept(workspace.get(numThreads-1), index);
+            for (int index = computeIndex(numThreads - 1, numThreads, numIterations); index < idx1; index += step) {
+                consumer.accept(workspace.get(numThreads - 1), index);
             }
 
             // wait until all the other threads are done

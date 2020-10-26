@@ -27,68 +27,67 @@ import java.util.concurrent.ForkJoinTask;
 @SuppressWarnings("NullAway.Init")
 public class IntRangeTask extends ForkJoinTask<Void> {
 
-	final int min;
-	final int max;
-	final int stepLength;
-	final int step;
-	final IntRangeConsumer consumer;
-	IntRangeTask next;
+    final int min;
+    final int max;
+    final int stepLength;
+    final int step;
+    final IntRangeConsumer consumer;
+    IntRangeTask next;
 
-	/**
-	 *
-	 * @param step which step is to be processed. the master task should have this set to -1
-	 */
-	public IntRangeTask(int step, int min , int max , int stepLength , IntRangeConsumer consumer ) {
-		this.step = step;
-		this.min = min;
-		this.max = max;
-		this.stepLength = stepLength;
-		this.consumer = consumer;
-	}
+    /**
+     * @param step which step is to be processed. the master task should have this set to -1
+     */
+    public IntRangeTask( int step, int min, int max, int stepLength, IntRangeConsumer consumer ) {
+        this.step = step;
+        this.min = min;
+        this.max = max;
+        this.stepLength = stepLength;
+        this.consumer = consumer;
+    }
 
-	public IntRangeTask( int min , int max , int stepLength , IntRangeConsumer consumer ) {
-		this(-1,min,max,stepLength,consumer);
-	}
+    public IntRangeTask( int min, int max, int stepLength, IntRangeConsumer consumer ) {
+        this(-1, min, max, stepLength, consumer);
+    }
 
-	@Override
-	public Void getRawResult() {return null;}
+    @Override
+    public Void getRawResult() {return null;}
 
-	@Override
-	protected void setRawResult(Void value) {}
+    @Override
+    protected void setRawResult( Void value ) {}
 
-	@Override
-	protected boolean exec() {
-		int N = (max-min)/stepLength;
+    @Override
+    protected boolean exec() {
+        int N = (max - min)/stepLength;
 
-		if( step == -1 ) {
-			// this is the first task, spawn all the others
-			IntRangeTask root=null;
-			IntRangeTask previous=null;
-			int step;
-			for ( step = 0; step < N - 1; step++) {
-				IntRangeTask task = new IntRangeTask(step,min,max,stepLength, consumer);
-				if( root == null ) {
-					root = previous = task;
-				} else {
-					Objects.requireNonNull(previous).next = task;
-					previous = task;
-				}
-				task.fork();
-			}
-			// process the last segment in this thread
-			int index0 = step*stepLength + min;
-			consumer.accept(index0,max);
+        if (step == -1) {
+            // this is the first task, spawn all the others
+            IntRangeTask root = null;
+            IntRangeTask previous = null;
+            int step;
+            for (step = 0; step < N - 1; step++) {
+                IntRangeTask task = new IntRangeTask(step, min, max, stepLength, consumer);
+                if (root == null) {
+                    root = previous = task;
+                } else {
+                    Objects.requireNonNull(previous).next = task;
+                    previous = task;
+                }
+                task.fork();
+            }
+            // process the last segment in this thread
+            int index0 = step*stepLength + min;
+            consumer.accept(index0, max);
 
-			// wait until all the other threads are done
-			while( root != null ) {
-				root.join();
-				root = root.next;
-			}
-		} else {
-			int index0 = step*stepLength + min;
-			int index1 = index0 + stepLength;
-			consumer.accept(index0,index1);
-		}
-		return true;
-	}
+            // wait until all the other threads are done
+            while (root != null) {
+                root.join();
+                root = root.next;
+            }
+        } else {
+            int index0 = step*stepLength + min;
+            int index1 = index0 + stepLength;
+            consumer.accept(index0, index1);
+        }
+        return true;
+    }
 }

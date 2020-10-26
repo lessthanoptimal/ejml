@@ -25,5 +25,5 @@ package pabeles.concurrency;
  */
 @FunctionalInterface
 public interface IntRangeObjectConsumer<T> {
-	void accept(T workspace, int minInclusive, int maxExclusive);
+    void accept( T workspace, int minInclusive, int maxExclusive );
 }

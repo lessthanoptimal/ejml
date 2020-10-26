@@ -25,5 +25,5 @@ package pabeles.concurrency;
  */
 @FunctionalInterface
 public interface IntProducerNumber {
-	Number accept(int value );
+    Number accept( int value );
 }
