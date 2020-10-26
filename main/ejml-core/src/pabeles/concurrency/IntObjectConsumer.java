@@ -25,5 +25,5 @@ package pabeles.concurrency;
  */
 @FunctionalInterface
 public interface IntObjectConsumer<T> {
-	void accept(T workspace, int value);
+    void accept( T workspace, int value );
 }

@@ -35,10 +35,10 @@ public class GrowArray<D> {
     int size;
 
     public GrowArray( ConcurrencyOps.NewInstance<D> factory ) {
-        this(factory,(o)->{});
+        this(factory, ( o ) -> {});
     }
 
-    public GrowArray( ConcurrencyOps.NewInstance<D> factory , ConcurrencyOps.Reset<D> reset ) {
+    public GrowArray( ConcurrencyOps.NewInstance<D> factory, ConcurrencyOps.Reset<D> reset ) {
         this.factory = factory;
         this.reset = reset;
 
@@ -47,8 +47,8 @@ public class GrowArray<D> {
     }
 
     @NotNull
-    private D[] createArray(int length) {
-        return (D[]) Array.newInstance(factory.newInstance().getClass(), length);
+    private D[] createArray( int length ) {
+        return (D[])Array.newInstance(factory.newInstance().getClass(), length);
     }
 
     public void reset() {
@@ -60,9 +60,9 @@ public class GrowArray<D> {
      * is bigger than the old size then reset is called on the new elements
      */
     public void resize( int length ) {
-        if( length >= array.length) {
+        if (length >= array.length) {
             D[] tmp = createArray(length);
-            System.arraycopy(array,0,tmp,0,array.length);
+            System.arraycopy(array, 0, tmp, 0, array.length);
             for (int i = array.length; i < tmp.length; i++) {
                 tmp[i] = factory.newInstance();
             }
@@ -78,10 +78,10 @@ public class GrowArray<D> {
      * Add a new element to the array. Reset is called on it and it's then returned.
      */
     public D grow() {
-        if( size == array.length ) {
-            int length = Math.max(10,size<1000?size*2:size*5/3);
+        if (size == array.length) {
+            int length = Math.max(10, size < 1000 ? size*2 : size*5/3);
             D[] tmp = createArray(length);
-            System.arraycopy(array,0,tmp,0,array.length);
+            System.arraycopy(array, 0, tmp, 0, array.length);
             for (int i = array.length; i < tmp.length; i++) {
                 tmp[i] = factory.newInstance();
             }
@@ -99,5 +99,4 @@ public class GrowArray<D> {
     public int size() {
         return size;
     }
-
 }
