@@ -20,6 +20,7 @@ package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
@@ -125,4 +126,41 @@ public class ImplSparseSparseMult_MT_DSCC {
         UtilEjml.assertEq(out.numCols, numCols);
         UtilEjml.assertEq(out.col_idx[numCols], out.nz_length);
     }
+
+    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(k,j)
+        EjmlConcurrency.loopFor(0,B.numCols,j->{
+            for (int i = 0; i < A.numCols; i++) {
+                int idx0 = A.col_idx[i];
+                int idx1 = A.col_idx[i + 1];
+
+                double sum = 0;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int rowK = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*B.data[rowK*B.numCols + j];
+                }
+
+                C.data[i*C.numCols + j] = sum;
+            }
+        });
+    }
+
+    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(k,j)
+        EjmlConcurrency.loopFor(0,B.numCols,j->{
+            for (int i = 0; i < A.numCols; i++) {
+                int idx0 = A.col_idx[i];
+                int idx1 = A.col_idx[i + 1];
+
+                double sum = 0;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int rowK = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*B.data[rowK*B.numCols + j];
+                }
+
+                C.data[i*C.numCols + j] += sum;
+            }
+        });
+    }
+
 }

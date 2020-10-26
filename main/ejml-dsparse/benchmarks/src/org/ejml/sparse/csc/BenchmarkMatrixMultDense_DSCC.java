@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,7 +44,7 @@ public class BenchmarkMatrixMultDense_DSCC {
     @Param({"3000"})
     private int dimension;
 
-    @Param({"10000"})
+    @Param({"100000"})
     private int elementCount;
 
     DMatrixSparseCSC A;
@@ -59,14 +59,14 @@ public class BenchmarkMatrixMultDense_DSCC {
         C = B.create(dimension, dimension);
     }
 
-    @Benchmark public void mult() { CommonOps_DSCC.multAdd(A, B, C); }
+    @Benchmark public void mult() { CommonOps_DSCC.mult(A, B, C); }
     @Benchmark public void multAdd() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multTransA() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multAddTransA() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multTransB() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multAddTransB() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multTransAB() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multAddTransAB() { CommonOps_DSCC.multAdd(A, B, C); }
+    @Benchmark public void multTransA() { CommonOps_DSCC.multTransA(A, B, C); }
+    @Benchmark public void multAddTransA() { CommonOps_DSCC.multAddTransA(A, B, C); }
+    @Benchmark public void multTransB() { CommonOps_DSCC.multTransB(A, B, C); }
+    @Benchmark public void multAddTransB() { CommonOps_DSCC.multAddTransB(A, B, C); }
+    @Benchmark public void multTransAB() { CommonOps_DSCC.multTransAB(A, B, C); }
+    @Benchmark public void multAddTransAB() { CommonOps_DSCC.multAddTransAB(A, B, C); }
     @Benchmark public void invert() { CommonOps_DSCC.invert(A, C); }
 
     public static void main( String[] args ) throws RunnerException {

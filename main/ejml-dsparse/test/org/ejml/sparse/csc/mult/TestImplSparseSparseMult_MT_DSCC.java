@@ -19,7 +19,10 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -60,5 +63,49 @@ class TestImplSparseSparseMult_MT_DSCC {
         assertTrue(CommonOps_DSCC.checkStructure(found));
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(expected, found, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void multTransA_s_d() {
+        multTransA_s_d(5, 5, 5);
+        multTransA_s_d(10, 5, 5);
+        multTransA_s_d(5, 10, 5);
+        multTransA_s_d(5, 5, 10);
+    }
+
+    private void multTransA_s_d( int rowsA, int colsA, int colsB ) {
+        int nz_a = RandomMatrices_DSCC.nonzero(rowsA, colsA, 0.05, 0.7, rand);
+
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(colsA, rowsA, nz_a, -1, 1, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(colsA, colsB, -1, 1, rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowsA, colsB, -1, 1, rand);
+        DMatrixRMaj found = expected.copy();
+
+        ImplSparseSparseMult_DSCC.multTransA(a, b, expected);
+        ImplSparseSparseMult_MT_DSCC.multTransA(a, b, found);
+
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
+    }
+
+    @Test
+    public void multAddTransA_s_d() {
+        multAddTransA_s_d(5, 5, 5);
+        multAddTransA_s_d(10, 5, 5);
+        multAddTransA_s_d(5, 10, 5);
+        multAddTransA_s_d(5, 5, 10);
+    }
+
+    private void multAddTransA_s_d( int rowsA, int colsA, int colsB ) {
+        int nz_a = RandomMatrices_DSCC.nonzero(rowsA, colsA, 0.05, 0.7, rand);
+
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(colsA, rowsA, nz_a, -1, 1, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(colsA, colsB, -1, 1, rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowsA, colsB, -1, 1, rand);
+        DMatrixRMaj found = expected.copy();
+
+        ImplSparseSparseMult_DSCC.multAddTransA(a, b, expected);
+        ImplSparseSparseMult_MT_DSCC.multAddTransA(a, b, found);
+
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
 }

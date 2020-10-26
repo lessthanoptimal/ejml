@@ -18,14 +18,14 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -39,32 +39,39 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 2)
-public class BenchmarkMatrixMult_MT_DSCC {
+public class BenchmarkMatrixMultDense_MT_DSCC {
 
-    @Param({"100000"})
+    @Param({"3000"})
     private int dimension;
 
-    @Param({"4000000"})
+    @Param({"100000"})
     private int elementCount;
 
-    GrowArray<Workspace_MT_DSCC> listWork = new GrowArray<>(Workspace_MT_DSCC::new);
-
     DMatrixSparseCSC A;
-    DMatrixSparseCSC B;
-    DMatrixSparseCSC C;
+    DMatrixRMaj B = new DMatrixRMaj(1, 1);
+    DMatrixRMaj C = new DMatrixRMaj(1, 1);
 
     @Setup
     public void setup() {
-        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
-        B = CommonOps_DSCC.transpose(A, null, null);
-        C = new DMatrixSparseCSC(1, 1);
+        Random rand = new Random(2345);
+        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+        B = RandomMatrices_DDRM.rectangle(dimension, dimension, -1, 1, rand);
+        C = B.create(dimension, dimension);
     }
 
-    @Benchmark public void mult() {CommonOps_MT_DSCC.mult(A, B, C, listWork); }
+//    @Benchmark public void mult() { CommonOps_MT_DSCC.mult(A, B, C); }
+//    @Benchmark public void multAdd() { CommonOps_MT_DSCC.multAdd(A, B, C); }
+    @Benchmark public void multTransA() { CommonOps_MT_DSCC.multTransA(A, B, C); }
+    @Benchmark public void multAddTransA() { CommonOps_MT_DSCC.multAddTransA(A, B, C); }
+//    @Benchmark public void multTransB() { CommonOps_MT_DSCC.multTransB(A, B, C); }
+//    @Benchmark public void multAddTransB() { CommonOps_MT_DSCC.multAddTransB(A, B, C); }
+//    @Benchmark public void multTransAB() { CommonOps_MT_DSCC.multTransAB(A, B, C); }
+//    @Benchmark public void multAddTransAB() { CommonOps_MT_DSCC.multAddTransAB(A, B, C); }
+//    @Benchmark public void invert() { CommonOps_MT_DSCC.invert(A, C); }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkMatrixMult_MT_DSCC.class.getSimpleName())
+                .include(BenchmarkMatrixMultDense_MT_DSCC.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();
