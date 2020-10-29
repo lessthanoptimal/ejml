@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -45,8 +45,8 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
-        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         a.sortIndices(null); b.sortIndices(null);
         assertTrue(MatrixFeatures_DSCC.isEquals(a,b));
@@ -73,13 +73,13 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,2,1.5);
         orig.addItem(2,4,2.7);
-        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         // these require sorting and this will fail if not
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b, UtilEjml.TEST_F64));
@@ -92,13 +92,13 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         orig = new DMatrixSparseTriplet(4,5,3);
         orig.addItem(3,1,2.5);
         orig.addItem(2,2,1.5);
         orig.addItem(2,4,2.7);
-        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         // these require sorting and this will fail if not
         assertTrue(MatrixFeatures_DSCC.isIdenticalSort(a,b, UtilEjml.TEST_F64));
@@ -121,8 +121,8 @@ public class TestMatrixFeatures_DSCC {
         orig.addItem(2,4,2.7);
         orig.addItem(2,2,1.5);
 
-        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
-        DMatrixSparseCSC b = ConvertDMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
+        DMatrixSparseCSC b = DConvertMatrixStruct.convert(orig,(DMatrixSparseCSC)null);
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,b,UtilEjml.TEST_F64));
 
@@ -199,7 +199,7 @@ public class TestMatrixFeatures_DSCC {
         // normal triangular matrix
         DMatrixRMaj D = new DMatrixRMaj(4,4,true,
                 1,0,0,0, 1,1,0,0, 0,0,1,0 , 1,0,1,1 );
-        DMatrixSparseCSC L = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        DMatrixSparseCSC L = DConvertMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -209,7 +209,7 @@ public class TestMatrixFeatures_DSCC {
         // Hessenberg matrix of degree 1
         D = new DMatrixRMaj(4,4,true,
                 1,1,0,0, 1,1,1,0, 0,0,0,1 , 1,0,1,1 );
-        L = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        L = DConvertMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -220,7 +220,7 @@ public class TestMatrixFeatures_DSCC {
         // testing a case which failed.  first column was all zeros for hessenberg of 1
         D = new DMatrixRMaj(4,4,true,
                 0,1,0,0, 0,0,1,0, 0,0,0,1 , 0,0,0,1 );
-        L = ConvertDMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        L = DConvertMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,0, UtilEjml.TEST_F64));
         assertTrue(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
@@ -240,8 +240,8 @@ public class TestMatrixFeatures_DSCC {
         CommonOps_DDRM.transpose(Ad,Ad_tran);
 
         // convert to sparse
-        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(Ad,(DMatrixSparseCSC)null, UtilEjml.EPS);
-        DMatrixSparseCSC At = ConvertDMatrixStruct.convert(Ad_tran,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        DMatrixSparseCSC A = DConvertMatrixStruct.convert(Ad,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        DMatrixSparseCSC At = DConvertMatrixStruct.convert(Ad_tran,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
         A.sortIndices(null);
         assertTrue(MatrixFeatures_DSCC.isTranspose(A,At, UtilEjml.TEST_F64));

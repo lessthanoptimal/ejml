@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,12 +50,8 @@ public class GenerateJavaCode32 extends GenerateCode32 {
 
         prefix64.add("DGrow");
         prefix32.add("FGrow");
-        prefix64.add("DUnary");
-        prefix32.add("FUnary");
-        prefix64.add("DBinary");
-        prefix32.add("FBinary");
-        prefix64.add("IDBinary");
-        prefix32.add("IFBinary");
+        prefix64.add("DOperator");
+        prefix32.add("FOperator");
         prefix64.add("DMonoid");
         prefix32.add("FMonoid");
         prefix64.add("DSemiRing");
@@ -74,8 +70,8 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         prefix32.add("FEigen");
         prefix64.add("DSubmatrix");
         prefix32.add("FSubmatrix");
-        prefix64.add("ConvertD");
-        prefix32.add("ConvertF");
+        prefix64.add("DConvert");
+        prefix32.add("FConvert");
         prefix64.add("GenericTestsDMatrix");
         prefix32.add("GenericTestsFMatrix");
 
@@ -101,12 +97,10 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         }
 
         converter.replacePattern("DScalar", "FScalar");
-        converter.replacePattern("DUnary", "FUnary");
-        converter.replacePattern("DBinary", "FBinary");
-        converter.replacePattern("IDBinary", "IFBinary");
+        converter.replacePattern("DOperator", "FOperator");
         converter.replacePattern("DMonoid", "FMonoid");
         converter.replacePattern("DSemiRing", "FSemiRing");
-        converter.replacePattern("ConvertD", "ConvertF");
+        converter.replacePattern("DConvert", "FConvert");
         converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
         converter.replacePattern("DSubmatrix", "FSubmatrix");

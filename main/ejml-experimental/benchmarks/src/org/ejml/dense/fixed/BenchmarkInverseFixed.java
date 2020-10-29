@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix4x4;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 
 import java.util.Random;
 
@@ -92,11 +92,11 @@ public class BenchmarkInverseFixed {
         RandomMatrices_DDRM.fillUniform(dm4x4_a,rand);
         RandomMatrices_DDRM.fillUniform(dm4x4_b,rand);
 
-        ConvertDMatrixStruct.convert(dm3x3_a,fixed3x3_a);
-        ConvertDMatrixStruct.convert(dm3x3_b,fixed3x3_b);
+        DConvertMatrixStruct.convert(dm3x3_a,fixed3x3_a);
+        DConvertMatrixStruct.convert(dm3x3_b,fixed3x3_b);
 
-        ConvertDMatrixStruct.convert(dm4x4_a,fixed4x4_a);
-        ConvertDMatrixStruct.convert(dm4x4_b,fixed4x4_b);
+        DConvertMatrixStruct.convert(dm4x4_a,fixed4x4_a);
+        DConvertMatrixStruct.convert(dm4x4_b,fixed4x4_b);
 
         int numTrials = 100000000;
 

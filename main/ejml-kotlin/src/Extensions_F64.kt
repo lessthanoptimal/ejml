@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixSparseCSC
 import org.ejml.dense.row.CommonOps_DDRM
 import org.ejml.dense.row.NormOps_DDRM
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM
-import org.ejml.ops.ConvertDMatrixStruct
+import org.ejml.ops.DConvertMatrixStruct
 import org.ejml.ops.MatrixIO
 import org.ejml.sparse.csc.CommonOps_DSCC
 import org.ejml.sparse.csc.NormOps_DSCC
@@ -122,7 +122,7 @@ fun String.toDDRM() : DMatrixRMaj = MatrixIO.matlabToDDRM(this)
 
 fun DMatrixRMaj.toDSCC() : DMatrixSparseCSC {
     val output = DMatrixSparseCSC(this.numRows,this.numCols)
-    ConvertDMatrixStruct.convert(this,output)
+    DConvertMatrixStruct.convert(this,output)
     return output
 }
 
@@ -182,7 +182,7 @@ fun DMatrixSparseCSC.normF() : Double {return NormOps_DSCC.normF(this)}
 
 fun DMatrixSparseCSC.toFDRM() : DMatrixRMaj {
     val output = DMatrixRMaj(this.numRows,this.numCols)
-    ConvertDMatrixStruct.convert(this,output)
+    DConvertMatrixStruct.convert(this,output)
     return output
 }
 

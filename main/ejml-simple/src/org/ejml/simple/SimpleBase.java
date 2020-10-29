@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,8 +23,8 @@ import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.equation.Equation;
-import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.ops.ConvertFMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
+import org.ejml.ops.FConvertMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ops.*;
 import org.jetbrains.annotations.Nullable;
@@ -1464,13 +1464,13 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         switch (mat.getType()) {
             case DDRM: {
                 DMatrixSparseCSC m = new DMatrixSparseCSC(mat.getNumRows(), mat.getNumCols());
-                ConvertDMatrixStruct.convert((DMatrixRMaj)mat, m, 0);
+                DConvertMatrixStruct.convert((DMatrixRMaj)mat, m, 0);
                 setMatrix(m);
             }
             break;
             case FDRM: {
                 FMatrixSparseCSC m = new FMatrixSparseCSC(mat.getNumRows(), mat.getNumCols());
-                ConvertFMatrixStruct.convert((FMatrixRMaj)mat, m, 0);
+                FConvertMatrixStruct.convert((FMatrixRMaj)mat, m, 0);
                 setMatrix(m);
             }
             break;
@@ -1490,13 +1490,13 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         switch (mat.getType()) {
             case DSCC: {
                 DMatrix m = new DMatrixRMaj(mat.getNumRows(), mat.getNumCols());
-                ConvertDMatrixStruct.convert((DMatrix)mat, m);
+                DConvertMatrixStruct.convert((DMatrix)mat, m);
                 setMatrix(m);
             }
             break;
             case FSCC: {
                 FMatrix m = new FMatrixRMaj(mat.getNumRows(), mat.getNumCols());
-                ConvertFMatrixStruct.convert((FMatrix)mat, m);
+                FConvertMatrixStruct.convert((FMatrix)mat, m);
                 setMatrix(m);
             }
             break;

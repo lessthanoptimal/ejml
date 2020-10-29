@@ -26,8 +26,8 @@ import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.ops.IDBinaryOperator;
+import org.ejml.ops.DConvertMatrixStruct;
+import org.ejml.ops.DOperatorBinaryIdx;
 import org.ejml.sparse.csc.mult.CheckMatrixMultShape_DSCC;
 import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
@@ -61,7 +61,7 @@ public class TestCommonOps_DSCC {
 
         orig.addItem(1, 2, 5);
 
-        DMatrixSparseCSC a = ConvertDMatrixStruct.convert(orig, (DMatrixSparseCSC)null);
+        DMatrixSparseCSC a = DConvertMatrixStruct.convert(orig, (DMatrixSparseCSC)null);
 
         // test positive case first
         assertTrue(CommonOps_DSCC.checkIndicesSorted(a));
@@ -151,11 +151,11 @@ public class TestCommonOps_DSCC {
             if (exception)
                 fail("exception expected");
 
-            DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
-            DMatrixRMaj denseB = ConvertDMatrixStruct.convert(B, (DMatrixRMaj)null);
+            DMatrixRMaj denseA = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
+            DMatrixRMaj denseB = DConvertMatrixStruct.convert(B, (DMatrixRMaj)null);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows, B.numCols);
             CommonOps_DDRM.mult(denseA, denseB, expected);
-            DMatrixRMaj found = ConvertDMatrixStruct.convert(C, (DMatrixRMaj)null);
+            DMatrixRMaj found = DConvertMatrixStruct.convert(C, (DMatrixRMaj)null);
             assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
         } catch (RuntimeException ignore) {
             if (!exception)
@@ -191,7 +191,7 @@ public class TestCommonOps_DSCC {
     }
 
     private void check_s_d_mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean exception ) {
-        DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
+        DMatrixRMaj denseA = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
         DMatrixRMaj expected = C.copy();
 
         DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A, null, null);
@@ -263,8 +263,8 @@ public class TestCommonOps_DSCC {
             trip_A.set(i, i, 1.0);
             trip_B.set(Math.min(4, i + 1), i, 1.0);
         }
-        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(trip_A, (DMatrixSparseCSC)null);
-        DMatrixSparseCSC B = ConvertDMatrixStruct.convert(trip_B, (DMatrixSparseCSC)null);
+        DMatrixSparseCSC A = DConvertMatrixStruct.convert(trip_A, (DMatrixSparseCSC)null);
+        DMatrixSparseCSC B = DConvertMatrixStruct.convert(trip_B, (DMatrixSparseCSC)null);
         DMatrixSparseCSC C = new DMatrixSparseCSC(1, 1);
         check_add(A, B, C, false);
     }
@@ -314,13 +314,13 @@ public class TestCommonOps_DSCC {
 
             if (exception)
                 fail("exception expected");
-            DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
-            DMatrixRMaj denseB = ConvertDMatrixStruct.convert(B, (DMatrixRMaj)null);
+            DMatrixRMaj denseA = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
+            DMatrixRMaj denseB = DConvertMatrixStruct.convert(B, (DMatrixRMaj)null);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows, B.numCols);
 
             CommonOps_DDRM.add(alpha, denseA, beta, denseB, expected);
 
-            DMatrixRMaj found = ConvertDMatrixStruct.convert(C, (DMatrixRMaj)null);
+            DMatrixRMaj found = DConvertMatrixStruct.convert(C, (DMatrixRMaj)null);
             assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
         } catch (RuntimeException ignore) {
             if (!exception)
@@ -354,7 +354,7 @@ public class TestCommonOps_DSCC {
 
         for (int length : new int[]{0, 2, 6, 15, 30}) {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6, 5, length, rand);
-            DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
+            DMatrixRMaj Ad = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
 
             DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows, A.numCols, 0);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows, A.numCols);
@@ -363,7 +363,7 @@ public class TestCommonOps_DSCC {
             CommonOps_DDRM.scale(scale, Ad, expected);
 
             assertTrue(CommonOps_DSCC.checkStructure(B));
-            DMatrixRMaj found = ConvertDMatrixStruct.convert(B, (DMatrixRMaj)null);
+            DMatrixRMaj found = DConvertMatrixStruct.convert(B, (DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
         }
@@ -392,7 +392,7 @@ public class TestCommonOps_DSCC {
 
         for (int length : new int[]{0, 2, 6, 15, 30}) {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6, 5, length, rand);
-            DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
+            DMatrixRMaj Ad = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
 
             DMatrixSparseCSC B = new DMatrixSparseCSC(A.numRows, A.numCols, 0);
             DMatrixRMaj expected = new DMatrixRMaj(A.numRows, A.numCols);
@@ -401,7 +401,7 @@ public class TestCommonOps_DSCC {
             CommonOps_DDRM.divide(Ad, denominator, expected);
 
             assertTrue(CommonOps_DSCC.checkStructure(B));
-            DMatrixRMaj found = ConvertDMatrixStruct.convert(B, (DMatrixRMaj)null);
+            DMatrixRMaj found = DConvertMatrixStruct.convert(B, (DMatrixRMaj)null);
 
             assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
         }
@@ -439,7 +439,7 @@ public class TestCommonOps_DSCC {
     public void elementMinAbs() {
         for (int length : new int[]{0, 2, 6, 15, 30}) {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6, 5, length, rand);
-            DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
+            DMatrixRMaj Ad = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
 
             double found = CommonOps_DSCC.elementMinAbs(A);
             double expected = CommonOps_DDRM.elementMinAbs(Ad);
@@ -454,7 +454,7 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6, 5, length, rand);
 
             double found = CommonOps_DSCC.elementMaxAbs(A);
-            double expected = CommonOps_DDRM.elementMaxAbs(ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null));
+            double expected = CommonOps_DDRM.elementMaxAbs(DConvertMatrixStruct.convert(A, (DMatrixRMaj)null));
 
             assertEquals(expected, found, UtilEjml.TEST_F64);
         }
@@ -466,7 +466,7 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6, 5, length, 1, 3, rand);
 
             double found = CommonOps_DSCC.elementMin(A);
-            double expected = CommonOps_DDRM.elementMin(ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null));
+            double expected = CommonOps_DDRM.elementMin(DConvertMatrixStruct.convert(A, (DMatrixRMaj)null));
 
             assertEquals(expected, found, UtilEjml.TEST_F64);
         }
@@ -478,7 +478,7 @@ public class TestCommonOps_DSCC {
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6, 5, length, -2, -1, rand);
 
             double found = CommonOps_DSCC.elementMax(A);
-            double expected = CommonOps_DDRM.elementMax(ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null));
+            double expected = CommonOps_DDRM.elementMax(DConvertMatrixStruct.convert(A, (DMatrixRMaj)null));
 
             assertEquals(expected, found, UtilEjml.TEST_F64);
         }
@@ -773,7 +773,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC P = new DMatrixSparseCSC(3, 3, 3);
         CommonOps_DSCC.permutationMatrix(p, false, 3, P);
 
-        DMatrixRMaj found = ConvertDMatrixStruct.convert(P, (DMatrixRMaj)null);
+        DMatrixRMaj found = DConvertMatrixStruct.convert(P, (DMatrixRMaj)null);
         DMatrixRMaj expected = UtilEjml.parse_DDRM(
                 "0 0 1 " +
                         "1 0 0 " +
@@ -784,7 +784,7 @@ public class TestCommonOps_DSCC {
 
         CommonOps_DSCC.permutationMatrix(p, true, 3, P);
 
-        found = ConvertDMatrixStruct.convert(P, (DMatrixRMaj)null);
+        found = DConvertMatrixStruct.convert(P, (DMatrixRMaj)null);
         expected = UtilEjml.parse_DDRM(
                 "0 1 0 " +
                         "0 0 1 " +
@@ -1312,7 +1312,7 @@ public class TestCommonOps_DSCC {
             RandomMatrices_DSCC.ensureNotSingular(A, rand);
 
             DMatrixRMaj Ad = new DMatrixRMaj(m, m);
-            ConvertDMatrixStruct.convert(A, Ad);
+            DConvertMatrixStruct.convert(A, Ad);
 
             DMatrixRMaj Ainv = new DMatrixRMaj(m, m);
 
@@ -1356,7 +1356,7 @@ public class TestCommonOps_DSCC {
     public void duplicatesAdd() {
         int N = 10;
         DMatrixSparseTriplet triplet = RandomMatrices_DSTL.uniform(N, N, (N*N)/2, -1, 1, rand);
-        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(triplet, (DMatrixSparseCSC)null);
+        DMatrixSparseCSC A = DConvertMatrixStruct.convert(triplet, (DMatrixSparseCSC)null);
         DMatrixSparseCSC B = A.copy();
 
         // first pass there should be no change
@@ -1374,7 +1374,7 @@ public class TestCommonOps_DSCC {
             double value = triplet.nz_value.data[j];
             triplet.addItem(row, col, value);
         }
-        ConvertDMatrixStruct.convert(triplet, B);
+        DConvertMatrixStruct.convert(triplet, B);
         // Remove duplicates and see if B has elements that are twice the size of elements in A
         CommonOps_DSCC.duplicatesAdd(B, null);
         assertTrue(CommonOps_DSCC.checkStructure(B));
@@ -1493,7 +1493,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
         double[] v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-        IDBinaryOperator applyFunc = ( row, val ) -> val/v[row];
+        DOperatorBinaryIdx applyFunc = ( row, val ) -> val/v[row];
         DMatrixSparseCSC B = CommonOps_DSCC.applyRowIdx(A, applyFunc, null);
 
         A.createCoordinateIterator()
@@ -1505,7 +1505,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
         double[] v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-        IDBinaryOperator applyFunc = ( row, val ) -> val/v[row];
+        DOperatorBinaryIdx applyFunc = ( row, val ) -> val/v[row];
         DMatrixSparseCSC B = CommonOps_DSCC.applyColumnIdx(A, applyFunc, null);
 
         A.createCoordinateIterator()

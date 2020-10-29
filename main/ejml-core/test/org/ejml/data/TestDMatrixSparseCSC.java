@@ -18,7 +18,7 @@
 
 package org.ejml.data;
 
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
 
     @Override
     public DMatrixSparse createSparse( DMatrixSparseTriplet orig ) {
-        return ConvertDMatrixStruct.convert(orig, (DMatrixSparseCSC)null);
+        return DConvertMatrixStruct.convert(orig, (DMatrixSparseCSC)null);
     }
 
     @Override

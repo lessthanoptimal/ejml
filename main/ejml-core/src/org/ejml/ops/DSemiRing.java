@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ public class DSemiRing {
     public final DMonoid add;
     public final DMonoid mult;
 
-    public DSemiRing(DMonoid add, DMonoid mult) {
+    public DSemiRing( DMonoid add, DMonoid mult ) {
         this.add = add;
         this.mult = mult;
     }

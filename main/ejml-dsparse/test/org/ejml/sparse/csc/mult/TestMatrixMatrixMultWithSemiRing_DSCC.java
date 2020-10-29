@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -60,7 +60,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseVectorMatrixMultSources")
-    void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
+    void mult_v_A( String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following outgoing edges of source nodes
         DMatrixSparseCSC vector = new DMatrixSparseCSC(1, 7);
         vector.set(0, 3, 0.5);

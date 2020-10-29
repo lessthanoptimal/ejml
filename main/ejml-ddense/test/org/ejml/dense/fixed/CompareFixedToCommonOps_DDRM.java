@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.MatrixFeatures_D;
 import org.junit.jupiter.api.Test;
 
@@ -74,12 +74,12 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
             Class<?>[] parameters = methods[i].getParameterTypes();
             DMatrixFixed _A = (DMatrixFixed)parameters[0].newInstance();
 
-            ConvertDMatrixStruct.convert(A,_A);
+            DConvertMatrixStruct.convert(A,_A);
             Object[] inputsFixed = new Object[1];
             inputsFixed[0] = _A;
 
             methods[i].invoke(null,inputsFixed);
-            ConvertDMatrixStruct.convert(_A,A);
+            DConvertMatrixStruct.convert(_A,A);
             assertTrue(MatrixFeatures_DDRM.isIdentical(expected,A, UtilEjml.TEST_F64 ));
             return;
         }
@@ -101,12 +101,12 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
             Class<?>[] parameters = methods[i].getParameterTypes();
             DMatrixFixed _A = (DMatrixFixed)parameters[0].newInstance();
 
-            ConvertDMatrixStruct.convert(A,_A);
+            DConvertMatrixStruct.convert(A,_A);
             Object[] inputsFixed = new Object[1];
             inputsFixed[0] = _A;
 
             methods[i].invoke(null,inputsFixed);
-            ConvertDMatrixStruct.convert(_A,A);
+            DConvertMatrixStruct.convert(_A,A);
             assertTrue(MatrixFeatures_DDRM.isIdentical(expected,A, UtilEjml.TEST_F64 ));
             return;
         }
@@ -143,10 +143,10 @@ public abstract class CompareFixedToCommonOps_DDRM extends CompareFixed_DDRM {
             DMatrixFixed _v = (DMatrixFixed)parameters[4].newInstance();
             _C = (DMatrixFixed)parameters[5].newInstance();
 
-            ConvertDMatrixStruct.convert(A,_A);
-            ConvertDMatrixStruct.convert(u,_u);
-            ConvertDMatrixStruct.convert(v,_v);
-            ConvertDMatrixStruct.convert(C,_C);
+            DConvertMatrixStruct.convert(A,_A);
+            DConvertMatrixStruct.convert(u,_u);
+            DConvertMatrixStruct.convert(v,_v);
+            DConvertMatrixStruct.convert(C,_C);
 
             Object[] inputsFixed = new Object[6];
             inputsFixed[0] = alpha;

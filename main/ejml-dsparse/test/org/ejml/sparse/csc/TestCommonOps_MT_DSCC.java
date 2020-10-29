@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -171,7 +171,7 @@ class TestCommonOps_MT_DSCC {
     }
 
     private void check_s_d_mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean exception ) {
-        DMatrixRMaj denseA = ConvertDMatrixStruct.convert(A, (DMatrixRMaj)null);
+        DMatrixRMaj denseA = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
         DMatrixRMaj expected = C.copy();
 
         DMatrixSparseCSC A_t = CommonOps_DSCC.transpose(A, null, null);

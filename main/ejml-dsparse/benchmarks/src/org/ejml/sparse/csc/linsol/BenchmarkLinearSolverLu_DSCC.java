@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,7 +20,7 @@ package org.ejml.sparse.csc.linsol;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.ejml.sparse.csc.decomposition.lu.LuUpLooking_DSCC;
 import org.ejml.sparse.csc.linsol.lu.LinearSolverLu_DSCC;
@@ -63,7 +63,7 @@ public class BenchmarkLinearSolverLu_DSCC {
         Random rand = new Random(345);
         A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
         B = RandomMatrices_DSCC.rectangle(dimension, 4, dimension*2, rand);
-        B_ddrm = ConvertDMatrixStruct.convert(B, (DMatrixRMaj)null);
+        B_ddrm = DConvertMatrixStruct.convert(B, (DMatrixRMaj)null);
         X = new DMatrixSparseCSC(1, 1);
         X_ddrm = new DMatrixRMaj(1, 1);
     }

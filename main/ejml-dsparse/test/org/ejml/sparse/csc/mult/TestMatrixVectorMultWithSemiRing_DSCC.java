@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -56,7 +56,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("vectorMatrixMultSources")
-    void mult_v_A(String desc, DSemiRing semiRing, double[] expected) {
+    void mult_v_A( String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following outgoing edges of source nodes
         double[] v = new double[7];
         Arrays.fill(v, semiRing.add.id);
@@ -72,7 +72,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("matrixVectorMultSources")
-    void mult_A_v(String desc, DSemiRing semiRing, double[] expected) {
+    void mult_A_v( String desc, DSemiRing semiRing, double[] expected) {
         // graphblas == following incoming edges of source nodes
         double[] v = new double[7];
         Arrays.fill(v, semiRing.add.id);

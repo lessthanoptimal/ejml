@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,14 +26,14 @@ public class DMonoid {
      * neutral-element/identity for `func`
      */
     public final double id;
-    public final DBinaryOperator func;
+    public final DOperatorBinary func;
 
-    public DMonoid(double id, DBinaryOperator func) {
+    public DMonoid( double id, DOperatorBinary func ) {
         this.id = id;
         this.func = func;
     }
 
-    DMonoid(DBinaryOperator func) {
+    DMonoid( DOperatorBinary func ) {
         this(0, func);
     }
 }

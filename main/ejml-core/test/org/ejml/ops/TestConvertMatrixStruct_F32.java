@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,14 +48,14 @@ public class TestConvertMatrixStruct_F32 {
         FMatrixRMaj a = new FMatrixRMaj(2,3,true,1,2,3,4,5,6);
         FMatrixRMaj b = new FMatrixRMaj(2,3);
 
-        ConvertFMatrixStruct.convert((FMatrix)a,(FMatrix)b);
+        FConvertMatrixStruct.convert((FMatrix)a,(FMatrix)b);
 
         assertTrue(MatrixFeatures_FDRM.isIdentical(a,b,UtilEjml.TEST_F32));
     }
 
     @Test
     public void checkAll_Fixed_to_DM() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertFMatrixStruct.class.getMethods();
+        Method[] methods = FConvertMatrixStruct.class.getMethods();
 
         int numFound = 0;
 
@@ -93,7 +93,7 @@ public class TestConvertMatrixStruct_F32 {
 
     @Test
     public void checkAll_DM_to_Fixed() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertFMatrixStruct.class.getMethods();
+        Method[] methods = FConvertMatrixStruct.class.getMethods();
 
         int numFound = 0;
 
@@ -136,7 +136,7 @@ public class TestConvertMatrixStruct_F32 {
                 FMatrixRBlock a = MatrixOps_FDRB.createRandom(rows,cols,-1,2,rand);
                 FMatrixRMaj b = new FMatrixRMaj(rows,cols);
 
-                ConvertFMatrixStruct.convert(a,b);
+                FConvertMatrixStruct.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -150,7 +150,7 @@ public class TestConvertMatrixStruct_F32 {
                 FMatrixRMaj a = RandomMatrices_FDRM.rectangle(rows,cols,rand);
                 FMatrixRBlock b = new FMatrixRBlock(rows,cols,3);
 
-                ConvertFMatrixStruct.convert(a,b);
+                FConvertMatrixStruct.convert(a,b);
 
                 checkIdentical(a,b);
             }

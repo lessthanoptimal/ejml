@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,6 +22,6 @@ package org.ejml.ops;
  * Functional Interface used in apply method to specify arbitrary unary functions accepting a double
  */
 @FunctionalInterface
-public interface DUnaryOperator {
-    double apply(double d);
+public interface DOperatorUnary {
+    double apply( double d );
 }

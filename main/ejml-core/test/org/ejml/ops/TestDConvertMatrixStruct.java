@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 @SuppressWarnings({"ClassNewInstance", "rawtypes"})
-public class TestConvertDMatrixStruct {
+public class TestDConvertMatrixStruct {
 
     Random rand = new Random(234);
 
@@ -52,14 +52,14 @@ public class TestConvertDMatrixStruct {
         DMatrixRMaj a = new DMatrixRMaj(2,3,true,1,2,3,4,5,6);
         DMatrixRMaj b = new DMatrixRMaj(2,3);
 
-        ConvertDMatrixStruct.convert((DMatrix)a,(DMatrix)b);
+        DConvertMatrixStruct.convert((DMatrix)a,(DMatrix)b);
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(a,b,UtilEjml.TEST_F64));
     }
 
     @Test
     public void checkAll_Fixed_to_DM() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertDMatrixStruct.class.getMethods();
+        Method[] methods = DConvertMatrixStruct.class.getMethods();
 
         int numFound = 0;
 
@@ -97,7 +97,7 @@ public class TestConvertDMatrixStruct {
 
     @Test
     public void checkAll_DM_to_Fixed() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Method[] methods = ConvertDMatrixStruct.class.getMethods();
+        Method[] methods = DConvertMatrixStruct.class.getMethods();
 
         int numFound = 0;
 
@@ -140,7 +140,7 @@ public class TestConvertDMatrixStruct {
                 DMatrixRBlock a = MatrixOps_DDRB.createRandom(rows,cols,-1,2,rand);
                 DMatrixRMaj b = new DMatrixRMaj(rows,cols);
 
-                ConvertDMatrixStruct.convert(a,b);
+                DConvertMatrixStruct.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -154,7 +154,7 @@ public class TestConvertDMatrixStruct {
                 DMatrixRMaj a = RandomMatrices_DDRM.rectangle(rows,cols,rand);
                 DMatrixRBlock b = new DMatrixRBlock(rows,cols,3);
 
-                ConvertDMatrixStruct.convert(a,b);
+                DConvertMatrixStruct.convert(a,b);
 
                 checkIdentical(a,b);
             }
@@ -184,7 +184,7 @@ public class TestConvertDMatrixStruct {
     }
 
     public void DMatrixRow_SMatrixTriplet(DMatrixRMaj a , @Nullable DMatrixSparseTriplet b ) {
-        b = ConvertDMatrixStruct.convert(a,b, UtilEjml.EPS);
+        b = DConvertMatrixStruct.convert(a,b, UtilEjml.EPS);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
@@ -202,10 +202,10 @@ public class TestConvertDMatrixStruct {
         }
 
         // now try it the other direction
-        DMatrixRMaj c = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj c = DConvertMatrixStruct.convert(b,(DMatrixRMaj)null);
         assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
 
-        c = ConvertDMatrixStruct.convert(b,new DMatrixRMaj(1,1));
+        c = DConvertMatrixStruct.convert(b,new DMatrixRMaj(1,1));
         assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
     }
 
@@ -223,7 +223,7 @@ public class TestConvertDMatrixStruct {
     }
 
     public void DMatrix_SMatrixTriplet(DMatrix a , @Nullable DMatrixSparseTriplet b ) {
-        b = ConvertDMatrixStruct.convert(a,b, UtilEjml.EPS);
+        b = DConvertMatrixStruct.convert(a,b, UtilEjml.EPS);
 
         assertEquals(a.getNumRows(), b.numRows);
         assertEquals(a.getNumCols(), b.numCols);
@@ -241,10 +241,10 @@ public class TestConvertDMatrixStruct {
         }
 
         // now try it the other direction
-        DMatrixRMaj c = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj c = DConvertMatrixStruct.convert(b,(DMatrixRMaj)null);
         EjmlUnitTests.assertEquals(a,c, UtilEjml.TEST_F64);
 
-        c = ConvertDMatrixStruct.convert(b,new DMatrixRMaj(1,1));
+        c = DConvertMatrixStruct.convert(b,new DMatrixRMaj(1,1));
         EjmlUnitTests.assertEquals(a,c, UtilEjml.TEST_F64);
     }
 
@@ -262,7 +262,7 @@ public class TestConvertDMatrixStruct {
     }
 
     public void DMatrixRow_SparseCSC(DMatrixRMaj a , @Nullable DMatrixSparseCSC b ) {
-        b = ConvertDMatrixStruct.convert(a,b, UtilEjml.EPS);
+        b = DConvertMatrixStruct.convert(a,b, UtilEjml.EPS);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
@@ -280,10 +280,10 @@ public class TestConvertDMatrixStruct {
         }
 
         // now try it the other direction
-        DMatrixRMaj c = ConvertDMatrixStruct.convert(b,(DMatrixRMaj)null);
+        DMatrixRMaj c = DConvertMatrixStruct.convert(b,(DMatrixRMaj)null);
         assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
 
-        c = ConvertDMatrixStruct.convert(b,new DMatrixRMaj(1,1));
+        c = DConvertMatrixStruct.convert(b,new DMatrixRMaj(1,1));
         assertTrue(MatrixFeatures_DDRM.isEquals(a,c, UtilEjml.TEST_F64));
     }
 
@@ -296,7 +296,7 @@ public class TestConvertDMatrixStruct {
     }
 
     public void SMatrixCC_DMatrixRow(DMatrixSparseCSC a , @Nullable DMatrixRMaj b ) {
-        b = ConvertDMatrixStruct.convert(a,b);
+        b = DConvertMatrixStruct.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
@@ -306,11 +306,11 @@ public class TestConvertDMatrixStruct {
         EjmlUnitTests.assertEquals(a, b);
 
         // now try it the other direction
-        DMatrixSparseCSC c = ConvertDMatrixStruct.convert(b,(DMatrixSparseCSC)null, UtilEjml.EPS);
+        DMatrixSparseCSC c = DConvertMatrixStruct.convert(b,(DMatrixSparseCSC)null, UtilEjml.EPS);
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,c, UtilEjml.TEST_F64));
         assertTrue(CommonOps_DSCC.checkIndicesSorted(c));
 
-        c = ConvertDMatrixStruct.convert(b,new DMatrixSparseCSC(1,1,1), UtilEjml.EPS);
+        c = DConvertMatrixStruct.convert(b,new DMatrixSparseCSC(1,1,1), UtilEjml.EPS);
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(a,c, UtilEjml.TEST_F64));
         assertTrue(CommonOps_DSCC.checkIndicesSorted(c));
     }
@@ -324,7 +324,7 @@ public class TestConvertDMatrixStruct {
     }
 
     public void SMatrixTriplet_SMatrixCC(DMatrixSparseTriplet a , @Nullable DMatrixSparseCSC b ) {
-        b = ConvertDMatrixStruct.convert(a,b);
+        b = DConvertMatrixStruct.convert(a,b);
 
         assertEquals(a.numRows, b.numRows);
         assertEquals(a.numCols, b.numCols);
@@ -339,10 +339,10 @@ public class TestConvertDMatrixStruct {
         assertTrue(CommonOps_DSCC.checkSortedFlag(b));
 
         // now try it the other direction
-        DMatrixSparseTriplet c = ConvertDMatrixStruct.convert(b,(DMatrixSparseTriplet)null);
+        DMatrixSparseTriplet c = DConvertMatrixStruct.convert(b,(DMatrixSparseTriplet)null);
         assertTrue(MatrixFeatures_DSTL.isEquals(a,c, UtilEjml.TEST_F64));
 
-        c = ConvertDMatrixStruct.convert(b,new DMatrixSparseTriplet(1,1,1));
+        c = DConvertMatrixStruct.convert(b,new DMatrixSparseTriplet(1,1,1));
         assertTrue(MatrixFeatures_DSTL.isEquals(a,c, UtilEjml.TEST_F64));
     }
 

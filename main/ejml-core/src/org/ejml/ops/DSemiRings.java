@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,8 +41,8 @@ public final class DSemiRings {
     public static final DSemiRing XNOR_OR = new DSemiRing(XNOR, OR);
 
     // only private as they have no identity element, hence can only be used for add
-    private static final DMonoid FIRST = new DMonoid(Double.NaN, (x, y) -> x);
-    private static final DMonoid SECOND = new DMonoid(Double.NaN, (x, y) -> y);
+    private static final DMonoid FIRST = new DMonoid(Double.NaN, ( x, y ) -> x);
+    private static final DMonoid SECOND = new DMonoid(Double.NaN, ( x, y ) -> y);
 
     // semi-rings with no multiplicative annihilator
     public static final DSemiRing MIN_FIRST = new DSemiRing(MIN, FIRST);

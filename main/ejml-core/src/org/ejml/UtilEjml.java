@@ -22,8 +22,8 @@ import org.ejml.data.*;
 import org.ejml.interfaces.linsol.LinearSolver;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
-import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.ops.ConvertFMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
+import org.ejml.ops.FConvertMatrixStruct;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
 
@@ -407,13 +407,13 @@ public class UtilEjml {
     public static DMatrixSparseCSC parse_DSCC( String s, int numColumns ) {
         DMatrixRMaj tmp = parse_DDRM(s, numColumns);
 
-        return ConvertDMatrixStruct.convert(tmp, (DMatrixSparseCSC)null, 0);
+        return DConvertMatrixStruct.convert(tmp, (DMatrixSparseCSC)null, 0);
     }
 
     public static FMatrixSparseCSC parse_FSCC( String s, int numColumns ) {
         FMatrixRMaj tmp = parse_FDRM(s, numColumns);
 
-        return ConvertFMatrixStruct.convert(tmp, (FMatrixSparseCSC)null, 0);
+        return FConvertMatrixStruct.convert(tmp, (FMatrixSparseCSC)null, 0);
     }
 
     public static int[] shuffled( int N, Random rand ) {

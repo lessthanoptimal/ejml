@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -130,7 +130,7 @@ public class RandomMatrices_DSCC {
         }
 
         DMatrixSparseCSC B = new DMatrixSparseCSC(N, N, A.nz_length);
-        ConvertDMatrixStruct.convert(A, B);
+        DConvertMatrixStruct.convert(A, B);
 
         return B;
     }
@@ -281,7 +281,7 @@ public class RandomMatrices_DSCC {
         }
 
         DMatrixSparseCSC out = new DMatrixSparseCSC(width, width, width);
-        ConvertDMatrixStruct.convert(b, out, UtilEjml.TEST_F64);
+        DConvertMatrixStruct.convert(b, out, UtilEjml.TEST_F64);
 
         return out;
     }
