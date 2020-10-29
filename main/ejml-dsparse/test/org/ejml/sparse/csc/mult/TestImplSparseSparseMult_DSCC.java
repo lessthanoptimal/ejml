@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
@@ -64,8 +64,8 @@ public class TestImplSparseSparseMult_DSCC {
         ImplSparseSparseMult_DSCC.mult(a, b, c, null, null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b, (DMatrixRMaj)null);
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
+        DMatrixRMaj dense_b = DConvertMatrixStruct.convert(b, (DMatrixRMaj)null);
         DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
 
         CommonOps_DDRM.mult(dense_a, dense_b, dense_c);
@@ -89,8 +89,8 @@ public class TestImplSparseSparseMult_DSCC {
         ImplSparseSparseMult_DSCC.mult(a, b, c, null, null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
-        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj)null);
-        DMatrixRMaj dense_b = ConvertDMatrixStruct.convert(b, (DMatrixRMaj)null);
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
+        DMatrixRMaj dense_b = DConvertMatrixStruct.convert(b, (DMatrixRMaj)null);
         DMatrixRMaj dense_c = new DMatrixRMaj(dense_a.numRows, dense_b.numCols);
 
         CommonOps_DDRM.mult(dense_a, dense_b, dense_c);
@@ -119,7 +119,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6, 5, -1, 1, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
         DMatrixRMaj expected_c = c.copy();
-        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj)null);
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
             ImplSparseSparseMult_DSCC.multAdd(a, b, c);
@@ -154,7 +154,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6, 5, -1, 1, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
         DMatrixRMaj expected_c = c.copy();
-        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj)null);
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
             ImplSparseSparseMult_DSCC.multAddTransA(a, b, c);
@@ -188,7 +188,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 6, -1, 1, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
         DMatrixRMaj expected_c = c.copy();
-        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj)null);
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
             ImplSparseSparseMult_DSCC.multAddTransB(a, b, c);
@@ -222,7 +222,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 6, -1, 1, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
         DMatrixRMaj expected_c = c.copy();
-        DMatrixRMaj dense_a = ConvertDMatrixStruct.convert(a, (DMatrixRMaj)null);
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
             ImplSparseSparseMult_DSCC.multAddTransAB(a, b, c);

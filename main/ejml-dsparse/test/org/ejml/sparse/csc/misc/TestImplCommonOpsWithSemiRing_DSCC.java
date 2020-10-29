@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("elementWiseAddSource")
-    public void add(DSemiRing semiRing, double[] expected) {
+    public void add( DSemiRing semiRing, double[] expected) {
         // == graph unions
         DMatrixSparseCSC a = new DMatrixSparseCSC(3, 3);
         DMatrixSparseCSC b = a.copy();
@@ -56,7 +56,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("elementWiseMultSource")
-    public void testelementWiseMult(DSemiRing semiRing, double[] expected) {
+    public void testelementWiseMult( DSemiRing semiRing, double[] expected) {
         // == graph intersection
         DMatrixSparseCSC matrix = new DMatrixSparseCSC(3, 3, 4);
         matrix.set(1, 1, 4);

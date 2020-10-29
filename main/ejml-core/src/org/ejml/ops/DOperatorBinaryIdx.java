@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,9 +19,9 @@
 package org.ejml.ops;
 
 /**
- * Functional Interface used in reduce methods to specify arbitrary binary functions accepting doubles
+ * Functional Interface used in applyRow/Col-Wise method to specify arbitrary binary functions accepting a row index and a double value
  */
 @FunctionalInterface
-public interface DBinaryOperator {
-    double apply(double x, double y);
+public interface DOperatorBinaryIdx {
+    double apply( int x, double y );
 }

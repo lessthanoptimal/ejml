@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -61,8 +61,8 @@ public class GenerateKotlinCode32 extends GenerateCode32{
         prefix32.add("FEigen");
         prefix64.add("DSubmatrix");
         prefix32.add("FSubmatrix");
-        prefix64.add("ConvertD");
-        prefix32.add("ConvertF");
+        prefix64.add("DConvert");
+        prefix32.add("FConvert");
         prefix64.add("GenericTestsDMatrix");
         prefix32.add("GenericTestsFMatrix");
 
@@ -85,7 +85,7 @@ public class GenerateKotlinCode32 extends GenerateCode32{
         }
 
         converter.replacePattern("DScalar", "FScalar");
-        converter.replacePattern("ConvertD", "ConvertF");
+        converter.replacePattern("DConvert", "FConvert");
         converter.replacePattern("DGrowArray", "FGrowArray");
         converter.replacePattern("DMatrix", "FMatrix");
         converter.replacePattern("DSubmatrix", "FSubmatrix");

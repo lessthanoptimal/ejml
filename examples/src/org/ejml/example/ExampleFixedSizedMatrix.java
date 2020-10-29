@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.data.DMatrix3;
 import org.ejml.data.DMatrix3x3;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.fixed.CommonOps_DDF3;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -67,7 +67,7 @@ public class ExampleFixedSizedMatrix {
         CommonOps_DDF3.mult(a,v,result);
 
         // Conversion into DMatrixRMaj can also be done
-        DMatrixRMaj dm = ConvertDMatrixStruct.convert(a,null);
+        DMatrixRMaj dm = DConvertMatrixStruct.convert(a,null);
 
         dm.print();
 
@@ -75,7 +75,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        DMatrix3x3 fv = ConvertDMatrixStruct.convert(sv.getDDRM(),(DMatrix3x3)null);
+        DMatrix3x3 fv = DConvertMatrixStruct.convert(sv.getDDRM(),(DMatrix3x3)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

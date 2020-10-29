@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.data.MatrixType;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
 
@@ -53,12 +53,12 @@ public class ExampleMatrixIO {
 
         try {
             // Use triplet as an intermediate step when working with sparse matrices
-            DMatrixSparseTriplet A_triple = ConvertDMatrixStruct.convert(A,(DMatrixSparseTriplet)null);
+            DMatrixSparseTriplet A_triple = DConvertMatrixStruct.convert(A,(DMatrixSparseTriplet)null);
 
             MatrixIO.saveSparseCSV(A_triple, "matrix_file.csv");
             DMatrixSparseTriplet B_triple = MatrixIO.loadCSV("matrix_file.csv",true);
 
-            DMatrixSparseCSC B = ConvertDMatrixStruct.convert(B_triple,(DMatrixSparseCSC)null);
+            DMatrixSparseCSC B = DConvertMatrixStruct.convert(B_triple,(DMatrixSparseCSC)null);
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);

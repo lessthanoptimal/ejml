@@ -22,7 +22,7 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
@@ -59,7 +59,7 @@ public class TestLinearSolverLu_DSCC extends GenericLinearSolverSparseTests_DSCC
 
     @Test
     public void testCase0() {
-        DMatrixSparseCSC A = ConvertDMatrixStruct.convert(A0_dense, (DMatrixSparseCSC)null, 0);
+        DMatrixSparseCSC A = DConvertMatrixStruct.convert(A0_dense, (DMatrixSparseCSC)null, 0);
 
         // sparse solvers appear to be more sensitive to numerical issues than their dense counter parts
         // skip this test if single precision

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,8 +20,8 @@ package org.ejml.simple;
 
 import org.ejml.data.*;
 import org.ejml.dense.row.*;
-import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.ops.ConvertFMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
+import org.ejml.ops.FConvertMatrixStruct;
 
 import java.util.Random;
 
@@ -205,11 +205,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         Matrix mat;
         if (orig instanceof DMatrixRBlock) {
             DMatrixRMaj a = new DMatrixRMaj(orig.getNumRows(), orig.getNumCols());
-            ConvertDMatrixStruct.convert((DMatrixRBlock)orig, a);
+            DConvertMatrixStruct.convert((DMatrixRBlock)orig, a);
             mat = a;
         } else if (orig instanceof FMatrixRBlock) {
             FMatrixRMaj a = new FMatrixRMaj(orig.getNumRows(), orig.getNumCols());
-            ConvertFMatrixStruct.convert((FMatrixRBlock)orig, a);
+            FConvertMatrixStruct.convert((FMatrixRBlock)orig, a);
             mat = a;
         } else {
             mat = orig.copy();

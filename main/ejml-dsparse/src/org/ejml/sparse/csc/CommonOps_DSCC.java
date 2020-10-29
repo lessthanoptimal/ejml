@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,9 +26,9 @@ import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
-import org.ejml.ops.DBinaryOperator;
-import org.ejml.ops.DUnaryOperator;
-import org.ejml.ops.IDBinaryOperator;
+import org.ejml.ops.DOperatorBinary;
+import org.ejml.ops.DOperatorBinaryIdx;
+import org.ejml.ops.DOperatorUnary;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
@@ -1785,7 +1785,7 @@ public class CommonOps_DSCC {
      * @param output (Output) Matrix. Modified.
      * @return The output matrix
      */
-    public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DUnaryOperator func, @Nullable DMatrixSparseCSC output ) {
+    public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DOperatorUnary func, @Nullable DMatrixSparseCSC output ) {
         if (output == null) {
             output = input.createLike();
         }
@@ -1800,7 +1800,7 @@ public class CommonOps_DSCC {
         return output;
     }
 
-    public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DUnaryOperator func ) {
+    public static DMatrixSparseCSC apply( DMatrixSparseCSC input, DOperatorUnary func ) {
         return apply(input, func, input);
     }
 
@@ -1814,7 +1814,7 @@ public class CommonOps_DSCC {
      * @param output (Output) Matrix. Modified.
      * @return The output matrix
      */
-    public static DMatrixSparseCSC applyRowIdx( DMatrixSparseCSC input, IDBinaryOperator func, @Nullable DMatrixSparseCSC output ) {
+    public static DMatrixSparseCSC applyRowIdx( DMatrixSparseCSC input, DOperatorBinaryIdx func, @Nullable DMatrixSparseCSC output ) {
         if (output == null) {
             output = input.createLike();
         }
@@ -1839,7 +1839,7 @@ public class CommonOps_DSCC {
      * @param output (Output) Matrix. Modified.
      * @return The output matrix
      */
-    public static DMatrixSparseCSC applyColumnIdx( DMatrixSparseCSC input, IDBinaryOperator func, @Nullable DMatrixSparseCSC output ) {
+    public static DMatrixSparseCSC applyColumnIdx( DMatrixSparseCSC input, DOperatorBinaryIdx func, @Nullable DMatrixSparseCSC output ) {
         if (output == null) {
             output = input.createLike();
         }
@@ -1869,7 +1869,7 @@ public class CommonOps_DSCC {
      * @param func Accumulator function defining "+" for accumulator +=  cellValue
      * @return accumulated value
      */
-    public static double reduceScalar( DMatrixSparseCSC input, double initValue, DBinaryOperator func ) {
+    public static double reduceScalar( DMatrixSparseCSC input, double initValue, DOperatorBinary func ) {
         double result = initValue;
 
         for (int i = 0; i < input.nz_length; i++) {
@@ -1879,7 +1879,7 @@ public class CommonOps_DSCC {
         return result;
     }
 
-    public static double reduceScalar( DMatrixSparseCSC input, DBinaryOperator func ) {
+    public static double reduceScalar( DMatrixSparseCSC input, DOperatorBinary func ) {
         return reduceScalar(input, 0, func);
     }
 
@@ -1899,7 +1899,7 @@ public class CommonOps_DSCC {
      * @param output output (Output) Vector, where result can be stored in
      * @return a column-vector, where v[i] == values of column i reduced to scalar based on `func`
      */
-    public static DMatrixRMaj reduceColumnWise( DMatrixSparseCSC input, double initValue, DBinaryOperator func, @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj reduceColumnWise( DMatrixSparseCSC input, double initValue, DOperatorBinary func, @Nullable DMatrixRMaj output ) {
         if (output == null) {
             output = new DMatrixRMaj(1, input.numCols);
         } else {
@@ -1937,7 +1937,7 @@ public class CommonOps_DSCC {
      * @param output output (Output) Vector, where result can be stored in
      * @return a row-vector, where v[i] == values of row i reduced to scalar based on `func`
      */
-    public static DMatrixRMaj reduceRowWise( DMatrixSparseCSC input, double initValue, DBinaryOperator func,
+    public static DMatrixRMaj reduceRowWise( DMatrixSparseCSC input, double initValue, DOperatorBinary func,
                                              @Nullable DMatrixRMaj output ) {
         if (output == null) {
             output = new DMatrixRMaj(1, input.numRows);

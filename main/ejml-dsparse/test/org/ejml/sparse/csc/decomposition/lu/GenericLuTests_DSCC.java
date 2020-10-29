@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.DecompositionSparseInterface;
 import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -206,7 +206,7 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
             int N = rand.nextInt(10) + 1;
 
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N, N, rand);
-            DMatrixSparseCSC A_sp = ConvertDMatrixStruct.convert(A, (DMatrixSparseCSC)null, UtilEjml.EPS);
+            DMatrixSparseCSC A_sp = DConvertMatrixStruct.convert(A, (DMatrixSparseCSC)null, UtilEjml.EPS);
 
             LUSparseDecomposition_F64<DMatrixSparseCSC> lu_sparse = create(perm);
 

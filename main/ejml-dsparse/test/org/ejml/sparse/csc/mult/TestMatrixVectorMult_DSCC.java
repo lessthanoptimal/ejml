@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ public class TestMatrixVectorMult_DSCC {
         double v[] = new double[]{0,1,2,3,4,5,6,7};
         double found[] = new double[7];
 
-        DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = DConvertMatrixStruct.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj vd = new DMatrixRMaj(4,1);
         System.arraycopy(v,2,vd.data,0,4);
 
@@ -70,7 +70,7 @@ public class TestMatrixVectorMult_DSCC {
         found[2] = 3;
 
 
-        DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = DConvertMatrixStruct.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj vd = new DMatrixRMaj(4,1);
         System.arraycopy(v,2,vd.data,0,4);
 
@@ -93,7 +93,7 @@ public class TestMatrixVectorMult_DSCC {
         double v[] = new double[]{0,1,2,3,4,5,6,7};
         double found[] = new double[5];
 
-        DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = DConvertMatrixStruct.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj vd = new DMatrixRMaj(6,1);
         System.arraycopy(v,offset,vd.data,0,A.numRows);
 
@@ -118,7 +118,7 @@ public class TestMatrixVectorMult_DSCC {
 
         double found = MatrixVectorMult_DSCC.innerProduct(v,offsetV,A,w,offsetW);
 
-        DMatrixRMaj Ad = ConvertDMatrixStruct.convert(A,(DMatrixRMaj)null);
+        DMatrixRMaj Ad = DConvertMatrixStruct.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj vd = new DMatrixRMaj(A.numRows,1);
         DMatrixRMaj wd = new DMatrixRMaj(A.numCols,1);
         System.arraycopy(v,offsetV,vd.data,0,A.numRows);

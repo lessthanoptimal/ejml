@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixFixed;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -190,7 +190,7 @@ public class CompareFixed_DDRM {
 
                 DMatrixRMaj m = RandomMatrices_DDRM.rectangle(f.getNumRows(), f.getNumCols(), -1,1,rand);
 
-                ConvertDMatrixStruct.convert(m, f);
+                DConvertMatrixStruct.convert(m, f);
                 inputsFixed[i] = f;
                 inputsCommon[i] = m;
             } else if( double.class == typesFixed[i] ) {
@@ -246,7 +246,7 @@ public class CompareFixed_DDRM {
 
             DMatrixFixed f = (DMatrixFixed)a;
             DMatrixRMaj m = new DMatrixRMaj(f.getNumRows(),f.getNumCols());
-            ConvertDMatrixStruct.convert(f,m);
+            DConvertMatrixStruct.convert(f,m);
             m.numRows = bb.numRows;
             m.numCols = bb.numCols;
 

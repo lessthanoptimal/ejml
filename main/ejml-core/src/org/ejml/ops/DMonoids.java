@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,14 +23,14 @@ package org.ejml.ops;
  * p. 26
  */
 public final class DMonoids {
-    public static final DMonoid AND = new DMonoid(1, (a, b) -> (a == 0 || b == 0) ? 0 : 1);
-    public static final DMonoid OR = new DMonoid(0, (a, b) -> (a != 0 || b != 0) ? 1 : 0);
-    public static final DMonoid XOR = new DMonoid(0, (a, b) -> ((a == 0 && b == 0) || (a != 0 && b != 0)) ? 0 : 1);
-    public static final DMonoid XNOR = new DMonoid(0, (a, b) -> ((a == 0 && b == 0) || (a != 0 && b != 0)) ? 1 : 0);
+    public static final DMonoid AND = new DMonoid(1, ( a, b ) -> (a == 0 || b == 0) ? 0 : 1);
+    public static final DMonoid OR = new DMonoid(0, ( a, b ) -> (a != 0 || b != 0) ? 1 : 0);
+    public static final DMonoid XOR = new DMonoid(0, ( a, b ) -> ((a == 0 && b == 0) || (a != 0 && b != 0)) ? 0 : 1);
+    public static final DMonoid XNOR = new DMonoid(0, ( a, b ) -> ((a == 0 && b == 0) || (a != 0 && b != 0)) ? 1 : 0);
 
     public static final DMonoid PLUS = new DMonoid(0, Double::sum);
-    public static final DMonoid TIMES = new DMonoid(1, (a, b) -> a * b);
+    public static final DMonoid TIMES = new DMonoid(1, ( a, b ) -> a*b);
 
-    public final static DMonoid MIN = new DMonoid(Double.MAX_VALUE, (a, b) -> (a <= b) ? a : b);
-    public final static DMonoid MAX = new DMonoid(Double.MIN_VALUE, (a, b) -> (a >= b) ? a : b);
+    public final static DMonoid MIN = new DMonoid(Double.MAX_VALUE, ( a, b ) -> (a <= b) ? a : b);
+    public final static DMonoid MAX = new DMonoid(Double.MIN_VALUE, ( a, b ) -> (a >= b) ? a : b);
 }

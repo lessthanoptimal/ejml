@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -50,7 +50,7 @@ public class MatrixOps_DDRB {
      * @param dst Equivalent DMatrixRBlock. Modified.
      */
     public static void convert( DMatrixRMaj src, DMatrixRBlock dst ) {
-        ConvertDMatrixStruct.convert(src, dst);
+        DConvertMatrixStruct.convert(src, dst);
     }
 
     /**
@@ -118,7 +118,7 @@ public class MatrixOps_DDRB {
      * @param dst Equivalent DMatrixRMaj. Modified.
      */
     public static DMatrixRMaj convert( DMatrixRBlock src, DMatrixRMaj dst ) {
-        return ConvertDMatrixStruct.convert(src, dst);
+        return DConvertMatrixStruct.convert(src, dst);
     }
 
     /**

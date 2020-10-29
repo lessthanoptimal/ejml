@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.data.IGrowArray;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -240,7 +240,7 @@ public class TestImplCommonOps_DSCC {
         for (int i = 0; i < 20; i++) {
             for( int N : sizes ) {
                 DMatrixSparseTriplet triplet = RandomMatrices_DSTL.uniform(N,N,(N*N)/2,-1,1,rand);
-                DMatrixSparseCSC A = ConvertDMatrixStruct.convert(triplet,(DMatrixSparseCSC)null);
+                DMatrixSparseCSC A = DConvertMatrixStruct.convert(triplet,(DMatrixSparseCSC)null);
                 DMatrixSparseCSC B = A.copy();
 
                 // first pass there should be no change
@@ -258,7 +258,7 @@ public class TestImplCommonOps_DSCC {
                     double value = triplet.nz_value.data[j];
                     triplet.addItem(row,col,value);
                 }
-                ConvertDMatrixStruct.convert(triplet,B);
+                DConvertMatrixStruct.convert(triplet,B);
                 // Remove duplicates and see if B has elements that are twice the size of elements in A
                 ImplCommonOps_DSCC.duplicatesAdd(B,gw);
                 assertTrue(CommonOps_DSCC.checkStructure(B));

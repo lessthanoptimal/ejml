@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,9 +19,9 @@
 package org.ejml.equation;
 
 import org.ejml.data.*;
-import org.ejml.ops.ConvertDMatrixStruct;
-import org.ejml.ops.ConvertFMatrixStruct;
 import org.ejml.ops.ConvertMatrixData;
+import org.ejml.ops.DConvertMatrixStruct;
+import org.ejml.ops.FConvertMatrixStruct;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
@@ -305,7 +305,7 @@ public class Equation {
 
     public void alias( DMatrixSparseCSC variable, String name ) {
         DMatrixRMaj f = new DMatrixRMaj(variable.numRows, variable.numCols);
-        ConvertDMatrixStruct.convert(variable, f);
+        DConvertMatrixStruct.convert(variable, f);
         alias(f, name);
     }
 
@@ -394,11 +394,11 @@ public class Equation {
             alias((SimpleMatrix)variable, name);
         } else if (variable instanceof DMatrixFixed) {
             DMatrixRMaj M = new DMatrixRMaj(1, 1);
-            ConvertDMatrixStruct.convert((DMatrixFixed)variable, M);
+            DConvertMatrixStruct.convert((DMatrixFixed)variable, M);
             alias(M, name);
         } else if (variable instanceof FMatrixFixed) {
             FMatrixRMaj M = new FMatrixRMaj(1, 1);
-            ConvertFMatrixStruct.convert((FMatrixFixed)variable, M);
+            FConvertMatrixStruct.convert((FMatrixFixed)variable, M);
             alias(M, name);
         } else {
             throw new RuntimeException("Unknown value type of " +

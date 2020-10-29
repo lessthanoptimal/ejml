@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -59,7 +59,7 @@ public class ConvertMatrixType {
 
                     case DSCC: {
                         m = new DMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertDMatrixStruct.convert((DMatrixRMaj) matrix, (DMatrixSparseCSC)m);
+                        DConvertMatrixStruct.convert((DMatrixRMaj) matrix, (DMatrixSparseCSC)m);
                     } break;
 
                     case FSCC: {
@@ -96,7 +96,7 @@ public class ConvertMatrixType {
 
                     case FSCC: {
                         m = new FMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertFMatrixStruct.convert((FMatrixRMaj) matrix, (FMatrixSparseCSC)m);
+                        FConvertMatrixStruct.convert((FMatrixRMaj) matrix, (FMatrixSparseCSC)m);
                     } break;
                 }
             } break;
@@ -123,7 +123,7 @@ public class ConvertMatrixType {
                 switch( desired ) {
                     case DDRM: {
                         m = new DMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertDMatrixStruct.convert((DMatrixSparseCSC) matrix, (DMatrixRMaj)m);
+                        DConvertMatrixStruct.convert((DMatrixSparseCSC) matrix, (DMatrixRMaj)m);
                     } break;
 
                     case FDRM: {
@@ -157,7 +157,7 @@ public class ConvertMatrixType {
 
                     case FDRM: {
                         m = new FMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertFMatrixStruct.convert((FMatrixSparseCSC) matrix, (FMatrixRMaj)m);
+                        FConvertMatrixStruct.convert((FMatrixSparseCSC) matrix, (FMatrixRMaj)m);
                     } break;
 
                     case ZDRM: {

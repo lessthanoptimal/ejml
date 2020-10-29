@@ -36,7 +36,7 @@ import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
-import org.ejml.ops.DUnaryOperator;
+import org.ejml.ops.DOperatorUnary;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -2859,7 +2859,7 @@ public class CommonOps_DDRM {
      * @param output (Output) Matrix. Can be same instance as A. Modified.
      * @return The output matrix
      */
-    public static DMatrixRMaj apply( DMatrixRMaj input, DUnaryOperator func, @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj apply( DMatrixRMaj input, DOperatorUnary func, @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         for (int i = 0; i < input.data.length; i++) {
@@ -2869,7 +2869,7 @@ public class CommonOps_DDRM {
         return output;
     }
 
-    public static DMatrixRMaj apply( DMatrixRMaj input, DUnaryOperator func ) {
+    public static DMatrixRMaj apply( DMatrixRMaj input, DOperatorUnary func ) {
         return apply(input, func, input);
     }
 }

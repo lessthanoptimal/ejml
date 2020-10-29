@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestConvertDArrays {
+public class TestDConvertArrays {
     @Test
     public void dd_to_ddrm() {
-        DMatrixRMaj m = ConvertDArrays.convert(new double[][]{{0,1},{2,3}},(DMatrixRMaj)null);
+        DMatrixRMaj m = DConvertArrays.convert(new double[][]{{0,1},{2,3}},(DMatrixRMaj)null);
 
         assertEquals(0,m.get(0,0), UtilEjml.TEST_F64);
         assertEquals(1,m.get(0,1), UtilEjml.TEST_F64);
@@ -51,7 +51,7 @@ public class TestConvertDArrays {
 
     @Test
     public void dd_to_d4() {
-        DMatrix4 m = ConvertDArrays.convert(new double[][]{{0,1,2,3}},(DMatrix4) null);
+        DMatrix4 m = DConvertArrays.convert(new double[][]{{0,1,2,3}},(DMatrix4) null);
 
         assertEquals(0,m.a1, UtilEjml.TEST_F64);
         assertEquals(1,m.a2, UtilEjml.TEST_F64);

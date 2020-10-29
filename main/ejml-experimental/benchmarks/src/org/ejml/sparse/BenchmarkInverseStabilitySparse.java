@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
-import org.ejml.ops.ConvertDMatrixStruct;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class BenchmarkInverseStabilitySparse {
                     CommonOps_DDRM.multTransB(A,A,tmp);
                     A = tmp;
                 }
-                DMatrixSparseCSC Asp = ConvertDMatrixStruct.convert(A,(DMatrixSparseCSC)null, UtilEjml.EPS);
+                DMatrixSparseCSC Asp = DConvertMatrixStruct.convert(A,(DMatrixSparseCSC)null, UtilEjml.EPS);
 
                 try {
                     if( !candidate.alg.setA(Asp) ) {
@@ -168,7 +168,7 @@ public class BenchmarkInverseStabilitySparse {
 
             CommonOps_DDRM.scale(scale,A);
 
-            DMatrixSparseCSC A_sparse = ConvertDMatrixStruct.convert(A,(DMatrixSparseCSC)null,0);
+            DMatrixSparseCSC A_sparse = DConvertMatrixStruct.convert(A,(DMatrixSparseCSC)null,0);
             DMatrixRMaj A_inv = new DMatrixRMaj(A.numRows,A.numCols);
 
             if(MatrixFeatures_DDRM.hasUncountable(A)) {
