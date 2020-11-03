@@ -19,17 +19,22 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -38,8 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TestImplSparseSparseMult_MT_DSCC {
     Random rand = new Random(234);
 
-    @Test
-    public void mult_s_s() {
+    @Test void mult_s_s() {
         for (int i = 0; i < 50; i++) {
             mult_s_s(5, 5, 5);
             mult_s_s(10, 5, 5);
@@ -65,8 +69,42 @@ class TestImplSparseSparseMult_MT_DSCC {
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(expected, found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void multTransA_s_d() {
+    @Test void mult_s_d() {
+        for (int i = 0; i < 10; i++) {
+            mult_s_d(24, false);
+            mult_s_d(15, false);
+            mult_s_d(4, false);
+            mult_s_d(24, true);
+            mult_s_d(15, true);
+            mult_s_d(4, true);
+        }
+    }
+
+    private void mult_s_d( int elementsA, boolean add ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4, 6, elementsA, -1, 1, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(6, 5, -1, 1, rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
+        DMatrixRMaj expected_c = c.copy();
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
+
+        GrowArray<DGrowArray> work = new GrowArray<>(DGrowArray::new);
+
+        if (add) {
+            ImplSparseSparseMult_MT_DSCC.multAdd(a, b, c, work);
+            CommonOps_DDRM.multAdd(dense_a, b, expected_c);
+        } else {
+            ImplSparseSparseMult_MT_DSCC.mult(a, b, c, work);
+            CommonOps_DDRM.mult(dense_a, b, expected_c);
+        }
+
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(expected_c.get(row, col), c.get(row, col), UtilEjml.TEST_F64, row + " " + col);
+            }
+        }
+    }
+
+    @Test void multTransA_s_d() {
         multTransA_s_d(5, 5, 5);
         multTransA_s_d(10, 5, 5);
         multTransA_s_d(5, 10, 5);
@@ -87,8 +125,7 @@ class TestImplSparseSparseMult_MT_DSCC {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void multAddTransA_s_d() {
+    @Test void multAddTransA_s_d() {
         multAddTransA_s_d(5, 5, 5);
         multAddTransA_s_d(10, 5, 5);
         multAddTransA_s_d(5, 10, 5);
@@ -107,5 +144,40 @@ class TestImplSparseSparseMult_MT_DSCC {
         ImplSparseSparseMult_MT_DSCC.multAddTransA(a, b, found);
 
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
+    }
+
+    @Test void multTransB_s_d() {
+        for (int i = 0; i < 10; i++) {
+            multTransB_s_d(24, false);
+            multTransB_s_d(15, false);
+            multTransB_s_d(4, false);
+
+//            multTransB_s_d(24, true);
+//            multTransB_s_d(15, true);
+//            multTransB_s_d(4, true);
+        }
+    }
+
+    private void multTransB_s_d( int elementsA, boolean add ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4, 6, elementsA, -1, 1, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 6, -1, 1, rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
+        DMatrixRMaj expected_c = c.copy();
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
+
+        GrowArray<DGrowArray> work = new GrowArray<>(DGrowArray::new);
+
+        if (add) {
+//            ImplSparseSparseMult_MT_DSCC.multAddTransB(a, b, c);
+            CommonOps_DDRM.multAddTransB(dense_a, b, expected_c);
+        } else {
+            ImplSparseSparseMult_MT_DSCC.multTransB(a, b, c, false, work);
+            CommonOps_DDRM.multTransB(dense_a, b, expected_c);
+        }
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(expected_c.get(row, col), c.get(row, col), UtilEjml.TEST_F64, row + " " + col);
+            }
+        }
     }
 }

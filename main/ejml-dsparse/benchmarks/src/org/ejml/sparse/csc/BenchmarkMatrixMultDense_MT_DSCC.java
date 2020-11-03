@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -26,6 +27,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
-@Fork(value = 2)
+@Fork(value = 1)
 public class BenchmarkMatrixMultDense_MT_DSCC {
 
     @Param({"3000"})
@@ -51,6 +53,8 @@ public class BenchmarkMatrixMultDense_MT_DSCC {
     DMatrixRMaj B = new DMatrixRMaj(1, 1);
     DMatrixRMaj C = new DMatrixRMaj(1, 1);
 
+    GrowArray<DGrowArray> work = new GrowArray<>(DGrowArray::new);
+
     @Setup
     public void setup() {
         Random rand = new Random(2345);
@@ -59,12 +63,12 @@ public class BenchmarkMatrixMultDense_MT_DSCC {
         C = B.create(dimension, dimension);
     }
 
-//    @Benchmark public void mult() { CommonOps_MT_DSCC.mult(A, B, C); }
-//    @Benchmark public void multAdd() { CommonOps_MT_DSCC.multAdd(A, B, C); }
+    @Benchmark public void mult() { CommonOps_MT_DSCC.mult(A, B, C, work); }
+    @Benchmark public void multAdd() { CommonOps_MT_DSCC.multAdd(A, B, C, work); }
     @Benchmark public void multTransA() { CommonOps_MT_DSCC.multTransA(A, B, C); }
     @Benchmark public void multAddTransA() { CommonOps_MT_DSCC.multAddTransA(A, B, C); }
-//    @Benchmark public void multTransB() { CommonOps_MT_DSCC.multTransB(A, B, C); }
-//    @Benchmark public void multAddTransB() { CommonOps_MT_DSCC.multAddTransB(A, B, C); }
+    @Benchmark public void multTransB() { CommonOps_MT_DSCC.multTransB(A, B, C, work); }
+    @Benchmark public void multAddTransB() { CommonOps_MT_DSCC.multAddTransB(A, B, C, work); }
 //    @Benchmark public void multTransAB() { CommonOps_MT_DSCC.multTransAB(A, B, C); }
 //    @Benchmark public void multAddTransAB() { CommonOps_MT_DSCC.multAddTransAB(A, B, C); }
 //    @Benchmark public void invert() { CommonOps_MT_DSCC.invert(A, C); }
