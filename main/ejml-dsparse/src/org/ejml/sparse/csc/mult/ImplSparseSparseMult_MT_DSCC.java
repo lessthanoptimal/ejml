@@ -20,10 +20,13 @@ package org.ejml.sparse.csc.mult;
 
 import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
+
+import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;
 import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;
@@ -127,9 +130,69 @@ public class ImplSparseSparseMult_MT_DSCC {
         UtilEjml.assertEq(out.col_idx[numCols], out.nz_length);
     }
 
+    public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
+                             @Nullable GrowArray<DGrowArray> listWork ) {
+        mult(A, B, C, false, listWork);
+    }
+
+    public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
+                                @Nullable GrowArray<DGrowArray> listWork ) {
+        mult(A, B, C, true, listWork);
+    }
+
+    public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean add,
+                             @Nullable GrowArray<DGrowArray> listWork ) {
+        if (listWork == null)
+            listWork = new GrowArray<>(DGrowArray::new);
+
+        // Break the problem up into blocks of columns and process them independently
+        EjmlConcurrency.loopBlocks(0, B.numCols, listWork, ( gwork, bj0, bj1 ) -> {
+            // same array to store column in A and B. This is done to reduce cache misses in B and C access
+            double[] work = gwork.reshape(A.numRows + B.numRows).data;
+
+            // C(i,j) = sum_k A(i,k) * B(k,j)
+            for (int bj = bj0; bj < bj1; bj++) {
+                // initialize column in C to all zeros
+                Arrays.fill(work, 0, A.numRows, 0.0);
+
+                // copy the column of B
+                for (int k = 0; k < B.numRows; k++) {
+                    work[A.numRows + k] = B.data[k*B.numCols + bj];
+                }
+
+                // Ideally this would be the outer loops, but there's no good way to only compute a row or column at
+                // a time if that is done
+                for (int k = 0; k < A.numCols; k++) {
+                    int idx0 = A.col_idx[k];
+                    int idx1 = A.col_idx[k + 1];
+
+                    if (idx0 == idx1)
+                        continue;
+
+                    for (int i = idx0; i < idx1; i++) {
+                        int ai = A.nz_rows[i];
+                        work[ai] += A.nz_values[i]*work[A.numRows + k];
+//                        C.data[ai*C.numCols + bj] += A.nz_values[i]*B.data[k*B.numCols + bj];
+                    }
+                }
+
+                // Copy results over
+                if (add) {
+                    for (int rowC = 0; rowC < C.numRows; rowC++) {
+                        C.data[rowC*C.numCols + bj] += work[rowC];
+                    }
+                } else {
+                    for (int rowC = 0; rowC < C.numRows; rowC++) {
+                        C.data[rowC*C.numCols + bj] = work[rowC];
+                    }
+                }
+            }
+        });
+    }
+
     public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
-        EjmlConcurrency.loopFor(0,B.numCols,j->{
+        EjmlConcurrency.loopFor(0, B.numCols, j -> {
             for (int i = 0; i < A.numCols; i++) {
                 int idx0 = A.col_idx[i];
                 int idx1 = A.col_idx[i + 1];
@@ -147,7 +210,7 @@ public class ImplSparseSparseMult_MT_DSCC {
 
     public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
-        EjmlConcurrency.loopFor(0,B.numCols,j->{
+        EjmlConcurrency.loopFor(0, B.numCols, j -> {
             for (int i = 0; i < A.numCols; i++) {
                 int idx0 = A.col_idx[i];
                 int idx1 = A.col_idx[i + 1];
@@ -163,4 +226,58 @@ public class ImplSparseSparseMult_MT_DSCC {
         });
     }
 
+    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
+                                   @Nullable GrowArray<DGrowArray> listWork ) {
+        mult(A, B, C, false, listWork);
+    }
+
+    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
+                                      @Nullable GrowArray<DGrowArray> listWork ) {
+        multTransB(A, B, C, true, listWork);
+    }
+
+    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean add,
+                                   @Nullable GrowArray<DGrowArray> listWork ) {
+        if (listWork == null)
+            listWork = new GrowArray<>(DGrowArray::new);
+
+        // Break the problem up into blocks of columns and process them independently
+        EjmlConcurrency.loopBlocks(0, B.numRows, listWork, ( gwork, bj0, bj1 ) -> {
+            // Local copy of column in A to reduce cache misses
+            double[] work = gwork.reshape(A.numRows).data;
+
+            // C(i,j) = sum_k A(i,k) * B(k,j)
+            for (int bj = bj0; bj < bj1; bj++) {
+                // initialize column in C to all zeros
+                Arrays.fill(work, 0, A.numRows, 0.0);
+
+                // Ideally this would be the outer loops, but there's no good way to only compute a row or column at
+                // a time if that is done
+                for (int k = 0; k < A.numCols; k++) {
+                    int idx0 = A.col_idx[k];
+                    int idx1 = A.col_idx[k + 1];
+
+                    if (idx0 == idx1)
+                        continue;
+
+                    for (int i = idx0; i < idx1; i++) {
+                        int ai = A.nz_rows[i];
+                        work[ai] += A.nz_values[i]*B.data[bj*B.numCols + k];
+//                        C.data[ai*C.numCols + bj] += A.nz_values[i]*B.data[k*B.numCols + bj];
+                    }
+                }
+
+                // Copy results over
+                if (add) {
+                    for (int rowC = 0; rowC < C.numRows; rowC++) {
+                        C.data[rowC*C.numCols + bj] += work[rowC];
+                    }
+                } else {
+                    for (int rowC = 0; rowC < C.numRows; rowC++) {
+                        C.data[rowC*C.numCols + bj] = work[rowC];
+                    }
+                }
+            }
+        });
+    }
 }

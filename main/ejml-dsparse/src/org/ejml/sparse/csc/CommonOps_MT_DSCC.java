@@ -19,6 +19,7 @@
 package org.ejml.sparse.csc;
 
 import org.ejml.MatrixDimensionException;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_MT_DSCC;
@@ -91,6 +92,37 @@ public class CommonOps_MT_DSCC {
      * @param B Dense Matrix
      * @param outputC Dense Matrix
      */
+    public static DMatrixRMaj mult( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
+                                    @Nullable GrowArray<DGrowArray> listWork ) {
+        if (A.numCols != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A.numRows, B.numCols);
+
+        ImplSparseSparseMult_MT_DSCC.mult(A, B, outputC, listWork);
+
+        return outputC;
+    }
+
+    /**
+     * <p>C = C + A<sup>T</sup>*B</p>
+     */
+    public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
+                                @Nullable GrowArray<DGrowArray> listWork ) {
+        if (A.numCols != B.numRows)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numRows != outputC.numRows || B.numCols != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
+
+        ImplSparseSparseMult_MT_DSCC.multAdd(A, B, outputC, listWork);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A<sup>T</sup>*B
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param outputC Dense Matrix
+     */
     public static DMatrixRMaj multTransA( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC ) {
         if (A.numRows != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
@@ -112,5 +144,36 @@ public class CommonOps_MT_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
         ImplSparseSparseMult_MT_DSCC.multAddTransA(A, B, outputC);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A*B<sup>T</sup>
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param outputC Dense Matrix
+     */
+    public static DMatrixRMaj multTransB( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
+                                          @Nullable GrowArray<DGrowArray> listWork ) {
+        if (A.numCols != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A.numRows, B.numRows);
+
+        ImplSparseSparseMult_MT_DSCC.multTransB(A, B, outputC, listWork);
+
+        return outputC;
+    }
+
+    /**
+     * <p>C = C + A*B<sup>T</sup></p>
+     */
+    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
+                                      @Nullable GrowArray<DGrowArray> listWork ) {
+        if (A.numCols != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numRows != outputC.numRows || B.numRows != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
+
+        ImplSparseSparseMult_MT_DSCC.multAddTransB(A, B, outputC, listWork);
     }
 }

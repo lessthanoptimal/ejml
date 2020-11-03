@@ -42,8 +42,7 @@ public class TestImplSparseSparseMult_DSCC {
 
     Random rand = new Random(234);
 
-    @Test
-    public void mult_s_s() {
+    @Test void mult_s_s() {
         for (int i = 0; i < 50; i++) {
             mult_s_s(5, 5, 5);
             mult_s_s(10, 5, 5);
@@ -80,8 +79,7 @@ public class TestImplSparseSparseMult_DSCC {
     /**
      * Makes sure the size of the output matrix is adjusted as needed
      */
-    @Test
-    public void mult_s_s_grow() {
+    @Test void mult_s_s_grow() {
         DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(4, 6, 17, -1, 1, rand);
         DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6, 5, 15, -1, 1, rand);
         DMatrixSparseCSC c = new DMatrixSparseCSC(4, 5, 0);
@@ -102,8 +100,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
-    @Test
-    public void mult_s_d() {
+    @Test void mult_s_d() {
         for (int i = 0; i < 10; i++) {
             mult_s_d(24, false);
             mult_s_d(15, false);
@@ -136,8 +133,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
-    @Test
-    public void multTransA_s_d() {
+    @Test void multTransA_s_d() {
         for (int i = 0; i < 10; i++) {
             multTransA_s_d(24, false);
             multTransA_s_d(15, false);
@@ -170,8 +166,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
-    @Test
-    public void multTransB_s_d() {
+    @Test void multTransB_s_d() {
         for (int i = 0; i < 10; i++) {
             multTransB_s_d(24, false);
             multTransB_s_d(15, false);
@@ -204,8 +199,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
-    @Test
-    public void multTransAB_s_d() {
+    @Test void multTransAB_s_d() {
         for (int i = 0; i < 10; i++) {
             multTransAB_s_d(24, false);
             multTransAB_s_d(15, false);
@@ -239,10 +233,9 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
-    @Test
-    public void addRowsInAInToC() {
+    @Test void addRowsInAInToC() {
         DMatrixSparseCSC A = UtilEjml.parse_DSCC(
-                      "1 0 1 0 0 " +
+                "1 0 1 0 0 " +
                         "1 0 0 1 0 " +
                         "0 0 1 0 0 " +
                         "0 0 0 1 0 " +
@@ -269,8 +262,7 @@ public class TestImplSparseSparseMult_DSCC {
         }
     }
 
-    @Test
-    public void dotInnerColumns() {
+    @Test void dotInnerColumns() {
         IGrowArray gw = new IGrowArray();
         DGrowArray gx = new DGrowArray();
 
