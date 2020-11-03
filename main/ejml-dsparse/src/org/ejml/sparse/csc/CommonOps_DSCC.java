@@ -33,7 +33,7 @@ import org.ejml.sparse.FillReducing;
 import org.ejml.sparse.csc.factory.DecompositionFactory_DSCC;
 import org.ejml.sparse.csc.factory.LinearSolverFactory_DSCC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_DSCC;
-import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
+import org.ejml.sparse.csc.mult.ImplMultiplication_DSCC;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -147,7 +147,7 @@ public class CommonOps_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_DSCC.mult(A, B, outputC, gw, gx);
+        ImplMultiplication_DSCC.mult(A, B, outputC, gw, gx);
 
         return outputC;
     }
@@ -164,7 +164,7 @@ public class CommonOps_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_DSCC.mult(A, B, outputC);
+        ImplMultiplication_DSCC.mult(A, B, outputC);
 
         return outputC;
     }
@@ -178,7 +178,7 @@ public class CommonOps_DSCC {
         if (A.numRows != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAdd(A, B, outputC);
+        ImplMultiplication_DSCC.multAdd(A, B, outputC);
     }
 
     /**
@@ -194,7 +194,7 @@ public class CommonOps_DSCC {
 
         outputC = reshapeOrDeclare(outputC, A.numCols, B.numCols);
 
-        ImplSparseSparseMult_DSCC.multTransA(A, B, outputC);
+        ImplMultiplication_DSCC.multTransA(A, B, outputC);
 
         return outputC;
     }
@@ -208,7 +208,7 @@ public class CommonOps_DSCC {
         if (A.numCols != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAddTransA(A, B, outputC);
+        ImplMultiplication_DSCC.multAddTransA(A, B, outputC);
     }
 
     /**
@@ -223,7 +223,7 @@ public class CommonOps_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numRows);
 
-        ImplSparseSparseMult_DSCC.multTransB(A, B, outputC);
+        ImplMultiplication_DSCC.multTransB(A, B, outputC);
 
         return outputC;
     }
@@ -237,7 +237,7 @@ public class CommonOps_DSCC {
         if (A.numRows != outputC.numRows || B.numRows != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAddTransB(A, B, outputC);
+        ImplMultiplication_DSCC.multAddTransB(A, B, outputC);
     }
 
     /**
@@ -252,7 +252,7 @@ public class CommonOps_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numCols, B.numRows);
 
-        ImplSparseSparseMult_DSCC.multTransAB(A, B, outputC);
+        ImplMultiplication_DSCC.multTransAB(A, B, outputC);
 
         return outputC;
     }
@@ -266,7 +266,7 @@ public class CommonOps_DSCC {
         if (A.numCols != outputC.numRows || B.numRows != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_DSCC.multAddTransAB(A, B, outputC);
+        ImplMultiplication_DSCC.multAddTransAB(A, B, outputC);
     }
 
     /**
@@ -1505,7 +1505,7 @@ public class CommonOps_DSCC {
      */
     public static double dotInnerColumns( DMatrixSparseCSC A, int colA, DMatrixSparseCSC B, int colB,
                                           @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
-        return ImplSparseSparseMult_DSCC.dotInnerColumns(A, colA, B, colB, gw, gx);
+        return ImplMultiplication_DSCC.dotInnerColumns(A, colA, B, colB, gw, gx);
     }
 
     /**

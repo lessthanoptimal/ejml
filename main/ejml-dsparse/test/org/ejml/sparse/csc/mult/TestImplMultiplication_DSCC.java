@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestImplSparseSparseMult_DSCC {
+public class TestImplMultiplication_DSCC {
 
     Random rand = new Random(234);
 
@@ -60,7 +60,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(colsA, colsB, nz_b, -1, 1, rand);
         DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(rowsA, colsB, nz_c, -1, 1, rand);
 
-        ImplSparseSparseMult_DSCC.mult(a, b, c, null, null);
+        ImplMultiplication_DSCC.mult(a, b, c, null, null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
@@ -84,7 +84,7 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(6, 5, 15, -1, 1, rand);
         DMatrixSparseCSC c = new DMatrixSparseCSC(4, 5, 0);
 
-        ImplSparseSparseMult_DSCC.mult(a, b, c, null, null);
+        ImplMultiplication_DSCC.mult(a, b, c, null, null);
         assertTrue(CommonOps_DSCC.checkStructure(c));
 
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
@@ -119,10 +119,10 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
-            ImplSparseSparseMult_DSCC.multAdd(a, b, c);
+            ImplMultiplication_DSCC.multAdd(a, b, c);
             CommonOps_DDRM.multAdd(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_DSCC.mult(a, b, c);
+            ImplMultiplication_DSCC.mult(a, b, c);
             CommonOps_DDRM.mult(dense_a, b, expected_c);
         }
 
@@ -153,10 +153,10 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
-            ImplSparseSparseMult_DSCC.multAddTransA(a, b, c);
+            ImplMultiplication_DSCC.multAddTransA(a, b, c);
             CommonOps_DDRM.multAddTransA(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_DSCC.multTransA(a, b, c);
+            ImplMultiplication_DSCC.multTransA(a, b, c);
             CommonOps_DDRM.multTransA(dense_a, b, expected_c);
         }
         for (int row = 0; row < c.numRows; row++) {
@@ -186,10 +186,10 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
-            ImplSparseSparseMult_DSCC.multAddTransB(a, b, c);
+            ImplMultiplication_DSCC.multAddTransB(a, b, c);
             CommonOps_DDRM.multAddTransB(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_DSCC.multTransB(a, b, c);
+            ImplMultiplication_DSCC.multTransB(a, b, c);
             CommonOps_DDRM.multTransB(dense_a, b, expected_c);
         }
         for (int row = 0; row < c.numRows; row++) {
@@ -219,10 +219,10 @@ public class TestImplSparseSparseMult_DSCC {
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
-            ImplSparseSparseMult_DSCC.multAddTransAB(a, b, c);
+            ImplMultiplication_DSCC.multAddTransAB(a, b, c);
             CommonOps_DDRM.multAddTransAB(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_DSCC.multTransAB(a, b, c);
+            ImplMultiplication_DSCC.multTransAB(a, b, c);
             CommonOps_DDRM.multTransAB(dense_a, b, expected_c);
         }
 
@@ -247,11 +247,11 @@ public class TestImplSparseSparseMult_DSCC {
         B.nz_length = 0;
 
         // nothing should be added here since w is full of 0 and colC = 0
-        ImplSparseSparseMult_DSCC.addRowsInAInToC(A, 0, B, 0, w);
+        ImplMultiplication_DSCC.addRowsInAInToC(A, 0, B, 0, w);
         assertEquals(0, B.col_idx[1]);
 
         // colA shoul dnow be added to colB
-        ImplSparseSparseMult_DSCC.addRowsInAInToC(A, 0, B, 1, w);
+        ImplMultiplication_DSCC.addRowsInAInToC(A, 0, B, 1, w);
         B.numCols = 2;// needed to be set correctly for structure unit test
         assertTrue(CommonOps_DSCC.checkStructure(B));
         assertEquals(3, B.col_idx[2]);
@@ -276,7 +276,7 @@ public class TestImplSparseSparseMult_DSCC {
             int colA = rand.nextInt(4);
             int colB = rand.nextInt(6);
 
-            double found = ImplSparseSparseMult_DSCC.dotInnerColumns(A, colA, B, colB, gw, gx);
+            double found = ImplMultiplication_DSCC.dotInnerColumns(A, colA, B, colB, gw, gx);
 
             double expected = 0;
             for (int i = 0; i < 8; i++) {
