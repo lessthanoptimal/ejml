@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import static org.ejml.UtilEjml.adjust;
 /**
  * based on ImplSparseSparseGraphMult_DSCC
  */
-public class ImplSparseSparseMultWithSemiRing_DSCC {
+public class ImplMultiplicationWithSemiRing_DSCC {
 
     /**
      * Performs matrix multiplication.  C = A*B

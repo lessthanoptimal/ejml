@@ -29,7 +29,7 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.DOperatorBinaryIdx;
 import org.ejml.sparse.csc.mult.CheckMatrixMultShape_DSCC;
-import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
+import org.ejml.sparse.csc.mult.ImplMultiplication_DSCC;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.jupiter.api.Test;
 
@@ -1262,7 +1262,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC B = RandomMatrices_DSCC.rectangle(8, 6, 30, rand);
 
         double found = CommonOps_DSCC.dotInnerColumns(A, 1, B, 3, null, null);
-        double expected = ImplSparseSparseMult_DSCC.dotInnerColumns(A, 1, B, 3, null, null);
+        double expected = ImplMultiplication_DSCC.dotInnerColumns(A, 1, B, 3, null, null);
 
         assertEquals(expected, found, UtilEjml.TEST_F64);
     }

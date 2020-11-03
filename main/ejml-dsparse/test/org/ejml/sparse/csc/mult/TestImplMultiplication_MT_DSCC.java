@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-class TestImplSparseSparseMult_MT_DSCC {
+class TestImplMultiplication_MT_DSCC {
     Random rand = new Random(234);
 
     @Test void mult_s_s() {
@@ -62,8 +62,8 @@ class TestImplSparseSparseMult_MT_DSCC {
         DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(rowsA, colsB, nz_c, -1, 1, rand);
         DMatrixSparseCSC found = expected.copy();
 
-        ImplSparseSparseMult_DSCC.mult(a, b, expected, null, null);
-        ImplSparseSparseMult_MT_DSCC.mult(a, b, found, null);
+        ImplMultiplication_DSCC.mult(a, b, expected, null, null);
+        ImplMultiplication_MT_DSCC.mult(a, b, found, null);
         assertTrue(CommonOps_DSCC.checkStructure(found));
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(expected, found, UtilEjml.TEST_F64));
@@ -90,10 +90,10 @@ class TestImplSparseSparseMult_MT_DSCC {
         GrowArray<DGrowArray> work = new GrowArray<>(DGrowArray::new);
 
         if (add) {
-            ImplSparseSparseMult_MT_DSCC.multAdd(a, b, c, work);
+            ImplMultiplication_MT_DSCC.multAdd(a, b, c, work);
             CommonOps_DDRM.multAdd(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_MT_DSCC.mult(a, b, c, work);
+            ImplMultiplication_MT_DSCC.mult(a, b, c, work);
             CommonOps_DDRM.mult(dense_a, b, expected_c);
         }
 
@@ -119,8 +119,8 @@ class TestImplSparseSparseMult_MT_DSCC {
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowsA, colsB, -1, 1, rand);
         DMatrixRMaj found = expected.copy();
 
-        ImplSparseSparseMult_DSCC.multTransA(a, b, expected);
-        ImplSparseSparseMult_MT_DSCC.multTransA(a, b, found);
+        ImplMultiplication_DSCC.multTransA(a, b, expected);
+        ImplMultiplication_MT_DSCC.multTransA(a, b, found);
 
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
@@ -140,8 +140,8 @@ class TestImplSparseSparseMult_MT_DSCC {
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowsA, colsB, -1, 1, rand);
         DMatrixRMaj found = expected.copy();
 
-        ImplSparseSparseMult_DSCC.multAddTransA(a, b, expected);
-        ImplSparseSparseMult_MT_DSCC.multAddTransA(a, b, found);
+        ImplMultiplication_DSCC.multAddTransA(a, b, expected);
+        ImplMultiplication_MT_DSCC.multAddTransA(a, b, found);
 
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
@@ -171,7 +171,7 @@ class TestImplSparseSparseMult_MT_DSCC {
 //            ImplSparseSparseMult_MT_DSCC.multAddTransB(a, b, c);
             CommonOps_DDRM.multAddTransB(dense_a, b, expected_c);
         } else {
-            ImplSparseSparseMult_MT_DSCC.multTransB(a, b, c, false, work);
+            ImplMultiplication_MT_DSCC.multTransB(a, b, c, false, work);
             CommonOps_DDRM.multTransB(dense_a, b, expected_c);
         }
         for (int row = 0; row < c.numRows; row++) {

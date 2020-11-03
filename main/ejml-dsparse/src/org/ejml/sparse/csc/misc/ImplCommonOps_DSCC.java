@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;
-import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;
+import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
 
 /**
  * Implementation class.  Not recommended for direct use.  Instead use {@link CommonOps_DSCC}

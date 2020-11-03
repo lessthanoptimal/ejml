@@ -29,14 +29,14 @@ import pabeles.concurrency.GrowArray;
 import java.util.Arrays;
 
 import static org.ejml.UtilEjml.adjust;
-import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;
+import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
 
 /**
  * Concurrent matrix multiplication for DSCC matrices.
  *
  * @author Peter Abeles
  */
-public class ImplSparseSparseMult_MT_DSCC {
+public class ImplMultiplication_MT_DSCC {
     /**
      * Performs matrix multiplication.  C = A*B. The problem is broken up into as many "blocks" as there are threads
      * available. Each block will process a set of columns independently. After running results from independent

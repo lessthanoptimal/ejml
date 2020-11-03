@@ -25,8 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
 
 import static org.ejml.UtilEjml.adjust;
-import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC.multAddColA;
-import static org.ejml.sparse.csc.mult.ImplSparseSparseMult_MT_DSCC.stitchMatrix;
+import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
+import static org.ejml.sparse.csc.mult.ImplMultiplication_MT_DSCC.stitchMatrix;
 
 /**
  * Concurrent implementations of {@link ImplCommonOps_DSCC}.

@@ -23,7 +23,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.misc.ImplCommonOps_MT_DSCC;
-import org.ejml.sparse.csc.mult.ImplSparseSparseMult_MT_DSCC;
+import org.ejml.sparse.csc.mult.ImplMultiplication_MT_DSCC;
 import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
@@ -56,7 +56,7 @@ public class CommonOps_MT_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_MT_DSCC.mult(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.mult(A, B, outputC, listWork);
 
         return outputC;
     }
@@ -98,7 +98,7 @@ public class CommonOps_MT_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numCols);
 
-        ImplSparseSparseMult_MT_DSCC.mult(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.mult(A, B, outputC, listWork);
 
         return outputC;
     }
@@ -113,7 +113,7 @@ public class CommonOps_MT_DSCC {
         if (A.numRows != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_MT_DSCC.multAdd(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.multAdd(A, B, outputC, listWork);
     }
 
     /**
@@ -129,7 +129,7 @@ public class CommonOps_MT_DSCC {
 
         outputC = reshapeOrDeclare(outputC, A.numCols, B.numCols);
 
-        ImplSparseSparseMult_MT_DSCC.multTransA(A, B, outputC);
+        ImplMultiplication_MT_DSCC.multTransA(A, B, outputC);
 
         return outputC;
     }
@@ -143,7 +143,7 @@ public class CommonOps_MT_DSCC {
         if (A.numCols != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_MT_DSCC.multAddTransA(A, B, outputC);
+        ImplMultiplication_MT_DSCC.multAddTransA(A, B, outputC);
     }
 
     /**
@@ -159,7 +159,7 @@ public class CommonOps_MT_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numRows);
 
-        ImplSparseSparseMult_MT_DSCC.multTransB(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.multTransB(A, B, outputC, listWork);
 
         return outputC;
     }
@@ -174,6 +174,6 @@ public class CommonOps_MT_DSCC {
         if (A.numRows != outputC.numRows || B.numRows != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplSparseSparseMult_MT_DSCC.multAddTransB(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.multAddTransB(A, B, outputC, listWork);
     }
 }

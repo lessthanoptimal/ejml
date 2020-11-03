@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.interfaces.decomposition.QRSparseDecomposition;
 import org.ejml.sparse.ComputePermutation;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
-import org.ejml.sparse.csc.mult.ImplSparseSparseMult_DSCC;
+import org.ejml.sparse.csc.mult.ImplMultiplication_DSCC;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -150,7 +150,7 @@ public class QrLeftLookingDecomposition_DSCC implements
                 R.nz_values[R.nz_length++] = x[i];
                 x[i] = 0;
                 if (parent[i] == k) {
-                    ImplSparseSparseMult_DSCC.addRowsInAInToC(V, i, V, k, w);
+                    ImplMultiplication_DSCC.addRowsInAInToC(V, i, V, k, w);
                 }
             }
             for (int p = p1; p < V.nz_length; p++) {

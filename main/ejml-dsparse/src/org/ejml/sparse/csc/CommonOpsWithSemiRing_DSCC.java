@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.ops.DSemiRing;
 import org.ejml.sparse.csc.misc.ImplCommonOpsWithSemiRing_DSCC;
-import org.ejml.sparse.csc.mult.ImplSparseSparseMultWithSemiRing_DSCC;
+import org.ejml.sparse.csc.mult.ImplMultiplicationWithSemiRing_DSCC;
 import org.jetbrains.annotations.Nullable;
 
 import static org.ejml.UtilEjml.reshapeOrDeclare;
@@ -54,7 +54,7 @@ public class CommonOpsWithSemiRing_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         output = reshapeOrDeclare(output, A, A.numRows, B.numCols);
 
-        ImplSparseSparseMultWithSemiRing_DSCC.mult(A, B, output, semiRing, gw, gx);
+        ImplMultiplicationWithSemiRing_DSCC.mult(A, B, output, semiRing, gw, gx);
 
         return output;
     }
@@ -73,7 +73,7 @@ public class CommonOpsWithSemiRing_DSCC {
 
         output = reshapeOrDeclare(output, A.numRows, B.numCols);
 
-        ImplSparseSparseMultWithSemiRing_DSCC.mult(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.mult(A, B, output, semiRing);
 
         return output;
     }
@@ -85,7 +85,7 @@ public class CommonOpsWithSemiRing_DSCC {
         if (A.numRows != output.numRows || B.numCols != output.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes. " + stringShapes(A, B, output));
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multAdd(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multAdd(A, B, output, semiRing);
     }
 
     /**
@@ -102,7 +102,7 @@ public class CommonOpsWithSemiRing_DSCC {
 
         output = reshapeOrDeclare(output, A.numCols, B.numCols);
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multTransA(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multTransA(A, B, output, semiRing);
 
         return output;
     }
@@ -114,7 +114,7 @@ public class CommonOpsWithSemiRing_DSCC {
         if (A.numCols != output.numRows || B.numCols != output.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes. " + stringShapes(A, B, output));
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multAddTransA(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multAddTransA(A, B, output, semiRing);
     }
 
     /**
@@ -130,7 +130,7 @@ public class CommonOpsWithSemiRing_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         output = reshapeOrDeclare(output, A.numRows, B.numRows);
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multTransB(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multTransB(A, B, output, semiRing);
 
         return output;
     }
@@ -142,7 +142,7 @@ public class CommonOpsWithSemiRing_DSCC {
         if (A.numRows != output.numRows || B.numRows != output.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes. " + stringShapes(A, B, output));
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multAddTransB(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multAddTransB(A, B, output, semiRing);
     }
 
     /**
@@ -158,7 +158,7 @@ public class CommonOpsWithSemiRing_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         output = reshapeOrDeclare(output, A.numCols, B.numRows);
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multTransAB(A, B, output, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multTransAB(A, B, output, semiRing);
 
         return output;
     }
@@ -171,7 +171,7 @@ public class CommonOpsWithSemiRing_DSCC {
         if (A.numCols != C.numRows || B.numRows != C.numCols)
             throw new IllegalArgumentException("Inconsistent matrix shapes. " + stringShapes(A, B, C));
 
-        ImplSparseSparseMultWithSemiRing_DSCC.multAddTransAB(A, B, C, semiRing);
+        ImplMultiplicationWithSemiRing_DSCC.multAddTransAB(A, B, C, semiRing);
     }
 
     /**
