@@ -21,7 +21,6 @@ package org.ejml.sparse.csc.misc;
 import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
-import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
 
 import static org.ejml.UtilEjml.adjust;
@@ -46,10 +45,7 @@ public class ImplCommonOps_MT_DSCC {
      * @param listWork (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                            @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
-        if (listWork == null)
-            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
-
+                            GrowArray<Workspace_MT_DSCC> listWork ) {
         // Break the problem up into blocks of columns and process them independently
         EjmlConcurrency.loopBlocks(0, A.numCols, listWork, ( workspace, col0, col1 ) -> {
             DMatrixSparseCSC workC = workspace.mat;

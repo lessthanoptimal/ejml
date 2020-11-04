@@ -41,7 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 class TestImplMultiplication_MT_DSCC {
-    Random rand = new Random(234);
+    private final Random rand = new Random(234);
+    private final GrowArray<DGrowArray> workArrays = new GrowArray<>(DGrowArray::new);
+    private final GrowArray<Workspace_MT_DSCC> workSpaceMT = new GrowArray<>(Workspace_MT_DSCC::new);
 
     @Test void mult_s_s() {
         for (int i = 0; i < 50; i++) {
@@ -63,7 +65,7 @@ class TestImplMultiplication_MT_DSCC {
         DMatrixSparseCSC found = expected.copy();
 
         ImplMultiplication_DSCC.mult(a, b, expected, null, null);
-        ImplMultiplication_MT_DSCC.mult(a, b, found, null);
+        ImplMultiplication_MT_DSCC.mult(a, b, found, workSpaceMT);
         assertTrue(CommonOps_DSCC.checkStructure(found));
 
         assertTrue(MatrixFeatures_DSCC.isEqualsSort(expected, found, UtilEjml.TEST_F64));
@@ -119,8 +121,8 @@ class TestImplMultiplication_MT_DSCC {
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowsA, colsB, -1, 1, rand);
         DMatrixRMaj found = expected.copy();
 
-        ImplMultiplication_DSCC.multTransA(a, b, expected);
-        ImplMultiplication_MT_DSCC.multTransA(a, b, found);
+        ImplMultiplication_DSCC.multTransA(a, b, expected, workArrays.grow());
+        ImplMultiplication_MT_DSCC.multTransA(a, b, found, workArrays);
 
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
@@ -140,8 +142,8 @@ class TestImplMultiplication_MT_DSCC {
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowsA, colsB, -1, 1, rand);
         DMatrixRMaj found = expected.copy();
 
-        ImplMultiplication_DSCC.multAddTransA(a, b, expected);
-        ImplMultiplication_MT_DSCC.multAddTransA(a, b, found);
+        ImplMultiplication_DSCC.multAddTransA(a, b, expected, workArrays.grow());
+        ImplMultiplication_MT_DSCC.multAddTransA(a, b, found, workArrays);
 
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
@@ -152,9 +154,9 @@ class TestImplMultiplication_MT_DSCC {
             multTransB_s_d(15, false);
             multTransB_s_d(4, false);
 
-//            multTransB_s_d(24, true);
-//            multTransB_s_d(15, true);
-//            multTransB_s_d(4, true);
+            multTransB_s_d(24, true);
+            multTransB_s_d(15, true);
+            multTransB_s_d(4, true);
         }
     }
 
@@ -168,12 +170,46 @@ class TestImplMultiplication_MT_DSCC {
         GrowArray<DGrowArray> work = new GrowArray<>(DGrowArray::new);
 
         if (add) {
-//            ImplSparseSparseMult_MT_DSCC.multAddTransB(a, b, c);
+            ImplMultiplication_MT_DSCC.multAddTransB(a, b, c, work);
             CommonOps_DDRM.multAddTransB(dense_a, b, expected_c);
         } else {
             ImplMultiplication_MT_DSCC.multTransB(a, b, c, false, work);
             CommonOps_DDRM.multTransB(dense_a, b, expected_c);
         }
+        for (int row = 0; row < c.numRows; row++) {
+            for (int col = 0; col < c.numCols; col++) {
+                assertEquals(expected_c.get(row, col), c.get(row, col), UtilEjml.TEST_F64, row + " " + col);
+            }
+        }
+    }
+
+    @Test void multTransAB_s_d() {
+        for (int i = 0; i < 10; i++) {
+            multTransAB_s_d(24, false);
+            multTransAB_s_d(15, false);
+            multTransAB_s_d(4, false);
+
+            multTransAB_s_d(24, true);
+            multTransAB_s_d(15, true);
+            multTransAB_s_d(4, true);
+        }
+    }
+
+    private void multTransAB_s_d( int elementsA, boolean add ) {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(6, 4, elementsA, -1, 1, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 6, -1, 1, rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(4, 5, -1, 1, rand);
+        DMatrixRMaj expected_c = c.copy();
+        DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
+
+        if (add) {
+            ImplMultiplication_MT_DSCC.multAddTransAB(a, b, c);
+            CommonOps_DDRM.multAddTransAB(dense_a, b, expected_c);
+        } else {
+            ImplMultiplication_MT_DSCC.multTransAB(a, b, c);
+            CommonOps_DDRM.multTransAB(dense_a, b, expected_c);
+        }
+
         for (int row = 0; row < c.numRows; row++) {
             for (int col = 0; col < c.numCols; col++) {
                 assertEquals(expected_c.get(row, col), c.get(row, col), UtilEjml.TEST_F64, row + " " + col);

@@ -19,6 +19,7 @@
 package org.ejml.sparse.csc;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -26,6 +27,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.ops.DConvertMatrixStruct;
 import org.junit.jupiter.api.Test;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 
@@ -39,8 +41,9 @@ class TestCommonOps_MT_DSCC {
 
     private final Random rand = new Random(234);
 
-    @Test
-    public void mult_s_s_shapes() {
+    private GrowArray<DGrowArray> growArray = new GrowArray<>(DGrowArray::new);
+
+    @Test void mult_s_s_shapes() {
         // multiple trials to test more sparse structures
         for (int trial = 0; trial < 50; trial++) {
             check_s_s_mult(
@@ -86,8 +89,7 @@ class TestCommonOps_MT_DSCC {
         }
     }
 
-    @Test
-    public void add_shapes() {
+    @Test void add_shapes() {
         check_add(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
@@ -143,8 +145,7 @@ class TestCommonOps_MT_DSCC {
         }
     }
 
-    @Test
-    public void mult_s_d_shapes() {
+    @Test void mult_s_d_shapes() {
         check_s_d_mult(
                 RandomMatrices_DSCC.rectangle(5, 6, 5, rand),
                 RandomMatrices_DDRM.rectangle(6, 4, rand),
@@ -188,40 +189,34 @@ class TestCommonOps_MT_DSCC {
                         if (add) {
                             if (transA) {
                                 if (transB) {
-                                    continue;
-//                                    CommonOps_DSCC.multAddTransAB(A_t, B_t, C);
-//                                    CommonOps_DDRM.multAddTransAB(denseA_t, B_t, expected);
+                                    CommonOps_MT_DSCC.multAddTransAB(A_t, B_t, C);
+                                    CommonOps_DDRM.multAddTransAB(denseA_t, B_t, expected);
                                 } else {
-                                    CommonOps_DSCC.multAddTransA(A_t, B, C);
+                                    CommonOps_MT_DSCC.multAddTransA(A_t, B, C, growArray);
                                     CommonOps_DDRM.multAddTransA(denseA_t, B, expected);
                                 }
                             } else if (transB) {
-                                continue;
-//                                CommonOps_DSCC.multAddTransB(A, B_t, C);
-//                                CommonOps_DDRM.multAddTransB(denseA, B_t, expected);
+                                CommonOps_MT_DSCC.multAddTransB(A, B_t, C, growArray);
+                                CommonOps_DDRM.multAddTransB(denseA, B_t, expected);
                             } else {
-                                continue;
-//                                CommonOps_DSCC.multAdd(A, B, C);
-//                                CommonOps_DDRM.multAdd(denseA, B, expected);
+                                CommonOps_MT_DSCC.multAdd(A, B, C, growArray);
+                                CommonOps_DDRM.multAdd(denseA, B, expected);
                             }
                         } else {
                             if (transA) {
                                 if (transB) {
-                                    continue;
-//                                    CommonOps_DSCC.multTransAB(A_t, B_t, C);
-//                                    CommonOps_DDRM.multTransAB(denseA_t, B_t, expected);
+                                    CommonOps_MT_DSCC.multTransAB(A_t, B_t, C);
+                                    CommonOps_DDRM.multTransAB(denseA_t, B_t, expected);
                                 } else {
-                                    CommonOps_DSCC.multTransA(A_t, B, C);
+                                    CommonOps_MT_DSCC.multTransA(A_t, B, C, growArray);
                                     CommonOps_DDRM.multTransA(denseA_t, B, expected);
                                 }
                             } else if (transB) {
-                                continue;
-//                                CommonOps_DSCC.multTransB(A, B_t, C);
-//                                CommonOps_DDRM.multTransB(denseA, B_t, expected);
+                                CommonOps_MT_DSCC.multTransB(A, B_t, C, growArray);
+                                CommonOps_DDRM.multTransB(denseA, B_t, expected);
                             } else {
-                                continue;
-//                                CommonOps_DSCC.mult(A, B, C);
-//                                CommonOps_DDRM.mult(denseA, B, expected);
+                                CommonOps_MT_DSCC.mult(A, B, C, growArray);
+                                CommonOps_DDRM.mult(denseA, B, expected);
                             }
                         }
 
@@ -229,9 +224,11 @@ class TestCommonOps_MT_DSCC {
                             fail("exception expected");
 
                         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, C, UtilEjml.TEST_F64));
-                    } catch (RuntimeException ignore) {
-                        if (!exception)
+                    } catch (RuntimeException e) {
+                        if (!exception) {
+                            e.printStackTrace();
                             fail("no exception expected");
+                        }
                     }
                 }
             }

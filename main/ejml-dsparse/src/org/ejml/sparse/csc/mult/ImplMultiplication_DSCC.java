@@ -22,6 +22,7 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.ops.DOperatorBinary;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -173,10 +174,24 @@ public class ImplMultiplication_DSCC {
         }
     }
 
-    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
+        multTransA(A, B, C, workArray, ( a, b ) -> b);
+    }
+
+    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
+        multTransA(A, B, C, workArray, Double::sum);
+    }
+
+    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray,
+                                   DOperatorBinary op ) {
+        double[] work = workArray.reshape(B.numRows).data;
 
         // C(i,j) = sum_k A(k,i) * B(k,j)
         for (int j = 0; j < B.numCols; j++) {
+            // local copy of row to avoid cache misses
+            for (int k = 0; k < B.numRows; k++) {
+                work[k] = B.data[k*B.numCols + j];
+            }
 
             for (int i = 0; i < A.numCols; i++) {
                 int idx0 = A.col_idx[i];
@@ -184,8 +199,54 @@ public class ImplMultiplication_DSCC {
 
                 double sum = 0;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
-                    int rowK = A.nz_rows[indexA];
-                    sum += A.nz_values[indexA]*B.data[rowK*B.numCols + j];
+                    int k = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*work[k];
+                }
+
+                C.data[i*C.numCols + j] = op.apply(C.data[i*C.numCols + j], sum);
+            }
+        }
+    }
+
+    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
+        C.zero();
+        multAddTransB(A, B, C, workArray);
+    }
+
+    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
+        double[] work = workArray.reshape(B.numRows).data;
+
+        // C(i,j) = sum_k A(i,k) * B(j,k)
+        for (int k = 0; k < A.numCols; k++) {
+            // local copy of row to avoid cache misses
+            for (int j = 0; j < B.numRows; j++) {
+                work[j] = B.data[j*B.numCols + k];
+            }
+
+            int idx0 = A.col_idx[k];
+            int idx1 = A.col_idx[k + 1];
+            for (int indexA = idx0; indexA < idx1; indexA++) {
+                for (int j = 0; j < B.numRows; j++) {
+                    int i = A.nz_rows[indexA];
+                    C.data[i*C.numCols + j] += A.nz_values[indexA]*work[j];
+                }
+            }
+        }
+    }
+
+    public static void multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(j,K)
+        for (int j = 0; j < B.numRows; j++) {
+            for (int i = 0; i < A.numCols; i++) {
+                int idx0 = A.col_idx[i];
+                int idx1 = A.col_idx[i + 1];
+
+                final int indexRowB = j*B.numCols;
+
+                double sum = 0;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int k = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*B.data[indexRowB + k];
                 }
 
                 C.data[i*C.numCols + j] = sum;
@@ -193,65 +254,22 @@ public class ImplMultiplication_DSCC {
         }
     }
 
-    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
-        // C(i,j) = sum_k A(k,i) * B(k,j)
-        for (int j = 0; j < B.numCols; j++) {
-
+    public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(j,K)
+        for (int j = 0; j < B.numRows; j++) {
             for (int i = 0; i < A.numCols; i++) {
                 int idx0 = A.col_idx[i];
                 int idx1 = A.col_idx[i + 1];
 
+                final int indexRowB = j*B.numCols;
+
                 double sum = 0;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
-                    int rowK = A.nz_rows[indexA];
-                    sum += A.nz_values[indexA]*B.data[rowK*B.numCols + j];
+                    int k = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*B.data[indexRowB + k];
                 }
 
                 C.data[i*C.numCols + j] += sum;
-            }
-        }
-    }
-
-    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
-
-        C.zero();
-        multAddTransB(A, B, C);
-    }
-
-    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
-
-        // C(i,j) = sum_k A(i,k) * B(j,k)
-        for (int k = 0; k < A.numCols; k++) {
-            int idx0 = A.col_idx[k];
-            int idx1 = A.col_idx[k + 1];
-            for (int indexA = idx0; indexA < idx1; indexA++) {
-                for (int j = 0; j < B.numRows; j++) {
-                    int i = A.nz_rows[indexA];
-                    C.data[i*C.numCols + j] += A.nz_values[indexA]*B.data[j*B.numCols + k];
-                }
-            }
-        }
-    }
-
-    public static void multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
-        C.zero();
-        multAddTransAB(A, B, C);
-    }
-
-    public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
-        // C(i,j) = sum_k A(k,i) * B(j,K)
-        for (int i = 0; i < A.numCols; i++) {
-            int idx0 = A.col_idx[i];
-            int idx1 = A.col_idx[i + 1];
-
-            for (int indexA = idx0; indexA < idx1; indexA++) {
-                for (int j = 0; j < B.numRows; j++) {
-                    int indexB = j*B.numCols;
-
-                    int k = A.nz_rows[indexA];
-
-                    C.data[i*C.numCols + j] += A.nz_values[indexA]*B.data[indexB + k];
-                }
             }
         }
     }

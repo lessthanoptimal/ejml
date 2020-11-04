@@ -23,7 +23,9 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.junit.jupiter.api.Test;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 
@@ -34,6 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class TestImplCommonOps_MT_DSCC {
     private final Random rand = new Random(324);
+
+    private final GrowArray<Workspace_MT_DSCC> listWork = new GrowArray<>(Workspace_MT_DSCC::new);
 
     @Test
     void add() {
@@ -48,7 +52,7 @@ class TestImplCommonOps_MT_DSCC {
                 DMatrixSparseCSC cc = c.copy();
 
                 ImplCommonOps_DSCC.add(alpha, a, beta, b, c, null, null);
-                ImplCommonOps_MT_DSCC.add(alpha, a, beta, b, cc, null);
+                ImplCommonOps_MT_DSCC.add(alpha, a, beta, b, cc, listWork);
 
                 assertTrue(CommonOps_DSCC.checkStructure(cc));
                 assertTrue(MatrixFeatures_DSCC.isEqualsSort(c, cc, UtilEjml.TEST_F64));
