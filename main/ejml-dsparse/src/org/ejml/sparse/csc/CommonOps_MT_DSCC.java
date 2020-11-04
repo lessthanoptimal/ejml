@@ -56,6 +56,9 @@ public class CommonOps_MT_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A, A.numRows, B.numCols);
 
+        if (listWork == null)
+            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
+
         ImplMultiplication_MT_DSCC.mult(A, B, outputC, listWork);
 
         return outputC;
@@ -80,6 +83,9 @@ public class CommonOps_MT_DSCC {
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A, A.numRows, A.numCols);
 
+        if (listWork == null)
+            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
+
         ImplCommonOps_MT_DSCC.add(alpha, A, beta, B, outputC, listWork);
 
         return outputC;
@@ -93,12 +99,14 @@ public class CommonOps_MT_DSCC {
      * @param outputC Dense Matrix
      */
     public static DMatrixRMaj mult( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
-                                    @Nullable GrowArray<DGrowArray> listWork ) {
+                                    @Nullable GrowArray<DGrowArray> workArrays ) {
         if (A.numCols != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numCols);
+        if (workArrays == null)
+            workArrays = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.mult(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.mult(A, B, outputC, workArrays);
 
         return outputC;
     }
@@ -107,13 +115,16 @@ public class CommonOps_MT_DSCC {
      * <p>C = C + A<sup>T</sup>*B</p>
      */
     public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
-                                @Nullable GrowArray<DGrowArray> listWork ) {
+                                @Nullable GrowArray<DGrowArray> workArrays ) {
         if (A.numCols != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         if (A.numRows != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplMultiplication_MT_DSCC.multAdd(A, B, outputC, listWork);
+        if (workArrays == null)
+            workArrays = new GrowArray<>(DGrowArray::new);
+
+        ImplMultiplication_MT_DSCC.multAdd(A, B, outputC, workArrays);
     }
 
     /**
@@ -123,13 +134,17 @@ public class CommonOps_MT_DSCC {
      * @param B Dense Matrix
      * @param outputC Dense Matrix
      */
-    public static DMatrixRMaj multTransA( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC ) {
+    public static DMatrixRMaj multTransA( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
+                                          @Nullable GrowArray<DGrowArray> workArray ) {
         if (A.numRows != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
 
         outputC = reshapeOrDeclare(outputC, A.numCols, B.numCols);
 
-        ImplMultiplication_MT_DSCC.multTransA(A, B, outputC);
+        if (workArray == null)
+            workArray = new GrowArray<>(DGrowArray::new);
+
+        ImplMultiplication_MT_DSCC.multTransA(A, B, outputC, workArray);
 
         return outputC;
     }
@@ -137,13 +152,17 @@ public class CommonOps_MT_DSCC {
     /**
      * <p>C = C + A<sup>T</sup>*B</p>
      */
-    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
+                                      @Nullable GrowArray<DGrowArray> workArray ) {
         if (A.numRows != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         if (A.numCols != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplMultiplication_MT_DSCC.multAddTransA(A, B, outputC);
+        if (workArray == null)
+            workArray = new GrowArray<>(DGrowArray::new);
+
+        ImplMultiplication_MT_DSCC.multAddTransA(A, B, outputC, workArray);
     }
 
     /**
@@ -154,12 +173,15 @@ public class CommonOps_MT_DSCC {
      * @param outputC Dense Matrix
      */
     public static DMatrixRMaj multTransB( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
-                                          @Nullable GrowArray<DGrowArray> listWork ) {
+                                          @Nullable GrowArray<DGrowArray> workArrays ) {
         if (A.numCols != B.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numRows);
 
-        ImplMultiplication_MT_DSCC.multTransB(A, B, outputC, listWork);
+        if (workArrays == null)
+            workArrays = new GrowArray<>(DGrowArray::new);
+
+        ImplMultiplication_MT_DSCC.multTransB(A, B, outputC, workArrays);
 
         return outputC;
     }
@@ -168,12 +190,44 @@ public class CommonOps_MT_DSCC {
      * <p>C = C + A*B<sup>T</sup></p>
      */
     public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
-                                      @Nullable GrowArray<DGrowArray> listWork ) {
+                                      @Nullable GrowArray<DGrowArray> workArrays ) {
         if (A.numCols != B.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         if (A.numRows != outputC.numRows || B.numRows != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        ImplMultiplication_MT_DSCC.multAddTransB(A, B, outputC, listWork);
+        if (workArrays == null)
+            workArrays = new GrowArray<>(DGrowArray::new);
+
+        ImplMultiplication_MT_DSCC.multAddTransB(A, B, outputC, workArrays);
+    }
+
+    /**
+     * Performs matrix multiplication.  C = A<sup>T</sup>*B<sup>T</sup>
+     *
+     * @param A Matrix
+     * @param B Dense Matrix
+     * @param outputC Dense Matrix
+     */
+    public static DMatrixRMaj multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numRows != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        outputC = reshapeOrDeclare(outputC, A.numCols, B.numRows);
+
+        ImplMultiplication_MT_DSCC.multTransAB(A, B, outputC);
+
+        return outputC;
+    }
+
+    /**
+     * <p>C = C + A<sup>T</sup>*B<sup>T</sup></p>
+     */
+    public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
+        if (A.numRows != B.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
+        if (A.numCols != outputC.numRows || B.numRows != outputC.numCols)
+            throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
+
+        ImplMultiplication_MT_DSCC.multAddTransAB(A, B, outputC);
     }
 }

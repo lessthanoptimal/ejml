@@ -211,11 +211,11 @@ public class TestCommonOps_DSCC {
                                     CommonOps_DSCC.multAddTransAB(A_t, B_t, C);
                                     CommonOps_DDRM.multAddTransAB(denseA_t, B_t, expected);
                                 } else {
-                                    CommonOps_DSCC.multAddTransA(A_t, B, C);
+                                    CommonOps_DSCC.multAddTransA(A_t, B, C, null);
                                     CommonOps_DDRM.multAddTransA(denseA_t, B, expected);
                                 }
                             } else if (transB) {
-                                CommonOps_DSCC.multAddTransB(A, B_t, C);
+                                CommonOps_DSCC.multAddTransB(A, B_t, C, null);
                                 CommonOps_DDRM.multAddTransB(denseA, B_t, expected);
                             } else {
                                 CommonOps_DSCC.multAdd(A, B, C);
@@ -227,11 +227,11 @@ public class TestCommonOps_DSCC {
                                     CommonOps_DSCC.multTransAB(A_t, B_t, C);
                                     CommonOps_DDRM.multTransAB(denseA_t, B_t, expected);
                                 } else {
-                                    CommonOps_DSCC.multTransA(A_t, B, C);
+                                    CommonOps_DSCC.multTransA(A_t, B, C, null);
                                     CommonOps_DDRM.multTransA(denseA_t, B, expected);
                                 }
                             } else if (transB) {
-                                CommonOps_DSCC.multTransB(A, B_t, C);
+                                CommonOps_DSCC.multTransB(A, B_t, C, null);
                                 CommonOps_DDRM.multTransB(denseA, B_t, expected);
                             } else {
                                 CommonOps_DSCC.mult(A, B, C);
@@ -547,7 +547,7 @@ public class TestCommonOps_DSCC {
             int nz_a = RandomMatrices_DSCC.nonzero(rows, cols, 0.05, 0.8, rand);
 
             DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(rows, cols, nz_a, rand);
-            DMatrixRMaj values = new DMatrixRMaj(1,1);
+            DMatrixRMaj values = new DMatrixRMaj(1, 1);
 
             CommonOps_DSCC.maxAbsCols(A, values);
 
@@ -1509,7 +1509,7 @@ public class TestCommonOps_DSCC {
         DMatrixSparseCSC B = CommonOps_DSCC.applyColumnIdx(A, applyFunc, null);
 
         A.createCoordinateIterator()
-                .forEachRemaining(entry -> assertEquals(B.get(entry.row, entry.col) ,applyFunc.apply(entry.col, entry.value)));
+                .forEachRemaining(entry -> assertEquals(B.get(entry.row, entry.col), applyFunc.apply(entry.col, entry.value)));
     }
 
     @Test

@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestImplMultiplication_DSCC {
 
     Random rand = new Random(234);
+    DGrowArray workArray = new DGrowArray();
 
     @Test void mult_s_s() {
         for (int i = 0; i < 50; i++) {
@@ -153,10 +154,10 @@ public class TestImplMultiplication_DSCC {
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
-            ImplMultiplication_DSCC.multAddTransA(a, b, c);
+            ImplMultiplication_DSCC.multAddTransA(a, b, c, workArray);
             CommonOps_DDRM.multAddTransA(dense_a, b, expected_c);
         } else {
-            ImplMultiplication_DSCC.multTransA(a, b, c);
+            ImplMultiplication_DSCC.multTransA(a, b, c, workArray);
             CommonOps_DDRM.multTransA(dense_a, b, expected_c);
         }
         for (int row = 0; row < c.numRows; row++) {
@@ -186,10 +187,10 @@ public class TestImplMultiplication_DSCC {
         DMatrixRMaj dense_a = DConvertMatrixStruct.convert(a, (DMatrixRMaj)null);
 
         if (add) {
-            ImplMultiplication_DSCC.multAddTransB(a, b, c);
+            ImplMultiplication_DSCC.multAddTransB(a, b, c, workArray);
             CommonOps_DDRM.multAddTransB(dense_a, b, expected_c);
         } else {
-            ImplMultiplication_DSCC.multTransB(a, b, c);
+            ImplMultiplication_DSCC.multTransB(a, b, c, workArray);
             CommonOps_DDRM.multTransB(dense_a, b, expected_c);
         }
         for (int row = 0; row < c.numRows; row++) {

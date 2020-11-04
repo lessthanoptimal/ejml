@@ -23,7 +23,6 @@ import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
-import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
 
 import java.util.Arrays;
@@ -49,10 +48,7 @@ public class ImplMultiplication_MT_DSCC {
      * @param listWork (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
-                             @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
-        if (listWork == null)
-            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
-
+                             GrowArray<Workspace_MT_DSCC> listWork ) {
         // Break the problem up into blocks of columns and process them independently
         EjmlConcurrency.loopBlocks(0, B.numCols, listWork, ( workspace, bj0, bj1 ) -> {
             DMatrixSparseCSC workC = workspace.mat;
@@ -131,20 +127,17 @@ public class ImplMultiplication_MT_DSCC {
     }
 
     public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
-                             @Nullable GrowArray<DGrowArray> listWork ) {
+                             GrowArray<DGrowArray> listWork ) {
         mult(A, B, C, false, listWork);
     }
 
     public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
-                                @Nullable GrowArray<DGrowArray> listWork ) {
+                                GrowArray<DGrowArray> listWork ) {
         mult(A, B, C, true, listWork);
     }
 
     public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean add,
-                             @Nullable GrowArray<DGrowArray> listWork ) {
-        if (listWork == null)
-            listWork = new GrowArray<>(DGrowArray::new);
-
+                             GrowArray<DGrowArray> listWork ) {
         // Break the problem up into blocks of columns and process them independently
         EjmlConcurrency.loopBlocks(0, B.numCols, listWork, ( gwork, bj0, bj1 ) -> {
             // same array to store column in A and B. This is done to reduce cache misses in B and C access
@@ -190,57 +183,74 @@ public class ImplMultiplication_MT_DSCC {
         });
     }
 
-    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
+                                   GrowArray<DGrowArray> listWork ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
-        EjmlConcurrency.loopFor(0, B.numCols, j -> {
-            for (int i = 0; i < A.numCols; i++) {
-                int idx0 = A.col_idx[i];
-                int idx1 = A.col_idx[i + 1];
+        EjmlConcurrency.loopBlocks(0, B.numCols, listWork, ( gwork, j0, j1 ) -> {
+            // Local copy of column in A to reduce cache misses
+            double[] work = gwork.reshape(B.numRows).data;
 
-                double sum = 0;
-                for (int indexA = idx0; indexA < idx1; indexA++) {
-                    int rowK = A.nz_rows[indexA];
-                    sum += A.nz_values[indexA]*B.data[rowK*B.numCols + j];
+            for (int j = j0; j < j1; j++) {
+                for (int k = 0; k < B.numRows; k++) {
+                    work[k] = B.data[k*B.numCols + j];
                 }
 
-                C.data[i*C.numCols + j] = sum;
+                for (int i = 0; i < A.numCols; i++) {
+                    int idx0 = A.col_idx[i];
+                    int idx1 = A.col_idx[i + 1];
+
+                    double sum = 0;
+                    for (int indexA = idx0; indexA < idx1; indexA++) {
+                        int k = A.nz_rows[indexA];
+                        sum += A.nz_values[indexA]*work[k];
+//                        sum += A.nz_values[indexA]*B.data[k*B.numCols + j];
+                    }
+
+                    C.data[i*C.numCols + j] = sum;
+                }
             }
         });
     }
 
-    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
+                                      GrowArray<DGrowArray> listWork ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
-        EjmlConcurrency.loopFor(0, B.numCols, j -> {
-            for (int i = 0; i < A.numCols; i++) {
-                int idx0 = A.col_idx[i];
-                int idx1 = A.col_idx[i + 1];
+        EjmlConcurrency.loopBlocks(0, B.numCols, listWork, ( gwork, j0, j1 ) -> {
+            // Local copy of column in A to reduce cache misses
+            double[] work = gwork.reshape(B.numRows).data;
 
-                double sum = 0;
-                for (int indexA = idx0; indexA < idx1; indexA++) {
-                    int rowK = A.nz_rows[indexA];
-                    sum += A.nz_values[indexA]*B.data[rowK*B.numCols + j];
+            for (int j = j0; j < j1; j++) {
+                for (int k = 0; k < B.numRows; k++) {
+                    work[k] = B.data[k*B.numCols + j];
                 }
 
-                C.data[i*C.numCols + j] += sum;
+                for (int i = 0; i < A.numCols; i++) {
+                    int idx0 = A.col_idx[i];
+                    int idx1 = A.col_idx[i + 1];
+
+                    double sum = 0;
+                    for (int indexA = idx0; indexA < idx1; indexA++) {
+                        int k = A.nz_rows[indexA];
+                        sum += A.nz_values[indexA]*work[k];
+//                        sum += A.nz_values[indexA]*B.data[k*B.numCols + j];
+                    }
+
+                    C.data[i*C.numCols + j] += sum;
+                }
             }
         });
     }
 
-    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
-                                   @Nullable GrowArray<DGrowArray> listWork ) {
-        mult(A, B, C, false, listWork);
+    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, GrowArray<DGrowArray> listWork ) {
+        multTransB(A, B, C, false, listWork);
     }
 
-    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
-                                      @Nullable GrowArray<DGrowArray> listWork ) {
+    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, GrowArray<DGrowArray> listWork ) {
         multTransB(A, B, C, true, listWork);
     }
 
     public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean add,
-                                   @Nullable GrowArray<DGrowArray> listWork ) {
-        if (listWork == null)
-            listWork = new GrowArray<>(DGrowArray::new);
-
+                                   GrowArray<DGrowArray> listWork ) {
         // Break the problem up into blocks of columns and process them independently
         EjmlConcurrency.loopBlocks(0, B.numRows, listWork, ( gwork, bj0, bj1 ) -> {
             // Local copy of column in A to reduce cache misses
@@ -277,6 +287,46 @@ public class ImplMultiplication_MT_DSCC {
                         C.data[rowC*C.numCols + bj] = work[rowC];
                     }
                 }
+            }
+        });
+    }
+
+    public static void multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(j,k)
+        EjmlConcurrency.loopFor(0, B.numRows, j -> {
+            for (int i = 0; i < A.numCols; i++) {
+                int idx0 = A.col_idx[i];
+                int idx1 = A.col_idx[i + 1];
+
+                final int indexRowB = j*B.numCols;
+
+                double sum = 0;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int k = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*B.data[indexRowB + k];
+                }
+
+                C.data[i*C.numCols + j] = sum;
+            }
+        });
+    }
+
+    public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
+        // C(i,j) = sum_k A(k,i) * B(j,k)
+        EjmlConcurrency.loopFor(0, B.numRows, j -> {
+            for (int i = 0; i < A.numCols; i++) {
+                int idx0 = A.col_idx[i];
+                int idx1 = A.col_idx[i + 1];
+
+                final int indexRowB = j*B.numCols;
+
+                double sum = 0;
+                for (int indexA = idx0; indexA < idx1; indexA++) {
+                    int k = A.nz_rows[indexA];
+                    sum += A.nz_values[indexA]*B.data[indexRowB + k];
+                }
+
+                C.data[i*C.numCols + j] += sum;
             }
         });
     }

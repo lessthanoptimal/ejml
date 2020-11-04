@@ -29,8 +29,9 @@ Date format: year/month/day
   * Removed the functions below since they had a runtime complexity of O(N^2) relative to matrix size instead of O(N)
     - multTransA(S,S,S), multTransB(S,S,S), innerProductLower(S,S,S)
     - Thanks Florentin Dörre for first noticing the performance issue
+  * Speed up multTransAB(S,D,D), multTransA(S,D,D), multTransB(S,D,D) by a large margin
 - DMatrixSparseCSC
-  * If sorted a binary search is used to lookup rows. Thanks Florentin Dörre.
+  * If sorted, a binary search is used to lookup rows. Thanks Florentin Dörre.
 - ReadMatrixCsv
   * Thanks DEDZTBH for fixing an indexing error when reading complex data types
 - Added Concurrent Algorithms

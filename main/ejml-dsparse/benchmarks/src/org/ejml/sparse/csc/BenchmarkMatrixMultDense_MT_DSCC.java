@@ -49,7 +49,7 @@ public class BenchmarkMatrixMultDense_MT_DSCC {
     @Param({"100000"})
     private int elementCount;
 
-    DMatrixSparseCSC A;
+    DMatrixSparseCSC A,A_small;
     DMatrixRMaj B = new DMatrixRMaj(1, 1);
     DMatrixRMaj C = new DMatrixRMaj(1, 1);
 
@@ -59,19 +59,20 @@ public class BenchmarkMatrixMultDense_MT_DSCC {
     public void setup() {
         Random rand = new Random(2345);
         A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+        A_small = RandomMatrices_DSCC.rectangle(dimension/4, dimension/4, elementCount/4, rand);
         B = RandomMatrices_DDRM.rectangle(dimension, dimension, -1, 1, rand);
         C = B.create(dimension, dimension);
     }
 
     @Benchmark public void mult() { CommonOps_MT_DSCC.mult(A, B, C, work); }
     @Benchmark public void multAdd() { CommonOps_MT_DSCC.multAdd(A, B, C, work); }
-    @Benchmark public void multTransA() { CommonOps_MT_DSCC.multTransA(A, B, C); }
-    @Benchmark public void multAddTransA() { CommonOps_MT_DSCC.multAddTransA(A, B, C); }
+    @Benchmark public void multTransA() { CommonOps_MT_DSCC.multTransA(A, B, C, work); }
+    @Benchmark public void multAddTransA() { CommonOps_MT_DSCC.multAddTransA(A, B, C, work); }
     @Benchmark public void multTransB() { CommonOps_MT_DSCC.multTransB(A, B, C, work); }
     @Benchmark public void multAddTransB() { CommonOps_MT_DSCC.multAddTransB(A, B, C, work); }
-//    @Benchmark public void multTransAB() { CommonOps_MT_DSCC.multTransAB(A, B, C); }
-//    @Benchmark public void multAddTransAB() { CommonOps_MT_DSCC.multAddTransAB(A, B, C); }
-//    @Benchmark public void invert() { CommonOps_MT_DSCC.invert(A, C); }
+    @Benchmark public void multTransAB() { CommonOps_MT_DSCC.multTransAB(A, B, C); }
+    @Benchmark public void multAddTransAB() { CommonOps_MT_DSCC.multAddTransAB(A, B, C); }
+//    @Benchmark public void invert() { CommonOps_MT_DSCC.invert(A_small, C); }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

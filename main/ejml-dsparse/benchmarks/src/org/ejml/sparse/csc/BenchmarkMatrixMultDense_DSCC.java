@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -47,27 +48,30 @@ public class BenchmarkMatrixMultDense_DSCC {
     @Param({"100000"})
     private int elementCount;
 
-    DMatrixSparseCSC A;
+    DMatrixSparseCSC A,A_small;
     DMatrixRMaj B = new DMatrixRMaj(1, 1);
     DMatrixRMaj C = new DMatrixRMaj(1, 1);
+
+    DGrowArray work = new DGrowArray();
 
     @Setup
     public void setup() {
         Random rand = new Random(2345);
         A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+        A_small = RandomMatrices_DSCC.rectangle(dimension/4, dimension/4, elementCount/4, rand);
         B = RandomMatrices_DDRM.rectangle(dimension, dimension, -1, 1, rand);
         C = B.create(dimension, dimension);
     }
 
     @Benchmark public void mult() { CommonOps_DSCC.mult(A, B, C); }
     @Benchmark public void multAdd() { CommonOps_DSCC.multAdd(A, B, C); }
-    @Benchmark public void multTransA() { CommonOps_DSCC.multTransA(A, B, C); }
-    @Benchmark public void multAddTransA() { CommonOps_DSCC.multAddTransA(A, B, C); }
-    @Benchmark public void multTransB() { CommonOps_DSCC.multTransB(A, B, C); }
-    @Benchmark public void multAddTransB() { CommonOps_DSCC.multAddTransB(A, B, C); }
+    @Benchmark public void multTransA() { CommonOps_DSCC.multTransA(A, B, C, work); }
+    @Benchmark public void multAddTransA() { CommonOps_DSCC.multAddTransA(A, B, C, work); }
+    @Benchmark public void multTransB() { CommonOps_DSCC.multTransB(A, B, C, work); }
+    @Benchmark public void multAddTransB() { CommonOps_DSCC.multAddTransB(A, B, C, work); }
     @Benchmark public void multTransAB() { CommonOps_DSCC.multTransAB(A, B, C); }
     @Benchmark public void multAddTransAB() { CommonOps_DSCC.multAddTransAB(A, B, C); }
-    @Benchmark public void invert() { CommonOps_DSCC.invert(A, C); }
+    @Benchmark public void invert() { CommonOps_DSCC.invert(A_small, C); }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
