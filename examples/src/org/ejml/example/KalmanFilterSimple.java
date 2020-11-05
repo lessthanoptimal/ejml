@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,21 +38,18 @@ public class KalmanFilterSimple implements KalmanFilter{
     // sytem state estimate
     private SimpleMatrix x,P;
 
-    @Override
-    public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
+    @Override public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
         this.F = new SimpleMatrix(F);
         this.Q = new SimpleMatrix(Q);
         this.H = new SimpleMatrix(H);
     }
 
-    @Override
-    public void setState(DMatrixRMaj x, DMatrixRMaj P) {
+    @Override public void setState(DMatrixRMaj x, DMatrixRMaj P) {
         this.x = new SimpleMatrix(x);
         this.P = new SimpleMatrix(P);
     }
 
-    @Override
-    public void predict() {
+    @Override public void predict() {
         // x = F x
         x = F.mult(x);
 
@@ -60,8 +57,7 @@ public class KalmanFilterSimple implements KalmanFilter{
         P = F.mult(P).mult(F.transpose()).plus(Q);
     }
 
-    @Override
-    public void update(DMatrixRMaj _z, DMatrixRMaj _R) {
+    @Override public void update(DMatrixRMaj _z, DMatrixRMaj _R) {
         // a fast way to make the matrices usable by SimpleMatrix
         SimpleMatrix z = SimpleMatrix.wrap(_z);
         SimpleMatrix R = SimpleMatrix.wrap(_R);
@@ -82,13 +78,7 @@ public class KalmanFilterSimple implements KalmanFilter{
         P = P.minus(K.mult(H).mult(P));
     }
 
-    @Override
-    public DMatrixRMaj getState() {
-        return x.getMatrix();
-    }
+    @Override public DMatrixRMaj getState() { return x.getMatrix(); }
 
-    @Override
-    public DMatrixRMaj getCovariance() {
-        return P.getMatrix();
-    }
+    @Override public DMatrixRMaj getCovariance() { return P.getMatrix(); }
 }

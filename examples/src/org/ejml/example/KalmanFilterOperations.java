@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,8 +46,7 @@ public class KalmanFilterOperations implements KalmanFilter{
 
     private LinearSolverDense<DMatrixRMaj> solver;
 
-    @Override
-    public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
+    @Override public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
         this.F = F;
         this.Q = Q;
         this.H = H;
@@ -71,14 +70,12 @@ public class KalmanFilterOperations implements KalmanFilter{
         solver = LinearSolverFactory_DDRM.symmPosDef(dimenX);
     }
 
-    @Override
-    public void setState(DMatrixRMaj x, DMatrixRMaj P) {
+    @Override public void setState(DMatrixRMaj x, DMatrixRMaj P) {
         this.x.set(x);
         this.P.set(P);
     }
 
-    @Override
-    public void predict() {
+    @Override public void predict() {
 
         // x = F x
         mult(F,x,a);
@@ -90,8 +87,7 @@ public class KalmanFilterOperations implements KalmanFilter{
         addEquals(P,Q);
     }
 
-    @Override
-    public void update(DMatrixRMaj z, DMatrixRMaj R) {
+    @Override  public void update(DMatrixRMaj z, DMatrixRMaj R) {
         // y = z - H x
         mult(H,x,y);
         subtract(z, y, y);
@@ -117,13 +113,7 @@ public class KalmanFilterOperations implements KalmanFilter{
         subtractEquals(P, b);
     }
 
-    @Override
-    public DMatrixRMaj getState() {
-        return x;
-    }
+    @Override public DMatrixRMaj getState() { return x; }
 
-    @Override
-    public DMatrixRMaj getCovariance() {
-        return P;
-    }
+    @Override public DMatrixRMaj getCovariance() { return P; }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -79,13 +79,13 @@ public class TestCompareKalmanResults {
     }
 
     private void compareFilters( KalmanFilter a, KalmanFilter b ) {
-            DMatrixRMaj testX = b.getState();
-            DMatrixRMaj testP = b.getCovariance();
+        DMatrixRMaj testX = b.getState();
+        DMatrixRMaj testP = b.getCovariance();
 
-            DMatrixRMaj X = a.getState();
-            DMatrixRMaj P = a.getCovariance();
+        DMatrixRMaj X = a.getState();
+        DMatrixRMaj P = a.getCovariance();
 
-            EjmlUnitTests.assertEquals(testX,X,UtilEjml.TEST_F64);
-            EjmlUnitTests.assertEquals(testP,P,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(testX,X,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(testP,P,UtilEjml.TEST_F64);
     }
 }

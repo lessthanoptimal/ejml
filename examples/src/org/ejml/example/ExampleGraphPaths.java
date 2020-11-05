@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,10 +25,11 @@ import org.ejml.ops.DSemiRings;
 import org.ejml.sparse.csc.CommonOpsWithSemiRing_DSCC;
 
 /**
- * Example including one iteration of the graph traversal algorithm breath-first-search (BFS), using different semirings.
- * So following the outgoing relationships for a set of starting nodes.
+ * Example including one iteration of the graph traversal algorithm breath-first-search (BFS),
+ * using different semirings. So following the outgoing relationships for a set of starting nodes.
  *
- * more about the connection between graphs and linear algebra can be found at: https://github.com/GraphBLAS/GraphBLAS-Pointers.
+ * More about the connection between graphs and linear algebra can be found at:
+ * https://github.com/GraphBLAS/GraphBLAS-Pointers.
  *
  * @author Florentin Doerre
  */
@@ -38,11 +39,9 @@ public class ExampleGraphPaths {
     public static void main(String[] args) {
         DMatrixSparseCSC adjacencyMatrix = new DMatrixSparseCSC(NODE_COUNT, 4);
 
-        /*
-            For the example we will be using the following graph:
+        // For the example we will be using the following graph:
+        // (3)<-[cost: 0.2]-(0)<-[cost: 0.1]->(2)<-[cost: 0.3]-(1)
 
-            (3)<-[cost: 0.2]-(0)<-[cost: 0.1]->(2)<-[cost: 0.3]-(1)
-         */
         adjacencyMatrix.set(0, 2, 0.1);
         adjacencyMatrix.set(0, 3, 0.2);
         adjacencyMatrix.set(2, 0, 0.1);
