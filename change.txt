@@ -3,7 +3,7 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.40
-2020/
+2020/11/04
 
 - Speed up build by only creating EjmlVersion.java when autogenerate is called
 - Switched to `org.jetbrains:annotations` from `com.google.code.findbugs:jsr305`
@@ -45,11 +45,6 @@ Date format: year/month/day
   * New Graph path finding example
 - Benchmark
   * Improved coverage of JMH benchmarks as part of an effort to automate the detection of runtime regressions
-
-Future
-- TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
-- TODO Concurrency for Complex Matrices
-- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
 
 ----- Version 0.39
 2020/04/06

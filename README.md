@@ -24,6 +24,7 @@ The following functionality is provided:
 * Graph BLAS (Semirings)
 * Single Thread and Concurrent Implementations
 * Unit Testing
+* Kotlin Extensions
 
 Unit tests are extensively used to ensure correctness of each algorithm's implementation.  Internal benchmarks and [Java Matrix Benchmark](https://lessthanoptimal.github.io/Java-Matrix-Benchmark/) are both used to ensure the speed of this library.
 
@@ -46,7 +47,7 @@ EJML is in Maven central repository and can easily be added to Gradle, Maven, an
 ```
 <groupId>org.ejml</groupId>
 <artifactId>ejml-all</artifactId>
-<version>0.39</version>
+<version>0.40</version>
 ```
 
 This will add the entire library.  Alternatively, you can include the required modules individually:

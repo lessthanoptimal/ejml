@@ -6,8 +6,7 @@
 - clean and generate code:
   cd main;git clean -cf;cd ..
 
-git clean -fd main/ejml-core/src main/ejml-cdense/src main/ejml-fdense/src
-./gradlew autogenerate
+git clean -fd main;./gradlew autogenerate
 
 - Rebuild and run unit tests
 - Commit and tag release
