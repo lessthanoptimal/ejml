@@ -3,6 +3,19 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.40
+2020/
+
+- TODO refactor set() -> setTo()
+- TODO runtime regression using JMH
+- TODO identify sparse decompositions which can be made concurrent
+- TODO identify dense decompositions which require specialized algorithms for concurrency
+
+Future
+- TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
+- TODO Concurrency for Complex Matrices
+- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
+
+----- Version 0.40
 2020/11/04
 
 - Speed up build by only creating EjmlVersion.java when autogenerate is called

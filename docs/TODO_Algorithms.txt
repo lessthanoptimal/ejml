@@ -1,8 +1,3 @@
-Future
-- TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
-- TODO Concurrency for Complex Matrices
-- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
-
 - Block bidiagonal
 - Explore having the various implementations of MatrixMult_* internally invoke an interface that can be swapped
   * Performance hit for small matrices?
