@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.linsol.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
@@ -111,7 +112,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
 
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        X.reshape(AnumCols, B.numCols);
+        UtilEjml.checkReshapeSolve(AnumRows, AnumCols, B, X);
 
         double[] b = adjust(gb, B.numRows);
         double[] bp = adjust(gbp, B.numRows);

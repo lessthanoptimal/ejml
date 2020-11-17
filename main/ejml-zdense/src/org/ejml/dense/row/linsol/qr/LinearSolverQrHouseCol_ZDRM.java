@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.linsol.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.SpecializedOps_ZDRM;
 import org.ejml.dense.row.decompose.TriangularSolver_ZDRM;
@@ -109,9 +110,7 @@ public class LinearSolverQrHouseCol_ZDRM extends LinearSolverAbstract_ZDRM {
      */
     @Override
     public void solve( ZMatrixRMaj B, ZMatrixRMaj X ) {
-        if (B.numRows != numRows)
-            throw new IllegalArgumentException("Unexpected dimensions for B");
-        X.reshape(numCols, B.numCols);
+        UtilEjml.checkReshapeSolve(numRows, numCols, B, X);
 
         int BnumCols = B.numCols;
 

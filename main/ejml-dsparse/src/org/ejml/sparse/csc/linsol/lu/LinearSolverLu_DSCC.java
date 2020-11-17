@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.linsol.lu;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
@@ -46,7 +47,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
     // Number of rows in A
-    int AnumCols;
+    int AnumRows,AnumCols;
 
     public LinearSolverLu_DSCC( LuUpLooking_DSCC decomposition ) {
         this.decomposition = decomposition;
@@ -54,6 +55,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
     @Override
     public boolean setA( DMatrixSparseCSC A ) {
+        this.AnumRows = A.numRows;
         this.AnumCols = A.numCols;
         return decomposition.decompose(A);
     }
@@ -97,7 +99,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     @Override
     @SuppressWarnings("NullAway") // Compiler isn't smart enough to realize null condition is impossible
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        X.reshape(AnumCols, B.numCols);
+        UtilEjml.checkReshapeSolve(AnumRows, AnumCols, B, X);
 
         int[] pinv = decomposition.getPinv();
         double[] x = adjust(gx, X.numRows);

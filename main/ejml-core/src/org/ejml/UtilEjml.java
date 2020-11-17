@@ -712,4 +712,17 @@ public class UtilEjml {
         if (!value)
             throw new MatrixDimensionException(message);
     }
+
+    /**
+     * Checks the size of inputs to the standard size function. Throws exception if B is incorrect. Reshapes X.
+     *
+     * @param numRowsA Number of rows in A matrix
+     * @param numColsA Number of columns in A matrix
+     */
+    public static void checkReshapeSolve( int numRowsA, int numColsA, ReshapeMatrix B, ReshapeMatrix X ) {
+        if (B.getNumRows() != numRowsA)
+            throw new IllegalArgumentException("Unexpected number of rows in B based on shape of A. Found="+
+                    B.getNumRows()+" Expected="+numRowsA);
+        X.reshape(numColsA, B.getNumCols());
+    }
 }

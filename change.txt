@@ -5,6 +5,9 @@ Date format: year/month/day
 ----- Version 0.40
 2020/
 
+- Solve now produces a correct and easily understood error message
+  * Thanks CLOVIS-AI for pointing out the issue
+
 - TODO refactor set() -> setTo()
 - TODO runtime regression using JMH
 - TODO identify sparse decompositions which can be made concurrent

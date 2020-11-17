@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.linsol.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.SpecializedOps_DDRM;
@@ -112,9 +113,7 @@ public class LinearSolverQr_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        if (B.numRows != numRows)
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numCols);
-        X.reshape(numCols, B.numCols);
+        UtilEjml.checkReshapeSolve(numRows, numCols, B, X);
 
         int BnumCols = B.numCols;
 

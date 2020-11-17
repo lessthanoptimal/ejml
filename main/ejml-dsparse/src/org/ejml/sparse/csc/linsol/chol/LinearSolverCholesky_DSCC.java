@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.linsol.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
@@ -51,7 +52,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
     // Number of rows in A
-    int AnumCols;
+    int AnumRows, AnumCols;
 
     public LinearSolverCholesky_DSCC( CholeskyUpLooking_DSCC cholesky, @Nullable ComputePermutation<DMatrixSparseCSC> fillReduce ) {
         this.cholesky = cholesky;
@@ -60,6 +61,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public boolean setA( DMatrixSparseCSC A ) {
+        this.AnumRows = A.numRows;
         this.AnumCols = A.numCols;
         DMatrixSparseCSC C = reduce.apply(A);
         return cholesky.decompose(C);
@@ -97,7 +99,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        X.reshape(AnumCols, B.numCols);
+        UtilEjml.checkReshapeSolve(AnumRows, AnumCols, B, X);
 
         DMatrixSparseCSC L = cholesky.getL();
 

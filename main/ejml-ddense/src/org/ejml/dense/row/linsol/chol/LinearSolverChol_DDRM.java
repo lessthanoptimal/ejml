@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.linsol.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
@@ -32,7 +33,6 @@ import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
 
     CholeskyDecompositionCommon_DDRM decomposer;
-    int n;
     double[] vv;
     double[] t;
 
@@ -48,7 +48,6 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
         _setA(A);
 
         if (decomposer.decompose(A)) {
-            n = A.numCols;
             vv = decomposer._getVV();
             t = decomposer.getT().data;
             return true;
@@ -79,12 +78,10 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        if (B.numRows != n) {
-            throw new IllegalArgumentException("Unexpected matrix size");
-        }
+        UtilEjml.checkReshapeSolve(numRows, numCols, B, X);
+
         if (A == null)
             throw new RuntimeException("Must call setA() first");
-        X.reshape(n, B.numCols);
 
         if (decomposer.isLower()) {
             solveLower(A, B, X, vv);
@@ -114,7 +111,7 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void invert( DMatrixRMaj inv ) {
-        if (inv.numRows != n || inv.numCols != n) {
+        if (inv.numRows != numCols || inv.numCols != numCols) {
             throw new RuntimeException("Unexpected matrix dimension");
         }
         if (inv.data == t) {
@@ -134,6 +131,7 @@ public class LinearSolverChol_DDRM extends LinearSolverAbstract_DDRM {
      * Sets the matrix to the inverse using a lower triangular matrix.
      */
     public void setToInverseL( double[] a ) {
+        final int n = numCols;
         // TODO reorder these operations to avoid cache misses
 
         // inverts the lower triangular system and saves the result
