@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.linsol.chol;
 
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
@@ -82,9 +83,7 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        if (B.numCols != X.numCols && B.numRows != n && X.numRows != n) {
-            throw new IllegalArgumentException("Unexpected matrix size");
-        }
+        UtilEjml.checkReshapeSolve(numRows, numCols, B, X);
 
         int numCols = B.numCols;
 

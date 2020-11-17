@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.linsol.qr;
 
+import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
@@ -53,9 +54,7 @@ public class LinearSolverQrHouseCol_MT_DDRM extends LinearSolverQrHouseCol_DDRM 
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
-        if (B.numRows != numRows)
-            throw new IllegalArgumentException("Unexpected dimensions for X: X rows = " + X.numRows + " expected = " + numRows);
-        X.reshape(numCols, B.numCols);
+        UtilEjml.checkReshapeSolve(numRows, numCols, B, X);
 
         int BnumCols = B.numCols;
 
