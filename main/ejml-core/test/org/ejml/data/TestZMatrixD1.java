@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ public class TestZMatrixD1 {
 
         ZMatrixD1 b = new ZMatrixRMaj(3,4);
 
-        b.set(a);
+        b.setTo(a);
         for (int i = 0; i < a.getDataLength(); i++) {
             assertEquals(a.data[i],b.data[i], UtilEjml.TEST_F64);
         }

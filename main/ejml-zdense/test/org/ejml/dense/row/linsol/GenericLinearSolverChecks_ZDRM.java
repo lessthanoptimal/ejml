@@ -260,8 +260,8 @@ public abstract class GenericLinearSolverChecks_ZDRM {
         Complex_F64 T = new Complex_F64();
 
         for (int j = 0; j < A.numRows; j++) {
-            T.set(t[j*2], t[j*2 + 1]);
-            power.set(1, 0);
+            T.setTo(t[j*2], t[j*2 + 1]);
+            power.setTo(1, 0);
 
             for (int i = 0; i < dof; i++) {
                 A.set(j, i, power.real, power.imaginary);

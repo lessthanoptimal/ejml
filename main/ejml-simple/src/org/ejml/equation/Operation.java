@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -710,7 +710,7 @@ public abstract class Operation {
                         DMatrixRMaj d = ((VariableMatrix)dst).matrix;
                         DMatrixRMaj s = ((VariableMatrix)src).matrix;
                         d.reshape(s.numRows, s.numCols);
-                        d.set(((VariableMatrix)src).matrix);
+                        d.setTo(((VariableMatrix)src).matrix);
                     }
                 };
             } else if (dst instanceof VariableDouble) {

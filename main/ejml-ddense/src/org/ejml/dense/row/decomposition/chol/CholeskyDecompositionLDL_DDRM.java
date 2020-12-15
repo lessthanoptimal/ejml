@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -95,7 +95,7 @@ public class CholeskyDecompositionLDL_DDRM
         }
         n = mat.numRows;
 
-        L.set(mat);
+        L.setTo(mat);
         double[] el = L.data;
 
         double d_inv = 0;
@@ -164,7 +164,7 @@ public class CholeskyDecompositionLDL_DDRM
         if (L == null) {
             L = this.L.copy();
         } else {
-            L.set(this.L);
+            L.setTo(this.L);
         }
 
         return L;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -231,7 +231,7 @@ public class QrUpdate_DDRM {
      * @param rowIndex where the matrix has been inserted.
      */
     private void updateInsertQ( int rowIndex ) {
-        Qm.set(Q);
+        Qm.setTo(Q);
         Q.reshape(m_m, m_m, false);
 
         for (int i = 0; i < rowIndex; i++) {
@@ -264,7 +264,7 @@ public class QrUpdate_DDRM {
      * There is still some room for improvement here...
      */
     private void updateRemoveQ( int rowIndex ) {
-        Qm.set(Q);
+        Qm.setTo(Q);
         Q.reshape(m_m, m_m, false);
 
         for (int i = 0; i < rowIndex; i++) {

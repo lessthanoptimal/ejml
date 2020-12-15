@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -56,7 +56,7 @@ public class TestLUDecompositionBase_ZDRM {
         for (int i = 0; i < width; i++) {
             LU.get(i, i, a);
             ComplexMath_F64.multiply(expected,a,tmp);
-            expected.set(tmp);
+            expected.setTo(tmp);
         }
 
         DebugDecompose alg = new DebugDecompose(width);

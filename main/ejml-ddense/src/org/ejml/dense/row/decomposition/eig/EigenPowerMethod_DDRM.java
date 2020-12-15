@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -120,7 +120,7 @@ public class EigenPowerMethod_DDRM {
             throw new IllegalArgumentException("A must be a square matrix.");
 
         if (seed != null) {
-            q0.set(seed);
+            q0.setTo(seed);
         } else {
             for (int i = 0; i < A.numRows; i++) {
                 q0.data[i] = 1;

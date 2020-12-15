@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -61,7 +61,7 @@ public class BenchmarkNullspace {
         long start = System.currentTimeMillis();
         for (int i = 0; i < numIterations; i++) {
             if( solverQR.inputModified() )
-                A_copy.set(A);
+                A_copy.setTo(A);
             solverQR.process(A_copy,1,nullspace);
         }
 //        DMatrixRMaj hrm = new DMatrixRMaj(A.numRows,1);
@@ -71,11 +71,11 @@ public class BenchmarkNullspace {
     }
 
     public long testQRP() {
-        A_copy.set(A);
+        A_copy.setTo(A);
         long start = System.currentTimeMillis();
         for (int i = 0; i < numIterations; i++) {
             if( solverQRP.inputModified() )
-                A_copy.set(A);
+                A_copy.setTo(A);
             solverQRP.process(A_copy,1,nullspace);
         }
 //        DMatrixRMaj hrm = new DMatrixRMaj(A.numRows,1);

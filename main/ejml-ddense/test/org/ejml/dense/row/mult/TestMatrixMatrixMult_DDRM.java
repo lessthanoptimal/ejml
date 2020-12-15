@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -249,7 +249,7 @@ public class TestMatrixMatrixMult_DDRM {
     private void transpose( DMatrixRMaj a ) {
         DMatrixRMaj b = new DMatrixRMaj(a.numCols,a.numRows);
         CommonOps_DDRM.transpose(a,b);
-        a.set(b);
+        a.setTo(b);
     }
 
     public static @Nullable DMatrixRMaj invoke(Method func,

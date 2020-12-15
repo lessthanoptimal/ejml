@@ -604,7 +604,7 @@ public class CommonOps_DDRM {
 
             // if only one column then a faster method can be used
             if (x.numCols == 1) {
-                x.set(b);
+                x.setTo(b);
                 TriangularSolver_DDRM.solveL(L.data, x.data, L.numCols);
                 TriangularSolver_DDRM.solveTranL(L.data, x.data, L.numCols);
             } else {
@@ -642,7 +642,7 @@ public class CommonOps_DDRM {
         } else {
             DMatrixRMaj b = new DMatrixRMaj(mat.numCols, mat.numRows);
             transpose(mat, b);
-            mat.set(b);
+            mat.setTo(b);
         }
     }
 
@@ -2490,7 +2490,7 @@ public class CommonOps_DDRM {
         ReducedRowEchelonForm_F64<DMatrixRMaj> alg = new RrefGaussJordanRowPivot_DDRM();
         alg.setTolerance(elementMaxAbs(A)*UtilEjml.EPS*Math.max(A.numRows, A.numCols));
 
-        reduced.set(A);
+        reduced.setTo(A);
         alg.reduce(reduced, numUnknowns);
 
         return reduced;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -137,7 +137,7 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
 
         for( int i = w; i < width; i++ ) {
             A.get(i,w,a);
-            b.set(found[w][i*2],found[w][i*2+1]);
+            b.setTo(found[w][i*2],found[w][i*2+1]);
 
             assertEquals(a.real, b.real, UtilEjml.TEST_F64);
             assertEquals(a.imaginary,b.imaginary,UtilEjml.TEST_F64);
@@ -147,7 +147,7 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
         for( int i = w; i < width; i++ ) {
             for( int j = w+1; j < width; j++ ) {
                 expected.get(i-w,j-w,a);
-                b.set(found[j][i*2],found[j][i*2+1]);
+                b.setTo(found[j][i*2],found[j][i*2+1]);
 //                found.get(i,j,b);
 
                 assertEquals(a.real, b.real, UtilEjml.TEST_F64);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -89,7 +89,7 @@ public class SwitchingEigenDecomposition_DDRM
 
     @Override
     public boolean decompose( DMatrixRMaj orig ) {
-        A.set(orig);
+        A.setTo(orig);
 
         symmetric = MatrixFeatures_DDRM.isSymmetric(A, tol);
 

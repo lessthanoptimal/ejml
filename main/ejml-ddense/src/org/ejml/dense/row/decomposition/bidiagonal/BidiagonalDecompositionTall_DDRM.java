@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -148,7 +148,7 @@ public class BidiagonalDecompositionTall_DDRM
         DMatrixRMaj P = decompQRP.getColPivotMatrix(null);
         //CONCURRENT_BELOW CommonOps_MT_DDRM.multTransB(B, P, result);
         CommonOps_DDRM.multTransB(B, P, result);
-        B.set(result);
+        B.setTo(result);
 
         return decompBi.decompose(B);
     }

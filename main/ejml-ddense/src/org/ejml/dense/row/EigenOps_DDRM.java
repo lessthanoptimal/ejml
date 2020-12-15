@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -133,7 +133,7 @@ public class EigenOps_DDRM {
             } else {
                 hasWorked = true;
 
-                b.set(x);
+                b.setTo(x);
                 NormOps_DDRM.normalizeF(b);
 
                 // compute the residual

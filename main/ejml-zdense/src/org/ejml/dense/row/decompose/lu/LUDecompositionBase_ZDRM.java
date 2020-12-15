@@ -231,7 +231,7 @@ public abstract class LUDecompositionBase_ZDRM
             realImg = t;
         }
 
-        det.set(realRet, realImg);
+        det.setTo(realRet, realImg);
         return det;
     }
 

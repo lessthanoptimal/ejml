@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -183,7 +183,7 @@ public class TestMatrixFeatures_DDRM {
          BMatrixRMaj b = new BMatrixRMaj(3,4);
 
          RandomMatrices_DDRM.setRandomB(a,rand);
-         b.set(a);
+         b.setTo(a);
 
          assertTrue(MatrixFeatures_DDRM.isEquals(a, b));
 

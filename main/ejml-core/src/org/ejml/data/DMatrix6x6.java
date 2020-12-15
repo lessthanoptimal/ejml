@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,15 @@
 
 package org.ejml.data;
 
-import javax.annotation.Generated;
 import org.ejml.ops.MatrixIO;
+
+import javax.annotation.Generated;
 
 /**
  * Fixed sized 6 by DMatrix6x6 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedNxN</p>
+ *
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateMatrixFixedNxN</p>
  *
  * @author Peter Abeles
  */
@@ -38,16 +40,14 @@ public class DMatrix6x6 implements DMatrixFixed {
     public double a51,a52,a53,a54,a55,a56;
     public double a61,a62,a63,a64,a65,a66;
 
-    public DMatrix6x6() {
-    }
+    public DMatrix6x6() {}
 
     public DMatrix6x6( double a11, double a12, double a13, double a14, double a15, double a16,
                        double a21, double a22, double a23, double a24, double a25, double a26,
                        double a31, double a32, double a33, double a34, double a35, double a36,
                        double a41, double a42, double a43, double a44, double a45, double a46,
                        double a51, double a52, double a53, double a54, double a55, double a56,
-                       double a61, double a62, double a63, double a64, double a65, double a66)
-    {
+                       double a61, double a62, double a63, double a64, double a65, double a66 ) {
         this.a11 = a11; this.a12 = a12; this.a13 = a13; this.a14 = a14; this.a15 = a15; this.a16 = a16;
         this.a21 = a21; this.a22 = a22; this.a23 = a23; this.a24 = a24; this.a25 = a25; this.a26 = a26;
         this.a31 = a31; this.a32 = a32; this.a33 = a33; this.a34 = a34; this.a35 = a35; this.a36 = a36;
@@ -65,8 +65,7 @@ public class DMatrix6x6 implements DMatrixFixed {
         this.a61 = o.a61; this.a62 = o.a62; this.a63 = o.a63; this.a64 = o.a64; this.a65 = o.a65; this.a66 = o.a66;
     }
 
-    @Override
-    public void zero() {
+    @Override public void zero() {
         a11 = 0.0; a12 = 0.0; a13 = 0.0; a14 = 0.0; a15 = 0.0; a16 = 0.0;
         a21 = 0.0; a22 = 0.0; a23 = 0.0; a24 = 0.0; a25 = 0.0; a26 = 0.0;
         a31 = 0.0; a32 = 0.0; a33 = 0.0; a34 = 0.0; a35 = 0.0; a36 = 0.0;
@@ -75,13 +74,12 @@ public class DMatrix6x6 implements DMatrixFixed {
         a61 = 0.0; a62 = 0.0; a63 = 0.0; a64 = 0.0; a65 = 0.0; a66 = 0.0;
     }
 
-    public void set( double a11, double a12, double a13, double a14, double a15, double a16,
-                     double a21, double a22, double a23, double a24, double a25, double a26,
-                     double a31, double a32, double a33, double a34, double a35, double a36,
-                     double a41, double a42, double a43, double a44, double a45, double a46,
-                     double a51, double a52, double a53, double a54, double a55, double a56,
-                     double a61, double a62, double a63, double a64, double a65, double a66)
-    {
+    public void setTo( double a11, double a12, double a13, double a14, double a15, double a16,
+                       double a21, double a22, double a23, double a24, double a25, double a26,
+                       double a31, double a32, double a33, double a34, double a35, double a36,
+                       double a41, double a42, double a43, double a44, double a45, double a46,
+                       double a51, double a52, double a53, double a54, double a55, double a56,
+                       double a61, double a62, double a63, double a64, double a65, double a66 ) {
         this.a11 = a11; this.a12 = a12; this.a13 = a13; this.a14 = a14; this.a15 = a15; this.a16 = a16;
         this.a21 = a21; this.a22 = a22; this.a23 = a23; this.a24 = a24; this.a25 = a25; this.a26 = a26;
         this.a31 = a31; this.a32 = a32; this.a33 = a33; this.a34 = a34; this.a35 = a35; this.a36 = a36;
@@ -90,7 +88,7 @@ public class DMatrix6x6 implements DMatrixFixed {
         this.a61 = a61; this.a62 = a62; this.a63 = a63; this.a64 = a64; this.a65 = a65; this.a66 = a66;
     }
 
-    public void set( int offset , double []a ) {
+    public void setTo( int offset , double[] a ) {
         this.a11 = a[offset + 0]; this.a12 = a[offset + 1]; this.a13 = a[offset + 2]; this.a14 = a[offset + 3]; this.a15 = a[offset + 4]; this.a16 = a[offset + 5];
         this.a21 = a[offset + 6]; this.a22 = a[offset + 7]; this.a23 = a[offset + 8]; this.a24 = a[offset + 9]; this.a25 = a[offset + 10]; this.a26 = a[offset + 11];
         this.a31 = a[offset + 12]; this.a32 = a[offset + 13]; this.a33 = a[offset + 14]; this.a34 = a[offset + 15]; this.a35 = a[offset + 16]; this.a36 = a[offset + 17];
@@ -99,199 +97,194 @@ public class DMatrix6x6 implements DMatrixFixed {
         this.a61 = a[offset + 30]; this.a62 = a[offset + 31]; this.a63 = a[offset + 32]; this.a64 = a[offset + 33]; this.a65 = a[offset + 34]; this.a66 = a[offset + 35];
     }
 
-    @Override
-    public double get(int row, int col) {
+    @Override public double get( int row, int col ) {
         return unsafe_get(row,col);
     }
 
-    @Override
-    public double unsafe_get(int row, int col) {
-        if( row == 0 ) {
-            if( col == 0 ) {
+    @Override public double unsafe_get( int row, int col ) {
+        if (row == 0) {
+            if (col == 0) {
                 return a11;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a12;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a13;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 return a14;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 return a15;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 return a16;
             }
-        } else if( row == 1 ) {
-            if( col == 0 ) {
+        } else if (row == 1) {
+            if (col == 0) {
                 return a21;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a22;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a23;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 return a24;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 return a25;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 return a26;
             }
-        } else if( row == 2 ) {
-            if( col == 0 ) {
+        } else if (row == 2) {
+            if (col == 0) {
                 return a31;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a32;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a33;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 return a34;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 return a35;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 return a36;
             }
-        } else if( row == 3 ) {
-            if( col == 0 ) {
+        } else if (row == 3) {
+            if (col == 0) {
                 return a41;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a42;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a43;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 return a44;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 return a45;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 return a46;
             }
-        } else if( row == 4 ) {
-            if( col == 0 ) {
+        } else if (row == 4) {
+            if (col == 0) {
                 return a51;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a52;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a53;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 return a54;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 return a55;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 return a56;
             }
-        } else if( row == 5 ) {
-            if( col == 0 ) {
+        } else if (row == 5) {
+            if (col == 0) {
                 return a61;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a62;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a63;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 return a64;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 return a65;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 return a66;
             }
         }
         throw new IllegalArgumentException("Row and/or column out of range. "+row+" "+col);
     }
 
-    @Override
-    public void set(int row, int col, double val) {
+    @Override public void set( int row, int col, double val ) {
         unsafe_set(row,col,val);
     }
 
-    @Override
-    public void unsafe_set(int row, int col, double val) {
-        if( row == 0 ) {
-            if( col == 0 ) {
+    @Override public void unsafe_set( int row, int col, double val ) {
+        if (row == 0) {
+            if (col == 0) {
                 a11 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a12 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a13 = val; return;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 a14 = val; return;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 a15 = val; return;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 a16 = val; return;
             }
-        } else if( row == 1 ) {
-            if( col == 0 ) {
+        } else if (row == 1) {
+            if (col == 0) {
                 a21 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a22 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a23 = val; return;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 a24 = val; return;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 a25 = val; return;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 a26 = val; return;
             }
-        } else if( row == 2 ) {
-            if( col == 0 ) {
+        } else if (row == 2) {
+            if (col == 0) {
                 a31 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a32 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a33 = val; return;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 a34 = val; return;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 a35 = val; return;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 a36 = val; return;
             }
-        } else if( row == 3 ) {
-            if( col == 0 ) {
+        } else if (row == 3) {
+            if (col == 0) {
                 a41 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a42 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a43 = val; return;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 a44 = val; return;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 a45 = val; return;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 a46 = val; return;
             }
-        } else if( row == 4 ) {
-            if( col == 0 ) {
+        } else if (row == 4) {
+            if (col == 0) {
                 a51 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a52 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a53 = val; return;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 a54 = val; return;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 a55 = val; return;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 a56 = val; return;
             }
-        } else if( row == 5 ) {
-            if( col == 0 ) {
+        } else if (row == 5) {
+            if (col == 0) {
                 a61 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a62 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a63 = val; return;
-            } else if( col == 3 ) {
+            } else if (col == 3) {
                 a64 = val; return;
-            } else if( col == 4 ) {
+            } else if (col == 4) {
                 a65 = val; return;
-            } else if( col == 5 ) {
+            } else if (col == 5) {
                 a66 = val; return;
             }
         }
         throw new IllegalArgumentException("Row and/or column out of range. "+row+" "+col);
     }
 
-    @Override
-    public void set(Matrix original) {
-        if( original.getNumCols() != 6 || original.getNumRows() != 6 )
+    @Override public void setTo( Matrix original ) {
+        if (original.getNumCols() != 6 || original.getNumRows() != 6)
             throw new IllegalArgumentException("Rows and/or columns do not match");
         DMatrix m = (DMatrix)original;
         
@@ -333,43 +326,25 @@ public class DMatrix6x6 implements DMatrixFixed {
         a66 = m.get(5,5);
     }
 
-    @Override
-    public int getNumRows() {
-        return 6;
-    }
+    @Override public int getNumRows() {return 6;}
 
-    @Override
-    public int getNumCols() {
-        return 6;
-    }
+    @Override public int getNumCols() {return 6;}
 
-    @Override
-    public int getNumElements() {
-        return 36;
-    }
+    @Override public int getNumElements() {return 36;}
 
-    @Override
-    public <T extends Matrix> T copy() {
+    @Override public <T extends Matrix> T copy() {
         return (T)new DMatrix6x6(this);
     }
 
-    @Override
-    public void print() {
+    @Override public void print() {
         MatrixIO.printFancy(System.out, this, MatrixIO.DEFAULT_LENGTH);
     }
 
-    @Override
-    public void print( String format ) {
+    @Override public void print( String format ) {
         MatrixIO.print(System.out, this, format);
     }
 
-    @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new DMatrix6x6();
-    }
+    @Override public <T extends Matrix> T createLike() {return (T)new DMatrix6x6();}
 
-    @Override
-    public MatrixType getType() {
-        return MatrixType.UNSPECIFIED;
-    }}
+    @Override public MatrixType getType() {return MatrixType.UNSPECIFIED;}}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -77,7 +77,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      *
      * @param b The matrix that this matrix is to be set equal to.
      */
-    public void set( DMatrixD1 b )
+    public void setTo( DMatrixD1 b )
     {
         this.reshape(b.numRows,b.numCols);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -160,7 +160,7 @@ public class CholeskyUpLooking_DSCC implements
         if (T == null) {
             T = new DMatrixSparseCSC(L.numRows, L.numCols, L.nz_length);
         }
-        T.set(L);
+        T.setTo(L);
         return T;
     }
 

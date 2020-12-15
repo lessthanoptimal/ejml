@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -157,7 +157,7 @@ public abstract class LUDecompositionBase_DDRM
         m = a.numRows;
         n = a.numCols;
 
-        LU.set(a);
+        LU.setTo(a);
         for (int i = 0; i < m; i++) {
             pivot[i] = i;
         }

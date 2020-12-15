@@ -71,15 +71,15 @@ public class KalmanFilterOperations implements KalmanFilter{
     }
 
     @Override public void setState(DMatrixRMaj x, DMatrixRMaj P) {
-        this.x.set(x);
-        this.P.set(P);
+        this.x.setTo(x);
+        this.P.setTo(P);
     }
 
     @Override public void predict() {
 
         // x = F x
         mult(F,x,a);
-        x.set(a);
+        x.setTo(a);
 
         // P = F P F' + Q
         mult(F,P,b);

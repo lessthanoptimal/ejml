@@ -7,8 +7,8 @@ Date format: year/month/day
 
 - Solve now produces a correct and easily understood error message
   * Thanks CLOVIS-AI for pointing out the issue
+- Refactor set(obj) -> setTo(obj)
 
-- TODO refactor set() -> setTo()
 - TODO runtime regression using JMH
 - TODO identify sparse decompositions which can be made concurrent
 - TODO identify dense decompositions which require specialized algorithms for concurrency

@@ -74,7 +74,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         IGrowArray gw1 = qr.getGwork();
 
         // Don't modify the input
-        tmp.set(B);
+        tmp.setTo(B);
         B = tmp;
         DMatrixSparseCSC B_tmp = B.createLike();
         DMatrixSparseCSC swap;

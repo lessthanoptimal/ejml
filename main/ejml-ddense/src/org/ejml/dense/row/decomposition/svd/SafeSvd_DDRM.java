@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -83,7 +83,7 @@ public class SafeSvd_DDRM
     public boolean decompose( DMatrixRMaj orig ) {
         if (alg.inputModified()) {
             work.reshape(orig.numRows, orig.numCols);
-            work.set(orig);
+            work.setTo(orig);
             return alg.decompose(work);
         } else {
             return alg.decompose(orig);

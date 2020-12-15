@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -71,7 +71,7 @@ public class RandomMatrices_DDRM {
             for (int j = 0; j < i; j++) {
                 // find a vector that is normal to vector j
                 // u[i] = (1/2)*(r + Q[j]*r)
-                a.set(r);
+                a.setTo(r);
                 VectorVectorMult_DDRM.householder(-2.0, u[j], r, a);
                 CommonOps_DDRM.add(r, a, a);
                 CommonOps_DDRM.scale(0.5, a);
@@ -108,7 +108,7 @@ public class RandomMatrices_DDRM {
         DMatrixRMaj B = new DMatrixRMaj(span[0].getNumElements(), 1);
 
         for (int i = 0; i < span.length; i++) {
-            B.set(span[i]);
+            B.setTo(span[i]);
             double val = rand.nextDouble()*(max - min) + min;
             CommonOps_DDRM.scale(val, B);
 

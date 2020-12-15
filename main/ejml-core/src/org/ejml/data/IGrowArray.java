@@ -63,7 +63,7 @@ public class IGrowArray {
         this.data = tmp;
     }
 
-    public void set( IGrowArray original ) {
+    public void setTo( IGrowArray original ) {
         reshape(original.length);
         System.arraycopy(original.data, 0, data, 0, original.length);
     }

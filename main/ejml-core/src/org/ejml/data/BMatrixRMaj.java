@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -138,12 +138,12 @@ public class BMatrixRMaj implements ReshapeMatrix {
     @Override
     public <T extends Matrix> T copy() {
         BMatrixRMaj ret = new BMatrixRMaj(numRows,numCols);
-        ret.set(this);
+        ret.setTo(this);
         return (T)ret;
     }
 
     @Override
-    public void set(Matrix original) {
+    public void setTo( Matrix original) {
         BMatrixRMaj orig = (BMatrixRMaj)original;
 
         reshape(original.getNumRows(),original.getNumCols());

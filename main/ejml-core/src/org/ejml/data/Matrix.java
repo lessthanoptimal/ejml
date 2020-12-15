@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -64,7 +64,7 @@ public interface Matrix extends Serializable {
     /**
      * Sets this matrix to be identical to the 'original' matrix passed in.
      */
-    void set( Matrix original );
+    void setTo( Matrix original );
 
     /**
      * Prints the matrix to standard out using standard formatting. This is the same as calling print("%e")

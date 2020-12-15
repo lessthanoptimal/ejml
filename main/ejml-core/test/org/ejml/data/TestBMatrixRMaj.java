@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -88,7 +88,7 @@ public class TestBMatrixRMaj {
         M.set(2,3,true);
 
         BMatrixRMaj N = new BMatrixRMaj(4,5);
-        N.set(M);
+        N.setTo(M);
 
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 5; col++) {

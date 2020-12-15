@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -806,27 +806,27 @@ public class TestSimpleMatrix {
         assertEquals(orig.get(0, 0) + 24.5, A.get(0, 0), UtilEjml.TEST_F64);
 
         // test implicit A =
-        A.set(orig);
+        A.setTo(orig);
         A.equation("A + B", 24.5, "B");
         assertEquals(orig.get(0, 0) + 24.5, A.get(0, 0), UtilEjml.TEST_F64);
 
         A.equation("A(B,5) = 4", 4, "B");
         assertEquals(4, A.get(4, 5), UtilEjml.TEST_F64);
 
-        A.set(orig);
+        A.setTo(orig);
         A.equation("A = A+B", B, "B");
         assertEquals(orig.get(0, 0) + B.get(0, 0), A.get(0, 0), UtilEjml.TEST_F64);
 
-        A.set(orig);
+        A.setTo(orig);
         A.equation("A = A+B", B.getDDRM(), "B");
         assertEquals(orig.get(0, 0) + B.get(0, 0), A.get(0, 0), UtilEjml.TEST_F64);
 
-        A.set(orig);
+        A.setTo(orig);
         A.equation("B = B+B", "B");
         assertEquals(orig.get(0, 0)*2, A.get(0, 0), UtilEjml.TEST_F64);
 
         // test implicit B
-        A.set(orig);
+        A.setTo(orig);
         A.equation("B+B", "B");
         assertEquals(orig.get(0, 0)*2, A.get(0, 0), UtilEjml.TEST_F64);
     }
@@ -901,7 +901,7 @@ public class TestSimpleMatrix {
         DMatrixRMaj template = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
         for (Matrix m : matrixTypes) {
-            m.set(ConvertMatrixType.convert(template, m.getType()));
+            m.setTo(ConvertMatrixType.convert(template, m.getType()));
 
             SimpleMatrix A = new SimpleMatrix(m);
             try {

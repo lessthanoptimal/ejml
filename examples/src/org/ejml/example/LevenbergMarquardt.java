@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -165,7 +165,7 @@ public class LevenbergMarquardt {
             if( cost <= previousCost ) {
                 // the candidate parameters produced better results so use it
                 computeHessian = true;
-                parameters.set(candidateParameters);
+                parameters.setTo(candidateParameters);
 
                 // check for convergence
                 // ftol <= (cost(k) - cost(k+1))/cost(k)
