@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -270,7 +270,7 @@ public class SvdImplicitQrDecompose_UltimateS
             CommonOps_DDRM.transpose(orig,A_mod);
         } else {
             A_mod.reshape(orig.numRows,orig.numCols,false);
-            A_mod.set(orig);
+            A_mod.setTo(orig);
         }
         if( !bidiag.decompose(A_mod) )
             return true;

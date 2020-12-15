@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -125,7 +125,7 @@ public class QRExampleOperations {
             CommonOps_DDRM.setIdentity(Q_k);
             CommonOps_DDRM.multAddTransB(-gammas[j],u,u,Q_k);
             CommonOps_DDRM.mult(Q_k,Q,temp);
-            Q.set(temp);
+            Q.setTo(temp);
         }
 
         return Q;

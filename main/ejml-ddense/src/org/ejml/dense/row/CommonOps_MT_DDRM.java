@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -363,7 +363,7 @@ public class CommonOps_MT_DDRM {
         } else {
             DMatrixRMaj b = new DMatrixRMaj(mat.numCols, mat.numRows);
             transpose(mat, b);
-            mat.set(b);
+            mat.setTo(b);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -117,7 +117,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
 //            UBV.print();
 //            C.print();
 
-            B.set(C);
+            B.setTo(C);
 
             // make sure everything is as expected
             for( int j = i+1; j < m; j++ ) {
@@ -168,7 +168,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
 //            UBV.print();
 //            C.print();
 
-            B.set(C);
+            B.setTo(C);
 
             // make sure everything is as expected
             for( int j = i+2; j < n; j++ ) {

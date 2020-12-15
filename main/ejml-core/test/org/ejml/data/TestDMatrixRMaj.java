@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -161,7 +161,7 @@ public class TestDMatrixRMaj {
         DMatrixRMaj mat = new DMatrixRMaj(d);
         DMatrixRMaj mat2 = new DMatrixRMaj(mat.numRows,mat.numCols);
 
-        mat2.set(mat);
+        mat2.setTo(mat);
 
         EjmlUnitTests.assertEquals(mat,mat2,UtilEjml.TEST_F64);
     }
@@ -196,7 +196,7 @@ public class TestDMatrixRMaj {
         DMatrixRMaj mat = new DMatrixRMaj(d);
         DMatrixRMaj mat2 = new DMatrixRMaj(5,5);
 
-        mat2.set(mat);
+        mat2.setTo(mat);
 
         assertEquals(mat.getNumCols(),mat2.getNumCols());
         assertEquals(mat.getNumRows(),mat2.getNumRows());

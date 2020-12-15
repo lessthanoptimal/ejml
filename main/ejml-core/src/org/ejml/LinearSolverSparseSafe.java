@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -54,7 +54,7 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
 
         if( alg.modifiesA() ) {
             this.A = UtilEjml.reshapeOrDeclare(this.A,A);
-            this.A.set(A);
+            this.A.setTo(A);
             return alg.setA(this.A);
         }
 
@@ -70,7 +70,7 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     public void solve(D B, D X) {
         if( alg.modifiesB() ) {
             this.B = UtilEjml.reshapeOrDeclare(this.B,B);
-            this.B.set(B);
+            this.B.setTo(B);
             B = this.B;
         }
 

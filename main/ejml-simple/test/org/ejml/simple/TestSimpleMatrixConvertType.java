@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -132,7 +132,7 @@ public class TestSimpleMatrixConvertType {
         SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_FDRM.rectangle(6,5,rand));
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,2,rand));
 
-        A.set(B);
+        A.setTo(B);
         assertEquals(MatrixType.DDRM,A.getType());
     }
 

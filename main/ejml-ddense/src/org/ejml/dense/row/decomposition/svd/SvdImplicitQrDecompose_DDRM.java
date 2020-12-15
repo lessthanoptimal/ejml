@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -127,7 +127,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         if (transpose) {
             if (U == null)
                 return Ut;
-            U.set(Ut);
+            U.setTo(Ut);
         } else {
             U = UtilEjml.reshapeOrDeclare(U, Ut.numCols, Ut.numRows);
             transpose(U, Ut);
@@ -144,7 +144,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
             if (V == null)
                 return Vt;
 
-            V.set(Vt);
+            V.setTo(Vt);
         } else {
             V = UtilEjml.reshapeOrDeclare(V, Vt.numCols, Vt.numRows);
             transpose(V, Vt);
@@ -208,7 +208,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
             transpose(A_mod, orig);
         } else {
             A_mod.reshape(orig.numRows, orig.numCols, false);
-            A_mod.set(orig);
+            A_mod.setTo(orig);
         }
         return !bidiag.decompose(A_mod);
     }

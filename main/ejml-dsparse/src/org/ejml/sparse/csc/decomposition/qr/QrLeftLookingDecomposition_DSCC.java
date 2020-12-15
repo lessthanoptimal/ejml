@@ -204,7 +204,7 @@ public class QrLeftLookingDecomposition_DSCC implements
 
         for (int i = V.numCols - 1; i >= 0; i--) {
             QrHelperFunctions_DSCC.rank1UpdateMultR(V, i, beta[i], I, Q, gwork, gx);
-            I.set(Q);
+            I.setTo(Q);
         }
 
         // Apply P transpose to Q
@@ -215,7 +215,7 @@ public class QrLeftLookingDecomposition_DSCC implements
         if (V.numRows > m)
             CommonOps_DSCC.extractRows(I, 0, m, Q);
         else
-            Q.set(I);
+            Q.setTo(I);
 
         return Q;
     }
@@ -225,14 +225,14 @@ public class QrLeftLookingDecomposition_DSCC implements
         if (R == null)
             R = new DMatrixSparseCSC(0, 0, 0);
 
-        R.set(this.R);
+        R.setTo(this.R);
         if (m > n) {
             // there should only be only zeros past row n
             R.numRows = compact ? n : m;
         } else if (n > m && V.numRows != m) {
             DMatrixSparseCSC tmp = new DMatrixSparseCSC(m, n, 0);
             CommonOps_DSCC.extractRows(R, 0, m, tmp);
-            R.set(tmp);
+            R.setTo(tmp);
         }
         return R;
     }

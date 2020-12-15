@@ -144,39 +144,39 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void elementPower_Ab() { CommonOps_DDRM.elementPower(A, 1.2, C); }
     @Benchmark public void elementLog() { CommonOps_DDRM.elementLog(A, C); }
     @Benchmark public void elementExp() { CommonOps_DDRM.elementExp(A, C); }
-    @Benchmark public void multRows() { A.set(B); CommonOps_DDRM.multRows(array_v, A); }
-    @Benchmark public void divideRows() {  A.set(B);  CommonOps_DDRM.divideRows(array_v, A); }
-    @Benchmark public void multCols() { A.set(B); CommonOps_DDRM.multCols(A, array_v); }
-    @Benchmark public void divideCols() { A.set(B); CommonOps_DDRM.divideCols(A, array_v); }
-    @Benchmark public void divideRowsCols() { A.set(B);  CommonOps_DDRM.divideRowsCols(array_v, 0, A, array_v, 0); }
+    @Benchmark public void multRows() { A.setTo(B); CommonOps_DDRM.multRows(array_v, A); }
+    @Benchmark public void divideRows() {  A.setTo(B);  CommonOps_DDRM.divideRows(array_v, A); }
+    @Benchmark public void multCols() { A.setTo(B); CommonOps_DDRM.multCols(A, array_v); }
+    @Benchmark public void divideCols() { A.setTo(B); CommonOps_DDRM.divideCols(A, array_v); }
+    @Benchmark public void divideRowsCols() { A.setTo(B);  CommonOps_DDRM.divideRowsCols(array_v, 0, A, array_v, 0); }
     @Benchmark public void sumRows() { CommonOps_DDRM.sumRows(A, C); }
     @Benchmark public void minRows() { CommonOps_DDRM.minRows(A, C); }
     @Benchmark public void sumCols() { CommonOps_DDRM.sumCols(A, C); }
     @Benchmark public void minCols() { CommonOps_DDRM.minCols(A, C); }
     @Benchmark public void maxCols() { CommonOps_DDRM.maxCols(A, C); }
-    @Benchmark public void addEquals() { C.set(A); CommonOps_DDRM.addEquals(C, B); }
-    @Benchmark public void addEquals_alpha() { C.set(A); CommonOps_DDRM.addEquals(C, 1.2, B); }
+    @Benchmark public void addEquals() { C.setTo(A); CommonOps_DDRM.addEquals(C, B); }
+    @Benchmark public void addEquals_alpha() { C.setTo(A); CommonOps_DDRM.addEquals(C, 1.2, B); }
     @Benchmark public void add() { CommonOps_DDRM.add(A, B, C); }
     @Benchmark public void add_beta() { CommonOps_DDRM.add(A, 1.2, B, C); }
     @Benchmark public void add_alpha_beta() { CommonOps_DDRM.add(0.8, A, 1.2, B, C); }
     @Benchmark public void add_alpha() { CommonOps_DDRM.add(0.8, A, B, C); }
-    @Benchmark public void add_inplace_alpha() { C.set(A); CommonOps_DDRM.add(C, 1.2); }
+    @Benchmark public void add_inplace_alpha() { C.setTo(A); CommonOps_DDRM.add(C, 1.2); }
     @Benchmark public void add_alpha_output() { CommonOps_DDRM.add(A, 1.2, C); }
     @Benchmark public void subtract_alpha_output() { CommonOps_DDRM.subtract(A, 1.2, C); }
     @Benchmark public void subtract_sAA() { CommonOps_DDRM.subtract(1.2, A, C); }
-    @Benchmark public void subtractEquals() { C.set(A); CommonOps_DDRM.subtractEquals(C, B); }
+    @Benchmark public void subtractEquals() { C.setTo(A); CommonOps_DDRM.subtractEquals(C, B); }
     @Benchmark public void subtract_AAA() { CommonOps_DDRM.subtract(A, B, C); }
-    @Benchmark public void scale_sA() { C.set(A); CommonOps_DDRM.scale(1.2, C); }
+    @Benchmark public void scale_sA() { C.setTo(A); CommonOps_DDRM.scale(1.2, C); }
     @Benchmark public void scale_sAA() { CommonOps_DDRM.scale(1.2, A, C); }
     @Benchmark public void scaleRow() { CommonOps_DDRM.scaleRow(1.2, A, 2); }
     @Benchmark public void scaleCol() { CommonOps_DDRM.scaleCol(1.2, A, 2); }
-    @Benchmark public void divide_sA() { C.set(A); CommonOps_DDRM.divide(1.2, C); }
-    @Benchmark public void divide_As() { C.set(A); CommonOps_DDRM.divide(C, 1.2); }
+    @Benchmark public void divide_sA() { C.setTo(A); CommonOps_DDRM.divide(1.2, C); }
+    @Benchmark public void divide_As() { C.setTo(A); CommonOps_DDRM.divide(C, 1.2); }
     @Benchmark public void divide_sAA() { CommonOps_DDRM.divide(1.2, A, C); }
     @Benchmark public void divide_AsA() { CommonOps_DDRM.divide(A, 1.2, C); }
-    @Benchmark public void changeSign_A() { C.set(A); CommonOps_DDRM.changeSign(C);}
+    @Benchmark public void changeSign_A() { C.setTo(A); CommonOps_DDRM.changeSign(C);}
     @Benchmark public void changeSign_AA() { CommonOps_DDRM.changeSign(A, C); }
-    @Benchmark public void fill() { C.set(A); CommonOps_DDRM.fill(C, 1.2);}
+    @Benchmark public void fill() { C.setTo(A); CommonOps_DDRM.fill(C, 1.2);}
     @Benchmark public void rref() { CommonOps_DDRM.rref(A, -1, C); }
     @Benchmark public void elementLessThan() { CommonOps_DDRM.elementLessThan(A, 0.5, binary); }
     @Benchmark public void elementLessThanOrEqual() { CommonOps_DDRM.elementLessThanOrEqual(A, 0.5, binary); }

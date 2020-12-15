@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -101,7 +101,7 @@ public class BenchmarkKalmanPerformance {
             CommonOps_DDRM.mult(F,x,x_next);
             CommonOps_DDRM.mult(H,x_next,z);
             ret.add(z.copy());
-            x.set(x_next);
+            x.setTo(x_next);
         }
 
         return ret;

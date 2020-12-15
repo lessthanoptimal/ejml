@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,15 @@
 
 package org.ejml.data;
 
-import javax.annotation.Generated;
 import org.ejml.ops.MatrixIO;
+
+import javax.annotation.Generated;
 
 /**
  * Fixed sized 3 by DMatrix3x3 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
  * value of row = X and column = Y.
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateMatrixFixedNxN</p>
+ *
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateMatrixFixedNxN</p>
  *
  * @author Peter Abeles
  */
@@ -35,13 +37,11 @@ public class DMatrix3x3 implements DMatrixFixed {
     public double a21,a22,a23;
     public double a31,a32,a33;
 
-    public DMatrix3x3() {
-    }
+    public DMatrix3x3() {}
 
     public DMatrix3x3( double a11, double a12, double a13,
                        double a21, double a22, double a23,
-                       double a31, double a32, double a33)
-    {
+                       double a31, double a32, double a33 ) {
         this.a11 = a11; this.a12 = a12; this.a13 = a13;
         this.a21 = a21; this.a22 = a22; this.a23 = a23;
         this.a31 = a31; this.a32 = a32; this.a33 = a33;
@@ -53,101 +53,94 @@ public class DMatrix3x3 implements DMatrixFixed {
         this.a31 = o.a31; this.a32 = o.a32; this.a33 = o.a33;
     }
 
-    @Override
-    public void zero() {
+    @Override public void zero() {
         a11 = 0.0; a12 = 0.0; a13 = 0.0;
         a21 = 0.0; a22 = 0.0; a23 = 0.0;
         a31 = 0.0; a32 = 0.0; a33 = 0.0;
     }
 
-    public void set( double a11, double a12, double a13,
-                     double a21, double a22, double a23,
-                     double a31, double a32, double a33)
-    {
+    public void setTo( double a11, double a12, double a13,
+                       double a21, double a22, double a23,
+                       double a31, double a32, double a33 ) {
         this.a11 = a11; this.a12 = a12; this.a13 = a13;
         this.a21 = a21; this.a22 = a22; this.a23 = a23;
         this.a31 = a31; this.a32 = a32; this.a33 = a33;
     }
 
-    public void set( int offset , double []a ) {
+    public void setTo( int offset , double[] a ) {
         this.a11 = a[offset + 0]; this.a12 = a[offset + 1]; this.a13 = a[offset + 2];
         this.a21 = a[offset + 3]; this.a22 = a[offset + 4]; this.a23 = a[offset + 5];
         this.a31 = a[offset + 6]; this.a32 = a[offset + 7]; this.a33 = a[offset + 8];
     }
 
-    @Override
-    public double get(int row, int col) {
+    @Override public double get( int row, int col ) {
         return unsafe_get(row,col);
     }
 
-    @Override
-    public double unsafe_get(int row, int col) {
-        if( row == 0 ) {
-            if( col == 0 ) {
+    @Override public double unsafe_get( int row, int col ) {
+        if (row == 0) {
+            if (col == 0) {
                 return a11;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a12;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a13;
             }
-        } else if( row == 1 ) {
-            if( col == 0 ) {
+        } else if (row == 1) {
+            if (col == 0) {
                 return a21;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a22;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a23;
             }
-        } else if( row == 2 ) {
-            if( col == 0 ) {
+        } else if (row == 2) {
+            if (col == 0) {
                 return a31;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 return a32;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 return a33;
             }
         }
         throw new IllegalArgumentException("Row and/or column out of range. "+row+" "+col);
     }
 
-    @Override
-    public void set(int row, int col, double val) {
+    @Override public void set( int row, int col, double val ) {
         unsafe_set(row,col,val);
     }
 
-    @Override
-    public void unsafe_set(int row, int col, double val) {
-        if( row == 0 ) {
-            if( col == 0 ) {
+    @Override public void unsafe_set( int row, int col, double val ) {
+        if (row == 0) {
+            if (col == 0) {
                 a11 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a12 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a13 = val; return;
             }
-        } else if( row == 1 ) {
-            if( col == 0 ) {
+        } else if (row == 1) {
+            if (col == 0) {
                 a21 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a22 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a23 = val; return;
             }
-        } else if( row == 2 ) {
-            if( col == 0 ) {
+        } else if (row == 2) {
+            if (col == 0) {
                 a31 = val; return;
-            } else if( col == 1 ) {
+            } else if (col == 1) {
                 a32 = val; return;
-            } else if( col == 2 ) {
+            } else if (col == 2) {
                 a33 = val; return;
             }
         }
         throw new IllegalArgumentException("Row and/or column out of range. "+row+" "+col);
     }
 
-    @Override
-    public void set(Matrix original) {
-        if( original.getNumCols() != 3 || original.getNumRows() != 3 )
+    @Override public void setTo( Matrix original ) {
+        if (original.getNumCols() != 3 || original.getNumRows() != 3)
             throw new IllegalArgumentException("Rows and/or columns do not match");
         DMatrix m = (DMatrix)original;
         
@@ -162,43 +155,25 @@ public class DMatrix3x3 implements DMatrixFixed {
         a33 = m.get(2,2);
     }
 
-    @Override
-    public int getNumRows() {
-        return 3;
-    }
+    @Override public int getNumRows() {return 3;}
 
-    @Override
-    public int getNumCols() {
-        return 3;
-    }
+    @Override public int getNumCols() {return 3;}
 
-    @Override
-    public int getNumElements() {
-        return 9;
-    }
+    @Override public int getNumElements() {return 9;}
 
-    @Override
-    public <T extends Matrix> T copy() {
+    @Override public <T extends Matrix> T copy() {
         return (T)new DMatrix3x3(this);
     }
 
-    @Override
-    public void print() {
+    @Override public void print() {
         MatrixIO.printFancy(System.out, this, MatrixIO.DEFAULT_LENGTH);
     }
 
-    @Override
-    public void print( String format ) {
+    @Override public void print( String format ) {
         MatrixIO.print(System.out, this, format);
     }
 
-    @Override
-    public <T extends Matrix> T createLike() {
-        return (T)new DMatrix3x3();
-    }
+    @Override public <T extends Matrix> T createLike() {return (T)new DMatrix3x3();}
 
-    @Override
-    public MatrixType getType() {
-        return MatrixType.UNSPECIFIED;
-    }}
+    @Override public MatrixType getType() {return MatrixType.UNSPECIFIED;}}
 

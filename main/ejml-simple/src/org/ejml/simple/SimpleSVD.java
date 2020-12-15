@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -174,7 +174,7 @@ public class SimpleSVD<T extends SimpleBase> {
      * Returns an array of all the singular values
      */
     public double[] getSingularValues() {
-        double ret[] = new double[W.numCols()];
+        double[] ret = new double[W.numCols()];
 
         for (int i = 0; i < ret.length; i++) {
             ret[i] = getSingleValue(i);

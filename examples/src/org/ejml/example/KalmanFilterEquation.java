@@ -66,8 +66,8 @@ public class KalmanFilterEquation implements KalmanFilter {
     }
 
     @Override public void setState( DMatrixRMaj x, DMatrixRMaj P ) {
-        this.x.set(x);
-        this.P.set(P);
+        this.x.setTo(x);
+        this.P.setTo(P);
     }
 
     @Override public void predict() {

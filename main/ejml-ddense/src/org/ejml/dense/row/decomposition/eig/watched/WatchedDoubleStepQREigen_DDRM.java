@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -94,7 +94,7 @@ public class WatchedDoubleStepQREigen_DDRM {
 
     private void addEigenvalue( double v ) {
         numStepsFind[numEigen] = steps;
-        eigenvalues[numEigen].set(v, 0);
+        eigenvalues[numEigen].setTo(v, 0);
         numEigen++;
         steps = 0;
         lastExceptional = 0;
@@ -102,7 +102,7 @@ public class WatchedDoubleStepQREigen_DDRM {
 
     private void addEigenvalue( double v, double i ) {
         numStepsFind[numEigen] = steps;
-        eigenvalues[numEigen].set(v, i);
+        eigenvalues[numEigen].setTo(v, i);
         numEigen++;
         steps = 0;
         lastExceptional = 0;
@@ -138,7 +138,7 @@ public class WatchedDoubleStepQREigen_DDRM {
             _temp = new DMatrixRMaj(A.numRows, 1);
             numStepsFind = new int[A.numRows];
         } else {
-            this.A.set(A);
+            this.A.setTo(A);
             UtilEjml.memset(numStepsFind, 0, numStepsFind.length);
         }
 

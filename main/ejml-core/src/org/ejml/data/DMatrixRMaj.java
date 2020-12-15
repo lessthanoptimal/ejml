@@ -352,7 +352,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     @Override
-    public void set(Matrix original) {
+    public void setTo( Matrix original) {
         DMatrix m = (DMatrix)original;
 
         reshape(original.getNumRows(),original.getNumCols());

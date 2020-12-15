@@ -126,7 +126,7 @@ public class TestSpecializedOps_ZDRM {
             a.imaginary /= max;
 
             ComplexMath_F64.multiply(total, a, tmp);
-            total.set(tmp);
+            total.setTo(tmp);
         }
         double expected = total.getMagnitude();
 

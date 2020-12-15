@@ -102,7 +102,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     public DMatrixSparseCSC( DMatrixSparseCSC original ) {
         this(original.numRows, original.numCols, original.nz_length);
 
-        set(original);
+        setTo(original);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
-    public void set( Matrix original ) {
+    public void setTo( Matrix original ) {
         DMatrixSparseCSC o = (DMatrixSparseCSC)original;
         reshape(o.numRows, o.numCols, o.nz_length);
         this.nz_length = o.nz_length;

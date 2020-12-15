@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -56,7 +56,7 @@ public interface DMatrix extends Matrix {
     void set(int row, int col, double val);
 
     /**
-     * Same as {@link #set} but does not perform bounds check on input parameters.  This results in about a 25%
+     * Same as {@link #setTo} but does not perform bounds check on input parameters.  This results in about a 25%
      * speed increase but potentially sacrifices stability and makes it more difficult to track down simple errors.
      * It is not recommended that this function be used, except in highly optimized code where the bounds are
      * implicitly being checked.

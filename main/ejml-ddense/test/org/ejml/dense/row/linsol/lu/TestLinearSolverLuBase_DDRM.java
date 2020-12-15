@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,7 @@ public class TestLinearSolverLuBase_DDRM {
 
         LUDecompositionAlt_DDRM alg = new LUDecompositionAlt_DDRM();
 
-        x_improved.set(x);
+        x_improved.setTo(x);
 
         LinearSolverLu_DDRM solver = new LinearSolverLu_DDRM(alg);
         assertTrue(solver.setA(A));

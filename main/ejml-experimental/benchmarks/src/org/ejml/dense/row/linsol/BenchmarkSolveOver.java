@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -58,13 +58,13 @@ public class BenchmarkSolveOver {
         for( long i = 0; i < numTrials; i++ ) {
 
             if( solver.modifiesA() ) {
-                A_copy.set(A);
+                A_copy.setTo(A);
             }
 
             if(includeSet) solver.setA(A_copy);
 
             if( solver.modifiesB() ) {
-                B_tmp.set(B);
+                B_tmp.setTo(B);
                 solver.solve(B_tmp,X);
             } else {
                 solver.solve(B,X);

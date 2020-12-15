@@ -44,12 +44,22 @@ public class ComplexPolar_F64 {
         ComplexMath_F64.convert(n, this);
     }
 
-    public ComplexPolar_F64() { }
+    public ComplexPolar_F64() {}
 
     public Complex_F64 toStandard() {
         Complex_F64 ret = new Complex_F64();
         ComplexMath_F64.convert(this, ret);
         return ret;
+    }
+
+    public void setTo( double r, double theta ) {
+        this.r = r;
+        this.theta = theta;
+    }
+
+    public void setTo( ComplexPolar_F64 src ) {
+        this.r = src.r;
+        this.theta = src.theta;
     }
 
     @Override

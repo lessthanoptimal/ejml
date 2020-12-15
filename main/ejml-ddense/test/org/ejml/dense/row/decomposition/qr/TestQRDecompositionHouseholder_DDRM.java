@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -108,7 +108,7 @@ public class TestQRDecompositionHouseholder_DDRM extends GenericQrCheck_DDRM {
         RandomMatrices_DDRM.fillUniform(U.getDDRM(),rand);
         RandomMatrices_DDRM.fillUniform(A.getDDRM(),rand);
 
-        qr.getQR().set(A.getDDRM());
+        qr.getQR().setTo(A.getDDRM());
 
         // compute the results using standard matrix operations
         SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRMaj.class);
@@ -148,7 +148,7 @@ public class TestQRDecompositionHouseholder_DDRM extends GenericQrCheck_DDRM {
         }
 
         public void householder( int j , DMatrixRMaj A ) {
-            this.QR.set(A);
+            this.QR.setTo(A);
 
             super.householder(j);
         }

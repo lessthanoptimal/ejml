@@ -71,7 +71,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
     }
 
     public DMatrixSparseTriplet( DMatrixSparseTriplet orig ) {
-        set(orig);
+        setTo(orig);
     }
 
     public void reset() {
@@ -272,11 +272,11 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
     }
 
     @Override
-    public void set( Matrix original ) {
+    public void setTo( Matrix original ) {
         DMatrixSparseTriplet orig = (DMatrixSparseTriplet)original;
         reshape(orig.numRows, orig.numCols);
-        this.nz_rowcol.set(orig.nz_rowcol);
-        this.nz_value.set(orig.nz_value);
+        this.nz_rowcol.setTo(orig.nz_rowcol);
+        this.nz_value.setTo(orig.nz_value);
         this.nz_length = orig.nz_length;
     }
 

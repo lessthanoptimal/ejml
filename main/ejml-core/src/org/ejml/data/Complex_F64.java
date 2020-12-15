@@ -47,12 +47,12 @@ public class Complex_F64 {
         return real*real + imaginary*imaginary;
     }
 
-    public void set( double real, double imaginary ) {
+    public void setTo( double real, double imaginary ) {
         this.real = real;
         this.imaginary = imaginary;
     }
 
-    public void set( Complex_F64 a ) {
+    public void setTo( Complex_F64 a ) {
         this.real = a.real;
         this.imaginary = a.imaginary;
     }

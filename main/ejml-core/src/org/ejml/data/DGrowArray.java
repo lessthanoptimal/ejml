@@ -71,7 +71,7 @@ public class DGrowArray {
         this.data = tmp;
     }
 
-    public void set( DGrowArray original ) {
+    public void setTo( DGrowArray original ) {
         reshape(original.length);
         System.arraycopy(original.data, 0, data, 0, original.length);
     }

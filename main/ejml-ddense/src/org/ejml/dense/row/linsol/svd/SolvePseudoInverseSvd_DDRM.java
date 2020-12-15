@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -139,7 +139,7 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
 
     @Override
     public void invert( DMatrixRMaj A_inv ) {
-        A_inv.set(pinv);
+        A_inv.setTo(pinv);
     }
 
     @Override

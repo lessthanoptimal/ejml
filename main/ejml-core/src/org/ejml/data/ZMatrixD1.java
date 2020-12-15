@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -78,7 +78,7 @@ public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
      *
      * @param b The matrix that this matrix is to be set equal to.
      */
-    public void set( ZMatrixD1 b )
+    public void setTo( ZMatrixD1 b )
     {
         if( numRows != b.numRows || numCols != b.numCols ) {
             throw new MatrixDimensionException("The two matrices do not have compatible shapes.");

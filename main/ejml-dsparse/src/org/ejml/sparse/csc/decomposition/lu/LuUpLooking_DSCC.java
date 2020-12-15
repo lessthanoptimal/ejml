@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -191,7 +191,7 @@ public class LuUpLooking_DSCC
     public DMatrixSparseCSC getLower( @Nullable DMatrixSparseCSC lower ) {
         if (lower == null)
             lower = new DMatrixSparseCSC(1, 1, 0);
-        lower.set(L);
+        lower.setTo(L);
         return lower;
     }
 
@@ -199,7 +199,7 @@ public class LuUpLooking_DSCC
     public DMatrixSparseCSC getUpper( @Nullable DMatrixSparseCSC upper ) {
         if (upper == null)
             upper = new DMatrixSparseCSC(1, 1, 0);
-        upper.set(U);
+        upper.setTo(U);
         return upper;
     }
 
