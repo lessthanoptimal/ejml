@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,15 +27,15 @@ import org.ejml.data.Complex_F64;
  *
  * @author Peter Abeles
  */
-public class ComplexMath_F64
-{
+public class ComplexMath_F64 {
 
     /**
      * Complex conjugate
+     *
      * @param input Input complex number
      * @param conj Complex conjugate of the input number
      */
-    public static void conj(Complex_F64 input , Complex_F64 conj ) {
+    public static void conj( Complex_F64 input, Complex_F64 conj ) {
         conj.real = input.real;
         conj.imaginary = -input.imaginary;
     }
@@ -49,7 +49,7 @@ public class ComplexMath_F64
      * @param b Complex number. Not modified.
      * @param result Storage for output
      */
-    public static void plus(Complex_F64 a , Complex_F64 b , Complex_F64 result ) {
+    public static void plus( Complex_F64 a, Complex_F64 b, Complex_F64 result ) {
         result.real = a.real + b.real;
         result.imaginary = a.imaginary + b.imaginary;
     }
@@ -63,7 +63,7 @@ public class ComplexMath_F64
      * @param b Complex number. Not modified.
      * @param result Storage for output
      */
-    public static void minus(Complex_F64 a , Complex_F64 b , Complex_F64 result ) {
+    public static void minus( Complex_F64 a, Complex_F64 b, Complex_F64 result ) {
         result.real = a.real - b.real;
         result.imaginary = a.imaginary - b.imaginary;
     }
@@ -77,8 +77,8 @@ public class ComplexMath_F64
      * @param b Complex number. Not modified.
      * @param result Storage for output
      */
-    public static void multiply(Complex_F64 a, Complex_F64 b, Complex_F64 result) {
-        result.real = a.real * b.real - a.imaginary*b.imaginary;
+    public static void multiply( Complex_F64 a, Complex_F64 b, Complex_F64 result ) {
+        result.real = a.real*b.real - a.imaginary*b.imaginary;
         result.imaginary = a.real*b.imaginary + a.imaginary*b.real;
     }
 
@@ -91,9 +91,9 @@ public class ComplexMath_F64
      * @param b Complex number. Not modified.
      * @param result Storage for output
      */
-    public static void divide(Complex_F64 a, Complex_F64 b, Complex_F64 result) {
+    public static void divide( Complex_F64 a, Complex_F64 b, Complex_F64 result ) {
         double norm = b.getMagnitude2();
-        result.real = (a.real * b.real + a.imaginary*b.imaginary)/norm;
+        result.real = (a.real*b.real + a.imaginary*b.imaginary)/norm;
         result.imaginary = (a.imaginary*b.real - a.real*b.imaginary)/norm;
     }
 
@@ -105,7 +105,7 @@ public class ComplexMath_F64
      * @param input Standard notation
      * @param output Polar notation
      */
-    public static void convert(Complex_F64 input , ComplexPolar_F64 output ) {
+    public static void convert( Complex_F64 input, ComplexPolar_F64 output ) {
         output.r = input.getMagnitude();
         output.theta = Math.atan2(input.imaginary, input.real);
     }
@@ -118,9 +118,9 @@ public class ComplexMath_F64
      * @param input Standard notation
      * @param output Polar notation
      */
-    public static void convert(ComplexPolar_F64 input , Complex_F64 output ) {
-        output.real = input.r * Math.cos(input.theta);
-        output.imaginary = input.r * Math.sin(input.theta);
+    public static void convert( ComplexPolar_F64 input, Complex_F64 output ) {
+        output.real = input.r*(double)Math.cos(input.theta);
+        output.imaginary = input.r*(double)Math.sin(input.theta);
     }
 
     /**
@@ -130,8 +130,7 @@ public class ComplexMath_F64
      * @param b Complex number in polar notation. Not modified.
      * @param result Storage for output.
      */
-    public static void multiply(ComplexPolar_F64 a, ComplexPolar_F64 b, ComplexPolar_F64 result)
-    {
+    public static void multiply( ComplexPolar_F64 a, ComplexPolar_F64 b, ComplexPolar_F64 result ) {
         result.r = a.r*b.r;
         result.theta = a.theta + b.theta;
     }
@@ -143,8 +142,7 @@ public class ComplexMath_F64
      * @param b Complex number in polar notation. Not modified.
      * @param result Storage for output.
      */
-    public static void divide(ComplexPolar_F64 a, ComplexPolar_F64 b, ComplexPolar_F64 result)
-    {
+    public static void divide( ComplexPolar_F64 a, ComplexPolar_F64 b, ComplexPolar_F64 result ) {
         result.r = a.r/b.r;
         result.theta = a.theta - b.theta;
     }
@@ -156,9 +154,8 @@ public class ComplexMath_F64
      * @param N Power it is to be multiplied by
      * @param result Result
      */
-    public static void pow(ComplexPolar_F64 a , int N , ComplexPolar_F64 result )
-    {
-        result.r = Math.pow(a.r,N);
+    public static void pow( ComplexPolar_F64 a, int N, ComplexPolar_F64 result ) {
+        result.r = Math.pow(a.r, N);
         result.theta = N*a.theta;
     }
 
@@ -171,10 +168,9 @@ public class ComplexMath_F64
      * @param k Specifies which root.  0 &le; k &lt; N
      * @param result Computed root
      */
-    public static void root(ComplexPolar_F64 a , int N , int k , ComplexPolar_F64 result )
-    {
-        result.r = Math.pow(a.r,1.0/N);
-        result.theta = (a.theta + 2.0*k* UtilEjml.PI)/N;
+    public static void root( ComplexPolar_F64 a, int N, int k, ComplexPolar_F64 result ) {
+        result.r = Math.pow(a.r, 1.0/N);
+        result.theta = (a.theta + 2.0*k*UtilEjml.PI)/N;
     }
 
     /**
@@ -186,16 +182,15 @@ public class ComplexMath_F64
      * @param k Specifies which root.  0 &le; k &lt; N
      * @param result Computed root
      */
-    public static void root(Complex_F64 a , int N , int k , Complex_F64 result )
-    {
+    public static void root( Complex_F64 a, int N, int k, Complex_F64 result ) {
         double r = a.getMagnitude();
-        double theta = Math.atan2(a.imaginary,a.real);
+        double theta = Math.atan2(a.imaginary, a.real);
 
-        r = Math.pow(r,1.0/N);
+        r = Math.pow(r, 1.0/N);
         theta = (theta + 2.0*k*UtilEjml.PI)/N;
 
-        result.real = r * Math.cos(theta);
-        result.imaginary = r * Math.sin(theta);
+        result.real = r*(double)Math.cos(theta);
+        result.imaginary = r*(double)Math.sin(theta);
     }
 
     /**
@@ -204,14 +199,13 @@ public class ComplexMath_F64
      * @param input Input complex number.
      * @param root Output. The square root of the input
      */
-    public static void sqrt(Complex_F64 input, Complex_F64 root)
-    {
+    public static void sqrt( Complex_F64 input, Complex_F64 root ) {
         double r = input.getMagnitude();
         double a = input.real;
 
-        root.real = Math.sqrt((r+a)/2.0);
-        root.imaginary = Math.sqrt((r-a)/2.0);
-        if( input.imaginary < 0 )
+        root.real = Math.sqrt((r + a)/2.0);
+        root.imaginary = Math.sqrt((r - a)/2.0);
+        if (input.imaginary < 0)
             root.imaginary = -root.imaginary;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,19 +18,17 @@
 
 package org.ejml;
 
-
 /**
  * If two matrices did not have compatible dimensions for the operation this exception
  * is thrown.
  *
  * @author Peter Abeles
  */
-public class MatrixDimensionException 
-    extends RuntimeException
-{
-    public MatrixDimensionException(){}
+public class MatrixDimensionException
+        extends RuntimeException {
+    public MatrixDimensionException() {}
 
-    public MatrixDimensionException(String message ) {
+    public MatrixDimensionException( String message ) {
         super(message);
     }
 }

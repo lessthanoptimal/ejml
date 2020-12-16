@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,7 +18,6 @@
 
 package org.ejml;
 
-
 /**
  * This is a list of parameters that are used across the code.  To tune performance
  * for a particular system change these values.
@@ -29,7 +28,6 @@ public class EjmlParameters {
 
     public static final float TOL32 = 1e-4f;
     public static final double TOL64 = 1e-8;
-
 
     /**
      * Used to adjust which algorithms are used.  Often there is a trade off between memory usage
@@ -61,7 +59,7 @@ public class EjmlParameters {
 
     public static int CMULT_COLUMN_SWITCH = 7;
     public static int CMULT_TRANAB_COLUMN_SWITCH = 20;
-    
+
     /**
      * <p>
      * At which point should it switch to the block cholesky algorithm.
@@ -76,8 +74,7 @@ public class EjmlParameters {
 
     public static int SWITCH_BLOCK64_QR = 1500;
 
-    public enum MemoryUsage
-    {
+    public enum MemoryUsage {
         /**
          * Use lower memory algorithm while not totally sacrificing speed.
          */
@@ -86,6 +83,5 @@ public class EjmlParameters {
          * Always favor faster algorithms even if they use more memory.
          */
         FASTER
-
     }
 }

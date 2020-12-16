@@ -40,12 +40,12 @@ public class ElementLocation {
         this.col = col;
     }
 
-    public void set( ElementLocation loc ) {
-        this.row = loc.row;
-        this.col = loc.col;
+    public void setTo( ElementLocation src ) {
+        this.row = src.row;
+        this.col = src.col;
     }
 
-    public void set( int row, int col ) {
+    public void setTo( int row, int col ) {
         this.row = row;
         this.col = col;
     }

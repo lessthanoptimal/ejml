@@ -23,7 +23,6 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * Ensures that any linear solver it is wrapped around will never modify
  * the input matrices.
@@ -40,18 +39,17 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDe
     private @Nullable T B;
 
     /**
-     *
      * @param alg The solver it is wrapped around.
      */
-    public LinearSolverSafe(LinearSolverDense<T> alg) {
+    public LinearSolverSafe( LinearSolverDense<T> alg ) {
         this.alg = alg;
     }
 
     @Override
-    public boolean setA(T A) {
+    public boolean setA( T A ) {
 
-        if( alg.modifiesA() ) {
-            this.A = UtilEjml.reshapeOrDeclare(this.A,A);
+        if (alg.modifiesA()) {
+            this.A = UtilEjml.reshapeOrDeclare(this.A, A);
             this.A.setTo(A);
             return alg.setA(this.A);
         }
@@ -65,18 +63,18 @@ public class LinearSolverSafe<T extends ReshapeMatrix> implements LinearSolverDe
     }
 
     @Override
-    public void solve(T B, T X) {
-        if( alg.modifiesB() ) {
-            this.B = UtilEjml.reshapeOrDeclare(this.B,B);
+    public void solve( T B, T X ) {
+        if (alg.modifiesB()) {
+            this.B = UtilEjml.reshapeOrDeclare(this.B, B);
             this.B.setTo(B);
             B = this.B;
         }
 
-        alg.solve(B,X);
+        alg.solve(B, X);
     }
 
     @Override
-    public void invert(T A_inv) {
+    public void invert( T A_inv ) {
         alg.invert(A_inv);
     }
 

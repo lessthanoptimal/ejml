@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,7 @@ public class ReadCsv {
     private char comment;
 
     // reader for the input stream
-    private BufferedReader in;
+    private final BufferedReader in;
 
     // number of lines that have been read
     private int lineNumber = 0;
@@ -60,8 +60,8 @@ public class ReadCsv {
      *
      * @param in Where the input comes from.
      */
-    public ReadCsv(InputStream in) {
-        this.in = new BufferedReader(new InputStreamReader(in,UTF_8));
+    public ReadCsv( InputStream in ) {
+        this.in = new BufferedReader(new InputStreamReader(in, UTF_8));
     }
 
     /**
@@ -69,7 +69,7 @@ public class ReadCsv {
      *
      * @param comment The new comment character.
      */
-    public void setComment(char comment) {
+    public void setComment( char comment ) {
         hasComment = true;
         this.comment = comment;
     }
@@ -85,6 +85,7 @@ public class ReadCsv {
 
     /**
      * Returns the reader that it is using internally.
+     *
      * @return The reader.
      */
     public BufferedReader getReader() {
@@ -96,18 +97,17 @@ public class ReadCsv {
      *
      * @return List of valid words on the line.  null if the end of the file has been reached.
      */
-    protected @Nullable List<String> extractWords() throws IOException
-    {
-        while( true ) {
+    protected @Nullable List<String> extractWords() throws IOException {
+        while (true) {
             lineNumber++;
             String line = in.readLine();
-            if( line == null ) {
+            if (line == null) {
                 return null;
             }
 
             // skip comment lines
-            if( hasComment ) {
-                if( line.charAt(0) == comment )
+            if (hasComment) {
+                if (line.charAt(0) == comment)
                     continue;
             }
 
@@ -122,21 +122,21 @@ public class ReadCsv {
      * @param line The line that is being parsed.
      * @return A list of words contained on the line.
      */
-    protected List<String> parseWords(String line) {
+    protected List<String> parseWords( String line ) {
         List<String> words = new ArrayList<String>();
         boolean insideWord = !isSpace(line.charAt(0));
         int last = 0;
-        for( int i = 0; i < line.length(); i++) {
+        for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
 
-            if( insideWord ) {
+            if (insideWord) {
                 // see if its at the end of a word
-                if( isSpace(c)) {
-                    words.add( line.substring(last,i) );
+                if (isSpace(c)) {
+                    words.add(line.substring(last, i));
                     insideWord = false;
                 }
             } else {
-                if( !isSpace(c)) {
+                if (!isSpace(c)) {
                     last = i;
                     insideWord = true;
                 }
@@ -144,8 +144,8 @@ public class ReadCsv {
         }
 
         // if the line ended add the final word
-        if( insideWord ) {
-            words.add( line.substring(last));
+        if (insideWord) {
+            words.add(line.substring(last));
         }
         return words;
     }
@@ -156,7 +156,7 @@ public class ReadCsv {
      * @param c The character being tested.
      * @return if it is a space character or not.
      */
-    private boolean isSpace(char c) {
+    private boolean isSpace( char c ) {
         return c == ' ' || c == '\t';
     }
 }

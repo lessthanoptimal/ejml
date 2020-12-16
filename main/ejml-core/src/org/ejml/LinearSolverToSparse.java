@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,24 +29,23 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
  * @author Peter Abeles
  */
 public class LinearSolverToSparse<D extends Matrix>
-    implements LinearSolverSparse<D,D>
-{
+        implements LinearSolverSparse<D, D> {
     LinearSolverDense<D> solver;
 
     // locking the structure has no meaning, but need to meet the contract
-    boolean locked=false;
+    boolean locked = false;
 
-    public LinearSolverToSparse(LinearSolverDense<D> solver) {
+    public LinearSolverToSparse( LinearSolverDense<D> solver ) {
         this.solver = solver;
     }
 
     @Override
-    public void solveSparse(D B, D X) {
-        solver.solve(B,X);
+    public void solveSparse( D B, D X ) {
+        solver.solve(B, X);
     }
 
     @Override
-    public void setStructureLocked(boolean locked) {
+    public void setStructureLocked( boolean locked ) {
         this.locked = locked;
     }
 
@@ -56,7 +55,7 @@ public class LinearSolverToSparse<D extends Matrix>
     }
 
     @Override
-    public boolean setA(D A) {
+    public boolean setA( D A ) {
         return solver.setA(A);
     }
 
@@ -66,8 +65,8 @@ public class LinearSolverToSparse<D extends Matrix>
     }
 
     @Override
-    public void solve(D B, D X) {
-        solver.solve(B,X);
+    public void solve( D B, D X ) {
+        solver.solve(B, X);
     }
 
     @Override

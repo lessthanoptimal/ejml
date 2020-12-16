@@ -178,7 +178,7 @@ public abstract class LUDecompositionBase_ZDRM
         n = a.numCols;
         stride = n*2;
 
-        LU.set(a);
+        LU.setTo(a);
         for (int i = 0; i < m; i++) {
             pivot[i] = i;
         }

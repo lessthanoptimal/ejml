@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,19 +30,18 @@ public class CommonOps_BDRM {
      *
      * @param mat The matrix that is transposed in-place.  Modified.
      */
-    public static void transposeSquare( BMatrixRMaj mat )
-    {
-        if( mat.numCols != mat.numRows )
+    public static void transposeSquare( BMatrixRMaj mat ) {
+        if (mat.numCols != mat.numRows)
             throw new IllegalArgumentException("Must be sqare");
 
         int index = 1;
         int indexEnd = mat.numCols;
-        for( int i = 0; i < mat.numRows;
-             i++ , index += i+1 , indexEnd += mat.numCols ) {
-            int indexOther = (i+1)*mat.numCols + i;
-            for( ; index < indexEnd; index++, indexOther += mat.numCols) {
-                boolean val = mat.data[ index ];
-                mat.data[ index ] = mat.data[ indexOther ];
+        for (int i = 0; i < mat.numRows;
+             i++, index += i + 1, indexEnd += mat.numCols) {
+            int indexOther = (i + 1)*mat.numCols + i;
+            for (; index < indexEnd; index++, indexOther += mat.numCols) {
+                boolean val = mat.data[index];
+                mat.data[index] = mat.data[indexOther];
                 mat.data[indexOther] = val;
             }
         }

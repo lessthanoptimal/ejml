@@ -721,8 +721,8 @@ public class UtilEjml {
      */
     public static void checkReshapeSolve( int numRowsA, int numColsA, ReshapeMatrix B, ReshapeMatrix X ) {
         if (B.getNumRows() != numRowsA)
-            throw new IllegalArgumentException("Unexpected number of rows in B based on shape of A. Found="+
-                    B.getNumRows()+" Expected="+numRowsA);
+            throw new IllegalArgumentException("Unexpected number of rows in B based on shape of A. Found=" +
+                    B.getNumRows() + " Expected=" + numRowsA);
         X.reshape(numColsA, B.getNumCols());
     }
 }

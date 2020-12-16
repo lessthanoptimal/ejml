@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,23 +33,23 @@ package org.ejml.ops;
 public class QuickSort_S32 {
     // an architecture dependent tuning parameter
     private int M = 7;
-    private int NSTACK;
+    private final int NSTACK;
 
-    private int istack[];
+    private final int[] istack;
 
     public QuickSort_S32() {
         NSTACK = 65;
         istack = new int[NSTACK];
     }
 
-    public QuickSort_S32(int NSTACK, int M) {
+    public QuickSort_S32( int NSTACK, int M ) {
         this.M = M;
         this.NSTACK = NSTACK;
 
         istack = new int[NSTACK];
     }
 
-    public void sort(int[] arr, int length, int indexes[]) {
+    public void sort( int[] arr, int length, int indexes[] ) {
         for (int i = 0; i < length; i++) {
             indexes[i] = i;
         }
@@ -80,7 +80,6 @@ public class QuickSort_S32 {
 
                 ir = istack[jstack--];
                 l = istack[jstack--];
-
             } else {
                 k = (l + ir) >>> 1;
                 temp = indexes[k];

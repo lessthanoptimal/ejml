@@ -24,7 +24,6 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * Ensures that any linear solver it is wrapped around will never modify
  * the input matrices.
@@ -33,27 +32,27 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings({"unchecked"})
 public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMatrix>
-        implements LinearSolverSparse<S,D> {
+        implements LinearSolverSparse<S, D> {
 
     // the solver it is wrapped around
-    private final LinearSolverSparse<S,D> alg;
+    private final LinearSolverSparse<S, D> alg;
 
     // local copies of input matrices that can be modified.
     private @Nullable S A;
     private @Nullable D B;
+
     /**
-     *
      * @param alg The solver it is wrapped around.
      */
-    public LinearSolverSparseSafe(LinearSolverSparse<S,D> alg) {
+    public LinearSolverSparseSafe( LinearSolverSparse<S, D> alg ) {
         this.alg = alg;
     }
 
     @Override
-    public boolean setA(S A) {
+    public boolean setA( S A ) {
 
-        if( alg.modifiesA() ) {
-            this.A = UtilEjml.reshapeOrDeclare(this.A,A);
+        if (alg.modifiesA()) {
+            this.A = UtilEjml.reshapeOrDeclare(this.A, A);
             this.A.setTo(A);
             return alg.setA(this.A);
         }
@@ -67,14 +66,14 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     }
 
     @Override
-    public void solve(D B, D X) {
-        if( alg.modifiesB() ) {
-            this.B = UtilEjml.reshapeOrDeclare(this.B,B);
+    public void solve( D B, D X ) {
+        if (alg.modifiesB()) {
+            this.B = UtilEjml.reshapeOrDeclare(this.B, B);
             this.B.setTo(B);
             B = this.B;
         }
 
-        alg.solve(B,X);
+        alg.solve(B, X);
     }
 
     @Override
@@ -93,8 +92,8 @@ public class LinearSolverSparseSafe<S extends DMatrixSparse, D extends ReshapeMa
     }
 
     @Override
-    public void solveSparse(S B, S X) {
-        alg.solveSparse(B,X);
+    public void solveSparse( S B, S X ) {
+        alg.solveSparse(B, X);
     }
 
     @Override

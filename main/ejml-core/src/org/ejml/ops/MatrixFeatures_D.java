@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,8 +43,8 @@ public class MatrixFeatures_D {
      * @param b A matrix. Not modified.
      * @return true if identical and false otherwise.
      */
-    public static boolean isEquals(DMatrix a, DMatrix b ) {
-        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() )
+    public static boolean isEquals( DMatrix a, DMatrix b ) {
+        if (a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols())
             return false;
 
         final int numRows = a.getNumRows();
@@ -52,7 +52,7 @@ public class MatrixFeatures_D {
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                if( !(a.unsafe_get(row,col) == b.unsafe_get(row,col)))
+                if (!(a.unsafe_get(row, col) == b.unsafe_get(row, col)))
                     return false;
             }
         }
@@ -78,11 +78,11 @@ public class MatrixFeatures_D {
      * @param tol Tolerance for equality.
      * @return true if identical and false otherwise.
      */
-    public static boolean isIdentical(DMatrix a, DMatrix b , double tol ) {
-        if( a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols() ) {
+    public static boolean isIdentical( DMatrix a, DMatrix b, double tol ) {
+        if (a.getNumRows() != b.getNumRows() || a.getNumCols() != b.getNumCols()) {
             return false;
         }
-        if( tol < 0 )
+        if (tol < 0)
             throw new IllegalArgumentException("Tolerance must be greater than or equal to zero.");
 
         final int numRows = a.getNumRows();
@@ -90,7 +90,7 @@ public class MatrixFeatures_D {
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                if( !UtilEjml.isIdentical(a.unsafe_get(row,col),b.unsafe_get(row,col), tol))
+                if (!UtilEjml.isIdentical(a.unsafe_get(row, col), b.unsafe_get(row, col), tol))
                     return false;
             }
         }

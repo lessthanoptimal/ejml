@@ -103,7 +103,7 @@ public class TestMatrixMatrixMult_ZDRM {
                     if (isAdd) {
                         CommonOps_ZDRM.add(C, AB, expected);
                     } else {
-                        expected.set(AB);
+                        expected.setTo(AB);
                     }
 
                     invoke(method, realAlpha, imgAlpha, A, B, C);

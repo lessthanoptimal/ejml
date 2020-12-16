@@ -106,7 +106,7 @@ public class BenchmarkCommonOps_ZDRM {
     @Benchmark public void fill() {CommonOps_ZDRM.fill(A, -0.5, 1.2);}
     @Benchmark public void add() {CommonOps_ZDRM.add(A, B, C);}
     @Benchmark public void subtract() {CommonOps_ZDRM.subtract(A, B, C);}
-    @Benchmark public void scale() {C.set(A); CommonOps_ZDRM.scale(-0.5, 1.2, C);}
+    @Benchmark public void scale() {C.setTo(A); CommonOps_ZDRM.scale(-0.5, 1.2, C);}
     @Benchmark public void transpose_A() {CommonOps_ZDRM.transpose(A);}
     @Benchmark public void transposeConjugate_A() {CommonOps_ZDRM.transposeConjugate(A);}
     @Benchmark public void transpose_AA() {CommonOps_ZDRM.transpose(A, C);}
