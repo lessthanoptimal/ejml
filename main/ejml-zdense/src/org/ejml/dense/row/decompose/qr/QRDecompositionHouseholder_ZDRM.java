@@ -248,7 +248,7 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
     protected void commonSetup( ZMatrixRMaj A ) {
         setExpectedMaxSize(A.numRows, A.numCols);
 
-        QR.set(A);
+        QR.setTo(A);
     }
 
     public double[] getGammas() {

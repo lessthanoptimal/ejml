@@ -22,7 +22,7 @@ import org.ejml.data.*;
 
 /**
  * Contains a function to convert from one matrix type into another
- * 
+ *
  * @author Peter Abeles
  */
 public class ConvertMatrixType {
@@ -33,153 +33,159 @@ public class ConvertMatrixType {
      * @return The converted matrix
      */
     @SuppressWarnings("MissingCasesInEnumSwitch")
-    public static Matrix convert(Matrix matrix , MatrixType desired ) {
-        Matrix m=null;
+    public static Matrix convert( Matrix matrix, MatrixType desired ) {
+        Matrix m = null;
 
-        switch( matrix.getType() ) {
+        switch (matrix.getType()) {
             case DDRM: {
-                switch( desired ) {
+                switch (desired) {
                     case DDRM: {
                         m = matrix.copy();
                     } break;
                     case FDRM: {
-                        m = new FMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixRMaj) matrix, (FMatrixRMaj)m);
+                        m = new FMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixRMaj)matrix, (FMatrixRMaj)m);
                     } break;
 
                     case ZDRM: {
-                        m = new ZMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixRMaj) matrix, (ZMatrixRMaj)m);
+                        m = new ZMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixRMaj)matrix, (ZMatrixRMaj)m);
                     } break;
 
                     case CDRM: {
-                        m = new CMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixRMaj) matrix, (CMatrixRMaj)m);
+                        m = new CMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixRMaj)matrix, (CMatrixRMaj)m);
                     } break;
 
                     case DSCC: {
-                        m = new DMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        DConvertMatrixStruct.convert((DMatrixRMaj) matrix, (DMatrixSparseCSC)m);
+                        m = new DMatrixSparseCSC(matrix.getNumRows(), matrix.getNumCols());
+                        DConvertMatrixStruct.convert((DMatrixRMaj)matrix, (DMatrixSparseCSC)m);
                     } break;
 
                     case FSCC: {
-                        m = new FMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixRMaj) matrix, (FMatrixSparseCSC)m);
+                        m = new FMatrixSparseCSC(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixRMaj)matrix, (FMatrixSparseCSC)m);
                     } break;
                 }
-            } break;
+            }
+            break;
 
             case FDRM: {
-                switch( desired ) {
+                switch (desired) {
                     case FDRM: {
                         m = matrix.copy();
                     } break;
                     case DDRM: {
-                        m = new DMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixRMaj) matrix, (DMatrixRMaj)m);
+                        m = new DMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixRMaj)matrix, (DMatrixRMaj)m);
                     } break;
 
                     case ZDRM: {
-                        m = new ZMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixRMaj) matrix, (ZMatrixRMaj)m);
+                        m = new ZMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixRMaj)matrix, (ZMatrixRMaj)m);
                     } break;
 
                     case CDRM: {
-                        m = new CMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixRMaj) matrix, (CMatrixRMaj)m);
+                        m = new CMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixRMaj)matrix, (CMatrixRMaj)m);
                     } break;
 
                     case DSCC: {
-                        m = new DMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixRMaj) matrix, (DMatrixSparseCSC)m);
+                        m = new DMatrixSparseCSC(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixRMaj)matrix, (DMatrixSparseCSC)m);
                     } break;
 
                     case FSCC: {
-                        m = new FMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        FConvertMatrixStruct.convert((FMatrixRMaj) matrix, (FMatrixSparseCSC)m);
+                        m = new FMatrixSparseCSC(matrix.getNumRows(), matrix.getNumCols());
+                        FConvertMatrixStruct.convert((FMatrixRMaj)matrix, (FMatrixSparseCSC)m);
                     } break;
                 }
-            } break;
+            }
+            break;
 
             case ZDRM: {
-                switch( desired ) {
+                switch (desired) {
                     case CDRM: {
-                        m = new CMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((ZMatrixRMaj) matrix, (CMatrixRMaj)m);
+                        m = new CMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((ZMatrixRMaj)matrix, (CMatrixRMaj)m);
                     } break;
                 }
-            } break;
+            }
+            break;
 
             case CDRM: {
-                switch( desired ) {
+                switch (desired) {
                     case ZDRM: {
-                        m = new ZMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((CMatrixRMaj) matrix, (ZMatrixRMaj)m);
+                        m = new ZMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((CMatrixRMaj)matrix, (ZMatrixRMaj)m);
                     } break;
                 }
-            } break;
+            }
+            break;
 
             case DSCC: {
-                switch( desired ) {
+                switch (desired) {
                     case DDRM: {
-                        m = new DMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        DConvertMatrixStruct.convert((DMatrixSparseCSC) matrix, (DMatrixRMaj)m);
+                        m = new DMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        DConvertMatrixStruct.convert((DMatrixSparseCSC)matrix, (DMatrixRMaj)m);
                     } break;
 
                     case FDRM: {
-                        m = new FMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixSparseCSC) matrix, (FMatrixRMaj)m);
+                        m = new FMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixSparseCSC)matrix, (FMatrixRMaj)m);
                     } break;
 
                     case ZDRM: {
-                        m = new ZMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixSparseCSC) matrix, (ZMatrixRMaj)m);
+                        m = new ZMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixSparseCSC)matrix, (ZMatrixRMaj)m);
                     } break;
 
                     case CDRM: {
-                        m = new CMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixSparseCSC) matrix, (CMatrixRMaj)m);
+                        m = new CMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixSparseCSC)matrix, (CMatrixRMaj)m);
                     } break;
 
                     case FSCC: {
-                        m = new FMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((DMatrixSparseCSC) matrix, (FMatrixSparseCSC)m);
+                        m = new FMatrixSparseCSC(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((DMatrixSparseCSC)matrix, (FMatrixSparseCSC)m);
                     } break;
                 }
-            } break;
+            }
+            break;
 
             case FSCC: {
-                switch( desired ) {
+                switch (desired) {
                     case DDRM: {
-                        m = new DMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixSparseCSC) matrix, (DMatrixRMaj)m);
+                        m = new DMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixSparseCSC)matrix, (DMatrixRMaj)m);
                     } break;
 
                     case FDRM: {
-                        m = new FMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        FConvertMatrixStruct.convert((FMatrixSparseCSC) matrix, (FMatrixRMaj)m);
+                        m = new FMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        FConvertMatrixStruct.convert((FMatrixSparseCSC)matrix, (FMatrixRMaj)m);
                     } break;
 
                     case ZDRM: {
-                        m = new ZMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixSparseCSC) matrix, (ZMatrixRMaj)m);
+                        m = new ZMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixSparseCSC)matrix, (ZMatrixRMaj)m);
                     } break;
 
                     case CDRM: {
-                        m = new CMatrixRMaj(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixSparseCSC) matrix, (CMatrixRMaj)m);
+                        m = new CMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixSparseCSC)matrix, (CMatrixRMaj)m);
                     } break;
 
                     case DSCC: {
-                        m = new DMatrixSparseCSC(matrix.getNumRows(),matrix.getNumCols());
-                        ConvertMatrixData.convert((FMatrixSparseCSC) matrix, (DMatrixSparseCSC)m);
+                        m = new DMatrixSparseCSC(matrix.getNumRows(), matrix.getNumCols());
+                        ConvertMatrixData.convert((FMatrixSparseCSC)matrix, (DMatrixSparseCSC)m);
                     } break;
                 }
-            } break;
+            }
+            break;
         }
 
-        if( m == null ) {
-            throw new IllegalArgumentException("Unknown "+matrix.getType()+" "+desired);
+        if (m == null) {
+            throw new IllegalArgumentException("Unknown " + matrix.getType() + " " + desired);
         }
 
         return m;

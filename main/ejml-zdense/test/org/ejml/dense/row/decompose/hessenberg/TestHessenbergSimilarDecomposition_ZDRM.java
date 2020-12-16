@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -201,7 +201,7 @@ public class TestHessenbergSimilarDecomposition_ZDRM {
             ZMatrixRMaj Qi = SpecializedOps_ZDRM.createReflector(u,gammas[i]);
 
             CommonOps_ZDRM.mult(Qi,Q,temp);
-            Q.set(temp);
+            Q.setTo(temp);
         }
         ZMatrixRMaj expectedH = new ZMatrixRMaj(N,N);
 

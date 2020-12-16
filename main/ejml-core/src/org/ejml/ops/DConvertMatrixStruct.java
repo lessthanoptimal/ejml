@@ -37,9 +37,9 @@ public class DConvertMatrixStruct {
      * @param input Input matrix.
      * @param output Output matrix.
      */
-    public static void convert(DMatrix input , DMatrix output ) {
-        if( output instanceof ReshapeMatrix ) {
-            ((ReshapeMatrix)output).reshape(input.getNumRows(),input.getNumCols());
+    public static void convert( DMatrix input, DMatrix output ) {
+        if (output instanceof ReshapeMatrix) {
+            ((ReshapeMatrix)output).reshape(input.getNumRows(), input.getNumCols());
         } else {
             if (input.getNumRows() != output.getNumRows())
                 throw new IllegalArgumentException("Number of rows do not match");
@@ -47,9 +47,9 @@ public class DConvertMatrixStruct {
                 throw new IllegalArgumentException("Number of columns do not match");
         }
 
-        for( int i = 0; i < input.getNumRows(); i++  ) {
-            for( int j = 0; j < input.getNumCols(); j++ ) {
-                output.unsafe_set(i,j,input.unsafe_get(i,j));
+        for (int i = 0; i < input.getNumRows(); i++) {
+            for (int j = 0; j < input.getNumCols(); j++) {
+                output.unsafe_set(i, j, input.unsafe_get(i, j));
             }
         }
     }
@@ -61,11 +61,11 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix2x2 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(2,2);
+    public static DMatrixRMaj convert( DMatrix2x2 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(2, 2);
 
-        output.reshape(input.getNumRows(),input.getNumCols());
+        output.reshape(input.getNumRows(), input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -82,11 +82,11 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix3x3 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(3,3);
+    public static DMatrixRMaj convert( DMatrix3x3 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(3, 3);
 
-        output.reshape(input.getNumRows(),input.getNumCols());
+        output.reshape(input.getNumRows(), input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -108,11 +108,11 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix4x4 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(4,4);
+    public static DMatrixRMaj convert( DMatrix4x4 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(4, 4);
 
-        output.reshape(input.getNumRows(),input.getNumCols());
+        output.reshape(input.getNumRows(), input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -141,11 +141,11 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix5x5 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(5,5);
+    public static DMatrixRMaj convert( DMatrix5x5 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(5, 5);
 
-        output.reshape(input.getNumRows(),input.getNumCols());
+        output.reshape(input.getNumRows(), input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -183,11 +183,11 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix6x6 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(6,6);
+    public static DMatrixRMaj convert( DMatrix6x6 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(6, 6);
 
-        output.reshape(input.getNumRows(),input.getNumCols());
+        output.reshape(input.getNumRows(), input.getNumCols());
 
         output.data[0] = input.a11;
         output.data[1] = input.a12;
@@ -236,13 +236,13 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix2x2 convert(DMatrixRMaj input , @Nullable DMatrix2x2 output ) {
-        if( output == null)
+    public static DMatrix2x2 convert( DMatrixRMaj input, @Nullable DMatrix2x2 output ) {
+        if (output == null)
             output = new DMatrix2x2();
 
-        if( input.getNumRows() != output.getNumRows() )
+        if (input.getNumRows() != output.getNumRows())
             throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
+        if (input.getNumCols() != output.getNumCols())
             throw new IllegalArgumentException("Number of columns do not match");
 
         output.a11 = input.data[0];
@@ -260,13 +260,13 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix3x3 convert(DMatrixRMaj input , @Nullable DMatrix3x3 output ) {
-        if( output == null)
+    public static DMatrix3x3 convert( DMatrixRMaj input, @Nullable DMatrix3x3 output ) {
+        if (output == null)
             output = new DMatrix3x3();
 
-        if( input.getNumRows() != output.getNumRows() )
+        if (input.getNumRows() != output.getNumRows())
             throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
+        if (input.getNumCols() != output.getNumCols())
             throw new IllegalArgumentException("Number of columns do not match");
 
         output.a11 = input.data[0];
@@ -289,13 +289,13 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix4x4 convert(DMatrixRMaj input , @Nullable DMatrix4x4 output ) {
-        if( output == null)
+    public static DMatrix4x4 convert( DMatrixRMaj input, @Nullable DMatrix4x4 output ) {
+        if (output == null)
             output = new DMatrix4x4();
 
-        if( input.getNumRows() != output.getNumRows() )
+        if (input.getNumRows() != output.getNumRows())
             throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
+        if (input.getNumCols() != output.getNumCols())
             throw new IllegalArgumentException("Number of columns do not match");
 
         output.a11 = input.data[0];
@@ -325,13 +325,13 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix5x5 convert(DMatrixRMaj input , @Nullable DMatrix5x5 output ) {
-        if( output == null)
+    public static DMatrix5x5 convert( DMatrixRMaj input, @Nullable DMatrix5x5 output ) {
+        if (output == null)
             output = new DMatrix5x5();
 
-        if( input.getNumRows() != output.getNumRows() )
+        if (input.getNumRows() != output.getNumRows())
             throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
+        if (input.getNumCols() != output.getNumCols())
             throw new IllegalArgumentException("Number of columns do not match");
 
         output.a11 = input.data[0];
@@ -370,13 +370,13 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix6x6 convert(DMatrixRMaj input , @Nullable DMatrix6x6 output ) {
-        if( output == null)
+    public static DMatrix6x6 convert( DMatrixRMaj input, @Nullable DMatrix6x6 output ) {
+        if (output == null)
             output = new DMatrix6x6();
 
-        if( input.getNumRows() != output.getNumRows() )
+        if (input.getNumRows() != output.getNumRows())
             throw new IllegalArgumentException("Number of rows do not match");
-        if( input.getNumCols() != output.getNumCols() )
+        if (input.getNumCols() != output.getNumCols())
             throw new IllegalArgumentException("Number of columns do not match");
 
         output.a11 = input.data[0];
@@ -426,15 +426,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix2 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(2,1);
+    public static DMatrixRMaj convert( DMatrix2 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(2, 1);
 
-        if( output.getNumRows() != 1 && output.getNumCols() != 1 )
+        if (output.getNumRows() != 1 && output.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(output.getNumRows(),output.getNumCols());
-        if( length != 2 )
-            throw new IllegalArgumentException("Length of input vector is not 2.  It is "+length);
+        int length = Math.max(output.getNumRows(), output.getNumCols());
+        if (length != 2)
+            throw new IllegalArgumentException("Length of input vector is not 2.  It is " + length);
 
         output.data[0] = input.a1;
         output.data[1] = input.a2;
@@ -449,15 +449,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix3 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(3,1);
+    public static DMatrixRMaj convert( DMatrix3 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(3, 1);
 
-        if( output.getNumRows() != 1 && output.getNumCols() != 1 )
+        if (output.getNumRows() != 1 && output.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(output.getNumRows(),output.getNumCols());
-        if( length != 3 )
-            throw new IllegalArgumentException("Length of input vector is not 3.  It is "+length);
+        int length = Math.max(output.getNumRows(), output.getNumCols());
+        if (length != 3)
+            throw new IllegalArgumentException("Length of input vector is not 3.  It is " + length);
 
         output.data[0] = input.a1;
         output.data[1] = input.a2;
@@ -473,15 +473,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix4 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(4,1);
+    public static DMatrixRMaj convert( DMatrix4 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(4, 1);
 
-        if( output.getNumRows() != 1 && output.getNumCols() != 1 )
+        if (output.getNumRows() != 1 && output.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(output.getNumRows(),output.getNumCols());
-        if( length != 4 )
-            throw new IllegalArgumentException("Length of input vector is not 4.  It is "+length);
+        int length = Math.max(output.getNumRows(), output.getNumCols());
+        if (length != 4)
+            throw new IllegalArgumentException("Length of input vector is not 4.  It is " + length);
 
         output.data[0] = input.a1;
         output.data[1] = input.a2;
@@ -498,15 +498,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix5 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(5,1);
+    public static DMatrixRMaj convert( DMatrix5 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(5, 1);
 
-        if( output.getNumRows() != 1 && output.getNumCols() != 1 )
+        if (output.getNumRows() != 1 && output.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(output.getNumRows(),output.getNumCols());
-        if( length != 5 )
-            throw new IllegalArgumentException("Length of input vector is not 5.  It is "+length);
+        int length = Math.max(output.getNumRows(), output.getNumCols());
+        if (length != 5)
+            throw new IllegalArgumentException("Length of input vector is not 5.  It is " + length);
 
         output.data[0] = input.a1;
         output.data[1] = input.a2;
@@ -524,15 +524,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrix6 input , @Nullable DMatrixRMaj output ) {
-        if( output == null)
-            output = new DMatrixRMaj(6,1);
+    public static DMatrixRMaj convert( DMatrix6 input, @Nullable DMatrixRMaj output ) {
+        if (output == null)
+            output = new DMatrixRMaj(6, 1);
 
-        if( output.getNumRows() != 1 && output.getNumCols() != 1 )
+        if (output.getNumRows() != 1 && output.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(output.getNumRows(),output.getNumCols());
-        if( length != 6 )
-            throw new IllegalArgumentException("Length of input vector is not 6.  It is "+length);
+        int length = Math.max(output.getNumRows(), output.getNumCols());
+        if (length != 6)
+            throw new IllegalArgumentException("Length of input vector is not 6.  It is " + length);
 
         output.data[0] = input.a1;
         output.data[1] = input.a2;
@@ -551,15 +551,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix2 convert(DMatrixRMaj input , @Nullable DMatrix2 output ) {
-        if( output == null)
+    public static DMatrix2 convert( DMatrixRMaj input, @Nullable DMatrix2 output ) {
+        if (output == null)
             output = new DMatrix2();
 
-        if( input.getNumRows() != 1 && input.getNumCols() != 1 )
+        if (input.getNumRows() != 1 && input.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(input.getNumRows(),input.getNumCols());
-        if( length != 2 )
-            throw new IllegalArgumentException("Length of input vector is not 2.  It is "+length);
+        int length = Math.max(input.getNumRows(), input.getNumCols());
+        if (length != 2)
+            throw new IllegalArgumentException("Length of input vector is not 2.  It is " + length);
 
         output.a1 = input.data[0];
         output.a2 = input.data[1];
@@ -574,15 +574,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix3 convert(DMatrixRMaj input , @Nullable DMatrix3 output ) {
-        if( output == null)
+    public static DMatrix3 convert( DMatrixRMaj input, @Nullable DMatrix3 output ) {
+        if (output == null)
             output = new DMatrix3();
 
-        if( input.getNumRows() != 1 && input.getNumCols() != 1 )
+        if (input.getNumRows() != 1 && input.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(input.getNumRows(),input.getNumCols());
-        if( length != 3 )
-            throw new IllegalArgumentException("Length of input vector is not 3.  It is "+length);
+        int length = Math.max(input.getNumRows(), input.getNumCols());
+        if (length != 3)
+            throw new IllegalArgumentException("Length of input vector is not 3.  It is " + length);
 
         output.a1 = input.data[0];
         output.a2 = input.data[1];
@@ -598,15 +598,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix4 convert(DMatrixRMaj input , @Nullable DMatrix4 output ) {
-        if( output == null)
+    public static DMatrix4 convert( DMatrixRMaj input, @Nullable DMatrix4 output ) {
+        if (output == null)
             output = new DMatrix4();
 
-        if( input.getNumRows() != 1 && input.getNumCols() != 1 )
+        if (input.getNumRows() != 1 && input.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(input.getNumRows(),input.getNumCols());
-        if( length != 4 )
-            throw new IllegalArgumentException("Length of input vector is not 4.  It is "+length);
+        int length = Math.max(input.getNumRows(), input.getNumCols());
+        if (length != 4)
+            throw new IllegalArgumentException("Length of input vector is not 4.  It is " + length);
 
         output.a1 = input.data[0];
         output.a2 = input.data[1];
@@ -623,15 +623,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix5 convert(DMatrixRMaj input , @Nullable DMatrix5 output ) {
-        if( output == null)
+    public static DMatrix5 convert( DMatrixRMaj input, @Nullable DMatrix5 output ) {
+        if (output == null)
             output = new DMatrix5();
 
-        if( input.getNumRows() != 1 && input.getNumCols() != 1 )
+        if (input.getNumRows() != 1 && input.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(input.getNumRows(),input.getNumCols());
-        if( length != 5 )
-            throw new IllegalArgumentException("Length of input vector is not 5.  It is "+length);
+        int length = Math.max(input.getNumRows(), input.getNumCols());
+        if (length != 5)
+            throw new IllegalArgumentException("Length of input vector is not 5.  It is " + length);
 
         output.a1 = input.data[0];
         output.a2 = input.data[1];
@@ -649,15 +649,15 @@ public class DConvertMatrixStruct {
      * @param output Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrix6 convert(DMatrixRMaj input , @Nullable DMatrix6 output ) {
-        if( output == null)
+    public static DMatrix6 convert( DMatrixRMaj input, @Nullable DMatrix6 output ) {
+        if (output == null)
             output = new DMatrix6();
 
-        if( input.getNumRows() != 1 && input.getNumCols() != 1 )
+        if (input.getNumRows() != 1 && input.getNumCols() != 1)
             throw new IllegalArgumentException("One row or column must have a length of 1 for it to be a vector");
-        int length = Math.max(input.getNumRows(),input.getNumCols());
-        if( length != 6 )
-            throw new IllegalArgumentException("Length of input vector is not 6.  It is "+length);
+        int length = Math.max(input.getNumRows(), input.getNumCols());
+        if (length != 6)
+            throw new IllegalArgumentException("Length of input vector is not 6.  It is " + length);
 
         output.a1 = input.data[0];
         output.a2 = input.data[1];
@@ -677,21 +677,21 @@ public class DConvertMatrixStruct {
      * @param src Input matrix.
      * @param dst Output matrix.
      */
-    public static void convert(DMatrixRMaj src , DMatrixRBlock dst ) {
-        if( src.numRows != dst.numRows || src.numCols != dst.numCols )
+    public static void convert( DMatrixRMaj src, DMatrixRBlock dst ) {
+        if (src.numRows != dst.numRows || src.numCols != dst.numCols)
             throw new IllegalArgumentException("Must be the same size.");
 
-        for( int i = 0; i < dst.numRows; i += dst.blockLength ) {
-            int blockHeight = Math.min( dst.blockLength , dst.numRows - i);
+        for (int i = 0; i < dst.numRows; i += dst.blockLength) {
+            int blockHeight = Math.min(dst.blockLength, dst.numRows - i);
 
-            for( int j = 0; j < dst.numCols; j += dst.blockLength ) {
-                int blockWidth = Math.min( dst.blockLength , dst.numCols - j);
+            for (int j = 0; j < dst.numCols; j += dst.blockLength) {
+                int blockWidth = Math.min(dst.blockLength, dst.numCols - j);
 
                 int indexDst = i*dst.numCols + blockHeight*j;
                 int indexSrcRow = i*dst.numCols + j;
 
-                for( int k = 0; k < blockHeight; k++ ) {
-                    System.arraycopy(src.data,indexSrcRow,dst.data,indexDst,blockWidth);
+                for (int k = 0; k < blockHeight; k++) {
+                    System.arraycopy(src.data, indexSrcRow, dst.data, indexDst, blockWidth);
                     indexDst += blockWidth;
                     indexSrcRow += dst.numCols;
                 }
@@ -706,24 +706,24 @@ public class DConvertMatrixStruct {
      * @param dst Output matrix.  If null a new matrix will be declared.
      * @return Converted matrix.
      */
-    public static DMatrixRMaj convert(DMatrixRBlock src , @Nullable DMatrixRMaj dst ) {
-        if( dst != null ) {
-            dst.reshape(src.getNumRows(),src.getNumCols());
+    public static DMatrixRMaj convert( DMatrixRBlock src, @Nullable DMatrixRMaj dst ) {
+        if (dst != null) {
+            dst.reshape(src.getNumRows(), src.getNumCols());
         } else {
-            dst = new DMatrixRMaj(src.numRows,src.numCols);
+            dst = new DMatrixRMaj(src.numRows, src.numCols);
         }
 
-        for( int i = 0; i < src.numRows; i += src.blockLength ) {
-            int blockHeight = Math.min( src.blockLength , src.numRows - i);
+        for (int i = 0; i < src.numRows; i += src.blockLength) {
+            int blockHeight = Math.min(src.blockLength, src.numRows - i);
 
-            for( int j = 0; j < src.numCols; j += src.blockLength ) {
-                int blockWidth = Math.min( src.blockLength , src.numCols - j);
+            for (int j = 0; j < src.numCols; j += src.blockLength) {
+                int blockWidth = Math.min(src.blockLength, src.numCols - j);
 
                 int indexSrc = i*src.numCols + blockHeight*j;
                 int indexDstRow = i*dst.numCols + j;
 
-                for( int k = 0; k < blockHeight; k++ ) {
-                    System.arraycopy(src.data,indexSrc,dst.data,indexDstRow,blockWidth);
+                for (int k = 0; k < blockHeight; k++) {
+                    System.arraycopy(src.data, indexSrc, dst.data, indexDstRow, blockWidth);
                     indexSrc += blockWidth;
                     indexDstRow += dst.numCols;
                 }
@@ -733,26 +733,26 @@ public class DConvertMatrixStruct {
         return dst;
     }
 
-    public static DMatrixSparseTriplet convert(DMatrix src , @Nullable DMatrixSparseTriplet dst , double tol ) {
-        if( dst == null )
+    public static DMatrixSparseTriplet convert( DMatrix src, @Nullable DMatrixSparseTriplet dst, double tol ) {
+        if (dst == null)
             dst = new DMatrixSparseTriplet(src.getNumRows(), src.getNumCols(), 1);
         else
             dst.reshape(src.getNumRows(), src.getNumCols());
 
         for (int row = 0; row < src.getNumRows(); row++) {
             for (int col = 0; col < src.getNumCols(); col++) {
-                double value = src.unsafe_get(row,col);
-                if( Math.abs(value) > tol )
-                    dst.addItem(row,col,value);
+                double value = src.unsafe_get(row, col);
+                if (Math.abs(value) > tol)
+                    dst.addItem(row, col, value);
             }
         }
 
         return dst;
     }
 
-    public static DMatrixSparseTriplet convert(DMatrixRMaj src , @Nullable DMatrixSparseTriplet dst , double tol ) {
-        if( dst == null )
-            dst = new DMatrixSparseTriplet(src.numRows, src.numCols,src.numRows*src.numCols);
+    public static DMatrixSparseTriplet convert( DMatrixRMaj src, @Nullable DMatrixSparseTriplet dst, double tol ) {
+        if (dst == null)
+            dst = new DMatrixSparseTriplet(src.numRows, src.numCols, src.numRows*src.numCols);
         else
             dst.reshape(src.numRows, src.numCols);
 
@@ -760,16 +760,16 @@ public class DConvertMatrixStruct {
         for (int row = 0; row < src.numRows; row++) {
             for (int col = 0; col < src.numCols; col++) {
                 double value = src.data[index++];
-                if( Math.abs(value) > tol )
-                    dst.addItem(row,col,value);
+                if (Math.abs(value) > tol)
+                    dst.addItem(row, col, value);
             }
         }
 
         return dst;
     }
 
-    public static DMatrixRMaj convert(DMatrixSparseTriplet src , @Nullable DMatrixRMaj dst ) {
-        if( dst == null )
+    public static DMatrixRMaj convert( DMatrixSparseTriplet src, @Nullable DMatrixRMaj dst ) {
+        if (dst == null)
             dst = new DMatrixRMaj(src.numRows, src.numCols);
         else {
             dst.reshape(src.numRows, src.numCols);
@@ -778,7 +778,7 @@ public class DConvertMatrixStruct {
 
         for (int i = 0; i < src.nz_length; i++) {
             int row = src.nz_rowcol.data[i*2];
-            int col = src.nz_rowcol.data[i*2+1];
+            int col = src.nz_rowcol.data[i*2 + 1];
             double value = src.nz_value.data[i];
 
             dst.unsafe_set(row, col, value);
@@ -787,8 +787,8 @@ public class DConvertMatrixStruct {
         return dst;
     }
 
-    public static DMatrixRMaj convert(DMatrixSparseCSC src , @Nullable DMatrixRMaj dst ) {
-        if( dst == null )
+    public static DMatrixRMaj convert( DMatrixSparseCSC src, @Nullable DMatrixRMaj dst ) {
+        if (dst == null)
             dst = new DMatrixRMaj(src.numRows, src.numCols);
         else {
             dst.reshape(src.numRows, src.numCols);
@@ -803,7 +803,7 @@ public class DConvertMatrixStruct {
                 int row = src.nz_rows[i];
                 double val = src.nz_values[i];
 
-                dst.unsafe_set(row,j-1, val);
+                dst.unsafe_set(row, j - 1, val);
             }
             idx0 = idx1;
         }
@@ -818,29 +818,29 @@ public class DConvertMatrixStruct {
      * @param dst Storage for the converted matrix.  If null a new instance will be returned.
      * @return The converted matrix
      */
-    public static DMatrixSparseCSC convert(DMatrixRMaj src , @Nullable DMatrixSparseCSC dst , double tol ) {
+    public static DMatrixSparseCSC convert( DMatrixRMaj src, @Nullable DMatrixSparseCSC dst, double tol ) {
         int nonzero = 0;
         int N = src.numRows*src.numCols;
         for (int i = 0; i < N; i++) {
-            if( src.data[i] != 0 )
+            if (src.data[i] != 0)
                 nonzero++;
         }
 
-        dst = UtilEjml.reshapeOrDeclare(dst,src.numRows, src.numCols, nonzero);
+        dst = UtilEjml.reshapeOrDeclare(dst, src.numRows, src.numCols, nonzero);
         dst.nz_length = 0;
 
         dst.col_idx[0] = 0;
         for (int col = 0; col < src.numCols; col++) {
             for (int row = 0; row < src.numRows; row++) {
-                double value = src.data[row*src.numCols+col];
-                if( Math.abs(value) <= tol )
+                double value = src.data[row*src.numCols + col];
+                if (Math.abs(value) <= tol)
                     continue;
 
                 dst.nz_rows[dst.nz_length] = row;
                 dst.nz_values[dst.nz_length] = value;
                 dst.nz_length += 1;
             }
-            dst.col_idx[col+1] = dst.nz_length;
+            dst.col_idx[col + 1] = dst.nz_length;
         }
 
         return dst;
@@ -854,25 +854,25 @@ public class DConvertMatrixStruct {
      * @param dst Destination. Will be a copy.  Modified.
      * @param histStorage Workspace. Can be null.
      */
-    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , @Nullable DMatrixSparseCSC dst ,
-                                           @Nullable IGrowArray histStorage) {
-        dst = UtilEjml.reshapeOrDeclare(dst,src.numRows,src.numCols,src.nz_length);
+    public static DMatrixSparseCSC convert( DMatrixSparseTriplet src, @Nullable DMatrixSparseCSC dst,
+                                            @Nullable IGrowArray histStorage ) {
+        dst = UtilEjml.reshapeOrDeclare(dst, src.numRows, src.numCols, src.nz_length);
 
-        int[] hist = UtilEjml.adjustClear(histStorage,src.numCols);
+        int[] hist = UtilEjml.adjustClear(histStorage, src.numCols);
 
         // compute the number of elements in each columns
         for (int i = 0; i < src.nz_length; i++) {
-            hist[src.nz_rowcol.data[i*2+1]]++;
+            hist[src.nz_rowcol.data[i*2 + 1]]++;
         }
 
         // define col_idx
         dst.histogramToStructure(hist);
-        System.arraycopy(dst.col_idx,0,hist,0,dst.numCols);
+        System.arraycopy(dst.col_idx, 0, hist, 0, dst.numCols);
 
         // now write the row indexes and the values
         for (int i = 0; i < src.nz_length; i++) {
             int row = src.nz_rowcol.data[i*2];
-            int col = src.nz_rowcol.data[i*2+1];
+            int col = src.nz_rowcol.data[i*2 + 1];
             double value = src.nz_value.data[i];
 
             int index = hist[col]++;
@@ -884,23 +884,23 @@ public class DConvertMatrixStruct {
         return dst;
     }
 
-    public static DMatrixSparseCSC convert(DMatrixSparseTriplet src , @Nullable DMatrixSparseCSC dst ) {
-        return convert(src,dst,null);
+    public static DMatrixSparseCSC convert( DMatrixSparseTriplet src, @Nullable DMatrixSparseCSC dst ) {
+        return convert(src, dst, null);
     }
 
-    public static DMatrixSparseTriplet convert(DMatrixSparseCSC src , @Nullable DMatrixSparseTriplet dst ) {
-        if( dst == null )
+    public static DMatrixSparseTriplet convert( DMatrixSparseCSC src, @Nullable DMatrixSparseTriplet dst ) {
+        if (dst == null)
             dst = new DMatrixSparseTriplet(src.numRows, src.numCols, src.nz_length);
         else
-            dst.reshape( src.numRows , src.numCols );
+            dst.reshape(src.numRows, src.numCols);
 
         int i0 = src.col_idx[0];
         for (int col = 0; col < src.numCols; col++) {
-            int i1 = src.col_idx[col+1];
+            int i1 = src.col_idx[col + 1];
 
             for (int i = i0; i < i1; i++) {
                 int row = src.nz_rows[i];
-                dst.addItem(row,col, src.nz_values[i]);
+                dst.addItem(row, col, src.nz_values[i]);
             }
             i0 = i1;
         }

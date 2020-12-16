@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,10 +29,10 @@ import java.text.DecimalFormat;
  */
 public class FancyPrint {
     DecimalFormat format = new DecimalFormat("#");
-    int length= MatrixIO.DEFAULT_LENGTH;
-    int significant=4;
+    int length = MatrixIO.DEFAULT_LENGTH;
+    int significant = 4;
 
-    public FancyPrint(DecimalFormat format, int length, int significant) {
+    public FancyPrint( DecimalFormat format, int length, int significant ) {
         this.format = format;
         this.length = length;
         this.significant = significant;
@@ -44,22 +44,21 @@ public class FancyPrint {
     /**
      * @see UtilEjml#fancyStringF(double, DecimalFormat, int, int)
      */
-    public String sf(double value ) {
-        return UtilEjml.fancyStringF(value,format,length,significant);
+    public String sf( double value ) {
+        return UtilEjml.fancyStringF(value, format, length, significant);
     }
 
     /**
      * @see UtilEjml#fancyString(double, DecimalFormat, int, int)
      */
-    public String s(double value ) {
-        return UtilEjml.fancyString(value,format,length,significant);
+    public String s( double value ) {
+        return UtilEjml.fancyString(value, format, length, significant);
     }
 
     /**
      * Fancy print without a space added to positive numbers
      */
-    public String p(double value ) {
-        return UtilEjml.fancyString(value,format,false,length,significant);
+    public String p( double value ) {
+        return UtilEjml.fancyString(value, format, false, length, significant);
     }
-
 }

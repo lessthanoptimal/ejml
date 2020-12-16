@@ -682,7 +682,7 @@ public class CommonOps_ZDRM {
             ZMatrixRMaj b = new ZMatrixRMaj(mat.numCols, mat.numRows);
             transpose(mat, b);
             mat.reshape(b.numRows, b.numCols);
-            mat.set(b);
+            mat.setTo(b);
         }
     }
 
@@ -699,7 +699,7 @@ public class CommonOps_ZDRM {
             ZMatrixRMaj b = new ZMatrixRMaj(mat.numCols, mat.numRows);
             transposeConjugate(mat, b);
             mat.reshape(b.numRows, b.numCols);
-            mat.set(b);
+            mat.setTo(b);
         }
     }
 

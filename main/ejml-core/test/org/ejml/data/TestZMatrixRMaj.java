@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -191,14 +191,14 @@ public class TestZMatrixRMaj {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(3,4,rand);
 
         ZMatrixRMaj B = new ZMatrixRMaj(1,1);
-        B.set(3,4,true,A.data);
+        B.setTo(3,4,true,A.data);
 
         assertTrue(MatrixFeatures_ZDRM.isEquals(A,B));
 
         ZMatrixRMaj A_tran = new ZMatrixRMaj(4,3);
         CommonOps_ZDRM.transpose(A,A_tran);
 
-        B.set(3,4,false,A_tran.data);
+        B.setTo(3,4,false,A_tran.data);
 
         assertTrue(MatrixFeatures_ZDRM.isEquals(A,B));
     }

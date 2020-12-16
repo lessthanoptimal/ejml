@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,14 +30,14 @@ public abstract class ComputePermutation<T extends Matrix> {
     protected @Nullable IGrowArray prow;
     protected @Nullable IGrowArray pcol;
 
-    protected ComputePermutation( boolean hasRow , boolean hasCol ) {
-        if( hasRow )
+    protected ComputePermutation( boolean hasRow, boolean hasCol ) {
+        if (hasRow)
             prow = new IGrowArray();
-        if( hasCol )
+        if (hasCol)
             pcol = new IGrowArray();
     }
 
-    public abstract void process(T m );
+    public abstract void process( T m );
 
     /**
      * Returns row permutation

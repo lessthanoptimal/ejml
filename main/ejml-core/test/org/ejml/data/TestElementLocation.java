@@ -26,7 +26,7 @@ public class TestElementLocation {
     @Test
     void set_row_col() {
         var loc = new ElementLocation();
-        loc.set(1, 2);
+        loc.setTo(1, 2);
         assertEquals(1, loc.row);
         assertEquals(2, loc.col);
     }
@@ -34,7 +34,7 @@ public class TestElementLocation {
     @Test
     void set_loc() {
         var loc = new ElementLocation();
-        loc.set(new ElementLocation(1, 2));
+        loc.setTo(new ElementLocation(1, 2));
         assertEquals(1, loc.row);
         assertEquals(2, loc.col);
     }

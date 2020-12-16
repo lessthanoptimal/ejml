@@ -52,9 +52,9 @@ public class Complex_F64 {
         this.imaginary = imaginary;
     }
 
-    public void setTo( Complex_F64 a ) {
-        this.real = a.real;
-        this.imaginary = a.imaginary;
+    public void setTo( Complex_F64 src ) {
+        this.real = src.real;
+        this.imaginary = src.imaginary;
     }
 
     public boolean isReal() {
