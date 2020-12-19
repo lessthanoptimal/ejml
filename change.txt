@@ -5,6 +5,8 @@ Date format: year/month/day
 ----- Version 0.40
 2020/
 
+- Build
+  * Switched to 'maven-publish'
 - Solve now produces a correct and easily understood error message
   * Thanks CLOVIS-AI for pointing out the issue
 - Refactor set(obj) -> setTo(obj)
