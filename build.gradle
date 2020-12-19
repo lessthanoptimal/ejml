@@ -17,9 +17,10 @@
  */
 
 import net.ltgt.gradle.errorprone.CheckSeverity
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
-    id "com.peterabeles.gversion" version "1.8.3" apply false
+    id "com.peterabeles.gversion" version "1.9" apply false
     id "net.ltgt.errorprone" version "1.2.1" apply false
 }
 
@@ -33,27 +34,50 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'signing'
     apply plugin: 'net.ltgt.errorprone'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        withJavadocJar()
+        withSourcesJar()
     }
 
-    compileJava {
-        // Should make single file changes faster
-        options.incremental = true
-        // Output byte code compatible with Java 8
-        options.compilerArgs += ["--release", "8"]
-//        options.compilerArgs += '--enable-preview'
+    tasks.withType(JavaCompile).all {
+        options.incremental = true                    // Should make single file changes faster
+        options.compilerArgs = ["--release", "8",]    // Output byte code compatible with Java 8
+    }
+
+    // Fail on jar conflict
+    configurations.all { resolutionStrategy { failOnVersionConflict() } }
+
+    // Force the release build to fail if it depends on a SNAPSHOT
+    jar.dependsOn checkDependsOnSNAPSHOT
+
+    // Force uploadArchives to fail if trying to upload a stable release and git is dirty
+    uploadArchives.dependsOn failDirtyNotSnapshot
+
+    // To make ErrorProne and Kotlin plugins happy
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains:annotations:20.0.0'
+            force 'com.google.guava:guava:27.0.1-jre'
+            force 'com.google.errorprone:error_prone_annotations:2.4.0'
+            force 'com.google.code.findbugs:jsr305:3.0.2'
+            force 'org.checkerframework:checker-qual:2.10.0'
+        }
     }
 
     test {
         useJUnitPlatform()
         reports.html.enabled = false
-        testLogging.showStandardStreams = true // Useful for debugging on Travis and there should be no stdout spam
+        testLogging.showStandardStreams = true                 // Print stdout making debugging easier
+        testLogging.exceptionFormat TestExceptionFormat.FULL
+        testLogging.showCauses true
+        testLogging.showExceptions true
+        testLogging.showStackTraces true
     }
 
     repositories {
@@ -70,9 +94,7 @@ subprojects {
             resources { srcDir 'resources/src' }
         }
 
-        generate {
-            java { srcDir 'generate' }
-        }
+        generate { java { srcDir 'generate' } }
 
         benchmarks {
             java { srcDir 'benchmarks/src' }
@@ -80,9 +102,7 @@ subprojects {
         }
 
         test {
-            java {
-                srcDir 'test'
-            }
+            java { srcDir 'test' }
             resources { srcDir 'resources/test' }
         }
     }
@@ -126,16 +146,12 @@ subprojects {
         generateAnnotationProcessor "com.uber.nullaway:nullaway:0.8.0"
     }
 
-    javadoc.failOnError = false
-    javadoc.enabled = !project.version.contains("SNAPSHOT") // disable to stop it from spamming stdout
-    task javadocJar(type: Jar) {
-        classifier = 'javadoc'
-        from javadoc
-    }
-
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
+    javadoc {
+        configure(options) {
+            links = ['http://docs.oracle.com/javase/8/docs/api/']
+            failOnError = false
+            enabled = !project.version.contains("SNAPSHOT") // disable to stop it from spamming stdout
+        }
     }
 
     // InconsistentCapitalization is disabled because in Math capital letters are often used for matrices and lower case
@@ -168,63 +184,64 @@ subprojects {
         }
     }
 
-    artifacts {
-        archives sourcesJar
+    // Skip these codeless directories when publishing jars locally or to a remote destination
+    if (['main','examples','main:autocode'].contains(name)) {
+        project.jar.enabled = false
+        project.uploadArchives.enabled = false
+        project.tasks.publish.enabled = false
     }
 
-    // Force uploadArchives to fail if trying to upload a stable release and git is dirty
-    uploadArchives.dependsOn failDirtyNotSnapshot
+    if (!project.tasks.publish.enabled)
+        return
 
-    // if Maven central isn't setup in gradle.properties skip all of this
-    if( project.hasProperty('ossrhUsername') ) {
-        signing {
-            sign configurations.archives
+    // if Maven central isn't setup in ~/.gradle/gradle.properties fill in these variables to make it happy
+    if( !project.hasProperty('ossrhUsername') ) {
+        ext.ossrhUsername = "dummy"
+        ext.ossrhPassword = "dummy"
+    } else {
+        signing { sign configurations.archives }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                pom {
+                    name = 'EJML'
+                    description = 'A fast and easy to use dense and sparse matrix linear algebra library written in Java.'
+                    url = 'http://ejml.org/'
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'pabeles'
+                            name = 'Peter Abeles'
+                            email = 'peter.abeles@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/lessthanoptimal/ejml.git'
+                        developerConnection = 'scm:git:git://github.com/lessthanoptimal/ejml.git'
+                        url = 'https://github.com/lessthanoptimal/ejml'
+                    }
+                }
+            }
         }
 
-        uploadArchives {
-            artifacts {
-                archives javadocJar
-            }
-            repositories {
-                mavenDeployer {
-                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                        authentication(userName: ossrhUsername, password: ossrhPassword)
-                    }
-
-                    snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                        authentication(userName: ossrhUsername, password: ossrhPassword)
-                    }
-
-                    pom.project {
-                        name 'EJML'
-                        packaging 'pom'
-                        // optionally artifactId can be defined here
-                        description 'A fast and easy to use dense and sparse matrix linear algebra library written in Java.'
-                        url 'http://ejml.org/'
-
-                        scm {
-                            connection 'git@github.com:lessthanoptimal/ejml.git'
-                            developerConnection 'git@github.com:lessthanoptimal/ejml.git'
-                            url 'https://github.com/lessthanoptimal/ejml'
-                        }
-
-                        licenses {
-                            license {
-                                name 'The Apache Software License, Version 2.0'
-                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            }
-                        }
-
-                        developers {
-                            developer {
-                                id 'pabeles'
-                                name 'Peter Abeles'
-                                email 'peter.abeles@gmail.com'
-                            }
-                        }
-                    }
+        repositories {
+            maven {
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
                 }
             }
         }
@@ -243,9 +260,8 @@ def allModules = [
         ':main:ejml-experimental',
 ]
 
-// Creates a directory with all the comiled jars
+// Creates a directory with all the compiled jars
 task createLibraryDirectory( dependsOn: allModules.collect{ it+":jar"}+allModules.collect{ it+":sourcesJar"}) {
-
     doLast {
         // Create lists of .class jars and source jars
         ext.listJars = files(allModules.collect{ project(it).tasks.jar.archivePath })
@@ -272,6 +288,7 @@ def javadocProjects = [
         ':main:ejml-cdense',
         ':main:ejml-simple'
 ]
+
 task alljavadoc(type: Javadoc) {
     // only include source code in src directory to avoid including 3rd party code which some projects do as a hack
     source = javadocProjects.collect { project(it).fileTree('src').include('**/*.java') }
@@ -308,19 +325,4 @@ wrapper {
     distributionType = Wrapper.DistributionType.BIN
     gradleVersion = '6.4.1'
 }
-
-// Disable the creation of jars for distribution.  If you don't do this it will crash
-[':main',':examples',':main:autocode'].each {String a ->
-    project(a) {
-        if( project.hasProperty('ossrhUsername') ) {
-            signArchives.enabled = false
-        }
-        sourcesJar.enabled = false
-        javadocJar.enabled = false
-        jar.enabled = false
-        uploadArchives.enabled = false
-        install.enabled = false
-    }
-}
-
 

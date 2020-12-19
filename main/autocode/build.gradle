@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,11 +25,13 @@ gversion {
     classPackage = "org.ejml"
     className = "EjmlVersion"
     indent = "    "
+    annotate = true
 }
 
 task(autogenerate, dependsOn: 'classes', type: JavaExec) {
     main = 'org.ejml.MasterCodeGenerator'
     classpath = sourceSets.main.runtimeClasspath
 }
+
 // Create the EjmlVersion file only when the autogenerate command is called. This speeds up build time significantly.
 project.autogenerate.dependsOn(createVersionFile)
