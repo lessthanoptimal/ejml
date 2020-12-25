@@ -36,9 +36,7 @@ public class TestQRExampleOperations {
 
     Random rand = new Random(23423);
 
-
-    @Test
-    public void basic() {
+    @Test void basic() {
         checkMatrix(7,5);
         checkMatrix(5,5);
         checkMatrix(7,7);
@@ -59,6 +57,4 @@ public class TestQRExampleOperations {
 
         assertTrue( MatrixFeatures_DDRM.isIdentical(A,A_found, UtilEjml.TEST_F64));
     }
-
-
 }

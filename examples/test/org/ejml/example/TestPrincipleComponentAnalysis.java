@@ -37,12 +37,11 @@ public class TestPrincipleComponentAnalysis {
     /**
      * Sees if the projection error increases as the DOF decreases in the number of basis vectors.
      */
-    @Test
-    public void checkBasisError() {
+    @Test void checkBasisError() {
         int M = 30;
         int N = 5;
 
-        double obs[][] = new double[M][];
+        double[][] obs = new double[M][];
 
         PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 
@@ -79,12 +78,11 @@ public class TestPrincipleComponentAnalysis {
      * Checks sampleToEigenSpace and sampleToEigenSpace when the basis vectors can
      * fully describe the vector.
      */
-    @Test
-    public void sampleToEigenSpace() {
+    @Test void sampleToEigenSpace() {
         int M = 30;
         int N = 5;
 
-        double obs[][] = new double[M][];
+        double[][] obs = new double[M][];
 
         PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 
@@ -100,9 +98,9 @@ public class TestPrincipleComponentAnalysis {
         pca.computeBasis(N);
 
         for( int i = 0; i < M; i++ ) {
-            double s[] = pca.sampleToEigenSpace(obs[i]);
+            double[] s = pca.sampleToEigenSpace(obs[i]);
             assertTrue(error(s,obs[i]) > 1e-8 );
-            double o[] = pca.eigenToSampleSpace(s);
+            double[] o = pca.eigenToSampleSpace(s);
             assertTrue(error(o,obs[i]) <= 1e-8 );
         }
     }
@@ -120,12 +118,11 @@ public class TestPrincipleComponentAnalysis {
     /**
      * Makes sure the response is not zero.  Perhaps this is too simple of a test
      */
-    @Test
-    public void response() {
+    @Test void response() {
         int M = 30;
         int N = 5;
 
-        double obs[][] = new double[M][];
+        double[][] obs = new double[M][];
 
         PrincipalComponentAnalysis pca = new PrincipalComponentAnalysis();
 

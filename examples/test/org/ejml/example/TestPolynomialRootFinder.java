@@ -30,8 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TestPolynomialRootFinder {
 
-    @Test
-    public void findRoots() {
+    @Test void findRoots() {
         Complex_F64[] roots = PolynomialRootFinder.findRoots(4, 3, 2, 1);
 
         int numReal = 0;

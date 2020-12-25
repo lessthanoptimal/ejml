@@ -32,12 +32,11 @@ public class TestPolynomialFit {
     /**
      * Test with perfect data
      */
-    @Test
-    public void testPerfect() {
-        double coef[] = new double[]{1,-2,3};
+    @Test void perfect() {
+        double[] coef = new double[]{1,-2,3};
 
-        double x[] = new double[]{-2,1,0.5,2,3,4,5,7,8,9.2,10.2,4.3,6.7};
-        double y[] = new double[ x.length ];
+        double[] x = new double[]{-2,1,0.5,2,3,4,5,7,8,9.2,10.2,4.3,6.7};
+        double[] y = new double[ x.length ];
 
         for( int i = 0; i < y.length; i++ ) {
             double v = 0;
@@ -54,7 +53,7 @@ public class TestPolynomialFit {
 
         alg.fit(x,y);
 
-        double found[] = alg.getCoef();
+        double[] found = alg.getCoef();
 
         for( int i = 0; i < coef.length; i++ ) {
             assertEquals(coef[i],found[i], UtilEjml.TEST_F64);
@@ -64,12 +63,11 @@ public class TestPolynomialFit {
     /**
      * Make one of the observations way off and see if it is removed
      */
-    @Test
-    public void testNoise() {
-        double coef[] = new double[]{1,-2,3};
+    @Test void noise() {
+        double[] coef = new double[]{1,-2,3};
 
-        double x[] = new double[]{-2,1,0.5,2,3,4,5,7,8,9.2,10.2,4.3,6.7};
-        double y[] = new double[ x.length ];
+        double[] x = new double[]{-2,1,0.5,2,3,4,5,7,8,9.2,10.2,4.3,6.7};
+        double[] y = new double[ x.length ];
 
         for( int i = 0; i < y.length; i++ ) {
             double v = 0;
@@ -88,7 +86,7 @@ public class TestPolynomialFit {
 
         alg.fit(x,y);
 
-        double found[] = alg.getCoef();
+        double[] found = alg.getCoef();
 
         // the coefficients that it initialy computes should be incorrect
 

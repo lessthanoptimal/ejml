@@ -39,8 +39,7 @@ public class TestLevenbergMarquardt {
     /**
      * Give it a simple function and see if it computes something close to it for its results.
      */
-    @Test
-    public void testNumericalJacobian() {
+    @Test void numericalJacobian() {
         DMatrixRMaj param = new DMatrixRMaj(3,1, true, 2, -1, 4);
 
         LevenbergMarquardt alg = new LevenbergMarquardt(1);
@@ -62,8 +61,7 @@ public class TestLevenbergMarquardt {
     /**
      * See if it can solve an easy optimization problem.
      */
-    @Test
-    public void testTrivial() {
+    @Test void trivial() {
         // the number of sample points is equal to the max allowed points
         runTrivial(NUM_PTS);
         // do the same thing but with a different number of poitns from the max allowed
@@ -100,7 +98,6 @@ public class TestLevenbergMarquardt {
      */
     private static class JacobianTestFunction implements LevenbergMarquardt.ResidualFunction
     {
-
         DMatrixRMaj x;
         DMatrixRMaj y;
 

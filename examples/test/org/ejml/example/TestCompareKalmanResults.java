@@ -39,8 +39,7 @@ public class TestCompareKalmanResults {
     /**
      * See if all the filters produce the same reslts.
      */
-    @Test
-    public void checkIdentical() {
+    @Test void checkIdentical() {
         KalmanFilterSimple simple = new KalmanFilterSimple();
 
         List<KalmanFilter> all = new ArrayList<KalmanFilter>();
