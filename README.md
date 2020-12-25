@@ -5,7 +5,7 @@
 
 #####  Project Website: http://ejml.org
 
-[![Build Status](https://travis-ci.org/lessthanoptimal/ejml.svg?branch=master)](https://travis-ci.org/lessthanoptimal/ejml)
+[![Build Status](https://github.com/lessthanoptimal/ejml//workflows/SNAPSHOT/badge.svg)](https://github.com/lessthanoptimal/ejml/actions?query=workflow%3A%22SNAPSHOT%22)
 
 ## Introduction
 
@@ -145,7 +145,7 @@ Description:
   'Z' for complex double
   'C' for complex float
   'B' for binary
-<structure> is the name the internal data structure.
+<structure> is the internal data structure's name, see below.
 
 Matrix Suffix   Abbreviation   Description
 =========================================================================
