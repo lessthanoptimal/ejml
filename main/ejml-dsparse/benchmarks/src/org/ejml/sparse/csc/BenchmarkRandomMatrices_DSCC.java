@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,6 @@
 
 package org.ejml.sparse.csc;
 
-import org.ejml.data.DGrowArray;
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.IGrowArray;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -50,8 +46,10 @@ public class BenchmarkRandomMatrices_DSCC {
 
     Random rand = new Random(345);
 
-    @Benchmark public void rectangle() { RandomMatrices_DSCC.rectangle(dimension, dimension, avgEntriesPerColumn * dimension, -1, 1, rand); }
+    // @formatter:off
+    @Benchmark public void rectangle() { RandomMatrices_DSCC.generateUniform(dimension, dimension, avgEntriesPerColumn, -1, 1, rand); }
     @Benchmark public void generateUniform() { RandomMatrices_DSCC.generateUniform(dimension, dimension, avgEntriesPerColumn, -1, 1, rand); }
+    // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

@@ -60,7 +60,8 @@ public class BenchmarkCommonOps_MT_DDRM {
         RandomMatrices_DDRM.fillUniform(C, -1, 1, rand);
     }
 
-    @Benchmark public void mult_AAA() {CommonOps_MT_DDRM.mult(A, B, C);}
+    // @formatter:off
+    @Benchmark public void mult_AAA() { CommonOps_MT_DDRM.mult(A, B, C); }
     @Benchmark public void mult_sAAA() { CommonOps_MT_DDRM.mult(1.2, A, B, C); }
     @Benchmark public void multAdd_AAA() { CommonOps_MT_DDRM.multAdd(A, B, C); }
     @Benchmark public void multAdd_sAAA() { CommonOps_MT_DDRM.multAdd(1.2,A, B, C); }
@@ -76,7 +77,7 @@ public class BenchmarkCommonOps_MT_DDRM {
     @Benchmark public void multTransB_sAAA() {  CommonOps_MT_DDRM.multTransB(1.2,A, B, C); }
     @Benchmark public void transpose_inplace() {  CommonOps_MT_DDRM.transpose(A); }
     @Benchmark public void transpose() { CommonOps_MT_DDRM.transpose(A, B); }
-
+    // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

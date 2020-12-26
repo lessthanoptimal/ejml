@@ -41,11 +41,11 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 2)
 public class BenchmarkMatrixMult_MT_DSCC {
 
-    @Param({"100000"})
+    @Param({"10000"})
     private int dimension;
 
-    @Param({"4000000"})
-    private int elementCount;
+    @Param({"100"})
+    private int countPerColumn;
 
     GrowArray<Workspace_MT_DSCC> listWork = new GrowArray<>(Workspace_MT_DSCC::new);
 
@@ -55,12 +55,13 @@ public class BenchmarkMatrixMult_MT_DSCC {
 
     @Setup
     public void setup() {
-        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
+        Random rand = new Random(345);
+        A = RandomMatrices_DSCC.generateUniform(dimension, dimension, countPerColumn,-1,1, rand);
         B = CommonOps_DSCC.transpose(A, null, null);
         C = new DMatrixSparseCSC(1, 1);
     }
 
-    @Benchmark public void mult() {CommonOps_MT_DSCC.mult(A, B, C, listWork); }
+    @Benchmark public void mult() { CommonOps_MT_DSCC.mult(A, B, C, listWork); }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

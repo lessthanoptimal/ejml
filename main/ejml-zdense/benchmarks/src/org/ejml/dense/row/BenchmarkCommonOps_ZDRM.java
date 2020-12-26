@@ -47,9 +47,7 @@ public class BenchmarkCommonOps_ZDRM {
     public double[] array_v;
     public DMatrixRMaj R;
 
-    @Setup
-    public void setup() {
-        System.out.println("Size = " + size);
+    @Setup public void setup() {
         Random rand = new Random(234);
 
         A = new ZMatrixRMaj(size, size);

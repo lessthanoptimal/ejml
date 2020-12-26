@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,30 +62,13 @@ public class BenchmarkTransposeAlgs_MT_DDRM {
         RandomMatrices_DDRM.fillUniform(R1, -1, 1, rand);
     }
 
-    @Benchmark
-    public void square_inplace() {
-        TransposeAlgs_MT_DDRM.square(S1);
-    }
-
-    @Benchmark
-    public void square_standard() {
-        TransposeAlgs_MT_DDRM.standard(S1, S2);
-    }
-
-    @Benchmark
-    public void standard() {
-        TransposeAlgs_MT_DDRM.standard(R1, R2);
-    }
-
-    @Benchmark
-    public void block() {
-        TransposeAlgs_MT_DDRM.block(R1, R2, EjmlParameters.BLOCK_WIDTH);
-    }
-
-    @Benchmark
-    public void block_2x() {
-        TransposeAlgs_MT_DDRM.block(R1, R2, 2*EjmlParameters.BLOCK_WIDTH);
-    }
+    // @formatter:off
+    @Benchmark public void square_inplace() { TransposeAlgs_MT_DDRM.square(S1); }
+    @Benchmark public void square_standard() { TransposeAlgs_MT_DDRM.standard(S1, S2); }
+    @Benchmark public void standard() { TransposeAlgs_MT_DDRM.standard(R1, R2); }
+    @Benchmark public void block() { TransposeAlgs_MT_DDRM.block(R1, R2, EjmlParameters.BLOCK_WIDTH); }
+    @Benchmark public void block_2x() { TransposeAlgs_MT_DDRM.block(R1, R2, 2*EjmlParameters.BLOCK_WIDTH); }
+    // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
