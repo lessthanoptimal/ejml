@@ -112,14 +112,14 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void identity_two() { CommonOps_DDRM.identity(size, size/2); }
     @Benchmark public void diag() { CommonOps_DDRM.diag(1, 2, 3, 4, 5, 6, 7, 8, 9, 10); }
     @Benchmark public void diagR() { CommonOps_DDRM.diagR(5, 4, 1, 2, 3, 4, 5, 6, 7, 8); }
-    @Benchmark public void kron() { CommonOps_DDRM.kron(A, B, C); }
+    @Benchmark public void kron() { B.reshape(5,5);CommonOps_DDRM.kron(A, B, C); }
     @Benchmark public void extract_a() { CommonOps_DDRM.extract(A, 1, size - 1, 1, size - 1, B, 0, 1); }
     @Benchmark public void extract_b() { CommonOps_DDRM.extract(A, 1, size - 1, 1, size - 1, B); }
     @Benchmark public void extract_c() { B.reshape(A.numRows - 2, A.numCols - 2); CommonOps_DDRM.extract(A, 1, 1, B); }
     @Benchmark public void extract_d() { CommonOps_DDRM.extract(A, 1, size - 1, 1, size - 1); }
     @Benchmark public void extract_e() { CommonOps_DDRM.extract(A, new int[]{1, 3, 4}, 3, new int[]{0, 1, 3}, 3, C); }
     @Benchmark public void extract_vector() { CommonOps_DDRM.extract(Va, new int[]{1, 3, 4}, 3, Vb); }
-    @Benchmark public void insert_rowcol() { B.reshape(3, 3); CommonOps_DDRM.insert(A, B, new int[]{0, 1, 3}, 3, new int[]{2, 1, 0}, 3); }
+    //    @Benchmark public void insert_rowcol() { B.reshape(3, 3); CommonOps_DDRM.insert(A, B, new int[]{0, 1, 3}, 3, new int[]{2, 1, 0}, 3); }
     @Benchmark public void extractDiag() { CommonOps_DDRM.extractDiag(A, C); }
     @Benchmark public void extractRow() { CommonOps_DDRM.extractRow(A, 1, Vb); }
     @Benchmark public void extractColumn() { CommonOps_DDRM.extractColumn(A, 1, Vb); }

@@ -45,8 +45,8 @@ public class BenchmarkMatrixMultDense_DSCC {
     @Param({"3000"})
     private int dimension;
 
-    @Param({"100000"})
-    private int elementCount;
+    @Param({"50"})
+    private int countPerColumn;
 
     DMatrixSparseCSC A,A_small;
     DMatrixRMaj B = new DMatrixRMaj(1, 1);
@@ -57,12 +57,13 @@ public class BenchmarkMatrixMultDense_DSCC {
     @Setup
     public void setup() {
         Random rand = new Random(2345);
-        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
-        A_small = RandomMatrices_DSCC.rectangle(dimension/4, dimension/4, elementCount/4, rand);
+        A =RandomMatrices_DSCC.generateUniform(dimension, dimension, countPerColumn,-1,1, rand);
+        A_small = RandomMatrices_DSCC.generateUniform(dimension/4, dimension/4, countPerColumn/4, -1,1,rand);
         B = RandomMatrices_DDRM.rectangle(dimension, dimension, -1, 1, rand);
         C = B.create(dimension, dimension);
     }
 
+    // @formatter:off
     @Benchmark public void mult() { CommonOps_DSCC.mult(A, B, C); }
     @Benchmark public void multAdd() { CommonOps_DSCC.multAdd(A, B, C); }
     @Benchmark public void multTransA() { CommonOps_DSCC.multTransA(A, B, C, work); }
@@ -72,6 +73,7 @@ public class BenchmarkMatrixMultDense_DSCC {
     @Benchmark public void multTransAB() { CommonOps_DSCC.multTransAB(A, B, C); }
     @Benchmark public void multAddTransAB() { CommonOps_DSCC.multAddTransAB(A, B, C); }
     @Benchmark public void invert() { CommonOps_DSCC.invert(A_small, C); }
+    // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

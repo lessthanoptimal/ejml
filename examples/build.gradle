@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,6 @@ dependencies {
     compile project(':main:ejml-all')
 
     ['core','generator-annprocess'].each { String a->
-        compile('org.openjdk.jmh:jmh-'+a+':1.19')
+        compile('org.openjdk.jmh:jmh-'+a+':1.27')
     }
 }

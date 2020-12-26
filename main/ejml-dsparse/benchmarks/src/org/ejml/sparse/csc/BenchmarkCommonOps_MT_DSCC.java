@@ -44,8 +44,8 @@ public class BenchmarkCommonOps_MT_DSCC {
     @Param({"100000"})
     private int dimension;
 
-    @Param({"10000000"})
-    private int elementCount;
+    @Param({"100"})
+    private int countPerColumn;
 
     DMatrixSparseCSC A;
     DMatrixSparseCSC B;
@@ -55,13 +55,13 @@ public class BenchmarkCommonOps_MT_DSCC {
 
     @Setup
     public void setup() {
-        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, new Random(42));
+        Random rand = new Random(42);
+        A = RandomMatrices_DSCC.generateUniform(dimension, dimension, countPerColumn,-1,1, rand);
         B = CommonOps_DSCC.transpose(A, null, null);
         C = new DMatrixSparseCSC(1, 1);
     }
 
-    @Benchmark
-    public void add() {
+    @Benchmark public void add() {
         CommonOps_MT_DSCC.add(1.5, B, 2.5, B, C, listWork);
     }
 

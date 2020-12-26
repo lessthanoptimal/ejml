@@ -33,7 +33,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
     apply plugin: 'net.ltgt.errorprone'
@@ -134,7 +134,7 @@ subprojects {
 
         benchmarksImplementation project.sourceSets.main.runtimeClasspath
         benchmarksImplementation project.sourceSets.main.compileClasspath
-        ['1.19'].each { String a->// don't upgrade to 1.21! much slower
+        ['1.27'].each { String a->
             benchmarksCompile('org.openjdk.jmh:jmh-core:'+a)
             benchmarksAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:'+a
         }
@@ -158,7 +158,7 @@ subprojects {
     // for vectors or scalars. Perhaps a more verbose name should be used but it's disabled for now to reduce build spam
     tasks.withType(JavaCompile).configureEach {
         options.errorprone.enabled = false
-        if( path.contains("benchmarks") || path.contains("examples") )
+        if( path.contains("Benchmarks") || path.contains("examples") || path.contains("regression"))
             return
 
         options.errorprone.enabled = true
@@ -183,7 +183,7 @@ subprojects {
     }
 
     // Skip these codeless directories when publishing jars locally or to a remote destination
-    if (['main','examples','main:autocode'].contains(name)) {
+    if (['main','examples','main:autocode','regression'].contains(name)) {
         project.jar.enabled = false
         project.uploadArchives.enabled = false
         project.tasks.publish.enabled = false

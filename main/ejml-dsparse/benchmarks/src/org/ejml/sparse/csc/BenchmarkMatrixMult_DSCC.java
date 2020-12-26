@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,18 +46,18 @@ public class BenchmarkMatrixMult_DSCC {
 
     @State(Scope.Benchmark)
     public static class StateMult {
-        @Param({"100000"})
+        @Param({"10000"})
         private int dimension;
 
-        @Param({"4000000"})
-        private int elementCount;
+        @Param({"100"})
+        private int countPerColumn;
 
         DMatrixSparseCSC A, B, C;
 
         @Setup
         public void setup() {
             Random rand = new Random(345);
-            A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+            A = RandomMatrices_DSCC.generateUniform(dimension, dimension, countPerColumn,-1,1, rand);
             B = CommonOps_DSCC.transpose(A, null, null);
             C = new DMatrixSparseCSC(1, 1);
         }
@@ -68,23 +68,25 @@ public class BenchmarkMatrixMult_DSCC {
         @Param({"1000"})
         private int dimension;
 
-        @Param({"10000"})
-        private int elementCount;
+        @Param({"50"})
+        private int countPerColumn;
 
         DMatrixSparseCSC A, B, X;
 
         @Setup
         public void setup() {
             Random rand = new Random(345);
-            A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
-            B = RandomMatrices_DSCC.rectangle(dimension, 3, elementCount, rand);
+            A = RandomMatrices_DSCC.generateUniform(dimension, dimension, countPerColumn,-1,1, rand);
+            B = RandomMatrices_DSCC.generateUniform(dimension, 3, countPerColumn, -1, 1, rand);
             X = new DMatrixSparseCSC(1, 1);
         }
     }
 
+    // @formatter:off
     @Benchmark public void mult( StateMult s ) { CommonOps_DSCC.mult(s.B, s.B, s.C, gw, gx); }
     @Benchmark public void solve( StateSolve s ) { CommonOps_DSCC.solve(s.A, s.B, s.X); }
     @Benchmark public void det( StateSolve s ) { CommonOps_DSCC.det(s.A); }
+    // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

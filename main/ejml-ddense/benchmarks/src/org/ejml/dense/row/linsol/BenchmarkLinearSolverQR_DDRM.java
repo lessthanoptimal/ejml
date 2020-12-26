@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 2)
 public class BenchmarkLinearSolverQR_DDRM {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"10", "2000"})
+    @Param({"10", "1000"})
     public int size;
 
     public DMatrixRMaj A, X, B;
@@ -55,8 +55,7 @@ public class BenchmarkLinearSolverQR_DDRM {
     SolvePseudoInverseQrp_DDRM pinvQrp = new SolvePseudoInverseQrp_DDRM(
             new QRColPivDecompositionHouseholderColumn_DDRM(),true);
 
-    @Setup
-    public void setup() {
+    @Setup public void setup() {
         Random rand = new Random(234);
 
         A = RandomMatrices_DDRM.rectangle(size*2, size/2, -1, 1, rand);
@@ -64,24 +63,21 @@ public class BenchmarkLinearSolverQR_DDRM {
         X = new DMatrixRMaj(A.numRows, B.numCols);
     }
 
-    @Benchmark
-    public void houseCol() {
+    @Benchmark public void houseCol() {
         DMatrixRMaj A = houseCol.modifiesA() ? this.A.copy() : this.A;
         DMatrixRMaj B = houseCol.modifiesB() ? this.B.copy() : this.B;
         houseCol.setA(A);
         houseCol.solve(B, X);
     }
 
-    @Benchmark
-    public void houseQrp() {
+    @Benchmark public void houseQrp() {
         DMatrixRMaj A = houseQrp.modifiesA() ? this.A.copy() : this.A;
         DMatrixRMaj B = houseQrp.modifiesB() ? this.B.copy() : this.B;
         houseQrp.setA(A);
         houseQrp.solve(B, X);
     }
 
-    @Benchmark
-    public void pinvQrp() {
+    @Benchmark public void pinvQrp() {
         DMatrixRMaj A = pinvQrp.modifiesA() ? this.A.copy() : this.A;
         DMatrixRMaj B = pinvQrp.modifiesB() ? this.B.copy() : this.B;
         pinvQrp.setA(A);

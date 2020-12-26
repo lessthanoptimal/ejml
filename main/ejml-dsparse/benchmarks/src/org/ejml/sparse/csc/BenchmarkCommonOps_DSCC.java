@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,8 +45,8 @@ public class BenchmarkCommonOps_DSCC {
     @Param({"100000"})
     private int dimension;
 
-    @Param({"10000000"})
-    private int elementCount;
+    @Param({"100"})
+    private int countPerColumn;
 
     DMatrixSparseCSC A;
     DMatrixSparseCSC B;
@@ -61,7 +61,7 @@ public class BenchmarkCommonOps_DSCC {
     @Setup
     public void setup() {
         Random rand = new Random(345);
-        A = RandomMatrices_DSCC.rectangle(dimension, dimension, elementCount, rand);
+        A = RandomMatrices_DSCC.generateUniform(dimension, dimension, countPerColumn,-1,1, rand);
         B = CommonOps_DSCC.transpose(A, null, null);
         C = new DMatrixSparseCSC(1, 1);
         C_ddrm = new DMatrixRMaj(1, 1);
@@ -71,6 +71,7 @@ public class BenchmarkCommonOps_DSCC {
         }
     }
 
+    // @formatter:off
     @Benchmark public void add() { CommonOps_DSCC.add(1.5, B, 2.5, B, C, gw, gx); }
     @Benchmark public void dotInnerColumns() { CommonOps_DSCC.dotInnerColumns(A, 2, B, 1, gw, gx); }
     @Benchmark public void transpose() { CommonOps_DSCC.transpose(A, C, gw); }
@@ -101,6 +102,7 @@ public class BenchmarkCommonOps_DSCC {
     @Benchmark public void trace() { CommonOps_DSCC.trace(A); }
     @Benchmark public void zero() { CommonOps_DSCC.zero(A,0,A.numRows,0,A.numCols); }
     @Benchmark public void removeZeros() { CommonOps_DSCC.removeZeros(A,1e-8); }
+    // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()

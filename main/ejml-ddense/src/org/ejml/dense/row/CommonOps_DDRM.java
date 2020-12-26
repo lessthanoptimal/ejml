@@ -1258,7 +1258,7 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj extract( DMatrixRMaj src, int[] indexes, int length, @Nullable DMatrixRMaj dst ) {
         if (dst==null)
             dst = new DMatrixRMaj(length,1);
-        else
+        else if (!(MatrixFeatures_DDRM.isVector(dst) && dst.getNumElements()==length) )
             dst.reshape(length,1);
 
         for (int i = 0; i < length; i++) {
