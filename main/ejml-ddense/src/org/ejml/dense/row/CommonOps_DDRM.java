@@ -1258,8 +1258,8 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj extract( DMatrixRMaj src, int[] indexes, int length, @Nullable DMatrixRMaj dst ) {
         if (dst==null)
             dst = new DMatrixRMaj(length,1);
-        else if (!MatrixFeatures_DDRM.isVector(dst) || length != dst.getNumElements())
-            throw new MatrixDimensionException("Dst must be a vector and have 'length' elements");
+        else
+            dst.reshape(length,1);
 
         for (int i = 0; i < length; i++) {
             dst.data[i] = src.data[indexes[i]];
