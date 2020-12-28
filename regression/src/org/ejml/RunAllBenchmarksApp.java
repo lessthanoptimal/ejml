@@ -196,6 +196,8 @@ public class RunAllBenchmarksApp {
      */
     public void runBenchmark( String benchmarkName ) {
         System.out.println("Running " + benchmarkName);
+        logRuntimes.printf("%-80s ", benchmarkName.substring(9));
+        logRuntimes.flush();
 
         long time0 = System.currentTimeMillis();
         Options opt = new OptionsBuilder()
@@ -231,7 +233,7 @@ public class RunAllBenchmarksApp {
         }
         long time1 = System.currentTimeMillis();
         logStderr.flush();
-        logRuntimes.printf("%-80s %6.1f (min)\n", benchmarkName.substring(9), (time1 - time0)/(60_000.0));
+        logRuntimes.printf("%7.2f (min)\n", (time1 - time0)/(60_000.0));
         logRuntimes.flush();
     }
 
