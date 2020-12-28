@@ -41,6 +41,13 @@ import java.util.concurrent.TimeUnit;
 public class RunAllBenchmarksApp {
 
     public static String BENCHMARK_RESULTS_DIR = "benchmark_results";
+    public static long DEFAULT_TIMEOUT_MIN = 3;
+
+    /**
+     * How long a single JMH test has before it times out. This should be kept fairly small since this is designed
+     * to catch regressions not evaluate performance on large datasets
+     */
+    public long timeoutMin = DEFAULT_TIMEOUT_MIN;
 
     String[] blackList = new String[]{"ejml-experimental"};
 
@@ -80,6 +87,7 @@ public class RunAllBenchmarksApp {
                 logStderr = new PrintStream(new File(outputDirectory, "stderr.txt"));
                 System.setErr(new PrintStream(new MirrorStream(stderr, logStderr)));
                 logRuntimes.println("# How long each benchmark took\n");
+                logRuntimes.flush();
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -184,6 +192,7 @@ public class RunAllBenchmarksApp {
                 .warmupIterations(2)
                 .measurementTime(TimeValue.seconds(1))
                 .measurementIterations(3)
+                .timeout(TimeValue.minutes(timeoutMin))
                 .forks(1)
                 .shouldFailOnError(true)
                 .shouldDoGC(true)
@@ -192,7 +201,11 @@ public class RunAllBenchmarksApp {
                 .build();
 
         try {
-            new Runner(opt).run();
+            Runner runner = new Runner(opt);
+            runner.run();
+            // There is a weird halting issue after it runs for a while on one machine. This is an attempt to see
+            // if it's GC related.
+            System.out.println("System GC run = "+runner.runSystemGC());
         } catch (RunnerException e) {
             e.printStackTrace();
             logException("Exception running " + benchmarkClass.getName() + " : " + e.getMessage());
@@ -200,6 +213,7 @@ public class RunAllBenchmarksApp {
         long time1 = System.currentTimeMillis();
         logStderr.flush();
         logRuntimes.printf("%-80s %6.1f (min)\n", benchmarkClass.getName().substring(9), (time1 - time0)/(60_000.0));
+        logRuntimes.flush();
     }
 
     private void logException( String message ) {

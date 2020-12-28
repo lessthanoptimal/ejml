@@ -45,6 +45,9 @@ public class RuntimeRegressionMasterApp {
     @Option(name = "-r", aliases = {"--ResultsPath"}, usage = "Path to results directory. If relative, relative to project.")
     String resultsPath = RunAllBenchmarksApp.BENCHMARK_RESULTS_DIR;
 
+    @Option(name = "--Timeout", usage = "JMH Timeout in minutes")
+    long timeoutMin = RunAllBenchmarksApp.DEFAULT_TIMEOUT_MIN;
+
     public void performRegression() {
         long time0 = System.currentTimeMillis();
         resultsPath = GenerateCode32.projectRelativePath(resultsPath);
@@ -59,6 +62,7 @@ public class RuntimeRegressionMasterApp {
         } else {
             var measure = new RunAllBenchmarksApp();
             measure.resultsDirectory = resultsPath;
+            measure.timeoutMin = timeoutMin;
             measure.process();
             outputDirectory = measure.outputDirectory;
         }
