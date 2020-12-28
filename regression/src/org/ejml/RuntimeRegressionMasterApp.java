@@ -39,14 +39,18 @@ public class RuntimeRegressionMasterApp {
     @Option(name = "--SummaryOnly", usage = "If true it will only print out the summary from last time it ran")
     boolean doSummaryOnly = false;
 
+    @Option(name = "-e", aliases = {"--EmailPath"}, usage = "Path to email login. If relative, relative to project.")
+    String emailPath = "email_login.txt";
+
     @Option(name = "-r", aliases = {"--ResultsPath"}, usage = "Path to results directory. If relative, relative to project.")
     String resultsPath = RunAllBenchmarksApp.BENCHMARK_RESULTS_DIR;
 
     public void performRegression() {
         long time0 = System.currentTimeMillis();
         resultsPath = GenerateCode32.projectRelativePath(resultsPath);
+        emailPath = GenerateCode32.projectRelativePath(emailPath);
         var email = new EmailResults();
-        email.loadEmailFile(new File("email_login.txt"));
+        email.loadEmailFile(new File(emailPath));
 
         File outputDirectory;
 
