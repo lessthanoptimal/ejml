@@ -54,8 +54,7 @@ public class BenchmarkCommonOps_DDRM {
 
     @Setup
     public void setup() {
-        System.out.println("Size = " + size);
-        Random rand = new Random(234);
+        var rand = new Random(234);
 
         A.reshape(size, size);
         B.reshape(size, size);
