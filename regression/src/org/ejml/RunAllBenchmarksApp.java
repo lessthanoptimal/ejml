@@ -28,6 +28,8 @@ import org.openjdk.jmh.runner.options.TimeValue;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +51,10 @@ public class RunAllBenchmarksApp {
      */
     public long timeoutMin = DEFAULT_TIMEOUT_MIN;
 
-    String[] blackList = new String[]{"ejml-experimental"};
+    /** Manually specify which benchmarks to run based on class name */
+    public List<String> benchmarkNames = new ArrayList<>();
+
+    String[] blackListPackages = new String[]{"ejml-experimental"};
 
     public String resultsDirectory = BENCHMARK_RESULTS_DIR;
 
@@ -92,28 +97,13 @@ public class RunAllBenchmarksApp {
                 throw new UncheckedIOException(e);
             }
 
-            File[] moduleDirectories = new File(pathToMain).listFiles();
-            Objects.requireNonNull(moduleDirectories);
-
-            for (File module : moduleDirectories) {
-                // Skip directories that are in the black list
-                boolean skip = false;
-                for (String excluded : blackList) {
-                    if (excluded.equals(module.getName())) {
-                        skip = true;
-                        break;
-                    }
+            // Run benchmarks by finding automatically or by manually specifying them
+            if (benchmarkNames.isEmpty()) {
+                findBenchmarksByModule(pathToMain);
+            } else {
+                for (String benchmarkName : benchmarkNames) {
+                    runBenchmark(benchmarkName);
                 }
-                if (skip)
-                    continue;
-
-//			System.out.println("module "+module.getPath());
-                File dirBenchmarks = new File(module, "benchmarks/src");
-
-                if (!dirBenchmarks.exists())
-                    continue;
-
-                recursiveRunBenchmarks(dirBenchmarks, dirBenchmarks);
             }
 
             // Print out the total time the benchmark took
@@ -134,6 +124,35 @@ public class RunAllBenchmarksApp {
             logRuntimes.close();
 
             System.out.println("Done!");
+        }
+    }
+
+    /**
+     * Recursively searches each module by file path to find benchmarks then runs them
+     */
+    private void findBenchmarksByModule( String pathToMain ) {
+        File[] moduleDirectories = new File(pathToMain).listFiles();
+        Objects.requireNonNull(moduleDirectories);
+
+        for (File module : moduleDirectories) {
+            // Skip directories that are in the black list
+            boolean skip = false;
+            for (String excluded : blackListPackages) {
+                if (excluded.equals(module.getName())) {
+                    skip = true;
+                    break;
+                }
+            }
+            if (skip)
+                continue;
+
+//			System.out.println("module "+module.getPath());
+            File dirBenchmarks = new File(module, "benchmarks/src");
+
+            if (!dirBenchmarks.exists())
+                continue;
+
+            recursiveRunBenchmarks(dirBenchmarks, dirBenchmarks);
         }
     }
 
@@ -161,7 +180,7 @@ public class RunAllBenchmarksApp {
                 continue;
             }
 
-            runBenchmark(c);
+            runBenchmark(c.getName());
         }
 
         // Depth first search through directories
@@ -175,12 +194,12 @@ public class RunAllBenchmarksApp {
     /**
      * Runs the benchmark and saves the results to disk
      */
-    public void runBenchmark( Class<?> benchmarkClass ) {
-        System.out.println("Running " + benchmarkClass.getName());
+    public void runBenchmark( String benchmarkName ) {
+        System.out.println("Running " + benchmarkName);
 
         long time0 = System.currentTimeMillis();
         Options opt = new OptionsBuilder()
-                .include(benchmarkClass.getName())
+                .include(benchmarkName)
                 // Do average and throughput to handle very very fast and very slow functions
                 .mode(Mode.AverageTime)
 //                .mode(Mode.Throughput)
@@ -197,7 +216,7 @@ public class RunAllBenchmarksApp {
                 .shouldFailOnError(true)
                 .shouldDoGC(true)
                 .resultFormat(ResultFormatType.CSV)
-                .result(outputDirectory.getPath() + "/" + benchmarkClass.getName() + ".csv")
+                .result(outputDirectory.getPath() + "/" + benchmarkName + ".csv")
                 .build();
 
         try {
@@ -208,11 +227,11 @@ public class RunAllBenchmarksApp {
             System.out.println("System GC run = "+runner.runSystemGC());
         } catch (RunnerException e) {
             e.printStackTrace();
-            logException("Exception running " + benchmarkClass.getName() + " : " + e.getMessage());
+            logException("Exception running " + benchmarkName + " : " + e.getMessage());
         }
         long time1 = System.currentTimeMillis();
         logStderr.flush();
-        logRuntimes.printf("%-80s %6.1f (min)\n", benchmarkClass.getName().substring(9), (time1 - time0)/(60_000.0));
+        logRuntimes.printf("%-80s %6.1f (min)\n", benchmarkName.substring(9), (time1 - time0)/(60_000.0));
         logRuntimes.flush();
     }
 

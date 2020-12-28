@@ -21,13 +21,16 @@ package org.ejml;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Master application which calls all the other processes. It will run the regression, compare results, compute the
@@ -48,6 +51,10 @@ public class RuntimeRegressionMasterApp {
     @Option(name = "--Timeout", usage = "JMH Timeout in minutes")
     long timeoutMin = RunAllBenchmarksApp.DEFAULT_TIMEOUT_MIN;
 
+    @Option(name = "-b", aliases = {"--Benchmark"}, handler = StringArrayOptionHandler.class,
+            usage = "Used to specify a subset of benchmarks to run. Default is to run them all.")
+    List<String> benchmarkNames = new ArrayList<>();
+
     public void performRegression() {
         long time0 = System.currentTimeMillis();
         resultsPath = GenerateCode32.projectRelativePath(resultsPath);
@@ -63,6 +70,7 @@ public class RuntimeRegressionMasterApp {
             var measure = new RunAllBenchmarksApp();
             measure.resultsDirectory = resultsPath;
             measure.timeoutMin = timeoutMin;
+            measure.benchmarkNames = benchmarkNames;
             measure.process();
             outputDirectory = measure.outputDirectory;
         }

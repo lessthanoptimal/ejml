@@ -37,7 +37,7 @@ dependencies {
 // Run the regression using a gradle command
 // Currently this is the only way to get paths set up for benchmarks. See comment below.
 //
-// Example: ./gradlew runtimeRegression -q -Dexec.args="--SummaryOnly"
+// Example: ./gradlew runtimeRegression run --console=plain -Dexec.args="--SummaryOnly"
 task runtimeRegression(type: JavaExec) {
     dependsOn build
     group = "Execution"
