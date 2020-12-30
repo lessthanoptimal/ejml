@@ -9,9 +9,14 @@ Date format: year/month/day
   * Switched to 'maven-publish'
 - Solve now produces a correct and easily understood error message
   * Thanks CLOVIS-AI for pointing out the issue
+- Regression Testing
+  * Added runtime regression using existing JMH benchmarks
+  * TODO baseline should be a copy not a renaming
+  * TODO change baseline when version is updated automatically. run, compare, then update
+  * TODO record the SHA it was compared against
+  * TODO record the tolerance for similarity and make command line configurable
 - Refactor set(obj) -> setTo(obj)
 
-- TODO runtime regression using JMH
 - TODO identify sparse decompositions which can be made concurrent
 - TODO identify dense decompositions which require specialized algorithms for concurrency
 

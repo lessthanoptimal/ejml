@@ -154,9 +154,15 @@ public class ParseBenchmarkCsv {
         public double ms_per_op = -1;
 
         public String getKey() {
-            String key = benchmark;
+            return benchmark + ":" + getParametersString();
+        }
+
+        public String getParametersString() {
+            String key = "";
             for (int i = 0; i < parameters.size(); i++) {
-                key += ":" + parameters.get(i);
+                key += parameters.get(i);
+                if (i < parameters.size() - 1)
+                    key += ":";
             }
             return key;
         }

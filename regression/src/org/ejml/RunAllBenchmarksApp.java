@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RunAllBenchmarksApp {
 
-    public static String BENCHMARK_RESULTS_DIR = "benchmark_results";
+    public static String BENCHMARK_RESULTS_DIR = "runtime_regression";
     public static long DEFAULT_TIMEOUT_MIN = 3;
 
     /**

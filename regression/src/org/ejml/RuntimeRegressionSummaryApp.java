@@ -110,7 +110,7 @@ public class RuntimeRegressionSummaryApp {
         summary += String.format("%6s %10s %10s %10s\n",
                 countFiles, countBenchmarks, flagged.size(), exceptions.size());
         summary += "\n";
-        summary += String.format("Duration: %.2f hrs\n",(processingTimeMS/(1000.0*60.0*60.0)));
+        summary += String.format("Duration: %.2f hrs\n", (processingTimeMS/(1000.0*60.0*60.0)));
         summary += "Date:     " + formatDate(new Date()) + "\n";
         summary += "Version:  " + EjmlVersion.VERSION + "\n";
         summary += "SHA:      " + EjmlVersion.GIT_SHA + "\n";
@@ -189,7 +189,12 @@ public class RuntimeRegressionSummaryApp {
             }
 
             if (b/c - 1.0 > significantFractionTol || c/b - 1.0 > significantFractionTol) {
-                flagged.add(String.format("%5.1f%% %s", 100.0*c/b, benchmarkName + ":" + baseline.getKey()));
+                // clip all but the function from the benchmark name since it's already including the csv file
+                // which has the benchmark name
+                String[] packagePath = baseline.benchmark.split("\\.");
+                String functionName = packagePath[packagePath.length - 1];
+                flagged.add(String.format("%5.1f%% %s", 100.0*c/b, benchmarkName + ":" +
+                        functionName + ":" + baseline.getParametersString()));
             }
             countBenchmarks++;
         }
@@ -199,8 +204,8 @@ public class RuntimeRegressionSummaryApp {
 
     public static void main( String[] args ) {
         var app = new RuntimeRegressionSummaryApp();
-        app.baselineDirectory = "benchmark_results/baseline";
-        app.currentDirectory = "benchmark_results/current";
+        app.baselineDirectory = "runtime_regression/baseline";
+        app.currentDirectory = "runtime_regression/current";
         app.process();
         System.out.println(app.createSummary());
     }
