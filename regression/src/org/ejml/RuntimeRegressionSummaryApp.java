@@ -19,6 +19,7 @@
 package org.ejml;
 
 import lombok.Getter;
+import org.ejml.data.DGrowArray;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,6 +59,9 @@ public class RuntimeRegressionSummaryApp {
     /** Number of files which were compared */
     int countFiles = 0;
 
+    // Contains all the errors for computing summary metrics
+    private final DGrowArray allErrors = new DGrowArray();
+
     /**
      * Processes the two sets of results and identifies parsing exception and significant differences
      */
@@ -66,6 +70,7 @@ public class RuntimeRegressionSummaryApp {
         countFiles = 0;
         flagged.clear();
         exceptions.clear();
+        allErrors.reset();
 
         Set<String> setBaseline = loadResultsSet(baselineDirectory);
         Set<String> setCurrent = loadResultsSet(currentDirectory);
@@ -116,10 +121,24 @@ public class RuntimeRegressionSummaryApp {
         summary += "SHA:      " + EjmlVersion.GIT_SHA + "\n";
         summary += "GIT_DATE: " + EjmlVersion.GIT_DATE + "\n";
         summary += "\n";
+        summary += String.format("Significant: %.1f%%\n",significantFractionTol*100.0);
+        summary += "\n";
         summary += "java.runtime.version:  " + System.getProperty("java.runtime.version") + "\n";
         summary += "java.vendor:           " + System.getProperty("java.vendor") + "\n";
         summary += "os.name+arch:          " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + "\n";
         summary += "os.version:            " + System.getProperty("os.version") + "\n";
+
+        Arrays.sort(allErrors.data,0,allErrors.length);
+        double error50 = 100.0*allErrors.get((int)(allErrors.length*0.5));
+        double error75 = 100.0*allErrors.get((int)(allErrors.length*0.75));
+        double error90 = 100.0*allErrors.get((int)(allErrors.length*0.90));
+        double error97 = 100.0*allErrors.get((int)(allErrors.length*0.97));
+        double error99 = 100.0*allErrors.get((int)(allErrors.length*0.99));
+
+        summary += String.format("\nError Summary: 50%% %5.1f, 75%% %5.1f, 90%% %5.1f, 97%% %5.1f, 99%% %5.1f\n",
+                error50,error75,error90,error97,error99);
+
+
         if (!flagged.isEmpty()) {
             summary += "\nFlagged:\n";
             for (int i = 0; i < flagged.size(); i++) {
@@ -188,7 +207,10 @@ public class RuntimeRegressionSummaryApp {
                 continue;
             }
 
-            if (b/c - 1.0 > significantFractionTol || c/b - 1.0 > significantFractionTol) {
+            double fractionalError = Math.max(b/c - 1.0, c/b - 1.0);
+            allErrors.add(fractionalError);
+
+            if (fractionalError > significantFractionTol) {
                 // clip all but the function from the benchmark name since it's already including the csv file
                 // which has the benchmark name
                 String[] packagePath = baseline.benchmark.split("\\.");

@@ -76,6 +76,14 @@ public class DGrowArray {
         System.arraycopy(original.data, 0, data, 0, original.length);
     }
 
+    public void add( double value ) {
+        if (length >= data.length) {
+            growInternal(Math.min(500_000,data.length+10));
+        }
+
+        data[length++] = value;
+    }
+
     public double get( int index ) {
         if (index < 0 || index >= length)
             throw new IllegalArgumentException("Out of bounds");
