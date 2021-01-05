@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -139,8 +139,8 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void elementSum() { CommonOps_DDRM.elementSum(A); }
     @Benchmark public void elementSumAbs() { CommonOps_DDRM.elementSumAbs(A); }
     @Benchmark public void elementPower_AB() { CommonOps_DDRM.elementPower(A, B, C); }
-    @Benchmark public void elementPower_aB() { CommonOps_DDRM.elementPower(1.2, B, C); }
-    @Benchmark public void elementPower_Ab() { CommonOps_DDRM.elementPower(A, 1.2, C); }
+    @Benchmark public void elementPower_sAB() { CommonOps_DDRM.elementPower(1.2, B, C); }
+    @Benchmark public void elementPower_ABs() { CommonOps_DDRM.elementPower(A, 1.2, C); }
     @Benchmark public void elementLog() { CommonOps_DDRM.elementLog(A, C); }
     @Benchmark public void elementExp() { CommonOps_DDRM.elementExp(A, C); }
     @Benchmark public void multRows() { A.setTo(B); CommonOps_DDRM.multRows(array_v, A); }

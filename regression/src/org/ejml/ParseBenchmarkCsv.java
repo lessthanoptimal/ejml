@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -72,7 +72,7 @@ public class ParseBenchmarkCsv {
             Result result = new Result();
             result.benchmark = stripQuotes(words[indexBenchmark]);
             for (int i = indexFirstParam; i < words.length; i++) {
-                result.parameters.add(words[i]);
+                result.parameters.add(words[i].trim());
             }
 
             // see if this result already exists
