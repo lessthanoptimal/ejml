@@ -19,6 +19,9 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.masks.DMaskFactory;
+import org.ejml.masks.Mask;
+import org.ejml.masks.MaskBuilder;
 import org.ejml.ops.DSemiRing;
 import org.ejml.ops.DSemiRings;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +32,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("UnusedMethod")
 public class TestMatrixVectorMultWithSemiRing_DSCC {
@@ -51,12 +54,11 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
         inputMatrix.set(6, 2, 1);
         inputMatrix.set(6, 3, 1);
         inputMatrix.set(6, 4, 1);
-
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("vectorMatrixMultSources")
-    void mult_v_A( String desc, DSemiRing semiRing, double[] expected) {
+    void mult_v_A( String desc, DSemiRing semiRing, double[] expected ) {
         // graphblas == following outgoing edges of source nodes
         double[] v = new double[7];
         Arrays.fill(v, semiRing.add.id);
@@ -65,14 +67,30 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
         double[] found = new double[7];
 
-        MatrixVectorMultWithSemiRing_DSCC.mult(v, inputMatrix, found, semiRing);
+        MatrixVectorMultWithSemiRing_DSCC.mult(v, inputMatrix, found, semiRing, null);
 
         assertTrue(Arrays.equals(found, expected));
     }
 
+    @ParameterizedTest
+    @MethodSource("maskedInputSources")
+    void mult_v_A_masked(double[] vector, Mask mask) {
+        var semiRing = DSemiRings.OR_AND;
+
+        double[] found = new double[7];
+        double[] foundMasked = new double[7];
+        MatrixVectorMultWithSemiRing_DSCC.mult(vector, inputMatrix, found, semiRing, null);
+
+        MatrixVectorMultWithSemiRing_DSCC.mult(vector, inputMatrix, foundMasked, semiRing, mask);
+
+        double[] expected = {1, 1, 1, 1, 0, 0, 0};
+        assertArrayEquals(found, expected);
+        assertMaskedResult(mask, found, foundMasked);
+    }
+
     @ParameterizedTest(name = "{0}")
     @MethodSource("matrixVectorMultSources")
-    void mult_A_v( String desc, DSemiRing semiRing, double[] expected) {
+    void mult_A_v( String desc, DSemiRing semiRing, double[] expected ) {
         // graphblas == following incoming edges of source nodes
         double[] v = new double[7];
         Arrays.fill(v, semiRing.add.id);
@@ -81,9 +99,25 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
         double[] found = new double[7];
 
-        MatrixVectorMultWithSemiRing_DSCC.mult(inputMatrix, v, found, semiRing);
+        MatrixVectorMultWithSemiRing_DSCC.mult(inputMatrix, v, found, semiRing, null);
 
         assertTrue(Arrays.equals(found, expected));
+    }
+
+    @ParameterizedTest
+    @MethodSource("maskedInputSources")
+    void mult_A_v_masked(double[] vector, Mask mask) {
+        var semiRing = DSemiRings.OR_AND;
+
+        double[] found = new double[7];
+        double[] foundMasked = new double[7];
+
+        MatrixVectorMultWithSemiRing_DSCC.mult(inputMatrix, vector, found, semiRing, null);
+        MatrixVectorMultWithSemiRing_DSCC.mult(inputMatrix, vector, foundMasked, semiRing, mask);
+
+        double[] expected = {1, 0, 0, 1, 0, 0, 1};
+        assertArrayEquals(found, expected);
+        assertMaskedResult(mask, found, foundMasked);
     }
 
     private static Stream<Arguments> vectorMatrixMultSources() {
@@ -109,5 +143,34 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
                 Arguments.of("MIN, PLUS", DSemiRings.MIN_PLUS,
                         new double[]{1.5, 1.6, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, 1.5})
         );
+    }
+
+    private static Stream<Arguments> maskedInputSources() {
+        int vectorLength = 7;
+        double[] v = new double[vectorLength];
+        v[0] = 0.5;
+        v[3] = 0.6;
+
+        DMatrixSparseCSC sparseVector = new DMatrixSparseCSC(vectorLength, 1);
+        sparseVector.set(0, 0, 0.5);
+        sparseVector.set(3, 0, 0.6);
+
+        Stream<MaskBuilder> maskBuilders = Stream.of(
+                DMaskFactory.builder(v),
+                DMaskFactory.builder(sparseVector, true),
+                DMaskFactory.builder(sparseVector, false)
+        );
+
+        return maskBuilders.map(builder -> Arguments.of(v, builder.withNegated(true).build()));
+    }
+
+    private void assertMaskedResult( Mask mask, double[] found, double[] foundMasked ) {
+        for (int i = 0; i < found.length; i++) {
+            if (mask.isSet(i)) {
+                assertEquals(found[i], foundMasked[i]);
+            } else {
+                assertEquals(0, foundMasked[i]);
+            }
+        }
     }
 }
