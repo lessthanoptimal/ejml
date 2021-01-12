@@ -22,6 +22,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
     id "com.peterabeles.gversion" version "1.10" apply false
     id "net.ltgt.errorprone" version "1.2.1" apply false
+    id "com.diffplug.spotless" version "5.6.1" apply false
 }
 
 allprojects {
@@ -37,6 +38,7 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
     apply plugin: 'net.ltgt.errorprone'
+    apply plugin: 'com.diffplug.spotless'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -187,6 +189,36 @@ subprojects {
         project.jar.enabled = false
         project.uploadArchives.enabled = false
         project.tasks.publish.enabled = false
+    }
+
+    spotless {
+        ratchetFrom 'origin/SNAPSHOT'
+
+        format 'misc', {
+            // define the files to apply `misc` to
+            target '*.gradle', '*.md', '.gitignore'
+
+            // define the steps to apply to those files
+            trimTrailingWhitespace()
+            indentWithTabs()
+            endWithNewline()
+        }
+        java {
+            // There is no good way to ignore auto generated code since you can't check to see if it's in git or not
+            // there is no simple regrex pattern. To apply spotless first remove all auto generated code.
+            target('**/ejml-core/src/org/ejml/**/*.java',
+                    '**/ejml-ddense/src/org/ejml/**/*.java',
+                    '**/ejml-dsparse/src/org/ejml/**/*.java',
+                    '**/ejml-kotlin/src/org/ejml/**/*.java',
+                    '**/ejml-simple/src/org/ejml/**/*.java',
+                    '**/ejml-zdense/src/**/*.java')
+
+            toggleOffOn('formatter:off', 'formatter:on')
+            removeUnusedImports()
+            endWithNewline()
+
+            licenseHeaderFile "${project.rootDir}/docs/copyright.txt"
+        }
     }
 
     if (!project.tasks.publish.enabled)
