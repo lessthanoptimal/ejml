@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.ops.MatrixIO;
@@ -280,4 +279,3 @@ public class DMatrix5x5 implements DMatrixFixed {
     @Override public <T extends Matrix> T createLike() {return (T)new DMatrix5x5();}
 
     @Override public MatrixType getType() {return MatrixType.UNSPECIFIED;}}
-
