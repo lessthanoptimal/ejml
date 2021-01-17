@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import org.ejml.UtilEjml;
@@ -284,17 +283,6 @@ public class DMatrixRMaj extends DMatrix1Row {
      */
     public boolean isInBounds( int row  , int col ) {
         return( col >= 0 && col < numCols && row >= 0 && row < numRows );
-    }
-
-    /**
-     * Returns the number of elements in this matrix, which is equal to
-     * the number of rows times the number of columns.
-     *
-     * @return The number of elements in the matrix.
-     */
-    @Override
-    public int getNumElements() {
-        return numRows*numCols;
     }
 
     /**
