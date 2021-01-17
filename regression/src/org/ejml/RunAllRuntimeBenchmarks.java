@@ -19,7 +19,6 @@
 package org.ejml;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +32,7 @@ import java.util.Objects;
  * preferable since if a new module is added or re-named unless it's updated correctly in this build.gradle it
  * will silently fail by skipping those benchmarks.
  */
-public class RunAllBenchmarksApp extends JmhRunnerBase {
+public class RunAllRuntimeBenchmarks extends JmhRunnerBase {
     public static String BENCHMARK_RESULTS_DIR = "runtime_regression";
 
     /** Manually specify which benchmarks to run based on class name */
@@ -47,7 +46,7 @@ public class RunAllBenchmarksApp extends JmhRunnerBase {
 
     String[] blackListPackages = new String[]{"ejml-experimental"};
 
-    @Override protected void performBenchmarks() throws IOException {
+    @Override protected void performBenchmarks() {
         String pathToMain = GenerateCode32.projectRelativePath("main");
         List<String> benchmarkNames = new ArrayList<>();
         if (userBenchmarkNames.isEmpty()) {
@@ -128,7 +127,7 @@ public class RunAllBenchmarksApp extends JmhRunnerBase {
         }
     }
 
-    public static void main( String[] args ) throws IOException {
-        new RunAllBenchmarksApp().process();
+    public static void main( String[] args ) {
+        new RunAllRuntimeBenchmarks().process();
     }
 }

@@ -84,7 +84,7 @@ public class RuntimeRegressionUtils {
     }
 
     public static void saveAllBenchmarks( Map<String, Double> results, String path ) {
-        String text = "# Results Summary";
+        String text = "# Results Summary\n";
         for (String key : results.keySet()) {
             text += key + "," + results.get(key) + "\n";
         }
@@ -120,7 +120,7 @@ public class RuntimeRegressionUtils {
 
                 String[] words = line.split(",");
                 if (words.length != 2)
-                    throw new IOException("Unexpected number of words: \"" + line+"\"");
+                    throw new IOException("Unexpected number of words: \"" + line + "\"");
 
                 results.put(words[0], Double.parseDouble(words[1]));
             }

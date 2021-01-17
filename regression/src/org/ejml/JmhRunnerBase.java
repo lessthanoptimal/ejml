@@ -78,7 +78,7 @@ public abstract class JmhRunnerBase {
                 logRuntimes = new PrintStream(new File(logs, "runtime.txt"));
                 // print stderr to console and save to a file
                 logStderr = new PrintStream(new File(logs, "stderr.txt"));
-                System.setErr(new PrintStream(new RunAllBenchmarksApp.MirrorStream(stderr, logStderr)));
+                System.setErr(new PrintStream(new RunAllRuntimeBenchmarks.MirrorStream(stderr, logStderr)));
                 logRuntimes.println("# How long each benchmark took\n");
                 logRuntimes.flush();
             } catch (IOException e) {
