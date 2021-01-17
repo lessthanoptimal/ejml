@@ -71,11 +71,6 @@ public interface MatrixSparse extends ReshapeMatrix {
     boolean isAssigned( int row , int col );
 
     /**
-     * Returns number of non-zero values
-     */
-    int getNonZeroCount();
-
-    /**
      * Sets all elements to zero by removing the sparse graph
      */
     @Override

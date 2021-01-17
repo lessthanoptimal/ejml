@@ -387,9 +387,4 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
             }
         };
     }
-
-    @Override
-    public int getNonZeroCount() {
-        return nz_length;
-    }
 }
