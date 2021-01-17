@@ -309,11 +309,6 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override
-    public int getNumElements() {
-        return numCols * numRows;
-    }
-
-    @Override
     public void reshape( int numRows, int numCols, int arrayLength ) {
         // OK so technically it is sorted, but forgetting to correctly set this flag is a common mistake so
         // decided to be conservative and mark it as unsorted so that stuff doesn't blow up

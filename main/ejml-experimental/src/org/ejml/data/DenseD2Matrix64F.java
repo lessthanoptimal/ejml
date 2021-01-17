@@ -96,11 +96,6 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public int getNumElements() {
-        return numRows*numCols;
-    }
-
-    @Override
     public int getNumRows() {
         return numRows;
     }

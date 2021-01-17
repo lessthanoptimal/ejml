@@ -136,11 +136,6 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public int getNumElements() {
-        return numRows*numCols;
-    }
-
-    @Override
     public void print() {
         MatrixIO.print(System.out,this);
     }

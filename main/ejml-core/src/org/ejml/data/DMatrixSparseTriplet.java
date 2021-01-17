@@ -174,11 +174,6 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         }
     }
 
-    @Override
-    public int getNumElements() {
-        return numCols * numRows;
-    }
-
     /**
      * Searches the list to see if the element at (row,col) has been assigned. The worst case runtime for this
      * operation is O(N), where N is the number of elements in the matrix.
