@@ -50,7 +50,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
         double[] found = new double[]{c.get(0, 0), c.get(1, 1)};
 
-        assertTrue(c.getNumElements() == 2);
+        assertTrue(c.getNonZeroLength() == 2);
         assertTrue(Arrays.equals(expected, found));
     }
 
@@ -73,7 +73,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
         ImplCommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, result, semiRing, null, null);
 
-        assertEquals(2, result.getNumElements());
+        assertEquals(2, result.getNonZeroLength());
         assertTrue(expected[0] == result.get(1, 1));
         assertTrue(expected[1] == result.get(1, 2));
     }

@@ -1518,7 +1518,7 @@ public class TestCommonOps_DSCC {
         double result = CommonOps_DSCC.reduceScalar(A, 0, Double::sum);
 
         double expectedResult = 0;
-        for (int i = 0; i < A.getNumElements(); i++) {
+        for (int i = 0; i < A.getNonZeroLength(); i++) {
             expectedResult += A.nz_values[i];
         }
 
