@@ -496,9 +496,4 @@ public class DMatrixSparseCSC implements DMatrixSparse {
             }
         };
     }
-
-    @Override
-    public int getNonZeroCount() {
-        return nz_length;
-    }
 }
