@@ -41,10 +41,13 @@ public class CreateRuntimeRegressionBaseline {
     /** Path to output directory relative to project base */
     public String outputRelativePath = "tmp";
 
+    /** If true it won't run benchmarks again but will only combine existing results */
+    public boolean combineOnly = false;
+
     /** How long it took to run all the benchmarks in hours */
-    public double timeBenchmarkHrs;
+    private @Getter double timeBenchmarkHrs;
     /** How long it took to combine all the results in milliseconds */
-    public double timeCombineMS;
+    private @Getter double timeCombineMS;
 
     public final RunAllRuntimeBenchmarks benchmark = new RunAllRuntimeBenchmarks();
 
@@ -78,13 +81,15 @@ public class CreateRuntimeRegressionBaseline {
 
             long time0 = System.currentTimeMillis();
             // Compute all the results. This will take a while
-            for (int trial = 0; trial < maxIterations; trial++) {
-                // Save the start time of each trial
-                logTiming.printf("trial%-2d  %s\n", trial, formatDate(new Date()));
-                logTiming.flush();
-                benchmark.outputRelativePath = outputRelativePath + "/" + "trial" + trial;
-                benchmark.process();
-                System.out.print("\n\nFinished Trial " + trial + "\n\n");
+            if (!combineOnly) {
+                for (int trial = 0; trial < maxIterations; trial++) {
+                    // Save the start time of each trial
+                    logTiming.printf("trial%-2d  %s\n", trial, formatDate(new Date()));
+                    logTiming.flush();
+                    benchmark.outputRelativePath = outputRelativePath + "/" + "trial" + trial;
+                    benchmark.process();
+                    System.out.print("\n\nFinished Trial " + trial + "\n\n");
+                }
             }
             long time1 = System.currentTimeMillis();
             timeBenchmarkHrs = (time1 - time0)/(double)(1000*60*60);

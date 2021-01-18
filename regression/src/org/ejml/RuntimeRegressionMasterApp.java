@@ -52,6 +52,9 @@ public class RuntimeRegressionMasterApp {
             "If true, it shouldn't compute main JMH results, but should re-run minimum finding")
     boolean doMinimumOnly = false;
 
+    @Option(name = "--UpdateBaseline", usage = "Recomputes the baseline using existing JMH results in its directory")
+    boolean updateBaseline = false;
+
     @Option(name = "-e", aliases = {"--EmailPath"}, usage = "Path to email login. If relative, relative to project.")
     String emailPath = "email_login.txt";
 
@@ -88,9 +91,15 @@ public class RuntimeRegressionMasterApp {
         try {
             File baselineDir = new File(resultsPath, "baseline");
 
-            // See if the baseline directory needs to be created
-            if (!baselineDir.exists()) {
-                createBaseline(email, baselineDir);
+            // See if the baseline directory needs to be created or updated
+            if (!baselineDir.exists() && !updateBaseline) {
+                createBaseline(email, baselineDir, false);
+                return;
+            } else if (updateBaseline){
+                if (!baselineDir.exists()) {
+                    throw new RuntimeException("The baseline directory doesn't exist and can't be updated");
+                }
+                createBaseline(email, baselineDir, true);
                 return;
             }
 
@@ -143,13 +152,14 @@ public class RuntimeRegressionMasterApp {
         logStderr = null;
     }
 
-    private void createBaseline( EmailResults email, File baselineDir ) {
-        System.out.println("\n\n************* WARNING: Creating Baseline *************\n\n");
-        // Pause before we start to give the user a chance to abort before potentially sucking up
-        // all CPU on the machine for 10+ hrs.
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException ignore) {
+    private void createBaseline( EmailResults email, File baselineDir, boolean update ) {
+        if (!update) {
+            System.out.println("\n\n************* WARNING: Creating Baseline *************\n\n");
+            // Pause before we start to give the user a chance to abort before potentially sucking up
+            // all CPU on the machine for 10+ hrs.
+            try {
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException ignore) {}
         }
 
         // Save start time
@@ -157,6 +167,7 @@ public class RuntimeRegressionMasterApp {
 
         // Pass in user configurations
         var createBaseline = new CreateRuntimeRegressionBaseline();
+        createBaseline.combineOnly = update;
         createBaseline.outputRelativePath = baselineDir.getPath();
         createBaseline.maxIterations = maxIterations;
         createBaseline.benchmark.timeoutMin = timeoutMin;

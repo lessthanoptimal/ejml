@@ -60,6 +60,10 @@ public class ParseBenchmarkCsv {
         int indexUnit = findColumn("Unit");
         int indexScore = findColumn("Score");
         int indexFirstParam = findFirstParameterIndex();
+        List<String> parameters = new ArrayList<>();
+        for (int i = indexFirstParam; i < columns.size(); i++) {
+            parameters.add(columns.get(i).split(" ")[1].replace("\"",""));
+        }
 
         while (input.available() != 0) {
             String[] words = GenerateCode32.readLine(input, buffer).split(",");
@@ -72,7 +76,10 @@ public class ParseBenchmarkCsv {
             Result result = new Result();
             result.benchmark = stripQuotes(words[indexBenchmark]);
             for (int i = indexFirstParam; i < words.length; i++) {
-                result.parameters.add(words[i].trim());
+                Parameter p = new Parameter();
+                p.name = parameters.get(i-indexFirstParam);
+                p.value = words[i].trim();
+                result.parameters.add(p);
             }
 
             // see if this result already exists
@@ -146,23 +153,21 @@ public class ParseBenchmarkCsv {
     public static class Result {
         // which benchmark
         public String benchmark;
-        // How it was configured
-        public final List<String> parameters = new ArrayList<>();
+        // name of each parameter
+        public final List<Parameter> parameters = new ArrayList<>();
         // results stored two different ways. Due to limits on precision the one with the largest value
         // should be trusted
         public double ops_per_ms = -1;
         public double ms_per_op = -1;
 
         public String getKey() {
-            return benchmark + ":" + getParametersString();
+            return benchmark + getParametersString();
         }
 
         public String getParametersString() {
             String key = "";
             for (int i = 0; i < parameters.size(); i++) {
-                key += parameters.get(i);
-                if (i < parameters.size() - 1)
-                    key += ":";
+                key += "," + parameters.get(i).name+":"+parameters.get(i).value;
             }
             return key;
         }
@@ -173,5 +178,10 @@ public class ParseBenchmarkCsv {
             else
                 return ms_per_op;
         }
+    }
+
+    public static class Parameter {
+        public String name;
+        public String value;
     }
 }

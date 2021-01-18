@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -54,7 +54,7 @@ public class TestParseBenchmarkCsv {
 
         // Pick one and see if it has the expected values
         ParseBenchmarkCsv.Result r = parser.mapResults.get(
-                "org.ejml.dense.block.BenchmarkMatrixMult_DDRB.multMinus:80:1000");
+                "org.ejml.dense.block.BenchmarkMatrixMult_DDRB.multMinus,blockLength:80,size:1000");
         assertNotNull(r);
         assertEquals(0.002888,r.ops_per_ms, UtilEjml.TEST_F64);
         assertEquals(347.177507,r.ms_per_op, UtilEjml.TEST_F64);

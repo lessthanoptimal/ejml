@@ -18,15 +18,17 @@
 
 package org.ejml;
 
+import org.ejml.ParseBenchmarkCsv.Parameter;
+import org.jetbrains.annotations.Nullable;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
 import java.io.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -117,14 +119,21 @@ public abstract class JmhRunnerBase {
      *
      * @param exact If true it will only run tests which match that name exactly. Good for single runs
      */
-    public void runBenchmark( String benchmarkName, boolean exact ) {
+    public void runBenchmark( String benchmarkName, boolean exact, @Nullable List<Parameter> parameters ) {
         System.out.println("Running " + benchmarkName);
         logRuntimes.printf("%-80s ", benchmarkName.substring(9));
         logRuntimes.flush();
 
         long time0 = System.currentTimeMillis();
-        Options opt = new OptionsBuilder()
-                .include(exact ? "\\b" + benchmarkName + "\\b" : benchmarkName)
+        OptionsBuilder opt = new OptionsBuilder();
+
+        if (parameters != null) {
+            for (Parameter p : parameters) {
+                opt.param(p.name, p.value);
+            }
+        }
+
+        opt.include(exact ? "\\b" + benchmarkName + "\\b" : benchmarkName)
                 // Using average since it seems to have less loss of precision across a range of speeds
                 .mode(Mode.AverageTime)
                 // Using nanoseconds since it seems to have less loss of precision for very fast and slow operations

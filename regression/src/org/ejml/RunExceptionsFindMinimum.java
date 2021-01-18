@@ -19,6 +19,7 @@
 package org.ejml;
 
 import lombok.Getter;
+import org.ejml.ParseBenchmarkCsv.Parameter;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class RunExceptionsFindMinimum extends JmhRunnerBase {
     public int maxIterations = 10;
 
     /** Given the name give it the new results */
-    @Getter private final Map<String,Double> nameToResults = new HashMap<>();
+    @Getter private final Map<String, Double> nameToResults = new HashMap<>();
 
     /** Which benchmarks still fail */
     @Getter private final List<String> failedNames = new ArrayList<>();
@@ -51,11 +52,11 @@ public class RunExceptionsFindMinimum extends JmhRunnerBase {
     PrintStream logMinimum;
 
     public void addBenchmark( String name, double targetTimeMS ) {
-        benchmarks.add(new BenchmarkInfo(name,targetTimeMS));
+        benchmarks.add(new BenchmarkInfo(name, targetTimeMS));
     }
 
     @Override protected void performBenchmarks() throws IOException {
-        System.out.println("re-running benchmarks.size="+benchmarks.size()+" tol="+significantFractionTol);
+        System.out.println("re-running benchmarks.size=" + benchmarks.size() + " tol=" + significantFractionTol);
 
         // print to stdout and to a file
         PrintStream logFileMinimum = new PrintStream(new File(outputDirectory, "minimum_search.txt"));
@@ -63,8 +64,8 @@ public class RunExceptionsFindMinimum extends JmhRunnerBase {
         logMinimum = new PrintStream(mirror);
 
         // Record the settings for better visibility when debugging
-        logMinimum.println("# significantFractionTol="+significantFractionTol);
-        logMinimum.println("# maxIterations="+maxIterations);
+        logMinimum.println("# significantFractionTol=" + significantFractionTol);
+        logMinimum.println("# maxIterations=" + maxIterations);
 
         try {
             nameToResults.clear();
@@ -89,13 +90,11 @@ public class RunExceptionsFindMinimum extends JmhRunnerBase {
      */
     private void findMinimums() throws IOException {
         // Run benchmarks by finding automatically or by manually specifying them
-        ParseBenchmarkCsv parseResults = new ParseBenchmarkCsv();
+        final var parseResults = new ParseBenchmarkCsv();
         for (int iteration = 0; iteration < maxIterations; iteration++) {
             for (int i = benchmarks.size() - 1; i >= 0; i--) {
                 BenchmarkInfo info = benchmarks.get(i);
-                // Everything after : are the parameters
-                String benchmarkName = info.path.split(":")[0];
-                runBenchmark(benchmarkName, true);
+                String benchmarkName = rerunBenchmark(info);
                 parseResults.parse(new FileInputStream(new File(outputDirectory, benchmarkName + ".csv")));
                 int matchingIndex = findResult(parseResults, info.path);
                 double score = parseResults.results.get(matchingIndex).getMilliSecondsPerOp();
@@ -116,6 +115,23 @@ public class RunExceptionsFindMinimum extends JmhRunnerBase {
                 }
             }
         }
+    }
+
+    private String rerunBenchmark( BenchmarkInfo info ) {
+        // Everything after : are the parameters
+        String[] segments = info.path.split(",");
+        String benchmarkName = segments[0];
+        // Add the segments so that it can re-run the specific tests
+        List<Parameter> parameters = new ArrayList<>();
+        for (int segIdx = 1; segIdx < segments.length; segIdx++) {
+            String[] words = segments[segIdx].split(":");
+            Parameter p = new Parameter();
+            p.name = words[0];
+            p.value = words[1];
+            parameters.add(p);
+        }
+        runBenchmark(benchmarkName, true, parameters);
+        return benchmarkName;
     }
 
     /**
@@ -160,13 +176,13 @@ public class RunExceptionsFindMinimum extends JmhRunnerBase {
         public BenchmarkInfo( String path, double targetScore ) {
             this.path = path;
             this.targetScore = targetScore;
-            this.bestFound = targetScore;
+            this.bestFound = Double.MAX_VALUE;
         }
     }
 
-    public static void main( String[] args ) throws IOException {
+    public static void main( String[] args ) {
         var app = new RunExceptionsFindMinimum();
-        app.addBenchmark("org.ejml.dense.block.BenchmarkMatrixMult_DDRB.mult",242.377049833333);
+        app.addBenchmark("org.ejml.dense.block.BenchmarkMatrixMult_DDRB.mult", 242.377049833333);
         app.process();
     }
 }
