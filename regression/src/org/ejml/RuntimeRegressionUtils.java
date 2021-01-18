@@ -18,6 +18,8 @@
 
 package org.ejml;
 
+import org.ejml.ParseBenchmarkCsv.Result;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,12 +48,8 @@ public class RuntimeRegressionUtils {
             if (!f.isFile() || !f.getName().endsWith(".csv"))
                 continue;
             parser.parse(new FileInputStream(f));
-            for (ParseBenchmarkCsv.Result r : parser.results) {
-                String parameters = "";
-                for (String p : r.parameters) {
-                    parameters += ":" + p;
-                }
-                results.put(r.benchmark + parameters, r.getMilliSecondsPerOp());
+            for (Result r : parser.results) {
+                results.put(r.getKey(), r.getMilliSecondsPerOp());
             }
         }
 
@@ -83,11 +81,17 @@ public class RuntimeRegressionUtils {
         return exceptions;
     }
 
-    public static void saveAllBenchmarks( Map<String, Double> results, String path ) {
+    public static String encodeAllBenchmarks( Map<String, Double> results ) {
         String text = "# Results Summary\n";
         for (String key : results.keySet()) {
             text += key + "," + results.get(key) + "\n";
         }
+        return text;
+    }
+
+    public static void saveAllBenchmarks( Map<String, Double> results, String path ) {
+        String text = encodeAllBenchmarks(results);
+
         try {
             System.out.println("Saving to " + path);
             var writer = new PrintWriter(path);
@@ -118,11 +122,15 @@ public class RuntimeRegressionUtils {
                 if (line.startsWith("#") || line.isEmpty())
                     continue;
 
-                String[] words = line.split(",");
-                if (words.length != 2)
-                    throw new IOException("Unexpected number of words: \"" + line + "\"");
+                // find the last comma, that's where it needs to split
+                int lastIdx = line.lastIndexOf(',');
+                if (lastIdx==-1)
+                    throw new IOException("No comma found");
 
-                results.put(words[0], Double.parseDouble(words[1]));
+                String key = line.substring(0,lastIdx);
+                String value = line.substring(lastIdx+1);
+
+                results.put(key, Double.parseDouble(value));
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
