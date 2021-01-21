@@ -71,8 +71,8 @@ public class RuntimeRegressionMasterApp {
             usage = "Used to specify a subset of benchmarks to run. Default is to run them all.")
     List<String> benchmarkNames = new ArrayList<>();
 
-    /** Tolerance used to decide if the difference in results are significant */
-    public double significantFractionTol = 0.1;
+    @Option(name = "-t", aliases = {"--Tolerance"}, usage = "Refactional outlier tolerance for difference from baseline")
+    public double significantFractionTol = 0.2;
 
     // Log error messages
     protected PrintStream logStderr;
