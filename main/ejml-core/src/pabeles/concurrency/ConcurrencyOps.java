@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -292,6 +292,11 @@ public class ConcurrencyOps {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Returns the thread pool. */
+    public static ForkJoinPool getThreadPool() {
+        return pool;
     }
 
     public interface NewInstance<D> {
