@@ -125,6 +125,7 @@ public class RuntimeRegressionSummary {
         summary += String.format("%6s %10s %10s %10s %10s\n",
                 countFiles, countBenchmarks, degraded.size(), improved.size(), exceptions.size());
         summary += "\n";
+        summary += "Machine:  " + SettingsLocal.machineName + " , " +RuntimeRegressionUtils.getHostName() + "\n";
         summary += String.format("Duration: %.2f hrs\n", (processingTimeMS/(1000.0*60.0*60.0)));
         summary += "Date:     " + formatDate(new Date()) + "\n";
         summary += "Version:  " + EjmlVersion.VERSION + "\n";

@@ -21,10 +21,9 @@ package org.ejml;
 import org.ejml.ParseBenchmarkCsv.Result;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * Utility functions for dealing with JMh log results.
@@ -32,6 +31,59 @@ import java.util.Set;
  * @author Peter Abeles
  */
 public class RuntimeRegressionUtils {
+
+    /**
+     * Adds useful information about the system it's being run on. Some of this will be system specific.
+     */
+    public static void saveSystemInfo( File directory, PrintStream err ) {
+        try {
+            PrintStream out = new PrintStream(new File(directory, "SystemInfo.txt"));
+
+            out.println("Hostname: " + getHostName());
+            out.println("Device Name: " + SettingsLocal.machineName);
+
+            // This won't work on every system
+            try {
+                double[] load = SystemInfo.lookupSystemLoad();
+
+                out.println("---- Native Access Info");
+                out.println("OS: "+SystemInfo.readOSVersion());
+                out.println("CPU: "+SystemInfo.readCpu());
+                out.println("Ave Load: 1m="+load[0]+" 5m="+load[1]+" 15m="+load[2]);
+            } catch( RuntimeException ignore ){}
+
+            // This should work on every system
+            out.println("----");
+            out.println("Runtime.getRuntime().availableProcessors()," +Runtime.getRuntime().availableProcessors());
+            out.println("Runtime.getRuntime().freeMemory()," +Runtime.getRuntime().freeMemory());
+            out.println("Runtime.getRuntime().totalMemory()," + Runtime.getRuntime().totalMemory());
+
+            String newLine = System.getProperty("line.separator");
+            Properties properties = System.getProperties();
+            Set<Object> keys = properties.keySet();
+            for( Object key : keys ) {
+                String property = properties.getProperty(key.toString());
+                // Get rid of newlines since they screw up the formatting
+                property = property.replaceAll(newLine,"");
+                out.println("\""+key.toString()+"\",\""+property+"\"");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(err);
+            err.println("Error saving system info");
+        }
+    }
+
+    /**
+     * Returns the name of the device this regression is run on
+     */
+    public static String getHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return "Unknown";
+        }
+    }
+
     /**
      * Loads all the JMH results in a directory and puts it into a map.
      */

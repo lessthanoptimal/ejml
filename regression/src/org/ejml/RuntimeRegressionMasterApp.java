@@ -58,6 +58,9 @@ public class RuntimeRegressionMasterApp {
     @Option(name = "-e", aliases = {"--EmailPath"}, usage = "Path to email login. If relative, relative to project.")
     String emailPath = "email_login.txt";
 
+    @Option(name = "--LocalSettingsPath", usage = "Path to local settings If relative, relative to project.")
+    String localSettingsPath = SettingsLocal.FILE_NAME;
+
     @Option(name = "-r", aliases = {"--ResultsPath"}, usage = "Path to results directory. If relative, relative to project.")
     String resultsPath = RunAllRuntimeBenchmarks.BENCHMARK_RESULTS_DIR;
 
@@ -81,6 +84,7 @@ public class RuntimeRegressionMasterApp {
         long startTime = System.currentTimeMillis();
         resultsPath = GenerateCode32.projectRelativePath(resultsPath);
         emailPath = GenerateCode32.projectRelativePath(emailPath);
+        localSettingsPath = GenerateCode32.projectRelativePath(localSettingsPath);
         var email = new EmailResults();
         email.loadEmailFile(new File(emailPath));
 
@@ -89,13 +93,16 @@ public class RuntimeRegressionMasterApp {
             doSummaryOnly = true;
 
         try {
+            // Load local settings
+            SettingsLocal.loadStdErrIfFail(new File(localSettingsPath));
+
             File baselineDir = new File(resultsPath, "baseline");
 
             // See if the baseline directory needs to be created or updated
             if (!baselineDir.exists() && !updateBaseline) {
                 createBaseline(email, baselineDir, false);
                 return;
-            } else if (updateBaseline){
+            } else if (updateBaseline) {
                 if (!baselineDir.exists()) {
                     throw new RuntimeException("The baseline directory doesn't exist and can't be updated");
                 }
@@ -108,8 +115,21 @@ public class RuntimeRegressionMasterApp {
 
             if (doSummaryOnly) {
                 currentResultsDir = selectMostRecentResults();
+                // Not creating new results, so we don't want to overwrite the old error log
+                logStderr = System.err;
             } else {
+                // Create the directory and save system information
                 currentResultsDir = new File(resultsPath, System.currentTimeMillis() + "");
+                if (!currentResultsDir.mkdirs()) {
+                    throw new RuntimeException(
+                            "Failed to created directory for new results: " + currentResultsDir.getPath());
+                }
+
+                // Tell it where to log errors and save system info
+                logStderr = new PrintStream(new FileOutputStream(new File(currentResultsDir, MASTER_EXCEPTIONS_FILE)));
+                RuntimeRegressionUtils.saveSystemInfo(currentResultsDir, logStderr);
+
+                // Run benchmarks and save the results
                 var measure = new RunAllRuntimeBenchmarks();
                 measure.outputRelativePath = new File(currentResultsDir, JMH_DIR).getPath();
                 measure.timeoutMin = timeoutMin;
@@ -119,37 +139,43 @@ public class RuntimeRegressionMasterApp {
 
             System.out.println("Current Results: " + currentResultsDir.getPath());
             File currentJmhDir = new File(currentResultsDir, "jmh");
-            logStderr = new PrintStream(new FileOutputStream(new File(currentResultsDir, MASTER_EXCEPTIONS_FILE)));
 
             // Load the baseline to compare against
             Map<String, Double> baselineResults = checkLoadAllBenchmarks(baselineDir);
 
             // Load or finalize the current benchmark results
-            Map<String, Double> currentResults;
-            if (doMinimumOnly || !doSummaryOnly) {
-                // Load JMH results
-                currentResults = RuntimeRegressionUtils.loadJmhResults(currentJmhDir);
-
-                // find exceptions and re-run them to see if they are false positives
-                rerunFailedRegressionTests(currentResultsDir, currentResults, baselineResults);
-
-                // Save all the combined results to a file
-                RuntimeRegressionUtils.saveAllBenchmarks(currentResults,
-                        new File(currentResultsDir, ALL_BENCHMARKS_FILE).getPath());
-            } else {
-                // Load previously saved results
-                currentResults = checkLoadAllBenchmarks(currentResultsDir);
-            }
+            Map<String, Double> currentResults = getCurrentResults(currentResultsDir, currentJmhDir, baselineResults);
 
             createSummary(email, currentResultsDir, currentResults, baselineResults,
                     System.currentTimeMillis() - startTime);
         } catch (Exception e) {
-            e.printStackTrace(logStderr);
+            e.printStackTrace(logStderr == null ? System.err : logStderr);
         } finally {
             if (logStderr != null) logStderr.close();
         }
 
         logStderr = null;
+    }
+
+    private Map<String, Double> getCurrentResults( File currentResultsDir,
+                                                   File currentJmhDir,
+                                                   Map<String, Double> baselineResults ) throws IOException {
+        Map<String, Double> currentResults;
+        if (doMinimumOnly || !doSummaryOnly) {
+            // Load JMH results
+            currentResults = RuntimeRegressionUtils.loadJmhResults(currentJmhDir);
+
+            // find exceptions and re-run them to see if they are false positives
+            rerunFailedRegressionTests(currentResultsDir, currentResults, baselineResults);
+
+            // Save all the combined results to a file
+            RuntimeRegressionUtils.saveAllBenchmarks(currentResults,
+                    new File(currentResultsDir, ALL_BENCHMARKS_FILE).getPath());
+        } else {
+            // Load previously saved results
+            currentResults = checkLoadAllBenchmarks(currentResultsDir);
+        }
+        return currentResults;
     }
 
     private void createBaseline( EmailResults email, File baselineDir, boolean update ) {
@@ -159,11 +185,15 @@ public class RuntimeRegressionMasterApp {
             // all CPU on the machine for 10+ hrs.
             try {
                 TimeUnit.SECONDS.sleep(10);
-            } catch (InterruptedException ignore) {}
+            } catch (InterruptedException ignore) {
+            }
         }
 
         // Save start time
         long time0 = System.currentTimeMillis();
+
+        // Save system information
+        RuntimeRegressionUtils.saveSystemInfo(baselineDir, logStderr);
 
         // Pass in user configurations
         var createBaseline = new CreateRuntimeRegressionBaseline();
