@@ -71,8 +71,6 @@ public class CreateRuntimeRegressionBaseline {
 
         try {
             logTiming = new PrintStream(new FileOutputStream(new File(homeDirectory, "time.txt")));
-            logTiming.print("Started:     " + formatDate(new Date()) + "\n\n");
-            logTiming.flush();
 
             // Save info about what is being computed
             try (PrintWriter out = new PrintWriter(new File(homeDirectory, "baseline_info.txt"))) {
@@ -145,6 +143,8 @@ public class CreateRuntimeRegressionBaseline {
         String text = "";
         text += "EJML Runtime Regression Baseline\n";
         text += "\n";
+        text += "Machine:  " + SettingsLocal.machineName + "\n";
+        text += "Hostname: " + RuntimeRegressionUtils.getHostName() + "\n";
         text += "Date:     " + formatDate(new Date()) + "\n";
         text += "Version:  " + EjmlVersion.VERSION + "\n";
         text += "SHA:      " + EjmlVersion.GIT_SHA + "\n";
