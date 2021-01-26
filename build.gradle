@@ -205,7 +205,7 @@ subprojects {
         }
         java {
             // There is no good way to ignore auto generated code since you can't check to see if it's in git or not
-            // there is no simple regrex pattern. To apply spotless first remove all auto generated code.
+            // there is no simple regex pattern. To apply spotless first remove all auto generated code.
             target('**/ejml-core/src/org/ejml/**/*.java',
                     '**/ejml-ddense/src/org/ejml/**/*.java',
                     '**/ejml-dsparse/src/org/ejml/**/*.java',
@@ -217,7 +217,7 @@ subprojects {
             removeUnusedImports()
             endWithNewline()
 
-            licenseHeaderFile "${project.rootDir}/docs/copyright.txt"
+            licenseHeaderFile "${project.rootDir}/docs/copyright.txt", 'package '
         }
     }
 

@@ -1,7 +1,10 @@
 <component name="CopyrightManager">
   <settings default="ejml">
     <module2copyright>
-      <element module="ejml" copyright="ejml" />
+      <element module="ejml-java" copyright="ejml" />
     </module2copyright>
+    <LanguageOptions name="Groovy">
+      <option name="fileTypeOverride" value="1" />
+    </LanguageOptions>
   </settings>
 </component>
