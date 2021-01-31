@@ -2771,7 +2771,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Fill all rows in the specified range with zeros
+     * Fills all rows in the specified range with zeros
      *
      * @param start Index of the first row (inclusivce) to be filled
      * @param end Index of the last row (exclusive) to be filled
@@ -2781,10 +2781,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Shifts all rows up by the specified number of places
+     * Shifts all elements up by the specified number of rows.
+     * Vacated rows are set to zero.
      *
      * @param a A matrix. Modified.
-     * @param c The rows are shifted by this number.
+     * @param c Number of rows to shift by.
      */
     public static void shiftRowsUp(DMatrixRMaj a, int c) {
         if (c < a.numRows) {
@@ -2796,10 +2797,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Shifts all rows down by the specified number of places
+     * Shifts all elements down by the specified number of rows
+     * Vacated rows are set to zero.
      *
      * @param a A matrix. Modified.
-     * @param c The rows are shifted by this number.
+     * @param c Number of rows to shift by.
      */
     public static void shiftRowsDown(DMatrixRMaj a, int c) {
         if (c < a.numRows) {
