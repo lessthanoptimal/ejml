@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.example;
 
+import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -38,31 +39,22 @@ public class ExampleConcurrent {
     public static void main( String[] args ) {
         // Create a few random matrices that we will multiply and decompose
         var rand = new Random(0xBEEF);
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4000,4000,-1,1,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(A.numCols,1000,-1,1,rand);
-        DMatrixRMaj C = new DMatrixRMaj(1,1);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4000, 4000, -1, 1, rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(A.numCols, 1000, -1, 1, rand);
+        DMatrixRMaj C = new DMatrixRMaj(1, 1);
 
         // First do a concurrent matrix multiply using the default number of threads
-        System.out.println("Matrix Multiply, threads="+EjmlConcurrency.getMaxThreads());
-        long time0 = System.currentTimeMillis();
-        CommonOps_MT_DDRM.mult(A,B,C);
-        long time1 = System.currentTimeMillis();
-        System.out.println("Elapsed time "+(time1-time0)+" (ms)");
+        System.out.println("Matrix Multiply, threads=" + EjmlConcurrency.getMaxThreads());
+        UtilEjml.printTime("  ", "Elapsed: ", () -> CommonOps_MT_DDRM.mult(A, B, C));
 
         // Set it to two threads
         EjmlConcurrency.setMaxThreads(2);
-        System.out.println("Matrix Multiply, threads="+EjmlConcurrency.getMaxThreads());
-        long time2 = System.currentTimeMillis();
-        CommonOps_MT_DDRM.mult(A,B,C);
-        long time3 = System.currentTimeMillis();
-        System.out.println("Elapsed time "+(time3-time2)+" (ms)");
+        System.out.println("Matrix Multiply, threads=" + EjmlConcurrency.getMaxThreads());
+        UtilEjml.printTime("  ", "Elapsed: ", () -> CommonOps_MT_DDRM.mult(A, B, C));
 
         // Then let's compare it against the single thread implementation
         System.out.println("Matrix Multiply, Single Thread");
-        long time4 = System.currentTimeMillis();
-        CommonOps_DDRM.mult(A,B,C);
-        long time5 = System.currentTimeMillis();
-        System.out.println("Elapsed time "+(time5-time4)+" (ms)");
+        UtilEjml.printTime("  ", "Elapsed: ", () -> CommonOps_DDRM.mult(A, B, C));
 
         // Setting the number of threads to 1 then running am MT implementation actually calls completely different
         // code than the regular function calls and will be less efficient. This will probably only be evident on
