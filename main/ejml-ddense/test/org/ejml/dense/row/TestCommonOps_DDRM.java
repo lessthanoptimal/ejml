@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1569,8 +1569,8 @@ public class TestCommonOps_DDRM {
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void rref() {
+    /** A wide matrix with linearly dependent rows */
+    @Test void rref_case0() {
         DMatrixRMaj A = new DMatrixRMaj(4, 6, true,
                 0, 0, 1, -1, -1, 4,
                 2, 4, 2, 4, 2, 4,
@@ -1585,7 +1585,26 @@ public class TestCommonOps_DDRM {
 
         DMatrixRMaj found = CommonOps_DDRM.rref(A, 5, null);
 
+        assertTrue(MatrixFeatures_DDRM.isEquals(found, expected));
 
+        // Run it again using default for numUnknowns
+        found = CommonOps_DDRM.rref(A, -1, null);
+        assertTrue(MatrixFeatures_DDRM.isEquals(found, expected));
+    }
+
+    /** Wide matrix with zeros in the first column. */
+    @Test void rref_case1() {
+        var A = new DMatrixRMaj(2, 3, true, new double[]{0, 2, 2, 0, 0, 2});
+        DMatrixRMaj found = CommonOps_DDRM.rref(A, -1, null);
+        var expected = new DMatrixRMaj(2, 3, true, new double[]{0, 1, 0, 0, 0, 1});
+        assertTrue(MatrixFeatures_DDRM.isEquals(found, expected));
+    }
+
+    /** Tall matrix */
+    @Test void rref_case2() {
+        var A = new DMatrixRMaj(3, 2, true, new double[]{1, 2, 2, 4, 5, 2});
+        DMatrixRMaj found = CommonOps_DDRM.rref(A, -1, null);
+        var expected = new DMatrixRMaj(3, 2, true, new double[]{1, 0, 0, 1, 0, 0});
         assertTrue(MatrixFeatures_DDRM.isEquals(found, expected));
     }
 

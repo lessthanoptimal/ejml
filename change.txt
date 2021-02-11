@@ -16,7 +16,8 @@ Date format: year/month/day
   * TODO record the SHA it was compared against
   * TODO record the tolerance for similarity and make command line configurable
 - Refactor set(obj) -> setTo(obj)
-
+- CommonOps
+  * Fix a rather glaring bug in rref(). Thanks KayakDov
 - TODO identify sparse decompositions which can be made concurrent
 - TODO identify dense decompositions which require specialized algorithms for concurrency
 

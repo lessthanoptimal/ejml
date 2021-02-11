@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.dense.row;
 
 import org.ejml.EjmlParameters;
@@ -2476,7 +2475,7 @@ public class CommonOps_DDRM {
      *
      * @param A Input matrix.  Unmodified.
      * @param numUnknowns Number of unknowns/columns that are reduced. Set to -1 to default to
-     * Math.min(A.numRows,A.numCols), which works for most systems.
+     * A.numCols, which works for most applications.
      * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
      * @return Reduced echelon form of A
      * @see RrefGaussJordanRowPivot_DDRM
@@ -2485,7 +2484,7 @@ public class CommonOps_DDRM {
         reduced = UtilEjml.reshapeOrDeclare(reduced, A);
 
         if (numUnknowns <= 0)
-            numUnknowns = Math.min(A.numCols, A.numRows);
+            numUnknowns = A.numCols;
 
         ReducedRowEchelonForm_F64<DMatrixRMaj> alg = new RrefGaussJordanRowPivot_DDRM();
         alg.setTolerance(elementMaxAbs(A)*UtilEjml.EPS*Math.max(A.numRows, A.numCols));
