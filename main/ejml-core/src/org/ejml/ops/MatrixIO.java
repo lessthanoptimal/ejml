@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -290,9 +290,14 @@ public class MatrixIO {
      * Loads a {@link DMatrix} which has been saved to file using Java binary
      * serialization.
      *
+     * @deprecated
+     * This will be removed in the future due to how unsafe readObject() is.
+     *
      * @param fileName The file being loaded.
      * @return DMatrixRMaj
      */
+    @Deprecated
+    @SuppressWarnings("BanSerializableRead")
     public static <T extends DMatrix> T loadBin( String fileName )
             throws IOException {
         FileInputStream fileStream = new FileInputStream(fileName);

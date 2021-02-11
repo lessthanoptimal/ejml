@@ -65,7 +65,7 @@ subprojects {
     configurations.all {
         resolutionStrategy {
             force 'org.jetbrains:annotations:20.0.0'
-            force 'com.google.guava:guava:27.0.1-jre'
+            force 'com.google.guava:guava:30.1-jre'
             force 'com.google.errorprone:error_prone_annotations:2.4.0'
             force 'com.google.code.findbugs:jsr305:3.0.2'
             force 'org.checkerframework:checker-qual:2.10.0'
@@ -131,7 +131,7 @@ subprojects {
         annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
         annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
 
-        errorprone "com.google.errorprone:error_prone_core:2.4.0"   // adds benchmarks/generated to sourceSet
+        errorprone "com.google.errorprone:error_prone_core:2.5.1"   // adds benchmarks/generated to sourceSet
         errorproneJavac "com.google.errorprone:javac:9+181-r4173-1" // annoying...
 
         benchmarksImplementation project.sourceSets.main.runtimeClasspath
