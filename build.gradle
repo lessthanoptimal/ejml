@@ -110,6 +110,7 @@ subprojects {
     }
 
     dependencies {
+        compileOnly 'us.hebi.matlab.mat:mfl-ejml:0.5.7'
         compileOnly 'org.projectlombok:lombok:1.18.10'
         compileOnly 'org.jetbrains:annotations:20.0.0' // @Nullable
         compileOnly 'javax.annotation:jsr250-api:1.0'  // @Generated
