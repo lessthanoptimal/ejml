@@ -35,6 +35,8 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
@@ -91,6 +93,17 @@ public class TestMatrixIO {
         FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketF(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
+    }
+
+    @Test
+    public void load_save_matlab_missing_dep_msg() throws IOException {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6, 3, rand);
+        String msg = assertThrows(IllegalStateException.class, () -> MatrixIO.saveMatlab(A, "temp.mat"))
+                .getMessage();
+        assertNotNull(msg);
+        assertTrue(msg.contains("mfl-ejml"));
+        assertEquals(msg, assertThrows(IllegalStateException.class, () -> MatrixIO.loadMatlab("temp.mat"))
+                .getMessage());
     }
 
     @Test

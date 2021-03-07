@@ -15,11 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.ops;
 
 import org.ejml.EjmlVersion;
 import org.ejml.data.*;
+import org.jetbrains.annotations.Nullable;
+import us.hebi.matlab.mat.ejml.Mat5Ejml;
+import us.hebi.matlab.mat.format.Mat5;
+import us.hebi.matlab.mat.types.MatFile;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -260,6 +263,97 @@ public class MatrixIO {
             throw new RuntimeException(e);
         }
         return output;
+    }
+
+    /**
+     * Saves a matrix to disk using MATLAB's MAT-File Format (Level 5) binary serialization.
+     *
+     * Notes:
+     * * The matrix gets stored as a single root level entry named 'ejmlMatrix'
+     * * {@link FMatrixSparseCSC} get stored as sparse double matrices
+     *
+     * See
+     * <a href="https://github.com/HebiRobotics/MFL">MAT File Library</a>
+     * <a href="https://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf">matfile_format.pdf</a>
+     *
+     * @param A The matrix being saved.
+     * @param fileName Name of the file its being saved at.
+     */
+    public static void saveMatlab( Matrix A, String fileName ) throws IOException {
+        MflAccess.verifyEnabled();
+        MflAccess.IO.saveMatlab(A, fileName);
+    }
+
+    /**
+     * Loads a {@link Matrix} which has been saved to file using MATLAB's MAT-File Format (Level 5) serialization.
+     *
+     * @param fileName The file being loaded. It is expected to contain a root level entry named 'ejmlMatrix'.
+     * @return Matrix A matrix of the type that best matches the serialized data
+     */
+    public static <T extends Matrix> T loadMatlab( String fileName ) throws IOException {
+        return loadMatlab(fileName, null);
+    }
+
+    /**
+     * Loads a {@link Matrix} which has been saved to file using MATLAB's MAT-File Format (Level 5) serialization.
+     *
+     * @param fileName The file being loaded. It is expected to contain a root level entry named 'ejmlMatrix'.
+     * @param output Output Matrix. Automatically matched if null. Modified.
+     * @return Matrix
+     */
+    public static <T extends Matrix> T loadMatlab( String fileName, @Nullable T output ) throws IOException {
+        MflAccess.verifyEnabled();
+        return MflAccess.IO.loadMatlab(fileName,output);
+    }
+
+    /**
+     * Lazily verify MFL availability without using reflections
+     */
+    static class MflAccess {
+
+        private static void verifyEnabled() {
+            if (!ENABLED) {
+                throw new IllegalStateException("Missing dependency: add maven coordinates 'us.hebi.matlab.mat:mfl-ejml:0.5.7' or later. https://github.com/HebiRobotics/MFL");
+            }
+        }
+
+        static {
+            boolean foundInClasspath;
+            try{
+                @SuppressWarnings("unused")
+                Class<Mat5Ejml> clazz = Mat5Ejml.class;
+                foundInClasspath = true;
+            }catch (NoClassDefFoundError cfe) {
+                foundInClasspath = false;
+            }
+            ENABLED = foundInClasspath;
+        }
+
+        private static final boolean ENABLED;
+
+        /**
+         * Load external library once we have verified that it exists
+         */
+        static class IO {
+
+            public static void saveMatlab( Matrix A, String fileName ) throws IOException {
+                MatFile mat = Mat5.newMatFile().addArray(ENTRY_NAME, Mat5Ejml.asArray(A));
+                Mat5.writeToFile(mat, fileName);
+            }
+
+            public static <T extends Matrix> T loadMatlab( String fileName, @Nullable T output ) throws IOException {
+                MatFile mat = Mat5.readFromFile(fileName);
+                for (MatFile.Entry entry : mat.getEntries()) {
+                    if (ENTRY_NAME.matches(entry.getName())) {
+                        return Mat5Ejml.convert(entry.getValue(), output);
+                    }
+                }
+                throw new IllegalArgumentException("File does not have expected entry: '" + ENTRY_NAME + "'");
+            }
+
+            private static final String ENTRY_NAME = "ejmlMatrix";
+        }
+
     }
 
     /**
