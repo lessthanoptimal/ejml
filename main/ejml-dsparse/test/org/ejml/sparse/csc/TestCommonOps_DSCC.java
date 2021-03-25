@@ -26,6 +26,8 @@ import org.ejml.data.DMatrixSparseTriplet;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.masks.DMaskFactory;
+import org.ejml.masks.Mask;
 import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.DOperatorBinaryIdx;
 import org.ejml.sparse.csc.mult.CheckMatrixMultShape_DSCC;
@@ -36,6 +38,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
 
+import static org.ejml.sparse.csc.MaskTestUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -1529,7 +1532,7 @@ public class TestCommonOps_DSCC {
     public void reduceColumnWise() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
 
-        DMatrixRMaj result = CommonOps_DSCC.reduceColumnWise(A, 0, Double::sum, null);
+        DMatrixRMaj result = CommonOps_DSCC.reduceColumnWise(A, 0, Double::sum, null, null);
 
         for (int i = 0; i < A.numCols; i++) {
             DMatrixSparseCSC colVector = CommonOps_DSCC.extractColumn(A, i, null);
@@ -1539,6 +1542,17 @@ public class TestCommonOps_DSCC {
             }
             assertEquals(expected, result.get(i));
         }
+    }
+
+    @Test
+    public void maskedReduceColumnWise() {
+        DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 10, 20, rand);
+
+        Mask mask = DMaskFactory.builder(RandomMatrices_DSCC.rectangle(10, 1, 5, new Random(42)), false).build();
+        DMatrixRMaj unmasked = CommonOps_DSCC.reduceColumnWise(A, 0, Double::sum, null, null);
+        DMatrixRMaj masked = CommonOps_DSCC.reduceColumnWise(A, 0, Double::sum, null, mask);
+
+        assertMaskedResult(unmasked.data, masked.data, mask);
     }
 
     @Test
