@@ -25,6 +25,7 @@ import org.ejml.data.IGrowArray;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.LUSparseDecomposition_F64;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
+import org.ejml.masks.Mask;
 import org.ejml.ops.DOperatorBinary;
 import org.ejml.ops.DOperatorBinaryIdx;
 import org.ejml.ops.DOperatorUnary;
@@ -1936,9 +1937,11 @@ public class CommonOps_DSCC {
      * @param initValue initial value for accumulator
      * @param func Accumulator function defining "+" for accumulator +=  cellValue
      * @param output output (Output) Vector, where result can be stored in
+     * @param mask (Optional) Mask for specifying which entries should be overwritten
      * @return a column-vector, where v[i] == values of column i reduced to scalar based on `func`
      */
-    public static DMatrixRMaj reduceColumnWise( DMatrixSparseCSC input, double initValue, DOperatorBinary func, @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj reduceColumnWise( DMatrixSparseCSC input, double initValue, DOperatorBinary func,
+                                                @Nullable DMatrixRMaj output, @Nullable Mask mask ) {
         if (output == null) {
             output = new DMatrixRMaj(1, input.numCols);
         } else {
@@ -1950,8 +1953,10 @@ public class CommonOps_DSCC {
             int end = input.col_idx[col + 1];
 
             double acc = initValue;
-            for (int i = start; i < end; i++) {
-                acc = func.apply(acc, input.nz_values[i]);
+            if (mask == null || mask.isSet(col)) {
+                for (int i = start; i < end; i++) {
+                    acc = func.apply(acc, input.nz_values[i]);
+                }
             }
 
             output.data[col] = acc;

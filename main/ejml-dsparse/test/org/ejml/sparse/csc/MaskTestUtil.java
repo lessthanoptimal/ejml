@@ -18,9 +18,12 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.Matrix;
 import org.ejml.masks.Mask;
 
+import static org.ejml.UtilEjml.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -36,6 +39,20 @@ public class MaskTestUtil {
                     // entry should not be computed as not set in mask
                     assertFalse(maskedResult.isAssigned(row, col));
                 }
+            }
+        }
+    }
+
+    public static void assertMaskedResult( double[] unmaskedResult, double[] maskedResult, Mask mask ) {
+        assertEquals(unmaskedResult.length, maskedResult.length);
+
+        for (int idx = 0; idx < unmaskedResult.length; idx++) {
+            if (mask == null || mask.isSet(idx)) {
+                // entry should be computed
+                assertEquals(unmaskedResult[idx], maskedResult[idx]);
+            } else {
+                // entry should not be computed as not set in mask
+                assertEquals(maskedResult[idx], 0D);
             }
         }
     }
