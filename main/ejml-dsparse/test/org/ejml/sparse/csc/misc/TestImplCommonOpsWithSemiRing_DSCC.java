@@ -22,7 +22,6 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.masks.DMaskFactory;
 import org.ejml.ops.DSemiRing;
 import org.ejml.ops.DSemiRings;
-import org.ejml.sparse.csc.MaskTestUtil;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,6 +32,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import static org.ejml.TestDMaskUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({"UnusedMethod"})
@@ -72,7 +72,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, masked, DSemiRings.PLUS_TIMES, mask, null, null);
 
 
-        MaskTestUtil.assertMaskedResult(unmasked, masked, mask);
+        assertMaskedResult(unmasked, masked, mask);
     }
 
     @ParameterizedTest
@@ -113,7 +113,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         ImplCommonOpsWithSemiRing_DSCC.elementMult(a, b, masked, DSemiRings.PLUS_TIMES, mask, null, null);
 
 
-        MaskTestUtil.assertMaskedResult(unmasked, masked, mask);
+        assertMaskedResult(unmasked, masked, mask);
     }
 
     private static Stream<Arguments> elementWiseAddSemiringSource() {

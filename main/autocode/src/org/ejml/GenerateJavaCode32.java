@@ -141,6 +141,7 @@ public class GenerateJavaCode32 extends GenerateCode32 {
                 "main/ejml-simple/src/org/ejml/simple/ops",
                 "main/ejml-core/src/org/ejml/data",
                 "main/ejml-core/test/org/ejml/data",
+                "main/ejml-core/test/org/ejml",
                 "main/ejml-core/src/org/ejml/ops",
                 "main/ejml-core/test/org/ejml/ops",
                 "main/ejml-core/src/org/ejml/masks",
