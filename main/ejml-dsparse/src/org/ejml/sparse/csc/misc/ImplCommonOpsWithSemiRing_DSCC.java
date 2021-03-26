@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.sparse.csc.misc;
 
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.masks.Mask;
 import org.ejml.ops.DSemiRing;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,11 +42,12 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param B Matrix
      * @param C Output matrix.
      * @param semiRing Semi-Ring to define + and *
+     * @param mask (Optional) Mask for specifying which entries should be overwritten
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                            @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+                            @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
 
@@ -56,8 +57,12 @@ public class ImplCommonOpsWithSemiRing_DSCC {
         for (int col = 0; col < A.numCols; col++) {
             C.col_idx[col] = C.nz_length;
 
-            multAddColA(A, col, alpha, C, col + 1, semiRing, x, w);
-            multAddColA(B, col, beta, C, col + 1, semiRing, x, w);
+            if (mask != null) {
+                mask.setIndexColumn(col);
+            }
+
+            multAddColA(A, col, alpha, C, col + 1, semiRing, mask, x, w);
+            multAddColA(B, col, beta, C, col + 1, semiRing, mask, x, w);
 
             // take the values in the dense vector 'x' and put them into 'C'
             int idxC0 = C.col_idx[col];
@@ -125,11 +130,12 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param B (Input) Matrix
      * @param C (Output) Matrix.
      * @param semiRing Semi-Ring to define + and *
+     * @param mask (Optional) Mask for specifying which entries should be overwritten
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                                    @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
+                                    @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows);
         Arrays.fill(w, 0, A.numRows, -1); // fill with -1. This will be a value less than column
@@ -144,6 +150,7 @@ public class ImplCommonOpsWithSemiRing_DSCC {
             int idxB0 = B.col_idx[col];
             int idxB1 = B.col_idx[col + 1];
 
+            // TODO: also consider mask here for size estimation (add Mask::maxSetValues(col))
             // compute the maximum number of elements that there can be in this row
             int maxInRow = Math.min(idxA1 - idxA0, idxB1 - idxB0);
 
@@ -164,9 +171,11 @@ public class ImplCommonOpsWithSemiRing_DSCC {
             // If a row appears in A and B, multiply and set as an element in C
             for (int i = idxB0; i < idxB1; i++) {
                 int row = B.nz_rows[i];
-                if (w[row] == col) {
-                    C.nz_values[C.nz_length] = semiRing.mult.func.apply(x[row], B.nz_values[i]);
-                    C.nz_rows[C.nz_length++] = row;
+                if (mask == null || mask.isSet(row, col)) {
+                    if (w[row] == col) {
+                        C.nz_values[C.nz_length] = semiRing.mult.func.apply(x[row], B.nz_values[i]);
+                        C.nz_rows[C.nz_length++] = row;
+                    }
                 }
             }
         }

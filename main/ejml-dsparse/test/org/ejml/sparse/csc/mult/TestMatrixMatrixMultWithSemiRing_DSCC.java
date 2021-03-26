@@ -20,12 +20,16 @@ package org.ejml.sparse.csc.mult;
 
 import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.masks.DMaskFactory;
 import org.ejml.ops.DSemiRing;
 import org.ejml.ops.DSemiRings;
 import org.ejml.sparse.csc.CommonOpsWithSemiRing_DSCC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.MaskTestUtil;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.ejml.sparse.csc.misc.ImplCommonOpsWithSemiRing_DSCC;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -78,7 +82,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
     void elementMult(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
-        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, null, semiRing, null, null);
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, null, semiRing, null, null, null);
         DMatrixSparseCSC expected = CommonOps_DSCC.elementMult(matrix, otherMatrix, null, null, null);
 
         EjmlUnitTests.assertEquals(expected, found);
@@ -89,10 +93,26 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
     void add(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
-        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.add(1, matrix, 1, otherMatrix, null, semiRing, null, null);
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.add(1, matrix, 1, otherMatrix, null, semiRing, null,null, null);
         DMatrixSparseCSC expected = CommonOps_DSCC.add(1, matrix, 1, otherMatrix, null, null, null);
 
         EjmlUnitTests.assertEquals(expected, found);
+    }
+
+    @Test
+    public void maskedMult() {
+        var random = new Random(1337);
+        var a = RandomMatrices_DSCC.rectangle(10, 10, 30, random);
+        var b = RandomMatrices_DSCC.rectangle(10, 10, 30, random);
+        var mask = DMaskFactory.builder(RandomMatrices_DSCC.rectangle(10, 10, 30, random), true).build();
+
+        var unmasked = new DMatrixSparseCSC(10, 10, 0);
+        var masked = new DMatrixSparseCSC(10, 10, 0);
+
+        CommonOpsWithSemiRing_DSCC.mult(a, b, unmasked, DSemiRings.PLUS_TIMES, null, null, null);
+        CommonOpsWithSemiRing_DSCC.mult(a, b, masked, DSemiRings.PLUS_TIMES, mask, null, null);
+
+        MaskTestUtil.assertMaskedResult(unmasked, masked, mask);
     }
 
     private static Stream<Arguments> sparseVectorMatrixMultSources() {

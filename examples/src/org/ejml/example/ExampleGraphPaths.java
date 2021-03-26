@@ -60,7 +60,7 @@ public class ExampleGraphPaths {
         DMatrixSparseCSC outputVector = startNodes.createLike();
 
         // Compute which nodes can be reached from the node 0 (disregarding the costs of the relationship)
-        CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, lor_land, null, null);
+        CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, lor_land, null, null, null);
 
         System.out.println("Node 3 can be reached from node 0: " + (outputVector.get(0, 3) == 1));
         System.out.println("Node 1 can be reached from node 0: " + (outputVector.get(0, 1) == 1));
@@ -69,13 +69,13 @@ public class ExampleGraphPaths {
         startNodes.set(0, 3, 1);
 
         // Find the number of path the nodes can be reached with
-        CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, plus_land, null, null);
+        CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, plus_land, null, null, null);
         System.out.println("The number of start-nodes leading to node 2 is " + (int) outputVector.get(0, 2));
 
         // Find the path with the minimal cost (direct connection from one of the specified starting nodes)
         // the calculated cost equals the cost specified in the relationship (as both startNodes have a weight of 1)
         // as an alternative you could use the MIN_PLUS semiring to consider the existing cost specified in the startNodes vector
-        CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, min_times, null, null);
+        CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, min_times, null, null, null);
         System.out.println("The minimal cost to reach the node 2 is " + outputVector.get(0, 2));
     }
 }
