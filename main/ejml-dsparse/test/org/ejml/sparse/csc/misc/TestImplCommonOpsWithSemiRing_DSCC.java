@@ -19,23 +19,27 @@
 package org.ejml.sparse.csc.misc;
 
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.masks.DMaskFactory;
 import org.ejml.ops.DSemiRing;
 import org.ejml.ops.DSemiRings;
+import org.ejml.sparse.csc.MaskTestUtil;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({"UnusedMethod"})
 public class TestImplCommonOpsWithSemiRing_DSCC {
 
     @ParameterizedTest
-    @MethodSource("elementWiseAddSource")
+    @MethodSource("elementWiseAddSemiringSource")
     public void add( DSemiRing semiRing, double[] expected) {
         // == graph unions
         DMatrixSparseCSC a = new DMatrixSparseCSC(3, 3);
@@ -46,7 +50,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         b.set(1, 1, 3);
         b.set(0, 0, 4);
 
-        ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, c, semiRing, null, null);
+        ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, c, semiRing, null, null, null);
 
         double[] found = new double[]{c.get(0, 0), c.get(1, 1)};
 
@@ -54,9 +58,26 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         assertTrue(Arrays.equals(expected, found));
     }
 
+    @Test
+    public void maskedAdd() {
+        var random = new Random(42);
+        var a = RandomMatrices_DSCC.rectangle(10, 10, 30, random);
+        var b = RandomMatrices_DSCC.rectangle(10, 10, 30, random);
+        var mask = DMaskFactory.builder(RandomMatrices_DSCC.rectangle(10, 10, 30, random), true).build();
+
+        var unmasked = new DMatrixSparseCSC(10, 10, 0);
+        var masked = new DMatrixSparseCSC(10, 10, 0);
+
+        ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, unmasked, DSemiRings.PLUS_TIMES, null, null, null);
+        ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, masked, DSemiRings.PLUS_TIMES, mask, null, null);
+
+
+        MaskTestUtil.assertMaskedResult(unmasked, masked, mask);
+    }
+
     @ParameterizedTest
-    @MethodSource("elementWiseMultSource")
-    public void testelementWiseMult( DSemiRing semiRing, double[] expected) {
+    @MethodSource("elementWiseMultSemiringSource")
+    public void elementWiseMult( DSemiRing semiRing, double[] expected) {
         // == graph intersection
         DMatrixSparseCSC matrix = new DMatrixSparseCSC(3, 3, 4);
         matrix.set(1, 1, 4);
@@ -71,14 +92,31 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
         DMatrixSparseCSC result = new DMatrixSparseCSC(3, 3, 0);
 
-        ImplCommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, result, semiRing, null, null);
+        ImplCommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, result, semiRing, null, null, null);
 
         assertEquals(2, result.getNonZeroLength());
         assertTrue(expected[0] == result.get(1, 1));
         assertTrue(expected[1] == result.get(1, 2));
     }
 
-    private static Stream<Arguments> elementWiseAddSource() {
+    @Test
+    public void maskedeWiseMult() {
+        var random = new Random(42);
+        var a = RandomMatrices_DSCC.rectangle(10, 10, 30, random);
+        var b = RandomMatrices_DSCC.rectangle(10, 10, 30, random);
+        var mask = DMaskFactory.builder(RandomMatrices_DSCC.rectangle(10, 10, 30, random), true).build();
+
+        var unmasked = new DMatrixSparseCSC(10, 10, 0);
+        var masked = new DMatrixSparseCSC(10, 10, 0);
+
+        ImplCommonOpsWithSemiRing_DSCC.elementMult(a, b, unmasked, DSemiRings.PLUS_TIMES, null, null, null);
+        ImplCommonOpsWithSemiRing_DSCC.elementMult(a, b, masked, DSemiRings.PLUS_TIMES, mask, null, null);
+
+
+        MaskTestUtil.assertMaskedResult(unmasked, masked, mask);
+    }
+
+    private static Stream<Arguments> elementWiseAddSemiringSource() {
         return Stream.of(
                 Arguments.of(DSemiRings.PLUS_TIMES, new double[]{4, 5}),
                 Arguments.of(DSemiRings.MIN_MAX, new double[]{4, 2}),
@@ -86,7 +124,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         );
     }
 
-    private static Stream<Arguments> elementWiseMultSource() {
+    private static Stream<Arguments> elementWiseMultSemiringSource() {
         return Stream.of(
                 Arguments.of(DSemiRings.PLUS_TIMES, new double[]{12, -2}),
                 Arguments.of(DSemiRings.PLUS_MIN, new double[]{3, -2}),

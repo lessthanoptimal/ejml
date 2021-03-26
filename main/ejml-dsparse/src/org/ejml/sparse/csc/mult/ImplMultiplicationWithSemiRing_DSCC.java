@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
+import org.ejml.masks.Mask;
 import org.ejml.ops.DSemiRing;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,14 +35,15 @@ public class ImplMultiplicationWithSemiRing_DSCC {
     /**
      * Performs matrix multiplication.  C = A*B
      *
-     * @param A  Matrix
-     * @param B  Matrix
-     * @param C  Storage for results.  Data length is increased if increased if insufficient.
+     * @param A Matrix
+     * @param B Matrix
+     * @param C Storage for results.  Data length is increased if increased if insufficient.
+     * @param mask (Optional) Mask for specifying which entries should be overwritten
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
     public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                            @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
+                            @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
 
@@ -61,12 +62,17 @@ public class ImplMultiplicationWithSemiRing_DSCC {
                 continue;
             }
 
+            // as colB mask is accessed for each colB entry
+            if (mask != null) {
+                mask.setIndexColumn(colB);
+            }
+
             // C(:,j) = sum_k A(:,k)*B(k,j)
             for (int bi = idx0; bi < idx1; bi++) {
                 int rowB = B.nz_rows[bi];
                 double valB = B.nz_values[bi];  // B(k,j)  k=rowB j=colB
 
-                multAddColA(A, rowB, valB, C, colB + 1, semiRing, x, w);
+                multAddColA(A, rowB, valB, C, colB + 1, semiRing, mask, x, w);
             }
 
             // take the values in the dense vector 'x' and put them into 'C'
@@ -87,28 +93,31 @@ public class ImplMultiplicationWithSemiRing_DSCC {
      *
      * <p>NOTE: This is the same as cs_scatter() in csparse.</p>
      */
-    public static void multAddColA(DMatrixSparseCSC A, int colA,
-                                   double alpha,
-                                   DMatrixSparseCSC C, int mark,
-                                   DSemiRing semiRing,
-                                   double x[], int w[]) {
+    public static void multAddColA( DMatrixSparseCSC A, int colA,
+                                    double alpha,
+                                    DMatrixSparseCSC C, int mark,
+                                    DSemiRing semiRing,
+                                    @Nullable Mask mask, double[] x, int[] w ) {
         int idxA0 = A.col_idx[colA];
         int idxA1 = A.col_idx[colA + 1];
 
         for (int j = idxA0; j < idxA1; j++) {
             int row = A.nz_rows[j];
 
-            if (w[row] < mark) {
-                if (C.nz_length >= C.nz_rows.length) {
-                    C.growMaxLength(C.nz_length * 2 + 1, true);
-                }
+            if (mask == null || mask.isSet(row, mark - 1)) {
+                if (w[row] < mark) {
+                    if (C.nz_length >= C.nz_rows.length) {
+                        // TODO also use mask information Math.min(C.nz_length*2 + 1, mask.maxSetItemsCount())
+                        C.growMaxLength(C.nz_length*2 + 1, true);
+                    }
 
-                w[row] = mark;
-                C.nz_rows[C.nz_length] = row;
-                C.col_idx[mark] = ++C.nz_length;
-                x[row] = semiRing.mult.func.apply(A.nz_values[j], alpha);
-            } else {
-                x[row] = semiRing.add.func.apply(x[row], semiRing.mult.func.apply(A.nz_values[j], alpha));
+                    w[row] = mark;
+                    C.nz_rows[C.nz_length] = row;
+                    C.col_idx[mark] = ++C.nz_length;
+                    x[row] = semiRing.mult.func.apply(A.nz_values[j], alpha);
+                } else {
+                    x[row] = semiRing.add.func.apply(x[row], semiRing.mult.func.apply(A.nz_values[j], alpha));
+                }
             }
         }
     }
