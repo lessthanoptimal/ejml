@@ -32,6 +32,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import static org.ejml.TestDMaskUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("UnusedMethod")
@@ -85,7 +86,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
         double[] expected = {1, 1, 1, 1, 0, 0, 0};
         assertArrayEquals(found, expected);
-        assertMaskedResult(mask, found, foundMasked);
+        assertMaskedResult(found, foundMasked, mask);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -117,7 +118,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
         double[] expected = {1, 0, 0, 1, 0, 0, 1};
         assertArrayEquals(found, expected);
-        assertMaskedResult(mask, found, foundMasked);
+        assertMaskedResult(found, foundMasked, mask);
     }
 
     private static Stream<Arguments> vectorMatrixMultSources() {
@@ -159,15 +160,5 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
         );
 
         return maskBuilders.map(builder -> Arguments.of(v, builder.withNegated(true).build()));
-    }
-
-    private void assertMaskedResult( Mask mask, double[] found, double[] foundMasked ) {
-        for (int i = 0; i < found.length; i++) {
-            if (mask.isSet(i)) {
-                assertEquals(found[i], foundMasked[i]);
-            } else {
-                assertEquals(0, foundMasked[i]);
-            }
-        }
     }
 }

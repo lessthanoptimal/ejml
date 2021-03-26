@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
 
-import static org.ejml.sparse.csc.MaskTestUtil.assertMaskedResult;
+import static org.ejml.TestDMaskUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

@@ -25,9 +25,7 @@ import org.ejml.ops.DSemiRing;
 import org.ejml.ops.DSemiRings;
 import org.ejml.sparse.csc.CommonOpsWithSemiRing_DSCC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
-import org.ejml.sparse.csc.MaskTestUtil;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
-import org.ejml.sparse.csc.misc.ImplCommonOpsWithSemiRing_DSCC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +35,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import static org.ejml.TestDMaskUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings({"UnusedMethod"})
@@ -112,7 +111,7 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
         CommonOpsWithSemiRing_DSCC.mult(a, b, unmasked, DSemiRings.PLUS_TIMES, null, null, null);
         CommonOpsWithSemiRing_DSCC.mult(a, b, masked, DSemiRings.PLUS_TIMES, mask, null, null);
 
-        MaskTestUtil.assertMaskedResult(unmasked, masked, mask);
+        assertMaskedResult(unmasked, masked, mask);
     }
 
     private static Stream<Arguments> sparseVectorMatrixMultSources() {

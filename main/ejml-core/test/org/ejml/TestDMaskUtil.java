@@ -16,18 +16,15 @@
  * limitations under the License.
  */
 
-package org.ejml.sparse.csc;
+package org.ejml;
 
-import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixSparseCSC;
-import org.ejml.data.Matrix;
 import org.ejml.masks.Mask;
 
-import static org.ejml.UtilEjml.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class MaskTestUtil {
+public class TestDMaskUtil {
     public static void assertMaskedResult( DMatrixSparseCSC unmaskedResult, DMatrixSparseCSC maskedResult, Mask mask ) {
         for (int col = 0; col < unmaskedResult.numCols; col++) {
             for (int row = 0; row < unmaskedResult.numRows; row++) {
