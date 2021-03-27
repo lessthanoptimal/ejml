@@ -21,12 +21,26 @@ package org.ejml.masks;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestDMasksSparseStructural {
+
+    private static Stream<Arguments> maskAndExpectedMaxEntries() {
+        DMatrixSparseCSC maskMatrix = RandomMatrices_DSCC.rectangle(10, 10, 20, new Random(42));
+        var maskBuilder = new DMaskSparseStructural.Builder(maskMatrix);
+
+        return Stream.of(
+                Arguments.of(maskBuilder.withNegated(true).build(), 80),
+                Arguments.of(maskBuilder.withNegated(false).build(), 20)
+        );
+    }
 
     @Test
     void masks() {
@@ -63,5 +77,11 @@ public class TestDMasksSparseStructural {
                 assertEquals(negated_mask.isSet(row, col), !expected);
             }
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("maskAndExpectedMaxEntries")
+    void maxEntries( Mask mask, int expected ) {
+        assertEquals(expected, mask.maxMaskedEntries());
     }
 }

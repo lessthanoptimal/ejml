@@ -92,4 +92,11 @@ public abstract class Mask {
             ));
         }
     }
+
+    /**
+     * Pessimistic estimation of entries set in the mask
+     *
+     * @return Maximum number of set entries in mask
+     */
+    public abstract int maxMaskedEntries();
 }
