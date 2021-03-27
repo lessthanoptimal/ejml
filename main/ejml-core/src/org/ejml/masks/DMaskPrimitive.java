@@ -60,6 +60,11 @@ public class DMaskPrimitive extends Mask {
     public void setIndexColumn( int column ) {}
 
     @Override
+    public int maxMaskedEntries() {
+        return values.length;
+    }
+
+    @Override
     public boolean isSet( int index ) {
         return negated ^ (values[index] != zeroElement);
     }

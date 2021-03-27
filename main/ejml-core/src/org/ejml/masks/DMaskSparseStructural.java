@@ -80,6 +80,15 @@ public class DMaskSparseStructural extends Mask {
         }
     }
 
+    @Override
+    public int maxMaskedEntries() {
+        if (negated) {
+            return matrix.getNumCols()*matrix.getNumRows() - matrix.nz_length;
+        } else {
+            return matrix.nz_length;
+        }
+    }
+
     /**
      * Utility class to build {@link DMaskSparseStructural}
      */
