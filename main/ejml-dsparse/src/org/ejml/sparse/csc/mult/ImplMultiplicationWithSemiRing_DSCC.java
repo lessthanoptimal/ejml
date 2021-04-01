@@ -107,8 +107,11 @@ public class ImplMultiplicationWithSemiRing_DSCC {
             if (mask == null || mask.isSet(row, mark - 1)) {
                 if (w[row] < mark) {
                     if (C.nz_length >= C.nz_rows.length) {
-                        // TODO also use mask information Math.min(C.nz_length*2 + 1, mask.maxSetItemsCount())
-                        C.growMaxLength(C.nz_length*2 + 1, true);
+                        int growToLength = C.nz_length*2 + 1;
+                        if (mask != null) {
+                            growToLength = Math.min(growToLength, mask.maxMaskedEntries());
+                        }
+                        C.growMaxLength(growToLength, true);
                     }
 
                     w[row] = mark;

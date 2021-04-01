@@ -75,6 +75,40 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         assertMaskedResult(unmasked, masked, mask);
     }
 
+    @Test
+    public void useMaskForResultExpansionInAdd() {
+        var random = new Random(42);
+        var a = RandomMatrices_DSCC.rectangle(10, 10, 100, random);
+        var b = RandomMatrices_DSCC.rectangle(10, 10, 100, random);
+        int expectedResultEntries = 50;
+        var mask = DMaskFactory.builder(RandomMatrices_DSCC.rectangle(10, 10, expectedResultEntries, random), false).build();
+
+        var result = new DMatrixSparseCSC(10, 10, 1);
+
+        ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, result, DSemiRings.PLUS_TIMES, mask, null, null);
+
+        assertEquals(expectedResultEntries, result.nz_length);
+        assertEquals(50, result.nz_rows.length );
+        assertEquals(50, result.nz_values.length );
+    }
+
+    @Test
+    public void useMaskForResultExpansionInMult() {
+        var random = new Random(42);
+        var a = RandomMatrices_DSCC.rectangle(10, 10, 100, random);
+        var b = RandomMatrices_DSCC.rectangle(10, 10, 100, random);
+        int expectedResultEntries = 50;
+        var mask = DMaskFactory.builder(RandomMatrices_DSCC.rectangle(10, 10, expectedResultEntries, random), false).build();
+
+        var result = new DMatrixSparseCSC(10, 10, 1);
+
+        ImplCommonOpsWithSemiRing_DSCC.elementMult( a, b, result, DSemiRings.PLUS_TIMES, mask, null, null);
+
+        assertEquals(expectedResultEntries, result.nz_length);
+        assertEquals(50, result.nz_rows.length );
+        assertEquals(50, result.nz_values.length );
+    }
+
     @ParameterizedTest
     @MethodSource("elementWiseMultSemiringSource")
     public void elementWiseMult( DSemiRing semiRing, double[] expected) {

@@ -140,9 +140,15 @@ public class ImplCommonOpsWithSemiRing_DSCC {
         int[] w = adjust(gw, A.numRows);
         Arrays.fill(w, 0, A.numRows, -1); // fill with -1. This will be a value less than column
 
-        C.growMaxLength(Math.min(A.nz_length, B.nz_length), false);
+        int maxMaskEntries = Integer.MAX_VALUE;
+        if (mask != null) {
+            maxMaskEntries = mask.maxMaskedEntries();
+        }
+
+        C.growMaxLength(Math.min(maxMaskEntries ,Math.min(A.nz_length, B.nz_length)), false);
         C.indicesSorted = false; // Hmm I think if B is storted then C will be sorted...
         C.nz_length = 0;
+
 
         for (int col = 0; col < A.numCols; col++) {
             int idxA0 = A.col_idx[col];
@@ -150,13 +156,14 @@ public class ImplCommonOpsWithSemiRing_DSCC {
             int idxB0 = B.col_idx[col];
             int idxB1 = B.col_idx[col + 1];
 
-            // TODO: also consider mask here for size estimation (add Mask::maxSetValues(col))
             // compute the maximum number of elements that there can be in this row
             int maxInRow = Math.min(idxA1 - idxA0, idxB1 - idxB0);
+            int expectedResultSize = C.nz_length + maxInRow;
 
             // make sure there are enough non-zero elements in C
-            if (C.nz_length + maxInRow > C.nz_values.length)
-                C.growMaxLength(C.nz_values.length + maxInRow, true);
+            if (expectedResultSize > C.nz_values.length) {
+                C.growMaxLength(Math.min(maxMaskEntries, expectedResultSize), true);
+            }
 
             // update the structure of C
             C.col_idx[col] = C.nz_length;
