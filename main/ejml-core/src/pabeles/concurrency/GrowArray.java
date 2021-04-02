@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -90,6 +90,14 @@ public class GrowArray<D> {
         D ret = array[size++];
         reset.reset(ret);
         return ret;
+    }
+
+    /**
+     * Replaces the internal array with one of length zero.
+     */
+    public void releaseInternalArray() {
+        array = createArray(0);
+        size = 0;
     }
 
     public D get( int index ) {
