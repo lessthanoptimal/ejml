@@ -31,6 +31,7 @@ public class GrowArray<D> {
     ConcurrencyOps.NewInstance<D> factory;
     ConcurrencyOps.Reset<D> reset;
 
+    Class<D> elementType;
     D[] array;
     int size;
 
@@ -39,16 +40,23 @@ public class GrowArray<D> {
     }
 
     public GrowArray( ConcurrencyOps.NewInstance<D> factory, ConcurrencyOps.Reset<D> reset ) {
+        this(factory, reset, (Class)factory.newInstance().getClass());
+    }
+
+    /**
+     * Specifies the internal array type. Negating the need to create an initial instance to determine the type
+     */
+    public GrowArray( ConcurrencyOps.NewInstance<D> factory, ConcurrencyOps.Reset<D> reset, Class<D> type ) {
         this.factory = factory;
         this.reset = reset;
-
+        this.elementType = type;
         array = createArray(0);
         size = 0;
     }
 
     @NotNull
     private D[] createArray( int length ) {
-        return (D[])Array.newInstance(factory.newInstance().getClass(), length);
+        return (D[])Array.newInstance(elementType, length);
     }
 
     public void reset() {
