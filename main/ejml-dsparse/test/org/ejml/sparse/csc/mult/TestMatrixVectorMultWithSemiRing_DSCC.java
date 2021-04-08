@@ -126,13 +126,10 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
                 Arguments.of("OR, AND", DSemiRings.OR_AND, new double[]{1, 0, 1, 0, 0, 0, 0}),
                 Arguments.of("MIN, PLUS", DSemiRings.MIN_PLUS,
                         new double[]{0.7, Double.MAX_VALUE, 0.9, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE}),
-// This only works on sparse input vectors (here resulting in 1.0 instead of Double.MIN_Value as max(1.0, Double.MIN_VALUE) = 1.0)
-//                Arguments.of("MAX, PLUS", PreDefinedDoubleSemiRings.MAX_PLUS,
-//                        new double[]{0.7, Double.MIN_VALUE, 1.1, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE}),
                 Arguments.of("MIN, TIMES", DSemiRings.MIN_TIMES,
                         new double[]{0.1, Double.MAX_VALUE, 0.2, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE}),
                 Arguments.of("MAX, MIN", DSemiRings.MAX_MIN,
-                        new double[]{0.2, Double.MIN_VALUE, 0.5, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE})
+                        new double[]{0.2, -Double.MAX_VALUE, 0.5, -Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE})
         );
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.ops;
 
 /**
@@ -32,5 +31,5 @@ public final class DMonoids {
     public static final DMonoid TIMES = new DMonoid(1, ( a, b ) -> a*b);
 
     public final static DMonoid MIN = new DMonoid(Double.MAX_VALUE, ( a, b ) -> (a <= b) ? a : b);
-    public final static DMonoid MAX = new DMonoid(Double.MIN_VALUE, ( a, b ) -> (a >= b) ? a : b);
+    public final static DMonoid MAX = new DMonoid(-Double.MAX_VALUE, ( a, b ) -> (a >= b) ? a : b);
 }
