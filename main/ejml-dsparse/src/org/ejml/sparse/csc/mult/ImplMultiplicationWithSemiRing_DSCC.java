@@ -42,8 +42,8 @@ public class ImplMultiplicationWithSemiRing_DSCC {
      * @param gw (Optional) Storage for internal workspace.  Can be null.
      * @param gx (Optional) Storage for internal workspace.  Can be null.
      */
-    public static void mult(DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
-                            @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
+    public static void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
+                             @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
         double[] x = adjust(gx, A.numRows);
         int[] w = adjust(gw, A.numRows, A.numRows);
 
@@ -85,7 +85,6 @@ public class ImplMultiplicationWithSemiRing_DSCC {
 
             idx0 = idx1;
         }
-
     }
 
     /**
@@ -125,12 +124,12 @@ public class ImplMultiplicationWithSemiRing_DSCC {
         }
     }
 
-    public static void mult(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
         C.fill(semiRing.add.id);
         multAdd(A, B, C, semiRing);
     }
 
-    public static void multAdd(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
         // C(i,j) = sum_k A(i,k) * B(k,j)
         for (int k = 0; k < A.numCols; k++) {
             int idx0 = A.col_idx[k];
@@ -140,8 +139,8 @@ public class ImplMultiplicationWithSemiRing_DSCC {
                 int i = A.nz_rows[indexA];
                 double valueA = A.nz_values[indexA];
 
-                int indexB = k * B.numCols;
-                int indexC = i * C.numCols;
+                int indexB = k*B.numCols;
+                int indexC = i*C.numCols;
                 int end = indexB + B.numCols;
 
 //                for (int j = 0; j < B.numCols; j++) {
@@ -152,7 +151,7 @@ public class ImplMultiplicationWithSemiRing_DSCC {
         }
     }
 
-    public static void multTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
 
         // C(i,j) = sum_k A(k,i) * B(k,j)
         for (int j = 0; j < B.numCols; j++) {
@@ -164,15 +163,15 @@ public class ImplMultiplicationWithSemiRing_DSCC {
                 double sum = semiRing.add.id;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
                     int rowK = A.nz_rows[indexA];
-                    sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(A.nz_values[indexA], B.data[rowK * B.numCols + j]));
+                    sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(A.nz_values[indexA], B.data[rowK*B.numCols + j]));
                 }
 
-                C.data[i * C.numCols + j] = sum;
+                C.data[i*C.numCols + j] = sum;
             }
         }
     }
 
-    public static void multAddTransA(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
         for (int j = 0; j < B.numCols; j++) {
 
@@ -183,20 +182,20 @@ public class ImplMultiplicationWithSemiRing_DSCC {
                 double sum = semiRing.add.id;
                 for (int indexA = idx0; indexA < idx1; indexA++) {
                     int rowK = A.nz_rows[indexA];
-                    sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(A.nz_values[indexA], B.data[rowK * B.numCols + j]));
+                    sum = semiRing.add.func.apply(sum, semiRing.mult.func.apply(A.nz_values[indexA], B.data[rowK*B.numCols + j]));
                 }
 
-                C.data[i * C.numCols + j] = semiRing.add.func.apply(C.data[i * C.numCols + j], sum);
+                C.data[i*C.numCols + j] = semiRing.add.func.apply(C.data[i*C.numCols + j], sum);
             }
         }
     }
 
-    public static void multTransB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
         C.zero();
         multAddTransB(A, B, C, semiRing);
     }
 
-    public static void multAddTransB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
 
         // C(i,j) = sum_k A(i,k) * B(j,k)
         for (int k = 0; k < A.numCols; k++) {
@@ -205,11 +204,11 @@ public class ImplMultiplicationWithSemiRing_DSCC {
             for (int indexA = idx0; indexA < idx1; indexA++) {
                 for (int j = 0; j < B.numRows; j++) {
                     int i = A.nz_rows[indexA];
-                    C.data[i * C.numCols + j] = semiRing.add.func.apply(
-                            C.data[i * C.numCols + j],
+                    C.data[i*C.numCols + j] = semiRing.add.func.apply(
+                            C.data[i*C.numCols + j],
                             semiRing.mult.func.apply(
                                     A.nz_values[indexA],
-                                    B.data[j * B.numCols + k]
+                                    B.data[j*B.numCols + k]
                             )
                     );
                 }
@@ -217,12 +216,12 @@ public class ImplMultiplicationWithSemiRing_DSCC {
         }
     }
 
-    public static void multTransAB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
         C.zero();
         multAddTransAB(A, B, C, semiRing);
     }
 
-    public static void multAddTransAB(DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing) {
+    public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DSemiRing semiRing ) {
         // C(i,j) = sum_k A(k,i) * B(j,K)
         for (int i = 0; i < A.numCols; i++) {
             int idx0 = A.col_idx[i];
@@ -230,12 +229,12 @@ public class ImplMultiplicationWithSemiRing_DSCC {
 
             for (int indexA = idx0; indexA < idx1; indexA++) {
                 for (int j = 0; j < B.numRows; j++) {
-                    int indexB = j * B.numCols;
+                    int indexB = j*B.numCols;
 
                     int k = A.nz_rows[indexA];
 
-                    C.data[i * C.numCols + j] = semiRing.add.func.apply(
-                            C.data[i * C.numCols + j],
+                    C.data[i*C.numCols + j] = semiRing.add.func.apply(
+                            C.data[i*C.numCols + j],
                             semiRing.mult.func.apply(
                                     A.nz_values[indexA],
                                     B.data[indexB + k]

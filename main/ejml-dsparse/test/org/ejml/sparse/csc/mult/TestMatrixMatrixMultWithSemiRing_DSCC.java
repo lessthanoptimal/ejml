@@ -58,12 +58,11 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
         inputMatrix.set(6, 2, 1);
         inputMatrix.set(6, 3, 1);
         inputMatrix.set(6, 4, 1);
-
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseVectorMatrixMultSources")
-    void mult_v_A( String desc, DSemiRing semiRing, double[] expected) {
+    void mult_v_A( String desc, DSemiRing semiRing, double[] expected ) {
         // graphblas == following outgoing edges of source nodes
         DMatrixSparseCSC vector = new DMatrixSparseCSC(1, 7);
         vector.set(0, 3, 0.5);
@@ -75,10 +74,9 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
         assertEquals(expected[1], found.get(0, 2));
     }
 
-
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")
-    void elementMult(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+    void elementMult( String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix ) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
         DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.elementMult(matrix, otherMatrix, null, semiRing, null, null, null);
@@ -89,10 +87,10 @@ public class TestMatrixMatrixMultWithSemiRing_DSCC {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("sparseMatrixSources")
-    void add(String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix) {
+    void add( String desc, DMatrixSparseCSC matrix, DMatrixSparseCSC otherMatrix ) {
         DSemiRing semiRing = DSemiRings.PLUS_TIMES;
 
-        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.add(1, matrix, 1, otherMatrix, null, semiRing, null,null, null);
+        DMatrixSparseCSC found = CommonOpsWithSemiRing_DSCC.add(1, matrix, 1, otherMatrix, null, semiRing, null, null, null);
         DMatrixSparseCSC expected = CommonOps_DSCC.add(1, matrix, 1, otherMatrix, null, null, null);
 
         EjmlUnitTests.assertEquals(expected, found);

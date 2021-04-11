@@ -40,7 +40,7 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("elementWiseAddSemiringSource")
-    public void add( DSemiRing semiRing, double[] expected) {
+    public void add( DSemiRing semiRing, double[] expected ) {
         // == graph unions
         DMatrixSparseCSC a = new DMatrixSparseCSC(3, 3);
         DMatrixSparseCSC b = a.copy();
@@ -88,8 +88,8 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
         ImplCommonOpsWithSemiRing_DSCC.add(1, a, 1, b, result, DSemiRings.PLUS_TIMES, mask, null, null);
 
         assertEquals(expectedResultEntries, result.nz_length);
-        assertEquals(50, result.nz_rows.length );
-        assertEquals(50, result.nz_values.length );
+        assertEquals(50, result.nz_rows.length);
+        assertEquals(50, result.nz_values.length);
     }
 
     @Test
@@ -102,16 +102,16 @@ public class TestImplCommonOpsWithSemiRing_DSCC {
 
         var result = new DMatrixSparseCSC(10, 10, 1);
 
-        ImplCommonOpsWithSemiRing_DSCC.elementMult( a, b, result, DSemiRings.PLUS_TIMES, mask, null, null);
+        ImplCommonOpsWithSemiRing_DSCC.elementMult(a, b, result, DSemiRings.PLUS_TIMES, mask, null, null);
 
         assertEquals(expectedResultEntries, result.nz_length);
-        assertEquals(50, result.nz_rows.length );
-        assertEquals(50, result.nz_values.length );
+        assertEquals(50, result.nz_rows.length);
+        assertEquals(50, result.nz_values.length);
     }
 
     @ParameterizedTest
     @MethodSource("elementWiseMultSemiringSource")
-    public void elementWiseMult( DSemiRing semiRing, double[] expected) {
+    public void elementWiseMult( DSemiRing semiRing, double[] expected ) {
         // == graph intersection
         DMatrixSparseCSC matrix = new DMatrixSparseCSC(3, 3, 4);
         matrix.set(1, 1, 4);

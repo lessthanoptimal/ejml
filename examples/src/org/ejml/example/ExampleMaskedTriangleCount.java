@@ -37,7 +37,7 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
  * @author Florentin Doerre
  */
 public class ExampleMaskedTriangleCount {
-    public static void main(String[] args) {
+    public static void main( String[] args ) {
         // For the example we will be using the following graph:
         // (0)--(1)--(2)--(0), (2)--(3)--(4)--(2), (5)
         var adjacencyMatrix = new DMatrixSparseCSC(6, 6, 24);
@@ -60,7 +60,7 @@ public class ExampleMaskedTriangleCount {
         // To compute the triangles per vertex we calculate the sum per each row.
         // For the correct count, we need to divide the count by 2 as each triangle was counted twice (a--b--c, and a--c--b)
         var trianglesPerVertex = CommonOps_DSCC.reduceRowWise(triangleMatrix, 0, Double::sum, null);
-        CommonOps_DDRM.apply(trianglesPerVertex, v -> v / 2);
+        CommonOps_DDRM.apply(trianglesPerVertex, v -> v/2);
 
         System.out.println("Triangles including vertex 0 " + trianglesPerVertex.get(0));
         System.out.println("Triangles including vertex 2 " + trianglesPerVertex.get(2));
@@ -68,5 +68,4 @@ public class ExampleMaskedTriangleCount {
 
         // Note: To avoid counting each triangle twice, the lower triangle over the adjacency matrix can be used TRI<A> = A * L
     }
-
 }
