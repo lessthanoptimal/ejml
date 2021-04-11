@@ -36,7 +36,7 @@ import org.ejml.sparse.csc.CommonOpsWithSemiRing_DSCC;
 public class ExampleGraphPaths {
     private static final int NODE_COUNT = 4;
 
-    public static void main(String[] args) {
+    public static void main( String[] args ) {
         DMatrixSparseCSC adjacencyMatrix = new DMatrixSparseCSC(NODE_COUNT, 4);
 
         // For the example we will be using the following graph:
@@ -70,7 +70,7 @@ public class ExampleGraphPaths {
 
         // Find the number of path the nodes can be reached with
         CommonOpsWithSemiRing_DSCC.mult(startNodes, adjacencyMatrix, outputVector, plus_land, null, null, null);
-        System.out.println("The number of start-nodes leading to node 2 is " + (int) outputVector.get(0, 2));
+        System.out.println("The number of start-nodes leading to node 2 is " + (int)outputVector.get(0, 2));
 
         // Find the path with the minimal cost (direct connection from one of the specified starting nodes)
         // the calculated cost equals the cost specified in the relationship (as both startNodes have a weight of 1)

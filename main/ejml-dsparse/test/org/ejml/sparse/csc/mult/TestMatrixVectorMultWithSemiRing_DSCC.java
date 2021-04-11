@@ -75,7 +75,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("maskedInputSources")
-    void mult_v_A_masked(double[] vector, Mask mask) {
+    void mult_v_A_masked( double[] vector, Mask mask ) {
         var semiRing = DSemiRings.OR_AND;
 
         double[] found = new double[7];
@@ -107,7 +107,7 @@ public class TestMatrixVectorMultWithSemiRing_DSCC {
 
     @ParameterizedTest
     @MethodSource("maskedInputSources")
-    void mult_A_v_masked(double[] vector, Mask mask) {
+    void mult_A_v_masked( double[] vector, Mask mask ) {
         var semiRing = DSemiRings.OR_AND;
 
         double[] found = new double[7];

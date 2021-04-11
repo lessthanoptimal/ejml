@@ -145,7 +145,7 @@ public class ImplCommonOpsWithSemiRing_DSCC {
             maxMaskEntries = mask.maxMaskedEntries();
         }
 
-        C.growMaxLength(Math.min(maxMaskEntries ,Math.min(A.nz_length, B.nz_length)), false);
+        C.growMaxLength(Math.min(maxMaskEntries, Math.min(A.nz_length, B.nz_length)), false);
         C.indicesSorted = false; // Hmm I think if B is storted then C will be sorted...
         C.nz_length = 0;
 
