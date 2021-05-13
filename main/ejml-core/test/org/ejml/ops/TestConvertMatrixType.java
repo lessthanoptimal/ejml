@@ -42,9 +42,6 @@ public class TestConvertMatrixType {
             Matrix matA = a.create(4,6);
 
             for( MatrixType b : types ) {
-                if( a == b )
-                    continue;
-
                 // can't convert complex to real
                 if( !a.isReal() && b.isReal() )
                     continue;
