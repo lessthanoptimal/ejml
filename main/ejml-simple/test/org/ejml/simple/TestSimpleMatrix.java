@@ -129,6 +129,34 @@ public class TestSimpleMatrix {
     }
 
     @Test
+    public void convertToSparse() {
+        var data = new double[]{0, 1, 0, 1};
+        var simpleMatrix = new SimpleMatrix(2, 2, true, data);
+        assertTrue(simpleMatrix.getType().isDense());
+        var denseMatrix = simpleMatrix.mat.copy();
+
+        simpleMatrix.convertToSparse();
+
+        assertFalse(simpleMatrix.getType().isDense());
+        EjmlUnitTests.assertEquals(denseMatrix, simpleMatrix.mat);
+    }
+
+    @Test
+    public void transformMatrix() {
+        var data = new float[]{0, 1, 0, 1};
+        var s = new SimpleMatrix(2, 2, true, data);
+
+        var sparseDMatrix = s.getDSCC();
+        var sparseFMatrix = s.getFSCC();
+        var denseDMatrix = s.getDDRM();
+        var denseFMatrix = s.getFDRM();
+
+        EjmlUnitTests.assertEquals(sparseDMatrix, denseDMatrix);
+        EjmlUnitTests.assertEquals(sparseDMatrix, sparseFMatrix);
+        EjmlUnitTests.assertEquals(sparseDMatrix, denseFMatrix);
+    }
+
+    @Test
     public void transpose() {
         SimpleMatrix orig = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix tran = orig.transpose();

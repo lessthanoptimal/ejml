@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml;
 
 import org.ejml.data.*;
@@ -108,10 +107,14 @@ public class EjmlUnitTests {
     }
 
     public static void assertEquals( Matrix A, Matrix B ) {
-        if (A instanceof DMatrix) {
+        if (A instanceof DMatrix && B instanceof DMatrix) {
             assertEquals((DMatrix)A, (DMatrix)B, UtilEjml.TEST_F64);
-        } else {
+        } else if (A instanceof FMatrix && B instanceof FMatrix) {
             assertEquals((FMatrix)A, (FMatrix)B, UtilEjml.TEST_F32);
+        } else if (A instanceof FMatrix) {
+            assertEquals((FMatrix)A, (DMatrix)B, UtilEjml.TEST_F32);
+        } else {
+            assertEquals((FMatrix)B, (DMatrix)A, UtilEjml.TEST_F32);
         }
     }
 
@@ -230,6 +233,23 @@ public class EjmlUnitTests {
                 assertTrue(!Float.isInfinite(valA) && !Float.isInfinite(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
 
                 float error = Math.abs(valA - valB);
+                assertTrue(error <= tol, "At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error + " tol = " + tol);
+            }
+        }
+    }
+
+    private static void assertEquals( FMatrix A, DMatrix B, float tol ) {
+        assertShape(A, B);
+
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
+                float valA = A.get(i, j);
+                double valB = B.get(i, j);
+
+                assertTrue(!Float.isNaN(valA) && !Double.isNaN(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
+                assertTrue(!Float.isInfinite(valA) && !Double.isInfinite(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
+
+                var error = Math.abs(valA - valB);
                 assertTrue(error <= tol, "At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error + " tol = " + tol);
             }
         }

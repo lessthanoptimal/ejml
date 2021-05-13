@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple;
 
 import org.ejml.UtilEjml;
@@ -23,6 +22,7 @@ import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.equation.Equation;
+import org.ejml.ops.ConvertMatrixType;
 import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.FConvertMatrixStruct;
 import org.ejml.ops.MatrixIO;
@@ -95,27 +95,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     public DMatrixRMaj getDDRM() {
-        return (DMatrixRMaj)mat;
+        return (DMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.DDRM);
     }
 
     public FMatrixRMaj getFDRM() {
-        return (FMatrixRMaj)mat;
+        return (FMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.FDRM);
     }
 
     public ZMatrixRMaj getZDRM() {
-        return (ZMatrixRMaj)mat;
+        return (ZMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.ZDRM);
     }
 
     public CMatrixRMaj getCDRM() {
-        return (CMatrixRMaj)mat;
+        return (CMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.CDRM);
     }
 
     public DMatrixSparseCSC getDSCC() {
-        return (DMatrixSparseCSC)mat;
+        return (DMatrixSparseCSC) ConvertMatrixType.convert(mat, MatrixType.DSCC);
     }
 
     public FMatrixSparseCSC getFSCC() {
-        return (FMatrixSparseCSC)mat;
+        return (FMatrixSparseCSC) ConvertMatrixType.convert(mat, MatrixType.FSCC);
     }
 
     protected static SimpleOperations lookupOps( MatrixType type ) {
