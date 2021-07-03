@@ -51,6 +51,9 @@ public class RuntimeRegressionSummary {
     /** Number of files which were compared */
     int countFiles = 0;
 
+    /** Directory results are saved in */
+    String directoryName = "unknown";
+
     // Contains all the errors for computing summary metrics
     private final DGrowArray allErrors = new DGrowArray();
 
@@ -128,6 +131,7 @@ public class RuntimeRegressionSummary {
         summary += "Machine:  " + SettingsLocal.machineName + " , " +RuntimeRegressionUtils.getHostName() + "\n";
         summary += String.format("Duration: %.2f hrs\n", (processingTimeMS/(1000.0*60.0*60.0)));
         summary += "Date:     " + formatDate(new Date()) + "\n";
+        summary += "Location: " + directoryName + "\n";
         summary += "Version:  " + EjmlVersion.VERSION + "\n";
         summary += "SHA:      " + EjmlVersion.GIT_SHA + "\n";
         summary += "GIT_DATE: " + EjmlVersion.GIT_DATE + "\n";

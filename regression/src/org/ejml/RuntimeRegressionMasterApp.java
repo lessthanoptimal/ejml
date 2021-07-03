@@ -258,6 +258,7 @@ public class RuntimeRegressionMasterApp {
         var summary = new RuntimeRegressionSummary();
         summary.significantFractionTol = significantFractionTol;
         summary.processingTimeMS = elapsedTime;
+        summary.directoryName = currentDirectory.getName();
         summary.process(current, baseline);
 
         // Log results
@@ -272,11 +273,9 @@ public class RuntimeRegressionMasterApp {
             email.send(subject, text);
         }
 
-        try {
+        try (var writer = new PrintWriter(new File(currentDirectory, SUMMARY_FILE))) {
             System.out.println("Saving to " + new File(currentDirectory, SUMMARY_FILE).getAbsolutePath());
-            var writer = new PrintWriter(new File(currentDirectory, SUMMARY_FILE));
             writer.println(text);
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace(logStderr);
             logStderr.flush();
