@@ -25,6 +25,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
+import static org.ejml.RuntimeRegressionMasterApp.formatDate;
+
 /**
  * Utility functions for dealing with JMh log results.
  *
@@ -33,14 +35,34 @@ import java.util.*;
 public class RuntimeRegressionUtils {
 
     /**
+     * Short summary of system and EJML info
+     */
+    public static String createInfoSummaryText() {
+        String text = "";
+        text += "EJML Runtime Regression Baseline\n";
+        text += "\n";
+        text += "Hostname: " + RuntimeRegressionUtils.getHostName() + "\n";
+        text += "Machine Name:  " + SettingsLocal.machineName + "\n";
+        text += "Date:     " + formatDate(new Date()) + "\n";
+        text += "EJML Version:  " + EjmlVersion.VERSION + "\n";
+        text += "EJML SHA:      " + EjmlVersion.GIT_SHA + "\n";
+        text += "EJML GIT_DATE: " + EjmlVersion.GIT_DATE + "\n";
+        return text;
+    }
+
+    /**
      * Adds useful information about the system it's being run on. Some of this will be system specific.
      */
     public static void saveSystemInfo( File directory, PrintStream err ) {
         try {
             PrintStream out = new PrintStream(new File(directory, "SystemInfo.txt"));
 
-            out.println("Hostname: " + getHostName());
-            out.println("Device Name: " + SettingsLocal.machineName);
+            out.println("Hostname:      " + getHostName());
+            out.println("Machine Name:  " + SettingsLocal.machineName);
+            out.println("Date:          " + formatDate(new Date()));
+            out.println("EJML Version:  " + EjmlVersion.VERSION);
+            out.println("EJML SHA:      " + EjmlVersion.GIT_SHA);
+            out.println("EJML GIT_DATE: " + EjmlVersion.GIT_DATE);
 
             // This won't work on every system
             try {

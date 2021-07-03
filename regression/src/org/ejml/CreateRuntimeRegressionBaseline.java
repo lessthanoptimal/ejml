@@ -20,7 +20,10 @@ package org.ejml;
 
 import lombok.Getter;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,9 +76,7 @@ public class CreateRuntimeRegressionBaseline {
             logTiming = new PrintStream(new FileOutputStream(new File(homeDirectory, "time.txt")));
 
             // Save info about what is being computed
-            try (PrintWriter out = new PrintWriter(new File(homeDirectory, "baseline_info.txt"))) {
-                out.print(createInfoText());
-            }
+            RuntimeRegressionUtils.saveSystemInfo(homeDirectory, System.out);
 
             long time0 = System.currentTimeMillis();
             // Compute all the results. This will take a while
@@ -137,18 +138,5 @@ public class CreateRuntimeRegressionBaseline {
                 }
             }
         }
-    }
-
-    public String createInfoText() {
-        String text = "";
-        text += "EJML Runtime Regression Baseline\n";
-        text += "\n";
-        text += "Machine:  " + SettingsLocal.machineName + "\n";
-        text += "Hostname: " + RuntimeRegressionUtils.getHostName() + "\n";
-        text += "Date:     " + formatDate(new Date()) + "\n";
-        text += "Version:  " + EjmlVersion.VERSION + "\n";
-        text += "SHA:      " + EjmlVersion.GIT_SHA + "\n";
-        text += "GIT_DATE: " + EjmlVersion.GIT_DATE + "\n";
-        return text;
     }
 }

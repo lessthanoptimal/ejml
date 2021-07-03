@@ -192,9 +192,6 @@ public class RuntimeRegressionMasterApp {
         // Save start time
         long time0 = System.currentTimeMillis();
 
-        // Save system information
-        RuntimeRegressionUtils.saveSystemInfo(baselineDir, logStderr);
-
         // Pass in user configurations
         var createBaseline = new CreateRuntimeRegressionBaseline();
         createBaseline.combineOnly = update;
@@ -213,7 +210,8 @@ public class RuntimeRegressionMasterApp {
 
         if (email.emailDestination != null) {
             email.send("EJML Runtime Regression: Initialized",
-                    createBaseline.createInfoText() + String.format("\n\nElapsed Time %.2f hrs\n\n", hrs));
+                    RuntimeRegressionUtils.createInfoSummaryText() +
+                            String.format("\n\nElapsed Time %.2f hrs\n\n", hrs));
         }
     }
 
