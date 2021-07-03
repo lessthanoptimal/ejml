@@ -41,9 +41,9 @@ public class RuntimeRegressionUtils {
         String text = "";
         text += "EJML Runtime Regression Baseline\n";
         text += "\n";
-        text += "Hostname: " + RuntimeRegressionUtils.getHostName() + "\n";
+        text += "Hostname:      " + RuntimeRegressionUtils.getHostName() + "\n";
         text += "Machine Name:  " + SettingsLocal.machineName + "\n";
-        text += "Date:     " + formatDate(new Date()) + "\n";
+        text += "Date:          " + formatDate(new Date()) + "\n";
         text += "EJML Version:  " + EjmlVersion.VERSION + "\n";
         text += "EJML SHA:      " + EjmlVersion.GIT_SHA + "\n";
         text += "EJML GIT_DATE: " + EjmlVersion.GIT_DATE + "\n";
