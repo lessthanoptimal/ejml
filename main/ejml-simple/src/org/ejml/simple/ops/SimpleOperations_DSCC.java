@@ -154,7 +154,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void plus( DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
-        if (EjmlConcurrency.USE_CONCURRENT) {
+        if (EjmlConcurrency.useConcurrent(A)) {
             CommonOps_MT_DSCC.add(1, A, (double)beta, b, output, workspaceMT);
         } else {
             CommonOps_DSCC.add(1, A, (double)beta, b, output, gw, gx);
@@ -163,7 +163,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void plus( /**/double alpha, DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
-        if (EjmlConcurrency.USE_CONCURRENT) {
+        if (EjmlConcurrency.useConcurrent(A)) {
             CommonOps_MT_DSCC.add((double)alpha, A, (double)beta, b, output, workspaceMT);
         } else {
             CommonOps_DSCC.add((double)alpha, A, (double)beta, b, output, gw, gx);
