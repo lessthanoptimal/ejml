@@ -28,6 +28,7 @@ public class ConvertMatrixType {
     /**
      * Converts a matrix of one data type into another data type. If no conversion is known then an exception
      * is thrown.
+     * The result is always a new matrix instance, even if the matrix already has the desired type.
      *
      * @return The converted matrix
      */
@@ -35,13 +36,12 @@ public class ConvertMatrixType {
     public static Matrix convert( Matrix matrix, MatrixType desired ) {
         Matrix m = null;
 
-        if (matrix.getType().equals(desired)) {
-            return matrix;
-        }
-
         switch (matrix.getType()) {
             case DDRM: {
                 switch (desired) {
+                    case DDRM: {
+                        m = matrix.copy();
+                    } break;
                     case FDRM: {
                         m = new FMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
                         ConvertMatrixData.convert((DMatrixRMaj)matrix, (FMatrixRMaj)m);
@@ -72,6 +72,9 @@ public class ConvertMatrixType {
 
             case FDRM: {
                 switch (desired) {
+                    case FDRM: {
+                        m = matrix.copy();
+                    } break;
                     case DDRM: {
                         m = new DMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
                         ConvertMatrixData.convert((FMatrixRMaj)matrix, (DMatrixRMaj)m);
@@ -102,6 +105,9 @@ public class ConvertMatrixType {
 
             case ZDRM: {
                 switch (desired) {
+                    case ZDRM: {
+                        m = matrix.copy();
+                    } break;
                     case CDRM: {
                         m = new CMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
                         ConvertMatrixData.convert((ZMatrixRMaj)matrix, (CMatrixRMaj)m);
@@ -112,6 +118,9 @@ public class ConvertMatrixType {
 
             case CDRM: {
                 switch (desired) {
+                    case CDRM: {
+                        m = matrix.copy();
+                    } break;
                     case ZDRM: {
                         m = new ZMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
                         ConvertMatrixData.convert((CMatrixRMaj)matrix, (ZMatrixRMaj)m);
@@ -122,6 +131,9 @@ public class ConvertMatrixType {
 
             case DSCC: {
                 switch (desired) {
+                    case DSCC: {
+                        m = matrix.copy();
+                    } break;
                     case DDRM: {
                         m = new DMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
                         DConvertMatrixStruct.convert((DMatrixSparseCSC)matrix, (DMatrixRMaj)m);
@@ -152,6 +164,9 @@ public class ConvertMatrixType {
 
             case FSCC: {
                 switch (desired) {
+                    case FSCC: {
+                        m = matrix.copy();
+                    } break;
                     case DDRM: {
                         m = new DMatrixRMaj(matrix.getNumRows(), matrix.getNumCols());
                         ConvertMatrixData.convert((FMatrixSparseCSC)matrix, (DMatrixRMaj)m);
