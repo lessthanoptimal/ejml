@@ -95,27 +95,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     public DMatrixRMaj getDDRM() {
-        return (DMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.DDRM);
+        return (mat.getType() == MatrixType.DDRM) ? (DMatrixRMaj)mat : (DMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.DDRM);
     }
 
     public FMatrixRMaj getFDRM() {
-        return (FMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.FDRM);
+        return (mat.getType() == MatrixType.FDRM) ? (FMatrixRMaj)mat : (FMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.FDRM);
     }
 
     public ZMatrixRMaj getZDRM() {
-        return (ZMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.ZDRM);
+        return (mat.getType() == MatrixType.ZDRM) ? (ZMatrixRMaj)mat : (ZMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.ZDRM);
     }
 
     public CMatrixRMaj getCDRM() {
-        return (CMatrixRMaj) ConvertMatrixType.convert(mat, MatrixType.CDRM);
+        return (mat.getType() == MatrixType.CDRM) ? (CMatrixRMaj)mat : (CMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.CDRM);
     }
 
     public DMatrixSparseCSC getDSCC() {
-        return (DMatrixSparseCSC) ConvertMatrixType.convert(mat, MatrixType.DSCC);
+        return (mat.getType() == MatrixType.DSCC) ? (DMatrixSparseCSC)mat : (DMatrixSparseCSC)ConvertMatrixType.convert(mat, MatrixType.DSCC);
     }
 
     public FMatrixSparseCSC getFSCC() {
-        return (FMatrixSparseCSC) ConvertMatrixType.convert(mat, MatrixType.FSCC);
+        return (mat.getType() == MatrixType.FSCC) ? (FMatrixSparseCSC)mat : (FMatrixSparseCSC)ConvertMatrixType.convert(mat, MatrixType.FSCC);
     }
 
     protected static SimpleOperations lookupOps( MatrixType type ) {

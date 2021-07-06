@@ -23,8 +23,7 @@ import org.ejml.data.MatrixType;
 import org.junit.jupiter.api.Test;
 
 import static org.ejml.data.MatrixType.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
@@ -36,25 +35,22 @@ public class TestConvertMatrixType {
      */
     @Test
     public void basicCheckAll() {
-        MatrixType types[] = new MatrixType[]{DDRM,FDRM,ZDRM,CDRM,DSCC,FSCC};
+        MatrixType[] types = new MatrixType[]{DDRM,FDRM,ZDRM,CDRM,DSCC,FSCC};
 
-        for( MatrixType a : types ) {
-            Matrix matA = a.create(4,6);
+        for (MatrixType a : types) {
+            Matrix matA = a.create(4, 6);
 
-            for( MatrixType b : types ) {
+            for (MatrixType b : types) {
                 // can't convert complex to real
-                if( !a.isReal() && b.isReal() )
+                if (!a.isReal() && b.isReal())
                     continue;
 
-                Matrix matB = ConvertMatrixType.convert(matA,b);
+                Matrix matB = ConvertMatrixType.convert(matA, b);
 
-                if( matB == null ) {
-                    System.out.println(a+" -> "+b);
-                    fail("returned null");
-                }
-
-                assertEquals(matA.getNumRows(),matB.getNumRows());
-                assertEquals(matA.getNumCols(),matB.getNumCols());
+                assertNotNull(matB);
+                assertNotSame(matA, matB);
+                assertEquals(matA.getNumRows(), matB.getNumRows());
+                assertEquals(matA.getNumCols(), matB.getNumCols());
             }
         }
     }
