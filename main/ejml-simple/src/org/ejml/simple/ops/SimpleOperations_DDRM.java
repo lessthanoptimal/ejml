@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,10 +18,12 @@
 
 package org.ejml.simple.ops;
 
+import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.Matrix;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.CommonOps_MT_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
@@ -68,17 +70,29 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
 
     @Override
     public void transpose( DMatrixRMaj input, DMatrixRMaj output ) {
-        CommonOps_DDRM.transpose(input, output);
+        if (EjmlConcurrency.useConcurrent(input)) {
+            CommonOps_MT_DDRM.transpose(input, output);
+        } else {
+            CommonOps_DDRM.transpose(input, output);
+        }
     }
 
     @Override
     public void mult( DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output ) {
-        CommonOps_DDRM.mult(A, B, output);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DDRM.mult(A, B, output);
+        } else {
+            CommonOps_DDRM.mult(A, B, output);
+        }
     }
 
     @Override
     public void multTransA( DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output ) {
-        CommonOps_DDRM.multTransA(A, B, output);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DDRM.multTransA(A, B, output);
+        } else {
+            CommonOps_DDRM.multTransA(A, B, output);
+        }
     }
 
     @Override
