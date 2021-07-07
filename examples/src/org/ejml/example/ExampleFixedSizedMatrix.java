@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,16 +33,15 @@ import org.ejml.simple.SimpleMatrix;
  * @author Peter Abeles
  */
 public class ExampleFixedSizedMatrix {
-
-    public static void main( String args[] ) {
+    public static void main( String[] args ) {
         // declare the matrix
         DMatrix3x3 a = new DMatrix3x3();
         DMatrix3x3 b = new DMatrix3x3();
 
         // Can assign values the usual way
-        for( int i = 0; i < 3; i++ ) {
-            for( int j = 0; j < 3; j++ ) {
-                a.set(i,j,i+j+1);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                a.set(i, j, i + j + 1);
             }
         }
 
@@ -54,20 +53,20 @@ public class ExampleFixedSizedMatrix {
         a.print();
 
         // most of the standard operations are support
-        CommonOps_DDF3.transpose(a,b);
+        CommonOps_DDF3.transpose(a, b);
         b.print();
 
-        System.out.println("Determinant = "+ CommonOps_DDF3.det(a));
+        System.out.println("Determinant = " + CommonOps_DDF3.det(a));
 
         // matrix-vector operations are also supported
         // Constructors for vectors and matrices can be used to initialize its value
-        DMatrix3 v = new DMatrix3(1,2,3);
+        DMatrix3 v = new DMatrix3(1, 2, 3);
         DMatrix3 result = new DMatrix3();
 
-        CommonOps_DDF3.mult(a,v,result);
+        CommonOps_DDF3.mult(a, v, result);
 
         // Conversion into DMatrixRMaj can also be done
-        DMatrixRMaj dm = DConvertMatrixStruct.convert(a,null);
+        DMatrixRMaj dm = DConvertMatrixStruct.convert(a, null);
 
         dm.print();
 
@@ -75,7 +74,7 @@ public class ExampleFixedSizedMatrix {
         SimpleMatrix sv = SimpleMatrix.wrap(dm).svd().getV();
 
         // can then convert it back into a fixed matrix
-        DMatrix3x3 fv = DConvertMatrixStruct.convert(sv.getDDRM(),(DMatrix3x3)null);
+        DMatrix3x3 fv = DConvertMatrixStruct.convert(sv.getDDRM(), (DMatrix3x3)null);
 
         System.out.println("Original simple matrix and converted fixed matrix");
         sv.print();

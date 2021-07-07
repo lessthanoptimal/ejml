@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,10 +36,10 @@ import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
  *  <li>Using an adjustable solver</li>
  *  <li>reshaping</li>
  * </ol>
+ *
  * @author Peter Abeles
  */
 public class PolynomialFit {
-
     // Vandermonde matrix
     DMatrixRMaj A;
     // matrix containing computed polynomial coefficients
@@ -56,9 +56,9 @@ public class PolynomialFit {
      * @param degree The polynomial's degree which is to be fit to the observations.
      */
     public PolynomialFit( int degree ) {
-        coef = new DMatrixRMaj(degree+1,1);
-        A = new DMatrixRMaj(1,degree+1);
-        y = new DMatrixRMaj(1,1);
+        coef = new DMatrixRMaj(degree + 1, 1);
+        A = new DMatrixRMaj(1, degree + 1);
+        y = new DMatrixRMaj(1, 1);
 
         // create a solver that allows elements to be added or removed efficiently
         solver = LinearSolverFactory_DDRM.adjustable();
@@ -79,32 +79,32 @@ public class PolynomialFit {
      * @param samplePoints where the observations were sampled.
      * @param observations A set of observations.
      */
-    public void fit( double samplePoints[] , double[] observations ) {
+    public void fit( double[] samplePoints, double[] observations ) {
         // Create a copy of the observations and put it into a matrix
-        y.reshape(observations.length,1,false);
-        System.arraycopy(observations,0, y.data,0,observations.length);
+        y.reshape(observations.length, 1, false);
+        System.arraycopy(observations, 0, y.data, 0, observations.length);
 
         // reshape the matrix to avoid unnecessarily declaring new memory
         // save values is set to false since its old values don't matter
-        A.reshape(y.numRows, coef.numRows,false);
+        A.reshape(y.numRows, coef.numRows, false);
 
         // set up the A matrix
-        for( int i = 0; i < observations.length; i++ ) {
+        for (int i = 0; i < observations.length; i++) {
 
             double obs = 1;
 
-            for( int j = 0; j < coef.numRows; j++ ) {
-                A.set(i,j,obs);
+            for (int j = 0; j < coef.numRows; j++) {
+                A.set(i, j, obs);
                 obs *= samplePoints[i];
             }
         }
 
         // process the A matrix and see if it failed
-        if( !solver.setA(A) )
+        if (!solver.setA(A))
             throw new RuntimeException("Solver failed");
 
         // solver the the coefficients
-        solver.solve(y,coef);
+        solver.solve(y, coef);
     }
 
     /**
@@ -115,26 +115,26 @@ public class PolynomialFit {
      */
     public void removeWorstFit() {
         // find the observation with the most error
-        int worstIndex=-1;
+        int worstIndex = -1;
         double worstError = -1;
 
-        for( int i = 0; i < y.numRows; i++ ) {
+        for (int i = 0; i < y.numRows; i++) {
             double predictedObs = 0;
 
-            for( int j = 0; j < coef.numRows; j++ ) {
-                predictedObs += A.get(i,j)*coef.get(j,0);
+            for (int j = 0; j < coef.numRows; j++) {
+                predictedObs += A.get(i, j)*coef.get(j, 0);
             }
 
-            double error = Math.abs(predictedObs- y.get(i,0));
+            double error = Math.abs(predictedObs - y.get(i, 0));
 
-            if( error > worstError ) {
+            if (error > worstError) {
                 worstError = error;
                 worstIndex = i;
             }
         }
 
         // nothing left to remove, so just return
-        if( worstIndex == -1 )
+        if (worstIndex == -1)
             return;
 
         // remove that observation
@@ -144,7 +144,7 @@ public class PolynomialFit {
         solver.removeRowFromA(worstIndex);
 
         // solve for the parameters again
-        solver.solve(y,coef);
+        solver.solve(y, coef);
     }
 
     /**
@@ -153,12 +153,12 @@ public class PolynomialFit {
      * @param index which element is to be removed
      */
     private void removeObservation( int index ) {
-        final int N = y.numRows-1;
-        final double d[] = y.data;
+        final int N = y.numRows - 1;
+        final double[] d = y.data;
 
         // shift
-        for( int i = index; i < N; i++ ) {
-            d[i] = d[i+1];
+        for (int i = index; i < N; i++) {
+            d[i] = d[i + 1];
         }
         y.numRows--;
     }

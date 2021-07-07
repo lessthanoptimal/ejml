@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,22 +31,21 @@ import static org.ejml.dense.row.CommonOps_DDRM.*;
  *
  * @author Peter Abeles
  */
-public class KalmanFilterOperations implements KalmanFilter{
-
+public class KalmanFilterOperations implements KalmanFilter {
     // kinematics description
-    private DMatrixRMaj F,Q,H;
+    private DMatrixRMaj F, Q, H;
 
     // system state estimate
-    private DMatrixRMaj x,P;
+    private DMatrixRMaj x, P;
 
     // these are predeclared for efficiency reasons
-    private DMatrixRMaj a,b;
-    private DMatrixRMaj y,S,S_inv,c,d;
+    private DMatrixRMaj a, b;
+    private DMatrixRMaj y, S, S_inv, c, d;
     private DMatrixRMaj K;
 
     private LinearSolverDense<DMatrixRMaj> solver;
 
-    @Override public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
+    @Override public void configure( DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H ) {
         this.F = F;
         this.Q = Q;
         this.H = H;
@@ -54,62 +53,61 @@ public class KalmanFilterOperations implements KalmanFilter{
         int dimenX = F.numCols;
         int dimenZ = H.numRows;
 
-        a = new DMatrixRMaj(dimenX,1);
-        b = new DMatrixRMaj(dimenX,dimenX);
-        y = new DMatrixRMaj(dimenZ,1);
-        S = new DMatrixRMaj(dimenZ,dimenZ);
-        S_inv = new DMatrixRMaj(dimenZ,dimenZ);
-        c = new DMatrixRMaj(dimenZ,dimenX);
-        d = new DMatrixRMaj(dimenX,dimenZ);
-        K = new DMatrixRMaj(dimenX,dimenZ);
+        a = new DMatrixRMaj(dimenX, 1);
+        b = new DMatrixRMaj(dimenX, dimenX);
+        y = new DMatrixRMaj(dimenZ, 1);
+        S = new DMatrixRMaj(dimenZ, dimenZ);
+        S_inv = new DMatrixRMaj(dimenZ, dimenZ);
+        c = new DMatrixRMaj(dimenZ, dimenX);
+        d = new DMatrixRMaj(dimenX, dimenZ);
+        K = new DMatrixRMaj(dimenX, dimenZ);
 
-        x = new DMatrixRMaj(dimenX,1);
-        P = new DMatrixRMaj(dimenX,dimenX);
+        x = new DMatrixRMaj(dimenX, 1);
+        P = new DMatrixRMaj(dimenX, dimenX);
 
         // covariance matrices are symmetric positive semi-definite
         solver = LinearSolverFactory_DDRM.symmPosDef(dimenX);
     }
 
-    @Override public void setState(DMatrixRMaj x, DMatrixRMaj P) {
+    @Override public void setState( DMatrixRMaj x, DMatrixRMaj P ) {
         this.x.setTo(x);
         this.P.setTo(P);
     }
 
     @Override public void predict() {
-
         // x = F x
-        mult(F,x,a);
+        mult(F, x, a);
         x.setTo(a);
 
         // P = F P F' + Q
-        mult(F,P,b);
-        multTransB(b,F, P);
-        addEquals(P,Q);
+        mult(F, P, b);
+        multTransB(b, F, P);
+        addEquals(P, Q);
     }
 
-    @Override  public void update(DMatrixRMaj z, DMatrixRMaj R) {
+    @Override public void update( DMatrixRMaj z, DMatrixRMaj R ) {
         // y = z - H x
-        mult(H,x,y);
+        mult(H, x, y);
         subtract(z, y, y);
 
         // S = H P H' + R
-        mult(H,P,c);
-        multTransB(c,H,S);
-        addEquals(S,R);
+        mult(H, P, c);
+        multTransB(c, H, S);
+        addEquals(S, R);
 
         // K = PH'S^(-1)
-        if( !solver.setA(S) ) throw new RuntimeException("Invert failed");
+        if (!solver.setA(S)) throw new RuntimeException("Invert failed");
         solver.invert(S_inv);
-        multTransA(H,S_inv,d);
-        mult(P,d,K);
+        multTransA(H, S_inv, d);
+        mult(P, d, K);
 
         // x = x + Ky
-        mult(K,y,a);
-        addEquals(x,a);
+        mult(K, y, a);
+        addEquals(x, a);
 
         // P = (I-kH)P = P - (KH)P = P-K(HP)
-        mult(H,P,c);
-        mult(K,c,b);
+        mult(H, P, c);
+        mult(K, c, b);
         subtractEquals(P, b);
     }
 

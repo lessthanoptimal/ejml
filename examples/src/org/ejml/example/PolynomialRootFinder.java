@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,7 +44,6 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
  * @author Peter Abeles
  */
 public class PolynomialRootFinder {
-
     /**
      * <p>
      * Given a set of polynomial coefficients, compute the roots of the polynomial.  Depending on
@@ -59,28 +58,28 @@ public class PolynomialRootFinder {
      * @param coefficients Coefficients of the polynomial.
      * @return The roots of the polynomial
      */
-    public static Complex_F64[] findRoots(double... coefficients) {
-        int N = coefficients.length-1;
+    public static Complex_F64[] findRoots( double... coefficients ) {
+        int N = coefficients.length - 1;
 
         // Construct the companion matrix
-        DMatrixRMaj c = new DMatrixRMaj(N,N);
+        DMatrixRMaj c = new DMatrixRMaj(N, N);
 
         double a = coefficients[N];
-        for( int i = 0; i < N; i++ ) {
-            c.set(i,N-1,-coefficients[i]/a);
+        for (int i = 0; i < N; i++) {
+            c.set(i, N - 1, -coefficients[i]/a);
         }
-        for( int i = 1; i < N; i++ ) {
-            c.set(i,i-1,1);
+        for (int i = 1; i < N; i++) {
+            c.set(i, i - 1, 1);
         }
 
         // use generalized eigenvalue decomposition to find the roots
-        EigenDecomposition_F64<DMatrixRMaj> evd =  DecompositionFactory_DDRM.eig(N,false);
+        EigenDecomposition_F64<DMatrixRMaj> evd = DecompositionFactory_DDRM.eig(N, false);
 
         evd.decompose(c);
 
         Complex_F64[] roots = new Complex_F64[N];
 
-        for( int i = 0; i < N; i++ ) {
+        for (int i = 0; i < N; i++) {
             roots[i] = evd.getEigenvalue(i);
         }
 

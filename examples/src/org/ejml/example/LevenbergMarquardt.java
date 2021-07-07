@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,6 +43,7 @@ import org.ejml.dense.row.NormOps_DDRM;
  * Whenever possible the allocation of new memory is avoided.  This is accomplished by reshaping matrices.
  * A matrix that is reshaped won't grow unless the new shape requires more memory than it has available.
  * </p>
+ *
  * @author Peter Abeles
  */
 public class LevenbergMarquardt {
@@ -62,24 +63,24 @@ public class LevenbergMarquardt {
     private ResidualFunction function;
 
     // the optimized parameters and associated costs
-    private DMatrixRMaj candidateParameters = new DMatrixRMaj(1,1);
+    private DMatrixRMaj candidateParameters = new DMatrixRMaj(1, 1);
     private double initialCost;
     private double finalCost;
 
     // used by matrix operations
-    private DMatrixRMaj g = new DMatrixRMaj(1,1);            // gradient
-    private DMatrixRMaj H = new DMatrixRMaj(1,1);            // Hessian approximation
-    private DMatrixRMaj Hdiag = new DMatrixRMaj(1,1);
-    private DMatrixRMaj negativeStep = new DMatrixRMaj(1,1);
+    private DMatrixRMaj g = new DMatrixRMaj(1, 1);            // gradient
+    private DMatrixRMaj H = new DMatrixRMaj(1, 1);            // Hessian approximation
+    private DMatrixRMaj Hdiag = new DMatrixRMaj(1, 1);
+    private DMatrixRMaj negativeStep = new DMatrixRMaj(1, 1);
 
     // variables used by the numerical jacobian algorithm
-    private DMatrixRMaj temp0 = new DMatrixRMaj(1,1);
-    private DMatrixRMaj temp1 = new DMatrixRMaj(1,1);
+    private DMatrixRMaj temp0 = new DMatrixRMaj(1, 1);
+    private DMatrixRMaj temp1 = new DMatrixRMaj(1, 1);
     // used when computing d and H variables
-    private DMatrixRMaj residuals = new DMatrixRMaj(1,1);
+    private DMatrixRMaj residuals = new DMatrixRMaj(1, 1);
 
     // Where the numerical Jacobian is stored.
-    private DMatrixRMaj jacobian = new DMatrixRMaj(1,1);
+    private DMatrixRMaj jacobian = new DMatrixRMaj(1, 1);
 
     public double getInitialCost() {
         return initialCost;
@@ -90,10 +91,9 @@ public class LevenbergMarquardt {
     }
 
     /**
-     *
      * @param initialLambda Initial value of dampening parameter. Try 1 to start
      */
-    public LevenbergMarquardt(double initialLambda) {
+    public LevenbergMarquardt( double initialLambda ) {
         this.initialLambda = initialLambda;
     }
 
@@ -104,7 +104,7 @@ public class LevenbergMarquardt {
      * @param ftol convergence based on change in function value. try 1e-12
      * @param gtol convergence based on residual magnitude. Try 1e-12
      */
-    public void setConvergence( int maxIterations , double ftol , double gtol ) {
+    public void setConvergence( int maxIterations, double ftol, double gtol ) {
         this.maxIterations = maxIterations;
         this.ftol = ftol;
         this.gtol = gtol;
@@ -117,9 +117,8 @@ public class LevenbergMarquardt {
      * @param parameters (Input/Output) initial parameter estimate and storage for optimized parameters
      * @return true if it succeeded and false if it did not.
      */
-    public boolean optimize(ResidualFunction function, DMatrixRMaj parameters )
-    {
-        configure(function,parameters.getNumElements());
+    public boolean optimize( ResidualFunction function, DMatrixRMaj parameters ) {
+        configure(function, parameters.getNumElements());
 
         // save the cost of the initial parameters so that it knows if it improves or not
         double previousCost = initialCost = cost(parameters);
@@ -130,8 +129,8 @@ public class LevenbergMarquardt {
         // if it should recompute the Jacobian in this iteration or not
         boolean computeHessian = true;
 
-        for( int iter = 0; iter < maxIterations; iter++ ) {
-            if( computeHessian ) {
+        for (int iter = 0; iter < maxIterations; iter++) {
+            if (computeHessian) {
                 // compute some variables based on the gradient
                 computeGradientAndHessian(parameters);
                 computeHessian = false;
@@ -139,22 +138,22 @@ public class LevenbergMarquardt {
                 // check for convergence using gradient test
                 boolean converged = true;
                 for (int i = 0; i < g.getNumElements(); i++) {
-                    if( Math.abs(g.data[i]) > gtol ) {
+                    if (Math.abs(g.data[i]) > gtol) {
                         converged = false;
                         break;
                     }
                 }
-                if( converged )
+                if (converged)
                     return true;
             }
 
             // H = H + lambda*I
             for (int i = 0; i < H.numRows; i++) {
-                H.set(i,i, Hdiag.get(i) + lambda);
+                H.set(i, i, Hdiag.get(i) + lambda);
             }
 
             // In robust implementations failure to solve is handled much better
-            if( !CommonOps_DDRM.solve(H, g, negativeStep) ) {
+            if (!CommonOps_DDRM.solve(H, g, negativeStep)) {
                 return false;
             }
 
@@ -162,25 +161,24 @@ public class LevenbergMarquardt {
             CommonOps_DDRM.subtract(parameters, negativeStep, candidateParameters);
 
             double cost = cost(candidateParameters);
-            if( cost <= previousCost ) {
+            if (cost <= previousCost) {
                 // the candidate parameters produced better results so use it
                 computeHessian = true;
                 parameters.setTo(candidateParameters);
 
                 // check for convergence
                 // ftol <= (cost(k) - cost(k+1))/cost(k)
-                boolean converged = ftol*previousCost >= previousCost-cost;
+                boolean converged = ftol*previousCost >= previousCost - cost;
 
                 previousCost = cost;
                 lambda /= 10.0;
 
-                if( converged ) {
+                if (converged) {
                     return true;
                 }
             } else {
                 lambda *= 10.0;
             }
-
         }
         finalCost = previousCost;
         return true;
@@ -190,22 +188,21 @@ public class LevenbergMarquardt {
      * Performs sanity checks on the input data and reshapes internal matrices.  By reshaping
      * a matrix it will only declare new memory when needed.
      */
-    protected void configure(ResidualFunction function , int numParam )
-    {
+    protected void configure( ResidualFunction function, int numParam ) {
         this.function = function;
         int numFunctions = function.numFunctions();
 
         // reshaping a matrix means that new memory is only declared when needed
-        candidateParameters.reshape(numParam,1);
-        g.reshape(numParam,1);
-        H.reshape(numParam,numParam);
-        negativeStep.reshape(numParam,1);
+        candidateParameters.reshape(numParam, 1);
+        g.reshape(numParam, 1);
+        H.reshape(numParam, numParam);
+        negativeStep.reshape(numParam, 1);
 
         // Normally these variables are thought of as row vectors, but it works out easier if they are column
-        temp0.reshape(numFunctions,1);
-        temp1.reshape(numFunctions,1);
-        residuals.reshape(numFunctions,1);
-        jacobian.reshape(numFunctions,numParam);
+        temp0.reshape(numFunctions, 1);
+        temp1.reshape(numFunctions, 1);
+        residuals.reshape(numFunctions, 1);
+        jacobian.reshape(numFunctions, numParam);
     }
 
     /**
@@ -214,32 +211,29 @@ public class LevenbergMarquardt {
      * d = J'*(f(x)-y)    <--- that's also the gradient
      * H = J'*J
      */
-    private void computeGradientAndHessian(DMatrixRMaj param  )
-    {
+    private void computeGradientAndHessian( DMatrixRMaj param ) {
         // residuals = f(x) - y
         function.compute(param, residuals);
 
-        computeNumericalJacobian(param,jacobian);
+        computeNumericalJacobian(param, jacobian);
 
         CommonOps_DDRM.multTransA(jacobian, residuals, g);
-        CommonOps_DDRM.multTransA(jacobian, jacobian,  H);
+        CommonOps_DDRM.multTransA(jacobian, jacobian, H);
 
-        CommonOps_DDRM.extractDiag(H,Hdiag);
+        CommonOps_DDRM.extractDiag(H, Hdiag);
     }
-
 
     /**
      * Computes the "cost" for the parameters given.
      *
      * cost = (1/N) Sum (f(x) - y)^2
      */
-    private double cost(DMatrixRMaj param )
-    {
+    private double cost( DMatrixRMaj param ) {
         function.compute(param, residuals);
 
         double error = NormOps_DDRM.normF(residuals);
 
-        return error*error / (double)residuals.numRows;
+        return error*error/(double)residuals.numRows;
     }
 
     /**
@@ -248,25 +242,24 @@ public class LevenbergMarquardt {
      * @param param (input) The set of parameters that the Jacobian is to be computed at.
      * @param jacobian (output) Where the jacobian will be stored
      */
-    protected void computeNumericalJacobian( DMatrixRMaj param ,
-                                             DMatrixRMaj jacobian )
-    {
+    protected void computeNumericalJacobian( DMatrixRMaj param,
+                                             DMatrixRMaj jacobian ) {
         double invDelta = 1.0/DELTA;
 
         function.compute(param, temp0);
 
         // compute the jacobian by perturbing the parameters slightly
         // then seeing how it effects the results.
-        for( int i = 0; i < param.getNumElements(); i++ ) {
+        for (int i = 0; i < param.getNumElements(); i++) {
             param.data[i] += DELTA;
             function.compute(param, temp1);
             // compute the difference between the two parameters and divide by the delta
             // temp1 = (temp1 - temp0)/delta
-            CommonOps_DDRM.add(invDelta,temp1,-invDelta,temp0,temp1);
+            CommonOps_DDRM.add(invDelta, temp1, -invDelta, temp0, temp1);
 
             // copy the results into the jacobian matrix
             // J(i,:) = temp1
-            CommonOps_DDRM.insert(temp1,jacobian,0,i);
+            CommonOps_DDRM.insert(temp1, jacobian, 0, i);
 
             param.data[i] -= DELTA;
         }
@@ -283,10 +276,11 @@ public class LevenbergMarquardt {
          * @param param (Input) N by 1 parameter vector
          * @param residual (Output) M by 1 output vector to store the residual = f(x)-y
          */
-        void compute(DMatrixRMaj param , DMatrixRMaj residual );
+        void compute( DMatrixRMaj param, DMatrixRMaj residual );
 
         /**
          * Number of functions in output
+         *
          * @return function count
          */
         int numFunctions();

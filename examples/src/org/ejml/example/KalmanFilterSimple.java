@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,21 +30,20 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Peter Abeles
  */
-public class KalmanFilterSimple implements KalmanFilter{
-
+public class KalmanFilterSimple implements KalmanFilter {
     // kinematics description
-    private SimpleMatrix F,Q,H;
+    private SimpleMatrix F, Q, H;
 
     // sytem state estimate
-    private SimpleMatrix x,P;
+    private SimpleMatrix x, P;
 
-    @Override public void configure(DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H) {
+    @Override public void configure( DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H ) {
         this.F = new SimpleMatrix(F);
         this.Q = new SimpleMatrix(Q);
         this.H = new SimpleMatrix(H);
     }
 
-    @Override public void setState(DMatrixRMaj x, DMatrixRMaj P) {
+    @Override public void setState( DMatrixRMaj x, DMatrixRMaj P ) {
         this.x = new SimpleMatrix(x);
         this.P = new SimpleMatrix(P);
     }
@@ -57,7 +56,7 @@ public class KalmanFilterSimple implements KalmanFilter{
         P = F.mult(P).mult(F.transpose()).plus(Q);
     }
 
-    @Override public void update(DMatrixRMaj _z, DMatrixRMaj _R) {
+    @Override public void update( DMatrixRMaj _z, DMatrixRMaj _R ) {
         // a fast way to make the matrices usable by SimpleMatrix
         SimpleMatrix z = SimpleMatrix.wrap(_z);
         SimpleMatrix R = SimpleMatrix.wrap(_R);
