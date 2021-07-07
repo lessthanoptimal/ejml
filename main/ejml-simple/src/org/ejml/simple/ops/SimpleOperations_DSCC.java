@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,17 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple.ops;
 
+import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.*;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ConvertToDenseException;
 import org.ejml.simple.ConvertToImaginaryException;
 import org.ejml.simple.SimpleSparseOperations;
 import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.CommonOps_MT_DSCC;
 import org.ejml.sparse.csc.MatrixFeatures_DSCC;
 import org.ejml.sparse.csc.NormOps_DSCC;
+import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
+import pabeles.concurrency.GrowArray;
 
 import java.io.PrintStream;
 
@@ -39,6 +42,10 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     // Workspace variables
     public transient IGrowArray gw = new IGrowArray();
     public transient DGrowArray gx = new DGrowArray();
+
+    // Workspace for concurrent algorithms
+    public transient GrowArray<Workspace_MT_DSCC> workspaceMT = new GrowArray<>(Workspace_MT_DSCC::new);
+    public transient GrowArray<DGrowArray> workspaceA = new GrowArray<>(DGrowArray::new);
 
     @Override
     public void set( DMatrixSparseCSC A, int row, int column, /**/double value ) {
@@ -77,14 +84,23 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
-        CommonOps_DSCC.mult(A, B, output);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.mult(A, B, output, workspaceMT);
+        } else {
+            CommonOps_DSCC.mult(A, B, output);
+        }
     }
 
     @Override
     public void multTransA( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         var At = new DMatrixSparseCSC(1, 1);
         CommonOps_DSCC.transpose(A, At, gw);
-        CommonOps_DSCC.mult(At, B, output, gw, gx);
+
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.mult(A, B, output, workspaceMT);
+        } else {
+            CommonOps_DSCC.mult(At, B, output, gw, gx);
+        }
     }
 
     @Override
@@ -94,18 +110,26 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
-        CommonOps_DSCC.multTransA(A, B, output, null);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.multTransA(A, B, output, workspaceA);
+        } else {
+            CommonOps_DSCC.multTransA(A, B, output, null);
+        }
     }
 
     @Override
     public void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
-        CommonOps_DSCC.mult(A, B, output);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.mult(A, B, output, workspaceA);
+        } else {
+            CommonOps_DSCC.mult(A, B, output);
+        }
     }
 
     @Override
     public void kron( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
 //        CommonOps_DSCC.kron(A,B,output);
-        throw new RuntimeException("Unsupported");
+        throw new RuntimeException("Unsupported. Make a feature request if you need this!");
     }
 
     @Override
@@ -130,12 +154,20 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void plus( DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
-        CommonOps_DSCC.add(1, A, (double)beta, b, output, gw, gx);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.add(1, A, (double)beta, b, output, workspaceMT);
+        } else {
+            CommonOps_DSCC.add(1, A, (double)beta, b, output, gw, gx);
+        }
     }
 
     @Override
     public void plus( /**/double alpha, DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
-        CommonOps_DSCC.add((double)alpha, A, (double)beta, b, output, gw, gx);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.add((double)alpha, A, (double)beta, b, output, workspaceMT);
+        } else {
+            CommonOps_DSCC.add((double)alpha, A, (double)beta, b, output, gw, gx);
+        }
     }
 
     @Override

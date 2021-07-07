@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.concurrency;
 
+import org.ejml.data.Matrix;
+import org.ejml.data.MatrixSparse;
 import pabeles.concurrency.ConcurrencyOps;
 
 /**
@@ -28,6 +29,9 @@ import pabeles.concurrency.ConcurrencyOps;
 public class EjmlConcurrency extends ConcurrencyOps {
 	/** Used to toggle auto matic switching to concurrent algorithms */
 	public static boolean USE_CONCURRENT = true;
+
+	/** Minimum number of elements in a matrix before it will switch to concurrent implementation */
+	public static int ELEMENT_THRESHOLD = 50_000;
 
 	/**
 	 * Sets the maximum number of threads available in the thread pool and adjusts USE_CONCURRENT. If
@@ -44,5 +48,27 @@ public class EjmlConcurrency extends ConcurrencyOps {
 
 	public static boolean isUseConcurrent() {
 		return USE_CONCURRENT;
+	}
+
+	/**
+	 * Returns true if the operation on the matrix should use the concurrent implementation. If the matrix
+	 * is too small it should always use a single threaded implementation since the overhead will slow it down.
+	 */
+	public static boolean useConcurrent( MatrixSparse mat ) {
+		if (!USE_CONCURRENT)
+			return false;
+
+		return mat.getNonZeroLength() > ELEMENT_THRESHOLD;
+	}
+
+	/**
+	 * Returns true if the operation on the matrix should use the concurrent implementation. If the matrix
+	 * is too small it should always use a single threaded implementation since the overhead will slow it down.
+	 */
+	public static boolean useConcurrent( Matrix mat ) {
+		if (!USE_CONCURRENT)
+			return false;
+
+		return mat.getNumRows()*mat.getNumCols() > ELEMENT_THRESHOLD;
 	}
 }

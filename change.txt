@@ -11,20 +11,13 @@ Date format: year/month/day
   * Thanks CLOVIS-AI for pointing out the issue
 - Regression Testing
   * Added runtime regression using existing JMH benchmarks
-  * TODO baseline should be a copy not a renaming
-  * TODO change baseline when version is updated automatically. run, compare, then update
-  * TODO record the SHA it was compared against
-  * TODO record the tolerance for similarity and make command line configurable
 - Refactor set(obj) -> setTo(obj)
 - CommonOps
   * Fix a rather glaring bug in rref(). Thanks KayakDov
-- TODO identify sparse decompositions which can be made concurrent
-- TODO identify dense decompositions which require specialized algorithms for concurrency
+- SimpleMatrix
+  * Automatic type conversion. Thanks Florentin Dörre
+  * Automatic switching to concurrent algorithms when available
 
-Future
-- TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
-- TODO Concurrency for Complex Matrices
-- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
 
 ----- Version 0.40
 2020/11/04

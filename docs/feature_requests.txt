@@ -1,3 +1,14 @@
+Future
+- TODO Provide a mult_BL function that automatically converts to a block format and back, but modifies the input?
+- TODO Concurrency for Complex Matrices
+- TODO QR Decomposition. Make Block Householder computation more efficient. Single block?
+
+TODO Regression
+  * TODO baseline should be a copy not a renaming
+  * TODO change baseline when version is updated automatically. run, compare, then update
+  * TODO record the SHA it was compared against
+  * TODO record the tolerance for similarity and make command line configurable
+
 TODO Sparse LDL
 TODO constructor size check
 TODO New implementation of symmetric eigen
