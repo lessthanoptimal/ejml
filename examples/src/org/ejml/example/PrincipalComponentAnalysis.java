@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -62,14 +62,11 @@ public class PrincipalComponentAnalysis {
     private int numComponents;
 
     // where the data is stored
-    private DMatrixRMaj A = new DMatrixRMaj(1,1);
+    private DMatrixRMaj A = new DMatrixRMaj(1, 1);
     private int sampleIndex;
 
     // mean values of each element across all the samples
-    double mean[];
-
-    public PrincipalComponentAnalysis() {
-    }
+    double[] mean;
 
     /**
      * Must be called before any other functions. Declares and sets up internal data structures.
@@ -77,9 +74,9 @@ public class PrincipalComponentAnalysis {
      * @param numSamples Number of samples that will be processed.
      * @param sampleSize Number of elements in each sample.
      */
-    public void setup( int numSamples , int sampleSize ) {
-        mean = new double[ sampleSize ];
-        A.reshape(numSamples,sampleSize,false);
+    public void setup( int numSamples, int sampleSize ) {
+        mean = new double[sampleSize];
+        A.reshape(numSamples, sampleSize, false);
         sampleIndex = 0;
         numComponents = -1;
     }
@@ -91,13 +88,13 @@ public class PrincipalComponentAnalysis {
      * @param sampleData Sample from original raw data.
      */
     public void addSample( double[] sampleData ) {
-        if( A.getNumCols() != sampleData.length )
+        if (A.getNumCols() != sampleData.length)
             throw new IllegalArgumentException("Unexpected sample size");
-        if( sampleIndex >= A.getNumRows() )
+        if (sampleIndex >= A.getNumRows())
             throw new IllegalArgumentException("Too many samples");
 
-        for( int i = 0; i < sampleData.length; i++ ) {
-            A.set(sampleIndex,i,sampleData[i]);
+        for (int i = 0; i < sampleData.length; i++) {
+            A.set(sampleIndex, i, sampleData[i]);
         }
         sampleIndex++;
     }
@@ -109,46 +106,46 @@ public class PrincipalComponentAnalysis {
      * smaller than the number of elements in the input vector.
      */
     public void computeBasis( int numComponents ) {
-        if( numComponents > A.getNumCols() )
+        if (numComponents > A.getNumCols())
             throw new IllegalArgumentException("More components requested that the data's length.");
-        if( sampleIndex != A.getNumRows() )
+        if (sampleIndex != A.getNumRows())
             throw new IllegalArgumentException("Not all the data has been added");
-        if( numComponents > sampleIndex )
+        if (numComponents > sampleIndex)
             throw new IllegalArgumentException("More data needed to compute the desired number of components");
 
         this.numComponents = numComponents;
 
         // compute the mean of all the samples
-        for( int i = 0; i < A.getNumRows(); i++ ) {
-            for( int j = 0; j < mean.length; j++ ) {
-                mean[j] += A.get(i,j);
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < mean.length; j++) {
+                mean[j] += A.get(i, j);
             }
         }
-        for( int j = 0; j < mean.length; j++ ) {
+        for (int j = 0; j < mean.length; j++) {
             mean[j] /= A.getNumRows();
         }
 
         // subtract the mean from the original data
-        for( int i = 0; i < A.getNumRows(); i++ ) {
-            for( int j = 0; j < mean.length; j++ ) {
-                A.set(i,j,A.get(i,j)-mean[j]);
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < mean.length; j++) {
+                A.set(i, j, A.get(i, j) - mean[j]);
             }
         }
 
         // Compute SVD and save time by not computing U
         SingularValueDecomposition<DMatrixRMaj> svd =
                 DecompositionFactory_DDRM.svd(A.numRows, A.numCols, false, true, false);
-        if( !svd.decompose(A) )
+        if (!svd.decompose(A))
             throw new RuntimeException("SVD failed");
 
-        V_t = svd.getV(null,true);
+        V_t = svd.getV(null, true);
         DMatrixRMaj W = svd.getW(null);
 
         // Singular values are in an arbitrary order initially
-        SingularOps_DDRM.descendingOrder(null,false,W,V_t,true);
+        SingularOps_DDRM.descendingOrder(null, false, W, V_t, true);
 
         // strip off unneeded components and find the basis
-        V_t.reshape(numComponents,mean.length,true);
+        V_t.reshape(numComponents, mean.length, true);
     }
 
     /**
@@ -158,11 +155,11 @@ public class PrincipalComponentAnalysis {
      * @return Vector from the PCA basis.
      */
     public double[] getBasisVector( int which ) {
-        if( which < 0 || which >= numComponents )
+        if (which < 0 || which >= numComponents)
             throw new IllegalArgumentException("Invalid component");
 
-        DMatrixRMaj v = new DMatrixRMaj(1,A.numCols);
-        CommonOps_DDRM.extract(V_t,which,which+1,0,A.numCols,v,0,0);
+        DMatrixRMaj v = new DMatrixRMaj(1, A.numCols);
+        CommonOps_DDRM.extract(V_t, which, which + 1, 0, A.numCols, v, 0, 0);
 
         return v.data;
     }
@@ -174,16 +171,16 @@ public class PrincipalComponentAnalysis {
      * @return Eigen space projection.
      */
     public double[] sampleToEigenSpace( double[] sampleData ) {
-        if( sampleData.length != A.getNumCols() )
+        if (sampleData.length != A.getNumCols())
             throw new IllegalArgumentException("Unexpected sample length");
-        DMatrixRMaj mean = DMatrixRMaj.wrap(A.getNumCols(),1,this.mean);
+        DMatrixRMaj mean = DMatrixRMaj.wrap(A.getNumCols(), 1, this.mean);
 
-        DMatrixRMaj s = new DMatrixRMaj(A.getNumCols(),1,true,sampleData);
-        DMatrixRMaj r = new DMatrixRMaj(numComponents,1);
+        DMatrixRMaj s = new DMatrixRMaj(A.getNumCols(), 1, true, sampleData);
+        DMatrixRMaj r = new DMatrixRMaj(numComponents, 1);
 
         CommonOps_DDRM.subtract(s, mean, s);
 
-        CommonOps_DDRM.mult(V_t,s,r);
+        CommonOps_DDRM.mult(V_t, s, r);
 
         return r.data;
     }
@@ -195,20 +192,19 @@ public class PrincipalComponentAnalysis {
      * @return Sample space projection.
      */
     public double[] eigenToSampleSpace( double[] eigenData ) {
-        if( eigenData.length != numComponents )
+        if (eigenData.length != numComponents)
             throw new IllegalArgumentException("Unexpected sample length");
 
-        DMatrixRMaj s = new DMatrixRMaj(A.getNumCols(),1);
-        DMatrixRMaj r = DMatrixRMaj.wrap(numComponents,1,eigenData);
-        
-        CommonOps_DDRM.multTransA(V_t,r,s);
+        DMatrixRMaj s = new DMatrixRMaj(A.getNumCols(), 1);
+        DMatrixRMaj r = DMatrixRMaj.wrap(numComponents, 1, eigenData);
 
-        DMatrixRMaj mean = DMatrixRMaj.wrap(A.getNumCols(),1,this.mean);
-        CommonOps_DDRM.add(s,mean,s);
+        CommonOps_DDRM.multTransA(V_t, r, s);
+
+        DMatrixRMaj mean = DMatrixRMaj.wrap(A.getNumCols(), 1, this.mean);
+        CommonOps_DDRM.add(s, mean, s);
 
         return s.data;
     }
-
 
     /**
      * <p>
@@ -219,7 +215,7 @@ public class PrincipalComponentAnalysis {
      * The error is computed by projecting the sample into eigenspace then projecting
      * it back into sample space and
      * </p>
-     * 
+     *
      * @param sampleA The sample whose membership status is being considered.
      * @return Its membership error.
      */
@@ -229,7 +225,7 @@ public class PrincipalComponentAnalysis {
 
 
         double total = 0;
-        for( int i = 0; i < reproj.length; i++ ) {
+        for (int i = 0; i < reproj.length; i++) {
             double d = sampleA[i] - reproj[i];
             total += d*d;
         }
@@ -245,13 +241,13 @@ public class PrincipalComponentAnalysis {
      * @return Higher value indicates it is more likely to be a member of input dataset.
      */
     public double response( double[] sample ) {
-        if( sample.length != A.numCols )
+        if (sample.length != A.numCols)
             throw new IllegalArgumentException("Expected input vector to be in sample space");
 
-        DMatrixRMaj dots = new DMatrixRMaj(numComponents,1);
-        DMatrixRMaj s = DMatrixRMaj.wrap(A.numCols,1,sample);
+        DMatrixRMaj dots = new DMatrixRMaj(numComponents, 1);
+        DMatrixRMaj s = DMatrixRMaj.wrap(A.numCols, 1, sample);
 
-        CommonOps_DDRM.mult(V_t,s,dots);
+        CommonOps_DDRM.mult(V_t, s, dots);
 
         return NormOps_DDRM.normF(dots);
     }

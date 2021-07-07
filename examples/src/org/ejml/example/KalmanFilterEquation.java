@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,6 @@ import org.ejml.equation.Sequence;
  * @author Peter Abeles
  */
 public class KalmanFilterEquation implements KalmanFilter {
-
     // system state estimate
     private DMatrixRMaj x, P;
 
@@ -78,7 +77,7 @@ public class KalmanFilterEquation implements KalmanFilter {
     @Override public void update( DMatrixRMaj z, DMatrixRMaj R ) {
 
         // Alias will overwrite the reference to the previous matrices with the same name
-        eq.alias(z, "z",R, "R");
+        eq.alias(z, "z", R, "R");
 
         updateY.perform();
         updateK.perform();

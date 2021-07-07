@@ -30,7 +30,7 @@ allprojects {
     apply plugin: 'com.peterabeles.gversion'
 
     group = 'org.ejml'
-    version = '0.41-SNAPSHOT'
+    version = '0.41'
 }
 
 subprojects {
@@ -331,8 +331,6 @@ task alljavadoc(type: Javadoc) {
 
     // Hack for Java 8u121 and beyond. Comment out if running an earlier version of Java
     options.addBooleanOption("-allow-script-in-comments", true)
-    // Fixed the undefined search problem
-    options.addBooleanOption("-no-module-directories", true)
 
     // Add a list of uses of a class to javadoc
     options.use = true
