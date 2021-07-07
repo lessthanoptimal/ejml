@@ -5,6 +5,9 @@ Date format: year/month/day
 ----- Version 0.42
 2021/
 
+- Build
+  * Gradle will now download the specified JDK prior to building
+
 ----- Version 0.41
 2021/07/07
 

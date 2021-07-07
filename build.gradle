@@ -21,7 +21,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     id "com.peterabeles.gversion" version "1.10" apply false
-    id "net.ltgt.errorprone" version "1.2.1" apply false
+    id "net.ltgt.errorprone" version "2.0.1" apply false
     id "com.diffplug.spotless" version "5.6.1" apply false
 }
 
@@ -33,6 +33,9 @@ allprojects {
     version = '0.42-SNAPSHOT'
 }
 
+project.ext.set("lombok_version", '1.18.18')
+project.ext.set("errorprone_version", '2.7.1')
+
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
@@ -41,32 +44,35 @@ subprojects {
     apply plugin: 'com.diffplug.spotless'
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
         withJavadocJar()
         withSourcesJar()
+        toolchain { languageVersion = JavaLanguageVersion.of(15) }
     }
 
-    tasks.withType(JavaCompile).all {
-        options.incremental = true                    // Should make single file changes faster
-        options.compilerArgs = ["--release", "8",]    // Output byte code compatible with Java 8
-    }
+    // Prevents tons of errors if someone is using ASCII
+    tasks.withType(JavaCompile).configureEach { options.encoding = "UTF-8" }
+
+    // Creates Java 8 byte code
+    tasks.withType(JavaCompile).configureEach { options.release = 8 }
+
+    // Enable incremental compile. Should make single file changes faster
+    tasks.withType(JavaCompile) { options.incremental = true }
 
     // Fail on jar conflict
     configurations.all { resolutionStrategy { failOnVersionConflict() } }
 
     // Force the release build to fail if it depends on a SNAPSHOT
-    jar.dependsOn checkDependsOnSNAPSHOT
+    project.jar.dependsOn project.checkDependsOnSNAPSHOT
 
-    // Force uploadArchives to fail if trying to upload a stable release and git is dirty
-    uploadArchives.dependsOn failDirtyNotSnapshot
+    // Force publish to fail if trying to upload a stable release and git is dirty
+    project.publish.dependsOn failDirtyNotSnapshot
 
     // To make ErrorProne and Kotlin plugins happy
     configurations.all {
         resolutionStrategy {
             force 'org.jetbrains:annotations:20.0.0'
             force 'com.google.guava:guava:30.1-jre'
-            force 'com.google.errorprone:error_prone_annotations:2.4.0'
+            force "com.google.errorprone:error_prone_annotations:$project.errorprone_version"
             force 'com.google.code.findbugs:jsr305:3.0.2'
             force 'org.checkerframework:checker-qual:2.10.0'
         }
@@ -111,7 +117,7 @@ subprojects {
 
     dependencies {
         compileOnly 'us.hebi.matlab.mat:mfl-ejml:0.5.7'
-        compileOnly 'org.projectlombok:lombok:1.18.10'
+        compileOnly "org.projectlombok:lombok:${project.lombok_version}"
         compileOnly 'org.jetbrains:annotations:20.0.0' // @Nullable
         compileOnly 'javax.annotation:jsr250-api:1.0'  // @Generated
         testCompileOnly project.sourceSets.main.compileClasspath
@@ -122,15 +128,8 @@ subprojects {
 
         generateCompile project(':main:autocode')
 
-        // needed to use Java 11+ syntax with Java 1.8 byte code
-        annotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.2.0') {
-            exclude group: 'net.bytebuddy', module: 'byte-buddy'
-            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
-        }
-
-        annotationProcessor 'org.projectlombok:lombok:1.18.10'  // @Getter @Setter
-        annotationProcessor("net.bytebuddy:byte-buddy:1.10.10")
-        annotationProcessor("net.bytebuddy:byte-buddy-agent:1.10.10")
+        annotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.3.0')
+        annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"  // @Getter @Setter
 
         errorprone "com.google.errorprone:error_prone_core:2.5.1"   // adds benchmarks/generated to sourceSet
         errorproneJavac "com.google.errorprone:javac:9+181-r4173-1" // annoying...
@@ -332,6 +331,11 @@ task alljavadoc(type: Javadoc) {
     // Hack for Java 8u121 and beyond. Comment out if running an earlier version of Java
     options.addBooleanOption("-allow-script-in-comments", true)
 
+    // Flag is no longer around in later versions of Java but required before
+    if (JavaVersion.current().ordinal() < JavaVersion.VERSION_13.ordinal()) {
+        options.addBooleanOption("-no-module-directories", true)
+    }
+
     // Add a list of uses of a class to javadoc
     options.use = true
 
@@ -353,6 +357,5 @@ task oneJarBin(type: Jar, dependsOn: javadocProjects.collect { it + ":compileJav
 
 wrapper {
     distributionType = Wrapper.DistributionType.BIN
-    gradleVersion = '6.4.1'
+    gradleVersion = '6.8.3'
 }
-
