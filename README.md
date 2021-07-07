@@ -77,7 +77,7 @@ it in your local Maven repository.
 ```bash
 cd ejml
 ./gradlew autogenerate
-./gradlew install
+./gradlew publishToMavenLocal
 ```
 
 Here are a few other useful Gradle commands:

@@ -20,7 +20,7 @@
 Push to central:
 
 - Do a clean build and upload to Sonatype
-  ./gradlew clean;git clean -fd main;./gradlew autogenerate;./gradlew assemble;./gradlew uploadArchives -Dorg.gradle.parallel=false
+  ./gradlew clean;git clean -fd main;./gradlew autogenerate;./gradlew assemble;./gradlew publish -Dorg.gradle.parallel=false
 
 - Then go to the website  https://oss.sonatype.org/
   * click close button
