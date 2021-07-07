@@ -129,10 +129,11 @@ subprojects {
         generateCompile project(':main:autocode')
 
         annotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.3.0')
+        testAnnotationProcessor('com.github.bsideup.jabel:jabel-javac-plugin:0.3.0')
+
         annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"  // @Getter @Setter
 
-        errorprone "com.google.errorprone:error_prone_core:2.5.1"   // adds benchmarks/generated to sourceSet
-        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1" // annoying...
+        errorprone("com.google.errorprone:error_prone_core:$project.errorprone_version")
 
         benchmarksImplementation project.sourceSets.main.runtimeClasspath
         benchmarksImplementation project.sourceSets.main.compileClasspath
