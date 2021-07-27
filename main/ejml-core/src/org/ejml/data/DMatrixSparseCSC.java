@@ -231,7 +231,9 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
-        unsafe_set(row, col, val);
+        if (val != 0.0) {
+            unsafe_set(row, col, val);
+        }
     }
 
     @Override
