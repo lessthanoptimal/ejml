@@ -9,16 +9,6 @@ dependencies {
 	compile project(':main:ejml-zdense').sourceSets.benchmarks.output
 
 	compile("com.peterabeles:regression:$auto64to32_version")
-
-	['core','generator-annprocess'].each { String a->
-		compile('org.openjdk.jmh:jmh-'+a+':1.27')
-	}
-
-	compile 'org.apache.commons:commons-lang3:3.7'
-	compile group: 'org.yaml', name: 'snakeyaml', version: '1.23'
-
-	compile group: 'args4j', name: 'args4j', version: '2.33'
-	compile 'com.sun.mail:javax.mail:1.6.0'
 }
 
 // Run the regression using a gradle command
