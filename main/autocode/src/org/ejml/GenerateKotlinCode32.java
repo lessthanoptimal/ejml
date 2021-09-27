@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,8 +18,8 @@
 
 package org.ejml;
 
-import com.peterabeles.auto64fto32f.ConvertFile32From64;
-import com.peterabeles.auto64fto32f.Language;
+import com.peterabeles.autocode.ConvertFile32From64;
+import com.peterabeles.autocode.Language;
 
 import java.io.File;
 

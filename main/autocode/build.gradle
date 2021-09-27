@@ -17,7 +17,8 @@
  */
 
 dependencies {
-    compile group: 'com.peterabeles', name: 'auto64fto32f', version: '2.1'
+    compile group: 'com.peterabeles', name: 'autofloat', version: auto64to32_version
+    compile group: 'com.peterabeles', name: 'autoconcurrent', version: auto64to32_version
 }
 
 gversion {

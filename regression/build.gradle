@@ -8,6 +8,8 @@ dependencies {
 	compile project(':main:ejml-fsparse').sourceSets.benchmarks.output
 	compile project(':main:ejml-zdense').sourceSets.benchmarks.output
 
+	compile("com.peterabeles:regression:$auto64to32_version")
+
 	['core','generator-annprocess'].each { String a->
 		compile('org.openjdk.jmh:jmh-'+a+':1.27')
 	}
@@ -28,7 +30,7 @@ task runtimeRegression(type: JavaExec) {
 	group = "Execution"
 	description = "Run the mainClass from the output jar in classpath with ExecTask"
 	classpath = sourceSets.main.runtimeClasspath
-	main = "org.ejml.RuntimeRegressionMasterApp"
+	main = "org.ejml.EjmlRuntimeRegressionApp"
 	args System.getProperty("exec.args", "").split()
 }
 
