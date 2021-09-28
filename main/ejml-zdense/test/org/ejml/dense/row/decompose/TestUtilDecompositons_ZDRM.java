@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,75 +18,62 @@
 
 package org.ejml.dense.row.decompose;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
-public class TestUtilDecompositons_ZDRM {
-    Random rand = new Random(234);
-
-    @Test
-    public void checkIdentity_null() {
+public class TestUtilDecompositons_ZDRM extends EjmlStandardJUnit {
+    @Test void checkIdentity_null() {
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkIdentity(null,4,3);
         assertTrue(MatrixFeatures_ZDRM.isIdentity(A, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkIdentity_random() {
+    @Test void checkIdentity_random() {
         ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkIdentity(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isIdentity(A, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
     }
 
-    @Test
-    public void checkZeros_null() {
+    @Test void checkZeros_null() {
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZeros(null,4,3);
         assertTrue(MatrixFeatures_ZDRM.isZeros(A, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkZeros_random() {
+    @Test void checkZeros_random() {
         ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZeros(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isZeros(A, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
     }
 
-    @Test
-    public void checkZerosLT_null() {
+    @Test void checkZerosLT_null() {
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZerosLT(null,4,3);
         assertTrue(MatrixFeatures_ZDRM.isUpperTriangle(A,0, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkZerosLT_random() {
+    @Test void checkZerosLT_random() {
         ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZerosLT(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isUpperTriangle(A, 0, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
     }
 
-    @Test
-    public void checkZerosUT_null() {
+    @Test void checkZerosUT_null() {
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZerosUT(null,4,3);
         assertTrue(MatrixFeatures_ZDRM.isLowerTriangle(A,0, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkZerosUT_random() {
+    @Test void checkZerosUT_random() {
         ZMatrixRMaj orig = RandomMatrices_ZDRM.rectangle(4,3,rand);
         ZMatrixRMaj A = UtilDecompositons_ZDRM.checkZerosUT(orig,4,3);
         assertTrue(MatrixFeatures_ZDRM.isLowerTriangle(A, 0, UtilEjml.TEST_F64));
-        assertTrue(A==orig);
+        assertSame(A, orig);
     }
 }

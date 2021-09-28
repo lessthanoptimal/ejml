@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,6 @@ import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
  * @author Peter Abeles
  */
 public class TestTridiagonalDecompositionHouseholder_DDRM extends StandardTridiagonalTests_DDRM {
-
     @Override
     protected TridiagonalSimilarDecomposition_F64<DMatrixRMaj> createDecomposition() {
         return new TridiagonalDecompositionHouseholder_DDRM();

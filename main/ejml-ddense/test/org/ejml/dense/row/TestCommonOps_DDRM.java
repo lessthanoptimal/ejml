@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
@@ -30,18 +31,12 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Random;
 
 import static org.ejml.UtilEjml.checkSameShape;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
-public class TestCommonOps_DDRM {
-
-    Random rand = new Random(0xFF);
+public class TestCommonOps_DDRM extends EjmlStandardJUnit {
     double tol = UtilEjml.TEST_F64;
 
     @Test

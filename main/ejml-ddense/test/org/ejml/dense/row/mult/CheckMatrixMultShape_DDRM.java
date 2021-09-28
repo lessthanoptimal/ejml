@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Peter Abeles
  */
 @SuppressWarnings("rawtypes")
-public class CheckMatrixMultShape_DDRM {
+public class CheckMatrixMultShape_DDRM extends EjmlStandardJUnit {
 
     // TODO merge with CheckMatrixMultShape_DSCC - Need to mess with project dependencies to do that
 

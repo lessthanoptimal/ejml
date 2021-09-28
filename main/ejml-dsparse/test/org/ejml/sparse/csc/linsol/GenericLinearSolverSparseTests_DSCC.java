@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.linsol;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
@@ -29,8 +30,6 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -39,12 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Peter Abeles
  */
 // TODO Add a test that makes sure identify permutation produces identical results to no permutation
-public abstract class GenericLinearSolverSparseTests_DSCC {
-
-    protected Random rand = new Random(234);
-
-    protected FillReducing permutationTests[] = new FillReducing[]
-            {FillReducing.NONE, FillReducing.IDENTITY};
+public abstract class GenericLinearSolverSparseTests_DSCC extends EjmlStandardJUnit {
+    protected FillReducing[] permutationTests = new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     // used to adjust tolerance threshold
     protected double equalityTolerance = UtilEjml.TEST_F64;
@@ -54,26 +49,24 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     protected boolean canDecomposeZeros = true;
     protected boolean canLockStructure = true;
 
-    public abstract LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> createSolver(FillReducing permutation);
+    public abstract LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> createSolver( FillReducing permutation );
 
     /**
      * Create a random matrix. The exact shape is determined by the implementation but all allowable shapes for this
      * size should be randomized
      */
-    public abstract DMatrixSparseCSC createA(int size);
+    public abstract DMatrixSparseCSC createA( int size );
 
-    public DMatrixRMaj create( int rows , int cols ) {
-        return RandomMatrices_DDRM.rectangle(rows,cols,rand);
+    public DMatrixRMaj create( int rows, int cols ) {
+        return RandomMatrices_DDRM.rectangle(rows, cols, rand);
     }
 
-    public DMatrixSparseCSC createSparse( int rows , int cols ) {
-        return RandomMatrices_DSCC.rectangle(rows,cols,rows*cols,rand);
+    public DMatrixSparseCSC createSparse( int rows, int cols ) {
+        return RandomMatrices_DSCC.rectangle(rows, cols, rows*cols, rand);
     }
 
-    @Test
-    public void randomSolveable() {
-
-        for( FillReducing perm : permutationTests ) {
+    @Test void randomSolveable() {
+        for (FillReducing perm : permutationTests) {
 //            System.out.println("perm = "+perm);
 
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
@@ -84,25 +77,25 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
                     DMatrixRMaj X = create(A.numCols, 3);
-                    DMatrixRMaj B = new DMatrixRMaj(1,1);
+                    DMatrixRMaj B = new DMatrixRMaj(1, 1);
 
                     // create B from X so that there is a valid solution in the tall case
-                    CommonOps_DSCC.mult(A,X,B);
+                    CommonOps_DSCC.mult(A, X, B);
                     DMatrixRMaj foundB = B.createLike();
                     DMatrixRMaj B_cpy = B.copy();
 
                     assertTrue(solver.setA(A));
                     // it should resize X, so let's mess it up
-                    X.reshape(1,1);
+                    X.reshape(1, 1);
                     solver.solve(B, X);
                     CommonOps_DSCC.mult(A, X, foundB);
 
                     EjmlUnitTests.assertEquals(B_cpy, foundB, equalityTolerance);
 
-                    if( !solver.modifiesA() ) {
+                    if (!solver.modifiesA()) {
                         EjmlUnitTests.assertEquals(A, A_cpy, equalityTolerance);
                     }
-                    if( !solver.modifiesB() ) {
+                    if (!solver.modifiesB()) {
                         EjmlUnitTests.assertEquals(B, B_cpy, equalityTolerance);
                     }
                 }
@@ -110,10 +103,8 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         }
     }
 
-    @Test
-    public void randomSolveable_Sparse() {
-
-        for( FillReducing perm : permutationTests ) {
+    @Test void randomSolveable_Sparse() {
+        for (FillReducing perm : permutationTests) {
 //            System.out.println("perm = "+perm);
 
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(perm);
@@ -124,7 +115,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
                     DMatrixSparseCSC A = createA(N);
                     DMatrixSparseCSC A_cpy = A.copy();
                     DMatrixSparseCSC X = createSparse(A.numCols, 3);
-                    DMatrixSparseCSC B = new DMatrixSparseCSC(1,1,1);
+                    DMatrixSparseCSC B = new DMatrixSparseCSC(1, 1, 1);
                     DMatrixSparseCSC foundX = X.createLike();
 
                     // compute the solution
@@ -135,7 +126,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
 //                    A.print();
                     assertTrue(solver.setA(A));
                     // it should resize X, so let's mess it up
-                    foundX.reshape(1,1);
+                    foundX.reshape(1, 1);
                     solver.solveSparse(B, foundX);
                     assertTrue(CommonOps_DSCC.checkStructure(foundX));
 
@@ -152,9 +143,8 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     /**
      * Give it a matrix that's all zeros and see if it fails.
      */
-    @Test
-    public void handleAllZeros() {
-        DMatrixSparseCSC A = new DMatrixSparseCSC(10,10,0);
+    @Test void handleAllZeros() {
+        DMatrixSparseCSC A = new DMatrixSparseCSC(10, 10, 0);
 
         LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(FillReducing.NONE);
 
@@ -164,35 +154,34 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
     /**
      * Provides wide or tall matrices and see if it throws an exception
      */
-    @Test
-    public void checkFailByShape_Tall() {
-        if( canHandleTall ) {
+    @Test void checkFailByShape_Tall() {
+        if (canHandleTall) {
             return;
         }
         try {
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(FillReducing.NONE);
-            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10,5,50,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(10, 5, 50, rand);
             solver.setA(A);
             fail("Should have thrown an exception");
-        } catch( IllegalArgumentException ignore ){}
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
-    @Test
-    public void checkFailByShape_Wide() {
-        if( canHandleWide ) {
+    @Test void checkFailByShape_Wide() {
+        if (canHandleWide) {
             return;
         }
         try {
             LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(FillReducing.NONE);
-            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5,10,50,rand);
+            DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(5, 10, 50, rand);
             solver.setA(A);
             fail("Should have thrown an exception");
-        } catch( IllegalArgumentException ignore ){}
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
-    @Test
-    public void quality() {
-        DMatrixSparseCSC A_good = CommonOps_DSCC.diag(4,3,2,1);
+    @Test void quality() {
+        DMatrixSparseCSC A_good = CommonOps_DSCC.diag(4, 3, 2, 1);
         DMatrixSparseCSC A_bad = CommonOps_DSCC.diag(4, 3, 2, 0.1);
 
         LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver = createSolver(FillReducing.NONE);
@@ -201,7 +190,7 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         double q_good;
         try {
             q_good = (double)solver.quality();
-        } catch( IllegalArgumentException e ) {
+        } catch (IllegalArgumentException e) {
             // quality is not supported
             return;
         }
@@ -212,10 +201,9 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         assertTrue(q_bad < q_good);
     }
 
-    @Test
-    public void ifCanNotLockThrowException() {
-        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> d = createSolver(FillReducing.NONE);
-        if( canLockStructure ) {
+    @Test void ifCanNotLockThrowException() {
+        LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> d = createSolver(FillReducing.NONE);
+        if (canLockStructure) {
             d.setStructureLocked(true);
         } else {
             try {
@@ -226,28 +214,27 @@ public abstract class GenericLinearSolverSparseTests_DSCC {
         }
     }
 
-    @Test
-    public void lockingDoesNotChangeSolution() {
-        if( !canLockStructure )
+    @Test void lockingDoesNotChangeSolution() {
+        if (!canLockStructure)
             return;
 
-        LinearSolverSparse<DMatrixSparseCSC,DMatrixRMaj> d = createSolver(FillReducing.NONE);
+        LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> d = createSolver(FillReducing.NONE);
 
         DMatrixSparseCSC A = createA(10);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(A.numRows,5,rand);
-        DMatrixRMaj X0 = new DMatrixRMaj(A.numCols,5);
-        DMatrixRMaj X1 = new DMatrixRMaj(A.numCols,5);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(A.numRows, 5, rand);
+        DMatrixRMaj X0 = new DMatrixRMaj(A.numCols, 5);
+        DMatrixRMaj X1 = new DMatrixRMaj(A.numCols, 5);
 
         assertTrue(d.setA((DMatrixSparseCSC)A.copy()));
-        d.solve(B.copy(),X0);
+        d.solve(B.copy(), X0);
 
         assertFalse(d.isStructureLocked());
         d.setStructureLocked(true);
         assertTrue(d.isStructureLocked());
 
         assertTrue(d.setA(A));
-        d.solve(B,X1);
+        d.solve(B, X1);
 
-        EjmlUnitTests.assertEquals(X0,X1,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(X0, X1, UtilEjml.TEST_F64);
     }
 }

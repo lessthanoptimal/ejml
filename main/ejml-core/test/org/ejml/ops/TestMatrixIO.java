@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
@@ -31,21 +32,10 @@ import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
- * @author Peter Abeles
- */
-public class TestMatrixIO {
-
-    Random rand = new Random(23424);
-
+public class TestMatrixIO extends EjmlStandardJUnit {
     @Test
     public void matlabToDDRM() {
         DMatrixRMaj expected = new DMatrixRMaj(

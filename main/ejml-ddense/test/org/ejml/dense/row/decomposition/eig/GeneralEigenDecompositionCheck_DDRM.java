@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition.eig;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DEigenpair;
@@ -28,7 +29,6 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.Objects;
-import java.util.Random;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.safeDecomposition;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,10 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
-public abstract class GeneralEigenDecompositionCheck_DDRM {
-
-    Random rand = new Random(895723);
-
+public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJUnit {
     public abstract EigenDecomposition_F64 createDecomposition();
 
     boolean computeVectors;
@@ -57,7 +54,6 @@ public abstract class GeneralEigenDecompositionCheck_DDRM {
         checkExceptional();
         checkIdentity();
         checkAllZeros();
-        rand = new Random(2934);
         checkWithSomeRepeatedValuesSymm();
         checkWithSingularSymm();
         checkSmallValue(false);

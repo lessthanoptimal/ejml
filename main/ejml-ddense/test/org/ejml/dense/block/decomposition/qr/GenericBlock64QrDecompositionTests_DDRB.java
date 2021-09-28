@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block.decomposition.qr;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
@@ -29,8 +30,6 @@ import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderTran_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -39,9 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Peter Abeles
  */
-public class GenericBlock64QrDecompositionTests_DDRB {
-    Random rand = new Random(324);
-
+public class GenericBlock64QrDecompositionTests_DDRB extends EjmlStandardJUnit {
     int r = 3;
 
     QRDecompositionHouseholder_DDRB alg;

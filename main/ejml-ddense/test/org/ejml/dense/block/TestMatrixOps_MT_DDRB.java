@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
@@ -28,15 +29,12 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TestMatrixOps_MT_DDRB {
+class TestMatrixOps_MT_DDRB extends EjmlStandardJUnit {
     final static int BLOCK_LENGTH = 10;
-
-    Random rand = new Random(234);
 
     /**
      * Tests for correctness multiplication of an entire matrix for all multiplication operations.

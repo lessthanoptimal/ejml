@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.sparse.csc.misc;
 
 
+import org.ejml.EjmlStandardJUnit;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author Peter Abeles
  */
-public class TestApplyFillReductionPermutation_DSCC {
+public class TestApplyFillReductionPermutation_DSCC extends EjmlStandardJUnit {
     @Disabled
     @Test
     public void symmetric() {

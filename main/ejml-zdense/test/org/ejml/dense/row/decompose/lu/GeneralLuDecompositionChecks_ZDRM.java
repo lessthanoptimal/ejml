@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decompose.lu;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.CommonOps_ZDRM;
@@ -26,17 +27,9 @@ import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.interfaces.decomposition.LUDecomposition;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
-public abstract class GeneralLuDecompositionChecks_ZDRM {
-
-    Random rand = new Random(0xff);
-
+public abstract class GeneralLuDecompositionChecks_ZDRM extends EjmlStandardJUnit {
     public abstract LUDecomposition<ZMatrixRMaj> create( int numRows, int numCols );
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,19 +23,10 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
- * @author Peter Abeles
- */
 @SuppressWarnings({"NullAway"})
-public class TestLinearSolverSafe {
-
-    Random rand = new Random(234);
-
+public class TestLinearSolverSafe extends EjmlStandardJUnit {
     DMatrixRMaj Ainput = new DMatrixRMaj(1,1);
     DMatrixRMaj Binput = new DMatrixRMaj(1,1);
 

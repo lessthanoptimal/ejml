@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.masks;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestDMasksSparseStructural {
+public class TestDMasksSparseStructural extends EjmlStandardJUnit {
 
     private static Stream<Arguments> maskAndExpectedMaxEntries() {
         DMatrixSparseCSC maskMatrix = RandomMatrices_DSCC.rectangle(10, 10, 20, new Random(42));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,13 +32,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_DDRM {
-
-
     /**
      * See if the naive implementation and this version produce the same results.
      */

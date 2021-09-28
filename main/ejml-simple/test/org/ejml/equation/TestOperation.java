@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.equation;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
@@ -32,13 +33,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
-public class TestOperation {
-
-    Random rand = new Random(234);
-
+public class TestOperation extends EjmlStandardJUnit {
     @Test
     public void divide_matrix_scalar() {
         Equation eq = new Equation();

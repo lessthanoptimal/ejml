@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition.lu;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -29,13 +30,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-/**
- * @author Peter Abeles
- */
-public class TestLUDecompositionBase_DDRM {
-    Random rand = new Random(0x3344);
-
+public class TestLUDecompositionBase_DDRM extends EjmlStandardJUnit {
     /**
      * Compare the determinant computed from LU to the value computed from the minor
      * matrix method.

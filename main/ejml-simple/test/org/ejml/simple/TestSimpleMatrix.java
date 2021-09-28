@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.simple;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
@@ -36,13 +37,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
-public class TestSimpleMatrix {
-
-    Random rand = new Random(76343);
-
+public class TestSimpleMatrix extends EjmlStandardJUnit {
     @Test
     public void randomNormal() {
         SimpleMatrix Q = SimpleMatrix.diag(5, 3, 12);

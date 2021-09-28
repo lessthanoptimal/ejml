@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,47 +18,45 @@
 
 package org.ejml.dense.row.decomposition.bidiagonal;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TestBidiagonalDecompositionTall_MT_DDRM {
-	Random rand = new Random(3245);
-	int rows = 200;
-	int cols = 20;
+class TestBidiagonalDecompositionTall_MT_DDRM extends EjmlStandardJUnit {
+    int rows = 200;
+    int cols = 20;
 
-	@Test
-	void compareToSingle() {
-		DMatrixRMaj A = RandomMatrices_DDRM.rectangle(rows,cols,-1,1,rand);
-		DMatrixRMaj B = A.copy();
+    @Test
+    void compareToSingle() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(rows, cols, -1, 1, rand);
+        DMatrixRMaj B = A.copy();
 
-		var algSingle = new BidiagonalDecompositionTall_DDRM();
-		var algMT = new BidiagonalDecompositionTall_MT_DDRM();
+        var algSingle = new BidiagonalDecompositionTall_DDRM();
+        var algMT = new BidiagonalDecompositionTall_MT_DDRM();
 
-		assertTrue(algSingle.decompose(A));
-		assertTrue(algMT.decompose(B));
+        assertTrue(algSingle.decompose(A));
+        assertTrue(algMT.decompose(B));
 
-		assertTrue(MatrixFeatures_DDRM.isEquals(A,B, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(A, B, UtilEjml.TEST_F64));
 
-		assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getB(null,true),
-				algMT.getB(null,true), UtilEjml.TEST_F64));
-		assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getB(null,false),
-				algMT.getB(null,false), UtilEjml.TEST_F64));
-		assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getU(null,false,true),
-				algMT.getU(null,false,true), UtilEjml.TEST_F64));
-		assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getU(null,false,true),
-				algMT.getU(null,false,true), UtilEjml.TEST_F64));
-		assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getV(null,false,true),
-				algMT.getV(null,false,true), UtilEjml.TEST_F64));
-		assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getV(null,false,true),
-				algMT.getV(null,false,true), UtilEjml.TEST_F64));
-	}
+        assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getB(null, true),
+                algMT.getB(null, true), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getB(null, false),
+                algMT.getB(null, false), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getU(null, false, true),
+                algMT.getU(null, false, true), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getU(null, false, true),
+                algMT.getU(null, false, true), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getV(null, false, true),
+                algMT.getV(null, false, true), UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(algSingle.getV(null, false, true),
+                algMT.getV(null, false, true), UtilEjml.TEST_F64));
+    }
 }
 
 

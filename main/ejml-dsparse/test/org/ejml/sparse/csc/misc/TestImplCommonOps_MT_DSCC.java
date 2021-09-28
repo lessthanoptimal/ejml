@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.sparse.csc.CommonOps_DSCC;
@@ -27,16 +28,12 @@ import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import org.junit.jupiter.api.Test;
 import pabeles.concurrency.GrowArray;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles
  */
-class TestImplCommonOps_MT_DSCC {
-    private final Random rand = new Random(324);
-
+class TestImplCommonOps_MT_DSCC extends EjmlStandardJUnit {
     private final GrowArray<Workspace_MT_DSCC> listWork = new GrowArray<>(Workspace_MT_DSCC::new);
 
     @Test

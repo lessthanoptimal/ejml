@@ -24,7 +24,7 @@ import org.ejml.masks.Mask;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class TestDMaskUtil {
+public class TestDMaskUtil extends EjmlStandardJUnit {
     public static void assertMaskedResult( DMatrixSparseCSC unmaskedResult, DMatrixSparseCSC maskedResult, Mask mask ) {
         for (int col = 0; col < unmaskedResult.numCols; col++) {
             for (int row = 0; row < unmaskedResult.numRows; row++) {

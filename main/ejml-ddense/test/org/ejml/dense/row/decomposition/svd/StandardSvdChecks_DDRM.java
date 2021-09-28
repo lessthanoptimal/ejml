@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.UtilTestMatrix;
@@ -29,18 +30,9 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
- * @author Peter Abeles
- */
-public abstract class StandardSvdChecks_DDRM {
-
-    Random rand = new Random(73675);
-
+public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
     public abstract SingularValueDecomposition_F64<DMatrixRMaj> createSvd();
 
     boolean omitVerySmallValues = false;

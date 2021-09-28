@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,24 +18,17 @@
 
 package org.ejml.dense.row.linsol.qr;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
-public class TestLinearSolverQrHouseCol_MT_DDRM {
-    Random rand = new Random(234);
-
-    @Test
-    void compare() {
+public class TestLinearSolverQrHouseCol_MT_DDRM extends EjmlStandardJUnit {
+    @Test void compare() {
         DMatrixRMaj A = new DMatrixRMaj(400,90);
         DMatrixRMaj B = new DMatrixRMaj(400,2);
         DMatrixRMaj expX = new DMatrixRMaj(1,1);

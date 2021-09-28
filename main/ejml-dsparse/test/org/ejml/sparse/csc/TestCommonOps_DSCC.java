@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
@@ -41,13 +42,7 @@ import java.util.Random;
 import static org.ejml.TestDMaskUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
-public class TestCommonOps_DSCC {
-
-    private final Random rand = new Random(234);
-
+public class TestCommonOps_DSCC extends EjmlStandardJUnit {
     @Test
     void checkShape() {
         CheckMatrixMultShape_DSCC checkShape = new CheckMatrixMultShape_DSCC(CommonOps_DSCC.class);

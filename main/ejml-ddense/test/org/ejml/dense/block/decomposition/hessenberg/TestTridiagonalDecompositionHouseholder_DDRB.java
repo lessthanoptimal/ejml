@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block.decomposition.hessenberg;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
@@ -30,8 +31,6 @@ import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouse
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,9 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestTridiagonalDecompositionHouseholder_DDRB {
-
-    Random rand = new Random(23423);
+public class TestTridiagonalDecompositionHouseholder_DDRB extends EjmlStandardJUnit {
     int r = 3;
     
     @Test

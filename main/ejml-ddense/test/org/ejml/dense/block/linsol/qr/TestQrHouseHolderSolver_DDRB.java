@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block.linsol.qr;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.dense.block.MatrixOps_DDRB;
@@ -26,17 +27,13 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles
  */
-class TestQrHouseHolderSolver_DDRB {
-    Random rand = new Random(23423);
-
+class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
     /**
      * Test positive examples against a variety of different inputs shapes.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,25 +18,23 @@
 
 package org.ejml.dense.row.linsol;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
-public class TestLinearSolverAbstract_DDRM {
+public class TestLinearSolverAbstract_DDRM extends EjmlStandardJUnit {
     @Test
     public void setA_getA() {
-        DMatrixRMaj A = new DMatrixRMaj(1,1);
+        DMatrixRMaj A = new DMatrixRMaj(1, 1);
 
         MySolver s = new MySolver();
         s.setA(A);
 
-        assertTrue(A==s.getA());
+        assertSame(A, s.getA());
     }
 
     /**
@@ -46,7 +44,7 @@ public class TestLinearSolverAbstract_DDRM {
     public void invert() {
         MySolver solver = new MySolver();
 
-        DMatrixRMaj A = new DMatrixRMaj(1,1);
+        DMatrixRMaj A = new DMatrixRMaj(1, 1);
 
         solver.setA(A);
         solver.invert(A);
@@ -55,12 +53,11 @@ public class TestLinearSolverAbstract_DDRM {
     }
 
     @SuppressWarnings({"NullAway"})
-    private static class MySolver extends LinearSolverAbstract_DDRM
-    {
+    private static class MySolver extends LinearSolverAbstract_DDRM {
         boolean solveCalled = false;
 
         @Override
-        public boolean setA(DMatrixRMaj A) {
+        public boolean setA( DMatrixRMaj A ) {
             _setA(A);
 
             return true;
@@ -72,8 +69,8 @@ public class TestLinearSolverAbstract_DDRM {
         }
 
         @Override
-        public void solve(DMatrixRMaj B, DMatrixRMaj X) {
-              solveCalled = true;
+        public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
+            solveCalled = true;
         }
 
         @Override

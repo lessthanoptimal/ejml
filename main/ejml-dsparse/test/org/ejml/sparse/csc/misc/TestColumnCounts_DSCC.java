@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.misc;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
@@ -25,16 +26,12 @@ import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Peter Abeles
  */
-public class TestColumnCounts_DSCC {
-    private Random rand = new Random(234);
-
+public class TestColumnCounts_DSCC extends EjmlStandardJUnit {
     /**
      * Hand constructed test case.
      */
@@ -49,9 +46,9 @@ public class TestColumnCounts_DSCC {
                         "0 0 0 0 0 1 1 " +
                         "0 0 0 0 0 0 1 ",7);
 
-        int parent[] = new int[A.numCols];
-        int post[] = new int[A.numCols];
-        int counts[] = new int[A.numCols];
+        int[] parent = new int[A.numCols];
+        int[] post = new int[A.numCols];
+        int[] counts = new int[A.numCols];
         int n = A.numRows;
 
         TriangularSolver_DSCC.eliminationTree(A,false,parent,null);
@@ -61,7 +58,7 @@ public class TestColumnCounts_DSCC {
         alg.process(A,parent,post,counts);
 
         // computed by inspection
-        int expected[] = new int[]{4,2,4,3,3,2,1};
+        int[] expected = new int[]{4,2,4,3,3,2,1};
 
         for (int i = 0; i < n; i++) {
             assertEquals(expected[i],counts[i]);
@@ -93,13 +90,13 @@ public class TestColumnCounts_DSCC {
             CommonOps_DSCC.mult(A_t, A, ATA, null, null);
 
             // compute expected results
-            int expected[] = new int[A.numCols];
+            int[] expected = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(ATA, false, parent.data, null);
             TriangularSolver_DSCC.postorder(parent.data, N, post.data, null);
             alg.process(ATA, parent.data, post.data, expected);
 
             // Now compute it implicitly
-            int found[] = new int[A.numCols];
+            int[] found = new int[A.numCols];
             TriangularSolver_DSCC.eliminationTree(A, true, parent.data, null);
             TriangularSolver_DSCC.postorder(parent.data, N, post.data, null);
             algATA.process(A, parent.data, post.data, found);
@@ -125,9 +122,9 @@ public class TestColumnCounts_DSCC {
             CommonOps_DSCC.transpose(A,A_t,null);
 
 
-            int parent[] = new int[A.numCols];
-            int post[] = new int[A.numCols];
-            int counts[] = new int[A.numCols];
+            int[] parent = new int[A.numCols];
+            int[] post = new int[A.numCols];
+            int[] counts = new int[A.numCols];
 
             TriangularSolver_DSCC.eliminationTree(A_t,false,parent,null);
             TriangularSolver_DSCC.postorder(parent,N,post,null);
@@ -136,7 +133,7 @@ public class TestColumnCounts_DSCC {
 
             // Find a solution the very slow way
             bruteForceFill(A);
-            int expected[] = computeColumns(A);
+            int[] expected = computeColumns(A);
 
             for (int j = 0; j < N; j++) {
                 assertEquals(expected[j],counts[j]);
@@ -180,9 +177,9 @@ public class TestColumnCounts_DSCC {
         // set up data structures
         int n = 6;
 
-        int delta[] = new int[n];
-        int parent[] = new int[]{2,3,3,4,5,-1};
-        int post[] = new int[parent.length];
+        int[] delta = new int[n];
+        int[] parent = new int[]{2,3,3,4,5,-1};
+        int[] post = new int[parent.length];
         TriangularSolver_DSCC.postorder(parent,n,post,null);
 
         // run the algorithm
@@ -191,8 +188,8 @@ public class TestColumnCounts_DSCC {
         alg.findFirstDescendant(parent,post,delta);
 
         // check 'first'
-        int expected[] = new int[]{1,0,1,0,0,0};
-        int w[] = alg.getW();
+        int[] expected = new int[]{1,0,1,0,0,0};
+        int[] w = alg.getW();
         for (int i = 0; i < n; i++) {
             assertEquals(expected[i],w[alg.first+i]);
         }
@@ -212,9 +209,9 @@ public class TestColumnCounts_DSCC {
         // set up data structures
         int n = 6;
 
-        int delta[] = new int[n];
-        int parent[] = new int[]{2,3,3,4,5,-1};
-        int post[] = new int[parent.length];
+        int[] delta = new int[n];
+        int[] parent = new int[]{2,3,3,4,5,-1};
+        int[] post = new int[parent.length];
         TriangularSolver_DSCC.postorder(parent,n,post,null);
 
         // run the algorithm

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 
 import java.util.Arrays;
@@ -31,11 +32,11 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * @author Peter Abeles
  */
-public class UtilTestMatrix {
+public class UtilTestMatrix extends EjmlStandardJUnit {
 
     public static void checkMat(DMatrixRMaj mat , double ...d )
     {
-        double data[] = mat.getData();
+        double[] data = mat.getData();
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
             assertEquals(d[i],data[i], UtilEjml.TEST_F64);
@@ -44,17 +45,17 @@ public class UtilTestMatrix {
 
     public static void checkMat(FMatrixRMaj mat , float ...d )
     {
-        float data[] = mat.getData();
+        float[] data = mat.getData();
 
         for( int i = 0; i < mat.getNumElements(); i++ ) {
             assertEquals(d[i],data[i],UtilEjml.TEST_F32);
         }
     }
 
-    public static void checkSameElements( double tol, int length , double a[], double b[] )
+    public static void checkSameElements( double tol, int length , double[] a, double[] b )
     {
-        double aa[] = new double[ length ];
-        double bb[] = new double[ length ];
+        double[] aa = new double[ length ];
+        double[] bb = new double[ length ];
 
         System.arraycopy(a,0,aa,0,length);
         System.arraycopy(b,0,bb,0,length);
@@ -68,10 +69,10 @@ public class UtilTestMatrix {
         }
     }
 
-    public static void checkSameElements( float tol, int length , float a[], float b[] )
+    public static void checkSameElements( float tol, int length , float[] a, float[] b )
     {
-        float aa[] = new float[ length ];
-        float bb[] = new float[ length ];
+        float[] aa = new float[ length ];
+        float[] bb = new float[ length ];
 
         System.arraycopy(a,0,aa,0,length);
         System.arraycopy(b,0,bb,0,length);
@@ -85,7 +86,7 @@ public class UtilTestMatrix {
         }
     }
 
-    public static void checkNumFound( int expected , double tol , double value , double data[] )
+    public static void checkNumFound( int expected , double tol , double value , double[] data )
     {
         int numFound = 0;
 
@@ -97,7 +98,7 @@ public class UtilTestMatrix {
         assertEquals(expected,numFound);
     }
 
-    public static void checkNumFound( int expected , float tol , float value , float data[] )
+    public static void checkNumFound( int expected , float tol , float value , float[] data )
     {
         int numFound = 0;
 
@@ -121,7 +122,7 @@ public class UtilTestMatrix {
     public static DMatrixRMaj random64(int numRows , int numCols , double min , double max , Random rand )
     {
         DMatrixRMaj mat = new DMatrixRMaj(numRows,numCols);
-        double d[] = mat.getData();
+        double[] d = mat.getData();
         int size = mat.getNumElements();
 
         double r = max-min;
@@ -145,7 +146,7 @@ public class UtilTestMatrix {
     public static FMatrixRMaj random32(int numRows , int numCols , float min , float max , Random rand )
     {
         FMatrixRMaj mat = new FMatrixRMaj(numRows,numCols);
-        float d[] = mat.getData();
+        float[] d = mat.getData();
         int size = mat.getNumElements();
 
         float r = max-min;

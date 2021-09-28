@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.mult;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
@@ -28,16 +29,12 @@ import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Peter Abeles
  */
-public class TestMatrixVectorMult_DSCC {
-    Random rand = new Random(234);
-
+public class TestMatrixVectorMult_DSCC extends EjmlStandardJUnit {
     @Test
     public void mult_A_v() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,4,14,rand);

@@ -1,6 +1,7 @@
 dependencies {
 	compile project(':main:autocode')
 	compile project(':main:ejml-all')
+	compile project(':main:ejml-experimental')
 	compile project(':main:ejml-cdense').sourceSets.benchmarks.output
 	compile project(':main:ejml-ddense').sourceSets.benchmarks.output
 	compile project(':main:ejml-dsparse').sourceSets.benchmarks.output
@@ -8,7 +9,19 @@ dependencies {
 	compile project(':main:ejml-fsparse').sourceSets.benchmarks.output
 	compile project(':main:ejml-zdense').sourceSets.benchmarks.output
 
+	testImplementation project(':main:ejml-core').sourceSets.test.output
+	testImplementation project(':main:ejml-simple').sourceSets.test.output
+	testImplementation project(':main:ejml-experimental').sourceSets.test.output
+	testImplementation project(':main:ejml-cdense').sourceSets.test.output
+	testImplementation project(':main:ejml-dsparse').sourceSets.test.output
+	testImplementation project(':main:ejml-ddense').sourceSets.test.output
+	testImplementation project(':main:ejml-fdense').sourceSets.test.output
+	testImplementation project(':main:ejml-fsparse').sourceSets.test.output
+	testImplementation project(':main:ejml-zdense').sourceSets.test.output
+	testCompile group: 'commons-io', name: 'commons-io', version: commons_io_version
+
 	compile("com.peterabeles:regression:$auto64to32_version")
+	compile("com.peterabeles:language:$auto64to32_version")
 }
 
 // Run the regression using a gradle command

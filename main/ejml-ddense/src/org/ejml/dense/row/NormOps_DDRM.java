@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -140,13 +140,14 @@ public class NormOps_DDRM {
 
         if (n == 0) return 0;
 
-        double smallest = Double.MAX_VALUE;
-        double largest = Double.MIN_VALUE;
+        double smallest = singularValues[0];
+        double largest = singularValues[0];
 
-        for (double s : singularValues) {
+        for (int i = 1; i < singularValues.length; i++) {
+            double s = singularValues[i];
             if (s < smallest)
                 smallest = s;
-            if (s > largest)
+            else if (s > largest)
                 largest = s;
         }
 

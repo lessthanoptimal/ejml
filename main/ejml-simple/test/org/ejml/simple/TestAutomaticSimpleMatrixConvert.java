@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,18 +18,16 @@
 
 package org.ejml.simple;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.FMatrixRMaj;
 import org.ejml.data.MatrixType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-/**
- * @author Peter Abeles
- */
-public class TestAutomaticSimpleMatrixConvert {
+public class TestAutomaticSimpleMatrixConvert extends EjmlStandardJUnit {
     /**
      * Very basic test. The inner parts are tested elsewhere.
      */
@@ -42,8 +40,8 @@ public class TestAutomaticSimpleMatrixConvert {
 
         alg.specify(a,b);
 
-        assertTrue(a==alg.convert(a));
-        assertFalse(b==alg.convert(b));
-        assertTrue(alg.convert(b).getType()== MatrixType.DDRM);
+        assertSame(a, alg.convert(a));
+        assertNotSame(b, alg.convert(b));
+        assertSame(alg.convert(b).getType(), MatrixType.DDRM);
     }
 }

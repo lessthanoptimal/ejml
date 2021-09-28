@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,10 +21,6 @@ package org.ejml.dense.row.decomposition.bidiagonal;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.BidiagonalDecomposition_F64;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestBidiagonalDecompositionTall_DDRM extends GenericBidiagonalCheck_DDRM {
     @Override
     protected BidiagonalDecomposition_F64<DMatrixRMaj> createQRDecomposition() {

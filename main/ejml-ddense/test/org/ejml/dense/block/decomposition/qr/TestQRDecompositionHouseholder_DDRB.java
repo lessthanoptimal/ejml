@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,13 @@
 
 package org.ejml.dense.block.decomposition.qr;
 
+import org.ejml.EjmlStandardJUnit;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author Peter Abeles
  */
-public class TestQRDecompositionHouseholder_DDRB {
-
+public class TestQRDecompositionHouseholder_DDRB extends EjmlStandardJUnit {
     @Test
     public void generic() {
         QRDecompositionHouseholder_DDRB decomp = new QRDecompositionHouseholder_DDRB();

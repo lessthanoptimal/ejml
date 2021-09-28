@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TestQrLeftLookingDecomposition_DSCC extends GenericDecompositionTests_DSCC {
 
-    protected FillReducing permutationTests[] =
+    protected FillReducing[] permutationTests =
             new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
 
     @Override

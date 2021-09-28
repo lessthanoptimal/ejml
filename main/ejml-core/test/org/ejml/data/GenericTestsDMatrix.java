@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,8 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsDMatrix {
-
+public abstract class GenericTestsDMatrix extends EjmlStandardJUnit {
     protected abstract DMatrix createMatrix(int numRows , int numCols );
 
     public void allTests() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.ZMatrixRMaj;
@@ -33,10 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSpecializedOps_ZDRM {
-
-    private final Random rand = new Random(234);
-
+public class TestSpecializedOps_ZDRM extends EjmlStandardJUnit {
     @Test
     void createReflector() {
         ZMatrixRMaj u = RandomMatrices_ZDRM.rectangle(4, 1, rand);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.decomposition;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixSparseCSC;
@@ -25,7 +26,6 @@ import org.ejml.interfaces.decomposition.DecompositionSparseInterface;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,9 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Peter Abeles
  */
-public abstract class GenericDecompositionTests_DSCC {
-    protected Random rand = new Random(0x45478);
-
+public abstract class GenericDecompositionTests_DSCC extends EjmlStandardJUnit {
     protected boolean canLockStructure = true;
 
     /**

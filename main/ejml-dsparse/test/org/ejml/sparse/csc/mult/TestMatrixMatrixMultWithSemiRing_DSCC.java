@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse.csc.mult;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.masks.DMaskFactory;
@@ -39,7 +40,7 @@ import static org.ejml.TestDMaskUtil.assertMaskedResult;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings({"UnusedMethod"})
-public class TestMatrixMatrixMultWithSemiRing_DSCC {
+public class TestMatrixMatrixMultWithSemiRing_DSCC extends EjmlStandardJUnit {
     DMatrixSparseCSC inputMatrix;
 
     @BeforeEach

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,10 +21,6 @@ package org.ejml.dense.row.decomposition.eig;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.junit.jupiter.api.Test;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestWatchedDoubleStepQRDecomposition_DDRM extends GeneralEigenDecompositionCheck_DDRM {
     @Override
     public EigenDecomposition_F64 createDecomposition() {

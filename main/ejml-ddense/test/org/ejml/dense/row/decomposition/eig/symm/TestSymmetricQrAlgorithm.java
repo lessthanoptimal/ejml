@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition.eig.symm;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouseholder_DDRM;
 import org.junit.jupiter.api.Test;
@@ -29,15 +30,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestSymmetricQrAlgorithm {
+public class TestSymmetricQrAlgorithm extends EjmlStandardJUnit {
 
     /**
      * There should no need to do anything in this case.
      */
     @Test
     public void shouldNotChange() {
-        double diag[] = new double[]{2,3,4,5,6};
-        double off[] = new double[diag.length-1];
+        double[] diag = new double[]{2,3,4,5,6};
+        double[] off = new double[diag.length-1];
 
         SymmetricQrAlgorithm_DDRM alg = new SymmetricQrAlgorithm_DDRM();
 
@@ -53,8 +54,8 @@ public class TestSymmetricQrAlgorithm {
      */
     @Test
     public void hasOffDiagonal() {
-        double diag[] = new double[]{2,3,4,5,6};
-        double off[] = new double[diag.length-1];
+        double[] diag = new double[]{2,3,4,5,6};
+        double[] off = new double[diag.length-1];
 
         for( int i = 1; i < diag.length; i++ ) {
             off[i-1] = i+0.5;
@@ -79,8 +80,8 @@ public class TestSymmetricQrAlgorithm {
     @Test
     public void zeroDiagonalNotZeroOff() {
         int N = 5;
-        double diag[] = new double[N];
-        double off[] = new double[N-1];
+        double[] diag = new double[N];
+        double[] off = new double[N-1];
 
         for( int i = 0; i < N-1; i++ ) {
             off[i] = i+0.5;
@@ -109,8 +110,8 @@ public class TestSymmetricQrAlgorithm {
         TridiagonalDecompositionHouseholder_DDRM tridiag = new TridiagonalDecompositionHouseholder_DDRM();
         tridiag.decompose(A);
 
-        double diag[] = new double[5];
-        double off[] = new double[4];
+        double[] diag = new double[5];
+        double[] off = new double[4];
 
         tridiag.getDiagonal(diag,off);
 

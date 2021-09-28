@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.ops;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrixRMaj;
@@ -25,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestDConvertArrays {
+public class TestDConvertArrays extends EjmlStandardJUnit {
     @Test
     public void dd_to_ddrm() {
         DMatrixRMaj m = DConvertArrays.convert(new double[][]{{0,1},{2,3}},(DMatrixRMaj)null);

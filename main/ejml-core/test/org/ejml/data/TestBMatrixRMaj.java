@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.data;
 
+import org.ejml.EjmlStandardJUnit;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
-public class TestBMatrixRMaj {
+public class TestBMatrixRMaj extends EjmlStandardJUnit {
     @Test
     public void getNumElements() {
         BMatrixRMaj M = new BMatrixRMaj(4,5);
@@ -41,16 +42,16 @@ public class TestBMatrixRMaj {
     @Test
     public void reshape() {
         BMatrixRMaj M = new BMatrixRMaj(4,5);
-        boolean data[] = M.data;
+        boolean[] data = M.data;
 
         M.reshape(3, 4);
         assertEquals(12, M.getNumElements());
-        assertTrue(data == M.data);
+        assertSame(data, M.data);
 
         M.reshape(6, 7);
         assertEquals(6 * 7, M.getNumElements());
         assertTrue(6*7 <= M.data.length);
-        assertTrue(data != M.data);
+        assertNotSame(data, M.data);
 
     }
 
@@ -75,9 +76,9 @@ public class TestBMatrixRMaj {
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 5; col++) {
                 if( row == 2 && col == 3 )
-                    assertEquals(true,N.get(2,3));
+                    assertTrue(N.get(2, 3));
                 else
-                    assertEquals(false,N.get(row,col));
+                    assertFalse(N.get(row, col));
             }
         }
     }
@@ -93,9 +94,9 @@ public class TestBMatrixRMaj {
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 5; col++) {
                 if( row == 2 && col == 3 )
-                    assertEquals(true,N.get(2,3));
+                    assertTrue(N.get(2, 3));
                 else
-                    assertEquals(false,N.get(row,col));
+                    assertFalse(N.get(row, col));
             }
         }
     }
@@ -104,9 +105,9 @@ public class TestBMatrixRMaj {
     public void set_get_row_col() {
         BMatrixRMaj M = new BMatrixRMaj(4,5);
 
-        assertEquals(false, M.get(2, 3));
+        assertFalse(M.get(2, 3));
         M.set(2, 3, true);
-        assertEquals(true, M.get(2, 3));
+        assertTrue(M.get(2, 3));
 
         try {
             M.set(6,6,true);
@@ -123,9 +124,9 @@ public class TestBMatrixRMaj {
     public void unsafe_set_get_row_col() {
         BMatrixRMaj M = new BMatrixRMaj(4,5);
 
-        assertEquals(false, M.get(2, 3));
+        assertFalse(M.get(2, 3));
         M.set(2, 3, true);
-        assertEquals(true, M.get(2, 3));
+        assertTrue(M.get(2, 3));
     }
 
     @Test

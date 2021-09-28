@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,27 +18,20 @@
 
 package org.ejml.data;
 
+import org.ejml.EjmlStandardJUnit;
 import org.junit.jupiter.api.Test;
 
-
-/**
- * @author Peter Abeles
- */
-public class TestDenseD2Matrix64F {
-
+public class TestDenseD2Matrix64F extends EjmlStandardJUnit {
     @Test
     public void testGeneric() {
         GenericTestsDMatrix g;
         g = new GenericTestsDMatrix() {
             @Override
-            protected DMatrix createMatrix(int numRows, int numCols) {
-                return new DenseD2Matrix64F(numRows,numCols);
+            protected DMatrix createMatrix( int numRows, int numCols ) {
+                return new DenseD2Matrix64F(numRows, numCols);
             }
         };
 
         g.allTests();
     }
-
-
-
 }

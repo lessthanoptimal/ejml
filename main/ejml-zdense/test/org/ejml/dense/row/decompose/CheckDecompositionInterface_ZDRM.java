@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decompose;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.ZMatrixRMaj;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.RandomMatrices_ZDRM;
@@ -27,13 +28,8 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
-public class CheckDecompositionInterface_ZDRM {
-
-    /**
+public class CheckDecompositionInterface_ZDRM extends EjmlStandardJUnit {
+    /*
      * Performs a decomposition and makes sure the input matrix is not modified.
      */
     public static boolean safeDecomposition(DecompositionInterface<ZMatrixRMaj> decomp , ZMatrixRMaj A ) {

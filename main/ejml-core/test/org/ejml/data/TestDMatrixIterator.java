@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,23 +18,14 @@
 
 package org.ejml.data;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-
-/**
- * @author Peter Abeles
- */
-public class TestDMatrixIterator {
-
-    Random rand = new Random(234234);
-
+public class TestDMatrixIterator extends EjmlStandardJUnit {
     @Test
     public void allRow() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,6,rand);
@@ -47,7 +38,7 @@ public class TestDMatrixIterator {
                 assertEquals(A.get(i,j),iter.next(), UtilEjml.TEST_F64);
             }
         }
-        assertTrue(!iter.hasNext());
+        assertFalse(iter.hasNext());
     }
 
     @Test
@@ -62,7 +53,7 @@ public class TestDMatrixIterator {
                 assertEquals(A.get(i,j),iter.next(),UtilEjml.TEST_F64);
             }
         }
-        assertTrue(!iter.hasNext());
+        assertFalse(iter.hasNext());
     }
 
     @Test
@@ -77,7 +68,7 @@ public class TestDMatrixIterator {
                 assertEquals(A.get(i,j),iter.next(),UtilEjml.TEST_F64);
             }
         }
-        assertTrue(!iter.hasNext());
+        assertFalse(iter.hasNext());
 
     }
 
@@ -93,7 +84,7 @@ public class TestDMatrixIterator {
                 assertEquals(A.get(i,j),iter.next(),UtilEjml.TEST_F64);
             }
         }
-        assertTrue(!iter.hasNext());
+        assertFalse(iter.hasNext());
     }
 
 }

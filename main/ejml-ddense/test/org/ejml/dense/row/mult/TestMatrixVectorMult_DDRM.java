@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.UtilTestMatrix;
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,10 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestMatrixVectorMult_DDRM {
-
-    Random rand = new Random(0x7354);
-
+public class TestMatrixVectorMult_DDRM extends EjmlStandardJUnit {
     @Test
     public void checkShapesOfInput() {
         CheckMatrixVectorMultShape_DDRM check = new CheckMatrixVectorMultShape_DDRM(MatrixVectorMult_DDRM.class);

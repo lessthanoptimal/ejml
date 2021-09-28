@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,12 @@
 
 package org.ejml.dense.row.misc;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,10 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestUnrolledDeterminantFromMinor_DDRM {
-
-    Random rand = new Random(234234);
-
+public class TestUnrolledDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
     @Test
     public void testAll() {
         for(int N = 2; N <= UnrolledDeterminantFromMinor_DDRM.MAX; N++ ) {

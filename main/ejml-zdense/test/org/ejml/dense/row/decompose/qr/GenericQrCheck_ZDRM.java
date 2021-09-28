@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decompose.qr;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.ZMatrixRMaj;
@@ -27,17 +28,9 @@ import org.ejml.dense.row.RandomMatrices_ZDRM;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
-* @author Peter Abeles
-*/
-public abstract class GenericQrCheck_ZDRM {
-    Random rand = new Random(0xff);
-
+public abstract class GenericQrCheck_ZDRM extends EjmlStandardJUnit {
     abstract protected QRDecomposition<ZMatrixRMaj> createQRDecomposition();
 
     @Test

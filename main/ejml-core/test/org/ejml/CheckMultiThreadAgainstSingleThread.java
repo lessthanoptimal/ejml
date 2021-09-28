@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,8 +39,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public abstract class CheckMultiThreadAgainstSingleThread {
-    protected Random rand = new Random(3245);
+public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJUnit {
     protected int size = 200;
     protected int numTrials = 2;
     int expectedFunctions;

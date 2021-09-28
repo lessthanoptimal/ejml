@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.factory;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.LinearSolverSafe;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
@@ -28,18 +29,13 @@ import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverFactory_DDRM {
-
-    Random rand = new Random(234);
-
+public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
     @Test
     public void general() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);

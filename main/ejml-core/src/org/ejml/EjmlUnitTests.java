@@ -249,7 +249,7 @@ public class EjmlUnitTests {
                 assertTrue(!Float.isNaN(valA) && !Double.isNaN(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
                 assertTrue(!Float.isInfinite(valA) && !Double.isInfinite(valB), "At (" + i + "," + j + ") A = " + valA + " B = " + valB);
 
-                var error = Math.abs(valA - valB);
+                double error = Math.abs(valA - valB);
                 assertTrue(error <= tol, "At (" + i + "," + j + ") A = " + valA + " B = " + valB + " error = " + error + " tol = " + tol);
             }
         }

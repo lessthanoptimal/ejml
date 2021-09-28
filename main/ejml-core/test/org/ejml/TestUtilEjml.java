@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,17 +23,11 @@ import org.ejml.data.DMatrixSparseCSC;
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
 @SuppressWarnings("FloatingPointLiteralPrecision")
-public class TestUtilEjml {
-    Random rand = new Random(23423);
-
+public class TestUtilEjml extends EjmlStandardJUnit {
     @Test
     void max_array() {
         double[] a = new double[]{-1, 2, 3, 4, 5, 6, 3, 4, 5, 7, 8, 2, 3, -5, -6};

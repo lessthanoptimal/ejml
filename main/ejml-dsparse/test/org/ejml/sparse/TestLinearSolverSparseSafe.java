@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.sparse;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.LinearSolverSafe;
 import org.ejml.LinearSolverSparseSafe;
 import org.ejml.UtilEjml;
@@ -28,16 +29,12 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Peter Abeles
  */
-public class TestLinearSolverSparseSafe {
-    Random rand = new Random(234);
-
+public class TestLinearSolverSparseSafe extends EjmlStandardJUnit {
     DMatrixSparseCSC Ainput = new DMatrixSparseCSC(1,1,1);
     DMatrixRMaj Binput = new DMatrixRMaj(1,1);
 

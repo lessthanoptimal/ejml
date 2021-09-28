@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.block.decomposition.chol;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
@@ -28,8 +29,6 @@ import org.ejml.generic.GenericMatrixOps_F64;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,10 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-public class TestCholeskyOuterForm_DDRB {
-
-    Random rand = new Random(1231);
-
+public class TestCholeskyOuterForm_DDRB extends EjmlStandardJUnit {
     // size of a block
     int bl = 5;
 

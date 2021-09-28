@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,13 @@
 
 package org.ejml.dense.row.linsol;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.LinearSolverSafe;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,10 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Peter Abeles
  */
-public class GenericSolvePseudoInverseChecks_DDRM {
-
-    Random rand = new Random(234);
-
+public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
     LinearSolverDense<DMatrixRMaj> solver;
 
     public GenericSolvePseudoInverseChecks_DDRM(LinearSolverDense<DMatrixRMaj> solver) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,19 +18,15 @@
 
 package org.ejml.dense.block.decomposition.bidiagonal;
 
+import org.ejml.EjmlStandardJUnit;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 
 /**
  * @author Peter Abeles
  */
-public class TestBidiagonalHelper_DDRB {
-
+public class TestBidiagonalHelper_DDRB extends EjmlStandardJUnit {
     final static int r = 3;
-    Random rand = new Random(234);
-
 
     @Test
     public void bidiagOuterBlocks() {

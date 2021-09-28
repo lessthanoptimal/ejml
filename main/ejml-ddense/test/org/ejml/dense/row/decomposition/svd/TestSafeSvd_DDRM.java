@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml.dense.row.decomposition.svd;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.DMatrix;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.SingularValueDecomposition;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
-public class TestSafeSvd_DDRM {
+public class TestSafeSvd_DDRM extends EjmlStandardJUnit {
 
     @Test
     public void getSafety() {
@@ -38,12 +39,12 @@ public class TestSafeSvd_DDRM {
         // it will need to create a copy in this case
         Dummy dummy = new Dummy(2,true,true,2,3);
 
-        SingularValueDecomposition decomp = new SafeSvd_DDRM(dummy);
+        SingularValueDecomposition<DMatrixRMaj> decomp = new SafeSvd_DDRM(dummy);
         assertFalse(decomp.inputModified());
 
         decomp.decompose(A);
 
-        assertTrue(A != dummy.passedInMatrix);
+        assertNotSame(A, dummy.passedInMatrix);
 
         // now no need to make a copy
         dummy = new Dummy(2,true,false,2,3);
@@ -52,14 +53,14 @@ public class TestSafeSvd_DDRM {
 
         decomp.decompose(A);
 
-        assertTrue(A == dummy.passedInMatrix);
+        assertSame(A, dummy.passedInMatrix);
     }
 
     @Test
     public void checkOtherFunctions() {
         Dummy dummy = new Dummy(2,true,true,2,3);
 
-        SingularValueDecomposition decomp = new SafeSvd_DDRM(dummy);
+        SingularValueDecomposition<DMatrixRMaj> decomp = new SafeSvd_DDRM(dummy);
 
         assertTrue(decomp.isCompact());
         assertEquals(2, decomp.numberOfSingularValues());
