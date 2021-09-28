@@ -7,6 +7,9 @@ Date format: year/month/day
 
 - Build
   * Gradle will now download the specified JDK prior to building
+- Tooling
+  * Uses new external library for auto code generation (no change in logic)
+  * TODO lint checks
 
 ----- Version 0.41
 2021/07/07
