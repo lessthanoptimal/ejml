@@ -1116,11 +1116,12 @@ public class TestEquation extends EjmlStandardJUnit {
      */
     @Test
     public void print() {
+        // Disable unit test
+        System.setOut(super.systemOut);
         Equation eq = new Equation();
         eq.print("[1 2;3 4]");
         eq.process("A=[1 2;3 4;5 6]");
         eq.print("A");
         eq.print("B=5");
-
     }
 }

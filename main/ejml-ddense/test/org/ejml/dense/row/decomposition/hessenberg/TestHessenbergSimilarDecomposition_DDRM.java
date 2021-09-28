@@ -121,7 +121,7 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
 //        System.out.println("------------ QH -----------");
 //        UtilEjml.print(QH);
 
-        double gammas[] = decomp.getGammas();
+        double[] gammas = decomp.getGammas();
 
         DMatrixRMaj u = new DMatrixRMaj(N,1);
 
@@ -172,7 +172,7 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
 
         DMatrixRMaj QH = decomp.getQH();
 
-        double gammas[] = decomp.getGammas();
+        double[] gammas = decomp.getGammas();
 
         DMatrixRMaj u = new DMatrixRMaj(N,1);
 
@@ -204,7 +204,5 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
 //        UtilEjml.print(foundH);
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(expectedH,foundH,UtilEjml.TEST_F64));
-
-        System.out.println();
     }
 }

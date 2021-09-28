@@ -45,6 +45,7 @@ public class TestTriangularSolver_DDRB extends EjmlStandardJUnit {
 
         for (int size = 1; size <= 9; size++) {
             DMatrixRBlock T = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, r);
+            makeSolvable(T);
             MatrixOps_DDRB.zeroTriangle(true, T);
 
             DMatrixRBlock T_inv = T.copy();
@@ -70,6 +71,7 @@ public class TestTriangularSolver_DDRB extends EjmlStandardJUnit {
 
         for (int size = 1; size <= 9; size++) {
             DMatrixRBlock T = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, r);
+            makeSolvable(T);
             MatrixOps_DDRB.zeroTriangle(true, T);
 
             DMatrixRBlock T_inv = T.copy();
@@ -99,6 +101,7 @@ public class TestTriangularSolver_DDRB extends EjmlStandardJUnit {
                 for (int cols = 1; cols <= 9; cols++) {
 //                System.out.println("triangle "+triangleSize+" cols "+cols);
                     DMatrixRBlock T = MatrixOps_DDRB.createRandom(triangleSize, triangleSize, -1, 1, rand, r);
+                    makeSolvable(T);
                     MatrixOps_DDRB.zeroTriangle(true, T);
 
                     if (upper) {
@@ -117,6 +120,13 @@ public class TestTriangularSolver_DDRB extends EjmlStandardJUnit {
                     checkSolveUnaligned(T, B, Y, r, upper, true);
                 }
             }
+        }
+    }
+
+    private void makeSolvable( DMatrixRBlock T ) {
+        // Attempt to ensure it's a numerically stable invertible matrix
+        for (int i = 0; i < T.numCols; i++) {
+            T.set(i,i, 1.0 + rand.nextDouble());
         }
     }
 

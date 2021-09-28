@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +55,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         for (int i = 0; i < sum.length; i++) {
             sum[i] /= N;
             assertTrue(sum[i] != 0);
-            assertEquals(0, sum[i], 0.3);
+            assertEquals(0, sum[i], 0.4);
         }
     }
 
