@@ -18,7 +18,6 @@
 
 package org.ejml;
 
-import com.peterabeles.LibrarySourceInfo;
 import com.peterabeles.ProjectUtils;
 import com.peterabeles.regression.RuntimeRegressionMasterApp;
 
@@ -36,14 +35,10 @@ public class EjmlRuntimeRegressionApp {
         ProjectUtils.checkRoot = ( f ) ->
                 new File(f, "README.md").exists() && new File(f, "settings.gradle").exists();
 
-        ProjectUtils.sourceInfo = () -> {
-            var info = new LibrarySourceInfo();
-            info.version = EjmlVersion.VERSION;
-            info.gitDate = EjmlVersion.GIT_DATE;
-            info.gitSha = EjmlVersion.GIT_SHA;
-            info.projectName = "EJML";
-            return info;
-        };
+        ProjectUtils.libraryInfo.version = EjmlVersion.VERSION;
+        ProjectUtils.libraryInfo.gitDate = EjmlVersion.GIT_DATE;
+        ProjectUtils.libraryInfo.gitSha = EjmlVersion.GIT_SHA;
+        ProjectUtils.libraryInfo.projectName = "EJML";
 
         // Specify which packages it should skip over
         String[] excluded = new String[]{"ejml-experimental"};
