@@ -54,7 +54,7 @@ subprojects {
         toolchain { languageVersion = JavaLanguageVersion.of(15) }
     }
 
-    ext.build_java8 = false // IntelliJ has issues when this is set to true
+    ext.build_java8 = true // IntelliJ has issues when this is set to true
 
     // Prevents tons of errors if someone is using ASCII
     tasks.withType(JavaCompile).configureEach { options.encoding = "UTF-8" }
