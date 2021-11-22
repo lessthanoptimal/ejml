@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple;
 
 import org.ejml.data.Complex_F64;
@@ -100,6 +99,10 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     boolean hasUncountable( T M );
 
     void changeSign( T a );
+
+    double elementMax( T A );
+
+    double elementMin( T A );
 
     double elementMaxAbs( T A );
 

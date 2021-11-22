@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple;
 
 import org.ejml.data.*;
@@ -141,6 +140,18 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
+     * Creates a column vector with the values and shape defined by the 1D array 'data'.
+     * @param data 1D array representation of the vector. Not modified.
+     */
+    public SimpleMatrix( double data[] ) {
+        setMatrix(new DMatrixRMaj(data.length, 1, true, data));
+    }
+
+    public SimpleMatrix( float data[] ) {
+        setMatrix(new FMatrixRMaj(data.length, 1, true, data));
+    }
+
+    /**
      * Creates a new matrix that is initially set to zero with the specified dimensions. This will wrap a
      * {@link DMatrixRMaj}.
      *
@@ -232,6 +243,29 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         SimpleMatrix ret = new SimpleMatrix();
         ret.setMatrix(internalMat);
         return ret;
+    }
+
+    /**
+     * Returns a filled matrix (numRows x numCols) of the value a.
+     * @param numRows The number of numRows.
+     * @param numCols The number of columns.
+     * @param a The number to fill the matrix with.
+     * @return A matrix filled with the value a.
+     */
+    public static SimpleMatrix filled( int numRows, int numCols, double a ) {
+        SimpleMatrix res = new SimpleMatrix(numRows, numCols);
+        res.fill(a);
+        return res;
+    }
+
+    /**
+     * Returns a matrix of ones.
+     * @param numRows The number of numRows.
+     * @param numCols The number of columns.
+     * @return A matrix of ones.
+     */
+    public static SimpleMatrix ones( int numRows, int numCols ) {
+        return filled(numRows, numCols, 1);
     }
 
     /**

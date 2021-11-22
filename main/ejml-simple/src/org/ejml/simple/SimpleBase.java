@@ -790,6 +790,20 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * Returns 2D array of doubles using the {@link SimpleBase#get(int, int)} method.
+     * @return 2D array of doubles.
+     */
+    public double[][] toArray2() {
+        double[][] array = new double[mat.getNumRows()][mat.getNumCols()];
+        for (int r = 0; r < mat.getNumRows(); r++) {
+            for (int c = 0; c < mat.getNumCols(); c++) {
+                array[r][c] = get(r, c);
+            }
+        }
+        return array;
+    }
+
+    /**
      * <p>
      * Converts the array into a string format for display purposes.
      * The conversion is done using {@link MatrixIO#print(java.io.PrintStream, DMatrix)}.
@@ -999,6 +1013,24 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         ret.insertIntoThis(insertRow, insertCol, B);
 
         return ret;
+    }
+
+    /**
+     * Returns the maximum real value of all the elements in this matrix.
+     *
+     * @return Largest real value of any element.
+     */
+    public double elementMax() {
+        return ops.elementMax(mat);
+    }
+
+    /**
+     * Returns the minimum real value of all the elements in this matrix.
+     *
+     * @return Smallest real value of any element.
+     */
+    public double elementMin() {
+        return ops.elementMin(mat);
     }
 
     /**

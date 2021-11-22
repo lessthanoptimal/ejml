@@ -291,6 +291,16 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     }
 
     @Override
+    public /**/double elementMax( DMatrixSparseCSC A ) {
+        return CommonOps_DSCC.elementMax(A);
+    }
+
+    @Override
+    public /**/double elementMin( DMatrixSparseCSC A ) {
+        return CommonOps_DSCC.elementMin(A);
+    }
+
+    @Override
     public /**/double elementMaxAbs( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.elementMaxAbs(A);
     }
