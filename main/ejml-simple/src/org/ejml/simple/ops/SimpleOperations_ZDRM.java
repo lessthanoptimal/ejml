@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple.ops;
 
 import org.ejml.data.Complex_F64;
@@ -227,6 +226,16 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     public void changeSign( ZMatrixRMaj a ) {
 //        CommonOps_ZDRM.changeSign(a);
         throw new UnsupportedOperation();
+    }
+
+    @Override
+    public /**/double elementMax( ZMatrixRMaj A ) {
+        return CommonOps_ZDRM.elementMaxReal(A);
+    }
+
+    @Override
+    public /**/double elementMin( ZMatrixRMaj A ) {
+        return CommonOps_ZDRM.elementMinReal(A);
     }
 
     @Override
