@@ -105,8 +105,18 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override
+    public void plusi( DMatrixRMaj A, DMatrixRMaj B) {
+        CommonOps_DDRM.addEquals(A, B);
+    }
+
+    @Override
     public void minus( DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output ) {
         CommonOps_DDRM.subtract(A, B, output);
+    }
+
+    @Override
+    public void minusi( DMatrixRMaj A, DMatrixRMaj B ) {
+        CommonOps_DDRM.subtractEquals(A, B);
     }
 
     @Override
@@ -122,6 +132,11 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     @Override
     public void plus( DMatrixRMaj A, /**/double beta, DMatrixRMaj b, DMatrixRMaj output ) {
         CommonOps_DDRM.add(A, (double)beta, b, output);
+    }
+
+    @Override
+    public void plusi( DMatrixRMaj A, /**/double beta, DMatrixRMaj b ) {
+        CommonOps_DDRM.addEquals(A, (double)beta, b);
     }
 
     @Override

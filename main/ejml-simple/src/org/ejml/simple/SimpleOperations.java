@@ -51,13 +51,19 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void plus( T A, T B, T output );
 
+    void plusi( T A, T B );
+
     void minus( T A, T B, T output );
+
+    void minusi( T A, T B );
 
     void minus( T A, double b, T output );
 
     void plus( T A, double b, T output );
 
     void plus( T A, double beta, T b, T output );
+
+    void plusi( T A, double beta, T b );
 
     void plus( double alpha, T A, double beta, T b, T output );
 

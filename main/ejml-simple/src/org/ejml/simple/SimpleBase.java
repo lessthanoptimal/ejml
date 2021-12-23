@@ -244,7 +244,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        A.ops.plus(A.mat, B.mat, A.mat);
+        A.ops.plusi(A.mat, B.mat);
 
         return A;
     }
@@ -277,7 +277,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        A.ops.minus(A.mat, B.mat, A.mat);
+        A.ops.minusi(A.mat, B.mat);
         return A;
     }
 
@@ -357,7 +357,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T A = convertType.convert(this);
         B = convertType.convert(B);
 
-        A.ops.plus(A.mat, beta, B.mat, A.mat);
+        A.ops.plusi(A.mat, beta, B.mat);
         return A;
     }
 

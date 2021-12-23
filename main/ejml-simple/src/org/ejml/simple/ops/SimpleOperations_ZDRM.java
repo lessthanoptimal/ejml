@@ -91,8 +91,18 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override
+    public void plusi( ZMatrixRMaj A, ZMatrixRMaj B ) {
+        CommonOps_ZDRM.add(A, B, A);
+    }
+
+    @Override
     public void minus( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
         CommonOps_ZDRM.subtract(A, B, output);
+    }
+
+    @Override
+    public void minusi( ZMatrixRMaj A, ZMatrixRMaj B ) {
+        CommonOps_ZDRM.subtract(A, B, A);
     }
 
     @Override
@@ -109,6 +119,12 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
 
     @Override
     public void plus( ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b, ZMatrixRMaj output ) {
+//        CommonOps_ZDRM.add(A, (double)beta, b, output);
+        throw new UnsupportedOperation();
+    }
+
+    @Override
+    public void plusi( ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b ) {
 //        CommonOps_ZDRM.add(A, (double)beta, b, output);
         throw new UnsupportedOperation();
     }
