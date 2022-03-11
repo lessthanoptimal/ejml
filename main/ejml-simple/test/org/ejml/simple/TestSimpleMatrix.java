@@ -92,7 +92,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(3, 2, rand);
         SimpleMatrix s = new SimpleMatrix(mat);
 
-        assertTrue(mat != s.getMatrix());
+        assertNotSame(mat, s.getMatrix());
         EjmlUnitTests.assertEquals(mat, s.getMatrix());
     }
 
@@ -101,7 +101,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix orig = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix copy = new SimpleMatrix(orig);
 
-        assertTrue(orig.mat != copy.mat);
+        assertNotSame(orig.mat, copy.mat);
         EjmlUnitTests.assertEquals(orig.mat, copy.mat);
     }
 
@@ -111,7 +111,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
 
         SimpleMatrix s = SimpleMatrix.wrap(mat);
 
-        assertTrue(s.mat == mat);
+        assertSame(s.mat, mat);
     }
 
     @Test
@@ -148,7 +148,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix s = new SimpleMatrix(3, 2);
 
         // make sure a new instance isn't returned
-        assertTrue(s.mat == s.getMatrix());
+        assertSame(s.mat, s.getMatrix());
     }
 
     @Test
@@ -444,7 +444,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         double cond = NormOps_DDRM.conditionP2((DMatrixRMaj)a.getMatrix());
         double found = a.conditionP2();
 
-        assertTrue(cond == found);
+        assertEquals(cond, found);
     }
 
     @Test
@@ -545,7 +545,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         SimpleMatrix b = a.copy();
 
-        assertTrue(a.mat != b.mat);
+        assertNotSame(a.mat, b.mat);
         EjmlUnitTests.assertEquals(b.mat, a.mat);
     }
 
@@ -574,7 +574,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
 
         for (int i = 0; i < 4; i++) {
             Complex_F64 c = evd.getEigenvalue(i);
-            assertTrue(c != null);
+            assertNotNull(c);
             evd.getEigenVector(i);
         }
     }
@@ -607,13 +607,13 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < 6; j++) {
                 if (i >= 2 && i < 5 && j >= 2 && j < 6) {
                     // check to see if B was overlayed
-                    assertTrue(B.get(i - 2, j - 2) == C.get(i, j));
+                    assertEquals(B.get(i - 2, j - 2), C.get(i, j));
                 } else if (i >= 5 || j >= 4) {
                     // check zero padding
-                    assertTrue(C.get(i, j) == 0);
+                    assertEquals(0, C.get(i, j));
                 } else {
                     // see if the parts of A remain there
-                    assertTrue(A.get(i, j) == C.get(i, j));
+                    assertEquals(A.get(i, j), C.get(i, j));
                 }
             }
         }
@@ -711,7 +711,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < A.numCols(); j++) {
                 double expected = A.get(i, j)*B.get(i, j);
 
-                assertTrue(expected == C.get(i, j));
+                assertEquals(expected, C.get(i, j));
             }
         }
     }
@@ -727,7 +727,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < A.numCols(); j++) {
                 double expected = A.get(i, j)/B.get(i, j);
 
-                assertTrue(expected == C.get(i, j));
+                assertEquals(expected, C.get(i, j));
             }
         }
     }
@@ -743,7 +743,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < A.numCols(); j++) {
                 double expected = Math.pow(A.get(i, j), B.get(i, j));
 
-                assertTrue(expected == C.get(i, j));
+                assertEquals(expected, C.get(i, j));
             }
         }
     }
@@ -759,7 +759,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < A.numCols(); j++) {
                 double expected = Math.pow(A.get(i, j), b);
 
-                assertTrue(expected == C.get(i, j));
+                assertEquals(expected, C.get(i, j));
             }
         }
     }
@@ -774,7 +774,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < A.numCols(); j++) {
                 double expected = Math.log(A.get(i, j));
 
-                assertTrue(expected == C.get(i, j));
+                assertEquals(expected, C.get(i, j));
             }
         }
     }
@@ -789,7 +789,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
             for (int j = 0; j < A.numCols(); j++) {
                 double expected = Math.exp(A.get(i, j));
 
-                assertTrue(expected == C.get(i, j));
+                assertEquals(expected, C.get(i, j));
             }
         }
     }
@@ -805,7 +805,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
                 double expected = a.get(i, j);
                 double found = b.get(i - 2, j - 3);
 
-                assertTrue(expected == found);
+                assertEquals(expected, found);
             }
         }
     }
@@ -1019,11 +1019,6 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
                 fail("Serialization failed");
             }
         }
-    }
-
-    @Test
-    public void serialization2() {
-
     }
 
     /**
