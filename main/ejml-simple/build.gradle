@@ -1,11 +1,11 @@
 dependencies {
-    compile project(':main:ejml-core')
-    compile project(':main:ejml-fdense')
-    compile project(':main:ejml-ddense')
-    compile project(':main:ejml-cdense')
-    compile project(':main:ejml-zdense')
-    compile project(':main:ejml-dsparse')
-    compile project(':main:ejml-fsparse')
-    testCompile project(':main:ejml-experimental')
-    testCompile project(':main:ejml-core').sourceSets.test.output
+    api project(':main:ejml-core')
+    api project(':main:ejml-fdense')
+    api project(':main:ejml-ddense')
+    api project(':main:ejml-cdense')
+    api project(':main:ejml-zdense')
+    api project(':main:ejml-dsparse')
+    api project(':main:ejml-fsparse')
+    testImplementation project(':main:ejml-experimental')
+    testImplementation project(':main:ejml-core').sourceSets.test.output
 }

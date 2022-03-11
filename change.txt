@@ -6,6 +6,7 @@ Date format: year/month/day
 2021/
 
 - Build
+  * Java language is now 17 and binary compatibility is 11
   * Gradle will now download the specified JDK prior to building
   * Uses new external library for auto code generation (no change in logic)
   * All unit tests must extend EjmlStandardJUnit

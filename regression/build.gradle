@@ -1,13 +1,13 @@
 dependencies {
-	compile project(':main:autocode')
-	compile project(':main:ejml-all')
-	compile project(':main:ejml-experimental')
-	compile project(':main:ejml-cdense').sourceSets.benchmarks.output
-	compile project(':main:ejml-ddense').sourceSets.benchmarks.output
-	compile project(':main:ejml-dsparse').sourceSets.benchmarks.output
-	compile project(':main:ejml-fdense').sourceSets.benchmarks.output
-	compile project(':main:ejml-fsparse').sourceSets.benchmarks.output
-	compile project(':main:ejml-zdense').sourceSets.benchmarks.output
+	api project(':main:autocode')
+	api project(':main:ejml-all')
+	api project(':main:ejml-experimental')
+	api project(':main:ejml-cdense').sourceSets.benchmarks.output
+	api project(':main:ejml-ddense').sourceSets.benchmarks.output
+	api project(':main:ejml-dsparse').sourceSets.benchmarks.output
+	api project(':main:ejml-fdense').sourceSets.benchmarks.output
+	api project(':main:ejml-fsparse').sourceSets.benchmarks.output
+	api project(':main:ejml-zdense').sourceSets.benchmarks.output
 
 	testImplementation project(':main:ejml-core').sourceSets.test.output
 	testImplementation project(':main:ejml-simple').sourceSets.test.output
@@ -18,10 +18,10 @@ dependencies {
 	testImplementation project(':main:ejml-fdense').sourceSets.test.output
 	testImplementation project(':main:ejml-fsparse').sourceSets.test.output
 	testImplementation project(':main:ejml-zdense').sourceSets.test.output
-	testCompile group: 'commons-io', name: 'commons-io', version: commons_io_version
+	testImplementation group: 'commons-io', name: 'commons-io', version: commons_io_version
 
-	compile("com.peterabeles:regression:$auto64to32_version")
-	compile("com.peterabeles:language:$auto64to32_version")
+	api("com.peterabeles:regression:$auto64to32_version")
+	api("com.peterabeles:language:$auto64to32_version")
 }
 
 // Run the regression using a gradle command

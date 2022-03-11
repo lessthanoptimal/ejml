@@ -1,7 +1,7 @@
 dependencies {
-    compile project(':main:ejml-core')
-    testCompile project(':main:ejml-ddense')
-    testCompile project(':main:ejml-core').sourceSets.test.output
+    api project(':main:ejml-core')
+    testImplementation project(':main:ejml-ddense')
+    testImplementation project(':main:ejml-core').sourceSets.test.output
 
-    generateCompile project(':main:ejml-core').sourceSets.generate.output
+    generateImplementation project(':main:ejml-core').sourceSets.generate.output
 }

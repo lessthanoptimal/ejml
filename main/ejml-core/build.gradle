@@ -1,8 +1,8 @@
 dependencies {
-    testCompile project(':main:ejml-fdense')
-    testCompile project(':main:ejml-cdense')
-    testCompile project(':main:ejml-ddense')
-    testCompile project(':main:ejml-zdense')
-    testCompile project(':main:ejml-dsparse')
-    testCompile project(':main:ejml-experimental')
+    testImplementation project(':main:ejml-fdense')
+    testImplementation project(':main:ejml-cdense')
+    testImplementation project(':main:ejml-ddense')
+    testImplementation project(':main:ejml-zdense')
+    testImplementation project(':main:ejml-dsparse')
+    testImplementation project(':main:ejml-experimental')
 }

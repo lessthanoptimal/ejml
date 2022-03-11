@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':main:ejml-core')
-    testCompile project(':main:ejml-fdense')
-    testCompile project(':main:ejml-core').sourceSets.test.output
+    api project(':main:ejml-core')
+    testImplementation project(':main:ejml-fdense')
+    testImplementation project(':main:ejml-core').sourceSets.test.output
 }

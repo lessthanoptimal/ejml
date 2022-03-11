@@ -1,11 +1,11 @@
 dependencies {
-    compile project(':main:ejml-core')
-    compile project(':main:ejml-ddense')
-    compile project(':main:ejml-dsparse')
-    compile project(':main:ejml-zdense')
-    compile project(':main:ejml-simple')
+    api project(':main:ejml-core')
+    api project(':main:ejml-ddense')
+    api project(':main:ejml-dsparse')
+    api project(':main:ejml-zdense')
+    api project(':main:ejml-simple')
 
-    testCompile project(':main:ejml-core').sourceSets.test.output
-    testCompile project(':main:ejml-ddense').sourceSets.test.output
-    testCompile project(':main:ejml-zdense').sourceSets.test.output
+    testImplementation project(':main:ejml-core').sourceSets.test.output
+    testImplementation project(':main:ejml-ddense').sourceSets.test.output
+    testImplementation project(':main:ejml-zdense').sourceSets.test.output
 }

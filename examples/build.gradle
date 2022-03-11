@@ -17,9 +17,9 @@
  */
 
 dependencies {
-    compile project(':main:ejml-all')
+    api project(':main:ejml-all')
 
     ['core','generator-annprocess'].each { String a->
-        compile('org.openjdk.jmh:jmh-'+a+':1.27')
+        api("org.openjdk.jmh:jmh-'+a+':$project.jmh_version")
     }
 }
