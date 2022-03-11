@@ -20,6 +20,6 @@ dependencies {
     api project(':main:ejml-all')
 
     ['core','generator-annprocess'].each { String a->
-        api("org.openjdk.jmh:jmh-'+a+':$project.jmh_version")
+        api("org.openjdk.jmh:jmh-$a:$project.jmh_version")
     }
 }

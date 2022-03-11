@@ -20,7 +20,9 @@ dependencies {
 	testImplementation project(':main:ejml-zdense').sourceSets.test.output
 	testImplementation group: 'commons-io', name: 'commons-io', version: commons_io_version
 
-	api("com.peterabeles:regression:$auto64to32_version")
+	implementation(group: 'com.peterabeles', name: 'regression', version: auto64to32_version) {
+		exclude(group: "org.openjdk.jmh")
+	}
 	api("com.peterabeles:language:$auto64to32_version")
 }
 
