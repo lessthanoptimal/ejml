@@ -24,6 +24,7 @@ dependencies {
 		exclude(group: "org.openjdk.jmh")
 	}
 	api("com.peterabeles:language:$auto64to32_version")
+	api("org.openjdk.jmh:jmh-core:$jmh_version")
 }
 
 // Run the regression using a gradle command
