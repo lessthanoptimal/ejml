@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ public class VectorVectorMult_DDRM {
 
     /**
      * <p>
-     * Computes the inner product of the two vectors.  In geometry this is known as the dot product.<br>
+     * Computes the inner product of the two vectors. In geometry this is known as the dot product.<br>
      * <br>
      * &sum;<sub>k=1:n</sub> x<sub>k</sub> * y<sub>k</sub><br>
      * where x and y are vectors with n elements.
@@ -39,7 +39,7 @@ public class VectorVectorMult_DDRM {
      *
      * <p>
      * These functions are often used inside of highly optimized code and therefor sanity checks are
-     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * kept to a minimum. It is not recommended that any of these functions be used directly.
      * </p>
      *
      * @param x A vector with n elements. Not modified.
@@ -63,7 +63,7 @@ public class VectorVectorMult_DDRM {
      * </p>
      *
      * @param x A vector with n elements. Not modified.
-     * @param A A matrix with n by m elements.  Not modified.
+     * @param A A matrix with n by m elements. Not modified.
      * @param y A vector with m elements. Not modified.
      * @return The results.
      */
@@ -97,7 +97,7 @@ public class VectorVectorMult_DDRM {
      * </p>
      *
      * @param x A vector with n elements. Not modified.
-     * @param A A matrix with n by n elements.  Not modified.
+     * @param A A matrix with n by n elements. Not modified.
      * @param y A vector with n elements. Not modified.
      * @return The results.
      */
@@ -131,7 +131,7 @@ public class VectorVectorMult_DDRM {
     /**
      * <p>
      * Sets A &isin; &real; <sup>m &times; n</sup> equal to an outer product multiplication of the two
-     * vectors.  This is also known as a rank-1 operation.<br>
+     * vectors. This is also known as a rank-1 operation.<br>
      * <br>
      * A = x * y'
      * where x &isin; &real; <sup>m</sup> and y &isin; &real; <sup>n</sup> are vectors.
@@ -142,7 +142,7 @@ public class VectorVectorMult_DDRM {
      *
      * <p>
      * These functions are often used inside of highly optimized code and therefor sanity checks are
-     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * kept to a minimum. It is not recommended that any of these functions be used directly.
      * </p>
      *
      * @param x A vector with m elements. Not modified.
@@ -165,7 +165,7 @@ public class VectorVectorMult_DDRM {
     /**
      * <p>
      * Adds to A &isin; &real; <sup>m &times; n</sup> the results of an outer product multiplication
-     * of the two vectors.  This is also known as a rank 1 update.<br>
+     * of the two vectors. This is also known as a rank 1 update.<br>
      * <br>
      * A = A + &gamma; x * y<sup>T</sup>
      * where x &isin; &real; <sup>m</sup> and y &isin; &real; <sup>n</sup> are vectors.
@@ -176,7 +176,7 @@ public class VectorVectorMult_DDRM {
      *
      * <p>
      * These functions are often used inside of highly optimized code and therefor sanity checks are
-     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * kept to a minimum. It is not recommended that any of these functions be used directly.
      * </p>
      *
      * @param gamma A multiplication factor for the outer product.
@@ -236,19 +236,19 @@ public class VectorVectorMult_DDRM {
 
     /**
      * <p>
-     * Performs a rank one update on matrix A using vectors u and w.  The results are stored in B.<br>
+     * Performs a rank one update on matrix A using vectors u and w. The results are stored in B.<br>
      * <br>
      * B = A + &gamma; u w<sup>T</sup><br>
      * </p>
      * <p>
-     * This is called a rank1 update because the matrix u w<sup>T</sup> has a rank of 1.  Both A and B
+     * This is called a rank1 update because the matrix u w<sup>T</sup> has a rank of 1. Both A and B
      * can be the same matrix instance, but there is a special rank1Update for that.
      * </p>
      *
      * @param gamma A scalar.
      * @param A A m by m matrix. Not modified.
-     * @param u A vector with m elements.  Not modified.
-     * @param w A vector with m elements.  Not modified.
+     * @param u A vector with m elements. Not modified.
+     * @param w A vector with m elements. Not modified.
      * @param B A m by m matrix where the results are stored. Modified.
      */
     public static void rank1Update( double gamma,
@@ -269,7 +269,7 @@ public class VectorVectorMult_DDRM {
 
     /**
      * <p>
-     * Performs a rank one update on matrix A using vectors u and w.  The results are stored in A.<br>
+     * Performs a rank one update on matrix A using vectors u and w. The results are stored in A.<br>
      * <br>
      * A = A + &gamma; u w<sup>T</sup><br>
      * </p>
@@ -279,7 +279,7 @@ public class VectorVectorMult_DDRM {
      *
      * @param gamma A scalar.
      * @param A A m by m matrix. Modified.
-     * @param u A vector with m elements.  Not modified.
+     * @param u A vector with m elements. Not modified.
      */
     public static void rank1Update( double gamma,
                                     DMatrixRMaj A,

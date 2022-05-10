@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -131,7 +131,7 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
     }
 
     /**
-     * The matrix is already sorted.  See if it is still sorted after set has been called.
+     * The matrix is already sorted. See if it is still sorted after set has been called.
      */
     @Test
     void set_sorted() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -166,7 +166,7 @@ public class TestHessenbergSimilarDecomposition_ZDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * Compute the overall Q matrix from the stored u vectors.  See if the extract H is the same as the expected H.
+     * Compute the overall Q matrix from the stored u vectors. See if the extract H is the same as the expected H.
      */
     @Test
     public void testH() {

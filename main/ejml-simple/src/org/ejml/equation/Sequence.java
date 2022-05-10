@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains a sequence of operations.  This is the final result of compiling the equation.  Once created it can
+ * Contains a sequence of operations. This is the final result of compiling the equation. Once created it can
  * be invoked an arbitrary number of times by invoking {@link #perform()}.
  *
  * @author Peter Abeles

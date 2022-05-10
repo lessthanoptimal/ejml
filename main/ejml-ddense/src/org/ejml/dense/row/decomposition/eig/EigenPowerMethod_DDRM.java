@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,12 +29,12 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 /**
  * <p>
  * The power method is an iterative method that can be used to find dominant eigen vector in
- * a matrix.  Computing <b>A<sup>n</sup>q</b> for larger and larger values of n, where q is a vector.  Eventually the
+ * a matrix. Computing <b>A<sup>n</sup>q</b> for larger and larger values of n, where q is a vector. Eventually the
  * dominant (if there is any) eigen vector will "win".
  * <p>
  *
  * <p>
- * Shift implementations find the eigen value of the matrix B=A-pI instead.  This matrix has the
+ * Shift implementations find the eigen value of the matrix B=A-pI instead. This matrix has the
  * same eigen vectors, but can converge much faster if p is chosen wisely.
  * </p>
  *
@@ -44,7 +44,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  *
  * <p>
  * WARNING:  These functions have well known conditions where they will not converge or converge
- * very slowly and are only used in special situations in practice.  I have also seen it converge
+ * very slowly and are only used in special situations in practice. I have also seen it converge
  * to none dominant eigen vectors.
  * </p>
  *
@@ -130,9 +130,9 @@ public class EigenPowerMethod_DDRM {
 
     /**
      * Test for convergence by seeing if the element with the largest change
-     * is smaller than the tolerance.  In some test cases it alternated between
-     * the + and - values of the eigen vector.  When this happens it seems to have "converged"
-     * to a non-dominant eigen vector.    At least in the case I looked at.  I haven't devoted
+     * is smaller than the tolerance. In some test cases it alternated between
+     * the + and - values of the eigen vector. When this happens it seems to have "converged"
+     * to a non-dominant eigen vector.   At least in the case I looked at. I haven't devoted
      * a lot of time into this issue...
      */
     private boolean checkConverged( DMatrixRMaj A ) {
@@ -161,7 +161,7 @@ public class EigenPowerMethod_DDRM {
     /**
      * Computes the most dominant eigen vector of A using a shifted matrix.
      * The shifted matrix is defined as <b>B = A - &alpha;I</b> and can converge faster
-     * if &alpha; is chosen wisely.  In general it is easier to choose a value for &alpha;
+     * if &alpha; is chosen wisely. In general it is easier to choose a value for &alpha;
      * that will converge faster with the shift-invert strategy than this one.
      *
      * @param A The matrix.

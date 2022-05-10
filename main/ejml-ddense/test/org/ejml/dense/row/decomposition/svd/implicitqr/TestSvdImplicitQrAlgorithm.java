@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -61,7 +61,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
     }
 
     /**
-     * A trivial case where all the elements are diagonal.  It should do nothing here.
+     * A trivial case where all the elements are diagonal. It should do nothing here.
      */
     @Test
     public void knownDiagonal() {

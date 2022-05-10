@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,7 +45,7 @@ public class TestQRDecompositionHouseholder_DDRM extends GenericQrCheck_DDRM {
     }
 
     /**
-     * Internall several house holder operations are performed.  This
+     * Internall several house holder operations are performed. This
      * checks to see if the householder operations and the expected result for all the
      * submatrices.
      */

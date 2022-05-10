@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -198,7 +198,7 @@ public class SingularOps_DDRM {
      *
      * <p>
      * In most implementations of SVD the singular values are automatically arranged in in descending
-     * order.  In EJML this is not the case since it is often not needed and some computations can
+     * order. In EJML this is not the case since it is often not needed and some computations can
      * be saved by not doing that.
      * </p>
      *
@@ -235,7 +235,7 @@ public class SingularOps_DDRM {
                 continue;
 
             if (bigIndex == -1) {
-                // there is at least one uncountable singular value.  just stop here
+                // there is at least one uncountable singular value. just stop here
                 break;
             }
 
@@ -291,7 +291,7 @@ public class SingularOps_DDRM {
                 continue;
 
             if (bigIndex == -1) {
-                // there is at least one uncountable singular value.  just stop here
+                // there is at least one uncountable singular value. just stop here
                 break;
             }
 
@@ -310,8 +310,8 @@ public class SingularOps_DDRM {
     }
 
     /**
-     * Checks to see if all the provided matrices are the expected size for an SVD.  If an error is encountered
-     * then an exception is thrown.  This automatically handles compact and non-compact formats
+     * Checks to see if all the provided matrices are the expected size for an SVD. If an error is encountered
+     * then an exception is thrown. This automatically handles compact and non-compact formats
      */
     public static void checkSvdMatrixSize( @Nullable DMatrixRMaj U, boolean tranU, DMatrixRMaj W,
                                            @Nullable DMatrixRMaj V, boolean tranV ) {
@@ -374,9 +374,9 @@ public class SingularOps_DDRM {
      * or equal to the threshold. In some situations a non-compact SVD is required.
      * </p>
      *
-     * @param svd A precomputed decomposition.  Not modified.
-     * @param nullSpace Storage for null space.  Will be reshaped as needed.  Modified.
-     * @param tol Threshold for selecting singular values.  Try UtilEjml.EPS.
+     * @param svd A precomputed decomposition. Not modified.
+     * @param nullSpace Storage for null space. Will be reshaped as needed. Modified.
+     * @param tol Threshold for selecting singular values. Try UtilEjml.EPS.
      * @return The null space.
      */
     public static DMatrixRMaj nullSpace( SingularValueDecomposition_F64<DMatrixRMaj> svd,
@@ -480,13 +480,13 @@ public class SingularOps_DDRM {
     /**
      * <p>
      * The vector associated will the smallest singular value is returned as the null space
-     * of the decomposed system.  A right null space is returned if 'isRight' is set to true,
+     * of the decomposed system. A right null space is returned if 'isRight' is set to true,
      * and a left null space if false.
      * </p>
      *
-     * @param svd A precomputed decomposition.  Not modified.
-     * @param isRight true for right null space and false for left null space.  Right is more commonly used.
-     * @param nullVector Optional storage for a vector for the null space.  Modified.
+     * @param svd A precomputed decomposition. Not modified.
+     * @param isRight true for right null space and false for left null space. Right is more commonly used.
+     * @param nullVector Optional storage for a vector for the null space. Modified.
      * @return Vector in V associated with smallest singular value..
      */
     public static DMatrixRMaj nullVector( SingularValueDecomposition_F64<DMatrixRMaj> svd,
@@ -551,7 +551,7 @@ public class SingularOps_DDRM {
      *
      * tol = max (size (A)) * largest sigma * eps;
      *
-     * @param svd A precomputed decomposition.  Not modified.
+     * @param svd A precomputed decomposition. Not modified.
      * @return threshold for singular values
      */
     public static double singularThreshold( SingularValueDecomposition_F64<?> svd ) {
@@ -584,7 +584,7 @@ public class SingularOps_DDRM {
     /**
      * Extracts the rank of a matrix using a preexisting decomposition and default threshold.
      *
-     * @param svd A precomputed decomposition.  Not modified.
+     * @param svd A precomputed decomposition. Not modified.
      * @return The rank of the decomposed matrix.
      * @see #singularThreshold(SingularValueDecomposition_F64)
      */
@@ -596,7 +596,7 @@ public class SingularOps_DDRM {
     /**
      * Extracts the rank of a matrix using a preexisting decomposition.
      *
-     * @param svd A precomputed decomposition.  Not modified.
+     * @param svd A precomputed decomposition. Not modified.
      * @param threshold Tolerance used to determine of a singular value is singular.
      * @return The rank of the decomposed matrix.
      * @see #singularThreshold(SingularValueDecomposition_F64)
@@ -619,7 +619,7 @@ public class SingularOps_DDRM {
     /**
      * Extracts the nullity of a matrix using a preexisting decomposition and default threshold.
      *
-     * @param svd A precomputed decomposition.  Not modified.
+     * @param svd A precomputed decomposition. Not modified.
      * @return The nullity of the decomposed matrix.
      * @see #singularThreshold(SingularValueDecomposition_F64)
      */
@@ -631,7 +631,7 @@ public class SingularOps_DDRM {
     /**
      * Extracts the nullity of a matrix using a preexisting decomposition.
      *
-     * @param svd A precomputed decomposition.  Not modified.
+     * @param svd A precomputed decomposition. Not modified.
      * @param threshold Tolerance used to determine of a singular value is singular.
      * @return The nullity of the decomposed matrix.
      * @see #singularThreshold(SingularValueDecomposition_F64)

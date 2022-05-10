@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,9 +24,9 @@ import org.ejml.dense.row.linsol.AdjustableLinearSolver_DDRM;
 
 /**
  * <p>
- * This example demonstrates how a polynomial can be fit to a set of data.  This is done by
- * using a least squares solver that is adjustable.  By using an adjustable solver elements
- * can be inexpensively removed and the coefficients recomputed.  This is much less expensive
+ * This example demonstrates how a polynomial can be fit to a set of data. This is done by
+ * using a least squares solver that is adjustable. By using an adjustable solver elements
+ * can be inexpensively removed and the coefficients recomputed. This is much less expensive
  * than resolving the whole system from scratch.
  * </p>
  * <p>
@@ -109,8 +109,8 @@ public class PolynomialFit {
 
     /**
      * Removes the observation that fits the model the worst and recomputes the coefficients.
-     * This is done efficiently by using an adjustable solver.  Often times the elements with
-     * the largest errors are outliers and not part of the system being modeled.  By removing them
+     * This is done efficiently by using an adjustable solver. Often times the elements with
+     * the largest errors are outliers and not part of the system being modeled. By removing them
      * a more accurate set of coefficients can be computed.
      */
     public void removeWorstFit() {

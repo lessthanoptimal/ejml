@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,10 +26,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 /**
- * <p>Compressed Column (CC) sparse matrix format.   Only non-zero elements are stored.</p>
+ * <p>Compressed Column (CC) sparse matrix format.  Only non-zero elements are stored.</p>
  * <p>
  * Format:<br>
- * Row indexes for column j are stored in rol_idx[col_idx[j]] to rol_idx[col_idx[j+1]-1].  The values
+ * Row indexes for column j are stored in rol_idx[col_idx[j]] to rol_idx[col_idx[j+1]-1]. The values
  * for the corresponding elements are stored at data[col_idx[j]] to data[col_idx[j+1]-1].<br>
  * <br>
  * Row indexes must be specified in chronological order.
@@ -39,7 +39,7 @@ import java.util.Iterator;
  */
 public class DMatrixSparseCSC implements DMatrixSparse {
     /**
-     * Storage for non-zero values.  Only valid up to length-1.
+     * Storage for non-zero values. Only valid up to length-1.
      */
     public double[] nz_values = UtilEjml.ZERO_LENGTH_F64;
     /**
@@ -47,12 +47,12 @@ public class DMatrixSparseCSC implements DMatrixSparse {
      */
     public int nz_length;
     /**
-     * Specifies which row a specific non-zero value corresponds to.  If they are sorted or not with in each column
+     * Specifies which row a specific non-zero value corresponds to. If they are sorted or not with in each column
      * is specified by the {@link #indicesSorted} flag.
      */
     public int[] nz_rows = UtilEjml.ZERO_LENGTH_I32;
     /**
-     * Stores the range of indexes in the non-zero lists that belong to each column.  Column 'i' corresponds to
+     * Stores the range of indexes in the non-zero lists that belong to each column. Column 'i' corresponds to
      * indexes col_idx[i] to col_idx[i+1]-1, inclusive.
      */
     public int[] col_idx;
@@ -345,11 +345,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     /**
-     * Increases the maximum size of the data array so that it can store sparse data up to 'length'.  The class
+     * Increases the maximum size of the data array so that it can store sparse data up to 'length'. The class
      * parameter nz_length is not modified by this function call.
      *
      * @param arrayLength Desired maximum length of sparse data
-     * @param preserveValue If true the old values will be copied into the new arrays.  If false that step will be skipped.
+     * @param preserveValue If true the old values will be copied into the new arrays. If false that step will be skipped.
      */
     public void growMaxLength( int arrayLength, boolean preserveValue ) {
         if (arrayLength < 0)
@@ -393,7 +393,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     /**
-     * Given the histogram of columns compute the col_idx for the matrix.  nz_length is automatically set and
+     * Given the histogram of columns compute the col_idx for the matrix. nz_length is automatically set and
      * nz_values will grow if needed.
      *
      * @param histogram histogram of column values in the sparse matrix. modified, see above.
@@ -413,7 +413,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     /**
      * Sorts the row indices in ascending order.
      *
-     * @param sorter (Optional) Used to sort rows.  If null a new instance will be declared internally.
+     * @param sorter (Optional) Used to sort rows. If null a new instance will be declared internally.
      */
     public void sortIndices( @Nullable SortCoupledArray_F64 sorter ) {
         if (sorter == null)

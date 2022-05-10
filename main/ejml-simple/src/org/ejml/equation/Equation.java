@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,19 +35,19 @@ import static org.ejml.equation.TokenList.Type;
  * <p>
  * Equation allows the user to manipulate matrices in a more compact symbolic way, similar to Matlab and Octave.
  * Aliases are made to Matrices and scalar values which can then be manipulated by specifying an equation in a string.
- * These equations can either be "pre-compiled" [1] into a sequence of operations or immediately executed.  While the
+ * These equations can either be "pre-compiled" [1] into a sequence of operations or immediately executed. While the
  * former is more verbose, when dealing with small matrices it significantly faster and runs close to the speed of
  * normal hand written code.
  * </p>
  * <p>
- * Each string represents a single line and must have one and only one assignment '=' operator.  Temporary variables
- * are handled transparently to the user.  Temporary variables are declared at compile time, but resized at runtime.
- * If the inputs are not resized and the code is precompiled, then no new memory will be declared.  When a matrix
+ * Each string represents a single line and must have one and only one assignment '=' operator. Temporary variables
+ * are handled transparently to the user. Temporary variables are declared at compile time, but resized at runtime.
+ * If the inputs are not resized and the code is precompiled, then no new memory will be declared. When a matrix
  * is assigned the results of an operation it is resized so that it can store the results.
  * </p>
  * <p>
- * The compiler currently produces simplistic code.  For example, if it encounters the following equation "a = b*c' it
- * will not invoke multTransB(b,c,a), but will explicitly transpose c and then call mult().  In the future it
+ * The compiler currently produces simplistic code. For example, if it encounters the following equation "a = b*c' it
+ * will not invoke multTransB(b,c,a), but will explicitly transpose c and then call mult(). In the future it
  * will recognize such short cuts.
  * </p>
  *
@@ -59,7 +59,7 @@ import static org.ejml.equation.TokenList.Type;
  * eq.process("x = F*x");
  * eq.process("P = F*P*F' + Q");
  * </pre>
- * Which will modify the matrices 'x' and 'P'.  Support for sub-matrices and inline matrix construction is also
+ * Which will modify the matrices 'x' and 'P'. Support for sub-matrices and inline matrix construction is also
  * available.
  * <pre>
  * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");  // create a 3x3 matrix then multiply it by x
@@ -74,21 +74,21 @@ import static org.ejml.equation.TokenList.Type;
  * Sequence predictX = eq.compile("x = F*x");
  * predictX.perform();
  * </pre>
- * Then you can invoke it as much as you want without the "expensive" compilation step.  If you are dealing with
+ * Then you can invoke it as much as you want without the "expensive" compilation step. If you are dealing with
  * larger matrices (e.g. 100 by 100) then it is likely that the compilation step has an insignificant runtime
  * cost.
  *
- * Variables can also be lazily declared and their type inferred under certain conditions.  For example:
+ * Variables can also be lazily declared and their type inferred under certain conditions. For example:
  * <pre>
  * eq.alias(A,"A", B,"B");
  * eq.process("C = A*B");
  * DMatrixRMaj C = eq.lookupMatrix("C");
  * </pre>
- * In this case 'C' was lazily declared.  To access the variable, or any others, you can use one of the lookup*()
+ * In this case 'C' was lazily declared. To access the variable, or any others, you can use one of the lookup*()
  * functions.
  *
  * Sometimes you don't get the results you expect and it can be helpful to print out the tokens and which operations
- * the compiler selected.  To do this set the second parameter to eq.compile() or eq.process() to true:
+ * the compiler selected. To do this set the second parameter to eq.compile() or eq.process() to true:
  * <pre>
  * Code:
  * eq.process("C=2.1*B'*A",true);
@@ -124,7 +124,7 @@ import static org.ejml.equation.TokenList.Type;
  * eye(N)       Create an identity matrix which is N by N.
  * eye(A)       Create an identity matrix which is A.numRows by A.numCols
  * normF(A)     Frobenius normal of the matrix.
- * normP(A,p)   P-norm for a matrix or vector.  p=1 or p=2 is typical.
+ * normP(A,p)   P-norm for a matrix or vector. p=1 or p=2 is typical.
  * sum(A)       Sum of every element in A
  * sum(A,d)     Sum of rows for d = 0 and columns for d = 1
  * det(A)       Determinant of the matrix
@@ -139,7 +139,7 @@ import static org.ejml.equation.TokenList.Type;
  * rng(seed)    Specifies the random number generator's seed
  * diag(A)      If a vector then returns a square matrix with diagonal elements filled with vector
  * diag(A)      If a matrix then it returns the diagonal elements as a column vector
- * dot(A,B)     Returns the dot product of two vectors as a double.  Does not work on general matrices.
+ * dot(A,B)     Returns the dot product of two vectors as a double. Does not work on general matrices.
  * solve(A,B)   Returns the solution X from A*X = B.
  * kron(A,B)    Kronecker product
  * abs(A)       Absolute value of A.
@@ -147,7 +147,7 @@ import static org.ejml.equation.TokenList.Type;
  * max(A,d)     Vector containing largest element along the rows (d=0) or columns (d=1)
  * min(A)       Element with the smallest value in A.
  * min(A,d)     Vector containing largest element along the rows (d=0) or columns (d=1)
- * pow(a,b)     Computes a to the power of b.  Can also be invoked with "a^b" scalars only.
+ * pow(a,b)     Computes a to the power of b. Can also be invoked with "a^b" scalars only.
  * sqrt(a)      Computes the square root of a.
  * sin(a)       Math.sin(a) for scalars only
  * cos(a)       Math.cos(a) for scalars only
@@ -164,8 +164,8 @@ import static org.ejml.equation.TokenList.Type;
  * '-'        subtraction (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
  * '/'        divide (Matrix-Scalar, Scalar-Scalar)
  * '/'        matrix solve "x=b/A" is equivalent to x=solve(A,b) (Matrix-Matrix)
- * '^'        Scalar power.  a^b is a to the power of b.
- * '\'        left-divide.  Same as divide but reversed.  e.g. x=A\b is x=solve(A,b)
+ * '^'        Scalar power. a^b is a to the power of b.
+ * '\'        left-divide. Same as divide but reversed. e.g. x=A\b is x=solve(A,b)
  * '.*'       element-wise multiplication (Matrix-Matrix)
  * './'       element-wise division (Matrix-Matrix)
  * '.^'       element-wise power. (scalar-scalar) (matrix-matrix) (scalar-matrix) (matrix-scalar)
@@ -208,20 +208,20 @@ import static org.ejml.equation.TokenList.Type;
  * </pre>
  *
  * <h2>Macros</h2>
- * Macros are used to insert patterns into the code.  Consider this example:
+ * Macros are used to insert patterns into the code. Consider this example:
  * <pre>
  * eq.process("macro ata( a ) = (a'*a)");
  * eq.process("b = ata(c)");
  * </pre>
- * The first line defines a macro named "ata" with one parameter 'a'.  When compiled the equation in the second
- * line is replaced with "b = (a'*a)".  The "(" ")" in the macro isn't strictly necissary in this situation, but
- * is a good practice.  Consider the following.
+ * The first line defines a macro named "ata" with one parameter 'a'. When compiled the equation in the second
+ * line is replaced with "b = (a'*a)". The "(" ")" in the macro isn't strictly necissary in this situation, but
+ * is a good practice. Consider the following.
  * <pre>
  * eq.process("b = ata(c)*r");
  * </pre>
  * Will become "b = (a'*a)*r"  but with out () it will be "b = a'*a*r" which is not the same thing!
  *
- * <p><b>NOTE:</b>In the future macros might be replaced with functions.  Macros are harder for the user to debug, but
+ * <p><b>NOTE:</b>In the future macros might be replaced with functions. Macros are harder for the user to debug, but
  * functions are harder for EJML's developer to implement.</p>
  *
  * <h2>Footnotes:</h2>
@@ -278,7 +278,7 @@ public class Equation {
     }
 
     /**
-     * Adds a new Matrix variable.  If one already has the same name it is written over.
+     * Adds a new Matrix variable. If one already has the same name it is written over.
      *
      * While more verbose for multiple variables, this function doesn't require new memory be declared
      * each time it's called.
@@ -493,7 +493,7 @@ public class Equation {
             sequence.output = createVariableInferred(t0, variableRight);
             sequence.addOperation(Operation.copy(variableRight, sequence.output));
         } else {
-            // a sub-matrix range is specified.  Copy into that inner part
+            // a sub-matrix range is specified. Copy into that inner part
             if (t0.getType() == Type.WORD) {
                 throw new ParseError("Can't do lazy variable initialization with submatrices. " + t0.getWord());
             }
@@ -616,7 +616,7 @@ public class Equation {
     }
 
     /**
-     * See if a range for assignment is specified.  If so return the range, otherwise return null
+     * See if a range for assignment is specified. If so return the range, otherwise return null
      *
      * Example of assign range:
      * a(0:3,4:5) = blah
@@ -652,7 +652,7 @@ public class Equation {
             List<Variable> range = new ArrayList<>();
             addSubMatrixVariables(inputs, range);
             if (range.size() != 1 && range.size() != 2) {
-                throw new ParseError("Unexpected number of range variables.  1 or 2 expected");
+                throw new ParseError("Unexpected number of range variables. 1 or 2 expected");
             }
             return range;
         }
@@ -661,8 +661,8 @@ public class Equation {
     }
 
     /**
-     * Searches for pairs of parentheses and processes blocks inside of them.  Embedded parentheses are handled
-     * with no problem.  On output only a single token should be in tokens.
+     * Searches for pairs of parentheses and processes blocks inside of them. Embedded parentheses are handled
+     * with no problem. On output only a single token should be in tokens.
      *
      * @param tokens List of parsed tokens
      * @param sequence Sequence of operators
@@ -723,7 +723,7 @@ public class Equation {
     }
 
     /**
-     * Searches for commas in the set of tokens.  Used for inputs to functions.
+     * Searches for commas in the set of tokens. Used for inputs to functions.
      *
      * Ignore comma's which are inside a [ ] block
      *
@@ -801,10 +801,10 @@ public class Equation {
 
         addSubMatrixVariables(inputs, variables);
         if (variables.size() != 2 && variables.size() != 3) {
-            throw new ParseError("Unexpected number of variables.  1 or 2 expected");
+            throw new ParseError("Unexpected number of variables. 1 or 2 expected");
         }
 
-        // first parameter is the matrix it will be extracted from.  rest specify range
+        // first parameter is the matrix it will be extracted from. rest specify range
         Operation.Info info;
 
         // only one variable means its referencing elements
@@ -835,7 +835,7 @@ public class Equation {
     }
 
     /**
-     * Goes through the token lists and adds all the variables which can be used to define a sub-matrix.  If anything
+     * Goes through the token lists and adds all the variables which can be used to define a sub-matrix. If anything
      * else is found an excpetion is thrown
      */
     private void addSubMatrixVariables( List<TokenList.Token> inputs, List<Variable> variables ) {
@@ -853,7 +853,7 @@ public class Equation {
     }
 
     /**
-     * Parses a code block with no parentheses and no commas.  After it is done there should be a single token left,
+     * Parses a code block with no parentheses and no commas. After it is done there should be a single token left,
      * which is returned.
      */
     protected TokenList.Token parseBlockNoParentheses( TokenList tokens, Sequence sequence, boolean insideMatrixConstructor ) {
@@ -873,8 +873,8 @@ public class Equation {
         parseOperationsLR(new Symbol[]{Symbol.TIMES, Symbol.RDIVIDE, Symbol.LDIVIDE, Symbol.ELEMENT_TIMES, Symbol.ELEMENT_DIVIDE}, tokens, sequence);
         parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
-        // Commas are used in integer sequences.  Can be used to force to compiler to treat - as negative not
-        // minus.  They can now be removed since they have served their purpose
+        // Commas are used in integer sequences. Can be used to force to compiler to treat - as negative not
+        // minus. They can now be removed since they have served their purpose
         stripCommas(tokens);
 
         // now construct rest of the lists and combine them together
@@ -889,7 +889,7 @@ public class Equation {
                     System.err.println("  " + t);
                     t = t.next;
                 }
-                throw new RuntimeException("BUG in parser.  There should only be a single token left");
+                throw new RuntimeException("BUG in parser. There should only be a single token left");
             }
             return tokens.first;
         } else {
@@ -1182,7 +1182,7 @@ public class Equation {
     }
 
     /**
-     * Searches for cases where a minus sign means negative operator.  That happens when there is a minus
+     * Searches for cases where a minus sign means negative operator. That happens when there is a minus
      * sign with a variable to its right and no variable to its left
      *
      * Example:
@@ -1225,7 +1225,7 @@ public class Equation {
     }
 
     /**
-     * Parses operations where the input comes from variables to its left only.  Hard coded to only look
+     * Parses operations where the input comes from variables to its left only. Hard coded to only look
      * for transpose for now
      *
      * @param tokens List of all the tokens
@@ -1293,7 +1293,7 @@ public class Equation {
     }
 
     /**
-     * Adds a new operation to the list from the operation and two variables.  The inputs are removed
+     * Adds a new operation to the list from the operation and two variables. The inputs are removed
      * from the token list and replaced by their output.
      */
     protected TokenList.Token insertTranspose( TokenList.Token variable,
@@ -1312,7 +1312,7 @@ public class Equation {
     }
 
     /**
-     * Adds a new operation to the list from the operation and two variables.  The inputs are removed
+     * Adds a new operation to the list from the operation and two variables. The inputs are removed
      * from the token list and replaced by their output.
      */
     protected TokenList.Token createOp( TokenList.Token left, TokenList.Token op, TokenList.Token right,
@@ -1330,7 +1330,7 @@ public class Equation {
     }
 
     /**
-     * Adds a new operation to the list from the operation and two variables.  The inputs are removed
+     * Adds a new operation to the list from the operation and two variables. The inputs are removed
      * from the token list and replaced by their output.
      */
     protected TokenList.Token createFunction( TokenList.Token name, List<TokenList.Token> inputs, TokenList tokens, Sequence sequence ) {
@@ -1354,7 +1354,7 @@ public class Equation {
     }
 
     /**
-     * Looks up a variable given its name.  If none is found then return null.
+     * Looks up a variable given its name. If none is found then return null.
      */
     public <T extends Variable> T lookupVariable( String token ) {
         Variable result = variables.get(token);
@@ -1428,7 +1428,7 @@ public class Equation {
                     type = TokenType.UNKNOWN;
                     again = true; // process unexpected character a second time
                 }
-            } else if (type == TokenType.INTEGER) { // Handle integer numbers.  Until proven to be a float
+            } else if (type == TokenType.INTEGER) { // Handle integer numbers. Until proven to be a float
                 if (c == '.') {
                     type = TokenType.FLOAT;
                     storage[length++] = c;
@@ -1532,7 +1532,7 @@ public class Equation {
     }
 
     /**
-     * Search for WORDS in the token list.  Then see if the WORD is a function or a variable.  If so replace
+     * Search for WORDS in the token list. Then see if the WORD is a function or a variable. If so replace
      * the work with the function/variable
      */
     void insertFunctionsAndVariables( TokenList tokens ) {
@@ -1553,7 +1553,7 @@ public class Equation {
     }
 
     /**
-     * Checks to see if a WORD matches the name of a macro.  if it does it applies the macro at that location
+     * Checks to see if a WORD matches the name of a macro. if it does it applies the macro at that location
      */
     void insertMacros( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
@@ -1588,7 +1588,7 @@ public class Equation {
     }
 
     /**
-     * Checks to see if the token is in the list of allowed character operations.  Used to apply order of operations
+     * Checks to see if the token is in the list of allowed character operations. Used to apply order of operations
      *
      * @param token Token being checked
      * @param ops List of allowed character operations
@@ -1640,7 +1640,7 @@ public class Equation {
     }
 
     /**
-     * Returns true if the specified name is NOT allowed.  It isn't allowed if it matches a built in operator
+     * Returns true if the specified name is NOT allowed. It isn't allowed if it matches a built in operator
      * or if it contains a restricted character.
      */
     protected boolean isReserved( String name ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,7 +55,7 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         DMatrixRMaj Y = new DMatrixRMaj(A_e.numRows, X.numCols);
         CommonOps_DDRM.mult(A_e, X, Y);
 
-        // create the solver from A then add a A.  The solver
+        // create the solver from A then add a A. The solver
         // should be equivalent to one created from A_e
         AdjustableLinearSolver_DDRM adjSolver = new AdjLinearSolverQr_DDRM();
 

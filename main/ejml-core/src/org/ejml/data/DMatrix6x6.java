@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.ops.MatrixIO;
 import javax.annotation.Generated;
 
 /**
- * Fixed sized 6 by DMatrix6x6 matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the
+ * Fixed sized 6 by DMatrix6x6 matrix. The matrix is stored as class variables for very fast read/write. aXY is the
  * value of row = X and column = Y.
  *
  * <p>DO NOT MODIFY. Automatically generated code created by GenerateMatrixFixedNxN</p>

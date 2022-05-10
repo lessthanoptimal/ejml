@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,10 +29,10 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * This class contains various types of matrix vector multiplcation operations for {@link DMatrixRMaj}.
  * </p>
  * <p>
- * If a matrix has only one column or row then it is a vector.  There are faster algorithms
- * that can be used to multiply matrices by vectors.  Strangely, even though the operations
+ * If a matrix has only one column or row then it is a vector. There are faster algorithms
+ * that can be used to multiply matrices by vectors. Strangely, even though the operations
  * count smaller, the difference between this and a regular matrix multiply is insignificant
- * for large matrices.  The smaller matrices there is about a 40% speed improvement.  In
+ * for large matrices. The smaller matrices there is about a 40% speed improvement. In
  * practice the speed improvement for smaller matrices is not noticeable unless 10s of millions
  * of matrix multiplications are being performed.
  * </p>
@@ -156,7 +156,7 @@ public class MatrixVectorMult_DDRM {
      * where A is a matrix, B is a column or transposed row vector, and C is a column vector.
      * </p>
      * <p>
-     * This implementation is optimal for small matrices.  There is a huge performance hit when
+     * This implementation is optimal for small matrices. There is a huge performance hit when
      * used on large matrices due to CPU cache issues.
      * </p>
      *
@@ -195,7 +195,7 @@ public class MatrixVectorMult_DDRM {
 
     /**
      * An alternative implementation of {@link #multTransA_small} that performs well on large
-     * matrices.  There is a relative performance hit when used on small matrices.
+     * matrices. There is a relative performance hit when used on small matrices.
      *
      * @param A A matrix that is m by n. Not modified.
      * @param B A Vector that has length m. Not modified.
@@ -247,7 +247,7 @@ public class MatrixVectorMult_DDRM {
      * where A is a matrix, B is a column or transposed row vector, and C is a column vector.
      * </p>
      * <p>
-     * This implementation is optimal for small matrices.  There is a huge performance hit when
+     * This implementation is optimal for small matrices. There is a huge performance hit when
      * used on large matrices due to CPU cache issues.
      * </p>
      *
@@ -286,7 +286,7 @@ public class MatrixVectorMult_DDRM {
 
     /**
      * An alternative implementation of {@link #multAddTransA_small} that performs well on large
-     * matrices.  There is a relative performance hit when used on small matrices.
+     * matrices. There is a relative performance hit when used on small matrices.
      *
      * @param A A matrix that is m by n. Not modified.
      * @param B A vector that has length m. Not modified.

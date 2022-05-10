@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -213,7 +213,7 @@ public class TestMatrixFeatures_DSCC extends EjmlStandardJUnit {
         L.set(0,1,UtilEjml.EPS);
         assertFalse(MatrixFeatures_DSCC.isLowerTriangle(L,1, UtilEjml.TEST_F64));
 
-        // testing a case which failed.  first column was all zeros for hessenberg of 1
+        // testing a case which failed. first column was all zeros for hessenberg of 1
         D = new DMatrixRMaj(4,4,true,
                 0,1,0,0, 0,0,1,0, 0,0,0,1 , 0,0,0,1 );
         L = DConvertMatrixStruct.convert(D,(DMatrixSparseCSC)null, UtilEjml.EPS);

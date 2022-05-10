@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,7 +39,7 @@ public class CovarianceOps_DDRM {
     /**
      * This is a fairly light weight check to see of a covariance matrix is valid.
      * It checks to see if the diagonal elements are all positive, which they should be
-     * if it is valid.  Not all invalid covariance matrices will be caught by this method.
+     * if it is valid. Not all invalid covariance matrices will be caught by this method.
      *
      * @return true if valid and false if invalid
      */
@@ -70,7 +70,7 @@ public class CovarianceOps_DDRM {
      * Performs a matrix inversion operations that takes advantage of the special
      * properties of a covariance matrix.
      *
-     * @param cov On input it is a covariance matrix, on output it is the inverse.  Modified.
+     * @param cov On input it is a covariance matrix, on output it is the inverse. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DMatrixRMaj cov ) {
@@ -82,7 +82,7 @@ public class CovarianceOps_DDRM {
      * properties of a covariance matrix.
      *
      * @param cov A covariance matrix. Not modified.
-     * @param cov_inv The inverse of cov.  Modified.
+     * @param cov_inv The inverse of cov. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( final DMatrixRMaj cov, final DMatrixRMaj cov_inv ) {
@@ -108,9 +108,9 @@ public class CovarianceOps_DDRM {
 
     /**
      * Sets vector to a random value based upon a zero-mean multivariate Gaussian distribution with
-     * covariance 'cov'.  If repeat calls are made to this class, consider using {@link CovarianceRandomDraw_DDRM} instead.
+     * covariance 'cov'. If repeat calls are made to this class, consider using {@link CovarianceRandomDraw_DDRM} instead.
      *
-     * @param cov The distirbutions covariance.  Not modified.
+     * @param cov The distirbutions covariance. Not modified.
      * @param vector The random vector. Modified.
      * @param rand Random number generator.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,7 +37,7 @@ public class TestUtilEjml extends EjmlStandardJUnit {
     }
 
     /**
-     * Provide it a couple of different strings to parse.  Then compare
+     * Provide it a couple of different strings to parse. Then compare
      * the results against the expect answer
      */
     @Test

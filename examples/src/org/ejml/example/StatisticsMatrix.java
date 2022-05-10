@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,8 +28,8 @@ import java.util.Random;
 
 
 /**
- * Example of how to extend "SimpleMatrix" and add your own functionality.  In this case
- * two basic statistic operations are added.  Since SimpleBase is extended and StatisticsMatrix
+ * Example of how to extend "SimpleMatrix" and add your own functionality. In this case
+ * two basic statistic operations are added. Since SimpleBase is extended and StatisticsMatrix
  * is specified as the generics type, all "SimpleMatrix" operations return a matrix of
  * type StatisticsMatrix, ensuring strong typing.
  *
@@ -44,7 +44,7 @@ public class StatisticsMatrix extends SimpleBase<StatisticsMatrix> {
     protected StatisticsMatrix(){}
 
     /**
-     * Wraps a StatisticsMatrix around 'm'.  Does NOT create a copy of 'm' but saves a reference
+     * Wraps a StatisticsMatrix around 'm'. Does NOT create a copy of 'm' but saves a reference
      * to it.
      */
     public static StatisticsMatrix wrap( DMatrixRMaj m ) {

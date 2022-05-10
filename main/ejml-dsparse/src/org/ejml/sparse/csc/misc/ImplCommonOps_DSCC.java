@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ import static org.ejml.UtilEjml.adjust;
 import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
 
 /**
- * Implementation class.  Not recommended for direct use.  Instead use {@link CommonOps_DSCC}
+ * Implementation class. Not recommended for direct use. Instead use {@link CommonOps_DSCC}
  * instead.
  *
  * @author Peter Abeles
@@ -79,9 +79,9 @@ public class ImplCommonOps_DSCC {
     /**
      * Performs a matrix transpose.
      *
-     * @param A Original matrix.  Not modified.
-     * @param C Storage for transposed 'A'.  Reshaped.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param A Original matrix. Not modified.
+     * @param C Storage for transposed 'A'. Reshaped.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
      */
     public static void transpose( DMatrixSparseCSC A, DMatrixSparseCSC C, @Nullable IGrowArray gw ) {
         int[] work = adjust(gw, A.numRows, A.numRows);
@@ -120,8 +120,8 @@ public class ImplCommonOps_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
                             @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
@@ -203,8 +203,8 @@ public class ImplCommonOps_DSCC {
      * @param A (Input) Matrix
      * @param B (Input) Matrix
      * @param C (Output) Matrix.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
                                     @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {

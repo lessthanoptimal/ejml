@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,7 +40,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
     @Override
     protected DMatrix createMatrix( int numRows, int numCols ) {
 
-        // define a sparse matrix with every element filled.  It should act low a slow and inefficient
+        // define a sparse matrix with every element filled. It should act low a slow and inefficient
         // row matrix now
         DMatrixSparseTriplet t = new DMatrixSparseTriplet(numRows, numCols, numRows*numCols);
 
@@ -78,7 +78,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
             assertEquals(20, m.get(1, 2), UtilEjml.TEST_F64);
             assertTrue(isStructureValid(m));
 
-            // another test case.  empty matrix
+            // another test case. empty matrix
             m.zero();
             m.set(1, 2, 15);
             assertEquals(15, m.get(1, 2), UtilEjml.TEST_F64);

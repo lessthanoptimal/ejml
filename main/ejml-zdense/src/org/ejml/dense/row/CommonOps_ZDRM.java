@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -114,7 +114,7 @@ public class CommonOps_ZDRM {
 
     /**
      * <p>
-     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector. 'dst'
      * can either be a row or column vector.
      * <p>
      *
@@ -222,8 +222,8 @@ public class CommonOps_ZDRM {
      * imaginary<sub>i,j</sub> = -1*imaginary<sub>i,j</sub><br>
      * </p>
      *
-     * @param input Input matrix.  Not modified.
-     * @param output The complex conjugate of the input matrix.  Modified.
+     * @param input Input matrix. Not modified.
+     * @param output The complex conjugate of the input matrix. Modified.
      */
     public static ZMatrixD1 conjugate( ZMatrixD1 input, @Nullable ZMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
@@ -316,7 +316,7 @@ public class CommonOps_ZDRM {
      * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix that is to be scaled.  Modified.
+     * @param a The matrix that is to be scaled. Modified.
      * @param alphaReal real component of scale factor
      * @param alphaImag imaginary component of scale factor
      */
@@ -669,7 +669,7 @@ public class CommonOps_ZDRM {
      *
      * <p>
      * For square matrices the transpose is truly in-place and does not require
-     * additional memory.  For non-square matrices, internally a temporary matrix is declared and
+     * additional memory. For non-square matrices, internally a temporary matrix is declared and
      * {@link #transpose(ZMatrixRMaj, ZMatrixRMaj)} is invoked.
      * </p>
      *
@@ -711,7 +711,7 @@ public class CommonOps_ZDRM {
      * where 'b' is the transpose of 'a'.
      * </p>
      *
-     * @param input The original matrix.  Not modified.
+     * @param input The original matrix. Not modified.
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
@@ -732,7 +732,7 @@ public class CommonOps_ZDRM {
      * where 'b' is the transpose of 'a'.
      * </p>
      *
-     * @param input The original matrix.  Not modified.
+     * @param input The original matrix. Not modified.
      * @param output Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
@@ -753,12 +753,12 @@ public class CommonOps_ZDRM {
      * </p>
      *
      * <p>
-     * If the algorithm could not invert the matrix then false is returned.  If it returns true
-     * that just means the algorithm finished.  The results could still be bad
+     * If the algorithm could not invert the matrix then false is returned. If it returns true
+     * that just means the algorithm finished. The results could still be bad
      * because the matrix is singular or nearly singular.
      * </p>
      *
-     * @param A The matrix that is to be inverted.  Results are stored here.  Modified.
+     * @param A The matrix that is to be inverted. Results are stored here. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( ZMatrixRMaj A ) {
@@ -775,15 +775,15 @@ public class CommonOps_ZDRM {
     /**
      * <p>
      * Performs a matrix inversion operation that does not modify the original
-     * and stores the results in another matrix.  The two matrices must have the
+     * and stores the results in another matrix. The two matrices must have the
      * same dimension.<br>
      * <br>
      * b = a<sup>-1</sup>
      * </p>
      *
      * <p>
-     * If the algorithm could not invert the matrix then false is returned.  If it returns true
-     * that just means the algorithm finished.  The results could still be bad
+     * If the algorithm could not invert the matrix then false is returned. If it returns true
+     * that just means the algorithm finished. The results could still be bad
      * because the matrix is singular or nearly singular.
      * </p>
      *
@@ -793,7 +793,7 @@ public class CommonOps_ZDRM {
      * </p>
      *
      * @param input The matrix that is to be inverted. Not modified.
-     * @param output Where the inverse matrix is stored.  Modified.
+     * @param output Where the inverse matrix is stored. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( ZMatrixRMaj input, ZMatrixRMaj output ) {
@@ -816,7 +816,7 @@ public class CommonOps_ZDRM {
      * </p>
      *
      * <p>
-     * If the system could not be solved then false is returned.  If it returns true
+     * If the system could not be solved then false is returned. If it returns true
      * that just means the algorithm finished operating, but the results could still be bad
      * because 'A' is singular or nearly singular.
      * </p>
@@ -854,11 +854,11 @@ public class CommonOps_ZDRM {
     }
 
     /**
-     * Returns the determinant of the matrix.  If the inverse of the matrix is also
+     * Returns the determinant of the matrix. If the inverse of the matrix is also
      * needed, then using {@link LUDecompositionAlt_ZDRM} directly (or any
      * similar algorithm) can be more efficient.
      *
-     * @param mat The matrix whose determinant is to be computed.  Not modified.
+     * @param mat The matrix whose determinant is to be computed. Not modified.
      * @return The determinant.
      */
     public static Complex_F64 det( ZMatrixRMaj mat ) {
@@ -1109,7 +1109,7 @@ public class CommonOps_ZDRM {
      * original matrix.
      * </p>
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcX0 Start column.
      * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
@@ -1145,12 +1145,12 @@ public class CommonOps_ZDRM {
      * original matrix.
      * </p>
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcX0 Start column.
      * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
      * @param srcY1 Stop row+1.
-     * @param dst Where the submatrix are stored.  Modified.
+     * @param dst Where the submatrix are stored. Modified.
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
@@ -1172,7 +1172,7 @@ public class CommonOps_ZDRM {
     /**
      * Converts the columns in a matrix into a set of vectors.
      *
-     * @param A Matrix.  Not modified.
+     * @param A Matrix. Not modified.
      * @param v Optional storage for columns.
      * @return An array of vectors.
      */

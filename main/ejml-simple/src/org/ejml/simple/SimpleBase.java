@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 
 /**
  * Parent of {@link SimpleMatrix} implements all the standard matrix operations and uses
- * generics to allow the returned matrix type to be changed.  This class should be extended
+ * generics to allow the returned matrix type to be changed. This class should be extended
  * instead of SimpleMatrix.
  *
  * @author Peter Abeles
@@ -69,7 +69,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Used internally for creating new instances of SimpleMatrix.  If SimpleMatrix is extended
+     * Used internally for creating new instances of SimpleMatrix. If SimpleMatrix is extended
      * by another class this function should be overridden so that the returned matrices are
      * of the correct type.
      *
@@ -84,7 +84,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Returns a reference to the matrix that it uses internally.  This is useful
+     * Returns a reference to the matrix that it uses internally. This is useful
      * when an operation is needed that is not provided by this class.
      * </p>
      *
@@ -326,7 +326,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
      *
-     * @param v The second vector in the dot product.  Not modified.
+     * @param v The second vector in the dot product. Not modified.
      * @return dot product
      */
     public double dot( T v ) {
@@ -344,7 +344,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Returns true if this matrix is a vector.  A vector is defined as a matrix
+     * Returns true if this matrix is a vector. A vector is defined as a matrix
      * that has either one row or column.
      *
      * @return Returns true for vectors and false otherwise.
@@ -393,7 +393,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * </p>
      *
      * <p>
-     * If the matrix could not be inverted then SingularMatrixException is thrown.  Even
+     * If the matrix could not be inverted then SingularMatrixException is thrown. Even
      * if no exception is thrown the matrix could still be singular or nearly singular.
      * </p>
      *
@@ -434,7 +434,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * </p>
      *
      * <p>
-     * If the system could not be solved then SingularMatrixException is thrown.  Even
+     * If the system could not be solved then SingularMatrixException is thrown. Even
      * if no exception is thrown 'a' could still be singular or nearly singular.
      * </p>
      *
@@ -527,7 +527,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * <p>
      * The condition p = 2 number of a matrix is used to measure the sensitivity of the linear
-     * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.
+     * system <b>Ax=b</b>. A value near one indicates that it is a well conditioned matrix.
      * </p>
      *
      * @return The condition number.
@@ -564,8 +564,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Reshapes the matrix to the specified number of rows and columns.  If the total number of elements
-     * is &le; number of elements it had before the data is saved.  Otherwise a new internal array is
+     * Reshapes the matrix to the specified number of rows and columns. If the total number of elements
+     * is &le; number of elements it had before the data is saved. Otherwise a new internal array is
      * declared and the old data lost.
      * </p>
      *
@@ -586,7 +586,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Assigns the element in the Matrix to the specified value.  Performs a bounds check to make sure
+     * Assigns the element in the Matrix to the specified value. Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *
      * @param row The row of the element.
@@ -660,7 +660,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Returns the value of the specified matrix element.  Performs a bounds check to make sure
+     * Returns the value of the specified matrix element. Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *
      * NOTE: Complex matrices will throw an exception
@@ -718,9 +718,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Creates a new iterator for traversing through a submatrix inside this matrix.  It can be traversed
-     * by row or by column.  Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
-     * 0 and 1.  The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
+     * Creates a new iterator for traversing through a submatrix inside this matrix. It can be traversed
+     * by row or by column. Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
+     * 0 and 1. The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
      *
      * @param rowMajor true means it will traverse through the submatrix by row first, false by columns.
      * @param minRow first row it will start at.
@@ -903,7 +903,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * Checks to see if any of the elements in this matrix are either NaN or infinite.
      *
-     * @return True of an element is NaN or infinite.  False otherwise.
+     * @return True of an element is NaN or infinite. False otherwise.
      */
     public boolean hasUncountable() {
         return ops.hasUncountable(mat);
@@ -962,9 +962,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Creates a new matrix that is a combination of this matrix and matrix B.  B is
+     * Creates a new matrix that is a combination of this matrix and matrix B. B is
      * written into A at the specified location if needed the size of A is increased by
-     * growing it.  A is grown by padding the new area with zeros.
+     * growing it. A is grown by padding the new area with zeros.
      * </p>
      *
      * <p>
@@ -1034,7 +1034,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Returns the maximum absolute value of all the elements in this matrix.  This is
+     * Returns the maximum absolute value of all the elements in this matrix. This is
      * equivalent the the infinite p-norm of the matrix.
      *
      * @return Largest absolute value of any element.
@@ -1177,10 +1177,10 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * <p>Allows you to perform an equation in-place on this matrix by specifying the right hand side.  For information on how to define an equation
-     * see {@link org.ejml.equation.Equation}.  The variable sequence alternates between variable and it's label String.
+     * <p>Allows you to perform an equation in-place on this matrix by specifying the right hand side. For information on how to define an equation
+     * see {@link org.ejml.equation.Equation}. The variable sequence alternates between variable and it's label String.
      * This matrix is by default labeled as 'A', but is a string is the first object in 'variables' then it will take
-     * on that value.  The variable passed in can be any data type supported by Equation can be passed in.
+     * on that value. The variable passed in can be any data type supported by Equation can be passed in.
      * This includes matrices and scalars.</p>
      *
      * Examples:<br>
@@ -1283,7 +1283,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Saves this matrix to a file in a CSV format.  For the file format see {@link MatrixIO}.
+     * Saves this matrix to a file in a CSV format. For the file format see {@link MatrixIO}.
      * </p>
      *
      * @see MatrixIO#saveBin(DMatrix, String)
@@ -1295,7 +1295,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Loads a new matrix from a CSV file.  For the file format see {@link MatrixIO}.
+     * Loads a new matrix from a CSV file. For the file format see {@link MatrixIO}.
      * </p>
      *
      * @param fileName File which is to be loaded.
@@ -1332,14 +1332,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Size of internal array elements.  32 or 64 bits
+     * Size of internal array elements. 32 or 64 bits
      */
     public int bits() {
         return mat.getType().getBits();
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ this, m[0] , ... , m[n-1] ]
@@ -1374,7 +1374,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ this; m[0] ; ... ; m[n-1] ]
@@ -1411,7 +1411,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * Extracts the specified rows from the matrix.
      *
-     * @param begin First row.  Inclusive.
+     * @param begin First row. Inclusive.
      * @param end Last row + 1.
      * @return Submatrix that contains the specified rows.
      */
@@ -1422,7 +1422,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * Extracts the specified rows from the matrix.
      *
-     * @param begin First row.  Inclusive.
+     * @param begin First row. Inclusive.
      * @param end Last row + 1.
      * @return Submatrix that contains the specified rows.
      */

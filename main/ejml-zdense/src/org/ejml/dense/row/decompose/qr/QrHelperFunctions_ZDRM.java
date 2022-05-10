@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,16 +27,16 @@ import org.ejml.data.ZMatrixRMaj;
  * </p>
  *
  * <p>
- * Two different families of functions are provided for help in computing reflectors.  Internally
- * both of these functions switch between normalization by division or multiplication.  Multiplication
+ * Two different families of functions are provided for help in computing reflectors. Internally
+ * both of these functions switch between normalization by division or multiplication. Multiplication
  * is most often significantly faster than division (2 or 3 times) but produces less accurate results
- * on very small numbers.  It checks to see if round off error is significant and decides which
+ * on very small numbers. It checks to see if round off error is significant and decides which
  * one it should do.
  * </p>
  *
  * <p>
  * Tests were done using the stability benchmark in jmatbench and there doesn't seem to be
- * any advantage to always dividing by the max instead of checking and deciding.  The most
+ * any advantage to always dividing by the max instead of checking and deciding. The most
  * noticeable difference between the two methods is with very small numbers.
  * </p>
  *
@@ -174,12 +174,12 @@ public class QrHelperFunctions_ZDRM {
      *
      * @param A matrix
      * @param u vector
-     * @param offsetU offset added to w0 when indexing u.  Multiplied by 2 since complex.
+     * @param offsetU offset added to w0 when indexing u. Multiplied by 2 since complex.
      * @param gamma real component of gamma
      * @param colA0 first column in A sub-matrix.
      * @param w0 first index in sub-array in u and row sub-matrix in A
      * @param w1 last index + 1 in sub-array in u and row sub-matrix in A
-     * @param _temp temporary storage.  Same size as u.
+     * @param _temp temporary storage. Same size as u.
      */
     public static void rank1UpdateMultR( ZMatrixRMaj A,
                                          double[] u, int offsetU,

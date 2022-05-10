@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,13 +35,13 @@ import static org.ejml.UtilEjml.adjust;
 public class ImplMultiplication_DSCC {
 
     /**
-     * Performs matrix multiplication.  C = A*B
+     * Performs matrix multiplication. C = A*B
      *
      * @param A Matrix
      * @param B Matrix
-     * @param C Storage for results.  Data length is increased if increased if insufficient.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param C Storage for results. Data length is increased if increased if insufficient.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
                              @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {

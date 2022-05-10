@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 /**
  * <p>
- * Norms are a measure of the size of a vector or a matrix.  One typical application is in error analysis.
+ * Norms are a measure of the size of a vector or a matrix. One typical application is in error analysis.
  * </p>
  * Vector norms have the following properties:
  * <ol>
@@ -54,7 +54,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * </p>
  *
  * <p>
- * By default implementations that try to mitigate overflow/underflow are used.  If the word fast is
+ * By default implementations that try to mitigate overflow/underflow are used. If the word fast is
  * found before a function's name that means it does not mitigate those issues, but runs a bit faster.
  * </p>
  *
@@ -83,7 +83,7 @@ public class NormOps_DDRM {
     /**
      * <p>
      * The condition number of a matrix is used to measure the sensitivity of the linear
-     * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.<br>
+     * system <b>Ax=b</b>. A value near one indicates that it is a well conditioned matrix.<br>
      * <br>
      * &kappa;<sub>p</sub> = ||A||<sub>p</sub>||A<sup>-1</sup>||<sub>p</sub>
      * </p>
@@ -118,7 +118,7 @@ public class NormOps_DDRM {
     /**
      * <p>
      * The condition p = 2 number of a matrix is used to measure the sensitivity of the linear
-     * system <b>Ax=b</b>.  A value near one indicates that it is a well conditioned matrix.<br>
+     * system <b>Ax=b</b>. A value near one indicates that it is a well conditioned matrix.<br>
      * <br>
      * &kappa;<sub>2</sub> = ||A||<sub>2</sub>||A<sup>-1</sup>||<sub>2</sub>
      * </p>
@@ -157,11 +157,11 @@ public class NormOps_DDRM {
     /**
      * <p>
      * This implementation of the Frobenius norm is a straight forward implementation and can
-     * be susceptible for overflow/underflow issues.  A more resilient implementation is
+     * be susceptible for overflow/underflow issues. A more resilient implementation is
      * {@link #normF}.
      * </p>
      *
-     * @param a The matrix whose norm is computed.  Not modified.
+     * @param a The matrix whose norm is computed. Not modified.
      */
     public static double fastNormF( DMatrixD1 a ) {
         double total = 0;
@@ -183,11 +183,11 @@ public class NormOps_DDRM {
      * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
      * </p>
      * <p>
-     * This is equivalent to the element wise p=2 norm.  See {@link #fastNormF} for another implementation
+     * This is equivalent to the element wise p=2 norm. See {@link #fastNormF} for another implementation
      * that is faster, but more prone to underflow/overflow errors.
      * </p>
      *
-     * @param a The matrix whose norm is computed.  Not modified.
+     * @param a The matrix whose norm is computed. Not modified.
      * @return The norm's value.
      */
     public static double normF( DMatrixD1 a ) {
@@ -321,7 +321,7 @@ public class NormOps_DDRM {
     }
 
     /**
-     * Computes the p=1 norm.  If A is a matrix then the induced norm is computed.
+     * Computes the p=1 norm. If A is a matrix then the induced norm is computed.
      *
      * @param A Matrix or vector.
      * @return The norm.
@@ -335,7 +335,7 @@ public class NormOps_DDRM {
     }
 
     /**
-     * Computes the p=2 norm.  If A is a matrix then the induced norm is computed.
+     * Computes the p=2 norm. If A is a matrix then the induced norm is computed.
      *
      * @param A Matrix or vector.
      * @return The norm.
@@ -349,7 +349,7 @@ public class NormOps_DDRM {
     }
 
     /**
-     * Computes the p=2 norm.  If A is a matrix then the induced norm is computed. This
+     * Computes the p=2 norm. If A is a matrix then the induced norm is computed. This
      * implementation is faster, but more prone to buffer overflow or underflow problems.
      *
      * @param A Matrix or vector.
@@ -364,7 +364,7 @@ public class NormOps_DDRM {
     }
 
     /**
-     * Computes the p=&#8734; norm.  If A is a matrix then the induced norm is computed.
+     * Computes the p=&#8734; norm. If A is a matrix then the induced norm is computed.
      *
      * @param A Matrix or vector.
      * @return The norm.

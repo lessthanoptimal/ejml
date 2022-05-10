@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,13 +31,13 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>
  * LU Decomposition is useful since once the decomposition has been performed linear
- * equations can be quickly solved and the original matrix A inverted.  Different algorithms
+ * equations can be quickly solved and the original matrix A inverted. Different algorithms
  * can be selected to perform the decomposition, all will have the same end result.
  * </p>
  * <p>
  * To use this class first specify the size of the matrix that will be decomposed by it in
- * the constructor.  Only square m by m matrices can be decomposed.  Then to decompose a matrix
- * call {@link #decompose}.  If it encounters any problems an exception will be thrown.  After
+ * the constructor. Only square m by m matrices can be decomposed. Then to decompose a matrix
+ * call {@link #decompose}. If it encounters any problems an exception will be thrown. After
  * that all the other functions will be available for solving and inverting matrices.
  * </p>
  *
@@ -50,30 +50,30 @@ public interface LUDecomposition <T extends Matrix>
 
     /**
      * <p>
-     * Returns the L matrix from the decomposition.  Should only
+     * Returns the L matrix from the decomposition. Should only
      * be called after {@link #decompose(org.ejml.data.Matrix)} has
      * been called.
      * </p>
      *
      * <p>
-     * If parameter 'lower' is not null, then that matrix is used to store the L matrix.  Otherwise
+     * If parameter 'lower' is not null, then that matrix is used to store the L matrix. Otherwise
      * a new matrix is created.
      * </p>
      *
-     * @param lower Storage for T matrix. If null then a new matrix is returned.  Modified.
+     * @param lower Storage for T matrix. If null then a new matrix is returned. Modified.
      * @return The L matrix.
      */
     T getLower( @Nullable T lower );
 
     /**
      * <p>
-     * Returns the U matrix from the decomposition.  Should only
+     * Returns the U matrix from the decomposition. Should only
      * be called after {@link #decompose(org.ejml.data.Matrix)}  has
      * been called.
      * </p>
      *
      * <p>
-     * If parameter 'upper' is not null, then that matrix is used to store the U matrix.  Otherwise
+     * If parameter 'upper' is not null, then that matrix is used to store the U matrix. Otherwise
      * a new matrix is created.
      * </p>
      *
@@ -84,7 +84,7 @@ public interface LUDecomposition <T extends Matrix>
 
     /**
      * <p>
-     * For numerical stability there are often row interchanges.  This computes
+     * For numerical stability there are often row interchanges. This computes
      * a pivot matrix that will undo those changes.
      * </p>
      *
@@ -102,7 +102,7 @@ public interface LUDecomposition <T extends Matrix>
     int[] getRowPivotV( @Nullable IGrowArray pivot );
 
     /**
-     * Returns true if the decomposition detected a singular matrix.  This check
+     * Returns true if the decomposition detected a singular matrix. This check
      * will not work 100% of the time due to machine precision issues.
      *
      * @return True if the matrix is singular and false if it is not.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,9 +44,9 @@ import static org.ejml.UtilEjml.*;
 
 /**
  * <p>
- * Common matrix operations are contained here.  Which specific underlying algorithm is used
- * is not specified just the out come of the operation.  Nor should calls to these functions
- * reply on the underlying implementation.  Which algorithm is used can depend on the matrix
+ * Common matrix operations are contained here. Which specific underlying algorithm is used
+ * is not specified just the out come of the operation. Nor should calls to these functions
+ * reply on the underlying implementation. Which algorithm is used can depend on the matrix
  * being passed in.
  * </p>
  * <p>
@@ -294,7 +294,7 @@ public class CommonOps_DDRM {
 
     /**
      * <p>
-     * Computes the dot product or inner product between two vectors.  If the two vectors are columns vectors
+     * Computes the dot product or inner product between two vectors. If the two vectors are columns vectors
      * then it is defined as:<br>
      * {@code dot(a,b) = a<sup>T</sup> * b}<br>
      * If the vectors are column or row or both is ignored by this function.
@@ -320,7 +320,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * <p>
-     * Is faster than using a generic matrix multiplication by taking advantage of symmetry.  For
+     * Is faster than using a generic matrix multiplication by taking advantage of symmetry. For
      * vectors there is an even faster option, see {@link VectorVectorMult_DDRM#innerProd(DMatrixD1, DMatrixD1)}
      * </p>
      *
@@ -541,7 +541,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * <p>
-     * If the system could not be solved then false is returned.  If it returns true
+     * If the system could not be solved then false is returned. If it returns true
      * that just means the algorithm finished operating, but the results could still be bad
      * because 'A' is singular or nearly singular.
      * </p>
@@ -629,7 +629,7 @@ public class CommonOps_DDRM {
      *
      * <p>
      * For square matrices the transpose is truly in-place and does not require
-     * additional memory.  For non-square matrices, internally a temporary matrix is declared and
+     * additional memory. For non-square matrices, internally a temporary matrix is declared and
      * {@link #transpose(DMatrixRMaj, DMatrixRMaj)} is invoked.
      * </p>
      *
@@ -653,7 +653,7 @@ public class CommonOps_DDRM {
      * where 'b' is the transpose of 'a'.
      * </p>
      *
-     * @param A The original matrix.  Not modified.
+     * @param A The original matrix. Not modified.
      * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */
@@ -677,7 +677,7 @@ public class CommonOps_DDRM {
      * where n = min(numRows,numCols)
      * </p>
      *
-     * @param a A square matrix.  Not modified.
+     * @param a A square matrix. Not modified.
      */
     public static double trace( DMatrix1Row a ) {
         int N = Math.min(a.numRows, a.numCols);
@@ -692,11 +692,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Returns the determinant of the matrix.  If the inverse of the matrix is also
+     * Returns the determinant of the matrix. If the inverse of the matrix is also
      * needed, then using {@link org.ejml.interfaces.decomposition.LUDecomposition_F64} directly (or any
      * similar algorithm) can be more efficient.
      *
-     * @param mat The matrix whose determinant is to be computed.  Not modified.
+     * @param mat The matrix whose determinant is to be computed. Not modified.
      * @return The determinant.
      */
     public static double det( DMatrixRMaj mat ) {
@@ -736,12 +736,12 @@ public class CommonOps_DDRM {
      * </p>
      *
      * <p>
-     * If the algorithm could not invert the matrix then false is returned.  If it returns true
-     * that just means the algorithm finished.  The results could still be bad
+     * If the algorithm could not invert the matrix then false is returned. If it returns true
+     * that just means the algorithm finished. The results could still be bad
      * because the matrix is singular or nearly singular.
      * </p>
      *
-     * @param mat The matrix that is to be inverted.  Results are stored here.  Modified.
+     * @param mat The matrix that is to be inverted. Results are stored here. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DMatrixRMaj mat ) {
@@ -770,15 +770,15 @@ public class CommonOps_DDRM {
     /**
      * <p>
      * Performs a matrix inversion operation that does not modify the original
-     * and stores the results in another matrix.  The two matrices must have the
+     * and stores the results in another matrix. The two matrices must have the
      * same dimension.<br>
      * <br>
      * b = a<sup>-1</sup>
      * </p>
      *
      * <p>
-     * If the algorithm could not invert the matrix then false is returned.  If it returns true
-     * that just means the algorithm finished.  The results could still be bad
+     * If the algorithm could not invert the matrix then false is returned. If it returns true
+     * that just means the algorithm finished. The results could still be bad
      * because the matrix is singular or nearly singular.
      * </p>
      *
@@ -788,7 +788,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param mat The matrix that is to be inverted. Not modified.
-     * @param result Where the inverse matrix is stored.  Modified.
+     * @param result Where the inverse matrix is stored. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DMatrixRMaj mat, DMatrixRMaj result ) {
@@ -862,12 +862,12 @@ public class CommonOps_DDRM {
      * pinv(A) = A<sup>T</sup>(AA<sup>T</sup>)<sup>-1</sup><br>
      * </p>
      * <p>
-     * Internally it uses {@link SolvePseudoInverseSvd_DDRM} to compute the inverse.  For performance reasons, this should only
+     * Internally it uses {@link SolvePseudoInverseSvd_DDRM} to compute the inverse. For performance reasons, this should only
      * be used when a matrix is singular or nearly singular.
      * </p>
      *
-     * @param A A m by n Matrix.  Not modified.
-     * @param invA Where the computed pseudo inverse is stored. n by m.  Modified.
+     * @param A A m by n Matrix. Not modified.
+     * @param invA Where the computed pseudo inverse is stored. n by m. Modified.
      */
     public static void pinv( DMatrixRMaj A, DMatrixRMaj invA ) {
         LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.pseudoInverse(true);
@@ -883,7 +883,7 @@ public class CommonOps_DDRM {
     /**
      * Converts the columns in a matrix into a set of vectors.
      *
-     * @param A Matrix.  Not modified.
+     * @param A Matrix. Not modified.
      * @return An array of vectors.
      */
     public static DMatrixRMaj[] columnsToVector( DMatrixRMaj A, @Nullable DMatrixRMaj[] v ) {
@@ -914,7 +914,7 @@ public class CommonOps_DDRM {
     /**
      * Converts the rows in a matrix into a set of vectors.
      *
-     * @param A Matrix.  Not modified.
+     * @param A Matrix. Not modified.
      * @return An array of vectors.
      */
     public static DMatrixRMaj[] rowsToVector( DMatrixRMaj A, @Nullable DMatrixRMaj[] v ) {
@@ -1113,12 +1113,12 @@ public class CommonOps_DDRM {
      * original matrix.
      * </p>
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcX0 Start column.
      * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
      * @param srcY1 Stop row+1.
-     * @param dst Where the submatrix are stored.  Modified.
+     * @param dst Where the submatrix are stored. Modified.
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
@@ -1151,12 +1151,12 @@ public class CommonOps_DDRM {
     /**
      * Extract where the destination is reshaped to match the extracted region
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcX0 Start column.
      * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
      * @param srcY1 Stop row+1.
-     * @param dst Where the submatrix are stored.  Modified.
+     * @param dst Where the submatrix are stored. Modified.
      */
     public static void extract( DMatrix src,
                                 int srcY0, int srcY1,
@@ -1172,7 +1172,7 @@ public class CommonOps_DDRM {
      * to determine the size of the matrix extracted.
      * </p>
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcY0 Start row in src.
      * @param srcX0 Start column in src.
      * @param dst Where the matrix is extracted into.
@@ -1194,7 +1194,7 @@ public class CommonOps_DDRM {
      * original matrix.
      * </p>
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcX0 Start column.
      * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
@@ -1228,7 +1228,7 @@ public class CommonOps_DDRM {
      * @param rowsSize maximum element in row array
      * @param cols array of column indexes
      * @param colsSize maximum element in column array
-     * @param dst output matrix.  Must be correct shape.
+     * @param dst output matrix. Must be correct shape.
      */
     public static DMatrixRMaj extract( DMatrixRMaj src,
                                        int[] rows, int rowsSize,
@@ -1252,7 +1252,7 @@ public class CommonOps_DDRM {
      * @param src Source matrix. Not modified.
      * @param indexes array of row indexes
      * @param length maximum element in row array
-     * @param dst output matrix.  Must be a vector of the correct length.
+     * @param dst output matrix. Must be a vector of the correct length.
      */
     public static DMatrixRMaj extract( DMatrixRMaj src, int[] indexes, int length, @Nullable DMatrixRMaj dst ) {
         if (dst==null)
@@ -1276,7 +1276,7 @@ public class CommonOps_DDRM {
      * </pre>
      *
      * @param src Source matrix. Not modified.
-     * @param dst output matrix.  Must be correct shape.
+     * @param dst output matrix. Must be correct shape.
      * @param rows array of row indexes.
      * @param rowsSize maximum element in row array
      * @param cols array of column indexes
@@ -1300,7 +1300,7 @@ public class CommonOps_DDRM {
 
     /**
      * <p>
-     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector. 'dst'
      * can either be a row or column vector.
      * <p>
      *
@@ -1816,7 +1816,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Reshaped into a column. Modified.
+     * @param output Optional storage for output. Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj minRows( DMatrixRMaj input, @Nullable DMatrixRMaj output ) {
@@ -1845,7 +1845,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param input Input matrix
-     * @param output Optional storage for output.  Reshaped into a column. Modified.
+     * @param output Optional storage for output. Reshaped into a column. Modified.
      * @return Vector containing the sum of each row in the input.
      */
     public static DMatrixRMaj maxRows( DMatrixRMaj input, @Nullable DMatrixRMaj output ) {
@@ -2122,7 +2122,7 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = a<sub>ij</sub> + val<br>
      * </p>
      *
-     * @param a A matrix.  Modified.
+     * @param a A matrix. Modified.
      * @param val The value that's added to each element.
      */
     public static void add( DMatrixD1 a, double val ) {
@@ -2259,7 +2259,7 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = &alpha;*a<sub>ij</sub>
      * </p>
      *
-     * @param a The matrix that is to be scaled.  Modified.
+     * @param a The matrix that is to be scaled. Modified.
      * @param alpha the amount each element is multiplied by.
      */
     public static void scale( double alpha, DMatrixD1 a ) {
@@ -2280,7 +2280,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param alpha the amount each element is multiplied by.
-     * @param a The matrix that is to be scaled.  Not modified.
+     * @param a The matrix that is to be scaled. Not modified.
      * @param b Where the scaled matrix is stored. Modified.
      */
     public static void scale( double alpha, DMatrixD1 a, DMatrixD1 b ) {
@@ -2328,7 +2328,7 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = &alpha;/a<sub>ij</sub>
      * </p>
      *
-     * @param a (input/output) The matrix whose elements are divide the scalar.  Modified.
+     * @param a (input/output) The matrix whose elements are divide the scalar. Modified.
      * @param alpha top value in division
      */
     public static void divide( double alpha, DMatrixD1 a ) {
@@ -2346,7 +2346,7 @@ public class CommonOps_DDRM {
      * a<sub>ij</sub> = a<sub>ij</sub>/&alpha;
      * </p>
      *
-     * @param a (input/output) The matrix whose elements are to be divided.  Modified.
+     * @param a (input/output) The matrix whose elements are to be divided. Modified.
      * @param alpha the amount each element is divided by.
      */
     public static void divide( DMatrixD1 a, double alpha ) {
@@ -2365,7 +2365,7 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param alpha The numerator.
-     * @param input The matrix whose elements are the divisor.  Not modified.
+     * @param input The matrix whose elements are the divisor. Not modified.
      * @param output Where the results are stored. Modified. Can be null.
      * @return The resulting matrix
      */
@@ -2388,7 +2388,7 @@ public class CommonOps_DDRM {
      * b<sub>ij</sub> = a<sub>ij</sub> /&alpha;
      * </p>
      *
-     * @param input The matrix whose elements are to be divided.  Not modified.
+     * @param input The matrix whose elements are to be divided. Not modified.
      * @param alpha the amount each element is divided by.
      * @param output Where the results are stored. Modified. Can be null.
      * @return The resulting matrix
@@ -2460,11 +2460,11 @@ public class CommonOps_DDRM {
     /**
      * <p>
      * Puts the augmented system matrix into reduced row echelon form (RREF) using Gauss-Jordan
-     * elimination with row (partial) pivots.  A matrix is said to be in RREF is the following conditions are true:
+     * elimination with row (partial) pivots. A matrix is said to be in RREF is the following conditions are true:
      * </p>
      *
      * <ol>
-     *     <li>If a row has non-zero entries, then the first non-zero entry is 1.  This is known as the leading one.</li>
+     *     <li>If a row has non-zero entries, then the first non-zero entry is 1. This is known as the leading one.</li>
      *     <li>If a column contains a leading one then all other entries in that column are zero.</li>
      *     <li>If a row contains a leading 1, then each row above contains a leading 1 further to the left.</li>
      * </ol>
@@ -2473,7 +2473,7 @@ public class CommonOps_DDRM {
      * [1] Page 19 in, Otter Bretscherm "Linear Algebra with Applications" Prentice-Hall Inc, 1997
      * </p>
      *
-     * @param A Input matrix.  Unmodified.
+     * @param A Input matrix. Unmodified.
      * @param numUnknowns Number of unknowns/columns that are reduced. Set to -1 to default to
      * A.numCols, which works for most applications.
      * @param reduced Storage for reduced echelon matrix. If null then a new matrix is returned. Modified.
@@ -2496,11 +2496,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the &gt; operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &gt; operator to each element in A. Results are stored in a boolean matrix.
      *
      * @param A Input matrx
      * @param value value each element is compared against
-     * @param output (Optional) Storage for results.  Can be null. Is reshaped.
+     * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
     public static BMatrixRMaj elementLessThan( DMatrixRMaj A, double value, BMatrixRMaj output ) {
@@ -2516,11 +2516,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the &ge; operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &ge; operator to each element in A. Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
-     * @param output (Optional) Storage for results.  Can be null. Is reshaped.
+     * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
     public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, double value, BMatrixRMaj output ) {
@@ -2536,11 +2536,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the &gt; operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &gt; operator to each element in A. Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
-     * @param output (Optional) Storage for results.  Can be null. Is reshaped.
+     * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
     public static BMatrixRMaj elementMoreThan( DMatrixRMaj A, double value, BMatrixRMaj output ) {
@@ -2556,11 +2556,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the &ge; operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &ge; operator to each element in A. Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param value value each element is compared against
-     * @param output (Optional) Storage for results.  Can be null. Is reshaped.
+     * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
     public static BMatrixRMaj elementMoreThanOrEqual( DMatrixRMaj A, double value, BMatrixRMaj output ) {
@@ -2576,11 +2576,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the &lt; operator to each element in A.  Results are stored in a boolean matrix.
+     * Applies the &lt; operator to each element in A. Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param B Input matrix
-     * @param output (Optional) Storage for results.  Can be null. Is reshaped.
+     * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
     public static BMatrixRMaj elementLessThan( DMatrixRMaj A, DMatrixRMaj B, BMatrixRMaj output ) {
@@ -2596,11 +2596,11 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Applies the A &le; B operator to each element.  Results are stored in a boolean matrix.
+     * Applies the A &le; B operator to each element. Results are stored in a boolean matrix.
      *
      * @param A Input matrix
      * @param B Input matrix
-     * @param output (Optional) Storage for results.  Can be null. Is reshaped.
+     * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
      */
     public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, DMatrixRMaj B, BMatrixRMaj output ) {
@@ -2620,7 +2620,7 @@ public class CommonOps_DDRM {
      *
      * @param A Input matrix
      * @param marked Input matrix marking elements in A
-     * @param output Storage for output row vector. Can be null.  Will be reshaped.
+     * @param output Storage for output row vector. Can be null. Will be reshaped.
      * @return Row vector with marked elements
      */
     public static DMatrixRMaj elements( DMatrixRMaj A, BMatrixRMaj marked, @Nullable DMatrixRMaj output ) {
@@ -2679,7 +2679,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ m[0] , ... , m[n-1] ]
@@ -2721,7 +2721,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns.  If the rows do not match the upper elements
+     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ m[0] ; ... ; m[n-1] ]
@@ -2750,11 +2750,11 @@ public class CommonOps_DDRM {
 
     /**
      * Applies the row permutation specified by the vector to the input matrix and save the results
-     * in the output matrix.  output[perm[j],:] = input[j,:]
+     * in the output matrix. output[perm[j],:] = input[j,:]
      *
-     * @param pinv (Input) Inverse permutation vector.  Specifies new order of the rows.
+     * @param pinv (Input) Inverse permutation vector. Specifies new order of the rows.
      * @param input (Input) Matrix which is to be permuted
-     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     * @param output (Output) Matrix which has the permutation stored in it. Is reshaped.
      */
     public static DMatrixRMaj permuteRowInv( int[] pinv, DMatrixRMaj input, DMatrixRMaj output ) {
         if (input.numRows > pinv.length)

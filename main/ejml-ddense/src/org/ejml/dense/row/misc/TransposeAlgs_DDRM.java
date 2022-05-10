@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.DMatrix1Row;
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 /**
- * Low level transpose algorithms.  No sanity checks are performed.    Take a look at BenchmarkTranspose to
+ * Low level transpose algorithms. No sanity checks are performed.   Take a look at BenchmarkTranspose to
  * see which one is faster on your computer.
  *
  * @author Peter Abeles
@@ -31,10 +31,10 @@ import org.ejml.data.DMatrix1Row;
 public class TransposeAlgs_DDRM {
 
     /**
-     * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
+     * In-place transpose for a square matrix. On most architectures it is faster than the standard transpose
      * algorithm, but on most modern computers it's slower than block transpose.
      *
-     * @param A The matrix that is transposed in-place.  Modified.
+     * @param A The matrix that is transposed in-place. Modified.
      */
     public static void square( DMatrix1Row A ) {
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
@@ -53,15 +53,15 @@ public class TransposeAlgs_DDRM {
     }
 
     /**
-     * Performs a transpose across block sub-matrices.  Reduces
+     * Performs a transpose across block sub-matrices. Reduces
      * the number of cache misses on larger matrices.
      *
      * *NOTE* If this is beneficial is highly dependent on the computer it is run on. e.g:
      * - Q6600 Almost twice as fast as standard.
      * - Pentium-M Same speed and some times a bit slower than standard.
      *
-     * @param A Original matrix.  Not modified.
-     * @param A_tran Transposed matrix.  Modified.
+     * @param A Original matrix. Not modified.
+     * @param A_tran Transposed matrix. Modified.
      * @param blockLength Length of a block.
      */
     public static void block( DMatrix1Row A, DMatrix1Row A_tran,
@@ -100,10 +100,10 @@ public class TransposeAlgs_DDRM {
     }
 
     /**
-     * A straight forward transpose.  Good for small non-square matrices.
+     * A straight forward transpose. Good for small non-square matrices.
      *
-     * @param A Original matrix.  Not modified.
-     * @param A_tran Transposed matrix.  Modified.
+     * @param A Original matrix. Not modified.
+     * @param A_tran Transposed matrix. Modified.
      */
     public static void standard( DMatrix1Row A, DMatrix1Row A_tran ) {
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A_tran.numRows, i -> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -160,12 +160,12 @@ public class ComplexMath_F64 {
     }
 
     /**
-     * Computes the N<sup>th</sup> root of a complex number in polar notation.  There are
+     * Computes the N<sup>th</sup> root of a complex number in polar notation. There are
      * N distinct N<sup>th</sup> roots.
      *
      * @param a Complex number
      * @param N The root's magnitude
-     * @param k Specifies which root.  0 &le; k &lt; N
+     * @param k Specifies which root. 0 &le; k &lt; N
      * @param result Computed root
      */
     public static void root( ComplexPolar_F64 a, int N, int k, ComplexPolar_F64 result ) {
@@ -174,12 +174,12 @@ public class ComplexMath_F64 {
     }
 
     /**
-     * Computes the N<sup>th</sup> root of a complex number.  There are
+     * Computes the N<sup>th</sup> root of a complex number. There are
      * N distinct N<sup>th</sup> roots.
      *
      * @param a Complex number
      * @param N The root's magnitude
-     * @param k Specifies which root.  0 &le; k &lt; N
+     * @param k Specifies which root. 0 &le; k &lt; N
      * @param result Computed root
      */
     public static void root( Complex_F64 a, int N, int k, Complex_F64 result ) {

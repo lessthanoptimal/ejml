@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,7 @@ public abstract class GenericTestsDMatrix extends EjmlStandardJUnit {
     }
 
     public void testSetAndGet_2D() {
-        // test a variety of different shapes.  Added rigor needed
+        // test a variety of different shapes. Added rigor needed
         // to properly test block matrix.
         checkSetAndGet(10, 12);
         checkSetAndGet(12, 10);
@@ -79,7 +79,7 @@ public abstract class GenericTestsDMatrix extends EjmlStandardJUnit {
     }
 
     public void testSetAndGet_2D_unsafe() {
-        // test a variety of different shapes.  Added rigor needed
+        // test a variety of different shapes. Added rigor needed
         // to properly test block matrix.
         checkSetAndGet_unsafe(10, 12);
         checkSetAndGet_unsafe(12, 10);

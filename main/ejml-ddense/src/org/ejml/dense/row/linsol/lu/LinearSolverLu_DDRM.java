@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import org.ejml.dense.row.decomposition.lu.LUDecompositionBase_DDRM;
 
 /**
  * For each column in the B matrix it makes a copy, which is then solved for and
- * writen into X.  By making a copy of the column cpu cache issues are reduced.
+ * writen into X. By making a copy of the column cpu cache issues are reduced.
  *
  * @author Peter Abeles
  */

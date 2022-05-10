@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,8 +26,8 @@ import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.simple.SimpleMatrix;
 
 /**
- * In some applications a small fixed sized matrix can speed things up a lot, e.g. 8 times faster.  One application
- * which uses small matrices is graphics and rigid body motion, which extensively uses 3x3 and 4x4 matrices.  This
+ * In some applications a small fixed sized matrix can speed things up a lot, e.g. 8 times faster. One application
+ * which uses small matrices is graphics and rigid body motion, which extensively uses 3x3 and 4x4 matrices. This
  * example is to show some examples of how you can use a fixed sized matrix.
  *
  * @author Peter Abeles

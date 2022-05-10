@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,8 +55,8 @@ public class LinearSolverLuKJI_DDRM extends LinearSolverLuBase_DDRM {
      * It seems to have the same runtime performance as {@link #solve} and is more complicated.
      * It is being kept around to avoid future replication of work.
      *
-     * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is writen to.  Modified.
+     * @param B A matrix that is n by m. Not modified.
+     * @param X An n by m matrix where the solution is writen to. Modified.
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {

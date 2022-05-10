@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,8 +28,6 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -129,7 +127,7 @@ public class TestSingularOps_DDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * Creates a random SVD that is highly unlikely to be in the correct order.  Adjust its order
+     * Creates a random SVD that is highly unlikely to be in the correct order. Adjust its order
      * and see if it produces the same matrix.
      */
     private void testDescendingOrder(int numRows, int numCols, boolean compact, boolean testArray ) {
@@ -268,7 +266,7 @@ public class TestSingularOps_DDRM extends EjmlStandardJUnit {
 
 
     /**
-     * Gives it correct input matrices and makes sure no exceptions are thrown.  All permutations
+     * Gives it correct input matrices and makes sure no exceptions are thrown. All permutations
      * are tested.
      */
     @Test

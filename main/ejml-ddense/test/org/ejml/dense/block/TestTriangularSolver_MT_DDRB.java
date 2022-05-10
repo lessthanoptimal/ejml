@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -90,7 +90,7 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 
 	/**
 	 * Checks to see if BlockTriangularSolver.solve produces the expected output given
-	 * these inputs.  The solution is computed directly.
+	 * these inputs. The solution is computed directly.
 	 */
 	private void checkSolve( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
 							 int r, boolean upper, boolean transT ) {
@@ -112,7 +112,7 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 
 	/**
 	 * Checks to see if BlockTriangularSolver.solve produces the expected output given
-	 * these inputs.  The solution is computed directly.
+	 * these inputs. The solution is computed directly.
 	 */
 	private void checkSolveUnaligned( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
 									  int r, boolean upper, boolean transT ) {

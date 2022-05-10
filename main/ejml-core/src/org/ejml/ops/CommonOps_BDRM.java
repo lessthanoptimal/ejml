@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,10 +25,10 @@ import org.ejml.data.BMatrixRMaj;
  */
 public class CommonOps_BDRM {
     /**
-     * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
+     * In-place transpose for a square matrix. On most architectures it is faster than the standard transpose
      * algorithm, but on most modern computers it's slower than block transpose.
      *
-     * @param mat The matrix that is transposed in-place.  Modified.
+     * @param mat The matrix that is transposed in-place. Modified.
      */
     public static void transposeSquare( BMatrixRMaj mat ) {
         if (mat.numCols != mat.numRows)

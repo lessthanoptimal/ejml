@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -88,8 +88,8 @@ public class TestMatrixMatrixMult_DDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * Use java reflections to get a list of all the functions.  From the name extract what
-     * the function is supposed to do.  then compute the expected results.
+     * Use java reflections to get a list of all the functions. From the name extract what
+     * the function is supposed to do. then compute the expected results.
      *
      * Correctness is tested against a known case.
      */

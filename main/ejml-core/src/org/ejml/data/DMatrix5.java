@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.ops.MatrixIO;
 import javax.annotation.Generated;
 
 /**
- * Fixed sized vector with 5 elements.  Can represent a 5 x 1 or 1 x 5 matrix, context dependent.
+ * Fixed sized vector with 5 elements. Can represent a 5 x 1 or 1 x 5 matrix, context dependent.
  *
  * <p>DO NOT MODIFY. Automatically generated code created by GenerateMatrixFixedN</p>
  *
@@ -94,7 +94,7 @@ public class DMatrix5 implements DMatrixFixed {
         } else if (w == 4) {
             return a5;
         } else {
-            throw new IllegalArgumentException("Out of range.  "+w);
+            throw new IllegalArgumentException("Out of range. "+w);
         }
     }
 
@@ -119,7 +119,7 @@ public class DMatrix5 implements DMatrixFixed {
         } else if (w == 4) {
             a5 = val;
         } else {
-            throw new IllegalArgumentException("Out of range.  "+w);
+            throw new IllegalArgumentException("Out of range. "+w);
         }
     }
 

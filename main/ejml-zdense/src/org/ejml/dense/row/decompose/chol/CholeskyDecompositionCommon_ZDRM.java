@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * This is an abstract class for a Cholesky decomposition.  It provides the solvers, but the actual
+ * This is an abstract class for a Cholesky decomposition. It provides the solvers, but the actual
  * decomposition is provided in other classes.
  * </p>
  *

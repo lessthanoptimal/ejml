@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ public class MatrixFeatures_D {
      * <p>
      *
      * <p>
-     * NOTE: If any of the elements are NaN then false is returned.  If two corresponding
+     * NOTE: If any of the elements are NaN then false is returned. If two corresponding
      * elements are both positive or negative infinity then they are equal.
      * </p>
      *
@@ -62,7 +62,7 @@ public class MatrixFeatures_D {
     /**
      * <p>
      * Checks to see if each corresponding element in the two matrices are
-     * within tolerance of each other or have the some symbolic meaning.  This
+     * within tolerance of each other or have the some symbolic meaning. This
      * can handle NaN and Infinite numbers.
      * <p>
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -71,7 +71,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
     }
 
     /**
-     * The block size and the matrix width are not perfectly divisible.  see if this is handled correctly.
+     * The block size and the matrix width are not perfectly divisible. see if this is handled correctly.
      */
     @Test
     public void testWithBlocksNotDivisible() {

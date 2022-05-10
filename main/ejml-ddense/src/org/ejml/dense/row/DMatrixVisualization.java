@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,8 +37,8 @@ import java.awt.*;
  */
 public class DMatrixVisualization {
     /**
-     * Creates a window visually showing the matrix's state.  Block means an element is zero.
-     * Red positive and blue negative.  More intense the color larger the element's absolute value
+     * Creates a window visually showing the matrix's state. Block means an element is zero.
+     * Red positive and blue negative. More intense the color larger the element's absolute value
      * is.
      *
      * @param A A matrix.

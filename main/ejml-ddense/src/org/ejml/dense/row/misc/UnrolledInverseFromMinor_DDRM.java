@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,15 @@
 
 package org.ejml.dense.row.misc;
 
-import javax.annotation.Generated;
 import org.ejml.data.DMatrixRMaj;
+
+import javax.annotation.Generated;
 
 /**
  * Unrolled inverse from minor for DDRM type matrices.
  * The input matrix is scaled make it much less prone to overflow and underflow issues.
  *
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateUnrolledInverseFromMinor_DDRM</p>
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateUnrolledInverseFromMinor_DDRM</p>
  *
  * @author Peter Abeles
  */

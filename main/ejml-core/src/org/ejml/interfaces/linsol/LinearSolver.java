@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,13 +33,13 @@ public interface LinearSolver<S extends Matrix, D extends Matrix> {
 
     /**
      * <p>
-     * Specifies the A matrix in the linear equation.  A reference might be saved
-     * and it might also be modified depending on the implementation.  If it is modified
+     * Specifies the A matrix in the linear equation. A reference might be saved
+     * and it might also be modified depending on the implementation. If it is modified
      * then {@link #modifiesA()} will return true.
      * </p>
      *
      * <p>
-     * If this value returns true that does not guarantee a valid solution was generated.  This
+     * If this value returns true that does not guarantee a valid solution was generated. This
      * is because some decompositions don't detect singular matrices.
      * </p>
      *
@@ -50,16 +50,16 @@ public interface LinearSolver<S extends Matrix, D extends Matrix> {
 
     /**
      * <p>
-     * Returns a very quick to compute measure of how singular the system is.  This measure will
+     * Returns a very quick to compute measure of how singular the system is. This measure will
      * be invariant to the scale of the matrix and always be positive, with larger values
-     * indicating it is less singular.  If not supported by the solver then the runtime
-     * exception IllegalArgumentException is thrown.  This is NOT the matrix's condition.
+     * indicating it is less singular. If not supported by the solver then the runtime
+     * exception IllegalArgumentException is thrown. This is NOT the matrix's condition.
      * </p>
      *
      * <p>
-     * How this function is implemented is not specified.  One possible implementation is the following:
+     * How this function is implemented is not specified. One possible implementation is the following:
      * In many decompositions a triangular matrix
-     * is extracted.  The determinant of a triangular matrix is easily computed and once normalized
+     * is extracted. The determinant of a triangular matrix is easily computed and once normalized
      * to be scale invariant and its absolute value taken it will provide functionality described above.
      * </p>
      *
@@ -72,12 +72,12 @@ public interface LinearSolver<S extends Matrix, D extends Matrix> {
      * Solves for X in the linear system, A*X=B.
      * </p>
      * <p>
-     * In some implementations 'B' and 'X' can be the same instance of a variable.  Call
+     * In some implementations 'B' and 'X' can be the same instance of a variable. Call
      * {@link #modifiesB()} to determine if 'B' is modified.
      * </p>
      *
-     * @param B A matrix &real; <sup>m &times; p</sup>.  Might be modified.
-     * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
+     * @param B A matrix &real; <sup>m &times; p</sup>. Might be modified.
+     * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to. Modified.
      */
     void solve(D B, D X);
 
@@ -103,7 +103,7 @@ public interface LinearSolver<S extends Matrix, D extends Matrix> {
      * Most linear solvers decompose the input matrix into a more simplistic form.
      * However some solutions do not require decomposition, e.g. inverse by minor.
      * @param <Decomposition> Decomposition type
-     * @return Internal decomposition class.  If there is none then null.
+     * @return Internal decomposition class. If there is none then null.
      */
     <Decomposition extends DecompositionInterface>Decomposition getDecomposition();
 }

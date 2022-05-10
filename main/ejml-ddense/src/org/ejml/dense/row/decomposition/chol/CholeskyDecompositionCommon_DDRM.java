@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * This is an abstract class for a Cholesky decomposition.  It provides the solvers, but the actual
+ * This is an abstract class for a Cholesky decomposition. It provides the solvers, but the actual
  * decomposition is provided in other classes.
  * </p>
  *
@@ -93,8 +93,8 @@ public abstract class CholeskyDecompositionCommon_DDRM
      *
      * <p>
      * If the matrix is not positive definite then this function will return
-     * false since it can't complete its computations.  Not all errors will be
-     * found.  This is an efficient way to check for positive definiteness.
+     * false since it can't complete its computations. Not all errors will be
+     * found. This is an efficient way to check for positive definiteness.
      * </p>
      *
      * @param mat A symmetric positive definite matrix with n &le; widthMax.

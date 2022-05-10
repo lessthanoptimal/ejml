@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 /**
  * <p>
  * Finds the eigenvalue decomposition of an arbitrary square matrix using the implicit double-step QR algorithm.
- * Watched is included in its name because it is designed to print out internal debugging information.  This
+ * Watched is included in its name because it is designed to print out internal debugging information. This
  * class is still underdevelopment and has yet to be optimized.
  * </p>
  *

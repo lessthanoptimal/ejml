@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ class TokenList {
     }
 
     /**
-     * Creates a list from the two given tokens.  These tokens are assumed to form a linked list starting at 'first'
+     * Creates a list from the two given tokens. These tokens are assumed to form a linked list starting at 'first'
      * and ending at 'last'
      *
      * @param first First element in the new list
@@ -120,9 +120,9 @@ class TokenList {
     }
 
     /**
-     * Inserts 'token' after 'where'.  if where is null then it is inserted to the beginning of the list.
+     * Inserts 'token' after 'where'. if where is null then it is inserted to the beginning of the list.
      *
-     * @param where Where 'token' should be inserted after.  if null the put at it at the beginning
+     * @param where Where 'token' should be inserted after. if null the put at it at the beginning
      * @param token The token that is to be inserted
      */
     public void insert( @Nullable Token where, Token token ) {
@@ -192,7 +192,7 @@ class TokenList {
     }
 
     /**
-     * Removes elements from begin to end from the list, inclusive.  Returns a new list which
+     * Removes elements from begin to end from the list, inclusive. Returns a new list which
      * is composed of the removed elements
      */
     public TokenList extractSubList( Token begin, Token end ) {
@@ -280,11 +280,11 @@ class TokenList {
     @SuppressWarnings("NullAway.Init")
     public static class Token {
         /**
-         * Next element in the list.  If null then it's at the end of the list
+         * Next element in the list. If null then it's at the end of the list
          */
         public Token next;
         /**
-         * Previous element in the list.  If null then it's the first element in the list
+         * Previous element in the list. If null then it's the first element in the list
          */
         public Token previous;
 

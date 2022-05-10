@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,8 +32,8 @@ public interface QRPDecomposition_F32<T extends Matrix>
 {
     /**
      * <p>
-     * Specifies the threshold used to flag a column as being singular.  The specified threshold is relative
-     * and will very depending on the system.  The default value is UtilEJML.F_EPS.
+     * Specifies the threshold used to flag a column as being singular. The specified threshold is relative
+     * and will very depending on the system. The default value is UtilEJML.F_EPS.
      * </p>
      *
      * @param threshold Singular threshold.

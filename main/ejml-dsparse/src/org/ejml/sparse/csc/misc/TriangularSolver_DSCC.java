@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,8 +33,8 @@ public class TriangularSolver_DSCC {
     /**
      * Solves for a lower triangular matrix against a dense matrix. L*x = b
      *
-     * @param L Lower triangular matrix.  Diagonal elements are assumed to be non-zero
-     * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
+     * @param L Lower triangular matrix. Diagonal elements are assumed to be non-zero
+     * @param x (Input) Solution matrix 'b'. (Output) matrix 'x'
      */
     public static void solveL( DMatrixSparseCSC L, double[] x ) {
         final int N = L.numCols;
@@ -57,8 +57,8 @@ public class TriangularSolver_DSCC {
     /**
      * Solves for the transpose of a lower triangular matrix against a dense matrix. L<sup>T</sup>*x = b
      *
-     * @param L Lower triangular matrix.  Diagonal elements are assumed to be non-zero
-     * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
+     * @param L Lower triangular matrix. Diagonal elements are assumed to be non-zero
+     * @param x (Input) Solution matrix 'b'. (Output) matrix 'x'
      */
     public static void solveTranL( DMatrixSparseCSC L, double[] x ) {
         final int N = L.numCols;
@@ -77,8 +77,8 @@ public class TriangularSolver_DSCC {
     /**
      * Solves for an upper triangular matrix against a dense vector. U*x = b
      *
-     * @param U Upper triangular matrix.  Diagonal elements are assumed to be non-zero
-     * @param x (Input) Solution matrix 'b'.  (Output) matrix 'x'
+     * @param U Upper triangular matrix. Diagonal elements are assumed to be non-zero
+     * @param x (Input) Solution matrix 'b'. (Output) matrix 'x'
      */
     public static void solveU( DMatrixSparseCSC U, double[] x ) {
         final int N = U.numCols;
@@ -102,9 +102,9 @@ public class TriangularSolver_DSCC {
      *
      * <p>G<sup>T</sup>*X = B</p>
      *
-     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param G (Input) Lower or upper triangular matrix. diagonal elements must be non-zero. Not modified.
      * @param lower true for lower triangular and false for upper
-     * @param B (Input) Matrix.  Not modified.
+     * @param B (Input) Matrix. Not modified.
      * @param X (Output) Solution
      * @param pinv (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_x (Optional) Storage for workspace.
@@ -200,9 +200,9 @@ public class TriangularSolver_DSCC {
     /**
      * Computes the solution to the triangular system.
      *
-     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero.  Not modified.
+     * @param G (Input) Lower or upper triangular matrix. diagonal elements must be non-zero. Not modified.
      * @param lower true for lower triangular and false for upper
-     * @param B (Input) Matrix.  Not modified.
+     * @param B (Input) Matrix. Not modified.
      * @param X (Output) Solution
      * @param pinv (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_x (Optional) Storage for workspace.
@@ -239,15 +239,15 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Computes the solution to a triangular system with (optional) pivots.  Only a single column in B is solved for. Diagonals
+     * Computes the solution to a triangular system with (optional) pivots. Only a single column in B is solved for. Diagonals
      * in G are assumed to filled in and either the first or last entry for lower or upper triangle, respectively.
      *
-     * @param G (Input) Lower or upper triangular matrix.  diagonal elements must be non-zero and last
-     * or first entry in a column.  Not modified.
+     * @param G (Input) Lower or upper triangular matrix. diagonal elements must be non-zero and last
+     * or first entry in a column. Not modified.
      * @param lower true for lower triangular and false for upper
-     * @param B (Input) Matrix.  Not modified.
+     * @param B (Input) Matrix. Not modified.
      * @param colB The column in B which is solved for
-     * @param x (Output) Storage for dense solution.  length = G.numRows
+     * @param x (Output) Storage for dense solution. length = G.numRows
      * @param pinv (Input, Optional) Permutation vector. Maps col j to G. Null if no pivots.
      * @param g_xi (Optional) Storage for workspace. Will contain nonzero pattern.
      * See {@link #searchNzRowsInX(DMatrixSparseCSC, DMatrixSparseCSC, int, int[], int[], int[])}
@@ -305,19 +305,19 @@ public class TriangularSolver_DSCC {
      * <p>Determines which elements in 'X' will be non-zero when the system below is solved for.</p>
      * G*X = B
      *
-     * <p>xi will contain a list of ordered row indexes in B which will be modified starting at xi[top] to xi[n-1].  top
+     * <p>xi will contain a list of ordered row indexes in B which will be modified starting at xi[top] to xi[n-1]. top
      * is the value returned by this function.</p>
      *
-     * <p>See cs_reach in dsparse library to understand the algorithm.  This code follow the spirit but not
+     * <p>See cs_reach in dsparse library to understand the algorithm. This code follow the spirit but not
      * the details because of differences in the contract.</p>
      *
-     * @param G (Input) Lower triangular system matrix.  Diagonal elements are assumed to be not zero.  Not modified.
+     * @param G (Input) Lower triangular system matrix. Diagonal elements are assumed to be not zero. Not modified.
      * @param B (Input) Matrix B. Not modified.
      * @param colB Column in B being solved for
      * @param pinv (Input, Optional) Column pivots in G. Null if no pivots.
-     * @param xi (Output) List of row indices in X which are non-zero in graph order.  Must have length  G.numCols
+     * @param xi (Output) List of row indices in X which are non-zero in graph order. Must have length  G.numCols
      * @param w workspace array used internally. Must have a length of G.numCols*2 or more. Assumed to be filled with 0 in first N elements.
-     * @return Returns the index of the first element in the xi list.  Also known as top.
+     * @return Returns the index of the first element in the xi list. Also known as top.
      */
     public static int searchNzRowsInX( DMatrixSparseCSC G, DMatrixSparseCSC B, int colB, @Nullable int[] pinv,
                                        int[] xi, int[] w ) {
@@ -357,7 +357,7 @@ public class TriangularSolver_DSCC {
     }
 
     /**
-     * Given the first row in B it performs a DFS seeing which elements in 'X' will be not zero.  A row=i in 'X' will
+     * Given the first row in B it performs a DFS seeing which elements in 'X' will be not zero. A row=i in 'X' will
      * be not zero if any element in row=(j < i) in G is not zero
      *
      * Tall Matrices: The non-zero pattern of X is entirely determined by the top N by N matrix,
@@ -369,7 +369,7 @@ public class TriangularSolver_DSCC {
     private static int searchNzRowsInX_DFS( int rowB, DMatrixSparseCSC G, int top, @Nullable int[] pinv, int[] xi, int[] w ) {
         int N = G.numCols;  // first N elements in w is the length of X
         int head = 0; // put the selected row into the FILO stack
-        xi[head] = rowB; // use the head of xi to store where the stack it's searching.  The tail is where
+        xi[head] = rowB; // use the head of xi to store where the stack it's searching. The tail is where
         // the graph ordered list of rows in B is stored.
         while (head >= 0) {
             // the column in G being examined
@@ -418,11 +418,11 @@ public class TriangularSolver_DSCC {
      *
      * <p>Functionally identical to cs_etree in csparse</p>
      *
-     * @param A (Input) M by N sparse upper triangular matrix.  If ata is false then M=N otherwise M &ge; N
+     * @param A (Input) M by N sparse upper triangular matrix. If ata is false then M=N otherwise M &ge; N
      * @param ata If true then it computes elimination treee of A'A without forming A'A otherwise computes elimination
      * tree for cholesky factorization
-     * @param parent (Output) Parent of each node in tree. This is the elimination tree.  -1 if no parent.  Size N.
-     * @param gwork (Optional) Internal workspace.  Can be null.
+     * @param parent (Output) Parent of each node in tree. This is the elimination tree. -1 if no parent. Size N.
+     * @param gwork (Optional) Internal workspace. Can be null.
      */
     public static void eliminationTree( DMatrixSparseCSC A, boolean ata, int[] parent, @Nullable IGrowArray gwork ) {
         final int m = A.numRows;
@@ -477,7 +477,7 @@ public class TriangularSolver_DSCC {
 
     /**
      * <p>Sorts an elimination tree {@link #eliminationTree} into postorder. In a postoredered tree, the d proper
-     * descendants of any node k are numbered k-d through k-1.  Non-recursive implementation for better performance.</p>
+     * descendants of any node k are numbered k-d through k-1. Non-recursive implementation for better performance.</p>
      *
      * <p>post[k] = i means node 'i' of the original tree is node 'k' in the postordered tree.</p>
      *
@@ -552,16 +552,16 @@ public class TriangularSolver_DSCC {
 
     /**
      * <p>Given an elimination tree compute the non-zero elements in the specified row of L given the
-     * symmetric A matrix.  This is in general much faster than general purpose algorithms</p>
+     * symmetric A matrix. This is in general much faster than general purpose algorithms</p>
      *
      * <p>Functionally equivalent to cs_ereach() in csparse</p>
      *
      * @param A Symmetric matrix.
      * @param k Row in A being processed.
      * @param parent elimination tree.
-     * @param s (Output) s[top:(n-1)] = pattern of L[k,:].  Must have length A.numCols
-     * @param w workspace array used internally.  All elements must be &ge; 0 on input. Must be of size A.numCols
-     * @return Returns the index of the first element in the xi list.  Also known as top.
+     * @param s (Output) s[top:(n-1)] = pattern of L[k,:]. Must have length A.numCols
+     * @param w workspace array used internally. All elements must be &ge; 0 on input. Must be of size A.numCols
+     * @return Returns the index of the first element in the xi list. Also known as top.
      */
     public static int searchNzRowsElim( DMatrixSparseCSC A, int k, int[] parent, int[] s, int[] w ) {
         int top = A.numCols;
@@ -597,7 +597,7 @@ public class TriangularSolver_DSCC {
 
     /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
-     * is defined in {@link LinearSolverDense#quality()}.  In
+     * is defined in {@link LinearSolverDense#quality()}. In
      * this situation the quality os the absolute value of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.

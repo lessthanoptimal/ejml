@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import org.ejml.data.ZMatrixRMaj;
 
 /**
  * <p>
- * An LU decomposition algorithm that originally came from Jama.  In general this is faster than
+ * An LU decomposition algorithm that originally came from Jama. In general this is faster than
  * what is in NR since it creates a cache of a column, which makes a big difference in larger
  * matrices.
  * </p>
@@ -32,10 +32,10 @@ import org.ejml.data.ZMatrixRMaj;
 public class LUDecompositionAlt_ZDRM extends LUDecompositionBase_ZDRM {
 
     /**
-     * This is a modified version of what was found in the JAMA package.  The order that it
+     * This is a modified version of what was found in the JAMA package. The order that it
      * performs its permutations in is the primary difference from NR
      *
-     * @param a The matrix that is to be decomposed.  Not modified.
+     * @param a The matrix that is to be decomposed. Not modified.
      * @return true If the matrix can be decomposed and false if it can not.
      */
     @Override

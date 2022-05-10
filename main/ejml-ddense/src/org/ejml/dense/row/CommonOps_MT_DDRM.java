@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -351,7 +351,7 @@ public class CommonOps_MT_DDRM {
      *
      * <p>
      * For square matrices the transpose is truly in-place and does not require
-     * additional memory.  For non-square matrices, internally a temporary matrix is declared and
+     * additional memory. For non-square matrices, internally a temporary matrix is declared and
      * {@link #transpose(DMatrixRMaj, DMatrixRMaj)} is invoked.
      * </p>
      *
@@ -375,7 +375,7 @@ public class CommonOps_MT_DDRM {
      * where 'b' is the transpose of 'a'.
      * </p>
      *
-     * @param A The original matrix.  Not modified.
+     * @param A The original matrix. Not modified.
      * @param A_tran Where the transpose is stored. If null a new matrix is created. Modified.
      * @return The transposed matrix.
      */

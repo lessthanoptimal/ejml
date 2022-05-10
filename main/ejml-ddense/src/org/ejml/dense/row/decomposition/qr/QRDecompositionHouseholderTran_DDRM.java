@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * Householder QR decomposition is rich in operations along the columns of the matrix.  This can be
+ * Householder QR decomposition is rich in operations along the columns of the matrix. This can be
  * taken advantage of by solving for the Q matrix in a column major format to reduce the number
  * of CPU cache misses and the number of copies that are performed.
  * </p>
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMatrixRMaj> {
 
     /**
-     * Where the Q and R matrices are stored.  For speed reasons
+     * Where the Q and R matrices are stored. For speed reasons
      * this is transposed
      */
     protected DMatrixRMaj QR;
@@ -92,7 +92,7 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
     }
 
     /**
-     * Computes the Q matrix from the information stored in the QR matrix.  This
+     * Computes the Q matrix from the information stored in the QR matrix. This
      * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
@@ -121,7 +121,7 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
     /**
      * A = Q*A
      *
-     * @param A Matrix that is being multiplied by Q.  Is modified.
+     * @param A Matrix that is being multiplied by Q. Is modified.
      */
     public void applyQ( DMatrixRMaj A ) {
         if (A.numRows != numRows)
@@ -139,7 +139,7 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
     /**
      * A = Q<sup>T</sup>*A
      *
-     * @param A Matrix that is being multiplied by Q<sup>T</sup>.  Is modified.
+     * @param A Matrix that is being multiplied by Q<sup>T</sup>. Is modified.
      */
     public void applyTranQ( DMatrixRMaj A ) {
         for (int j = 0; j < minLength; j++) {
@@ -176,13 +176,13 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
 
     /**
      * <p>
-     * To decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
+     * To decompose the matrix 'A' it must have full rank. 'A' is a 'm' by 'n' matrix.
      * It requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
      * </p>
      *
      * <p>
      * The matrix provided here can be of different
-     * dimension than the one specified in the constructor.  It just has to be smaller than or equal
+     * dimension than the one specified in the constructor. It just has to be smaller than or equal
      * to it.
      * </p>
      */
@@ -209,8 +209,8 @@ public class QRDecompositionHouseholderTran_DDRM implements QRDecomposition<DMat
 
     /**
      * <p>
-     * Computes the householder vector "u" for the first column of submatrix j.  Note this is
-     * a specialized householder for this problem.  There is some protection against
+     * Computes the householder vector "u" for the first column of submatrix j. Note this is
+     * a specialized householder for this problem. There is some protection against
      * overflow and underflow.
      * </p>
      * <p>

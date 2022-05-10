@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,7 +39,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 public interface QrpSparseDecomposition<T extends Matrix>
         extends QRDecomposition<T> {
     /**
-     * Returns the rank as determined by the algorithm.  This is dependent upon a fixed threshold
+     * Returns the rank as determined by the algorithm. This is dependent upon a fixed threshold
      * and might not be appropriate for some applications.
      *
      * @return Matrix's rank
@@ -47,7 +47,7 @@ public interface QrpSparseDecomposition<T extends Matrix>
     int getRank();
 
     /**
-     * Ordering of each column after pivoting.   The current column i was original at column pivot[i].
+     * Ordering of each column after pivoting.  The current column i was original at column pivot[i].
      *
      * @return Order of columns.
      */
@@ -56,13 +56,13 @@ public interface QrpSparseDecomposition<T extends Matrix>
     /**
      * Creates the column pivot matrix.
      *
-     * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
+     * @param P Optional storage for pivot matrix. If null a new matrix will be created.
      * @return The pivot matrix.
      */
     T getColPivotMatrix( T P );
 
     /**
-     * Ordering of each row after pivoting.   The current row i was original at row pivot[i].
+     * Ordering of each row after pivoting.  The current row i was original at row pivot[i].
      *
      * @return Order of rows.
      */
@@ -71,7 +71,7 @@ public interface QrpSparseDecomposition<T extends Matrix>
     /**
      * Creates the row pivot matrix.
      *
-     * @param P Optional storage for pivot matrix.  If null a new matrix will be created.
+     * @param P Optional storage for pivot matrix. If null a new matrix will be created.
      * @return The pivot matrix.
      */
     T getRowPivotMatrix( T P );

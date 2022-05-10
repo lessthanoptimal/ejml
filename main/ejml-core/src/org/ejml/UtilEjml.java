@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -500,7 +500,7 @@ public class UtilEjml {
 
     /**
      * Fixed length fancy formatting for doubles. If possible decimal notation is used. If all the significant digits
-     * can't be shown then it will switch to exponential notation.  If not all the space is needed then it will
+     * can't be shown then it will switch to exponential notation. If not all the space is needed then it will
      * be filled in to ensure it has the specified length.
      *
      * @param value value being formatted

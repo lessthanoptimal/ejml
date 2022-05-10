@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -150,10 +150,10 @@ public class MatrixFeatures_DSCC {
      * <br>
      * a<sub>ij</sub> &le; 0 for all i &lt; j+N<br>
      * <br>
-     * A triangular matrix is a Hessenberg matrix of degree 0.  Only the upper most diagonal elements are
+     * A triangular matrix is a Hessenberg matrix of degree 0. Only the upper most diagonal elements are
      * explicitly checked to see if they are non-zero
      * </p>
-     * @param A Matrix being tested.  Not modified.
+     * @param A Matrix being tested. Not modified.
      * @param hessenberg The degree of being hessenberg.
      * @param tol How not zero diagonal elements must be.
      * @return If it is an upper triangular/hessenberg matrix or not.
@@ -214,7 +214,7 @@ public class MatrixFeatures_DSCC {
     /**
      * Returns true if the input is a vector
      * @param a A matrix or vector
-     * @return true if it's a vector.  Column or row.
+     * @return true if it's a vector. Column or row.
      */
     public static boolean isVector(DMatrixSparseCSC a) {
         return (a.numCols == 1 && a.numRows > 1) || (a.numRows == 1 && a.numCols>1);
@@ -223,7 +223,7 @@ public class MatrixFeatures_DSCC {
     /**
      * Checks to see if the matrix is symmetric to within tolerance.
      *
-     * @param A Matrix being tested.  Not modified.
+     * @param A Matrix being tested. Not modified.
      * @param tol Tolerance that defines how similar two values must be to be considered identical
      * @return true if symmetric or false if not
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,8 @@ import org.jetbrains.annotations.Nullable;
 public class TridiagonalDecompositionHouseholderOrig_DDRM {
 
     /**
-     * Internal storage of decomposed matrix.  The tridiagonal matrix is stored in the
-     * upper tridiagonal portion of the matrix.  The householder vectors are stored
+     * Internal storage of decomposed matrix. The tridiagonal matrix is stored in the
+     * upper tridiagonal portion of the matrix. The householder vectors are stored
      * in the upper rows.
      */
     DMatrixRMaj QT;
@@ -69,7 +69,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     /**
      * Extracts the tridiagonal matrix found in the decomposition.
      *
-     * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param T If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
     public DMatrixRMaj getT( @Nullable DMatrixRMaj T ) {
@@ -94,7 +94,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     /**
      * An orthogonal matrix that has the following property: T = Q<sup>T</sup>AQ
      *
-     * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param Q If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
     public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q ) {
@@ -117,7 +117,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     /**
      * Decomposes the provided symmetric matrix.
      *
-     * @param A Symmetric matrix that is going to be decomposed.  Not modified.
+     * @param A Symmetric matrix that is going to be decomposed. Not modified.
      */
     public void decompose( DMatrixRMaj A ) {
         init(A);
@@ -186,7 +186,7 @@ public class TridiagonalDecompositionHouseholderOrig_DDRM {
     }
 
     /**
-     * Performs the householder operations on left and right and side of the matrix.  Q<sup>T</sup>AQ
+     * Performs the householder operations on left and right and side of the matrix. Q<sup>T</sup>AQ
      *
      * @param row Specifies the submatrix.
      * @param gamma The gamma for the householder operation

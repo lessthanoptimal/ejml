@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import org.ejml.data.Matrix;
 
 /**
  * <p>
- * An implementation of LinearSolverDense solves a linear system or inverts a matrix.  It masks more complex
+ * An implementation of LinearSolverDense solves a linear system or inverts a matrix. It masks more complex
  * implementation details, while giving the programmer control over memory management and performance.
  * To quickly detect nearly singular matrices without computing the SVD the {@link #quality()}
  * function is provided.
@@ -34,7 +34,7 @@ import org.ejml.data.Matrix;
  * A linear system is defined as:
  * A*X = B.<br>
  * where A &isin; &real; <sup>m &times; n</sup>, X &isin; &real; <sup>n &times; p</sup>,
- * B &isin; &real; <sup>m &times; p</sup>.  Different implementations can solve different
+ * B &isin; &real; <sup>m &times; p</sup>. Different implementations can solve different
  * types and shapes in input matrices and have different memory and runtime performance.
  *</p>
  *
@@ -56,9 +56,9 @@ import org.ejml.data.Matrix;
  *
  * <p>
  * <b>IMPORTANT:</b> Depending upon the implementation, input matrices might be overwritten by
- * the solver.  This
- * reduces memory and computational requirements and give more control to the programmer.  If
- * the input matrices need to be not modified then {@link LinearSolverSafe} can be used.  The
+ * the solver. This
+ * reduces memory and computational requirements and give more control to the programmer. If
+ * the input matrices need to be not modified then {@link LinearSolverSafe} can be used. The
  * functions {@link #modifiesA()} and {@link #modifiesB()} specify which input matrices are being
  * modified.
  * </p>
@@ -69,7 +69,7 @@ public interface LinearSolverDense< T extends Matrix> extends LinearSolver<T,T> 
 
     /**
      * Computes the inverse of of the 'A' matrix passed into {@link #setA(Matrix)}
-     * and writes the results to the provided matrix.  If 'A_inv' needs to be different from 'A'
+     * and writes the results to the provided matrix. If 'A_inv' needs to be different from 'A'
      * is implementation dependent.
      *
      * @param A_inv Where the inverted matrix saved. Modified.

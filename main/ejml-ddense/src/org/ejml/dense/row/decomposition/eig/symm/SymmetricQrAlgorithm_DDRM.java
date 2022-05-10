@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -103,8 +103,8 @@ public class SymmetricQrAlgorithm_DDRM {
     }
 
     /**
-     * Computes the eigenvalue of the provided tridiagonal matrix.  Note that only the upper portion
-     * needs to be tridiagonal.  The bottom diagonal is assumed to be the same as the top.
+     * Computes the eigenvalue of the provided tridiagonal matrix. Note that only the upper portion
+     * needs to be tridiagonal. The bottom diagonal is assumed to be the same as the top.
      *
      * @param sideLength Number of rows and columns in the input matrix.
      * @param diag Diagonal elements from tridiagonal matrix. Modified.

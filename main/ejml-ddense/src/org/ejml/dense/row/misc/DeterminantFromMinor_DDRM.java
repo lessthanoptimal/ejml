@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 
 /**
  * <p>
- * Computes the determinant of a matrix using Laplace expansion.  This is done
+ * Computes the determinant of a matrix using Laplace expansion. This is done
  * using minor matrices as is shown below:<br>
  * <br>
  * |A| = Sum{ i=1:k ; a<sub>ij</sub> C<sub>ij</sub> }<br>
@@ -98,7 +98,7 @@ public class DeterminantFromMinor_DDRM {
     }
 
     /**
-     * Computes the determinant for the specified matrix.  It must be square and have
+     * Computes the determinant for the specified matrix. It must be square and have
      * the same width and height as what was specified in the constructor.
      *
      * @param mat The matrix whose determinant is to be computed.

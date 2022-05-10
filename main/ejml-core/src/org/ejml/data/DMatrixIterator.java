@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 
 /**
- * This is a matrix iterator for traversing through a submatrix.  For speed it is recommended
+ * This is a matrix iterator for traversing through a submatrix. For speed it is recommended
  * that you directly access the elements in the matrix, but there are some situations where this
  * can be a better design.
  *
@@ -51,9 +51,9 @@ public class DMatrixIterator implements Iterator<Double> {
     int subRow,subCol;
 
     /**
-     * Creates a new iterator for traversing through a submatrix inside this matrix.  It can be traversed
-     * by row or by column.  Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
-     * 0 and 1.  The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
+     * Creates a new iterator for traversing through a submatrix inside this matrix. It can be traversed
+     * by row or by column. Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
+     * 0 and 1. The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
      *
      * @param a the matrix it is iterating through
      * @param rowMajor true means it will traverse through the submatrix by row first, false by columns.

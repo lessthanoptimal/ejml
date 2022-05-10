@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestBaseDecomposition_DDRB_to_DDRM extends EjmlStandardJUnit {
 
     /**
-     * Make sure the input is never modified.  Also checks to see if the matrix was correctly converted from
+     * Make sure the input is never modified. Also checks to see if the matrix was correctly converted from
      * row into block format and back
      */
     @Test

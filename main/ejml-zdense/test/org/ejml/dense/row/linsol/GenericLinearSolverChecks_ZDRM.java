@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -175,7 +175,7 @@ public abstract class GenericLinearSolverChecks_ZDRM extends EjmlStandardJUnit {
 
     /**
      * This test checks to see if it can solve a system that will require some algorithms to
-     * perform a pivot.  Pivots can change the data structure and can cause solve to fail if not
+     * perform a pivot. Pivots can change the data structure and can cause solve to fail if not
      * handled correctly.
      */
     @Test

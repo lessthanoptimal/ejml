@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,12 +21,12 @@ package org.ejml.equation;
 import java.util.Random;
 
 /**
- * Manages the creation and recycling of temporary variables used to store intermediate results.  The user
+ * Manages the creation and recycling of temporary variables used to store intermediate results. The user
  * cannot directly access these variables
  *
  * @author Peter Abeles
  */
-// TODO add function to purge temporary variables.  basicaly resize and redeclare their array to size 1
+// TODO add function to purge temporary variables. basicaly resize and redeclare their array to size 1
 public class ManagerTempVariables {
 
     /**

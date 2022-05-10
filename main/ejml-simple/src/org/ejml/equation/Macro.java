@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Definition of a macro.  Each input will replace the word of its name
+ * Definition of a macro. Each input will replace the word of its name
  *
  * @author Peter Abeles
  */

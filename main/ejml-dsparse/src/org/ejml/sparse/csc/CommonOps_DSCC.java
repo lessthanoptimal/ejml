@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -47,7 +47,7 @@ import static org.ejml.UtilEjml.*;
 public class CommonOps_DSCC {
 
     /**
-     * Checks to see if row indicies are sorted into ascending order.  O(N)
+     * Checks to see if row indicies are sorted into ascending order. O(N)
      *
      * @return true if sorted and false if not
      */
@@ -116,9 +116,9 @@ public class CommonOps_DSCC {
     /**
      * Perform matrix transpose
      *
-     * @param A Input matrix.  Not modified
-     * @param A_t Storage for transpose of 'a'.  Must be correct shape.  data length might be adjusted.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param A Input matrix. Not modified
+     * @param A_t Storage for transpose of 'a'. Must be correct shape. data length might be adjusted.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
      * @return The transposed matrix
      */
     public static DMatrixSparseCSC transpose( DMatrixSparseCSC A, @Nullable DMatrixSparseCSC A_t, @Nullable IGrowArray gw ) {
@@ -133,13 +133,13 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A*B
+     * Performs matrix multiplication. C = A*B
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Not modified.
-     * @param outputC (Output) Storage for results.  Data length is increased if insufficient.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param outputC (Output) Storage for results. Data length is increased if insufficient.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B,
                                          @Nullable DMatrixSparseCSC outputC,
@@ -154,7 +154,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A*B
+     * Performs matrix multiplication. C = A*B
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -183,7 +183,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A<sup>T</sup>*B
+     * Performs matrix multiplication. C = A<sup>T</sup>*B
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -221,7 +221,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A*B<sup>T</sup>
+     * Performs matrix multiplication. C = A*B<sup>T</sup>
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -258,7 +258,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A<sup>T</sup>*B<sup>T</sup>
+     * Performs matrix multiplication. C = A<sup>T</sup>*B<sup>T</sup>
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -307,8 +307,8 @@ public class CommonOps_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param outputC Output matrix.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B,
                                         @Nullable DMatrixSparseCSC outputC,
@@ -349,7 +349,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * B = scalar*A.   A and B can be the same instance.
+     * B = scalar*A.  A and B can be the same instance.
      *
      * @param scalar (Input) Scalar value
      * @param A (Input) Matrix. Not modified.
@@ -370,7 +370,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * B = A/scalar.   A and B can be the same instance.
+     * B = A/scalar.  A and B can be the same instance.
      *
      * @param scalar (Input) Scalar value
      * @param A (Input) Matrix. Not modified.
@@ -391,7 +391,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * B = scalar/A.   A and B can be the same instance. Only non-zero values are affected
+     * B = scalar/A.  A and B can be the same instance. Only non-zero values are affected
      *
      * @param A (Input) Matrix. Not modified.
      * @param scalar (Input) Scalar value
@@ -407,7 +407,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * B = -A.   Changes the sign of elements in A and stores it in B. A and B can be the same instance.
+     * B = -A.  Changes the sign of elements in A and stores it in B. A and B can be the same instance.
      *
      * @param A (Input) Matrix. Not modified.
      * @param outputB (Output) Matrix. Modified.
@@ -536,8 +536,8 @@ public class CommonOps_DSCC {
      * @param A (Input) Matrix.
      * @param B (Input) Matrix
      * @param output (Output) Matrix. data array is grown to min(A.nz_length,B.nz_length), resulting a in a large speed boost.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output,
                                                 @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
@@ -574,7 +574,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Multiply all elements of column 'i' by value[i].  A[:,i] *= values[i].<br>
+     * Multiply all elements of column 'i' by value[i]. A[:,i] *= values[i].<br>
      * Equivalent to A = A*diag(values)
      *
      * @param A (Input/Output) Matrix. Modified.
@@ -717,7 +717,7 @@ public class CommonOps_DSCC {
 
     /**
      * <p>
-     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector. 'dst'
      * can either be a row or column vector.
      * <p>
      *
@@ -757,7 +757,7 @@ public class CommonOps_DSCC {
 
     /**
      * <p>
-     * Extracts the diagonal elements 'src' write it to the 'dst' vector.  'dst'
+     * Extracts the diagonal elements 'src' write it to the 'dst' vector. 'dst'
      * can either be a row or column vector.
      * <p>
      *
@@ -777,7 +777,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Converts the permutation vector into a matrix. B = P*A.  B[p[i],:] = A[i,:]
+     * Converts the permutation vector into a matrix. B = P*A. B[p[i],:] = A[i,:]
      *
      * @param p (Input) Permutation vector
      * @param inverse (Input) If it is the inverse. B[i,:] = A[p[i],:)
@@ -856,11 +856,11 @@ public class CommonOps_DSCC {
 
     /**
      * Applies the row permutation specified by the vector to the input matrix and save the results
-     * in the output matrix.  output[perm[j],:] = input[j,:]
+     * in the output matrix. output[perm[j],:] = input[j,:]
      *
-     * @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows.
+     * @param permInv (Input) Inverse permutation vector. Specifies new order of the rows.
      * @param input (Input) Matrix which is to be permuted
-     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     * @param output (Output) Matrix which has the permutation stored in it. Is reshaped.
      */
     public static void permuteRowInv( int[] permInv, DMatrixSparseCSC input, DMatrixSparseCSC output ) {
         if (input.numRows > permInv.length)
@@ -891,7 +891,7 @@ public class CommonOps_DSCC {
      * @param permRowInv (Input) Inverse row permutation vector. Null is the same as passing in identity.
      * @param input (Input) Matrix which is to be permuted
      * @param permCol (Input) Column permutation vector. Null is the same as passing in identity.
-     * @param output (Output) Matrix which has the permutation stored in it.  Is reshaped.
+     * @param output (Output) Matrix which has the permutation stored in it. Is reshaped.
      */
     public static void permute( @Nullable int[] permRowInv, DMatrixSparseCSC input, @Nullable int[] permCol,
                                 DMatrixSparseCSC output ) {
@@ -924,7 +924,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Permutes a vector.  output[i] = input[perm[i]]
+     * Permutes a vector. output[i] = input[perm[i]]
      *
      * @param perm (Input) permutation vector
      * @param input (Input) Vector which is to be permuted
@@ -938,7 +938,7 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Permutes a vector in the inverse.  output[perm[k]] = input[k]
+     * Permutes a vector in the inverse. output[perm[k]] = input[k]
      *
      * @param perm (Input) permutation vector
      * @param input (Input) Vector which is to be permuted
@@ -961,9 +961,9 @@ public class CommonOps_DSCC {
      *
      * @param input (Input) Upper triangular symmetric matrix which is to be permuted.
      * Entries below the diagonal are ignored.
-     * @param permInv (Input) Inverse permutation vector.  Specifies new order of the rows and columns.
-     * @param output (Output) Upper triangular symmetric matrix which has the permutation stored in it.  Reshaped.
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
+     * @param permInv (Input) Inverse permutation vector. Specifies new order of the rows and columns.
+     * @param output (Output) Upper triangular symmetric matrix which has the permutation stored in it. Reshaped.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
      */
     public static void permuteSymmetric( DMatrixSparseCSC input, int[] permInv, DMatrixSparseCSC output,
                                          @Nullable IGrowArray gw ) {
@@ -1182,12 +1182,12 @@ public class CommonOps_DSCC {
      * <p>WARNING: This is a very slow operation for sparse matrices. The current implementation is simple but
      * involves excessive memory copying.</p>
      *
-     * @param src The original matrix which is to be copied.  Not modified.
+     * @param src The original matrix which is to be copied. Not modified.
      * @param srcX0 Start column.
      * @param srcX1 Stop column+1.
      * @param srcY0 Start row.
      * @param srcY1 Stop row+1.
-     * @param dst Where the submatrix are stored.  Modified.
+     * @param dst Where the submatrix are stored. Modified.
      * @param dstY0 Start row in dst.
      * @param dstX0 start column in dst.
      */
@@ -1556,7 +1556,7 @@ public class CommonOps_DSCC {
      * </p>
      *
      * <p>
-     * If the system could not be solved then false is returned.  If it returns true
+     * If the system could not be solved then false is returned. If it returns true
      * that just means the algorithm finished operating, but the results could still be bad
      * because 'A' is singular or nearly singular.
      * </p>
@@ -1609,7 +1609,7 @@ public class CommonOps_DSCC {
      * </p>
      *
      * <p>
-     * If the system could not be solved then false is returned.  If it returns true
+     * If the system could not be solved then false is returned. If it returns true
      * that just means the algorithm finished operating, but the results could still be bad
      * because 'A' is singular or nearly singular.
      * </p>
@@ -1657,15 +1657,15 @@ public class CommonOps_DSCC {
     /**
      * <p>
      * Performs a matrix inversion operation that does not modify the original
-     * and stores the results in another matrix.  The two matrices must have the
+     * and stores the results in another matrix. The two matrices must have the
      * same dimension.<br>
      * <br>
      * B = A<sup>-1</sup>
      * </p>
      *
      * <p>
-     * If the algorithm could not invert the matrix then false is returned.  If it returns true
-     * that just means the algorithm finished.  The results could still be bad
+     * If the algorithm could not invert the matrix then false is returned. If it returns true
+     * that just means the algorithm finished. The results could still be bad
      * because the matrix is singular or nearly singular.
      * </p>
      *
@@ -1675,7 +1675,7 @@ public class CommonOps_DSCC {
      * </p>
      *
      * @param A (Input) The matrix that is to be inverted. Not modified.
-     * @param inverse (Output) Where the inverse matrix is stored.  Modified.
+     * @param inverse (Output) Where the inverse matrix is stored. Modified.
      * @return true if it could invert the matrix false if it could not.
      */
     public static boolean invert( DMatrixSparseCSC A, DMatrixRMaj inverse ) {
@@ -1701,11 +1701,11 @@ public class CommonOps_DSCC {
     }
 
     /**
-     * Returns the determinant of the matrix.  If the inverse of the matrix is also
+     * Returns the determinant of the matrix. If the inverse of the matrix is also
      * needed, then using {@link org.ejml.interfaces.decomposition.LUDecomposition_F64} directly (or any
      * similar algorithm) can be more efficient.
      *
-     * @param A The matrix whose determinant is to be computed.  Not modified.
+     * @param A The matrix whose determinant is to be computed. Not modified.
      * @return The determinant.
      */
     public static double det( DMatrixSparseCSC A ) {
@@ -1794,7 +1794,7 @@ public class CommonOps_DSCC {
      * where n = min(numRows,numCols)
      * </p>
      *
-     * @param A (Input) Matrix.  Not modified.
+     * @param A (Input) Matrix. Not modified.
      */
     public static double trace( DMatrixSparseCSC A ) {
         double output = 0;
@@ -1818,7 +1818,7 @@ public class CommonOps_DSCC {
     /**
      * This applies a given unary function on every value stored in the matrix
      *
-     * B = f(A).   A and B can be the same instance.
+     * B = f(A).  A and B can be the same instance.
      *
      * @param input (Input) input matrix. Not modified
      * @param func Unary function accepting a double
@@ -1847,7 +1847,7 @@ public class CommonOps_DSCC {
     /**
      * This applies a given unary function on every nz row,value stored in the matrix
      *
-     * B = f(A).   A and B can be the same instance.
+     * B = f(A).  A and B can be the same instance.
      *
      * @param input (Input) input matrix. Not modified
      * @param func Binary function accepting (row-index, value)
@@ -1872,7 +1872,7 @@ public class CommonOps_DSCC {
     /**
      * This applies a given unary function on every non-zero column, value stored in the matrix
      *
-     * B = f(A).   A and B can be the same instance.
+     * B = f(A).  A and B can be the same instance.
      *
      * @param input (Input) input matrix. Not modified
      * @param func Binary function accepting (column-index, value)

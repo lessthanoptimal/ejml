@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -110,7 +110,7 @@ public class DMaskSparseStructural extends Mask {
         }
 
         /**
-         * @param gw (Optional) Storage for internal workspace.  Can be null.
+         * @param gw (Optional) Storage for internal workspace. Can be null.
          */
         public Builder withWorkArray( IGrowArray gw ) {
             this.gw = gw;

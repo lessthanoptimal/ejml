@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.equation;
 
 /**
- * Instance of a variable created at compile time.  This base class only specifies the type of variable which it is.
+ * Instance of a variable created at compile time. This base class only specifies the type of variable which it is.
  *
  * @author Peter Abeles
  */

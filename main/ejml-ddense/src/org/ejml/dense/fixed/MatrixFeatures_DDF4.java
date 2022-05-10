@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,14 +18,15 @@
 
 package org.ejml.dense.fixed;
 
-import javax.annotation.Generated;
+import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrix4x4;
-import org.ejml.UtilEjml;
+
+import javax.annotation.Generated;
 
 /**
  * <p>Matrix features for fixed sized matrices which are 4 x 4 or 4 element vectors.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateFixedFeatures</p>
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateFixedFeatures</p>
  *
  * @author Peter Abeles
  */

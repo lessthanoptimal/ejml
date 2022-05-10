@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.ejml.simple.SimpleMatrix;
 import java.util.Random;
 
 /**
- * Demonstration on how to create and use a custom function in Equation.  A custom function must implement
+ * Demonstration on how to create and use a custom function in Equation. A custom function must implement
  * ManagerFunctions.Input1 or ManagerFunctions.InputN, depending on the number of inputs it takes.
  *
  * @author Peter Abeles
@@ -54,8 +54,8 @@ public class EquationCustomFunction {
     }
 
     /**
-     * Create the function.  Be sure to handle all possible input types and combinations correctly and provide
-     * meaningful error messages.  The output matrix should be resized to fit the inputs.
+     * Create the function. Be sure to handle all possible input types and combinations correctly and provide
+     * meaningful error messages. The output matrix should be resized to fit the inputs.
      */
     public static ManagerFunctions.InputN createMultTransA() {
         return (inputs, manager) -> {

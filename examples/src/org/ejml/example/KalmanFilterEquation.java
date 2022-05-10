@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,11 +49,11 @@ public class KalmanFilterEquation implements KalmanFilter {
         // The names do not have to be the same.
         eq.alias(x, "x", P, "P", Q, "Q", F, "F", H, "H");
 
-        // Dummy matrix place holder to avoid compiler errors.  Will be replaced later on
+        // Dummy matrix place holder to avoid compiler errors. Will be replaced later on
         eq.alias(new DMatrixRMaj(1, 1), "z");
         eq.alias(new DMatrixRMaj(1, 1), "R");
 
-        // Pre-compile so that it doesn't have to compile it each time it's invoked.  More cumbersome
+        // Pre-compile so that it doesn't have to compile it each time it's invoked. More cumbersome
         // but for small matrices the overhead is significant
         predictX = eq.compile("x = F*x");
         predictP = eq.compile("P = F*P*F' + Q");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * Block Cholesky using outer product form.  The original matrix is stored and modified.
+ * Block Cholesky using outer product form. The original matrix is stored and modified.
  * </p>
  *
  * <p>
@@ -73,7 +73,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
     /**
      * Decomposes the provided matrix and stores the result in the same matrix.
      *
-     * @param A Matrix that is to be decomposed.  Modified.
+     * @param A Matrix that is to be decomposed. Modified.
      * @return If it succeeded or not.
      */
     @Override

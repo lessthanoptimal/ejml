@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,16 +28,16 @@ import org.ejml.data.DMatrixRMaj;
  * </p>
  *
  * <p>
- * Two different families of functions are provided for help in computing reflectors.  Internally
- * both of these functions switch between normalization by division or multiplication.  Multiplication
+ * Two different families of functions are provided for help in computing reflectors. Internally
+ * both of these functions switch between normalization by division or multiplication. Multiplication
  * is most often significantly faster than division (2 or 3 times) but produces less accurate results
- * on very small numbers.  It checks to see if round off error is significant and decides which
+ * on very small numbers. It checks to see if round off error is significant and decides which
  * one it should do.
  * </p>
  *
  * <p>
  * Tests were done using the stability benchmark in jmatbench and there doesn't seem to be
- * any advantage to always dividing by the max instead of checking and deciding.  The most
+ * any advantage to always dividing by the max instead of checking and deciding. The most
  * noticeable difference between the two methods is with very small numbers.
  * </p>
  *
@@ -152,7 +152,7 @@ public class QrHelperFunctions_DDRM {
 
     /**
      * Normalizes elements in 'u' by dividing by max and computes the norm2 of the normalized
-     * array u.  Adjust the sign of the returned value depending on the size of the first
+     * array u. Adjust the sign of the returned value depending on the size of the first
      * element in 'u'. Normalization is done to avoid overflow.
      *
      * <pre>

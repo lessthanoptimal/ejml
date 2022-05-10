@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,7 +48,7 @@ public class SymmetricQREigenHelper_DDRM {
     // used to compute eigenvalues directly
     protected EigenvalueSmall_F64 eigenSmall = new EigenvalueSmall_F64();
 
-    // orthogonal matrix used in similar transform.  optional
+    // orthogonal matrix used in similar transform. optional
     protected @Nullable DMatrixRMaj Q;
 
     // size of the matrix being processed
@@ -388,8 +388,8 @@ public class SymmetricQREigenHelper_DDRM {
         double scale = absA > absB ? absA : absB;
         if (absC > scale) scale = absC;
 
-        // see if it is a pathological case.  the diagonal must already be zero
-        // and the eigenvalues are all zero.  so just return
+        // see if it is a pathological case. the diagonal must already be zero
+        // and the eigenvalues are all zero. so just return
         if (scale == 0) {
             off[x1] = 0;
             diag[x1] = 0;
@@ -426,7 +426,7 @@ public class SymmetricQREigenHelper_DDRM {
     }
 
     /**
-     * Tells it to process the submatrix at the next split.  Should be called after the
+     * Tells it to process the submatrix at the next split. Should be called after the
      * current submatrix has been processed.
      */
     public boolean nextSplit() {

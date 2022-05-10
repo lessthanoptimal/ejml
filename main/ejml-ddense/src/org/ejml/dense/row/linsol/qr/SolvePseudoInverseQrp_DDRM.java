@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.interfaces.decomposition.QRPDecomposition_F64;
 
 /**
  * <p>
- * A pseudo inverse solver for a generic QR column pivot decomposition algorithm.  See
+ * A pseudo inverse solver for a generic QR column pivot decomposition algorithm. See
  * {@link BaseLinearSolverQrp_DDRM} for technical details on the algorithm.
  * </p>
  *

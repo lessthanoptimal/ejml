@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml.interfaces;
 
 /**
- * Interface for BLAS (basic linear algebra system) level operations.  Typically used internally inside
+ * Interface for BLAS (basic linear algebra system) level operations. Typically used internally inside
  * an implementation
  *
  * @author Peter Abeles

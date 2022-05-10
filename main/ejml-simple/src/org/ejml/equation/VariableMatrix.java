@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ public class VariableMatrix extends Variable {
     public boolean temp;
 
     /**
-     * Initializes the matrix variable.  If null then the variable will be a reference one.  If not null then
+     * Initializes the matrix variable. If null then the variable will be a reference one. If not null then
      * it will be assignment.
      *
      * @param matrix Matrix.

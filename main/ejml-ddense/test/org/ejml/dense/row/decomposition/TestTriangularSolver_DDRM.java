@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -151,7 +151,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
     @Test
     public void solveU_submatrix() {
 
-        // create U and B.  Insert into a larger matrix
+        // create U and B. Insert into a larger matrix
         DMatrixRMaj U_orig = RandomMatrices_DDRM.rectangle(3,3,rand);
         for( int i = 0; i < U_orig.numRows; i++ ) {
             for( int j = 0; j < i; j++ ) {

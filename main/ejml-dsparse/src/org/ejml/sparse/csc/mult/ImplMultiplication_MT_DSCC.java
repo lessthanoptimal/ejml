@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,15 +37,15 @@ import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
  */
 public class ImplMultiplication_MT_DSCC {
     /**
-     * Performs matrix multiplication.  C = A*B. The problem is broken up into as many "blocks" as there are threads
+     * Performs matrix multiplication. C = A*B. The problem is broken up into as many "blocks" as there are threads
      * available. Each block will process a set of columns independently. After running results from independent
      * blocks are stitched together in the main thread. Extra storage requirements is about the same size as
      * 'C'.
      *
      * @param A Matrix
      * @param B Matrix
-     * @param C Storage for results.  Data length is increased if increased if insufficient.
-     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     * @param C Storage for results. Data length is increased if increased if insufficient.
+     * @param listWork (Optional) Storage for internal workspace. Can be null.
      */
     public static void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
                              GrowArray<Workspace_MT_DSCC> listWork ) {

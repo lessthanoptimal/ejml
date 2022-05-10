@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ public class TestCholeskyDecompositionCommon_ZDRM extends EjmlStandardJUnit {
     int N = 6;
 
     /**
-     * The correctness of getT(null) has been tested else where effectively.  This
+     * The correctness of getT(null) has been tested else where effectively. This
      * checks to see if it handles the case where an input is provided correctly.
      */
     @Test

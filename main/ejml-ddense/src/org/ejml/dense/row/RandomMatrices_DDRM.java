@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,7 +35,7 @@ public class RandomMatrices_DDRM {
 
     /**
      * <p>
-     * Creates a randomly generated set of orthonormal vectors.  At most it can generate the same
+     * Creates a randomly generated set of orthonormal vectors. At most it can generate the same
      * number of vectors as the dimension of the vectors.
      * </p>
      *
@@ -159,7 +159,7 @@ public class RandomMatrices_DDRM {
     }
 
     /**
-     * Creates a random matrix where all elements are zero but diagonal elements.  Diagonal elements
+     * Creates a random matrix where all elements are zero but diagonal elements. Diagonal elements
      * randomly drawn from a uniform distribution from min to max, inclusive.
      *
      * @param numRows Number of rows in the returned matrix..
@@ -188,8 +188,8 @@ public class RandomMatrices_DDRM {
 
     /**
      * <p>
-     * Creates a random matrix which will have the provided singular values.  The length of sv
-     * is assumed to be the rank of the matrix.  This can be useful for testing purposes when one
+     * Creates a random matrix which will have the provided singular values. The length of sv
+     * is assumed to be the rank of the matrix. This can be useful for testing purposes when one
      * needs to ensure that a matrix is not singular but randomly generated.
      * </p>
      *
@@ -423,7 +423,7 @@ public class RandomMatrices_DDRM {
      * @return The random symmetric  positive definite matrix.
      */
     public static DMatrixRMaj symmetricPosDef( int width, Random rand ) {
-        // This is not formally proven to work.  It just seems to work.
+        // This is not formally proven to work. It just seems to work.
         DMatrixRMaj a = new DMatrixRMaj(width, 1);
         DMatrixRMaj b = new DMatrixRMaj(width, width);
 
@@ -462,7 +462,7 @@ public class RandomMatrices_DDRM {
      * Sets the provided square matrix to be a random symmetric matrix whose values are selected from an uniform distribution
      * from min to max, inclusive.
      *
-     * @param A The matrix that is to be modified.  Must be square.  Modified.
+     * @param A The matrix that is to be modified. Must be square. Modified.
      * @param min Minimum value an element can have.
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
@@ -485,7 +485,7 @@ public class RandomMatrices_DDRM {
     }
 
     /**
-     * Creates an upper triangular matrix whose values are selected from a uniform distribution.  If hessenberg
+     * Creates an upper triangular matrix whose values are selected from a uniform distribution. If hessenberg
      * is greater than zero then a hessenberg matrix of the specified degree is created instead.
      *
      * @param dimen Number of rows and columns in the matrix..
@@ -515,7 +515,7 @@ public class RandomMatrices_DDRM {
     }
 
     /**
-     * Creates a lower triangular matrix whose values are selected from a uniform distribution.  If hessenberg
+     * Creates a lower triangular matrix whose values are selected from a uniform distribution. If hessenberg
      * is greater than zero then a hessenberg matrix of the specified degree is created instead.
      *
      * @param dimen Number of rows and columns in the matrix..

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,7 +21,7 @@ package org.ejml.data;
 import lombok.Data;
 
 /**
- * An eigenpair is a set composed of an eigenvalue and an eigenvector.  In this library since only real
+ * An eigenpair is a set composed of an eigenvalue and an eigenvector. In this library since only real
  * matrices are supported, all eigenpairs are real valued.
  *
  * @author Peter Abeles

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,7 +23,7 @@ import org.ejml.ops.ComplexMath_F64;
 
 /**
  * <p>
- * Represents a complex number using 64bit floating point numbers.  A complex number is composed of
+ * Represents a complex number using 64bit floating point numbers. A complex number is composed of
  * a real and imaginary components.
  * </p>
  */

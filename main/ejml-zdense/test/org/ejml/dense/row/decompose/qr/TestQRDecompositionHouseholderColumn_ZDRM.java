@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,7 +42,7 @@ public class TestQRDecompositionHouseholderColumn_ZDRM extends GenericQrCheck_ZD
     }
 
     /**
-     * Internal several householder operations are performed.  This
+     * Internal several householder operations are performed. This
      * checks to see if the householder operations and the expected result for all the
      * submatrices.
      */

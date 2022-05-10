@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,7 +33,7 @@ public interface IntegerSequence {
     int length();
 
     /**
-     * Specifies the maximum index of the array.  If the maximum index is not known then a value &lt; 0 is passed
+     * Specifies the maximum index of the array. If the maximum index is not known then a value &lt; 0 is passed
      * in and an exception should be thrown if this information is required
      *
      * NOTE: This is length - 1

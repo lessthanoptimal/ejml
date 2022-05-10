@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class EigenOps_DDRM {
     /**
      * <p>
-     * Given matrix A and an eigen vector of A, compute the corresponding eigen value.  This is
+     * Given matrix A and an eigen vector of A, compute the corresponding eigen value. This is
      * the Rayleigh quotient.<br>
      * <br>
      * x<sup>T</sup>Ax / x<sup>T</sup>x
@@ -66,11 +66,11 @@ public class EigenOps_DDRM {
      * </p>
      * <p>
      * NOTE: If there is another eigenvalue that is very similar to the provided one then there
-     * is a chance of it converging towards that one instead.  The larger a matrix is the more
+     * is a chance of it converging towards that one instead. The larger a matrix is the more
      * likely this is to happen.
      * </p>
      *
-     * @param A Matrix whose eigenvector is being computed.  Not modified.
+     * @param A Matrix whose eigenvector is being computed. Not modified.
      * @param eigenvalue The eigenvalue in the eigen pair.
      * @return The eigenvector or null if none could be found.
      */
@@ -167,23 +167,23 @@ public class EigenOps_DDRM {
 
     /**
      * <p>
-     * Computes the dominant eigen vector for a matrix.  The dominant eigen vector is an
+     * Computes the dominant eigen vector for a matrix. The dominant eigen vector is an
      * eigen vector associated with the largest eigen value.
      * </p>
      *
      * <p>
-     * WARNING: This function uses the power method.  There are known cases where it will not converge.
-     * It also seems to converge to non-dominant eigen vectors some times.  Use at your own risk.
+     * WARNING: This function uses the power method. There are known cases where it will not converge.
+     * It also seems to converge to non-dominant eigen vectors some times. Use at your own risk.
      * </p>
      *
-     * @param A A matrix.  Not modified.
+     * @param A A matrix. Not modified.
      */
     // TODO maybe do the regular power method, estimate the eigenvalue, then shift invert?
     public static @Nullable DEigenpair dominantEigenpair( DMatrixRMaj A ) {
 
         EigenPowerMethod_DDRM power = new EigenPowerMethod_DDRM(A.numRows);
 
-        // eh maybe 0.1 is a good value.  who knows.
+        // eh maybe 0.1 is a good value. who knows.
         if (!power.computeShiftInvert(A, 0.1))
             return null;
 
@@ -194,15 +194,15 @@ public class EigenOps_DDRM {
     /**
      * <p>
      * Generates a bound for the largest eigen value of the provided matrix using Perron-Frobenius
-     * theorem.   This function only applies to non-negative real matrices.
+     * theorem.  This function only applies to non-negative real matrices.
      * </p>
      *
      * <p>
      * For "stochastic" matrices (Markov process) this should return one for the upper and lower bound.
      * </p>
      *
-     * @param A Square matrix with positive elements.  Not modified.
-     * @param bound Where the results are stored.  If null then a matrix will be declared. Modified.
+     * @param A Square matrix with positive elements. Not modified.
+     * @param bound Where the results are stored. If null then a matrix will be declared. Modified.
      * @return Lower and upper bound in the first and second elements respectively.
      */
     public static double[] boundLargestEigenValue( DMatrixRMaj A, @Nullable double[] bound ) {
@@ -243,7 +243,7 @@ public class EigenOps_DDRM {
 
     /**
      * <p>
-     * A diagonal matrix where real diagonal element contains a real eigenvalue.  If an eigenvalue
+     * A diagonal matrix where real diagonal element contains a real eigenvalue. If an eigenvalue
      * is imaginary then zero is stored in its place.
      * </p>
      *
@@ -268,7 +268,7 @@ public class EigenOps_DDRM {
 
     /**
      * <p>
-     * Puts all the real eigenvectors into the columns of a matrix.  If an eigenvalue is imaginary
+     * Puts all the real eigenvectors into the columns of a matrix. If an eigenvalue is imaginary
      * then the corresponding eigenvector will have zeros in its column.
      * </p>
      *

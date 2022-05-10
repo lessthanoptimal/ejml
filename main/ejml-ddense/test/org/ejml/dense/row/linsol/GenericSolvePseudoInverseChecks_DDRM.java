@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -51,7 +51,7 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * Shouldn't blow if it the input matrix is zero.  But there is no solution...
+     * Shouldn't blow if it the input matrix is zero. But there is no solution...
      */
     public void zeroMatrix() {
         DMatrixRMaj A = new DMatrixRMaj(3,3);

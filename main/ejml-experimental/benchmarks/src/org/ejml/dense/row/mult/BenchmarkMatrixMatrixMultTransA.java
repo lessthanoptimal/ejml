@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ import java.util.Random;
  *
  * Other libraries implement there multiplication the same as my aux implementation, but theirs run faster.
  * That is because they use 2D arrays, this allows them to only increment one variable in their inner
- * most loop.  While in mine I have to increment two.  Thus there is an additional N^3 addition operations.
+ * most loop. While in mine I have to increment two. Thus there is an additional N^3 addition operations.
  *
  * @author Peter Abeles
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ public interface SingularValueDecomposition_F32<T extends Matrix>
         extends SingularValueDecomposition<T> {
 
     /**
-     * Returns the singular values.  This is the diagonal elements of the W matrix in the decomposition.
+     * Returns the singular values. This is the diagonal elements of the W matrix in the decomposition.
      * <b>Ordering of singular values is not guaranteed.</b>.
      * 
      * @return Singular values. Note this array can be longer than the number of singular values.

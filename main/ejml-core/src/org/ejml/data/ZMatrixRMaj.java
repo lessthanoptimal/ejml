@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,8 +24,8 @@ import org.ejml.ops.MatrixIO;
 import java.util.Arrays;
 
 /**
- * Dense matrix for complex numbers.  Internally it stores its data in a single row-major array with the real
- * and imaginary components interlaces, in that order.  The total number of elements in the array will be
+ * Dense matrix for complex numbers. Internally it stores its data in a single row-major array with the real
+ * and imaginary components interlaces, in that order. The total number of elements in the array will be
  * numRows*numColumns*2.
  *
  * @author Peter Abeles

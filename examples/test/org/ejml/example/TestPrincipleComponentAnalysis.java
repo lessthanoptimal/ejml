@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -116,7 +116,7 @@ public class TestPrincipleComponentAnalysis {
     }
 
     /**
-     * Makes sure the response is not zero.  Perhaps this is too simple of a test
+     * Makes sure the response is not zero. Perhaps this is too simple of a test
      */
     @Test void response() {
         int M = 30;

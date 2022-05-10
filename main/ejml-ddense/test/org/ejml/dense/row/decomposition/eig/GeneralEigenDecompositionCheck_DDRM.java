@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -106,7 +106,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
 
     /**
      * Compare results against a simple matrix with known results where all the eigenvalues
-     * are real.  Octave was used to test the known values.
+     * are real. Octave was used to test the known values.
      */
     public void checkKnownReal() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
@@ -122,7 +122,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     }
 
     /**
-     * Found to be a stressing case that broke a version of the general EVD algorithm.  It is a companion matrix
+     * Found to be a stressing case that broke a version of the general EVD algorithm. It is a companion matrix
      * for a polynomial used to find the zeros.
      *
      * Discovered by exratt@googlema*l.com
@@ -183,7 +183,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     }
 
     /**
-     * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
+     * Sees if it correctly computed the eigenvalues. Does not check eigenvectors.
      */
     public void checkKnownReal_JustValue() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0.907265, 0.832472, 0.255310, 0.667810, 0.871323, 0.612657, 0.025059, 0.126475, 0.427002);
@@ -198,7 +198,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     }
 
     /**
-     * Sees if it correctly computed the eigenvalues.  Does not check eigenvectors.
+     * Sees if it correctly computed the eigenvalues. Does not check eigenvectors.
      */
     public void checkKnownSymmetric_JustValue() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true,
@@ -250,7 +250,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
 
     /**
      * For some eigenvector algorithms this is a difficult matrix that requires a special
-     * check for.  If it fails that check it will either loop forever or exit before converging.
+     * check for. If it fails that check it will either loop forever or exit before converging.
      */
     public void checkExceptional() {
         DMatrixRMaj A = new DMatrixRMaj(5,5, true, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0);
@@ -304,7 +304,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     }
 
     /**
-     * Creates a random symmetric matrix with the specified eigenvalues.  It then
+     * Creates a random symmetric matrix with the specified eigenvalues. It then
      * checks to see if it has the expected results.
      */
     private void checkSymmetricMatrix(EigenDecomposition_F64 alg , double ...ev ) {
@@ -439,7 +439,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     }
 
     /**
-     * Checks to see if an eigenvalue is complex then the eigenvector is null.  If it is real it
+     * Checks to see if an eigenvalue is complex then the eigenvector is null. If it is real it
      * then checks to see if the equation A*v = lambda*v holds true.
      */
     public void testPairsConsistent(EigenDecomposition_F64<DMatrixRMaj> alg , DMatrixRMaj A )
@@ -504,7 +504,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     }
 
     /**
-     * Takes a real eigenvalue and computes its eigenvector.  then sees if it is similar to the adjusted
+     * Takes a real eigenvalue and computes its eigenvector. then sees if it is similar to the adjusted
      * eigenvalue
      */
     public void testEigenvalueConsistency( EigenDecomposition_F64 alg ,
@@ -548,7 +548,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
                 // test using the characteristic equation
                 double det = (double)SimpleMatrix.identity(A.numCols).scale(c.real).minus(a).determinant();
 
-                // extremely crude test.  given perfect data this is probably considered a failure...  However,
+                // extremely crude test. given perfect data this is probably considered a failure... However,
                 // its hard to tell what a good test value actually is.
                 assertEquals(0, det, 0.1);
             }

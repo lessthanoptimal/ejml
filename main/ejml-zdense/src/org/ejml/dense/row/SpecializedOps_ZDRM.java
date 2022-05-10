@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -61,7 +61,7 @@ public class SpecializedOps_ZDRM {
      * Q = I - &gamma; u u<sup>H</sup><br>
      * </p>
      *
-     * @param u A vector.  Not modified.
+     * @param u A vector. Not modified.
      * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
      * @return An orthogonal reflector.
      */
@@ -85,7 +85,7 @@ public class SpecializedOps_ZDRM {
      * For example, if element 0 in 'pivots' is 2 then the first row in A' will be the 3rd row in A.
      * </p>
      *
-     * @param ret If null then a new matrix is declared otherwise the results are written to it.  Is modified.
+     * @param ret If null then a new matrix is declared otherwise the results are written to it. Is modified.
      * @param pivots Specifies the new order of rows in a matrix.
      * @param numPivots How many elements in pivots are being used.
      * @param transposed If the transpose of the matrix is returned.
@@ -147,7 +147,7 @@ public class SpecializedOps_ZDRM {
 
     /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
-     * is defined in {@link LinearSolverDense#quality()}.  In
+     * is defined in {@link LinearSolverDense#quality()}. In
      * this situation the quality is the magnitude of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.
@@ -211,7 +211,7 @@ public class SpecializedOps_ZDRM {
      * u(0) = u(0) + |u|
      * u = u / u(0)
      *
-     * @param x Input vector.  Unmodified.
+     * @param x Input vector. Unmodified.
      * @return The found householder reflector vector
      */
     public static ZMatrixRMaj householderVector( ZMatrixRMaj x ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * <p>
  * Computes the Singular value decomposition of a matrix using the implicit QR algorithm
- * for singular value decomposition.  It works by first by transforming the matrix
+ * for singular value decomposition. It works by first by transforming the matrix
  * to a bidiagonal A=U*B*V<sup>T</sup> form, then it implicitly computing the eigenvalues of the B<sup>T</sup>B matrix,
  * which are the same as the singular values in the original A matrix.
  * </p>
@@ -302,7 +302,7 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
     }
 
     /**
-     * With the QR algorithm it is possible for the found singular values to be negative.  This
+     * With the QR algorithm it is possible for the found singular values to be negative. This
      * makes them all positive by multiplying it by a diagonal matrix that has
      */
     private void makeSingularPositive() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import org.ejml.data.DMatrixRMaj;
  */
 public class SimpleUnitTests {
     /**
-     * Checks to see if every element in A is countable.  A doesn't have any element with
+     * Checks to see if every element in A is countable. A doesn't have any element with
      * a value of NaN or infinite.
      *
      * @param A Matrix

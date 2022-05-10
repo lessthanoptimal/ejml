@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,9 +26,9 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
- * Wrapper that allows {@link DMatrixRBlock} to implements {@link LinearSolverDense}.  It works
+ * Wrapper that allows {@link DMatrixRBlock} to implements {@link LinearSolverDense}. It works
  * by converting {@link DMatrixRMaj} into {@link DMatrixRBlock} and calling the equivalent
- * functions.  Since a local copy is made all input matrices are never modified.
+ * functions. Since a local copy is made all input matrices are never modified.
  *
  * @author Peter Abeles
  */
@@ -68,8 +68,8 @@ public class LinearSolver_DDRB_to_DDRM implements LinearSolverDense<DMatrixRMaj>
     /**
      * Converts B and X into block matrices and calls the block matrix solve routine.
      *
-     * @param B A matrix &real; <sup>m &times; p</sup>.  Not modified.
-     * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
+     * @param B A matrix &real; <sup>m &times; p</sup>. Not modified.
+     * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to. Modified.
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {

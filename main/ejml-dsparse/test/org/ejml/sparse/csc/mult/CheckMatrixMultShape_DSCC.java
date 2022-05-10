@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Checks to see if the input to a matrix mutiply is accepted or rejected correctly depending
- * on the shape in the input matrices.  Java reflections is used to grab all functions
+ * on the shape in the input matrices. Java reflections is used to grab all functions
  * with "mult" in its name and then it determins if any of matrices are transposed.
  *
  * @author Peter Abeles

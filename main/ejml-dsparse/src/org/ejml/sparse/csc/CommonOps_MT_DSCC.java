@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,13 +42,13 @@ public class CommonOps_MT_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A*B. Concurrency workspace is about the same size as the resulting "output"
+     * Performs matrix multiplication. C = A*B. Concurrency workspace is about the same size as the resulting "output"
      * matrix.
      *
      * @param A (Input) Matrix. Not modified.
      * @param B (Input) Matrix. Not modified.
-     * @param outputC (Output) Storage for results.  Data length is increased if insufficient.
-     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     * @param outputC (Output) Storage for results. Data length is increased if insufficient.
+     * @param listWork (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC outputC,
                                          @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
@@ -74,7 +74,7 @@ public class CommonOps_MT_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param outputC Output matrix.
-     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     * @param listWork (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B,
                                         @Nullable DMatrixSparseCSC outputC,
@@ -92,7 +92,7 @@ public class CommonOps_MT_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A<sup>T</sup>*B
+     * Performs matrix multiplication. C = A<sup>T</sup>*B
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -128,7 +128,7 @@ public class CommonOps_MT_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A<sup>T</sup>*B
+     * Performs matrix multiplication. C = A<sup>T</sup>*B
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -166,7 +166,7 @@ public class CommonOps_MT_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A*B<sup>T</sup>
+     * Performs matrix multiplication. C = A*B<sup>T</sup>
      *
      * @param A Matrix
      * @param B Dense Matrix
@@ -203,7 +203,7 @@ public class CommonOps_MT_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  C = A<sup>T</sup>*B<sup>T</sup>
+     * Performs matrix multiplication. C = A<sup>T</sup>*B<sup>T</sup>
      *
      * @param A Matrix
      * @param B Dense Matrix

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,7 +44,7 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase {
         out.print("import org.ejml.ops.MatrixIO;\n" +
                 "\n" +
                 "/**\n" +
-                " * Fixed sized vector with " + dimen + " elements.  Can represent a " + dimen + " x 1 or 1 x " + dimen + " matrix, context dependent.\n" +
+                " * Fixed sized vector with " + dimen + " elements. Can represent a " + dimen + " x 1 or 1 x " + dimen + " matrix, context dependent.\n" +
                 standardClassDocClosing("Peter Abeles") +
                 "public class " + className + " implements DMatrixFixed {\n");
         printClassParam(dimen);
@@ -83,7 +83,7 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase {
                 "\n");
         setGetter(dimen);
         out.print("        } else {\n" +
-                "            throw new IllegalArgumentException(\"Out of range.  \"+w);\n" +
+                "            throw new IllegalArgumentException(\"Out of range. \"+w);\n" +
                 "        }\n" +
                 "    }\n" +
                 "\n" +
@@ -99,7 +99,7 @@ public class GenerateMatrixFixedN extends CodeGeneratorBase {
                 "\n");
         setSetter(dimen);
         out.print("        } else {\n" +
-                "            throw new IllegalArgumentException(\"Out of range.  \"+w);\n" +
+                "            throw new IllegalArgumentException(\"Out of range. \"+w);\n" +
                 "        }\n" +
                 "    }\n" +
                 "\n");

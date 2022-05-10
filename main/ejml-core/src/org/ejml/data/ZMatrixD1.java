@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,15 +23,15 @@ import org.ejml.UtilEjml;
 
 
 /**
- * A generic abstract class for matrices whose data is stored in a single 1D array of doubles.  The
- * format of the elements in this array is not specified.  For example row major, column major,
+ * A generic abstract class for matrices whose data is stored in a single 1D array of doubles. The
+ * format of the elements in this array is not specified. For example row major, column major,
  * and block row major are all common formats.
  *
  * @author Peter Abeles
  */
 public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
     /**
-     * Where the raw data for the matrix is stored.  The format is type dependent.
+     * Where the raw data for the matrix is stored. The format is type dependent.
      */
     public double[] data = UtilEjml.ZERO_LENGTH_F64;
 
@@ -70,7 +70,7 @@ public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
     public abstract int getIndex( int row, int col );
 
     /**
-     * Sets the value of this matrix to be the same as the value of the provided matrix.  Both
+     * Sets the value of this matrix to be the same as the value of the provided matrix. Both
      * matrices must have the same shape:<br>
      * <br>
      * a<sub>ij</sub> = b<sub>ij</sub><br>

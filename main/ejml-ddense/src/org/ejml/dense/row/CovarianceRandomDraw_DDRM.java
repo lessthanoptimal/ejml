@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,7 +24,7 @@ import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
 import java.util.Random;
 
 /**
- * Generates random vectors based on a zero mean multivariate Gaussian distribution.  The covariance
+ * Generates random vectors based on a zero mean multivariate Gaussian distribution. The covariance
  * matrix is provided in the constructor.
  */
 public class CovarianceRandomDraw_DDRM {
@@ -33,11 +33,11 @@ public class CovarianceRandomDraw_DDRM {
     private DMatrixRMaj r;
 
     /**
-     * Creates a random distribution with the specified mean and covariance.  The references
+     * Creates a random distribution with the specified mean and covariance. The references
      * to the variables are not saved, their value are copied.
      *
      * @param rand Used to create the random numbers for the draw. Reference is saved.
-     * @param cov The covariance of the distribution.  Not modified.
+     * @param cov The covariance of the distribution. Not modified.
      */
     public CovarianceRandomDraw_DDRM( Random rand, DMatrixRMaj cov ) {
         r = new DMatrixRMaj(cov.numRows, 1);
@@ -53,7 +53,7 @@ public class CovarianceRandomDraw_DDRM {
     }
 
     /**
-     * Makes a draw on the distribution.  The results are added to parameter 'x'
+     * Makes a draw on the distribution. The results are added to parameter 'x'
      */
     public void next( DMatrixRMaj x ) {
         for (int i = 0; i < r.numRows; i++) {

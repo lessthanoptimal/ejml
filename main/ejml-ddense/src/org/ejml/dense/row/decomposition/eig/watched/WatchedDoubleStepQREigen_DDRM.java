@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,8 +31,8 @@ import java.util.Random;
 /**
  * <p>
  * The double step implicit Eigenvalue decomposition algorithm is fairly complicated and needs to be designed so that
- * it can handle several special cases.  To aid in development and debugging this class was created.  It allows
- * individual components to be tested and to print out their results.  This shows how each step is performed.
+ * it can handle several special cases. To aid in development and debugging this class was created. It allows
+ * individual components to be tested and to print out their results. This shows how each step is performed.
  * </p>
  *
  * <p>
@@ -224,7 +224,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         }
 
         // these equations are derived when the eigenvalues are extracted from the lower right
-        // 2 by 2 matrix.  See page 388 of Fundamentals of Matrix Computations 2nd ed for details.
+        // 2 by 2 matrix. See page 388 of Fundamentals of Matrix Computations 2nd ed for details.
         double b11, b21, b31;
         if (useStandardEq) {
             b11 = ((a11 - z11)*(a11 - z22) - z21*z12)/a21 + a12;
@@ -443,7 +443,7 @@ public class WatchedDoubleStepQREigen_DDRM {
         }
 
         if (printHumps) {
-            System.out.println("  After Q.   A =");
+            System.out.println("  After Q.  A =");
             A.print();
         }
 

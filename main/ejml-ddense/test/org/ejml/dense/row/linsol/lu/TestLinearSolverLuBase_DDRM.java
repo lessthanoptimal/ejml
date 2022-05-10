@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestLinearSolverLuBase_DDRM extends EjmlStandardJUnit {
     /**
-     * Make sure that improve solution doesn't make things worse.  This test does
+     * Make sure that improve solution doesn't make things worse. This test does
      * not realy test to see if it makes things better.
      */
     @Test

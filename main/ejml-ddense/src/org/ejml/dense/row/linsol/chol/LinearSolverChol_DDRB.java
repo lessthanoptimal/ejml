@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,11 +43,11 @@ public class LinearSolverChol_DDRB extends LinearSolver_DDRB_to_DDRM {
     }
 
     /**
-     * Only converts the B matrix and passes that onto solve.  Te result is then copied into
+     * Only converts the B matrix and passes that onto solve. Te result is then copied into
      * the input 'X' matrix.
      *
-     * @param B A matrix &real; <sup>m &times; p</sup>.  Not modified.
-     * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to.  Modified.
+     * @param B A matrix &real; <sup>m &times; p</sup>. Not modified.
+     * @param X A matrix &real; <sup>n &times; p</sup>, where the solution is written to. Modified.
      */
     @Override
     @SuppressWarnings("NullAway") // known special case for solve()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,15 +39,15 @@ public class CommonOpsWithSemiRing_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  output = A*B
+     * Performs matrix multiplication. output = A*B
      *
      * @param A        (Input) Matrix. Not modified.
      * @param B        (Input) Matrix. Not modified.
-     * @param output   (Output) Storage for results.  Data length is increased if insufficient.
+     * @param output   (Output) Storage for results. Data length is increased if insufficient.
      * @param semiRing Semi-Ring to define + and *
      * @param mask     (Optional) Mask for specifying which entries should be overwritten
-     * @param gw       (Optional) Storage for internal workspace.  Can be null.
-     * @param gx       (Optional) Storage for internal workspace.  Can be null.
+     * @param gw       (Optional) Storage for internal workspace. Can be null.
+     * @param gx       (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC mult(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output, DSemiRing semiRing,
                                         @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx) {
@@ -61,7 +61,7 @@ public class CommonOpsWithSemiRing_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  output = A*B
+     * Performs matrix multiplication. output = A*B
      *
      * @param A        Matrix
      * @param B        Dense Matrix
@@ -90,7 +90,7 @@ public class CommonOpsWithSemiRing_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  output = A<sup>T</sup>*B
+     * Performs matrix multiplication. output = A<sup>T</sup>*B
      *
      * @param A        Matrix
      * @param B        Dense Matrix
@@ -119,7 +119,7 @@ public class CommonOpsWithSemiRing_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  output = A*B<sup>T</sup>
+     * Performs matrix multiplication. output = A*B<sup>T</sup>
      *
      * @param A        Matrix
      * @param B        Dense Matrix
@@ -147,7 +147,7 @@ public class CommonOpsWithSemiRing_DSCC {
     }
 
     /**
-     * Performs matrix multiplication.  output = A<sup>T</sup>*B<sup>T</sup>
+     * Performs matrix multiplication. output = A<sup>T</sup>*B<sup>T</sup>
      *
      * @param A        Matrix
      * @param B        Dense Matrix
@@ -186,8 +186,8 @@ public class CommonOpsWithSemiRing_DSCC {
      * @param output   (Optional)    Output matrix.
      * @param semiRing Semi-Ring to define + and *
      * @param mask     (Optional) Mask for specifying which entries should be overwritten
-     * @param gw       (Optional) Storage for internal workspace.  Can be null.
-     * @param gx       (Optional) Storage for internal workspace.  Can be null.
+     * @param gw       (Optional) Storage for internal workspace. Can be null.
+     * @param gx       (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output, DSemiRing semiRing,
                                         @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
@@ -214,8 +214,8 @@ public class CommonOpsWithSemiRing_DSCC {
      * @param output   (Output) Matrix. data array is grown to min(A.nz_length,B.nz_length), resulting a in a large speed boost.
      * @param semiRing Semi-Ring to define + and *
      * @param mask     (Optional) Mask for specifying which entries should be overwritten
-     * @param gw       (Optional) Storage for internal workspace.  Can be null.
-     * @param gx       (Optional) Storage for internal workspace.  Can be null.
+     * @param gw       (Optional) Storage for internal workspace. Can be null.
+     * @param gx       (Optional) Storage for internal workspace. Can be null.
      */
     public static DMatrixSparseCSC elementMult(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output, DSemiRing semiRing,
                                                @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx) {

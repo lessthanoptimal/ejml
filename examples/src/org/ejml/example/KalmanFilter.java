@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,7 +36,7 @@ import org.ejml.data.DMatrixRMaj;
 public interface KalmanFilter {
 
     /**
-     * Specify the kinematics model of the Kalman filter.  This must be called
+     * Specify the kinematics model of the Kalman filter. This must be called
      * first before any other functions.
      *
      * @param F State transition matrix.

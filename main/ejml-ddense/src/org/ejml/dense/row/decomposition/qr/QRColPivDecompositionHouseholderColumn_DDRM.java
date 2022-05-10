@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,10 +27,10 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * Performs QR decomposition with column pivoting.  To prevent overflow/underflow the whole matrix
+ * Performs QR decomposition with column pivoting. To prevent overflow/underflow the whole matrix
  * is normalized by the max value, but columns are not normalized individually any more. To enable
  * code reuse it extends {@link QRDecompositionHouseholderColumn_DDRM} and functions from that class
- * are used whenever possible.  Columns are transposed into single arrays, which allow for
+ * are used whenever possible. Columns are transposed into single arrays, which allow for
  * fast pivots.
  * </p>
  *
@@ -91,7 +91,7 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
     }
 
     /**
-     * Computes the Q matrix from the information stored in the QR matrix.  This
+     * Computes the Q matrix from the information stored in the QR matrix. This
      * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
@@ -118,13 +118,13 @@ public class QRColPivDecompositionHouseholderColumn_DDRM
 
     /**
      * <p>
-     * To decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
+     * To decompose the matrix 'A' it must have full rank. 'A' is a 'm' by 'n' matrix.
      * It requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
      * </p>
      *
      * <p>
      * The matrix provided here can be of different
-     * dimension than the one specified in the constructor.  It just has to be smaller than or equal
+     * dimension than the one specified in the constructor. It just has to be smaller than or equal
      * to it.
      * </p>
      */

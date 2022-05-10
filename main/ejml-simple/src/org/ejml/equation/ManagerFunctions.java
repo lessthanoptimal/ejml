@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Centralized place to create new instances of operations and functions.  Must call
+ * Centralized place to create new instances of operations and functions. Must call
  * {@link #setManagerTemp} before any other functions.
  *
  * @author Peter Abeles

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,7 +19,7 @@
 package org.ejml;
 
 /**
- * This is a list of parameters that are used across the code.  To tune performance
+ * This is a list of parameters that are used across the code. To tune performance
  * for a particular system change these values.
  *
  * @author Peter Abeles
@@ -30,17 +30,17 @@ public class EjmlParameters {
     public static final double TOL64 = 1e-8;
 
     /**
-     * Used to adjust which algorithms are used.  Often there is a trade off between memory usage
+     * Used to adjust which algorithms are used. Often there is a trade off between memory usage
      * and speed.
      */
     public static MemoryUsage MEMORY = MemoryUsage.FASTER;
 
     /**
      * <p>
-     * In modern computers there are high speed memory caches.  It is assumed that a square
-     * block with this width can be contained entirely in one of those caches.  Settings this
-     * value too large can have a dramatic effect on performance in some situations.  Setting
-     * it too low results in a less dramatic performance hit.  The optimal value is dependent
+     * In modern computers there are high speed memory caches. It is assumed that a square
+     * block with this width can be contained entirely in one of those caches. Settings this
+     * value too large can have a dramatic effect on performance in some situations. Setting
+     * it too low results in a less dramatic performance hit. The optimal value is dependent
      * on the computer's memory architecture.
      * </p>
      */

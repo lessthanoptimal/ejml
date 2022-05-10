@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -91,7 +91,7 @@ public class TestMatrixMult_DDRB extends EjmlStandardJUnit {
     }
 
     /**
-     * Multiplies the two sub-matrices together.  Checks to see if the same result
+     * Multiplies the two sub-matrices together. Checks to see if the same result
      * is found when multiplied using the normal algorithm versus the submatrix one.
      */
     private void checkMult_submatrix( Method func, int operationType, boolean transA, boolean transB,

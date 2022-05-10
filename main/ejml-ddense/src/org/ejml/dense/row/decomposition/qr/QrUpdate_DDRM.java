@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,8 +25,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * <p>
  * The effects of adding and removing rows from the A matrix in a QR decomposition can
- * be computed much faster than simply recomputing the whole decomposition.  There are many real
- * world situations where this is useful.  For example, when computing a rolling solution to
+ * be computed much faster than simply recomputing the whole decomposition. There are many real
+ * world situations where this is useful. For example, when computing a rolling solution to
  * the most recent N measurements.
  * </p>
  *
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>
  * ** IMPORTANT USAGE NOTE ** If auto grow is set to true then the internal data structures will grow automatically
- * to accommodate the matrices passed in.  When adding elements to the decomposition the matrices must have enough
+ * to accommodate the matrices passed in. When adding elements to the decomposition the matrices must have enough
  * data elements to grow before hand.
  * </p>
  *
@@ -76,7 +76,7 @@ public class QrUpdate_DDRM {
     private boolean autoGrow;
 
     /**
-     * Creates an update which can decompose matrices up to the specified size.  Autogrow
+     * Creates an update which can decompose matrices up to the specified size. Autogrow
      * is set to false.
      */
     public QrUpdate_DDRM( int maxRows, int maxCols ) {
@@ -85,7 +85,7 @@ public class QrUpdate_DDRM {
     }
 
     /**
-     * Creates an update which can decompose matrices up to the specified size.  Autogrow
+     * Creates an update which can decompose matrices up to the specified size. Autogrow
      * is configurable.
      */
     public QrUpdate_DDRM( int maxRows, int maxCols, boolean autoGrow ) {
@@ -116,7 +116,7 @@ public class QrUpdate_DDRM {
     /**
      * <p>
      * Adjusts the values of the Q and R matrices to take in account the effects of inserting
-     * a row to the 'A' matrix at the specified location.  This operation requires about 6mn + O(n) flops.
+     * a row to the 'A' matrix at the specified location. This operation requires about 6mn + O(n) flops.
      * </p>
      *
      * <p>
@@ -125,12 +125,12 @@ public class QrUpdate_DDRM {
      *
      * <p>
      * The adjustment done is by computing a series of planar Givens rotations that make the adjusted R
-     * matrix upper triangular again.  This is then used to modify the Q matrix.
+     * matrix upper triangular again. This is then used to modify the Q matrix.
      * </p>
      *
-     * @param Q The Q matrix which is to be modified, must be big enough to grow.  Must be n by n..  Is modified.
-     * @param R The R matrix which is to be modified, must be big enough to grow.  Must be m by n.  Is modified.
-     * @param row The row being inserted.  Not modified.
+     * @param Q The Q matrix which is to be modified, must be big enough to grow. Must be n by n.. Is modified.
+     * @param R The R matrix which is to be modified, must be big enough to grow. Must be m by n. Is modified.
+     * @param row The row being inserted. Not modified.
      * @param rowIndex Which row index it is to be inserted at.
      * @param resizeR Should the number of rows in R be changed?  The additional rows are all zero.
      */
@@ -163,7 +163,7 @@ public class QrUpdate_DDRM {
     /**
      * <p>
      * Adjusts the values of the Q and R matrices to take in account the effects of removing
-     * a row from the 'A' matrix at the specified location.  This operation requires about 6mn + O(n) flops.
+     * a row from the 'A' matrix at the specified location. This operation requires about 6mn + O(n) flops.
      * </p>
      *
      * <p>
@@ -171,8 +171,8 @@ public class QrUpdate_DDRM {
      * equal to [1 0 ... 0].
      * </p>
      *
-     * @param Q The Q matrix.  Is modified.
-     * @param R The R matrix.  Is modified.
+     * @param Q The Q matrix. Is modified.
+     * @param R The R matrix. Is modified.
      * @param rowIndex Which index of the row that is being removed.
      * @param resizeR should the shape of R be adjusted?
      */
@@ -198,11 +198,11 @@ public class QrUpdate_DDRM {
     }
 
     /**
-     * Provides the results of a QR decomposition.  These will be modified by adding or removing
+     * Provides the results of a QR decomposition. These will be modified by adding or removing
      * rows from the original 'A' matrix.
      *
-     * @param Q The Q matrix which is to be modified.  Is modified later and reference saved.
-     * @param R The R matrix which is to be modified.  Is modified later and reference saved.
+     * @param Q The Q matrix which is to be modified. Is modified later and reference saved.
+     * @param R The R matrix which is to be modified. Is modified later and reference saved.
      */
     private void setQR( DMatrixRMaj Q, DMatrixRMaj R, int growRows ) {
         if (Q.numRows != Q.numCols) {

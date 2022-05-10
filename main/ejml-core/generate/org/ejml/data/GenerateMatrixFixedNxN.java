@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,7 +43,7 @@ public class GenerateMatrixFixedNxN extends CodeGeneratorBase {
 
         out.println("import org.ejml.ops.MatrixIO;\n\n" +
                 "/**\n" +
-                " * Fixed sized " + dimen + " by " + className + " matrix.  The matrix is stored as class variables for very fast read/write.  aXY is the\n" +
+                " * Fixed sized " + dimen + " by " + className + " matrix. The matrix is stored as class variables for very fast read/write. aXY is the\n" +
                 " * value of row = X and column = Y.\n" +
                 standardClassDocClosing("Peter Abeles") +
                 "public class " + className + " implements DMatrixFixed {\n");

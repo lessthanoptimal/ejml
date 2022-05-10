@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,14 +31,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * <p>
- * Base class for reading CSV formatted files.  CSV stands for column-space-value where text strings are separated
- * by a space character.  The values are typically stored in a human readable format.  The encoded text for a single
+ * Base class for reading CSV formatted files. CSV stands for column-space-value where text strings are separated
+ * by a space character. The values are typically stored in a human readable format. The encoded text for a single
  * variable is referred to as a word.
  * </p>
  *
  * <p>
- * Comments are allowed and identified by starting a line with the comment character.  The comment character is user
- * configurable.  By default there is no comment character.
+ * Comments are allowed and identified by starting a line with the comment character. The comment character is user
+ * configurable. By default there is no comment character.
  * </p>
  *
  * @author Peter Abeles
@@ -65,7 +65,7 @@ public class ReadCsv {
     }
 
     /**
-     * Sets the comment character.  All lines that start with this character will be ignored.
+     * Sets the comment character. All lines that start with this character will be ignored.
      *
      * @param comment The new comment character.
      */
@@ -95,7 +95,7 @@ public class ReadCsv {
     /**
      * Finds the next valid line of words in the stream and extracts them.
      *
-     * @return List of valid words on the line.  null if the end of the file has been reached.
+     * @return List of valid words on the line. null if the end of the file has been reached.
      */
     protected @Nullable List<String> extractWords() throws IOException {
         while (true) {
@@ -117,7 +117,7 @@ public class ReadCsv {
     }
 
     /**
-     * Extracts the words from a string.  Words are seperated by a space character.
+     * Extracts the words from a string. Words are seperated by a space character.
      *
      * @param line The line that is being parsed.
      * @return A list of words contained on the line.

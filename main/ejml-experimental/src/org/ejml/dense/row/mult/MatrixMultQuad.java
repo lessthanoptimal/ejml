@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,8 +32,8 @@ public class MatrixMultQuad {
      * out = A*B*A<sup>T</sup>
      * </p>
      * @param A Left and right matrix.
-     * @param B Middle square matrix.  Size = (A.numCols,A.numCols)
-     * @param out Output matrix.  Size = (A.numRows,A.numRows);
+     * @param B Middle square matrix. Size = (A.numCols,A.numCols)
+     * @param out Output matrix. Size = (A.numRows,A.numRows);
      */
     public static void multQuad1(DMatrixRMaj A , DMatrixRMaj B , DMatrixRMaj out ) {
 

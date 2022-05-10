@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 
 /**
  * Checks to see what type of matrix is being decomposed and calls different eigenvalue decomposition
- * algorithms depending on the results.  This primarily checks to see if the matrix is symmetric or not.
+ * algorithms depending on the results. This primarily checks to see if the matrix is symmetric or not.
  *
  * @author Peter Abeles
  */

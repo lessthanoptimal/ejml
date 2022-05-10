@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,7 +42,7 @@ public class ImplCommonOps_MT_DSCC {
      * @param beta scalar value multiplied against B
      * @param B Matrix
      * @param C Output matrix.
-     * @param listWork (Optional) Storage for internal workspace.  Can be null.
+     * @param listWork (Optional) Storage for internal workspace. Can be null.
      */
     public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C,
                             GrowArray<Workspace_MT_DSCC> listWork ) {

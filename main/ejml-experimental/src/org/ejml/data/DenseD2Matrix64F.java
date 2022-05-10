@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import java.util.Arrays;
 public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
 
     /**
-     * Where the raw data for the matrix is stored.  The format is type dependent.
+     * Where the raw data for the matrix is stored. The format is type dependent.
      */
     public double[][] data;
 

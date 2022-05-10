@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,9 +27,9 @@ import java.util.Random;
 
 /**
  * <p>
- * Computes the QR decomposition of a bidiagonal matrix.  Internally this matrix is stored as
- * two arrays.  Shifts can either be provided to it or it can generate the shifts on its own.
- * It optionally computes the U and V matrices.  This comparability allows it to be used to
+ * Computes the QR decomposition of a bidiagonal matrix. Internally this matrix is stored as
+ * two arrays. Shifts can either be provided to it or it can generate the shifts on its own.
+ * It optionally computes the U and V matrices. This comparability allows it to be used to
  * compute singular values and associated matrices efficiently.<br>
  * <br>
  * A = U*S*V<sup>T</sup><br>
@@ -54,7 +54,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     // used in exceptional shifts
     protected Random rand = new Random(0x34671e);
 
-    // U and V matrices in singular value decomposition.  Stored in the transpose
+    // U and V matrices in singular value decomposition. Stored in the transpose
     // to reduce cache jumps
     protected @Nullable DMatrixRMaj Ut;
     protected @Nullable DMatrixRMaj Vt;
@@ -63,7 +63,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     // algorithm
     protected int totalSteps;
 
-    // max value in original matrix.  used to test for zeros
+    // max value in original matrix. used to test for zeros
     protected double maxValue;
 
     // matrix's size
@@ -259,7 +259,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * Here the lambda in the implicit step is determined dynamically.  At first
+     * Here the lambda in the implicit step is determined dynamically. At first
      * it selects zeros to quickly reveal singular values that are zero or close to zero.
      * Then it computes it using a Wilkinson shift.
      */
@@ -286,7 +286,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * Shifts are performed based upon singular values computed previously.  If it does not converge
+     * Shifts are performed based upon singular values computed previously. If it does not converge
      * using one of those singular values it uses a Wilkinson shift instead.
      */
     private void performScriptedStep() {
@@ -327,7 +327,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * Tells it to process the submatrix at the next split.  Should be called after the
+     * Tells it to process the submatrix at the next split. Should be called after the
      * current submatrix has been processed.
      */
     public boolean nextSplit() {
@@ -366,8 +366,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * Multiplied a transpose orthogonal matrix Q by the specified rotator.  This is used
-     * to update the U and V matrices.  Updating the transpose of the matrix is faster
+     * Multiplied a transpose orthogonal matrix Q by the specified rotator. This is used
+     * to update the U and V matrices. Updating the transpose of the matrix is faster
      * since it only modifies the rows.
      *
      * @param Q Orthogonal matrix
@@ -554,7 +554,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * Selects the Wilkinson's shift for B<sup>T</sup>B.  See page 410.  It is guaranteed to converge
+     * Selects the Wilkinson's shift for B<sup>T</sup>B. See page 410. It is guaranteed to converge
      * and converges fast in practice.
      *
      * @param scale Scale factor used to help prevent overflow/underflow
@@ -608,8 +608,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
         double scale = absA > absB ? absA : absB;
         if (absC > scale) scale = absC;
 
-        // see if it is a pathological case.  the diagonal must already be zero
-        // and the eigenvalues are all zero.  so just return
+        // see if it is a pathological case. the diagonal must already be zero
+        // and the eigenvalues are all zero. so just return
         if (scale == 0)
             return;
 
@@ -626,7 +626,7 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * Checks to see if either the diagonal element or off diagonal element is zero.  If one is
+     * Checks to see if either the diagonal element or off diagonal element is zero. If one is
      * then it performs a split or pushes it off the matrix.
      *
      * @return True if there was a zero.
@@ -750,8 +750,8 @@ public class SvdImplicitQrAlgorithm_DDRM {
     }
 
     /**
-     * It is possible for the QR algorithm to get stuck in a loop because of symmetries.  This happens
-     * more often with larger matrices.  By taking a random step it can break the symmetry and finish.
+     * It is possible for the QR algorithm to get stuck in a loop because of symmetries. This happens
+     * more often with larger matrices. By taking a random step it can break the symmetry and finish.
      */
     public void exceptionShift() {
         numExceptional++;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,8 +38,8 @@ public class LUDecompositionNR_DDRM extends LUDecompositionBase_DDRM {
      * "Numerical Recipes The Art of Scientific Computing", Third Edition, Pages 48-55<br>
      * </p>
      *
-     * @param orig The matrix that is to be decomposed.  Not modified.
-     * @return true If the matrix can be decomposed and false if it can not.  It can
+     * @param orig The matrix that is to be decomposed. Not modified.
+     * @return true If the matrix can be decomposed and false if it can not. It can
      * return true and still be singular.
      */
     @Override
@@ -99,7 +99,7 @@ public class LUDecompositionNR_DDRM extends LUDecompositionBase_DDRM {
 
                 indx[k] = imax;
                 // for some applications it is better to have this set to tiny even though
-                // it is singular.  see the book
+                // it is singular. see the book
                 double element_kk = dataLU[k* n +k];
                 if( element_kk == 0.0) {
                     dataLU[k* n +k] = TINY;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,7 +32,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
 
 /**
  * <p>
- * Wrapper around SVD for simple matrix.  See {@link SingularValueDecomposition} for more details.
+ * Wrapper around SVD for simple matrix. See {@link SingularValueDecomposition} for more details.
  * </p>
  * SVD is defined as the following decomposition:<br>
  * <center> A = U * W * V <sup>T</sup> </center>
@@ -103,7 +103,7 @@ public class SimpleSVD<T extends SimpleBase> {
     }
 
     /**
-     * Returns a diagonal matrix with the singular values.  The singular values are ordered
+     * Returns a diagonal matrix with the singular values. The singular values are ordered
      * from largest to smallest.
      *
      * @return Diagonal matrix with singular values along the diagonal.
@@ -125,7 +125,7 @@ public class SimpleSVD<T extends SimpleBase> {
 
     /**
      * <p>
-     * Computes the quality of the computed decomposition.  A value close to or less than 1e-15
+     * Computes the quality of the computed decomposition. A value close to or less than 1e-15
      * is considered to be within machine precision.
      * </p>
      *
@@ -147,7 +147,7 @@ public class SimpleSVD<T extends SimpleBase> {
     }
 
     /**
-     * Computes the null space from an SVD.  For more information see {@link SingularOps_DDRM#nullSpace}.
+     * Computes the null space from an SVD. For more information see {@link SingularOps_DDRM#nullSpace}.
      *
      * @return Null space vector.
      */

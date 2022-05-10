@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,14 +29,14 @@ import org.jetbrains.annotations.Nullable;
  * where A is m by n, and U and V are orthogonal matrices, and  W is a diagonal matrix.
  *
  * <p>
- * The dimension of U,W,V depends if it is a compact SVD or not.  If not compact then U  is m by m, W is  m by n, V is n by n.
+ * The dimension of U,W,V depends if it is a compact SVD or not. If not compact then U  is m by m, W is  m by n, V is n by n.
  * If compact then let s be the number of singular values, U is m by s, W is s by s, and V is n by s.
  * </p>
  *
  * <p>
  * Accessor functions for decomposed matrices can return an internally constructed matrix if null is passed in for the
- * optional storage parameter.  The exact behavior is implementation specific.  If an internally maintained matrix is
- * returned then on the next call to decompose the matrix will be modified.  The advantage of this approach is reduced
+ * optional storage parameter. The exact behavior is implementation specific. If an internally maintained matrix is
+ * returned then on the next call to decompose the matrix will be modified. The advantage of this approach is reduced
  * memory overhead.
  * </p>
  *
@@ -74,11 +74,11 @@ public interface SingularValueDecomposition <T extends Matrix>
      * Returns the orthogonal 'U' matrix.
      * </p>
      * <p>
-     * Internally the SVD algorithm might compute U transposed or it might not.  To avoid an
+     * Internally the SVD algorithm might compute U transposed or it might not. To avoid an
      * unnecessary double transpose the option is provided to select if the transpose is returned.
      * </p>
      *
-     * @param U Optional storage for U. If null a new instance or internally maintained matrix is returned.  Modified.
+     * @param U Optional storage for U. If null a new instance or internally maintained matrix is returned. Modified.
      * @param transposed If the returned U is transposed.
      * @return An orthogonal matrix.
      */
@@ -90,21 +90,21 @@ public interface SingularValueDecomposition <T extends Matrix>
      * </p>
      *
      * <p>
-     * Internally the SVD algorithm might compute V transposed or it might not.  To avoid an
+     * Internally the SVD algorithm might compute V transposed or it might not. To avoid an
      * unnecessary double transpose the option is provided to select if the transpose is returned.
      * </p>
      *
-     * @param V Optional storage for v. If null a new instance or internally maintained matrix is returned.  Modified.
+     * @param V Optional storage for v. If null a new instance or internally maintained matrix is returned. Modified.
      * @param transposed If the returned V is transposed.
      * @return An orthogonal matrix.
      */
     T getV(@Nullable T V , boolean transposed );
 
     /**
-     * Returns a diagonal matrix with the singular values.  Order of the singular values
+     * Returns a diagonal matrix with the singular values. Order of the singular values
      * is not guaranteed.
      *
-     * @param W Optional storage for W. If null a new instance or internally maintained matrix is returned.  Modified.
+     * @param W Optional storage for W. If null a new instance or internally maintained matrix is returned. Modified.
      * @return Diagonal matrix with singular values along the diagonal.
      */
     T getW(@Nullable T W );

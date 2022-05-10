@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 /**
  * <p>
- * Complex Hessenberg decomposition.  It find matrices O and P such that:<br>
+ * Complex Hessenberg decomposition. It find matrices O and P such that:<br>
  * <br>
  * A = OPO<sup>H</sup><br>
  * <br>
@@ -81,10 +81,10 @@ public class HessenbergSimilarDecomposition_ZDRM
     }
 
     /**
-     * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
+     * Computes the decomposition of the provided matrix. If no errors are detected then true is returned,
      * false otherwise.
      *
-     * @param A The matrix that is being decomposed.  Not modified.
+     * @param A The matrix that is being decomposed. Not modified.
      * @return If it detects any errors or not.
      */
     @Override
@@ -123,7 +123,7 @@ public class HessenbergSimilarDecomposition_ZDRM
     /**
      * An upper Hessenberg matrix from the decomposition.
      *
-     * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param H If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
     public ZMatrixRMaj getH( @Nullable ZMatrixRMaj H ) {
@@ -142,7 +142,7 @@ public class HessenbergSimilarDecomposition_ZDRM
     /**
      * An orthogonal matrix that has the following property: H = Q<sup>T</sup>AQ
      *
-     * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param Q If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
     public ZMatrixRMaj getQ( @Nullable ZMatrixRMaj Q ) {

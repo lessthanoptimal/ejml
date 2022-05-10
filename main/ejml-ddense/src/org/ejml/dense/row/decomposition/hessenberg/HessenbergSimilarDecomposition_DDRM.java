@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -77,10 +77,10 @@ public class HessenbergSimilarDecomposition_DDRM
     }
 
     /**
-     * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
+     * Computes the decomposition of the provided matrix. If no errors are detected then true is returned,
      * false otherwise.
      *
-     * @param A The matrix that is being decomposed.  Not modified.
+     * @param A The matrix that is being decomposed. Not modified.
      * @return If it detects any errors or not.
      */
     @Override
@@ -119,7 +119,7 @@ public class HessenbergSimilarDecomposition_DDRM
     /**
      * An upper Hessenberg matrix from the decomposition.
      *
-     * @param H If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param H If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted H matrix.
      */
     public DMatrixRMaj getH( @Nullable DMatrixRMaj H ) {
@@ -140,7 +140,7 @@ public class HessenbergSimilarDecomposition_DDRM
     /**
      * An orthogonal matrix that has the following property: H = Q<sup>T</sup>AQ
      *
-     * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param Q If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
     public DMatrixRMaj getQ( @Nullable DMatrixRMaj Q ) {

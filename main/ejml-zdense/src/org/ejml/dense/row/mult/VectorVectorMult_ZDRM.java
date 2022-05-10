@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class VectorVectorMult_ZDRM {
     /**
      * <p>
-     * Computes the inner product of the two vectors.  In geometry this is known as the dot product.<br>
+     * Computes the inner product of the two vectors. In geometry this is known as the dot product.<br>
      * <br>
      * &sum;<sub>k=1:n</sub> x<sub>k</sub> * y<sub>k</sub><br>
      * where x and y are vectors with n elements.
@@ -38,7 +38,7 @@ public class VectorVectorMult_ZDRM {
      *
      * <p>
      * These functions are often used inside of highly optimized code and therefor sanity checks are
-     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * kept to a minimum. It is not recommended that any of these functions be used directly.
      * </p>
      *
      * @param x A vector with n elements. Not modified.
@@ -79,7 +79,7 @@ public class VectorVectorMult_ZDRM {
      *
      * <p>
      * These functions are often used inside of highly optimized code and therefor sanity checks are
-     * kept to a minimum.  It is not recommended that any of these functions be used directly.
+     * kept to a minimum. It is not recommended that any of these functions be used directly.
      * </p>
      *
      * @param x A vector with n elements. Not modified.
@@ -112,7 +112,7 @@ public class VectorVectorMult_ZDRM {
     /**
      * <p>
      * Sets A &isin; &real; <sup>m &times; n</sup> equal to an outer product multiplication of the two
-     * vectors.  This is also known as a rank-1 operation.<br>
+     * vectors. This is also known as a rank-1 operation.<br>
      * <br>
      * A = x * y<sup>T</sup>
      * where x &isin; &real; <sup>m</sup> and y &isin; &real; <sup>n</sup> are vectors.
@@ -148,7 +148,7 @@ public class VectorVectorMult_ZDRM {
     /**
      * <p>
      * Sets A &isin; &real; <sup>m &times; n</sup> equal to an outer product multiplication of the two
-     * vectors.  This is also known as a rank-1 operation.<br>
+     * vectors. This is also known as a rank-1 operation.<br>
      * <br>
      * A = x * y<sup>H</sup>
      * where x &isin; &real; <sup>m</sup> and y &isin; &real; <sup>n</sup> are vectors.

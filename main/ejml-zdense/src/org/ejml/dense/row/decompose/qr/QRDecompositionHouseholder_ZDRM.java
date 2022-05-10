@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,12 +27,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * <p>
  * This variation of complex QR decomposition uses reflections to compute the Q matrix.
- * Each reflection uses a householder operations, hence its name.  To provide a meaningful solution
- * the original matrix must have full rank.  This is intended for processing of small to medium matrices.
+ * Each reflection uses a householder operations, hence its name. To provide a meaningful solution
+ * the original matrix must have full rank. This is intended for processing of small to medium matrices.
  * </p>
  * <p>
- * Both Q and R are stored in the same m by n matrix.  Q is not stored directly, instead the u from
- * Q<sub>k</sub>=(I-&gamma;*u*u<sup>H</sup>) is stored.  Decomposition requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
+ * Both Q and R are stored in the same m by n matrix. Q is not stored directly, instead the u from
+ * Q<sub>k</sub>=(I-&gamma;*u*u<sup>H</sup>) is stored. Decomposition requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
  * </p>
  *
  * <p>
@@ -41,9 +41,9 @@ import org.jetbrains.annotations.Nullable;
  * </p>
  *
  * <p>
- * For the most part this is a straight forward implementation.  To improve performance on large matrices a column is
+ * For the most part this is a straight forward implementation. To improve performance on large matrices a column is
  * written to an array and the order
- * of some of the loops has been changed.  This will degrade performance noticeably on small matrices.  Since
+ * of some of the loops has been changed. This will degrade performance noticeably on small matrices. Since
  * it is unlikely that the QR decomposition would be a bottle neck when small matrices are involved only
  * one implementation is provided.
  * </p>
@@ -54,9 +54,9 @@ import org.jetbrains.annotations.Nullable;
 public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixRMaj> {
 
     /**
-     * Where the Q and R matrices are stored.  R is stored in the
-     * upper triangular portion and Q on the lower bit.  Lower columns
-     * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^H).
+     * Where the Q and R matrices are stored. R is stored in the
+     * upper triangular portion and Q on the lower bit. Lower columns
+     * are where u is stored. Q_k = (I - gamma_k*u_k*u_k^H).
      */
     protected ZMatrixRMaj QR;
 
@@ -108,7 +108,7 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
     }
 
     /**
-     * Returns a single matrix which contains the combined values of Q and R.  This
+     * Returns a single matrix which contains the combined values of Q and R. This
      * is possible since Q is symmetric and R is upper triangular.
      *
      * @return The combined Q R matrix.
@@ -118,7 +118,7 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
     }
 
     /**
-     * Computes the Q matrix from the information stored in the QR matrix.  This
+     * Computes the Q matrix from the information stored in the QR matrix. This
      * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
@@ -165,13 +165,13 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
 
     /**
      * <p>
-     * In order to decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
+     * In order to decompose the matrix 'A' it must have full rank. 'A' is a 'm' by 'n' matrix.
      * It requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
      * </p>
      *
      * <p>
      * The matrix provided here can be of different
-     * dimension than the one specified in the constructor.  It just has to be smaller than or equal
+     * dimension than the one specified in the constructor. It just has to be smaller than or equal
      * to it.
      * </p>
      */
@@ -193,8 +193,8 @@ public class QRDecompositionHouseholder_ZDRM implements QRDecomposition<ZMatrixR
 
     /**
      * <p>
-     * Computes the householder vector "u" for the first column of submatrix j.  Note this is
-     * a specialized householder for this problem.  There is some protection against
+     * Computes the householder vector "u" for the first column of submatrix j. Note this is
+     * a specialized householder for this problem. There is some protection against
      * overflow and underflow.
      * </p>
      * <p>

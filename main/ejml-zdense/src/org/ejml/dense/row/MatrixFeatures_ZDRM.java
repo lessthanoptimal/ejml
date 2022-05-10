@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,8 +49,8 @@ public class MatrixFeatures_ZDRM {
      * a<sub>ij</sub> = -b<sub>ij</sub>
      * </p>
      *
-     * @param a First matrix.  Not modified.
-     * @param b Second matrix.  Not modified.
+     * @param a First matrix. Not modified.
+     * @param b Second matrix. Not modified.
      * @param tol Numerical tolerance.
      * @return True if they are the negative of each other within tolerance.
      */
@@ -108,7 +108,7 @@ public class MatrixFeatures_ZDRM {
      * <p>
      *
      * <p>
-     * NOTE: If any of the elements are NaN then false is returned.  If two corresponding
+     * NOTE: If any of the elements are NaN then false is returned. If two corresponding
      * elements are both positive or negative infinity then they are equal.
      * </p>
      *
@@ -169,7 +169,7 @@ public class MatrixFeatures_ZDRM {
     /**
      * <p>
      * Checks to see if each corresponding element in the two matrices are
-     * within tolerance of each other or have the some symbolic meaning.  This
+     * within tolerance of each other or have the some symbolic meaning. This
      * can handle NaN and Infinite numbers.
      * <p>
      *
@@ -221,7 +221,7 @@ public class MatrixFeatures_ZDRM {
     /**
      * Checks to see if the provided matrix is within tolerance to an identity matrix.
      *
-     * @param mat Matrix being examined.  Not modified.
+     * @param mat Matrix being examined. Not modified.
      * @param tol Tolerance.
      * @return True if it is within tolerance to an identify matrix.
      */
@@ -355,7 +355,7 @@ public class MatrixFeatures_ZDRM {
      * A triangular matrix is a Hessenberg matrix of degree 0.
      * </p>
      *
-     * @param A Matrix being tested.  Not modified.
+     * @param A Matrix being tested. Not modified.
      * @param hessenberg The degree of being hessenberg.
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
@@ -389,7 +389,7 @@ public class MatrixFeatures_ZDRM {
      * A triangular matrix is a Hessenberg matrix of degree 0.
      * </p>
      *
-     * @param A Matrix being tested.  Not modified.
+     * @param A Matrix being tested. Not modified.
      * @param hessenberg The degree of being hessenberg.
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,7 @@ public class UtilDecompositons_ZDRM {
     }
 
     /**
-     * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
+     * Creates a zeros matrix only if A does not already exist. If it does exist it will fill
      * the lower triangular portion with zeros.
      */
     public static ZMatrixRMaj checkZerosLT( @Nullable ZMatrixRMaj A, int numRows, int numCols ) {
@@ -71,7 +71,7 @@ public class UtilDecompositons_ZDRM {
     }
 
     /**
-     * Creates a zeros matrix only if A does not already exist.  If it does exist it will fill
+     * Creates a zeros matrix only if A does not already exist. If it does exist it will fill
      * the upper triangular portion with zeros.
      */
     public static ZMatrixRMaj checkZerosUT( @Nullable ZMatrixRMaj A, int numRows, int numCols ) {

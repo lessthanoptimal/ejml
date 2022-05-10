@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_DDRM;
 /**
  * <p>
  * Performs a pseudo inverse solver using the {@link org.ejml.dense.row.decomposition.qr.QRColPivDecompositionHouseholderColumn_DDRM} decomposition
- * directly.  For details on how the pseudo inverse is computed see {@link BaseLinearSolverQrp_DDRM}.
+ * directly. For details on how the pseudo inverse is computed see {@link BaseLinearSolverQrp_DDRM}.
  * </p>
  *
  * @author Peter Abeles

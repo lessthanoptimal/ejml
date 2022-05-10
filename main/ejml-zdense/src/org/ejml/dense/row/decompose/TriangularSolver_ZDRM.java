@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ package org.ejml.dense.row.decompose;
  * where x and b are vectors, and T is an n by n matrix. T can either be a lower or upper triangular matrix.<br>
  * </p>
  * <p>
- * These functions are designed for use inside of other algorithms.  To use them directly
+ * These functions are designed for use inside of other algorithms. To use them directly
  * is dangerous since no sanity checks are performed.
  * </p>
  *

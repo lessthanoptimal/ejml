@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,8 +43,8 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param C Output matrix.
      * @param semiRing Semi-Ring to define + and *
      * @param mask (Optional) Mask for specifying which entries should be overwritten
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static void add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                             @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {
@@ -131,8 +131,8 @@ public class ImplCommonOpsWithSemiRing_DSCC {
      * @param C (Output) Matrix.
      * @param semiRing Semi-Ring to define + and *
      * @param mask (Optional) Mask for specifying which entries should be overwritten
-     * @param gw (Optional) Storage for internal workspace.  Can be null.
-     * @param gx (Optional) Storage for internal workspace.  Can be null.
+     * @param gw (Optional) Storage for internal workspace. Can be null.
+     * @param gx (Optional) Storage for internal workspace. Can be null.
      */
     public static void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C, DSemiRing semiRing,
                                     @Nullable Mask mask, @Nullable IGrowArray gw, @Nullable DGrowArray gx ) {

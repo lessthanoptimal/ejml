@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * This implementation is based off of the algorithm described in:<br>
  * <br>
- * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition.  Page 349-355
+ * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition. Page 349-355
  * </p>
  *
  * @author Peter Abeles
@@ -49,8 +49,8 @@ public class TridiagonalDecompositionHouseholder_DDRM
         implements TridiagonalSimilarDecomposition_F64<DMatrixRMaj> {
 
     /**
-     * Only the upper right triangle is used.  The Tridiagonal portion stores
-     * the tridiagonal matrix.  The rows store householder vectors.
+     * Only the upper right triangle is used. The Tridiagonal portion stores
+     * the tridiagonal matrix. The rows store householder vectors.
      */
     @SuppressWarnings("NullAway.Init")
     protected DMatrixRMaj QT;
@@ -93,7 +93,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
     /**
      * Extracts the tridiagonal matrix found in the decomposition.
      *
-     * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param T If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
     @Override
@@ -120,7 +120,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
     /**
      * An orthogonal matrix that has the following property: T = Q<sup>T</sup>AQ
      *
-     * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param Q If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
     @Override
@@ -153,7 +153,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
     /**
      * Decomposes the provided symmetric matrix.
      *
-     * @param A Symmetric matrix that is going to be decomposed.  Not modified.
+     * @param A Symmetric matrix that is going to be decomposed. Not modified.
      */
     @Override
     public boolean decompose( DMatrixRMaj A ) {
@@ -209,7 +209,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
     }
 
     /**
-     * Performs the householder operations on left and right and side of the matrix.  Q<sup>T</sup>AQ
+     * Performs the householder operations on left and right and side of the matrix. Q<sup>T</sup>AQ
      *
      * @param row Specifies the submatrix.
      * @param gamma The gamma for the householder operation
@@ -221,7 +221,7 @@ public class TridiagonalDecompositionHouseholder_DDRM
         for (int i = row; i < N; i++) {
             double total = 0;
             // the lower triangle is not written to so it needs to traverse upwards
-            // to get the information.  Reduces the number of matrix writes need
+            // to get the information. Reduces the number of matrix writes need
             // improving large matrix performance
             for (int j = row; j < i; j++) {
                 total += QT.data[j*N + i]*QT.data[startU + j];

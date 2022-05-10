@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -134,7 +134,7 @@ public class GenericBlock64QrDecompositionTests_DDRB extends EjmlStandardJUnit {
     }
 
     /**
-     * Decomposes the matrix and computes Q and R.  Verifies the results by
+     * Decomposes the matrix and computes Q and R. Verifies the results by
      * multiplying Q and R together and seeing if it gets A.
      */
     public void fullDecomposition() {

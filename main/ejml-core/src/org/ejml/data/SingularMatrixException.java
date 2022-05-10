@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,7 +22,7 @@ package org.ejml.data;
 /**
  * This exception is thrown if an operation can not be finished because the matrix is singular.
  * It is a RuntimeException to allow the code to be written cleaner and also because singular
- * matrices are not always detected.  Forcing an exception to be caught provides a false sense
+ * matrices are not always detected. Forcing an exception to be caught provides a false sense
  * of security.
  *
  * @author Peter Abeles

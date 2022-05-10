@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,9 +35,9 @@ public class NaiveDeterminant {
      * </p>
      *
      * <p>
-     * A direct implementation of Leibniz determinant equation.  This is of little practical use
+     * A direct implementation of Leibniz determinant equation. This is of little practical use
      * because of its slow runtime of O(n!) where n is the width of the matrix. LU decomposition
-     * should be used instead.  One advantage of Leibniz's equation is how simplistic it is.
+     * should be used instead. One advantage of Leibniz's equation is how simplistic it is.
      * </p>
      * <p>
      * det(A) = Sum( &sigma; in S<sub>n</sub> ; sgn(&sigma;) Prod( i = 1 to n ; a<sub>i,&sigma;(i)</sub>) )<br>

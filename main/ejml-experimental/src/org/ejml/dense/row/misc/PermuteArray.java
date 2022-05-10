@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import java.util.List;
 
 
 /**
- * Generates a permutations of an integer set from 0 to N-1.  This can either be generated
+ * Generates a permutations of an integer set from 0 to N-1. This can either be generated
  * all at once as a list of one at a time.
  *
  * @author Peter Abeles
@@ -52,7 +52,7 @@ public class PermuteArray {
 
     /**
      * <p>
-     * Returns signature of the permutation.  This is the sgn() operator and returns
+     * Returns signature of the permutation. This is the sgn() operator and returns
      * -1 or 1 depending on it being odd or even.
      * <br>
      * sgn(σ) = ( − 1)<sup>m</sup><br>
@@ -60,7 +60,7 @@ public class PermuteArray {
      * where m is the number of inversions.
      * </p>
      * <p>
-     * NOTE: This implementation is painfully slow O(N!).  There is probably another algorithm out there
+     * NOTE: This implementation is painfully slow O(N!). There is probably another algorithm out there
      * which is much faster.
      * </p>
      *
@@ -142,7 +142,7 @@ public class PermuteArray {
     /**
      * Creates the next permutation in the sequence.
      *
-     * @return An array containing the permutation.  The returned array is modified each time this function is called.
+     * @return An array containing the permutation. The returned array is modified each time this function is called.
      */
     public @Nullable int[] next()
     {

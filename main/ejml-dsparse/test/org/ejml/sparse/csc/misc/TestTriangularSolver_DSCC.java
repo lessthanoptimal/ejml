@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -436,7 +436,7 @@ public class TestTriangularSolver_DSCC extends EjmlStandardJUnit {
             assertEquals(0,w[i]);
         }
 
-        // add a hole on top.  This should not be filled in nor the one below it
+        // add a hole on top. This should not be filled in nor the one below it
         B.remove(0,0);
         top = TriangularSolver_DSCC.searchNzRowsInX(A,B,0,null,xi,w);
         assertEquals(2,top);
@@ -512,7 +512,7 @@ public class TestTriangularSolver_DSCC extends EjmlStandardJUnit {
     }
 
     /**
-     * All elements in A are filled in.  ata = false
+     * All elements in A are filled in. ata = false
      */
     @Test
     public void eliminationTree_full_square() {
@@ -628,8 +628,8 @@ public class TestTriangularSolver_DSCC extends EjmlStandardJUnit {
     }
 
     /**
-     * Test the elimination tree from its definition.  Test it by seeing if for each off diagonal non-zero element
-     * A[i,j] there is a path from i to j. i < j.  Hmm that description is actually for the transpose of A
+     * Test the elimination tree from its definition. Test it by seeing if for each off diagonal non-zero element
+     * A[i,j] there is a path from i to j. i < j. Hmm that description is actually for the transpose of A
      */
     @Test
     public void eliminationTree_random_square() {

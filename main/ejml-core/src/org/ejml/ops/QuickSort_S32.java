@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,11 +24,11 @@ package org.ejml.ops;
  * <p>
  * A small amount of memory is declared for this sorting algorithm.
  * <p>
- * This implementation seems to often perform slower than Shell sort.  A comment in Numerical
+ * This implementation seems to often perform slower than Shell sort. A comment in Numerical
  * recipes about unnecessary array checks makes me think this is slow because java always
  * does a bounds check on arrays.
  * <p>
- * This has slightly better performance than Arrays.sort(double[]).  Not noticeable in most applications.
+ * This has slightly better performance than Arrays.sort(double[]). Not noticeable in most applications.
  */
 public class QuickSort_S32 {
     // an architecture dependent tuning parameter

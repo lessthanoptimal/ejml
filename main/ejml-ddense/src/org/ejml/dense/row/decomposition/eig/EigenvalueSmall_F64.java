@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ public class EigenvalueSmall_F64 {
     public Complex_F64 value0 = new Complex_F64();
     public Complex_F64 value1 = new Complex_F64();
 
-    // if |a11-a22| >> |a12+a21| there might be a better way.  see pg371
+    // if |a11-a22| >> |a12+a21| there might be a better way. see pg371
     public void value2x2( double a11, double a12, double a21, double a22 ) {
         // apply a rotators such that th a11 and a22 elements are the same
         double c, s;
@@ -86,7 +86,7 @@ public class EigenvalueSmall_F64 {
     }
 
     /**
-     * Computes the eigenvalues of a 2 by 2 matrix using a faster but more prone to errors method.  This
+     * Computes the eigenvalues of a 2 by 2 matrix using a faster but more prone to errors method. This
      * is the typical method.
      */
     public void value2x2_fast( double a11, double a12, double a21, double a22 ) {

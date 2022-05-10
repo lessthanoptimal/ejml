@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -139,7 +139,7 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * See if it can handle very small values and not blow up.  This can some times
+     * See if it can handle very small values and not blow up. This can some times
      * cause a zero to appear unexpectedly and thus a divided by zero.
      */
     public void testVerySmallValue() {
@@ -255,7 +255,7 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
 
     /**
      * Makes sure arrays are correctly set when it first computers a larger matrix
-     * then a smaller one.  When going from small to large its often forces to declare
+     * then a smaller one. When going from small to large its often forces to declare
      * new memory, this way it actually uses memory.
      */
     public void testLargeToSmall() {

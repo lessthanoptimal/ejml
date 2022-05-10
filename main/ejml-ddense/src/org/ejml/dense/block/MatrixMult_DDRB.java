@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import static org.ejml.dense.block.MatrixOps_DDRB.checkShapeMult;
 
 /**
  * <p>
- * Matrix multiplication for {@link DMatrixRBlock}.  All sub-matrices must be block aligned.
+ * Matrix multiplication for {@link DMatrixRBlock}. All sub-matrices must be block aligned.
  * </p>
  *
  * @author Peter Abeles
@@ -48,9 +48,9 @@ public class MatrixMult_DDRB {
      * </p>
      *
      * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix.  Not modified.
-     * @param B A submatrix.  Not modified.
-     * @param C Result of the operation.  Modified,
+     * @param A A submatrix. Not modified.
+     * @param B A submatrix. Not modified.
+     * @param C Result of the operation. Modified,
      */
     public static void mult( int blockLength,
                              DSubmatrixD1 A, DSubmatrixD1 B,
@@ -97,9 +97,9 @@ public class MatrixMult_DDRB {
      * </p>
      *
      * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix.  Not modified.
-     * @param B A submatrix.  Not modified.
-     * @param C Result of the operation.  Modified,
+     * @param A A submatrix. Not modified.
+     * @param B A submatrix. Not modified.
+     * @param C Result of the operation. Modified,
      */
     public static void multPlus( int blockLength,
                                  DSubmatrixD1 A, DSubmatrixD1 B,
@@ -142,9 +142,9 @@ public class MatrixMult_DDRB {
      * </p>
      *
      * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix.  Not modified.
-     * @param B A submatrix.  Not modified.
-     * @param C Result of the operation.  Modified,
+     * @param A A submatrix. Not modified.
+     * @param B A submatrix. Not modified.
+     * @param C Result of the operation. Modified,
      */
     public static void multMinus( int blockLength,
                                   DSubmatrixD1 A, DSubmatrixD1 B,
@@ -187,9 +187,9 @@ public class MatrixMult_DDRB {
      * </p>
      *
      * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix.  Not modified.
-     * @param B A submatrix.  Not modified.
-     * @param C Result of the operation.  Modified,
+     * @param A A submatrix. Not modified.
+     * @param B A submatrix. Not modified.
+     * @param C Result of the operation. Modified,
      */
     public static void multTransA( int blockLength,
                                    DSubmatrixD1 A, DSubmatrixD1 B,
@@ -286,9 +286,9 @@ public class MatrixMult_DDRB {
      * </p>
      *
      * @param blockLength Length of the blocks in the submatrix.
-     * @param A A submatrix.  Not modified.
-     * @param B A submatrix.  Not modified.
-     * @param C Result of the operation.  Modified,
+     * @param A A submatrix. Not modified.
+     * @param B A submatrix. Not modified.
+     * @param C Result of the operation. Modified,
      */
     public static void multTransB( int blockLength,
                                    DSubmatrixD1 A, DSubmatrixD1 B,

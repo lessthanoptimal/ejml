@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,7 +76,7 @@ public class SimpleEVD<T extends SimpleBase> {
     }
 
     /**
-     * Returns the number of eigenvalues/eigenvectors.  This is the matrix's dimension.
+     * Returns the number of eigenvalues/eigenvectors. This is the matrix's dimension.
      *
      * @return number of eigenvalues/eigenvectors.
      */
@@ -86,13 +86,13 @@ public class SimpleEVD<T extends SimpleBase> {
 
     /**
      * <p>
-     * Returns an eigenvalue as a complex number.  For symmetric matrices the returned eigenvalue will always be a real
+     * Returns an eigenvalue as a complex number. For symmetric matrices the returned eigenvalue will always be a real
      * number, which means the imaginary component will be equal to zero.
      * </p>
      *
      * <p>
-     * NOTE: The order of the eigenvalues is dependent upon the decomposition algorithm used.  This means that they may
-     * or may not be ordered by magnitude.  For example the QR algorithm will returns results that are partially
+     * NOTE: The order of the eigenvalues is dependent upon the decomposition algorithm used. This means that they may
+     * or may not be ordered by magnitude. For example the QR algorithm will returns results that are partially
      * ordered by magnitude, but this behavior should not be relied upon.
      * </p>
      *
@@ -110,7 +110,7 @@ public class SimpleEVD<T extends SimpleBase> {
 
     /**
      * <p>
-     * Used to retrieve real valued eigenvectors.  If an eigenvector is associated with a complex eigenvalue
+     * Used to retrieve real valued eigenvectors. If an eigenvector is associated with a complex eigenvalue
      * then null is returned instead.
      * </p>
      *
@@ -126,7 +126,7 @@ public class SimpleEVD<T extends SimpleBase> {
 
     /**
      * <p>
-     * Computes the quality of the computed decomposition.  A value close to or less than 1e-15
+     * Computes the quality of the computed decomposition. A value close to or less than 1e-15
      * is considered to be within machine precision.
      * </p>
      *

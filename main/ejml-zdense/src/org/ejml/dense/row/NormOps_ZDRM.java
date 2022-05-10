@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ public class NormOps_ZDRM {
      * This is equivalent to the element wise p=2 norm.
      * </p>
      *
-     * @param a The matrix whose norm is computed.  Not modified.
+     * @param a The matrix whose norm is computed. Not modified.
      * @return The norm's value.
      */
     public static double normF( ZMatrixRMaj a ) {

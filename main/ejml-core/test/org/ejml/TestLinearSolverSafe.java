@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ public class TestLinearSolverSafe extends EjmlStandardJUnit {
     DMatrixRMaj Binput = new DMatrixRMaj(1,1);
 
     /**
-     * Checks to see if the input matrix is copied after multiple calls.  This was an actual bug.
+     * Checks to see if the input matrix is copied after multiple calls. This was an actual bug.
      */
     @Test
     public void multipleCalls_setA() {
@@ -50,7 +50,7 @@ public class TestLinearSolverSafe extends EjmlStandardJUnit {
     }
 
     /**
-     * Checks to see if the input matrix is copied after multiple calls.  This was an actual bug.
+     * Checks to see if the input matrix is copied after multiple calls. This was an actual bug.
      */
     @Test
     public void multipleCalls_setB() {

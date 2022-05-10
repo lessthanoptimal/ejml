@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import static org.ejml.dense.row.CommonOps_DDRM.*;
 
 /**
- * A Kalman filter that is implemented using the operations API, which is procedural.  Much of the excessive
+ * A Kalman filter that is implemented using the operations API, which is procedural. Much of the excessive
  * memory creation/destruction has been reduced from the KalmanFilterSimple. A specialized solver is
  * under to invert the SPD matrix.
  *

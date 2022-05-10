@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,7 +53,7 @@ public abstract class Operation {
     }
 
     /**
-     * If the variable is a local temporary variable it will be resized so that the operation can complete.  If not
+     * If the variable is a local temporary variable it will be resized so that the operation can complete. If not
      * temporary then it will not be reshaped
      *
      * @param mat Variable containing the matrix
@@ -805,7 +805,7 @@ public abstract class Operation {
                                     colExtent.array, colExtent.length);
                         }
                     } else {
-                        throw new RuntimeException("Unexpected number of ranges.  Should have been caught earlier");
+                        throw new RuntimeException("Unexpected number of ranges. Should have been caught earlier");
                     }
                 }
             };
@@ -854,7 +854,7 @@ public abstract class Operation {
                             }
                         }
                     } else {
-                        throw new RuntimeException("Unexpected number of ranges.  Should have been caught earlier");
+                        throw new RuntimeException("Unexpected number of ranges. Should have been caught earlier");
                     }
                 }
             };
@@ -1335,7 +1335,7 @@ public abstract class Operation {
                     int numCols = ((VariableInteger)B).value;
                     output.matrix.reshape(numRows, numCols);
                     CommonOps_DDRM.fill(output.matrix, 0);
-                    //not sure if this is necessary.  Can its value every be modified?
+                    //not sure if this is necessary. Can its value every be modified?
                 }
             };
         } else {
@@ -1681,7 +1681,7 @@ public abstract class Operation {
     }
 
     /**
-     * See if a simple sequence can be used to extract the array.  A simple extent is a continuous block from
+     * See if a simple sequence can be used to extract the array. A simple extent is a continuous block from
      * a min to max index
      *
      * @return true if it is a simple range or false if not

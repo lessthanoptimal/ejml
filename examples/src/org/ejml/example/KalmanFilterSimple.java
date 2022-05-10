@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,10 +22,10 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
 
 /**
- * A Kalman filter implemented using SimpleMatrix.  The code tends to be easier to
+ * A Kalman filter implemented using SimpleMatrix. The code tends to be easier to
  * read and write, but the performance is degraded due to excessive creation/destruction of
- * memory and the use of more generic algorithms.  This also demonstrates how code can be
- * seamlessly implemented using both SimpleMatrix and DMatrixRMaj.  This allows code
+ * memory and the use of more generic algorithms. This also demonstrates how code can be
+ * seamlessly implemented using both SimpleMatrix and DMatrixRMaj. This allows code
  * to be quickly prototyped or to be written either by novices or experts.
  *
  * @author Peter Abeles

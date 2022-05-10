@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.simple.SimpleMatrix;
 
 /**
  * A slower but much simpler version of {@link BidiagonalDecompositionRow_DDRM} that internally uses
- * SimpleMatrix and explicitly computes the householder matrices.  This was easier to code up and is
+ * SimpleMatrix and explicitly computes the householder matrices. This was easier to code up and is
  * used to validate other implementations.
  *
  * @author Peter Abeles
@@ -58,9 +58,9 @@ public class BidiagonalDecompositionNaive_DDRM {
     }
 
     /**
-     * Computes the decomposition of the provided matrix.  If no errors are detected then true is returned,
+     * Computes the decomposition of the provided matrix. If no errors are detected then true is returned,
      * false otherwise.
-     * @param A  The matrix that is being decomposed.  Not modified.
+     * @param A  The matrix that is being decomposed. Not modified.
      * @return If it detects any errors or not.
      */
     public boolean decompose( DMatrixRMaj A )

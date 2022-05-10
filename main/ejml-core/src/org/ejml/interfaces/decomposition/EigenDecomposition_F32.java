@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,13 +33,13 @@ public interface EigenDecomposition_F32<MatrixType extends Matrix>
 
     /**
      * <p>
-     * Returns an eigenvalue as a complex number.  For symmetric matrices the returned eigenvalue will always be a real
+     * Returns an eigenvalue as a complex number. For symmetric matrices the returned eigenvalue will always be a real
      * number, which means the imaginary component will be equal to zero.
      * </p>
      *
      * <p>
-     * NOTE: The order of the eigenvalues is dependent upon the decomposition algorithm used.  This means that they may
-     * or may not be ordered by magnitude.  For example the QR algorithm will returns results that are partially
+     * NOTE: The order of the eigenvalues is dependent upon the decomposition algorithm used. This means that they may
+     * or may not be ordered by magnitude. For example the QR algorithm will returns results that are partially
      * ordered by magnitude, but this behavior should not be relied upon.
      * </p>
      * 

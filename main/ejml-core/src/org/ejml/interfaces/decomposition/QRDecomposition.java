@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * QR decompositions decompose a rectangular matrix 'A' such that 'A=QR'.  Where
+ * QR decompositions decompose a rectangular matrix 'A' such that 'A=QR'. Where
  * A &isin; &real; <sup>n &times; m</sup> , n &ge; m, Q &isin; &real; <sup>n &times; n</sup> is an orthogonal matrix,
- * and R &isin; &real; <sup>n &times; m</sup> is an upper triangular matrix.  Some implementations
+ * and R &isin; &real; <sup>n &times; m</sup> is an upper triangular matrix. Some implementations
  * of QR decomposition require that A has full rank.
  * </p>
  *
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * <ul>
  * <li> Can decompose rectangular matrices. </li>
  * <li> Numerically stable solutions to least-squares problem, but not as stable as SVD </li>
- * <li> Can incrementally add and remove columns from the decomposed matrix.  See {@link org.ejml.dense.row.linsol.qr.AdjLinearSolverQr_DDRM} </li>
+ * <li> Can incrementally add and remove columns from the decomposed matrix. See {@link org.ejml.dense.row.linsol.qr.AdjLinearSolverQr_DDRM} </li>
  * </ul>
  *
  * Orthogonal matrices have the following properties:
@@ -49,7 +49,7 @@ public interface QRDecomposition <T extends Matrix>
         extends DecompositionInterface<T> {
     /**
      * <p>
-     * Returns the Q matrix from the decomposition.  Should only be called after
+     * Returns the Q matrix from the decomposition. Should only be called after
      * {@link #decompose(org.ejml.data.Matrix)} has been called.
      * </p>
      *
@@ -61,7 +61,7 @@ public interface QRDecomposition <T extends Matrix>
 
     /**
      * <p>
-     * Returns the R matrix from the decomposition.  Should only be
+     * Returns the R matrix from the decomposition. Should only be
      * called after {@link #decompose(org.ejml.data.Matrix)} has been.
      * </p>
      * <p>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import java.util.Arrays;
 /**
  * <p>
  * Performs a complex {@link TridiagonalSimilarDecomposition_F64 similar tridiagonal decomposition} on a
- * square Hermitian matrix.  Householder vectors perform the similar operation and the symmetry
+ * square Hermitian matrix. Householder vectors perform the similar operation and the symmetry
  * is taken advantage of for good performance.
  * </p>
  * <p>
@@ -43,7 +43,7 @@ import java.util.Arrays;
  * <p>
  * This implementation is inspired by description of the real symmetric decomposition in:<br>
  * <br>
- * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition.  Page 349-355
+ * David S. Watkins, "Fundamentals of Matrix Computations," Second Edition. Page 349-355
  * </p>
  *
  * @author Peter Abeles
@@ -53,8 +53,8 @@ public class TridiagonalDecompositionHouseholder_ZDRM
         implements TridiagonalSimilarDecomposition_F64<ZMatrixRMaj> {
 
     /**
-     * Only the upper right triangle is used.  The Tridiagonal portion stores
-     * the tridiagonal matrix.  The rows store householder vectors.
+     * Only the upper right triangle is used. The Tridiagonal portion stores
+     * the tridiagonal matrix. The rows store householder vectors.
      */
     private ZMatrixRMaj QT;
 
@@ -100,7 +100,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
     /**
      * Extracts the tridiagonal matrix found in the decomposition.
      *
-     * @param T If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param T If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted T matrix.
      */
     @Override
@@ -124,7 +124,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
     /**
      * An orthogonal matrix that has the following property: T = Q<sup>H</sup>AQ
      *
-     * @param Q If not null then the results will be stored here.  Otherwise a new matrix will be created.
+     * @param Q If not null then the results will be stored here. Otherwise a new matrix will be created.
      * @return The extracted Q matrix.
      */
     @Override
@@ -151,7 +151,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
     /**
      * Decomposes the provided symmetric matrix.
      *
-     * @param A Symmetric matrix that is going to be decomposed.  Not modified.
+     * @param A Symmetric matrix that is going to be decomposed. Not modified.
      */
     @Override
     public boolean decompose( ZMatrixRMaj A ) {
@@ -183,8 +183,8 @@ public class TridiagonalDecompositionHouseholder_ZDRM
             double imag_u_0 = t[(k*N + k + 1)*2 + 1] + tau.imaginary;
             QrHelperFunctions_ZDRM.divideElements(k + 2, N, t, k*N, real_u_0, imag_u_0);
 
-            // A column is zeroed first.  However a row is being used to store because it reduces
-            // cache misses.  Need to compute the conjugate to have the correct householder operation
+            // A column is zeroed first. However a row is being used to store because it reduces
+            // cache misses. Need to compute the conjugate to have the correct householder operation
             for (int i = k + 2; i < N; i++) {
                 t[(k*N + i)*2 + 1] = -t[(k*N + i)*2 + 1];
             }
@@ -208,7 +208,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
     }
 
     /**
-     * Performs the householder operations on left and right and side of the matrix.  Q<sup>T</sup>AQ
+     * Performs the householder operations on left and right and side of the matrix. Q<sup>T</sup>AQ
      *
      * @param row Specifies the submatrix.
      * @param gamma The gamma for the householder operation
@@ -222,7 +222,7 @@ public class TridiagonalDecompositionHouseholder_ZDRM
             double totalImag = 0;
 
             // the lower triangle is not written to so it needs to traverse upwards
-            // to get the information.  Reduces the number of matrix writes need
+            // to get the information. Reduces the number of matrix writes need
             // improving large matrix performance
             for (int j = row + 1; j < i; j++) {
                 double realA = QT.data[(j*N + i)*2];

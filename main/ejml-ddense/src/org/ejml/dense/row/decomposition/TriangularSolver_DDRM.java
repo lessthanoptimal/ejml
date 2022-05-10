@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ package org.ejml.dense.row.decomposition;
  * where x and b are vectors, and T is an n by n matrix. T can either be a lower or upper triangular matrix.<br>
  * </p>
  * <p>
- * These functions are designed for use inside of other algorithms.  To use them directly
+ * These functions are designed for use inside of other algorithms. To use them directly
  * is dangerous since no sanity checks are performed.
  * </p>
  *
@@ -195,7 +195,7 @@ public class TriangularSolver_DDRM {
     /**
      * <p>
      * This is a forward substitution solver for non-singular upper triangular matrices which are
-     * a sub-matrix inside a larger.  The columns of 'b' are solved for individually
+     * a sub-matrix inside a larger. The columns of 'b' are solved for individually
      * <br>
      * b = U<sup>-1</sup>b<br>
      * <br>
@@ -206,10 +206,10 @@ public class TriangularSolver_DDRM {
      * @param startU Index of the first element in U
      * @param strideU stride between rows
      * @param widthU How wide the square matrix is
-     * @param b Matrix containing the solution to the system.  Overwritten with the solution.
+     * @param b Matrix containing the solution to the system. Overwritten with the solution.
      * @param startB Index of the first element in B
      * @param strideB stride between rows
-     * @param widthB How wide the matrix is.  Length is the same as U's width
+     * @param widthB How wide the matrix is. Length is the same as U's width
      */
     public static void solveU( double[] U, int startU, int strideU, int widthU,
                                double[] b, int startB, int strideB, int widthB ) {

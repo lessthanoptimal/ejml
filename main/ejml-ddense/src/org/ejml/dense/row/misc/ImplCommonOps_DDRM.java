@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import static org.ejml.UtilEjml.checkSameShape;
 import static org.ejml.UtilEjml.reshapeOrDeclare;
 
 /**
- * Implementations of common ops routines for {@link DMatrixRMaj}.  In general
+ * Implementations of common ops routines for {@link DMatrixRMaj}. In general
  * there is no need to directly invoke these functions.
  *
  * @author Peter Abeles

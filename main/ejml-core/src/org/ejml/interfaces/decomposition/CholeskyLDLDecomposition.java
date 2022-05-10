@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * <br>
  * L*D*L<sup>T</sup>=A<br>
  * <br>
- * where L is a lower triangular matrix and D is a diagonal matrix.  The main advantage of LDL versus LL or RR Cholesky is that
+ * where L is a lower triangular matrix and D is a diagonal matrix. The main advantage of LDL versus LL or RR Cholesky is that
  * it avoid a square root operation.
  * </p>
  *

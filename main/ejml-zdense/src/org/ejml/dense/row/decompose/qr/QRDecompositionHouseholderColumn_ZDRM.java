@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * <p>
- * Householder QR decomposition is rich in operations along the columns of the matrix.  This can be
+ * Householder QR decomposition is rich in operations along the columns of the matrix. This can be
  * taken advantage of by solving for the Q matrix in a column major format to reduce the number
  * of CPU cache misses and the number of copies that are performed.
  * </p>
@@ -38,9 +38,9 @@ import org.jetbrains.annotations.Nullable;
 public class QRDecompositionHouseholderColumn_ZDRM implements QRDecomposition<ZMatrixRMaj> {
 
     /**
-     * Where the Q and R matrices are stored.  R is stored in the
-     * upper triangular portion and Q on the lower bit.  Lower columns
-     * are where u is stored.  Q_k = (I - gamma_k*u_k*u_k^T).
+     * Where the Q and R matrices are stored. R is stored in the
+     * upper triangular portion and Q on the lower bit. Lower columns
+     * are where u is stored. Q_k = (I - gamma_k*u_k*u_k^T).
      */
     protected double[][] dataQR; // [ column][ row ]
 
@@ -91,7 +91,7 @@ public class QRDecompositionHouseholderColumn_ZDRM implements QRDecomposition<ZM
     }
 
     /**
-     * Computes the Q matrix from the imformation stored in the QR matrix.  This
+     * Computes the Q matrix from the imformation stored in the QR matrix. This
      * operation requires about 4(m<sup>2</sup>n-mn<sup>2</sup>+n<sup>3</sup>/3) flops.
      *
      * @param Q The orthogonal Q matrix.
@@ -123,7 +123,7 @@ public class QRDecompositionHouseholderColumn_ZDRM implements QRDecomposition<ZM
     }
 
     /**
-     * Returns an upper triangular matrix which is the R in the QR decomposition.  If compact then the input
+     * Returns an upper triangular matrix which is the R in the QR decomposition. If compact then the input
      * expected to be size = [min(rows,cols) , numCols] otherwise size = [numRows,numCols].
      *
      * @param R Storage for upper triangular matrix.
@@ -149,13 +149,13 @@ public class QRDecompositionHouseholderColumn_ZDRM implements QRDecomposition<ZM
 
     /**
      * <p>
-     * To decompose the matrix 'A' it must have full rank.  'A' is a 'm' by 'n' matrix.
+     * To decompose the matrix 'A' it must have full rank. 'A' is a 'm' by 'n' matrix.
      * It requires about 2n*m<sup>2</sup>-2m<sup>2</sup>/3 flops.
      * </p>
      *
      * <p>
      * The matrix provided here can be of different
-     * dimension than the one specified in the constructor.  It just has to be smaller than or equal
+     * dimension than the one specified in the constructor. It just has to be smaller than or equal
      * to it.
      * </p>
      */
@@ -200,8 +200,8 @@ public class QRDecompositionHouseholderColumn_ZDRM implements QRDecomposition<ZM
 
     /**
      * <p>
-     * Computes the householder vector "u" for the first column of submatrix j.  Note this is
-     * a specialized householder for this problem.  There is some protection against
+     * Computes the householder vector "u" for the first column of submatrix j. Note this is
+     * a specialized householder for this problem. There is some protection against
      * overfloaw and underflow.
      * </p>
      * <p>

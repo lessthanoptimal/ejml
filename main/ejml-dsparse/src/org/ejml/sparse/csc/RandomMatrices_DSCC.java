@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -137,11 +137,11 @@ public class RandomMatrices_DSCC {
 
     /**
      * Randomly generates lower triangular (or hessenberg) matrix with the specified number of of non-zero
-     * elements.  The diagonal elements must be non-zero.
+     * elements. The diagonal elements must be non-zero.
      *
      * @param dimen Number of rows and columns
      * @param hessenberg Hessenberg degree. 0 is triangular and 1 or more is Hessenberg.
-     * @param nz_total Total number of non-zero elements in the matrix.  Adjust to meet matrix size constraints.
+     * @param nz_total Total number of non-zero elements in the matrix. Adjust to meet matrix size constraints.
      * @param min Minimum element value, inclusive
      * @param max Maximum element value, inclusive
      * @param rand Random number generator
@@ -265,7 +265,7 @@ public class RandomMatrices_DSCC {
         if (probabilityZero < 0 || probabilityZero > 1.0)
             throw new IllegalArgumentException("Invalid value for probabilityZero");
 
-        // This is not formally proven to work.  It just seems to work.
+        // This is not formally proven to work. It just seems to work.
         DMatrixRMaj a = new DMatrixRMaj(width, 1);
         DMatrixRMaj b = new DMatrixRMaj(width, width);
 

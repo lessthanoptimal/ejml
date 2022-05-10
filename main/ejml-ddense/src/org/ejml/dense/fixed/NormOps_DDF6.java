@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,14 @@
 
 package org.ejml.dense.fixed;
 
-import javax.annotation.Generated;
 import org.ejml.data.DMatrix6;
 import org.ejml.data.DMatrix6x6;
 
+import javax.annotation.Generated;
+
 /**
  * <p>Matrix norm related operations for fixed sized matrices of size 6.</p>
- * <p>DO NOT MODIFY.  Automatically generated code created by GenerateNormOps_DDF</p>
+ * <p>DO NOT MODIFY. Automatically generated code created by GenerateNormOps_DDF</p>
  *
  * @author Peter Abeles
  */

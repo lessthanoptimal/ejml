@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,9 +28,9 @@ import java.util.Arrays;
 
 /**
  * <p>
- * DMatrixRMaj is a row matrix with real elements that are 64-bit floats.  A matrix
- * is the fundamental data structure in linear algebra.  Unlike a sparse matrix, there is no
- * compression in a row matrix and every element is stored in memory.  This allows for fast
+ * DMatrixRMaj is a row matrix with real elements that are 64-bit floats. A matrix
+ * is the fundamental data structure in linear algebra. Unlike a sparse matrix, there is no
+ * compression in a row matrix and every element is stored in memory. This allows for fast
  * reads and writes to the matrix.
  * </p>
  *
@@ -55,7 +55,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     /**
      * <p>
      * Creates a new matrix which has the same value as the matrix encoded in the
-     * provided array.  The input matrix's format can either be row-major or
+     * provided array. The input matrix's format can either be row-major or
      * column-major.
      * </p>
      *
@@ -124,10 +124,10 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Creates a new matrix which is equivalent to the provided matrix.  Note that
+     * Creates a new matrix which is equivalent to the provided matrix. Note that
      * the length of the data will be determined by the shape of the matrix.
      *
-     * @param orig The matrix which is to be copied.  This is not modified or saved.
+     * @param orig The matrix which is to be copied. This is not modified or saved.
      */
     public DMatrixRMaj(DMatrixRMaj orig ) {
         this(orig.numRows,orig.numCols);
@@ -135,7 +135,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * This declares an array that can store a matrix up to the specified length.  This is use full
+     * This declares an array that can store a matrix up to the specified length. This is use full
      * when a matrix's size will be growing and it is desirable to avoid reallocating memory.
      *
      * @param length The size of the matrice's data array.
@@ -145,7 +145,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Default constructor in which nothing is configured.  THIS IS ONLY PUBLICLY ACCESSIBLE SO THAT THIS
+     * Default constructor in which nothing is configured. THIS IS ONLY PUBLICLY ACCESSIBLE SO THAT THIS
      * CLASS CAN BE A JAVA BEAN. DON'T USE IT UNLESS YOU REALLY KNOW WHAT YOU'RE DOING!
      */
     public DMatrixRMaj(){}
@@ -153,7 +153,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     /**
      * Creates a new DMatrixRMaj which contains the same information as the provided Matrix64F.
      *
-     * @param mat Matrix whose values will be copied.  Not modified.
+     * @param mat Matrix whose values will be copied. Not modified.
      */
     public DMatrixRMaj(DMatrix mat) {
         this(mat.getNumRows(),mat.getNumCols());
@@ -165,8 +165,8 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Creates a new DMatrixRMaj around the provided data.  The data must encode
-     * a row-major matrix.  Any modification to the returned matrix will modify the
+     * Creates a new DMatrixRMaj around the provided data. The data must encode
+     * a row-major matrix. Any modification to the returned matrix will modify the
      * provided data.
      *
      * @param numRows Number of rows in the matrix.
@@ -203,7 +203,7 @@ public class DMatrixRMaj extends DMatrix1Row {
 
     /**
      * <p>
-     * Assigns the element in the Matrix to the specified value.  Performs a bounds check to make sure
+     * Assigns the element in the Matrix to the specified value. Performs a bounds check to make sure
      * the requested element is part of the matrix. <br>
      * <br>
      * a<sub>ij</sub> = value<br>
@@ -248,7 +248,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Returns the value of the specified matrix element.  Performs a bounds check to make sure
+     * Returns the value of the specified matrix element. Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *
      * @param row The row of the element.

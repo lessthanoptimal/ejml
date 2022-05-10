@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -51,7 +51,7 @@ public class CompareFixed_DDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * Compares equivalent functions in FixedOps to CommonOps.  Inputs are randomly generated
+     * Compares equivalent functions in FixedOps to CommonOps. Inputs are randomly generated
      */
     public void compareToCommonOps( int expectedPassed , int expectedNotMatched ) {
         Method[] methods = classFixed.getMethods();

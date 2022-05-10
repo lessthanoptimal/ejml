@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -78,8 +78,8 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
      * *Note* that 'b' and 'x' can be the same matrix instance.
      * </p>
      *
-     * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is writen to.  Modified.
+     * @param B A matrix that is n by m. Not modified.
+     * @param X An n by m matrix where the solution is writen to. Modified.
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
@@ -116,7 +116,7 @@ public class LinearSolverCholLDL_DDRM extends LinearSolverAbstract_DDRM {
     /**
      * Sets the matrix 'inv' equal to the inverse of the matrix that was decomposed.
      *
-     * @param inv Where the value of the inverse will be stored.  Modified.
+     * @param inv Where the value of the inverse will be stored. Modified.
      */
     @Override
     public void invert( DMatrixRMaj inv ) {

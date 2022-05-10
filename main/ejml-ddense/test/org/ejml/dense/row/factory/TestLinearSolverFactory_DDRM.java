@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -103,7 +103,7 @@ public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
     }
 
     /**
-     * Given A and x it computes the value of y.  This is then compared against what the solver computes
+     * Given A and x it computes the value of y. This is then compared against what the solver computes
      * x should be.
      */
     private void standardTest(DMatrixRMaj a, DMatrixRMaj x, DMatrixRMaj y,

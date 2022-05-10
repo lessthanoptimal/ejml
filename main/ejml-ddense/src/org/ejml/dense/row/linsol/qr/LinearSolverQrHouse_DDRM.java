@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 
 /**
  * <p>
- * QR decomposition can be used to solve for systems.  However, this is not as computationally efficient
+ * QR decomposition can be used to solve for systems. However, this is not as computationally efficient
  * as LU decomposition and costs about 3n<sup>2</sup> flops.
  * </p>
  * <p>
@@ -95,8 +95,8 @@ public class LinearSolverQrHouse_DDRM extends LinearSolverAbstract_DDRM {
     /**
      * Solves for X using the QR decomposition.
      *
-     * @param B A matrix that is n by m.  Not modified.
-     * @param X An n by m matrix where the solution is writen to.  Modified.
+     * @param B A matrix that is n by m. Not modified.
+     * @param X An n by m matrix where the solution is writen to. Modified.
      */
     @Override
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {

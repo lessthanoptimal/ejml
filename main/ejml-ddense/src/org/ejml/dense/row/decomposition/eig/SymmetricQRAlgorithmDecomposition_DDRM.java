@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -97,7 +97,7 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
     }
 
     /**
-     * Used to limit the number of internal QR iterations that the QR algorithm performs.  20
+     * Used to limit the number of internal QR iterations that the QR algorithm performs. 20
      * should be enough for most applications.
      *
      * @param max The maximum number of QR iterations it will perform.
@@ -122,11 +122,11 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
     }
 
     /**
-     * Decomposes the matrix using the QR algorithm.  Care was taken to minimize unnecessary memory copying
+     * Decomposes the matrix using the QR algorithm. Care was taken to minimize unnecessary memory copying
      * and cache skipping.
      *
-     * @param orig The matrix which is being decomposed.  Not modified.
-     * @return true if it decomposed the matrix or false if an error was detected.  This will not catch all errors.
+     * @param orig The matrix which is being decomposed. Not modified.
+     * @return true if it decomposed the matrix or false if an error was detected. This will not catch all errors.
      */
     @Override
     public boolean decompose( DMatrixRMaj orig ) {
@@ -181,7 +181,7 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         if (!vector.process(-1, null, null))
             return false;
 
-        // the V matrix contains the eigenvectors.  Convert those into column vectors
+        // the V matrix contains the eigenvectors. Convert those into column vectors
         eigenvectors = CommonOps_DDRM.rowsToVector(V, eigenvectors);
 
         // save a copy of them since this data structure will be recycled next
@@ -212,7 +212,7 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
 
         // the ordering of the eigenvalues might have changed
         values = helper.copyEigenvalues(values);
-        // the V matrix contains the eigenvectors.  Convert those into column vectors
+        // the V matrix contains the eigenvectors. Convert those into column vectors
         eigenvectors = CommonOps_DDRM.rowsToVector(V, eigenvectors);
 
         return true;

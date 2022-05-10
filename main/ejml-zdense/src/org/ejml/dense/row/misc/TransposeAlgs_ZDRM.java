@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,10 +27,10 @@ import org.ejml.data.ZMatrixRMaj;
  */
 public class TransposeAlgs_ZDRM {
     /**
-     * In-place transpose for a square matrix.  On most architectures it is faster than the standard transpose
+     * In-place transpose for a square matrix. On most architectures it is faster than the standard transpose
      * algorithm, but on most modern computers it's slower than block transpose.
      *
-     * @param mat The matrix that is transposed in-place.  Modified.
+     * @param mat The matrix that is transposed in-place. Modified.
      */
     public static void square( ZMatrixRMaj mat ) {
         int index = 2;
@@ -75,10 +75,10 @@ public class TransposeAlgs_ZDRM {
     }
 
     /**
-     * A straight forward transpose.  Good for small non-square matrices.
+     * A straight forward transpose. Good for small non-square matrices.
      *
-     * @param A Original matrix.  Not modified.
-     * @param A_tran Transposed matrix.  Modified.
+     * @param A Original matrix. Not modified.
+     * @param A_tran Transposed matrix. Modified.
      */
     public static void standard( ZMatrixRMaj A, ZMatrixRMaj A_tran ) {
         int index = 0;
@@ -97,10 +97,10 @@ public class TransposeAlgs_ZDRM {
     }
 
     /**
-     * A straight forward conjugate transpose.  Good for small non-square matrices.
+     * A straight forward conjugate transpose. Good for small non-square matrices.
      *
-     * @param A Original matrix.  Not modified.
-     * @param A_tran Transposed matrix.  Modified.
+     * @param A Original matrix. Not modified.
+     * @param A_tran Transposed matrix. Modified.
      */
     public static void standardConjugate( ZMatrixRMaj A, ZMatrixRMaj A_tran ) {
         int index = 0;

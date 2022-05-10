@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -73,7 +73,7 @@ public class SpecializedOps_DDRM {
      * should be used for performance reasons since there is no need to calculate Q explicitly.
      * </p>
      *
-     * @param u A vector.  Not modified.
+     * @param u A vector. Not modified.
      * @param gamma To produce a reflector gamma needs to be equal to 2/||u||.
      * @return An orthogonal reflector.
      */
@@ -115,7 +115,7 @@ public class SpecializedOps_DDRM {
      * Copies just the upper or lower triangular portion of a matrix.
      *
      * @param src Matrix being copied. Not modified.
-     * @param dst Where just a triangle from src is copied.  If null a new one will be created. Modified.
+     * @param dst Where just a triangle from src is copied. If null a new one will be created. Modified.
      * @param upper If the upper or lower triangle should be copied.
      * @return The copied matrix.
      */
@@ -271,8 +271,8 @@ public class SpecializedOps_DDRM {
      * B = A + &alpha;I
      * <p>
      *
-     * @param A A square matrix.  Not modified.
-     * @param B A square matrix that the results are saved to.  Modified.
+     * @param A A square matrix. Not modified.
+     * @param B A square matrix that the results are saved to. Modified.
      * @param alpha Scaling factor for the identity matrix.
      */
     public static void addIdentity( DMatrix1Row A, DMatrix1Row B, double alpha ) {
@@ -297,12 +297,12 @@ public class SpecializedOps_DDRM {
 
     /**
      * <p>
-     * Extracts a row or column vector from matrix A.  The first element in the matrix is at element (rowA,colA).
-     * The next 'length' elements are extracted along a row or column.  The results are put into vector 'v'
+     * Extracts a row or column vector from matrix A. The first element in the matrix is at element (rowA,colA).
+     * The next 'length' elements are extracted along a row or column. The results are put into vector 'v'
      * start at its element v0.
      * </p>
      *
-     * @param A Matrix that the vector is being extracted from.  Not modified.
+     * @param A Matrix that the vector is being extracted from. Not modified.
      * @param rowA Row of the first element that is extracted.
      * @param colA Column of the first element that is extracted.
      * @param length Length of the extracted vector.
@@ -363,7 +363,7 @@ public class SpecializedOps_DDRM {
      * For example, if element 0 in 'pivots' is 2 then the first row in A' will be the 3rd row in A.
      * </p>
      *
-     * @param ret If null then a new matrix is declared otherwise the results are written to it.  Is modified.
+     * @param ret If null then a new matrix is declared otherwise the results are written to it. Is modified.
      * @param pivots Specifies the new order of rows in a matrix.
      * @param numPivots How many elements in pivots are being used.
      * @param transposed If the transpose of the matrix is returned.
@@ -393,7 +393,7 @@ public class SpecializedOps_DDRM {
     }
 
     /**
-     * Computes the product of the diagonal elements.  For a diagonal or triangular
+     * Computes the product of the diagonal elements. For a diagonal or triangular
      * matrix this is the determinant.
      *
      * @param T A matrix.
@@ -435,7 +435,7 @@ public class SpecializedOps_DDRM {
 
     /**
      * Computes the quality of a triangular matrix, where the quality of a matrix
-     * is defined in {@link LinearSolverDense#quality()}.  In
+     * is defined in {@link LinearSolverDense#quality()}. In
      * this situation the quality os the absolute value of the product of
      * each diagonal element divided by the magnitude of the largest diagonal element.
      * If all diagonal elements are zero then zero is returned.
@@ -461,7 +461,7 @@ public class SpecializedOps_DDRM {
     }
 
     /**
-     * Sums up the square of each element in the matrix.  This is equivalent to the
+     * Sums up the square of each element in the matrix. This is equivalent to the
      * Frobenius norm squared.
      *
      * @param m Matrix.

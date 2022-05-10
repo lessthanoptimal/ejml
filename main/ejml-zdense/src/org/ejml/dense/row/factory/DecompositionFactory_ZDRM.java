@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,9 +29,9 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 
 /**
  * <p>
- * Contains operations related to creating and evaluating the quality of common matrix decompositions.  Except
+ * Contains operations related to creating and evaluating the quality of common matrix decompositions. Except
  * in specialized situations, matrix decompositions should be instantiated from this factory instead of being
- * directly constructed.  Low level implementations are more prone to changes and new algorithms will be
+ * directly constructed. Low level implementations are more prone to changes and new algorithms will be
  * automatically placed here.
  * </p>
  *
@@ -70,7 +70,7 @@ public class DecompositionFactory_ZDRM {
      * </p>
      *
      * @param size Number of rows and columns it should be optimized for
-     * @param lower if true then it will be a lower cholesky.  false for upper.  Try lower.
+     * @param lower if true then it will be a lower cholesky. false for upper. Try lower.
      * @return QRDecomposition
      */
     public static CholeskyDecomposition_F64<ZMatrixRMaj> chol( int size, boolean lower ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import org.ejml.dense.row.decomposition.qr.QrHelperFunctions_MT_DDRM;
 public class TridiagonalDecompositionHouseholder_MT_DDRM
         extends TridiagonalDecompositionHouseholder_DDRM {
     /**
-     * Performs the householder operations on left and right and side of the matrix.  Q<sup>T</sup>AQ
+     * Performs the householder operations on left and right and side of the matrix. Q<sup>T</sup>AQ
      *
      * @param row Specifies the submatrix.
      * @param gamma The gamma for the householder operation
@@ -43,7 +43,7 @@ public class TridiagonalDecompositionHouseholder_MT_DDRM
         EjmlConcurrency.loopFor(row, N, i -> {
             double total = 0;
             // the lower triangle is not written to so it needs to traverse upwards
-            // to get the information.  Reduces the number of matrix writes need
+            // to get the information. Reduces the number of matrix writes need
             // improving large matrix performance
             for (int j = row; j < i; j++) {
                 total += QT.data[j*N + i]*QT.data[startU + j];

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * <p>
  * Similar to {@link SvdImplicitQrDecompose_DDRM} but it employs the
- * ultimate shift strategy.  Ultimate shift involves first computing singular values then uses those
- * to quickly compute the U and W matrices.  For EVD this strategy seems to work very well, but for
+ * ultimate shift strategy. Ultimate shift involves first computing singular values then uses those
+ * to quickly compute the U and W matrices. For EVD this strategy seems to work very well, but for
  * this problem it needs to have little benefit and makes the code more complex.
  * </p>
  *
@@ -275,7 +275,7 @@ public class SvdImplicitQrDecompose_Ultimate
     }
 
     /**
-     * With the QR algorithm it is possible for the found singular values to be native.  This
+     * With the QR algorithm it is possible for the found singular values to be native. This
      * makes them all positive by multiplying it by a diagonal matrix that has
      */
     private void makeSingularPositive() {

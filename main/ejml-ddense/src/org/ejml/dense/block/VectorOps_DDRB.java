@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ import org.ejml.data.DSubmatrixD1;
  * </p>
  *
  * <p>
- * All submatrices must be block aligned.  All offsets and end indexes are relative to the beginning of each
+ * All submatrices must be block aligned. All offsets and end indexes are relative to the beginning of each
  * submatrix.
  * </p>
  *
@@ -49,7 +49,7 @@ public class VectorOps_DDRB {
      * @param A submatrix. Not modified.
      * @param rowA which row in A the vector is contained in.
      * @param alpha scale factor.
-     * @param B submatrix that the results are written to.  Modified.
+     * @param B submatrix that the results are written to. Modified.
      * @param offset Index at which the vectors start at.
      * @param end Index at which the vectors end at.
      */
@@ -107,7 +107,7 @@ public class VectorOps_DDRB {
      * @param A submatrix. Not modified.
      * @param rowA which row in A the vector is contained in.
      * @param alpha scale factor.
-     * @param B submatrix that the results are written to.  Modified.
+     * @param B submatrix that the results are written to. Modified.
      * @param offset Index at which the vectors start at.
      * @param end Index at which the vectors end at.
      */

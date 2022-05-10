@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Renders a matrix as an image.  Positive elements are shades of red, negative shades of blue, 0 is black.
+ * Renders a matrix as an image. Positive elements are shades of red, negative shades of blue, 0 is black.
  *
  * @author Peter Abeles
  */

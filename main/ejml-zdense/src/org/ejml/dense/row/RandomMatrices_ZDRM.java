@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -106,7 +106,7 @@ public class RandomMatrices_ZDRM {
      * @return The random symmetric  positive definite matrix.
      */
     public static ZMatrixRMaj hermitianPosDef( int width, Random rand ) {
-        // This is not formally proven to work.  It just seems to work.
+        // This is not formally proven to work. It just seems to work.
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(width, 1, rand);
         ZMatrixRMaj b = new ZMatrixRMaj(1, width);
         ZMatrixRMaj c = new ZMatrixRMaj(width, width);
@@ -141,7 +141,7 @@ public class RandomMatrices_ZDRM {
     /**
      * Assigns the provided square matrix to be a random Hermitian matrix with elements from min to max value.
      *
-     * @param A The matrix that is to be modified.  Must be square.  Modified.
+     * @param A The matrix that is to be modified. Must be square. Modified.
      * @param min Minimum value an element can have.
      * @param max Maximum value an element can have.
      * @param rand Random number generator.
@@ -167,7 +167,7 @@ public class RandomMatrices_ZDRM {
     }
 
 //    /**
-//     * Creates an upper triangular matrix whose values are selected from a uniform distribution.  If hessenberg
+//     * Creates an upper triangular matrix whose values are selected from a uniform distribution. If hessenberg
 //     * is greater than zero then a hessenberg matrix of the specified degree is created instead.
 //     *
 //     * @param dimen Number of rows and columns in the matrix..

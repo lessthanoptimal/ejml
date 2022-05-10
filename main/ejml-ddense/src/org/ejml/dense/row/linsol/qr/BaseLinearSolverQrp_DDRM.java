@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,8 +30,8 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
  * <p>
- * Base class for QR pivot based pseudo inverse classes.  It will return either the
- * basic of minimal 2-norm solution. See [1] for details.  The minimal 2-norm solution refers to the solution
+ * Base class for QR pivot based pseudo inverse classes. It will return either the
+ * basic of minimal 2-norm solution. See [1] for details. The minimal 2-norm solution refers to the solution
  * 'x' whose 2-norm is the smallest making it unique, not some other error function.
  * </p>
  *
@@ -44,7 +44,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  * </pre>
  *
  * <pre>
- * The solution 'x' is found by solving the system below.  The basic solution is found by setting z=0
+ * The solution 'x' is found by solving the system below. The basic solution is found by setting z=0
  *
  *     [ R_11^-1*(c - R12*z) ]
  * x = [          z          ]
@@ -165,7 +165,7 @@ public abstract class BaseLinearSolverQrp_DDRM extends LinearSolverAbstract_DDRM
         // compute the z which will minimize the 2-norm of X
         // because of the identity matrix tacked onto the end 'A' should never be singular
         if (!internalSolver.setA(W))
-            throw new RuntimeException("This should never happen.  Is input NaN?");
+            throw new RuntimeException("This should never happen. Is input NaN?");
         z.reshape(numCols - rank, 1);
         internalSolver.solve(X, z);
 

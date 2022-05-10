@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,14 +27,14 @@ import java.util.Random;
 /**
  * <p>
  * {@link SimpleMatrix} is a wrapper around {@link DMatrixRMaj} that provides an
- * easy to use object oriented interface for performing matrix operations.  It is designed to be
+ * easy to use object oriented interface for performing matrix operations. It is designed to be
  * more accessible to novice programmers and provide a way to rapidly code up solutions by simplifying
  * memory management and providing easy to use functions.
  * </p>
  *
  * <p>
- * Most functions in SimpleMatrix do not modify the original matrix.  Instead they
- * create a new SimpleMatrix instance which is modified and returned.  This greatly simplifies memory
+ * Most functions in SimpleMatrix do not modify the original matrix. Instead they
+ * create a new SimpleMatrix instance which is modified and returned. This greatly simplifies memory
  * management and writing of code in general. It also allows operations to be chained, as is shown
  * below:<br>
  * <br>
@@ -44,36 +44,36 @@ import java.util.Random;
  * <p>
  * Working with both {@link DMatrixRMaj} and SimpleMatrix in the same code base is easy.
  * To access the internal DMatrixRMaj in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
- * To turn a DMatrixRMaj into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}.  Not
+ * To turn a DMatrixRMaj into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}. Not
  * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
  * DMatrixRMaj.
  * </p>
  *
  * <p>
- * EXTENDING: SimpleMatrix contains a list of narrowly focused functions for linear algebra.  To harness
+ * EXTENDING: SimpleMatrix contains a list of narrowly focused functions for linear algebra. To harness
  * the functionality for another application and to the number of functions it supports it is recommended
- * that one extends {@link SimpleBase} instead.  This way the returned matrix type's of SimpleMatrix functions
- * will be of the appropriate types.  See StatisticsMatrix inside of the examples directory.
+ * that one extends {@link SimpleBase} instead. This way the returned matrix type's of SimpleMatrix functions
+ * will be of the appropriate types. See StatisticsMatrix inside of the examples directory.
  * </p>
  *
  * <p>
  * PERFORMANCE: The disadvantage of using this class is that it is more resource intensive, since
- * it creates a new matrix each time an operation is performed.  This makes the JavaVM work harder and
- * Java automatically initializes the matrix to be all zeros.  Typically operations on small matrices
- * or operations that have a runtime linear with the number of elements are the most affected.  More
- * computationally intensive operations have only a slight unnoticeable performance loss.  MOST PEOPLE
+ * it creates a new matrix each time an operation is performed. This makes the JavaVM work harder and
+ * Java automatically initializes the matrix to be all zeros. Typically operations on small matrices
+ * or operations that have a runtime linear with the number of elements are the most affected. More
+ * computationally intensive operations have only a slight unnoticeable performance loss. MOST PEOPLE
  * SHOULD NOT WORRY ABOUT THE SLIGHT LOSS IN PERFORMANCE.
  * </p>
  *
  * <p>
- * It is hard to judge how significant the performance hit will be in general.  Often the performance
+ * It is hard to judge how significant the performance hit will be in general. Often the performance
  * hit is insignificant since other parts of the application are more processor intensive or the bottle
- * neck is a more computationally complex operation.  The best approach is benchmark and then optimize the code.
+ * neck is a more computationally complex operation. The best approach is benchmark and then optimize the code.
  * </p>
  *
  * <p>
  * If SimpleMatrix is extended then the protected function {link #createMatrix} should be extended and return
- * the child class.  The results of SimpleMatrix operations will then be of the correct matrix type.
+ * the child class. The results of SimpleMatrix operations will then be of the correct matrix type.
  * </p>
  *
  * <p>
@@ -93,7 +93,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * <p>
      * Creates a new matrix which has the same value as the matrix encoded in the
-     * provided array.  The input matrix's format can either be row-major or
+     * provided array. The input matrix's format can either be row-major or
      * column-major.
      * </p>
      *
@@ -210,7 +210,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * Creates a new SimpleMatrix which is a copy of the Matrix.
      *
-     * @param orig The original matrix whose value is copied.  Not modified.
+     * @param orig The original matrix whose value is copied. Not modified.
      */
     public SimpleMatrix( Matrix orig ) {
         Matrix mat;
@@ -229,12 +229,12 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Constructor for internal library use only.  Nothing is configured and is intended for serialization.
+     * Constructor for internal library use only. Nothing is configured and is intended for serialization.
      */
     protected SimpleMatrix() {}
 
     /**
-     * Creates a new SimpleMatrix with the specified DMatrixRMaj used as its internal matrix.  This means
+     * Creates a new SimpleMatrix with the specified DMatrixRMaj used as its internal matrix. This means
      * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in DMatrixRMaj.
      *
      * @param internalMat The internal DMatrixRMaj of the returned SimpleMatrix. Will be modified.
@@ -287,7 +287,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 
     /**
      * <p>
-     * Creates a matrix where all but the diagonal elements are zero.  The values
+     * Creates a matrix where all but the diagonal elements are zero. The values
      * of the diagonal elements are specified by the parameter 'vals'.
      * </p>
      *
@@ -325,7 +325,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param numCols The number of columns in the new matrix
      * @param minValue Lower bound
      * @param maxValue Upper bound
-     * @param rand The random number generator that's used to fill the matrix.  @return The new random matrix.
+     * @param rand The random number generator that's used to fill the matrix. @return The new random matrix.
      * @see RandomMatrices_DDRM#fillUniform(DMatrixRMaj, java.util.Random)
      */
     public static SimpleMatrix random_DDRM( int numRows, int numCols, double minValue, double maxValue, Random rand ) {

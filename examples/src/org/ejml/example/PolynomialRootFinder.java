@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,14 +26,14 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 /**
  * <p>
  * Eigenvalue decomposition can be used to find the roots in a polynomial by constructing the
- * so called companion matrix.  While faster techniques do exist for root finding, this is
+ * so called companion matrix. While faster techniques do exist for root finding, this is
  * one of the most stable and probably the easiest to implement.
  * </p>
  *
  * <p>
  * Because the companion matrix is not symmetric a generalized eigenvalue decomposition is needed.
- * The roots of the polynomial may also be complex.  Complex eigenvalues is the only instance in
- * which EJML supports complex arithmetic.  Depending on the application one might need to check
+ * The roots of the polynomial may also be complex. Complex eigenvalues is the only instance in
+ * which EJML supports complex arithmetic. Depending on the application one might need to check
  * to see if the eigenvalues are real or complex.
  * </p>
  *
@@ -46,8 +46,8 @@ import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 public class PolynomialRootFinder {
     /**
      * <p>
-     * Given a set of polynomial coefficients, compute the roots of the polynomial.  Depending on
-     * the polynomial being considered the roots may contain complex number.  When complex numbers are
+     * Given a set of polynomial coefficients, compute the roots of the polynomial. Depending on
+     * the polynomial being considered the roots may contain complex number. When complex numbers are
      * present they will come in pairs of complex conjugates.
      * </p>
      *

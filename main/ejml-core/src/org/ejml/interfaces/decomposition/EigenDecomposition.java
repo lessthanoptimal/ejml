@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,9 +32,9 @@ import org.ejml.data.Matrix;
  * </p>
  *
  * <p>
- * In general, both eigenvalues and eigenvectors can be complex numbers.  For symmetric matrices the
- * eigenvalues and eigenvectors are always real numbers.  EJML does not support complex matrices but
- * it does have minimal support for complex numbers.  As a result complex eigenvalues are found, but only
+ * In general, both eigenvalues and eigenvectors can be complex numbers. For symmetric matrices the
+ * eigenvalues and eigenvectors are always real numbers. EJML does not support complex matrices but
+ * it does have minimal support for complex numbers. As a result complex eigenvalues are found, but only
  * the real eigenvectors are computed.
  * </p>
  *
@@ -49,7 +49,7 @@ public interface EigenDecomposition<T extends Matrix>
         extends DecompositionInterface<T> {
 
     /**
-     * Returns the number of eigenvalues/eigenvectors.  This is the matrix's dimension.
+     * Returns the number of eigenvalues/eigenvectors. This is the matrix's dimension.
      *
      * @return number of eigenvalues/eigenvectors.
      */
@@ -58,7 +58,7 @@ public interface EigenDecomposition<T extends Matrix>
 
     /**
      * <p>
-     * Used to retrieve real valued eigenvectors.  If an eigenvector is associated with a complex eigenvalue
+     * Used to retrieve real valued eigenvectors. If an eigenvector is associated with a complex eigenvalue
      * then null is returned instead.
      * </p>
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,7 +29,7 @@ import javax.annotation.Generated;
  * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>
  * 
  *
- * <p>DO NOT MODIFY.  Automatically generated code created by GeneratorMatrixMatrixMult_ZDRM</p>
+ * <p>DO NOT MODIFY. Automatically generated code created by GeneratorMatrixMatrixMult_ZDRM</p>
  *
  * @author Peter Abeles
  */

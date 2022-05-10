@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ public interface MatrixSparse extends ReshapeMatrix {
 
     /**
      * Reshapes the matrix so that it can store a matrix with the specified dimensions and the number of
-     * non-zero elements.  The reshaped matrix will be empty.
+     * non-zero elements. The reshaped matrix will be empty.
      *
      * @param numRows number of rows
      * @param numCols number of columns
@@ -40,7 +40,7 @@ public interface MatrixSparse extends ReshapeMatrix {
 
     /**
      * Changes the number of rows and columns in the matrix. The graph structure is flushed and the matrix will
-     * be empty/all zeros.  Similar to {@link #reshape(int, int, int)}, but the storage for non-zero elements is
+     * be empty/all zeros. Similar to {@link #reshape(int, int, int)}, but the storage for non-zero elements is
      * not changed
      *
      * @param numRows number of rows
@@ -50,7 +50,7 @@ public interface MatrixSparse extends ReshapeMatrix {
     void reshape( int numRows , int numCols );
 
     /**
-     * Reduces the size of internal data structures to their minimal size.  No information is lost but the arrays will
+     * Reduces the size of internal data structures to their minimal size. No information is lost but the arrays will
      * change
      */
     void shrinkArrays();

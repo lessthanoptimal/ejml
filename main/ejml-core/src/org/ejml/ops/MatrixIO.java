@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -504,7 +504,7 @@ public class MatrixIO {
 
     /**
      * Reads a matrix in which has been encoded using a Column Space Value (CSV)
-     * file format.  For a description of the format see {@link MatrixIO#loadCSV(String, boolean)}.
+     * file format. For a description of the format see {@link MatrixIO#loadCSV(String, boolean)}.
      *
      * @param fileName The file being loaded.
      * @param numRows number of rows in the matrix.

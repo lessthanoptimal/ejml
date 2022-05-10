@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  * </p>
  *
  * <p>
- * This class implements the Moore-Penrose pseudo-inverse using SVD and should never fail.  Alternative implementations
+ * This class implements the Moore-Penrose pseudo-inverse using SVD and should never fail. Alternative implementations
  * can use Cholesky decomposition, but those will fail if the A<sup>T</sup>A matrix is singular.
  * However the Cholesky implementation is much faster.
  * </p>
@@ -58,8 +58,8 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
     /**
      * Creates a new solver targeted at the specified matrix size.
      *
-     * @param maxRows The expected largest matrix it might have to process.  Can be larger.
-     * @param maxCols The expected largest matrix it might have to process.  Can be larger.
+     * @param maxRows The expected largest matrix it might have to process. Can be larger.
+     * @param maxCols The expected largest matrix it might have to process. Can be larger.
      */
     public SolvePseudoInverseSvd_DDRM( int maxRows, int maxCols ) {
 
@@ -158,7 +158,7 @@ public class SolvePseudoInverseSvd_DDRM implements LinearSolverDense<DMatrixRMaj
     }
 
     /**
-     * Specify the relative threshold used to select singular values.  By default it's UtilEjml.EPS.
+     * Specify the relative threshold used to select singular values. By default it's UtilEjml.EPS.
      *
      * @param threshold The singular value threshold
      */

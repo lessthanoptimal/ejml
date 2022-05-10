@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -174,7 +174,7 @@ public class TestEquation extends EjmlStandardJUnit {
 
 
     /**
-     * Lazily declare a variable.  Which means it is not explicitly aliased
+     * Lazily declare a variable. Which means it is not explicitly aliased
      */
     @Test
     public void assign_lazy() {
@@ -958,7 +958,7 @@ public class TestEquation extends EjmlStandardJUnit {
     }
 
     /**
-     * See if the minus symbol is handled correctly.  It's meaning can very depending on the situation.
+     * See if the minus symbol is handled correctly. It's meaning can very depending on the situation.
      */
     @Test
     public void extractTokens_minus() {

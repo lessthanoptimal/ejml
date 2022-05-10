@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,7 +43,7 @@ public class QRExampleOperations {
     /**
      * Computes the QR decomposition of the provided matrix.
      *
-     * @param A Matrix which is to be decomposed.  Not modified.
+     * @param A Matrix which is to be decomposed. Not modified.
      */
     public void decompose( DMatrixRMaj A ) {
 

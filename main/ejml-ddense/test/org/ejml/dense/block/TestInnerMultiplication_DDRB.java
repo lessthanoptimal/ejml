@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -89,7 +89,7 @@ public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
     }
 
     /**
-     * The inner block multiplication is in a row major format.  Test it against
+     * The inner block multiplication is in a row major format. Test it against
      * operations for DMatrixRMaj
      */
     private void checkBlockMult( int operationType , boolean transA , boolean transB , Method method,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,7 +40,7 @@ import org.ejml.dense.row.NormOps_DDRM;
  * H =  (1/N) Sum{ i=1..N , jacobian(:,i) * jacobian(:,i)<sup>T</sup> }
  * </p>
  * <p>
- * Whenever possible the allocation of new memory is avoided.  This is accomplished by reshaping matrices.
+ * Whenever possible the allocation of new memory is avoided. This is accomplished by reshaping matrices.
  * A matrix that is reshaped won't grow unless the new shape requires more memory than it has available.
  * </p>
  *
@@ -53,7 +53,7 @@ public class LevenbergMarquardt {
     private double gtol = 1e-12;
 
     // how much the numerical jacobian calculation perturbs the parameters by.
-    // In better implementation there are better ways to compute this delta.  See Numerical Recipes.
+    // In better implementation there are better ways to compute this delta. See Numerical Recipes.
     private final static double DELTA = 1e-8;
 
     // Dampening. Larger values means it's more like gradient descent
@@ -185,7 +185,7 @@ public class LevenbergMarquardt {
     }
 
     /**
-     * Performs sanity checks on the input data and reshapes internal matrices.  By reshaping
+     * Performs sanity checks on the input data and reshapes internal matrices. By reshaping
      * a matrix it will only declare new memory when needed.
      */
     protected void configure( ResidualFunction function, int numParam ) {

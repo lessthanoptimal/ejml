@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Solver which uses an unrolled inverse to compute the inverse.  This can only invert matrices and not solve.
+ * Solver which uses an unrolled inverse to compute the inverse. This can only invert matrices and not solve.
  * This is faster than LU inverse but only supports small matrices..
  *
  * @author Peter Abeles

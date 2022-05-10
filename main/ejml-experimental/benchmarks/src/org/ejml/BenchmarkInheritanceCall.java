@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import java.util.Random;
 
 /**
  * Benchmark that tests to see if referring the parent of the class versus the actual class
- * has any performance difference.  The function used internally is matrix multiplication in "ikj" order.
+ * has any performance difference. The function used internally is matrix multiplication in "ikj" order.
  *
  * @author Peter Abeles
  */
