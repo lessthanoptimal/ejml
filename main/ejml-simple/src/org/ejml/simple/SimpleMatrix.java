@@ -97,15 +97,6 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * column-major.
      * </p>
      *
-     * <p>
-     * Note that 'data' is a variable argument type, so either 1D arrays or a set of numbers can be
-     * passed in:<br>
-     * SimpleMatrix a = new SimpleMatrix(2,2,true,new double[]{1,2,3,4});<br>
-     * SimpleMatrix b = new SimpleMatrix(2,2,true,1,2,3,4);<br>
-     * <br>
-     * Both are equivalent.
-     * </p>
-     *
      * @param numRows The number of rows.
      * @param numCols The number of columns.
      * @param rowMajor If the array is encoded in a row-major or a column-major format.
@@ -116,6 +107,19 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         setMatrix(new DMatrixRMaj(numRows, numCols, rowMajor, data));
     }
 
+    /**
+     * <p>
+     * Creates a new matrix which has the same value as the matrix encoded in the
+     * provided array. The input matrix's format can either be row-major or
+     * column-major.
+     * </p>
+     *
+     * @param numRows The number of rows.
+     * @param numCols The number of columns.
+     * @param rowMajor If the array is encoded in a row-major or a column-major format.
+     * @param data The formatted 1D array. Not modified.
+     * @see FMatrixRMaj#FMatrixRMaj(int, int, boolean, float...)
+     */
     public SimpleMatrix( int numRows, int numCols, boolean rowMajor, float[] data ) {
         setMatrix(new FMatrixRMaj(numRows, numCols, rowMajor, data));
     }
@@ -135,18 +139,35 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         setMatrix(new DMatrixRMaj(data));
     }
 
+    /**
+     * <p>
+     * Creates a matrix with the values and shape defined by the 2D array 'data'.
+     * It is assumed that 'data' has a row-major formatting:<br>
+     * <br>
+     * data[ row ][ column ]
+     * </p>
+     *
+     * @param data 2D array representation of the matrix. Not modified.
+     * @see FMatrixRMaj#FMatrixRMaj(float[][])
+     */
     public SimpleMatrix( float data[][] ) {
         setMatrix(new FMatrixRMaj(data));
     }
 
     /**
      * Creates a column vector with the values and shape defined by the 1D array 'data'.
+     *
      * @param data 1D array representation of the vector. Not modified.
      */
     public SimpleMatrix( double data[] ) {
         setMatrix(new DMatrixRMaj(data.length, 1, true, data));
     }
 
+    /**
+     * Creates a column vector with the values and shape defined by the 1D array 'data'.
+     *
+     * @param data 1D array representation of the vector. Not modified.
+     */
     public SimpleMatrix( float data[] ) {
         setMatrix(new FMatrixRMaj(data.length, 1, true, data));
     }
@@ -199,7 +220,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creats a new SimpleMatrix which is identical to the original.
+     * Creates a new SimpleMatrix which is identical to the original.
      *
      * @param orig The matrix which is to be copied. Not modified.
      */

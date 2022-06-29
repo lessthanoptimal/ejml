@@ -598,7 +598,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Assigns an element a value based on its index in the internal array..
+     * Assigns an element a value based on its index in the internal array.
      *
      * @param index The matrix element that is being assigned a value.
      * @param value The element's new value.
@@ -734,7 +734,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Creates and returns a matrix which is idential to this one.
+     * Creates and returns a matrix which is identical to this one.
      *
      * @return A new identical matrix.
      */
@@ -1035,7 +1035,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * Returns the maximum absolute value of all the elements in this matrix. This is
-     * equivalent the the infinite p-norm of the matrix.
+     * equivalent to the infinite p-norm of the matrix.
      *
      * @return Largest absolute value of any element.
      */
@@ -1339,7 +1339,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
+     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ this, m[0] , ... , m[n-1] ]
@@ -1374,7 +1374,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
+     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ this; m[0] ; ... ; m[n-1] ]
@@ -1411,8 +1411,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * Extracts the specified rows from the matrix.
      *
-     * @param begin First row. Inclusive.
-     * @param end Last row + 1.
+     * @param begin First row (inclusive).
+     * @param end Last row (exclusive).
      * @return Submatrix that contains the specified rows.
      */
     public T rows( int begin, int end ) {
@@ -1420,18 +1420,18 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Extracts the specified rows from the matrix.
+     * Extracts the specified columns from the matrix.
      *
-     * @param begin First row. Inclusive.
-     * @param end Last row + 1.
-     * @return Submatrix that contains the specified rows.
+     * @param begin First column (inclusive).
+     * @param end Last column (exclusive).
+     * @return Submatrix that contains the specified columns.
      */
     public T cols( int begin, int end ) {
         return extractMatrix(0, SimpleMatrix.END, begin, end);
     }
 
     /**
-     * Returns the type of matrix is is wrapping.
+     * Returns the type of matrix it is wrapping.
      */
     public MatrixType getType() {
         return mat.getType();

@@ -2679,7 +2679,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
+     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ m[0] , ... , m[n-1] ]
@@ -2721,7 +2721,7 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * <p>Concatinates all the matrices together along their columns. If the rows do not match the upper elements
+     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>
      *
      * A = [ m[0] ; ... ; m[n-1] ]
