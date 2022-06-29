@@ -329,7 +329,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Creates and returns a matrix which is idential to this one.
+     * Creates and returns a matrix which is identical to this one.
      *
      * @return A new identical matrix.
      */
