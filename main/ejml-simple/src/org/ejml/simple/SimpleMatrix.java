@@ -97,13 +97,22 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * column-major.
      * </p>
      *
+     * <p>
+     * Note that 'data' is a variable argument type, so either 1D arrays or a set of numbers can be
+     * passed in:<br>
+     * SimpleMatrix a = new SimpleMatrix(2,2,true,new double[]{1,2,3,4});<br>
+     * SimpleMatrix b = new SimpleMatrix(2,2,true,1,2,3,4);<br>
+     * <br>
+     * Both are equivalent.
+     * </p>
+     *
      * @param numRows The number of rows.
      * @param numCols The number of columns.
      * @param rowMajor If the array is encoded in a row-major or a column-major format.
      * @param data The formatted 1D array. Not modified.
      * @see DMatrixRMaj#DMatrixRMaj(int, int, boolean, double...)
      */
-    public SimpleMatrix( int numRows, int numCols, boolean rowMajor, double[] data ) {
+    public SimpleMatrix( int numRows, int numCols, boolean rowMajor, double... data ) {
         setMatrix(new DMatrixRMaj(numRows, numCols, rowMajor, data));
     }
 
@@ -114,13 +123,22 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * column-major.
      * </p>
      *
+     * <p>
+     * Note that 'data' is a variable argument type, so either 1D arrays or a set of numbers can be
+     * passed in:<br>
+     * SimpleMatrix a = new SimpleMatrix(2,2,true,new float[]{1,2,3,4});<br>
+     * SimpleMatrix b = new SimpleMatrix(2,2,true,1,2,3,4);<br>
+     * <br>
+     * Both are equivalent.
+     * </p>
+     *
      * @param numRows The number of rows.
      * @param numCols The number of columns.
      * @param rowMajor If the array is encoded in a row-major or a column-major format.
      * @param data The formatted 1D array. Not modified.
      * @see FMatrixRMaj#FMatrixRMaj(int, int, boolean, float...)
      */
-    public SimpleMatrix( int numRows, int numCols, boolean rowMajor, float[] data ) {
+    public SimpleMatrix( int numRows, int numCols, boolean rowMajor, float... data ) {
         setMatrix(new FMatrixRMaj(numRows, numCols, rowMajor, data));
     }
 
