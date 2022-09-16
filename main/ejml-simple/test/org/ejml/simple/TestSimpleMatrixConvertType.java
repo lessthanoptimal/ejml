@@ -164,9 +164,11 @@ public class TestSimpleMatrixConvertType extends EjmlStandardJUnit {
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,2,rand));
 
         SimpleMatrix C = A.combine(0,1,B);
+        SimpleMatrix D = B.combine(0,1,A);
         assertEquals(MatrixType.FDRM,A.getType());
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
+        assertEquals(MatrixType.DDRM,D.getType());
     }
 
     @Test
@@ -175,9 +177,11 @@ public class TestSimpleMatrixConvertType extends EjmlStandardJUnit {
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
 
         SimpleMatrix C = A.elementMult(B);
+        SimpleMatrix D = B.elementMult(A);
         assertEquals(MatrixType.FDRM,A.getType());
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
+        assertEquals(MatrixType.DDRM,D.getType());
     }
 
     @Test
@@ -186,9 +190,11 @@ public class TestSimpleMatrixConvertType extends EjmlStandardJUnit {
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
 
         SimpleMatrix C = A.elementDiv(B);
+        SimpleMatrix D = B.elementDiv(A);
         assertEquals(MatrixType.FDRM,A.getType());
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
+        assertEquals(MatrixType.DDRM,D.getType());
     }
 
     @Test
@@ -197,9 +203,11 @@ public class TestSimpleMatrixConvertType extends EjmlStandardJUnit {
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
 
         SimpleMatrix C = A.elementPower(B);
+        SimpleMatrix D = B.elementPower(A);
         assertEquals(MatrixType.FDRM,A.getType());
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
+        assertEquals(MatrixType.DDRM,D.getType());
     }
 
     @Test
@@ -208,9 +216,11 @@ public class TestSimpleMatrixConvertType extends EjmlStandardJUnit {
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
 
         SimpleMatrix C = A.concatRows(B);
+        SimpleMatrix D = B.concatRows(A);
         assertEquals(MatrixType.FDRM,A.getType());
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
+        assertEquals(MatrixType.DDRM,D.getType());
     }
 
     @Test
@@ -219,9 +229,11 @@ public class TestSimpleMatrixConvertType extends EjmlStandardJUnit {
         SimpleMatrix B = SimpleMatrix.wrap(RandomMatrices_DDRM.rectangle(6,5,rand));
 
         SimpleMatrix C = A.concatColumns(B);
+        SimpleMatrix D = B.concatColumns(A);
         assertEquals(MatrixType.FDRM,A.getType());
         assertEquals(MatrixType.DDRM,B.getType());
         assertEquals(MatrixType.DDRM,C.getType());
+        assertEquals(MatrixType.DDRM,D.getType());
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple;
 
 import org.ejml.data.Matrix;
@@ -35,7 +34,7 @@ public class AutomaticSimpleMatrixConvert {
         SimpleBase array[] = new SimpleBase[inputs.length+1];
         System.arraycopy(inputs,0,array,0,inputs.length);
         array[inputs.length] = a;
-        specify(inputs);
+        specify(array);
     }
 
     public void specify( SimpleBase ...inputs ) {
