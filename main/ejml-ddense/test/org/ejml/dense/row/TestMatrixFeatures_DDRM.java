@@ -138,7 +138,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
 
         // Check very large value
         m.set(1, 2, 5);
-        CommonOps_DDRM.scale(1e100, m);
+        CommonOps_DDRM.scale(Double.MAX_VALUE/20, m);
         assertTrue(MatrixFeatures_DDRM.isSymmetric(m));
 
         // Check max-abs of zero
