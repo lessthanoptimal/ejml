@@ -12,6 +12,8 @@ Date format: year/month/day
   * All unit tests must extend EjmlStandardJUnit
   * Unit tests which print to stdout will now fail
   * for-each loops being baned in performance code is now enforced with a unit test
+- MatrixFeatures_DDRM
+  * Fixed isSymmetric() Thanks HGuillemet for reporting the divide by zero bug
 
 ----- Version 0.41
 2021/07/07

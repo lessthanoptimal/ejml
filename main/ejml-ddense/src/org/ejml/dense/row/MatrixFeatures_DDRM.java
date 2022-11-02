@@ -188,12 +188,12 @@ public class MatrixFeatures_DDRM {
 
         for (int i = 0; i < m.numRows; i++) {
             for (int j = 0; j < i; j++) {
-                double a = m.get(i, j)/max;
-                double b = m.get(j, i)/max;
+                double a = m.get(i, j);
+                double b = m.get(j, i);
 
                 double diff = Math.abs(a - b);
 
-                if (!(diff <= tol)) {
+                if (!(diff <= tol*max)) {
                     return false;
                 }
             }
