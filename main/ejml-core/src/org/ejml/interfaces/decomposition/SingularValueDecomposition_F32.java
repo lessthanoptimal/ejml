@@ -15,14 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
 
 
 /**
- * <p>Implementation of {@link SingularValueDecomposition} for 64-bit floats.
+ * <p>Implementation of {@link SingularValueDecomposition} for 32-bit floats.
  * </p>
  *
  * @author Peter Abeles

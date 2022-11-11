@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Matrix;
@@ -54,7 +53,7 @@ public interface DecompositionInterface <T extends Matrix> {
     boolean decompose( T orig );
 
     /**
-     * Is the input matrix to {@link #decompose(org.ejml.data.Matrix)} is modified during
+     * Checks if the input matrix to {@link #decompose(org.ejml.data.Matrix)} is modified during
      * the decomposition process.
      *
      * @return true if the input matrix to decompose() is modified.
