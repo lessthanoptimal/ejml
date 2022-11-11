@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,14 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.interfaces.decomposition;
 
 import org.ejml.data.Complex_F32;
 import org.ejml.data.Matrix;
 
 /**
- * Implementation of {@link LUDecomposition} for 64-bit numbers
+ * Implementation of {@link LUDecomposition} for 32-bit numbers
  *
  * @author Peter Abeles
  */

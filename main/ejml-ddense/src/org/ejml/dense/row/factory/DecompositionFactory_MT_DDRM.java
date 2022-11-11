@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.dense.row.factory;
 
 import org.ejml.EjmlParameters;
@@ -185,11 +184,11 @@ public class DecompositionFactory_MT_DDRM {
     }
 
     /**
-     * A simple convinience function that decomposes the matrix but automatically checks the input ti make
-     * sure is not being modified.
+     * A simple convenience function that decomposes the matrix but automatically checks the input to make
+     * sure it is not being modified.
      *
      * @param decomp Decomposition which is being wrapped
-     * @param M THe matrix being decomposed.
+     * @param M The matrix being decomposed.
      * @param <T> Matrix type.
      * @return If the decomposition was successful or not.
      */
