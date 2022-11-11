@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
 
 import lombok.Data;
@@ -23,8 +22,8 @@ import org.ejml.ops.ComplexMath_F64;
 
 /**
  * <p>
- * Represents a complex number using 64bit floating point numbers. A complex number is composed of
- * a real and imaginary components.
+ * Represents a complex number using 64-bit floating point numbers. A complex number is composed of
+ * real and imaginary components.
  * </p>
  */
 @Data
