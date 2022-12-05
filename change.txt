@@ -2,8 +2,8 @@ Change log for EJML
 
 Date format: year/month/day
 
------ Version 0.42
-2021/
+----- Version 0.41.1
+2022/12/04
 
 - Build
   * Java language is now 17 and binary compatibility is 11
