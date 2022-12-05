@@ -22,7 +22,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
     id "com.peterabeles.gversion" version "1.10" apply false
     id "net.ltgt.errorprone" version "2.0.2" apply false
-    id "com.diffplug.spotless" version "6.2.0" apply false
+    id "com.diffplug.spotless" version "6.9.1" apply false
 }
 
 allprojects {
@@ -33,7 +33,7 @@ allprojects {
     version = '0.42-SNAPSHOT'
 
     project.ext.commons_io_version = '2.11.0'
-    project.ext.lombok_version = '1.18.20'
+    project.ext.lombok_version = '1.18.24'
     project.ext.jabel_version = '0.4.2'
     project.ext.guava_version = '31.0.1-jre'
     project.ext.junit_version = '5.8.1'
