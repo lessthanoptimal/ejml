@@ -28,6 +28,7 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ejml.UtilEjml.fancyString;
@@ -46,6 +47,9 @@ public class MatrixIO {
     public static final int DEFAULT_LENGTH = 11;
     /** Specified the printf format used when printing out in Matlab format */
     public static String MATLAB_FORMAT = "%.8E";
+
+    /** Local used by printf(). In general you want this to be US so that it stays standard compliant */
+    public static Locale local = Locale.US;
 
     /**
      * Converts a text string in matlab format into a DDRM matrix
@@ -102,7 +106,7 @@ public class MatrixIO {
         PrintWriter out = new PrintWriter(writer);
         out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
         out.println("% printf format used '" + floatFormat + "'");
-        out.printf("%9d %9d %9d\n", matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
+        out.printf(local, "%9d %9d %9d\n", matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
 
         String lineFormat = "%9d %9d " + floatFormat + "\n";
 
@@ -110,7 +114,7 @@ public class MatrixIO {
         while (iter.hasNext()) {
             DMatrixSparse.CoordinateRealValue val = iter.next();
             // matrix market is 1 indexed
-            out.printf(lineFormat, val.row + 1, val.col + 1, val.value);
+            out.printf(local, lineFormat, val.row + 1, val.col + 1, val.value);
         }
         out.flush();
     }
@@ -136,7 +140,7 @@ public class MatrixIO {
         while (iter.hasNext()) {
             FMatrixSparse.CoordinateRealValue val = iter.next();
             // matrix market is 1 indexed
-            out.printf(lineFormat, val.row + 1, val.col + 1, val.value);
+            out.printf(local, lineFormat, val.row + 1, val.col + 1, val.value);
         }
         out.flush();
     }
@@ -303,7 +307,7 @@ public class MatrixIO {
      */
     public static <T extends Matrix> T loadMatlab( String fileName, @Nullable T output ) throws IOException {
         MflAccess.verifyEnabled();
-        return MflAccess.IO.loadMatlab(fileName,output);
+        return MflAccess.IO.loadMatlab(fileName, output);
     }
 
     /**
@@ -319,11 +323,11 @@ public class MatrixIO {
 
         static {
             boolean foundInClasspath;
-            try{
+            try {
                 @SuppressWarnings("unused")
                 Class<Mat5Ejml> clazz = Mat5Ejml.class;
                 foundInClasspath = true;
-            }catch (NoClassDefFoundError cfe) {
+            } catch (NoClassDefFoundError cfe) {
                 foundInClasspath = false;
             }
             ENABLED = foundInClasspath;
@@ -353,7 +357,6 @@ public class MatrixIO {
 
             private static final String ENTRY_NAME = "ejmlMatrix";
         }
-
     }
 
     /**
@@ -384,11 +387,9 @@ public class MatrixIO {
      * Loads a {@link DMatrix} which has been saved to file using Java binary
      * serialization.
      *
-     * @deprecated
-     * This will be removed in the future due to how unsafe readObject() is.
-     *
      * @param fileName The file being loaded.
      * @return DMatrixRMaj
+     * @deprecated This will be removed in the future due to how unsafe readObject() is.
      */
     @Deprecated
     @SuppressWarnings("BanSerializableRead")
@@ -639,15 +640,15 @@ public class MatrixIO {
         String format = DEFAULT_FLOAT_FORMAT;
 
         switch (mat.getType()) {
-            case DDRM: print(out, (DMatrix)mat, format); break;
-            case FDRM: print(out, (FMatrix)mat, format); break;
-            case ZDRM: print(out, (ZMatrix)mat, format); break;
-            case CDRM: print(out, (CMatrix)mat, format); break;
-            case DSCC: print(out, (DMatrixSparseCSC)mat, format); break;
-            case DTRIPLET: print(out, (DMatrixSparseTriplet)mat, format); break;
-            case FSCC: print(out, (FMatrixSparseCSC)mat, format); break;
-            case FTRIPLET: print(out, (FMatrixSparseTriplet)mat, format); break;
-            default: throw new RuntimeException("Unknown type " + mat.getType());
+            case DDRM -> print(out, (DMatrix)mat, format);
+            case FDRM -> print(out, (FMatrix)mat, format);
+            case ZDRM -> print(out, (ZMatrix)mat, format);
+            case CDRM -> print(out, (CMatrix)mat, format);
+            case DSCC -> print(out, (DMatrixSparseCSC)mat, format);
+            case DTRIPLET -> print(out, (DMatrixSparseTriplet)mat, format);
+            case FSCC -> print(out, (FMatrixSparseCSC)mat, format);
+            case FTRIPLET -> print(out, (FMatrixSparseTriplet)mat, format);
+            default -> throw new RuntimeException("Unknown type " + mat.getType());
         }
     }
 
@@ -676,7 +677,7 @@ public class MatrixIO {
 
             for (int row = 0; row < mat.getNumRows(); row++) {
                 for (int col = 0; col < mat.getNumCols(); col++) {
-                    out.printf(format, mat.get(row, col));
+                    out.printf(local, format, mat.get(row, col));
                 }
                 out.println();
             }
@@ -688,7 +689,7 @@ public class MatrixIO {
 
         for (int row = 0; row < mat.getNumRows(); row++) {
             for (int col = 0; col < mat.getNumCols(); col++) {
-                out.printf("%.12E", mat.get(row, col));
+                out.printf(local, "%.12E", mat.get(row, col));
                 if (col + 1 < mat.getNumCols()) {
                     out.print(" , ");
                 }
@@ -705,7 +706,7 @@ public class MatrixIO {
 
         for (int row = 0; row < mat.getNumRows(); row++) {
             for (int col = 0; col < mat.getNumCols(); col++) {
-                out.printf(MATLAB_FORMAT, mat.get(row, col));
+                out.printf(local, MATLAB_FORMAT, mat.get(row, col));
                 if (col + 1 < mat.getNumCols()) {
                     out.print(" , ");
                 }
@@ -741,7 +742,7 @@ public class MatrixIO {
                 for (int col = 0; col < m.numCols; col++) {
                     int index = m.nz_index(row, col);
                     if (index >= 0)
-                        out.printf(format, m.nz_values[index]);
+                        out.printf(local, format, m.nz_values[index]);
                     else
                         out.print(zero);
                     if (col != m.numCols - 1)
@@ -767,7 +768,7 @@ public class MatrixIO {
                 for (int col = 0; col < m.numCols; col++) {
                     int index = m.nz_index(row, col);
                     if (index >= 0)
-                        out.printf(format, m.nz_values[index]);
+                        out.printf(local, format, m.nz_values[index]);
                     else
                         out.print(zero);
                     if (col != m.numCols - 1)
@@ -785,7 +786,7 @@ public class MatrixIO {
             for (int col = 0; col < m.numCols; col++) {
                 int index = m.nz_index(row, col);
                 if (index >= 0)
-                    out.printf(format, m.nz_value.data[index]);
+                    out.printf(local, format, m.nz_value.data[index]);
                 else
                     out.print("   *  ");
                 if (col != m.numCols - 1)
@@ -802,7 +803,7 @@ public class MatrixIO {
             for (int col = 0; col < m.numCols; col++) {
                 int index = m.nz_index(row, col);
                 if (index >= 0)
-                    out.printf(format, m.nz_value.data[index]);
+                    out.printf(local, format, m.nz_value.data[index]);
                 else
                     out.print("   *  ");
                 if (col != m.numCols - 1)
@@ -823,7 +824,7 @@ public class MatrixIO {
         for (int y = 0; y < mat.getNumRows(); y++) {
             out.print("{");
             for (int x = 0; x < mat.getNumCols(); x++) {
-                out.printf(format, mat.get(y, x));
+                out.printf(local, format, mat.get(y, x));
                 if (x + 1 < mat.getNumCols())
                     out.print(", ");
             }
@@ -850,7 +851,7 @@ public class MatrixIO {
 
             for (int row = 0; row < mat.getNumRows(); row++) {
                 for (int col = 0; col < mat.getNumCols(); col++) {
-                    out.printf(format, mat.get(row, col));
+                    out.printf(local, format, mat.get(row, col));
                 }
                 out.println();
             }
@@ -865,7 +866,7 @@ public class MatrixIO {
 
         for (int y = row0; y < row1; y++) {
             for (int x = col0; x < col1; x++) {
-                out.printf(format, mat.get(y, x));
+                out.printf(local, format, mat.get(y, x));
             }
             out.println();
         }
@@ -881,7 +882,7 @@ public class MatrixIO {
         for (int y = 0; y < mat.getNumRows(); y++) {
             out.print("{");
             for (int x = 0; x < mat.getNumCols(); x++) {
-                out.printf(format, mat.get(y, x));
+                out.printf(local, format, mat.get(y, x));
                 if (x + 1 < mat.getNumCols())
                     out.print(", ");
             }
@@ -900,7 +901,7 @@ public class MatrixIO {
 
         for (int y = row0; y < row1; y++) {
             for (int x = col0; x < col1; x++) {
-                out.printf(format, mat.get(y, x));
+                out.printf(local, format, mat.get(y, x));
             }
             out.println();
         }
@@ -915,7 +916,7 @@ public class MatrixIO {
         for (int y = 0; y < mat.getNumRows(); y++) {
             for (int x = 0; x < mat.getNumCols(); x++) {
                 mat.get(y, x, c);
-                out.printf(format, c.real, c.imaginary);
+                out.printf(local, format, c.real, c.imaginary);
                 if (x < mat.getNumCols() - 1) {
                     out.print(" , ");
                 }
@@ -943,7 +944,7 @@ public class MatrixIO {
         for (int y = 0; y < mat.getNumRows(); y++) {
             for (int x = 0; x < mat.getNumCols(); x++) {
                 mat.get(y, x, c);
-                out.printf(format, c.real, c.imaginary);
+                out.printf(local, format, c.real, c.imaginary);
                 if (x < mat.getNumCols() - 1) {
                     out.print(" , ");
                 }
