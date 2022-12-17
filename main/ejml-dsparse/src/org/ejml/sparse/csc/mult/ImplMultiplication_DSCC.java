@@ -23,6 +23,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.IGrowArray;
 import org.ejml.ops.DOperatorBinary;
+import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -30,6 +31,10 @@ import java.util.Arrays;
 import static org.ejml.UtilEjml.adjust;
 
 /**
+ * Implementation of single thread sparse matrix multiplication. Most functions should be
+ * invoked through {@link CommonOps_DSCC}. This code is focused on the implementation and does not
+ * check the contract or properly initialize input data structures.
+ *
  * @author Peter Abeles
  */
 public class ImplMultiplication_DSCC {
@@ -37,9 +42,11 @@ public class ImplMultiplication_DSCC {
     /**
      * Performs matrix multiplication. C = A*B
      *
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     *
      * @param A Matrix
      * @param B Matrix
-     * @param C Storage for results. Data length is increased if increased if insufficient.
+     * @param C Storage for results. Array size is increased if needed.
      * @param gw (Optional) Storage for internal workspace. Can be null.
      * @param gx (Optional) Storage for internal workspace. Can be null.
      */
@@ -147,11 +154,17 @@ public class ImplMultiplication_DSCC {
         C.col_idx[colC + 1] = C.nz_length;
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         C.zero();
         multAdd(A, B, C);
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(i,k) * B(k,j)
         for (int k = 0; k < A.numCols; k++) {
@@ -174,14 +187,23 @@ public class ImplMultiplication_DSCC {
         }
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
         multTransA(A, B, C, workArray, ( a, b ) -> b);
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
         multTransA(A, B, C, workArray, Double::sum);
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray,
                                    DOperatorBinary op ) {
         double[] work = workArray.reshape(B.numRows).data;
@@ -208,11 +230,17 @@ public class ImplMultiplication_DSCC {
         }
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
         C.zero();
         multAddTransB(A, B, C, workArray);
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, DGrowArray workArray ) {
         double[] work = workArray.reshape(B.numRows).data;
 
@@ -234,6 +262,9 @@ public class ImplMultiplication_DSCC {
         }
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(k,i) * B(j,K)
         for (int j = 0; j < B.numRows; j++) {
@@ -254,6 +285,9 @@ public class ImplMultiplication_DSCC {
         }
     }
 
+    /**
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
+     */
     public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(k,i) * B(j,K)
         for (int j = 0; j < B.numRows; j++) {
@@ -278,6 +312,8 @@ public class ImplMultiplication_DSCC {
      * Computes the inner product of two column vectors taken from the input matrices.
      *
      * <p>dot = A(:,colA)'*B(:,colB)</p>
+     *
+     * <p>Invoke through {@link CommonOps_DSCC}</p>
      *
      * @param A Matrix
      * @param colA Column in A

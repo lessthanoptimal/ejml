@@ -23,6 +23,7 @@ import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.sparse.csc.CommonOps_MT_DSCC;
 import pabeles.concurrency.GrowArray;
 
 import java.util.Arrays;
@@ -31,21 +32,24 @@ import static org.ejml.UtilEjml.adjust;
 import static org.ejml.sparse.csc.mult.ImplMultiplication_DSCC.multAddColA;
 
 /**
- * Concurrent matrix multiplication for DSCC matrices.
+ * Implementation of concurrent matrix multiplication for DSCC matrices. Please invoke through
+ * {@link CommonOps_MT_DSCC} as that provides a nicer API.
  *
  * @author Peter Abeles
  */
 public class ImplMultiplication_MT_DSCC {
     /**
-     * Performs matrix multiplication. C = A*B. The problem is broken up into as many "blocks" as there are threads
+     * <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p>
+     *
+     * <p>Performs matrix multiplication. C = A*B. The problem is broken up into as many "blocks" as there are threads
      * available. Each block will process a set of columns independently. After running results from independent
      * blocks are stitched together in the main thread. Extra storage requirements is about the same size as
-     * 'C'.
+     * 'C'.</p>
      *
      * @param A Matrix
      * @param B Matrix
-     * @param C Storage for results. Data length is increased if increased if insufficient.
-     * @param listWork (Optional) Storage for internal workspace. Can be null.
+     * @param C Storage for results. Array size is increased if needed.
+     * @param listWork Storage for internal workspace.
      */
     public static void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC C,
                              GrowArray<Workspace_MT_DSCC> listWork ) {
@@ -92,7 +96,7 @@ public class ImplMultiplication_MT_DSCC {
     }
 
     /**
-     * Compines results from independent blocks into a single matrix
+     * Combines results from independent blocks into a single matrix
      */
     public static void stitchMatrix( DMatrixSparseCSC out, int numRows, int numCols,
                                      GrowArray<Workspace_MT_DSCC> listWork ) {
@@ -126,16 +130,19 @@ public class ImplMultiplication_MT_DSCC {
         UtilEjml.assertEq(out.col_idx[numCols], out.nz_length);
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
                              GrowArray<DGrowArray> listWork ) {
         mult(A, B, C, false, listWork);
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
                                 GrowArray<DGrowArray> listWork ) {
         mult(A, B, C, true, listWork);
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean add,
                              GrowArray<DGrowArray> listWork ) {
         // Break the problem up into blocks of columns and process them independently
@@ -183,6 +190,7 @@ public class ImplMultiplication_MT_DSCC {
         });
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
                                    GrowArray<DGrowArray> listWork ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
@@ -212,6 +220,7 @@ public class ImplMultiplication_MT_DSCC {
         });
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C,
                                       GrowArray<DGrowArray> listWork ) {
         // C(i,j) = sum_k A(k,i) * B(k,j)
@@ -241,14 +250,17 @@ public class ImplMultiplication_MT_DSCC {
         });
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, GrowArray<DGrowArray> listWork ) {
         multTransB(A, B, C, false, listWork);
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, GrowArray<DGrowArray> listWork ) {
         multTransB(A, B, C, true, listWork);
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C, boolean add,
                                    GrowArray<DGrowArray> listWork ) {
         // Break the problem up into blocks of columns and process them independently
@@ -291,6 +303,7 @@ public class ImplMultiplication_MT_DSCC {
         });
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(k,i) * B(j,k)
         EjmlConcurrency.loopFor(0, B.numRows, j -> {
@@ -311,6 +324,7 @@ public class ImplMultiplication_MT_DSCC {
         });
     }
 
+    /** <p>Invoke through {@link CommonOps_MT_DSCC} as it will manage the input contract</p> */
     public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj C ) {
         // C(i,j) = sum_k A(k,i) * B(j,k)
         EjmlConcurrency.loopFor(0, B.numRows, j -> {
