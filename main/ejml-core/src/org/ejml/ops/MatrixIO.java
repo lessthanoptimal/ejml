@@ -104,8 +104,13 @@ public class MatrixIO {
      */
     public static void saveMatrixMarketD( DMatrixSparse matrix, String floatFormat, Writer writer ) {
         PrintWriter out = new PrintWriter(writer);
+        out.println("%%MatrixMarket matrix coordinate real general");
+        out.println("%=================================================================================");
         out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
         out.println("% printf format used '" + floatFormat + "'");
+        out.println("%");
+        out.println("% Indices are 1-based, i.e. A(1,1) is the first element.");
+        out.println("%=================================================================================");
         out.printf(local, "%9d %9d %9d\n", matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
 
         String lineFormat = "%9d %9d " + floatFormat + "\n";
@@ -130,9 +135,14 @@ public class MatrixIO {
      */
     public static void saveMatrixMarketF( FMatrixSparse matrix, String floatFormat, Writer writer ) {
         PrintWriter out = new PrintWriter(writer);
+        out.println("%%MatrixMarket matrix coordinate real general");
+        out.println("%=================================================================================");
         out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
         out.println("% printf format used '" + floatFormat + "'");
-        out.printf("%9d %9d %9d\n", matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
+        out.println("%");
+        out.println("% Indices are 1-based, i.e. A(1,1) is the first element.");
+        out.println("%=================================================================================");
+        out.printf(local, "%9d %9d %9d\n", matrix.getNumRows(), matrix.getNumCols(), matrix.getNonZeroLength());
 
         String lineFormat = "%9d %9d " + floatFormat + "\n";
 
@@ -146,9 +156,9 @@ public class MatrixIO {
     }
 
     /**
-     * Reads a stream in Matrix Market Coordinate format
+     * <p>Reads a stream in Matrix Market Coordinate format</p>
      *
-     * https://math.nist.gov/MatrixMarket/formats.html
+     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
      *
      * @param reader Input reader
      * @return Matrix in triplet format
@@ -188,9 +198,9 @@ public class MatrixIO {
     }
 
     /**
-     * Reads a stream in Matrix Market Coordinate format
+     * <p>Reads a stream in Matrix Market Coordinate format</p>
      *
-     * https://math.nist.gov/MatrixMarket/formats.html
+     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
      *
      * @param reader Input reader
      * @return Matrix in triplet format
@@ -230,9 +240,9 @@ public class MatrixIO {
     }
 
     /**
-     * Reads a stream in Matrix Market Coordinate format
+     * <p>Reads a stream in Matrix Market Coordinate format</p>
      *
-     * https://math.nist.gov/MatrixMarket/formats.html
+     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
      *
      * @param streamIn Input stream
      * @return Matrix in triplet format
@@ -270,13 +280,15 @@ public class MatrixIO {
     }
 
     /**
-     * Saves a matrix to disk using MATLAB's MAT-File Format (Level 5) binary serialization.
+     * <p>Saves a matrix to disk using MATLAB's MAT-File Format (Level 5) binary serialization.</p>
      *
      * Notes:
-     * * The matrix gets stored as a single root level entry named 'ejmlMatrix'
-     * * {@link FMatrixSparseCSC} get stored as sparse double matrices
+     * <ul>
+     *     <li>The matrix gets stored as a single root level entry named 'ejmlMatrix'</li>
+     *     <li>{@link FMatrixSparseCSC} get stored as sparse double matrices</li>
+     * </ul>
      *
-     * See
+     * See:
      * <a href="https://github.com/HebiRobotics/MFL">MAT File Library</a>
      * <a href="https://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf">matfile_format.pdf</a>
      *
