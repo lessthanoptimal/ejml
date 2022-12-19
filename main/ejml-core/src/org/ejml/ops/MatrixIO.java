@@ -93,15 +93,15 @@ public class MatrixIO {
     }
 
     /**
-     * Writes a stream using the Matrix Market Coordinate format.
+     * <p>Writes a stream using the Matrix Market Coordinate format.</p>
      *
-     * https://math.nist.gov/MatrixMarket/formats.html
+     * {@see https://math.nist.gov/MatrixMarket/formats.html}
      *
      * @param matrix The matrix to be written
      * @param floatFormat The format used by printf. "%.4e" is suggested
      * @param writer The writer
      */
-    public static void saveMatrixMarketD( DMatrixSparse matrix, String floatFormat, Writer writer ) {
+    public static void saveMatrixMarket( DMatrixSparse matrix, String floatFormat, Writer writer ) {
         PrintWriter out = new PrintWriter(writer);
         out.println("%%MatrixMarket matrix coordinate real general");
         out.println("%=================================================================================");
@@ -124,15 +124,15 @@ public class MatrixIO {
     }
 
     /**
-     * Writes a stream using the Matrix Market Coordinate format.
+     * <p>Writes a stream using the Matrix Market Coordinate format.</p>
      *
-     * https://math.nist.gov/MatrixMarket/formats.html
+     * {@see https://math.nist.gov/MatrixMarket/formats.html}
      *
      * @param matrix The matrix to be written
      * @param floatFormat The format used by printf. "%.4e" is suggested
      * @param writer The writer
      */
-    public static void saveMatrixMarketF( FMatrixSparse matrix, String floatFormat, Writer writer ) {
+    public static void saveMatrixMarket( FMatrixSparse matrix, String floatFormat, Writer writer ) {
         PrintWriter out = new PrintWriter(writer);
         out.println("%%MatrixMarket matrix coordinate real general");
         out.println("%=================================================================================");
@@ -155,6 +155,66 @@ public class MatrixIO {
     }
 
     /**
+     * <p>Writes a stream using the Matrix Market Coordinate format.</p>
+     *
+     * {@see https://math.nist.gov/MatrixMarket/formats.html}
+     *
+     * @param matrix The matrix to be written
+     * @param floatFormat The format used by printf. "%.4e" is suggested
+     * @param writer The writer
+     */
+    public static void saveMatrixMarket( DMatrixRMaj matrix, String floatFormat, Writer writer ) {
+        PrintWriter out = new PrintWriter(writer);
+        out.println("%%MatrixMarket matrix coordinate real general");
+        out.println("%=================================================================================");
+        out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
+        out.println("% printf format used '" + floatFormat + "'");
+        out.println("%");
+        out.println("% Indices are 1-based, i.e. A(1,1) is the first element.");
+        out.println("%=================================================================================");
+        out.printf(local, "%9d %9d\n", matrix.getNumRows(), matrix.getNumCols());
+
+        String lineFormat = floatFormat + "\n";
+
+        // Matrix Market is column major
+        for (int col = 0; col < matrix.numCols; col++) {
+            for (int row = 0; row < matrix.numRows; row++) {
+                out.printf(local, lineFormat, matrix.get(row, col));
+            }
+        }
+    }
+
+    /**
+     * <p>Writes a stream using the Matrix Market Coordinate format.</p>
+     *
+     * {@see https://math.nist.gov/MatrixMarket/formats.html}
+     *
+     * @param matrix The matrix to be written
+     * @param floatFormat The format used by printf. "%.4e" is suggested
+     * @param writer The writer
+     */
+    public static void saveMatrixMarket( FMatrixRMaj matrix, String floatFormat, Writer writer ) {
+        PrintWriter out = new PrintWriter(writer);
+        out.println("%%MatrixMarket matrix coordinate real general");
+        out.println("%=================================================================================");
+        out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
+        out.println("% printf format used '" + floatFormat + "'");
+        out.println("%");
+        out.println("% Indices are 1-based, i.e. A(1,1) is the first element.");
+        out.println("%=================================================================================");
+        out.printf(local, "%9d %9d\n", matrix.getNumRows(), matrix.getNumCols());
+
+        String lineFormat = floatFormat + "\n";
+
+        // Matrix Market is column major
+        for (int col = 0; col < matrix.numCols; col++) {
+            for (int row = 0; row < matrix.numRows; row++) {
+                out.printf(local, lineFormat, matrix.get(row, col));
+            }
+        }
+    }
+
+    /**
      * <p>Reads a stream in Matrix Market Coordinate format</p>
      *
      * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
@@ -162,7 +222,7 @@ public class MatrixIO {
      * @param reader Input reader
      * @return DMatrixSparseTriplet
      */
-    public static DMatrixSparseTriplet loadMatrixMarketD( Reader reader ) {
+    public static DMatrixSparseTriplet loadMatrixMarketDSTR( Reader reader ) {
         var output = new DMatrixSparseTriplet();
         loadMatrixMarket(reader,
                 output::reshape,
@@ -178,7 +238,7 @@ public class MatrixIO {
      * @param reader Input reader
      * @return DMatrixRMaj
      */
-    public static DMatrixRMaj loadMatrixMarketDenseD( Reader reader ) {
+    public static DMatrixRMaj loadMatrixMarketDDRM( Reader reader ) {
         var output = new DMatrixRMaj(0, 0);
         loadMatrixMarket(reader,
                 ( r, c, l ) -> output.reshape(r, c),
@@ -194,7 +254,7 @@ public class MatrixIO {
      * @param reader Input reader
      * @return FMatrixSparseTriplet
      */
-    public static FMatrixSparseTriplet loadMatrixMarketF( Reader reader ) {
+    public static FMatrixSparseTriplet loadMatrixMarketFSTR( Reader reader ) {
         var output = new FMatrixSparseTriplet();
         loadMatrixMarket(reader,
                 output::reshape,
@@ -210,7 +270,7 @@ public class MatrixIO {
      * @param reader Input reader
      * @return FMatrixRMaj
      */
-    public static FMatrixRMaj loadMatrixMarketDenseF( Reader reader ) {
+    public static FMatrixRMaj loadMatrixMarketFDRM( Reader reader ) {
         var output = new FMatrixRMaj(0, 0);
         loadMatrixMarket(reader,
                 ( r, c, l ) -> output.reshape(r, c),
@@ -228,7 +288,7 @@ public class MatrixIO {
     private static void loadMatrixMarket( Reader reader, ReshapeMatrix opReshape, AssignValue opAssign ) {
         var bufferedReader = new BufferedReader(reader);
         try {
-            boolean vector = false;
+            boolean array = false;
             boolean hasHeader = false;
             // keeps track of number of elements read for vectors
             int count = 0;
@@ -242,14 +302,10 @@ public class MatrixIO {
                 String[] words = line.trim().split("\\s+");
 
                 if (hasHeader) {
-                    if (vector) {
+                    if (array) {
                         if (words.length > 1)
                             throw new IOException("Expected only one word in each line for a vector");
-                        if (rows == 1) {
-                            opAssign.assign(0, count, words[0]);
-                        } else {
-                            opAssign.assign(count, 0, words[0]);
-                        }
+                        opAssign.assign(count%rows, count/rows, words[0]);
                         count++;
                     } else {
                         int row = Integer.parseInt(words[0]) - 1;
@@ -263,12 +319,12 @@ public class MatrixIO {
                     rows = Integer.parseInt(words[0]);
                     cols = Integer.parseInt(words[1]);
 
+                    // see if it's in the array or coordinate format
+                    // Array format is dense column major
                     int nz_length;
                     if (words.length == 2) {
-                        vector = true;
-                        nz_length = Math.max(rows, cols);
-                        if (Math.min(rows, cols) != 1)
-                            throw new IOException("Vector matrix but neither size is equal to 1");
+                        array = true;
+                        nz_length = rows*cols;
                     } else {
                         nz_length = Integer.parseInt(words[2]);
                     }
