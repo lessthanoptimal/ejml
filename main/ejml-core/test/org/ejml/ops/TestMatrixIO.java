@@ -170,7 +170,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
     }
 
     @Test
-    public void load_save_matlab_missing_dep_msg() throws IOException {
+    public void matlab_missing_load_save_dep_msg() throws IOException {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6, 3, rand);
         String msg = assertThrows(IllegalStateException.class, () -> MatrixIO.saveMatlab(A, "temp.mat"))
                 .getMessage();
@@ -321,6 +321,18 @@ public class TestMatrixIO extends EjmlStandardJUnit {
                 " 2          + -2.5i       \n";
 
         assertEquals(expected,found);
+    }
 
+    @Test public void nextWorkStart() {
+        assertEquals(0, MatrixIO.nextWordStart(0, "lalal lasd"));
+        assertEquals(5, MatrixIO.nextWordStart(5, "lalal"));
+        assertEquals(3, MatrixIO.nextWordStart(0, "   lalal   lasd"));
+        assertEquals(11, MatrixIO.nextWordStart(8, "   lalal   lasd"));
+    }
+
+    @Test public void nextWordEnd() {
+        assertEquals(5, MatrixIO.nextWordEnd(0, "lalal lasd"));
+        assertEquals(5, MatrixIO.nextWordEnd(0, "lalal"));
+        assertEquals(10, MatrixIO.nextWordEnd(6, "lalal lasd"));
     }
 }

@@ -300,34 +300,42 @@ public class MatrixIO {
                     continue;
                 }
                 try {
-                    String[] words = line.trim().split("\\s+");
                     if (hasHeader) {
                         int row, col;
                         double value;
                         if (array) {
-                            if (words.length > 1)
-                                throw new IOException("Expected only one word in each line for a vector");
                             row = count%rows;
                             col = count/rows;
-                            value = Double.parseDouble(words[0]);
+                            value = Double.parseDouble(line.strip()); // it should only be one word
                             count++;
-                            // Skip if the value is zero. When creating a sparse matrix this can be very imporant.
+                            // Skip if the value is zero. When creating a sparse matrix this can be very important.
                             if (value == 0.0)
                                 continue;
                         } else {
-                            row = Integer.parseInt(words[0]) - 1;
-                            col = Integer.parseInt(words[1]) - 1;
-                            value = Double.parseDouble(words[2]);
+                            // Custom search for beginning and end of words. This avoids using regex (slow) and
+                            // in theory less memory creation since a new string isn't needed for parseInt(). I've
+                            // not inspected that code internally so it might be doing that anyways.
+                            int start0 = nextWordStart(0, line);
+                            int end0 = nextWordEnd(start0, line);
+                            int start1 = nextWordStart(end0 + 1, line);
+                            int end1 = nextWordEnd(start1, line);
+                            int start2 = nextWordStart(end1 + 1, line);
+                            int end2 = nextWordEnd(start2, line);
+
+                            row = Integer.parseUnsignedInt(line, start0, end0, 10) - 1;
+                            col = Integer.parseUnsignedInt(line, start1, end1, 10) - 1;
+                            value = Double.parseDouble(line.substring(start2, end2));
                             // Don't skip zeros in coordinate format since someone might be using the structure
                             // to encode information
                         }
                         opAssign.assign(row, col, value);
                     } else {
+                        String[] words = line.trim().split("\\s+");
                         if (words.length > 3)
                             throw new IOException("Too many words in header. '" + line + "'");
                         // read matrix shape
-                        rows = Integer.parseInt(words[0]);
-                        cols = Integer.parseInt(words[1]);
+                        rows = Integer.parseUnsignedInt(words[0]);
+                        cols = Integer.parseUnsignedInt(words[1]);
 
                         // see if it's in the array or coordinate format
                         // Array format is dense column major
@@ -348,6 +356,33 @@ public class MatrixIO {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Finds location that the word starting at 'loc' ends + 1
+     */
+    static int nextWordStart( int loc, String text ) {
+        final int length = text.length();
+        if (loc >= length)
+            return length;
+
+        while (ReadCsv.isSpace(text.charAt(loc))) {
+            if (++loc >= length)
+                return length;
+        }
+        return loc;
+    }
+
+    /**
+     * Finds location that the word starting at 'loc' ends + 1
+     */
+    static int nextWordEnd( int loc, String text ) {
+        final int length = text.length();
+        while (!ReadCsv.isSpace(text.charAt(loc))) {
+            if (++loc >= length)
+                break;
+        }
+        return loc;
     }
 
     /**
