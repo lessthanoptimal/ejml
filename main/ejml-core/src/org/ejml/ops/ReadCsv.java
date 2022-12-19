@@ -156,7 +156,7 @@ public class ReadCsv {
      * @param c The character being tested.
      * @return if it is a space character or not.
      */
-    private boolean isSpace( char c ) {
+    public static boolean isSpace( char c ) {
         return c == ' ' || c == '\t';
     }
 }
