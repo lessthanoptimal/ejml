@@ -59,7 +59,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
 
     @Test
     public void load_save_matrix_market_F64() {
-        DMatrixSparseTriplet original = new DMatrixSparseTriplet(3,4,5);
+        var original = new DMatrixSparseTriplet(3,4,5);
         original.set(1,1,1.5);
         original.set(2,3,2.5);
 
@@ -73,7 +73,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
 
     @Test
     public void load_save_matrix_market_F32() {
-        FMatrixSparseTriplet original = new FMatrixSparseTriplet(3,4,5);
+        var original = new FMatrixSparseTriplet(3,4,5);
         original.set(1,1,1.5f);
         original.set(2,3,2.5f);
 
@@ -83,6 +83,20 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketF(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
+    }
+
+    @Test
+    public void load_save_matrix_market_dense_F64() {
+        var original = new DMatrixSparseTriplet(3,4,5);
+        original.set(1,1,1.5);
+        original.set(2,3,2.5);
+
+        Writer output = new StringWriter();
+        MatrixIO.saveMatrixMarketD(original,"%.22f",output);
+        Reader input = new CharArrayReader(output.toString().toCharArray());
+        DMatrixRMaj found = MatrixIO.loadMatrixMarketDenseD(input);
+
+        EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
 
     @Test
@@ -141,7 +155,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
 
         DMatrixRMaj A_copy = MatrixIO.loadBin("temp.mat");
 
-        assertTrue(A != A_copy);
+        assertNotSame(A, A_copy);
         assertTrue(MatrixFeatures_DDRM.isEquals(A,A_copy));
 
         // clean up
@@ -158,7 +172,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
 
         DMatrixRMaj A_copy = MatrixIO.loadCSV("temp.csv",true);
 
-        assertTrue(A != A_copy);
+        assertNotSame(A, A_copy);
         assertTrue(MatrixFeatures_DDRM.isEquals(A,A_copy));
 
         // clean up
@@ -175,7 +189,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
 
         DMatrixSparseTriplet A_copy = MatrixIO.loadCSV("temp.csv",true);
 
-        assertTrue(A != A_copy);
+        assertNotSame(A, A_copy);
         assertTrue(MatrixFeatures_DSTL.isEquals(A,A_copy));
 
         // clean up
