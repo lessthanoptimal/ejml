@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ejml.UtilEjml.fancyString;
 import static org.ejml.UtilEjml.fancyStringF;
 
@@ -161,11 +160,73 @@ public class MatrixIO {
      * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
      *
      * @param reader Input reader
-     * @return Matrix in triplet format
+     * @return DMatrixSparseTriplet
      */
     public static DMatrixSparseTriplet loadMatrixMarketD( Reader reader ) {
-        DMatrixSparseTriplet output = new DMatrixSparseTriplet();
-        BufferedReader bufferedReader = new BufferedReader(reader);
+        var output = new DMatrixSparseTriplet();
+        loadMatrixMarket(reader,
+                output::reshape,
+                ( r, c, word ) -> output.addItem(r, c, Double.parseDouble(word)));
+        return output;
+    }
+
+    /**
+     * <p>Reads a stream in Matrix Market Coordinate format</p>
+     *
+     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
+     *
+     * @param reader Input reader
+     * @return DMatrixRMaj
+     */
+    public static DMatrixRMaj loadMatrixMarketDenseD( Reader reader ) {
+        var output = new DMatrixRMaj(0, 0);
+        loadMatrixMarket(reader,
+                ( r, c, l ) -> output.reshape(r, c),
+                ( r, c, word ) -> output.set(r, c, Double.parseDouble(word)));
+        return output;
+    }
+
+    /**
+     * <p>Reads a stream in Matrix Market Coordinate format</p>
+     *
+     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
+     *
+     * @param reader Input reader
+     * @return FMatrixSparseTriplet
+     */
+    public static FMatrixSparseTriplet loadMatrixMarketF( Reader reader ) {
+        var output = new FMatrixSparseTriplet();
+        loadMatrixMarket(reader,
+                output::reshape,
+                ( r, c, word ) -> output.addItem(r, c, Float.parseFloat(word)));
+        return output;
+    }
+
+    /**
+     * <p>Reads a stream in Matrix Market Coordinate format</p>
+     *
+     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
+     *
+     * @param reader Input reader
+     * @return FMatrixRMaj
+     */
+    public static FMatrixRMaj loadMatrixMarketDenseF( Reader reader ) {
+        var output = new FMatrixRMaj(0, 0);
+        loadMatrixMarket(reader,
+                ( r, c, l ) -> output.reshape(r, c),
+                ( r, c, word ) -> output.set(r, c, Float.parseFloat(word)));
+        return output;
+    }
+
+    /**
+     * Common logic for loading all matrix-market files
+     *
+     * @param reader reads input file
+     * @param opReshape reshapes matrix
+     * @param opAssign assigns values to each element
+     */
+    private static void loadMatrixMarket( Reader reader, ReshapeMatrix opReshape, AssignValue opAssign ) {
+        var bufferedReader = new BufferedReader(reader);
         try {
             boolean vector = false;
             boolean hasHeader = false;
@@ -184,19 +245,16 @@ public class MatrixIO {
                     if (vector) {
                         if (words.length > 1)
                             throw new IOException("Expected only one word in each line for a vector");
-                        // in vector format each line is the value
-                        double value = Double.parseDouble(words[0]);
                         if (rows == 1) {
-                            output.addItem(0, count, value);
+                            opAssign.assign(0, count, words[0]);
                         } else {
-                            output.addItem(count, 0, value);
+                            opAssign.assign(count, 0, words[0]);
                         }
                         count++;
                     } else {
                         int row = Integer.parseInt(words[0]) - 1;
                         int col = Integer.parseInt(words[1]) - 1;
-                        double value = Double.parseDouble(words[2]);
-                        output.addItem(row, col, value);
+                        opAssign.assign(row, col, words[2]);
                     }
                 } else {
                     if (words.length > 3)
@@ -214,7 +272,7 @@ public class MatrixIO {
                     } else {
                         nz_length = Integer.parseInt(words[2]);
                     }
-                    output.reshape(rows, cols, nz_length);
+                    opReshape.reshape(rows, cols, nz_length);
                     hasHeader = true;
                 }
                 line = bufferedReader.readLine();
@@ -222,89 +280,6 @@ public class MatrixIO {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return output;
-    }
-
-    /**
-     * <p>Reads a stream in Matrix Market Coordinate format</p>
-     *
-     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
-     *
-     * @param reader Input reader
-     * @return Matrix in triplet format
-     */
-    public static FMatrixSparseTriplet loadMatrixMarketF( Reader reader ) {
-        FMatrixSparseTriplet output = new FMatrixSparseTriplet();
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        try {
-            boolean hasHeader = false;
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                if (line.length() == 0 || line.charAt(0) == '%') {
-                    line = bufferedReader.readLine();
-                    continue;
-                }
-                String[] words = line.trim().split("\\s+");
-                if (words.length != 3)
-                    throw new IOException("Unexpected number of words: " + words.length);
-                if (hasHeader) {
-                    int row = Integer.parseInt(words[0]) - 1;
-                    int col = Integer.parseInt(words[1]) - 1;
-                    float value = Float.parseFloat(words[2]);
-                    output.addItem(row, col, value);
-                } else {
-                    int rows = Integer.parseInt(words[0]);
-                    int cols = Integer.parseInt(words[1]);
-                    int nz_length = Integer.parseInt(words[2]);
-                    output.reshape(rows, cols, nz_length);
-                    hasHeader = true;
-                }
-                line = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return output;
-    }
-
-    /**
-     * <p>Reads a stream in Matrix Market Coordinate format</p>
-     *
-     * <a href="https://math.nist.gov/MatrixMarket/formats.html">Matrix Market</a>
-     *
-     * @param streamIn Input stream
-     * @return Matrix in triplet format
-     */
-    public static FMatrixSparseTriplet loadMatrixMarketF( InputStream streamIn ) {
-        FMatrixSparseTriplet output = new FMatrixSparseTriplet();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(streamIn, UTF_8));
-        try {
-            boolean hasHeader = false;
-            String line = reader.readLine();
-            while (line != null) {
-                if (line.length() == 0 || line.charAt(0) == '%')
-                    continue;
-                String[] words = line.trim().split("\\s");
-                if (words.length != 3)
-                    throw new IOException("Unexpected number of words: " + words.length);
-                if (hasHeader) {
-                    int row = Integer.parseInt(words[0]);
-                    int col = Integer.parseInt(words[1]);
-                    float value = Float.parseFloat(words[2]);
-                    output.addItem(row, col, value);
-                } else {
-                    int rows = Integer.parseInt(words[0]);
-                    int cols = Integer.parseInt(words[1]);
-                    int nz_length = Integer.parseInt(words[2]);
-                    output.reshape(rows, cols, nz_length);
-                    hasHeader = true;
-                }
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return output;
     }
 
     /**
@@ -1016,4 +991,12 @@ public class MatrixIO {
 //        displayMatrix(decomp.getV(false),"V");
 //        displayMatrix(decomp.getW(null),"W");
 //    }
+
+    @FunctionalInterface interface AssignValue {
+        void assign( int row, int col, String word );
+    }
+
+    @FunctionalInterface interface ReshapeMatrix {
+        void reshape( int rows, int cols, int nzLength );
+    }
 }
