@@ -56,35 +56,35 @@ public class TestMatrixIO extends EjmlStandardJUnit {
     }
 
     @Test
-    public void load_save_matrix_market_F64() {
+    public void matrix_market_load_save_DSTR() {
         var original = new DMatrixSparseTriplet(3,4,5);
         original.set(1,1,1.5);
         original.set(2,3,2.5);
 
-        Writer output = new StringWriter();
+        var output = new StringWriter();
         MatrixIO.saveMatrixMarket(original,"%.22f",output);
-        Reader input = new CharArrayReader(output.toString().toCharArray());
+        var input = new CharArrayReader(output.toString().toCharArray());
         DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketDSTR(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
 
     @Test
-    public void load_save_matrix_market_F32() {
+    public void matrix_market_load_save_FSTR() {
         var original = new FMatrixSparseTriplet(3,4,5);
         original.set(1,1,1.5f);
         original.set(2,3,2.5f);
 
-        Writer output = new StringWriter();
+        var output = new StringWriter();
         MatrixIO.saveMatrixMarket(original,"%.22f",output);
-        Reader input = new CharArrayReader(output.toString().toCharArray());
+        var input = new CharArrayReader(output.toString().toCharArray());
         FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketFSTR(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
     }
 
     @Test
-    public void load_save_matrix_market_DDRM() {
+    public void matrix_market_load_save_DDRM() {
         var original = new DMatrixRMaj(3,4);
         RandomMatrices_DDRM.fillUniform(original, rand);
 
@@ -97,7 +97,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
     }
 
     @Test
-    public void load_save_matrix_market_FDRM() {
+    public void matrix_market_load_save_FDRM() {
         var original = new FMatrixRMaj(3,4);
         RandomMatrices_FDRM.fillUniform(original, rand);
 
@@ -109,9 +109,31 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(original, found, UtilEjml.TEST_F32);
     }
 
+    /**
+     * Load an array Matrix Market file with zeros that should be skipped when reading it as a sparse matrix
+     */
+    @Test
+    public void matrix_market_load_skipZeros() {
+        var original = new DMatrixRMaj(3,4);
+        original.set(1,1,1.5);
+        original.set(2,3,2.5);
+
+        // Save Dense
+        var output = new StringWriter();
+        MatrixIO.saveMatrixMarket(original,"%.22f",output);
+
+        // Load sparse
+        Reader input = new CharArrayReader(output.toString().toCharArray());
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketDSTR(input);
+
+        // There should only be two non zero values
+        assertEquals(2, found.nz_length);
+
+        EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
+    }
 
     @Test
-    public void load_matrix_market_vectorRow() {
+    public void matrix_market_load_vectorRow() {
         var text = """
                 %%MatrixMarket matrix array real general
                 %
@@ -130,7 +152,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
     }
 
     @Test
-    public void load_matrix_market_vectorCol() {
+    public void matrix_market_load_vectorCol() {
         var text = """
                 %%MatrixMarket matrix array real general
                 %

@@ -226,7 +226,7 @@ public class MatrixIO {
         var output = new DMatrixSparseTriplet();
         loadMatrixMarket(reader,
                 output::reshape,
-                ( r, c, word ) -> output.addItem(r, c, Double.parseDouble(word)));
+                output::addItem);
         return output;
     }
 
@@ -242,7 +242,7 @@ public class MatrixIO {
         var output = new DMatrixRMaj(0, 0);
         loadMatrixMarket(reader,
                 ( r, c, l ) -> output.reshape(r, c),
-                ( r, c, word ) -> output.set(r, c, Double.parseDouble(word)));
+                output::set);
         return output;
     }
 
@@ -258,7 +258,7 @@ public class MatrixIO {
         var output = new FMatrixSparseTriplet();
         loadMatrixMarket(reader,
                 output::reshape,
-                ( r, c, word ) -> output.addItem(r, c, Float.parseFloat(word)));
+                ( r, c, value ) -> output.addItem(r, c, (float)value));
         return output;
     }
 
@@ -274,7 +274,7 @@ public class MatrixIO {
         var output = new FMatrixRMaj(0, 0);
         loadMatrixMarket(reader,
                 ( r, c, l ) -> output.reshape(r, c),
-                ( r, c, word ) -> output.set(r, c, Float.parseFloat(word)));
+                ( r, c, value ) -> output.set(r, c, (float)value));
         return output;
     }
 
@@ -299,39 +299,51 @@ public class MatrixIO {
                     line = bufferedReader.readLine();
                     continue;
                 }
-                String[] words = line.trim().split("\\s+");
-
-                if (hasHeader) {
-                    if (array) {
-                        if (words.length > 1)
-                            throw new IOException("Expected only one word in each line for a vector");
-                        opAssign.assign(count%rows, count/rows, words[0]);
-                        count++;
+                try {
+                    String[] words = line.trim().split("\\s+");
+                    if (hasHeader) {
+                        int row, col;
+                        double value;
+                        if (array) {
+                            if (words.length > 1)
+                                throw new IOException("Expected only one word in each line for a vector");
+                            row = count%rows;
+                            col = count/rows;
+                            value = Double.parseDouble(words[0]);
+                            count++;
+                            // Skip if the value is zero. When creating a sparse matrix this can be very imporant.
+                            if (value == 0.0)
+                                continue;
+                        } else {
+                            row = Integer.parseInt(words[0]) - 1;
+                            col = Integer.parseInt(words[1]) - 1;
+                            value = Double.parseDouble(words[2]);
+                            // Don't skip zeros in coordinate format since someone might be using the structure
+                            // to encode information
+                        }
+                        opAssign.assign(row, col, value);
                     } else {
-                        int row = Integer.parseInt(words[0]) - 1;
-                        int col = Integer.parseInt(words[1]) - 1;
-                        opAssign.assign(row, col, words[2]);
-                    }
-                } else {
-                    if (words.length > 3)
-                        throw new IOException("Too many words in header. '" + line + "'");
-                    // read matrix shape
-                    rows = Integer.parseInt(words[0]);
-                    cols = Integer.parseInt(words[1]);
+                        if (words.length > 3)
+                            throw new IOException("Too many words in header. '" + line + "'");
+                        // read matrix shape
+                        rows = Integer.parseInt(words[0]);
+                        cols = Integer.parseInt(words[1]);
 
-                    // see if it's in the array or coordinate format
-                    // Array format is dense column major
-                    int nz_length;
-                    if (words.length == 2) {
-                        array = true;
-                        nz_length = rows*cols;
-                    } else {
-                        nz_length = Integer.parseInt(words[2]);
+                        // see if it's in the array or coordinate format
+                        // Array format is dense column major
+                        int nz_length;
+                        if (words.length == 2) {
+                            array = true;
+                            nz_length = rows*cols;
+                        } else {
+                            nz_length = Integer.parseInt(words[2]);
+                        }
+                        opReshape.reshape(rows, cols, nz_length);
+                        hasHeader = true;
                     }
-                    opReshape.reshape(rows, cols, nz_length);
-                    hasHeader = true;
+                } finally {
+                    line = bufferedReader.readLine();
                 }
-                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -1049,7 +1061,7 @@ public class MatrixIO {
 //    }
 
     @FunctionalInterface interface AssignValue {
-        void assign( int row, int col, String word );
+        void assign( int row, int col, double value );
     }
 
     @FunctionalInterface interface ReshapeMatrix {
