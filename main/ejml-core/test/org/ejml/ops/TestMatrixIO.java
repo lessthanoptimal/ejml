@@ -21,12 +21,10 @@ package org.ejml.ops;
 import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparseTriplet;
-import org.ejml.data.FMatrixSparseTriplet;
-import org.ejml.data.ZMatrixRMaj;
+import org.ejml.data.*;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.RandomMatrices_FDRM;
 import org.ejml.sparse.triplet.MatrixFeatures_DSTL;
 import org.ejml.sparse.triplet.RandomMatrices_DSTL;
 import org.junit.jupiter.api.Test;
@@ -64,9 +62,9 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         original.set(2,3,2.5);
 
         Writer output = new StringWriter();
-        MatrixIO.saveMatrixMarketD(original,"%.22f",output);
+        MatrixIO.saveMatrixMarket(original,"%.22f",output);
         Reader input = new CharArrayReader(output.toString().toCharArray());
-        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketD(input);
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketDSTR(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
@@ -78,26 +76,39 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         original.set(2,3,2.5f);
 
         Writer output = new StringWriter();
-        MatrixIO.saveMatrixMarketF(original,"%.22f",output);
+        MatrixIO.saveMatrixMarket(original,"%.22f",output);
         Reader input = new CharArrayReader(output.toString().toCharArray());
-        FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketF(input);
+        FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketFSTR(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
     }
 
     @Test
-    public void load_save_matrix_market_dense_F64() {
-        var original = new DMatrixSparseTriplet(3,4,5);
-        original.set(1,1,1.5);
-        original.set(2,3,2.5);
+    public void load_save_matrix_market_DDRM() {
+        var original = new DMatrixRMaj(3,4);
+        RandomMatrices_DDRM.fillUniform(original, rand);
 
-        Writer output = new StringWriter();
-        MatrixIO.saveMatrixMarketD(original,"%.22f",output);
-        Reader input = new CharArrayReader(output.toString().toCharArray());
-        DMatrixRMaj found = MatrixIO.loadMatrixMarketDenseD(input);
+        var output = new StringWriter();
+        MatrixIO.saveMatrixMarket(original,"%.22f",output);
+        var input = new CharArrayReader(output.toString().toCharArray());
+        DMatrixRMaj found = MatrixIO.loadMatrixMarketDDRM(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
+
+    @Test
+    public void load_save_matrix_market_FDRM() {
+        var original = new FMatrixRMaj(3,4);
+        RandomMatrices_FDRM.fillUniform(original, rand);
+
+        var output = new StringWriter();
+        MatrixIO.saveMatrixMarket(original,"%.22f",output);
+        var input = new CharArrayReader(output.toString().toCharArray());
+        FMatrixRMaj found = MatrixIO.loadMatrixMarketFDRM(input);
+
+        EjmlUnitTests.assertEquals(original, found, UtilEjml.TEST_F32);
+    }
+
 
     @Test
     public void load_matrix_market_vectorRow() {
@@ -110,7 +121,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
                 3
                 """;
 
-        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketD(new StringReader(text));
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketDSTR(new StringReader(text));
         assertEquals(3, found.numRows);
         assertEquals(1, found.numCols);
         assertEquals(1, found.nz_value.get(0));
@@ -128,7 +139,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
                 2
                 3
                 """;
-        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketD(new StringReader(text));
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketDSTR(new StringReader(text));
         assertEquals(1, found.numRows);
         assertEquals(3, found.numCols);
         assertEquals(1, found.nz_value.get(0));
