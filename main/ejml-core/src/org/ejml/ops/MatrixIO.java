@@ -167,7 +167,11 @@ public class MatrixIO {
         DMatrixSparseTriplet output = new DMatrixSparseTriplet();
         BufferedReader bufferedReader = new BufferedReader(reader);
         try {
+            boolean vector = false;
             boolean hasHeader = false;
+            // keeps track of number of elements read for vectors
+            int count = 0;
+            int rows = -1, cols = -1;
             String line = bufferedReader.readLine();
             while (line != null) {
                 if (line.length() == 0 || line.charAt(0) == '%') {
@@ -175,17 +179,41 @@ public class MatrixIO {
                     continue;
                 }
                 String[] words = line.trim().split("\\s+");
-                if (words.length != 3)
-                    throw new IOException("Unexpected number of words: " + words.length);
+
                 if (hasHeader) {
-                    int row = Integer.parseInt(words[0]) - 1;
-                    int col = Integer.parseInt(words[1]) - 1;
-                    double value = Double.parseDouble(words[2]);
-                    output.addItem(row, col, value);
+                    if (vector) {
+                        if (words.length > 1)
+                            throw new IOException("Expected only one word in each line for a vector");
+                        // in vector format each line is the value
+                        double value = Double.parseDouble(words[0]);
+                        if (rows == 1) {
+                            output.addItem(0, count, value);
+                        } else {
+                            output.addItem(count, 0, value);
+                        }
+                        count++;
+                    } else {
+                        int row = Integer.parseInt(words[0]) - 1;
+                        int col = Integer.parseInt(words[1]) - 1;
+                        double value = Double.parseDouble(words[2]);
+                        output.addItem(row, col, value);
+                    }
                 } else {
-                    int rows = Integer.parseInt(words[0]);
-                    int cols = Integer.parseInt(words[1]);
-                    int nz_length = Integer.parseInt(words[2]);
+                    if (words.length > 3)
+                        throw new IOException("Too many words in header. '" + line + "'");
+                    // read matrix shape
+                    rows = Integer.parseInt(words[0]);
+                    cols = Integer.parseInt(words[1]);
+
+                    int nz_length;
+                    if (words.length == 2) {
+                        vector = true;
+                        nz_length = Math.max(rows, cols);
+                        if (Math.min(rows, cols) != 1)
+                            throw new IOException("Vector matrix but neither size is equal to 1");
+                    } else {
+                        nz_length = Integer.parseInt(words[2]);
+                    }
                     output.reshape(rows, cols, nz_length);
                     hasHeader = true;
                 }

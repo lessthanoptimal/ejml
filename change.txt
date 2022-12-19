@@ -10,6 +10,7 @@ Date format: year/month/day
 
 - MatrixIO
   * Fixed Matrix Market save. Thanks Adam Logowski for pointing out the issue
+  * Vector matrices are supported in matrix market.
 
 ----- Version 0.41.1
 2022/12/04

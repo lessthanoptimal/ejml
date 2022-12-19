@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -83,6 +83,43 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         FMatrixSparseTriplet found = MatrixIO.loadMatrixMarketF(input);
 
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
+    }
+
+    @Test
+    public void load_matrix_market_vectorRow() {
+        var text = """
+                %%MatrixMarket matrix array real general
+                %
+                3 1
+                1
+                2
+                3
+                """;
+
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketD(new StringReader(text));
+        assertEquals(3, found.numRows);
+        assertEquals(1, found.numCols);
+        assertEquals(1, found.nz_value.get(0));
+        assertEquals(2, found.nz_value.get(1));
+        assertEquals(3, found.nz_value.get(2));
+    }
+
+    @Test
+    public void load_matrix_market_vectorCol() {
+        var text = """
+                %%MatrixMarket matrix array real general
+                %
+                1 3
+                1
+                2
+                3
+                """;
+        DMatrixSparseTriplet found = MatrixIO.loadMatrixMarketD(new StringReader(text));
+        assertEquals(1, found.numRows);
+        assertEquals(3, found.numCols);
+        assertEquals(1, found.nz_value.get(0));
+        assertEquals(2, found.nz_value.get(1));
+        assertEquals(3, found.nz_value.get(2));
     }
 
     @Test
