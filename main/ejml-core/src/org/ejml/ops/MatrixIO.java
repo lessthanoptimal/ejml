@@ -288,12 +288,25 @@ public class MatrixIO {
     private static void loadMatrixMarket( Reader reader, ReshapeMatrix opReshape, AssignValue opAssign ) {
         var bufferedReader = new BufferedReader(reader);
         try {
-            boolean array = false;
+            boolean arrayFormat = false;
             boolean hasHeader = false;
             // keeps track of number of elements read for vectors
             int count = 0;
             int rows = -1, cols = -1;
             String line = bufferedReader.readLine();
+
+            // The very first line should define the file type
+            if (line.startsWith("%%MatrixMarket")) {
+                String[] words = line.trim().split("\\s+");
+                arrayFormat = words[2].equals("array");
+                if (!words[3].equals("real")) {
+                    throw new RuntimeException("Can only read real files. not " + words[3]);
+                }
+            } else {
+                throw new RuntimeException("Missing MatrixMarket header on first line");
+            }
+            line = bufferedReader.readLine();
+
             while (line != null) {
                 if (line.length() == 0 || line.charAt(0) == '%') {
                     line = bufferedReader.readLine();
@@ -303,7 +316,7 @@ public class MatrixIO {
                     if (hasHeader) {
                         int row, col;
                         double value;
-                        if (array) {
+                        if (arrayFormat) {
                             row = count%rows;
                             col = count/rows;
                             value = Double.parseDouble(line.strip()); // it should only be one word
@@ -341,9 +354,10 @@ public class MatrixIO {
                         // Array format is dense column major
                         int nz_length;
                         if (words.length == 2) {
-                            array = true;
+                            if (!arrayFormat) throw new RuntimeException("Array header when coordinate file");
                             nz_length = rows*cols;
                         } else {
+                            if (arrayFormat) throw new RuntimeException("Coordinate header when array file");
                             nz_length = Integer.parseInt(words[2]);
                         }
                         opReshape.reshape(rows, cols, nz_length);
