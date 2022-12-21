@@ -165,7 +165,7 @@ public class MatrixIO {
      */
     public static void saveMatrixMarket( DMatrixRMaj matrix, String floatFormat, Writer writer ) {
         PrintWriter out = new PrintWriter(writer);
-        out.println("%%MatrixMarket matrix coordinate real general");
+        out.println("%%MatrixMarket matrix array real general");
         out.println("%=================================================================================");
         out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
         out.println("% printf format used '" + floatFormat + "'");
@@ -195,7 +195,7 @@ public class MatrixIO {
      */
     public static void saveMatrixMarket( FMatrixRMaj matrix, String floatFormat, Writer writer ) {
         PrintWriter out = new PrintWriter(writer);
-        out.println("%%MatrixMarket matrix coordinate real general");
+        out.println("%%MatrixMarket matrix array real general");
         out.println("%=================================================================================");
         out.println("% Matrix Market Coordinate file written by EJML " + EjmlVersion.VERSION);
         out.println("% printf format used '" + floatFormat + "'");
