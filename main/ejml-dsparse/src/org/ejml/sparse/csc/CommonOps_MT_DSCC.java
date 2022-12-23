@@ -37,6 +37,15 @@ import static org.ejml.UtilEjml.stringShapes;
  * @author Peter Abeles
  */
 public class CommonOps_MT_DSCC {
+    /**
+     * Matrix multiplication C = A*B. Handles optional data structures requires by 
+     * {@link #mult(DMatrixSparseCSC, DMatrixSparseCSC, DMatrixSparseCSC, GrowArray)}.
+     *
+     * @param A (Input) Sparse matrix. Not modified.
+     * @param B (Input) Sparse matrix. Not modified.
+     * @param outputC (Output) Storage for results. If null a new instance is returned.
+     * @return Results of matrix multiplication, the 'C' matrix
+     */
     public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC outputC ) {
         return mult(A, B, outputC, null);
     }
@@ -45,21 +54,22 @@ public class CommonOps_MT_DSCC {
      * Performs matrix multiplication. C = A*B. Concurrency workspace is about the same size as the resulting "output"
      * matrix.
      *
-     * @param A (Input) Matrix. Not modified.
-     * @param B (Input) Matrix. Not modified.
-     * @param outputC (Output) Storage for results. Data length is increased if insufficient.
-     * @param listWork (Optional) Storage for internal workspace. Can be null.
+     * @param A (Input) Sparse matrix. Not modified.
+     * @param B (Input) Sparse matrix. Not modified.
+     * @param outputC (Output) Storage for results. If null a new instance is returned.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
+     * @return Results of matrix multiplication, the 'C' matrix
      */
     public static DMatrixSparseCSC mult( DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC outputC,
-                                         @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
+                                         @Nullable GrowArray<Workspace_MT_DSCC> workspace ) {
         if (A.numCols != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A, A.numRows, B.numCols);
 
-        if (listWork == null)
-            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(Workspace_MT_DSCC::new);
 
-        ImplMultiplication_MT_DSCC.mult(A, B, outputC, listWork);
+        ImplMultiplication_MT_DSCC.mult(A, B, outputC, workspace);
 
         return outputC;
     }
@@ -69,24 +79,25 @@ public class CommonOps_MT_DSCC {
      *
      * C = &alpha;A + &beta;B
      *
-     * @param alpha scalar value multiplied against A
-     * @param A Matrix
-     * @param beta scalar value multiplied against B
-     * @param B Matrix
-     * @param outputC Output matrix.
-     * @param listWork (Optional) Storage for internal workspace. Can be null.
+     * @param alpha (Input) scalar value multiplied against A
+     * @param A (Input) Sparse matrix. Not modified.
+     * @param beta (Input) scalar value multiplied against B
+     * @param B (Input) Sparse matrix. Not modified.
+     * @param outputC (Output) Dense Matrix. If null a new instance is returned.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
+     * @return Results of matrix multiplication, the 'C' matrix
      */
     public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B,
                                         @Nullable DMatrixSparseCSC outputC,
-                                        @Nullable GrowArray<Workspace_MT_DSCC> listWork ) {
+                                        @Nullable GrowArray<Workspace_MT_DSCC> workspace ) {
         if (A.numRows != B.numRows || A.numCols != B.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A, A.numRows, A.numCols);
 
-        if (listWork == null)
-            listWork = new GrowArray<>(Workspace_MT_DSCC::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(Workspace_MT_DSCC::new);
 
-        ImplCommonOps_MT_DSCC.add(alpha, A, beta, B, outputC, listWork);
+        ImplCommonOps_MT_DSCC.add(alpha, A, beta, B, outputC, workspace);
 
         return outputC;
     }
@@ -94,120 +105,141 @@ public class CommonOps_MT_DSCC {
     /**
      * Performs matrix multiplication. C = A<sup>T</sup>*B
      *
-     * @param A Matrix
-     * @param B Dense Matrix
-     * @param outputC Dense Matrix
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix. If null a new instance is returned.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
+     * @return Results of matrix multiplication, the 'C' matrix
      */
     public static DMatrixRMaj mult( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
-                                    @Nullable GrowArray<DGrowArray> workArrays ) {
+                                    @Nullable GrowArray<DGrowArray> workspace ) {
         if (A.numCols != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numCols);
-        if (workArrays == null)
-            workArrays = new GrowArray<>(DGrowArray::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.mult(A, B, outputC, workArrays);
+        ImplMultiplication_MT_DSCC.mult(A, B, outputC, workspace);
 
         return outputC;
     }
 
     /**
      * <p>C = C + A<sup>T</sup>*B</p>
+     *
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix.
      */
     public static void multAdd( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
-                                @Nullable GrowArray<DGrowArray> workArrays ) {
+                                @Nullable GrowArray<DGrowArray> workspace ) {
         if (A.numCols != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         if (A.numRows != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        if (workArrays == null)
-            workArrays = new GrowArray<>(DGrowArray::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.multAdd(A, B, outputC, workArrays);
+        ImplMultiplication_MT_DSCC.multAdd(A, B, outputC, workspace);
     }
 
     /**
      * Performs matrix multiplication. C = A<sup>T</sup>*B
      *
-     * @param A Matrix
-     * @param B Dense Matrix
-     * @param outputC Dense Matrix
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix. If null a new instance is returned.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
+     * @return Results of matrix multiplication, the 'C' matrix
      */
     public static DMatrixRMaj multTransA( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
-                                          @Nullable GrowArray<DGrowArray> workArray ) {
+                                          @Nullable GrowArray<DGrowArray> workspace ) {
         if (A.numRows != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
 
         outputC = reshapeOrDeclare(outputC, A.numCols, B.numCols);
 
-        if (workArray == null)
-            workArray = new GrowArray<>(DGrowArray::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.multTransA(A, B, outputC, workArray);
+        ImplMultiplication_MT_DSCC.multTransA(A, B, outputC, workspace);
 
         return outputC;
     }
 
     /**
      * <p>C = C + A<sup>T</sup>*B</p>
+     *
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
      */
     public static void multAddTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
-                                      @Nullable GrowArray<DGrowArray> workArray ) {
+                                      @Nullable GrowArray<DGrowArray> workspace ) {
         if (A.numRows != B.numRows)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         if (A.numCols != outputC.numRows || B.numCols != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        if (workArray == null)
-            workArray = new GrowArray<>(DGrowArray::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.multAddTransA(A, B, outputC, workArray);
+        ImplMultiplication_MT_DSCC.multAddTransA(A, B, outputC, workspace);
     }
 
     /**
      * Performs matrix multiplication. C = A*B<sup>T</sup>
      *
-     * @param A Matrix
-     * @param B Dense Matrix
-     * @param outputC Dense Matrix
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix. If null a new instance is returned.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
+     * @return Results of matrix multiplication, the 'C' matrix
      */
     public static DMatrixRMaj multTransB( DMatrixSparseCSC A, DMatrixRMaj B, @Nullable DMatrixRMaj outputC,
-                                          @Nullable GrowArray<DGrowArray> workArrays ) {
+                                          @Nullable GrowArray<DGrowArray> workspace ) {
         if (A.numCols != B.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         outputC = reshapeOrDeclare(outputC, A.numRows, B.numRows);
 
-        if (workArrays == null)
-            workArrays = new GrowArray<>(DGrowArray::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.multTransB(A, B, outputC, workArrays);
+        ImplMultiplication_MT_DSCC.multTransB(A, B, outputC, workspace);
 
         return outputC;
     }
 
     /**
      * <p>C = C + A*B<sup>T</sup></p>
+     *
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix.
+     * @param workspace (Optional) Storage for internal workspace. Can be null.
      */
     public static void multAddTransB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC,
-                                      @Nullable GrowArray<DGrowArray> workArrays ) {
+                                      @Nullable GrowArray<DGrowArray> workspace ) {
         if (A.numCols != B.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B));
         if (A.numRows != outputC.numRows || B.numRows != outputC.numCols)
             throw new MatrixDimensionException("Inconsistent matrix shapes. " + stringShapes(A, B, outputC));
 
-        if (workArrays == null)
-            workArrays = new GrowArray<>(DGrowArray::new);
+        if (workspace == null)
+            workspace = new GrowArray<>(DGrowArray::new);
 
-        ImplMultiplication_MT_DSCC.multAddTransB(A, B, outputC, workArrays);
+        ImplMultiplication_MT_DSCC.multAddTransB(A, B, outputC, workspace);
     }
 
     /**
      * Performs matrix multiplication. C = A<sup>T</sup>*B<sup>T</sup>
      *
-     * @param A Matrix
-     * @param B Dense Matrix
-     * @param outputC Dense Matrix
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix.
+     * @return Results of matrix multiplication, the 'C' matrix
      */
     public static DMatrixRMaj multTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
         if (A.numRows != B.numCols)
@@ -221,6 +253,10 @@ public class CommonOps_MT_DSCC {
 
     /**
      * <p>C = C + A<sup>T</sup>*B<sup>T</sup></p>
+     *
+     * @param A (Input) Sparse Matrix. Not modified.
+     * @param B (Input) Dense Matrix. Not modified.
+     * @param outputC (Output) Dense Matrix.
      */
     public static void multAddTransAB( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj outputC ) {
         if (A.numRows != B.numCols)
