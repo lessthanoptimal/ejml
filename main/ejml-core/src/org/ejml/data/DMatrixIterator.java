@@ -20,7 +20,6 @@ package org.ejml.data;
 
 import java.util.Iterator;
 
-
 /**
  * This is a matrix iterator for traversing through a submatrix. For speed it is recommended
  * that you directly access the elements in the matrix, but there are some situations where this
@@ -48,7 +47,7 @@ public class DMatrixIterator implements Iterator<Double> {
     private int submatrixStride;
 
     // the current element
-    int subRow,subCol;
+    int subRow, subCol;
 
     /**
      * Creates a new iterator for traversing through a submatrix inside this matrix. It can be traversed
@@ -62,16 +61,16 @@ public class DMatrixIterator implements Iterator<Double> {
      * @param maxRow last row it will stop at.
      * @param maxCol last column it will stop at.
      */
-    public DMatrixIterator(DMatrixD1 a, boolean rowMajor,
-                           int minRow, int minCol, int maxRow, int maxCol
+    public DMatrixIterator( DMatrixD1 a, boolean rowMajor,
+                            int minRow, int minCol, int maxRow, int maxCol
     ) {
-        if( maxCol < minCol )
+        if (maxCol < minCol)
             throw new IllegalArgumentException("maxCol has to be more than or equal to minCol");
-        if( maxRow < minRow )
+        if (maxRow < minRow)
             throw new IllegalArgumentException("maxRow has to be more than or equal to minCol");
-        if( maxCol >= a.numCols)
+        if (maxCol >= a.numCols)
             throw new IllegalArgumentException("maxCol must be < numCols");
-        if( maxRow >= a.numRows)
+        if (maxRow >= a.numRows)
             throw new IllegalArgumentException("maxRow must be < numCRows");
 
         this.a = a;
@@ -79,34 +78,31 @@ public class DMatrixIterator implements Iterator<Double> {
         this.minCol = minCol;
         this.minRow = minRow;
 
-        size = (maxCol-minCol+1)*(maxRow-minRow+1);
+        size = (maxCol - minCol + 1)*(maxRow - minRow + 1);
 
-        if( rowMajor )
-            submatrixStride = maxCol-minCol+1;
+        if (rowMajor)
+            submatrixStride = maxCol - minCol + 1;
         else
-            submatrixStride = maxRow-minRow+1;
+            submatrixStride = maxRow - minRow + 1;
     }
 
-    @Override
-    public boolean hasNext() {
+    @Override public boolean hasNext() {
         return index < size;
     }
 
-    @Override
-    public Double next() {
-        if( rowMajor ) {
-            subRow = index / submatrixStride;
-            subCol = index % submatrixStride;
+    @Override public Double next() {
+        if (rowMajor) {
+            subRow = index/submatrixStride;
+            subCol = index%submatrixStride;
         } else {
-            subRow = index % submatrixStride;
-            subCol = index / submatrixStride;
+            subRow = index%submatrixStride;
+            subCol = index/submatrixStride;
         }
         index++;
-        return a.get(subRow+minRow,subCol+minCol);
+        return a.get(subRow + minRow, subCol + minCol);
     }
 
-    @Override
-    public void remove() {
+    @Override public void remove() {
         throw new RuntimeException("Operation not supported");
     }
 
@@ -116,11 +112,12 @@ public class DMatrixIterator implements Iterator<Double> {
      * @return Submatrix element's index.
      */
     public int getIndex() {
-        return index-1;
+        return index - 1;
     }
 
     /**
      * True if it is iterating through the matrix by rows and false if by columns.
+     *
      * @return row major or column major
      */
     public boolean isRowMajor() {
@@ -133,6 +130,6 @@ public class DMatrixIterator implements Iterator<Double> {
      * @param value The element's new value.
      */
     public void set( double value ) {
-        a.set(subRow+minRow,subCol+minCol,value);
+        a.set(subRow + minRow, subCol + minCol, value);
     }
 }

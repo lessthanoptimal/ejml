@@ -104,28 +104,23 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         setTo(original);
     }
 
-    @Override
-    public int getNumRows() {
+    @Override public int getNumRows() {
         return numRows;
     }
 
-    @Override
-    public int getNumCols() {
+    @Override public int getNumCols() {
         return numCols;
     }
 
-    @Override
-    public DMatrixSparseCSC copy() {
+    @Override public DMatrixSparseCSC copy() {
         return new DMatrixSparseCSC(this);
     }
 
-    @Override
-    public DMatrixSparseCSC createLike() {
+    @Override public DMatrixSparseCSC createLike() {
         return new DMatrixSparseCSC(numRows, numCols);
     }
 
-    @Override
-    public void setTo( Matrix original ) {
+    @Override public void setTo( Matrix original ) {
         DMatrixSparseCSC o = (DMatrixSparseCSC)original;
         reshape(o.numRows, o.numCols, o.nz_length);
         this.nz_length = o.nz_length;
@@ -136,18 +131,15 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         this.indicesSorted = o.indicesSorted;
     }
 
-    @Override
-    public void print() {
+    @Override public void print() {
         MatrixIO.printFancy(System.out, this, MatrixIO.DEFAULT_LENGTH);
     }
 
-    @Override
-    public void print( String format ) {
+    @Override public void print( String format ) {
         MatrixIO.print(System.out, this, format);
     }
 
-    @Override
-    public void printNonZero() {
+    @Override public void printNonZero() {
         String format = "%d %d " + MatrixIO.DEFAULT_FLOAT_FORMAT + "\n";
         System.out.println("Type = " + getType().name() + " , rows = " + numRows + " , cols = " + numCols
                 + " , nz_length = " + nz_length);
@@ -165,37 +157,32 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         }
     }
 
-    @Override
-    public boolean isAssigned( int row, int col ) {
+    @Override public boolean isAssigned( int row, int col ) {
         return nz_index(row, col) >= 0;
     }
 
-    @Override
-    public double get( int row, int col ) {
+    @Override public double get( int row, int col ) {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
         return unsafe_get(row, col);
     }
 
-    @Override
-    public double get( int row, int col, double fallBackValue ) {
+    @Override public double get( int row, int col, double fallBackValue ) {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
         return unsafe_get(row, col, fallBackValue);
     }
 
-    @Override
-    public double unsafe_get( int row, int col ) {
+    @Override public double unsafe_get( int row, int col ) {
         int index = nz_index(row, col);
         if (index >= 0)
             return nz_values[index];
         return 0;
     }
 
-    @Override
-    public double unsafe_get( int row, int col, double fallBackValue ) {
+    @Override public double unsafe_get( int row, int col, double fallBackValue ) {
         int index = nz_index(row, col);
         if (index >= 0)
             return nz_values[index];
@@ -226,16 +213,14 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         }
     }
 
-    @Override
-    public void set( int row, int col, double val ) {
+    @Override public void set( int row, int col, double val ) {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
         unsafe_set(row, col, val);
     }
 
-    @Override
-    public void unsafe_set( int row, int col, double val ) {
+    @Override public void unsafe_set( int row, int col, double val ) {
         int index = nz_index(row, col);
         if (index >= 0) {
             nz_values[index] = val;
@@ -272,8 +257,7 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         }
     }
 
-    @Override
-    public void remove( int row, int col ) {
+    @Override public void remove( int row, int col ) {
         int index = nz_index(row, col);
 
         if (index < 0) // it's not in the nz structure
@@ -291,25 +275,21 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         }
     }
 
-    @Override
-    public void zero() {
+    @Override public void zero() {
         Arrays.fill(col_idx, 0, numCols + 1, 0);
         nz_length = 0;
         indicesSorted = false; // see justification in reshape
     }
 
-    @Override
-    public DMatrixSparseCSC create( int numRows, int numCols ) {
+    @Override public DMatrixSparseCSC create( int numRows, int numCols ) {
         return new DMatrixSparseCSC(numRows, numCols);
     }
 
-    @Override
-    public int getNonZeroLength() {
+    @Override public int getNonZeroLength() {
         return nz_length;
     }
 
-    @Override
-    public void reshape( int numRows, int numCols, int arrayLength ) {
+    @Override public void reshape( int numRows, int numCols, int arrayLength ) {
         // OK so technically it is sorted, but forgetting to correctly set this flag is a common mistake so
         // decided to be conservative and mark it as unsorted so that stuff doesn't blow up
         this.indicesSorted = false;
@@ -325,13 +305,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         }
     }
 
-    @Override
-    public void reshape( int numRows, int numCols ) {
+    @Override public void reshape( int numRows, int numCols ) {
         reshape(numRows, numCols, 0);
     }
 
-    @Override
-    public void shrinkArrays() {
+    @Override public void shrinkArrays() {
         if (nz_length < nz_values.length) {
             double[] tmp_values = new double[nz_length];
             int[] tmp_rows = new int[nz_length];
@@ -453,13 +431,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
         return nz_length == numRows*numCols;
     }
 
-    @Override
-    public MatrixType getType() {
+    @Override public MatrixType getType() {
         return MatrixType.DSCC;
     }
 
-    @Override
-    public Iterator<CoordinateRealValue> createCoordinateIterator() {
+    @Override public Iterator<CoordinateRealValue> createCoordinateIterator() {
         return new Iterator<>() {
             final CoordinateRealValue coordinate = new CoordinateRealValue();
             int nz_index = 0; // the index of the non-zero value and row
@@ -469,13 +445,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
                 incrementColumn();
             }
 
-            @Override
-            public boolean hasNext() {
+            @Override         public boolean hasNext() {
                 return nz_index < nz_length;
             }
 
-            @Override
-            public CoordinateRealValue next() {
+            @Override         public CoordinateRealValue next() {
                 coordinate.row = nz_rows[nz_index];
                 coordinate.col = column;
                 coordinate.value = nz_values[nz_index];
