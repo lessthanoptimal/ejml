@@ -247,6 +247,30 @@ public class UtilEjml {
         }
     }
 
+    /**
+     * Ensures that the matrix shape is valid. This means that an array that's large enough can be declared and
+     * that neither rows or columns are negative.
+     */
+    public static void checkValidMatrixShape( int rows, int cols ) {
+        if (rows < 0)
+            throw new IllegalArgumentException("Rows are negative: value=" + rows);
+        if (cols < 0)
+            throw new IllegalArgumentException("Cols are negative: value=" + cols);
+        checkTooLarge(rows, cols);
+    }
+
+    /**
+     * Ensures that the matrix shape is valid. This means that an array that's large enough can be declared and
+     * that neither rows or columns are negative.
+     */
+    public static void checkValidMatrixShapeComplex( int rows, int cols ) {
+        if (rows < 0)
+            throw new IllegalArgumentException("Rows are negative: value=" + rows);
+        if (cols < 0)
+            throw new IllegalArgumentException("Cols are negative: value=" + cols);
+        checkTooLargeComplex(rows, cols);
+    }
+
     public static void checkTooLarge( int rows, int cols ) {
         if ((rows*cols) != ((long)rows*cols))
             throw new IllegalArgumentException("Matrix size exceeds the size of an integer");

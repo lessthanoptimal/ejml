@@ -290,6 +290,9 @@ public class DMatrixSparseCSC implements DMatrixSparse {
     }
 
     @Override public void reshape( int numRows, int numCols, int arrayLength ) {
+        if (numRows < 0 || numCols < 0 || arrayLength < 0)
+            throw new IllegalArgumentException("Rows, columns, and arrayLength must be not be negative");
+
         // OK so technically it is sorted, but forgetting to correctly set this flag is a common mistake so
         // decided to be conservative and mark it as unsorted so that stuff doesn't blow up
         this.indicesSorted = false;

@@ -21,6 +21,8 @@ package org.ejml.data;
 import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 
+import static org.ejml.UtilEjml.checkValidMatrixShapeComplex;
+
 /**
  * A generic abstract class for matrices whose data is stored in a single 1D array of doubles. The
  * format of the elements in this array is not specified. For example row major, column major,
@@ -42,6 +44,13 @@ public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
      * Number of columns in the matrix.
      */
     public int numCols;
+
+    /** Sets the matrix's shape while checking that it's valid */
+    protected void assignShape(int rows, int cols) {
+        checkValidMatrixShapeComplex(rows, cols);
+        this.numRows = rows;
+        this.numCols = cols;
+    }
 
     /**
      * Used to get a reference to the internal data.

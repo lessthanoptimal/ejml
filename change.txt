@@ -2,15 +2,14 @@ Change log for EJML
 
 Date format: year/month/day
 
------ Version 0.42
-2023/XX/XX
-
 ----- Version 0.41.2
 20XX
 
 - MatrixIO
   * Fixed Matrix Market save. Thanks Adam Logowski for pointing out the issue
   * Vector matrices are supported in matrix market.
+- Negative rows or columns are now illegal
+  * Thanks JozefKutas for pointing out the issue
 
 ----- Version 0.41.1
 2022/12/04

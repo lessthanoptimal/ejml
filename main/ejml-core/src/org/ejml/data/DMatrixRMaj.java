@@ -17,7 +17,6 @@
  */
 package org.ejml.data;
 
-import org.ejml.UtilEjml;
 import org.ejml.ops.DConvertArrays;
 import org.ejml.ops.MatrixIO;
 
@@ -74,12 +73,8 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param data The formatted 1D array. Not modified.
      */
     public DMatrixRMaj( int numRows, int numCols, boolean rowMajor, double... data ) {
-        UtilEjml.checkTooLarge(numRows, numCols);
-        final int length = numRows*numCols;
-        this.data = new double[length];
-
-        this.numRows = numRows;
-        this.numCols = numCols;
+        assignShape(numRows, numCols);
+        this.data = new double[numRows*numCols];
 
         set(numRows, numCols, rowMajor, data);
     }
@@ -94,7 +89,7 @@ public class DMatrixRMaj extends DMatrix1Row {
      *
      * @param data 2D array representation of the matrix. Not modified.
      */
-    public DMatrixRMaj( double data[][] ) {
+    public DMatrixRMaj( double[][] data ) {
         this(1, 1);
         set(data);
     }
@@ -118,11 +113,8 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param numCols The number of columns in the matrix.
      */
     public DMatrixRMaj( int numRows, int numCols ) {
-        UtilEjml.checkTooLarge(numRows, numCols);
+        assignShape(numRows, numCols);
         data = new double[numRows*numCols];
-
-        this.numRows = numRows;
-        this.numCols = numCols;
     }
 
     /**
@@ -147,10 +139,11 @@ public class DMatrixRMaj extends DMatrix1Row {
     }
 
     /**
-     * Default constructor in which nothing is configured. THIS IS ONLY PUBLICLY ACCESSIBLE SO THAT THIS
-     * CLASS CAN BE A JAVA BEAN. DON'T USE IT UNLESS YOU REALLY KNOW WHAT YOU'RE DOING!
+     * Default constructor that creates a 0 by 0 matrix.
      */
-    public DMatrixRMaj() {}
+    public DMatrixRMaj() {
+        this(0, 0);
+    }
 
     /**
      * Creates a new DMatrixRMaj which contains the same information as the provided Matrix64F.
@@ -177,29 +170,25 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @return A matrix which references the provided data internally.
      */
     public static DMatrixRMaj wrap( int numRows, int numCols, double[] data ) {
-        UtilEjml.checkTooLarge(numRows, numCols);
-        DMatrixRMaj s = new DMatrixRMaj();
+        var s = new DMatrixRMaj();
+        s.assignShape(numRows, numCols);
         s.data = data;
-        s.numRows = numRows;
-        s.numCols = numCols;
 
         return s;
     }
 
     @Override public void reshape( int numRows, int numCols, boolean saveValues ) {
-        UtilEjml.checkTooLarge(numRows, numCols);
+        int numElements = getNumElements();
+        assignShape(numRows, numCols);
         if (data.length < numRows*numCols) {
-            double[] d = new double[numRows*numCols];
+            var d = new double[numRows*numCols];
 
             if (saveValues) {
-                System.arraycopy(data, 0, d, 0, getNumElements());
+                System.arraycopy(data, 0, d, 0, numElements);
             }
 
             this.data = d;
         }
-
-        this.numRows = numRows;
-        this.numCols = numCols;
     }
 
     /**
@@ -237,7 +226,6 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param col The column of the element.
      * @param value The value that is added to the element
      */
-    // todo move to commonops
     public void add( int row, int col, double value ) {
         if (col < 0 || col >= numCols || row < 0 || row >= numRows) {
             throw new IllegalArgumentException("Specified element is out of bounds");
