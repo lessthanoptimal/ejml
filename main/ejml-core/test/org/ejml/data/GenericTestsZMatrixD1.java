@@ -23,10 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsDMatrixD1 extends GenericTestsDMatrix {
+public abstract class GenericTestsZMatrixD1 extends GenericTestsZMatrix {
 
     @Override
-    protected abstract DMatrixD1 createMatrix( int numRows, int numCols );
+    protected abstract ZMatrixD1 createMatrix( int numRows, int numCols );
 
     @Override
     public void allTests() {
@@ -34,20 +34,20 @@ public abstract class GenericTestsDMatrixD1 extends GenericTestsDMatrix {
         testReshape();
         testReshape_Negative();
         testReshape_Zero();
-        testSetAndGet_1D();
     }
 
     public void testReshape() {
-        DMatrixD1 mat = createMatrix(3, 2);
+        ZMatrixD1 mat = createMatrix(3, 2);
 
         double[] origData = mat.getData();
 
-        mat.reshape(6, 1, false);
+        mat.reshape(6, 1);
 
         assertSame(origData, mat.getData());
         assertEquals(1, mat.getNumCols());
         assertEquals(6, mat.getNumRows());
     }
+
 
     public void testReshape_Negative() {
         ReshapeMatrix mat = createMatrix(2, 2);
@@ -84,19 +84,5 @@ public abstract class GenericTestsDMatrixD1 extends GenericTestsDMatrix {
         mat.reshape(0, 0);
         assertEquals(0, mat.getNumRows());
         assertEquals(0, mat.getNumCols());
-    }
-
-    public void testSetAndGet_1D() {
-        DMatrixD1 mat = createMatrix(3, 4);
-
-        int indexA = mat.getIndex(1, 2);
-        int indexB = mat.getIndex(2, 1);
-
-        assertTrue(indexA != indexB);
-
-        mat.set(indexA, 2.0);
-
-        assertEquals(0, mat.get(indexB), 1e-6);
-        assertEquals(2, mat.get(indexA), 1e-6);
     }
 }

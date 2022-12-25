@@ -25,9 +25,6 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
 public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
     public boolean assignable = true;
 
@@ -53,8 +50,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         return createSparse(t);
     }
 
-    @Test
-    public void set() {
+    @Test void set() {
         DMatrixSparse m = createSparse(3, 4);
 
         if (assignable) {
@@ -97,8 +93,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         }
     }
 
-    @Test
-    public void get() {
+    @Test void get() {
         DMatrixSparseTriplet tmp = new DMatrixSparseTriplet(3, 4, 1);
         tmp.addItem(1, 2, 5);
 
@@ -117,8 +112,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         }
     }
 
-    @Test
-    public void get_with_fallBackValue() {
+    @Test void get_with_fallBackValue() {
         DMatrixSparseTriplet tmp = new DMatrixSparseTriplet(3, 4, 1);
         tmp.addItem(1, 2, 5);
 
@@ -139,8 +133,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         }
     }
 
-    @Test
-    public void remove_case0() {
+    @Test void remove_case0() {
         DMatrixSparse m = (DMatrixSparse)createMatrix(3, 4);
         DMatrixSparse c = m.copy();
 
@@ -162,8 +155,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         }
     }
 
-    @Test
-    public void remove_case1() {
+    @Test void remove_case1() {
         DMatrixSparse m = (DMatrixSparse)createMatrix(3, 3);
         // create an identify matrix
         m.zero();
@@ -189,8 +181,7 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         }
     }
 
-    @Test
-    public void reshape() {
+    @Test void reshape() {
         DMatrixSparse m = (DMatrixSparse)createMatrix(3, 4);
         m.reshape(2, 4, 8);
         assertEquals(0, m.getNonZeroLength());
@@ -198,8 +189,44 @@ public abstract class GenericTestsDMatrixSparse extends GenericTestsDMatrix {
         assertEquals(4, m.getNumCols());
     }
 
-    @Test
-    public void iterator() {
+    @Test void reshape_Negative() {
+        DMatrixSparse mat = (DMatrixSparse)createMatrix(3, 4);
+
+        // set each axis to negative independently to ensure they are both checked
+        try {
+            mat.reshape(-1, 2);
+            fail("Should have thrown an exception");
+        } catch (IllegalArgumentException ignore) {
+            // it should throw an exception. Now stop bothering me error prone!
+        }
+
+        try {
+            mat.reshape(2, -1);
+            fail("Should have thrown an exception");
+        } catch (IllegalArgumentException ignore) {
+            // it should throw an exception. Now stop bothering me error prone!
+        }
+
+        // Turns out it was only throwing an exception because the array size is negative when rows*cols
+        try {
+            mat.reshape(-1, -1);
+            fail("Should have thrown an exception");
+        } catch (IllegalArgumentException ignore) {
+            // it should throw an exception. Now stop bothering me error prone!
+        }
+    }
+
+    /**
+     * 0x0 matrix should be allowed.
+     */
+    @Test void reshape_Zero() {
+        DMatrixSparse mat = (DMatrixSparse)createMatrix(3, 4);
+        mat.reshape(0, 0);
+        assertEquals(0, mat.getNumRows());
+        assertEquals(0, mat.getNumCols());
+    }
+
+    @Test void iterator() {
         DMatrixSparse m = createSparse(3, 4);
         assertFalse(m.createCoordinateIterator().hasNext());
 

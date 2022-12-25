@@ -27,14 +27,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author Peter Abeles
  */
-public abstract class GenericTestsDMatrix extends EjmlStandardJUnit {
-    protected abstract DMatrix createMatrix( int numRows, int numCols );
+public abstract class GenericTestsZMatrix extends EjmlStandardJUnit {
+    protected abstract ZMatrix createMatrix( int numRows, int numCols );
 
     public void allTests() {
         testGetNumRows();
         testGetNumCols();
         testSetAndGet_2D();
-        testSetAndGet_2D_unsafe();
         negativeSizedMatrix();
         zeroByZeroMatrix();
     }
@@ -71,19 +70,19 @@ public abstract class GenericTestsDMatrix extends EjmlStandardJUnit {
      * 0x0 matrix should be allowed.
      */
     public void zeroByZeroMatrix() {
-        DMatrix mat = createMatrix(0, 0);
+        ZMatrix mat = createMatrix(0, 0);
         assertEquals(0, mat.getNumRows());
         assertEquals(0, mat.getNumCols());
     }
 
     public void testGetNumRows() {
-        DMatrix mat = createMatrix(2, 3);
+        ZMatrix mat = createMatrix(2, 3);
 
         assertEquals(2, mat.getNumRows());
     }
 
     public void testGetNumCols() {
-        DMatrix mat = createMatrix(2, 3);
+        ZMatrix mat = createMatrix(2, 3);
 
         assertEquals(3, mat.getNumCols());
     }
@@ -100,48 +99,27 @@ public abstract class GenericTestsDMatrix extends EjmlStandardJUnit {
     }
 
     private void checkSetAndGet( int m, int n ) {
-        DMatrix mat = createMatrix(m, n);
+        ZMatrix mat = createMatrix(m, n);
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                mat.set(i, j, i*m + j);
+                mat.set(i, j, i*m + j, j);
             }
         }
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                double found = mat.get(i, j);
-
-                assertEquals(i*m + j, found, UtilEjml.TEST_F64);
-            }
-        }
-    }
-
-    public void testSetAndGet_2D_unsafe() {
-        // test a variety of different shapes. Added rigor needed
-        // to properly test block matrix.
-        checkSetAndGet_unsafe(10, 12);
-        checkSetAndGet_unsafe(12, 10);
-        checkSetAndGet_unsafe(10, 10);
-        checkSetAndGet_unsafe(19, 5);
-        checkSetAndGet_unsafe(5, 19);
-        checkSetAndGet_unsafe(19, 19);
-    }
-
-    private void checkSetAndGet_unsafe( int m, int n ) {
-        DMatrix mat = createMatrix(m, n);
+        var storage = new Complex_F64();
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                mat.unsafe_set(i, j, i*m + j);
-            }
-        }
+                double foundReal = mat.getReal(i, j);
+                double foundImg = mat.getImag(i, j);
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                double found = mat.unsafe_get(i, j);
+                assertEquals(i*m + j, foundReal, UtilEjml.TEST_F64);
+                assertEquals(j, foundImg, UtilEjml.TEST_F64);
 
-                assertEquals(i*m + j, found, UtilEjml.TEST_F64);
+                mat.get(i, j, storage);
+                assertEquals(foundReal, storage.real);
+                assertEquals(foundImg, storage.imaginary);
             }
         }
     }

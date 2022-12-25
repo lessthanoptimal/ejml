@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -54,17 +54,19 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
      */
     public int numCols;
 
-    public DMatrixSparseTriplet() {
-    }
+    public DMatrixSparseTriplet() {}
 
     /**
      * @param numRows Number of rows in the matrix
      * @param numCols Number of columns in the matrix
-     * @param initLength Initial maximum length of data array.
+     * @param arrayLength Initial maximum length of data array.
      */
-    public DMatrixSparseTriplet( int numRows, int numCols, int initLength ) {
-        nz_rowcol.reshape(initLength*2);
-        nz_value.reshape(initLength);
+    public DMatrixSparseTriplet( int numRows, int numCols, int arrayLength ) {
+        if (numRows < 0 || numCols < 0 || arrayLength < 0)
+            throw new IllegalArgumentException("Rows, columns, and arrayLength must be not be negative");
+
+        nz_rowcol.reshape(arrayLength*2);
+        nz_value.reshape(arrayLength);
         this.numRows = numRows;
         this.numCols = numCols;
     }
@@ -79,15 +81,17 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         numCols = 0;
     }
 
-    @Override
-    public void reshape( int numRows, int numCols ) {
+    @Override public void reshape( int numRows, int numCols ) {
+        if (numRows < 0 || numCols < 0)
+            throw new IllegalArgumentException("Rows, columns, and arrayLength must be not be negative");
         this.numRows = numRows;
         this.numCols = numCols;
         this.nz_length = 0;
     }
 
-    @Override
-    public void reshape( int numRows, int numCols, int arrayLength ) {
+    @Override public void reshape( int numRows, int numCols, int arrayLength ) {
+        if (numRows < 0 || numCols < 0 || arrayLength < 0)
+            throw new IllegalArgumentException("Rows, columns, and arrayLength must be not be negative");
         reshape(numRows, numCols);
         nz_rowcol.reshape(arrayLength*2);
         nz_value.reshape(arrayLength);
@@ -149,8 +153,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
      * @param value value of element.
      * @see #addItem(int, int, double) For a faster but less "safe" alternative
      */
-    @Override
-    public void set( int row, int col, double value ) {
+    @Override public void set( int row, int col, double value ) {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
@@ -164,8 +167,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
      * @param col Matrix element's column index.
      * @param value value of element.
      */
-    @Override
-    public void unsafe_set( int row, int col, double value ) {
+    @Override public void unsafe_set( int row, int col, double value ) {
         int index = nz_index(row, col);
         if (index < 0)
             addItem(row, col, value);
@@ -182,8 +184,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
      * @param col Matrix element's column index.
      * @return Value at (row,col)
      */
-    @Override
-    public double get( int row, int col ) {
+    @Override public double get( int row, int col ) {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
@@ -199,16 +200,14 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
      * @param fallBackValue Value to return, if the element is not assigned
      * @return Value at (row,col) or the fallBackValue, if the element is not assigned.
      */
-    @Override
-    public double get( int row, int col, double fallBackValue ) {
+    @Override public double get( int row, int col, double fallBackValue ) {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
         return unsafe_get(row, col, fallBackValue);
     }
 
-    @Override
-    public double unsafe_get( int row, int col ) {
+    @Override public double unsafe_get( int row, int col ) {
         int index = nz_index(row, col);
         if (index < 0)
             return 0;
@@ -216,8 +215,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
             return nz_value.data[index];
     }
 
-    @Override
-    public double unsafe_get( int row, int col, double fallBackValue ) {
+    @Override public double unsafe_get( int row, int col, double fallBackValue ) {
         int index = nz_index(row, col);
         if (index < 0)
             return fallBackValue;
@@ -240,33 +238,27 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         return nz_length;
     }
 
-    @Override
-    public int getNumRows() {
+    @Override public int getNumRows() {
         return numRows;
     }
 
-    @Override
-    public int getNumCols() {
+    @Override public int getNumCols() {
         return numCols;
     }
 
-    @Override
-    public <T extends Matrix> T copy() {
+    @Override public <T extends Matrix> T copy() {
         return (T)new DMatrixSparseTriplet(this);
     }
 
-    @Override
-    public <T extends Matrix> T createLike() {
+    @Override public <T extends Matrix> T createLike() {
         return (T)new DMatrixSparseTriplet(numRows, numCols, nz_length);
     }
 
-    @Override
-    public <T extends Matrix> T create( int numRows, int numCols ) {
+    @Override public <T extends Matrix> T create( int numRows, int numCols ) {
         return (T)new DMatrixSparseTriplet(numRows, numCols, 1);
     }
 
-    @Override
-    public void setTo( Matrix original ) {
+    @Override public void setTo( Matrix original ) {
         DMatrixSparseTriplet orig = (DMatrixSparseTriplet)original;
         reshape(orig.numRows, orig.numCols);
         this.nz_rowcol.setTo(orig.nz_rowcol);
@@ -274,8 +266,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         this.nz_length = orig.nz_length;
     }
 
-    @Override
-    public void shrinkArrays() {
+    @Override public void shrinkArrays() {
         if (nz_length < nz_value.length) {
             double[] vtmp = new double[nz_length];
             int[] rctmp = new int[nz_length*2];
@@ -288,8 +279,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         }
     }
 
-    @Override
-    public void remove( int row, int col ) {
+    @Override public void remove( int row, int col ) {
         int where = nz_index(row, col);
         if (where >= 0) {
 
@@ -305,28 +295,23 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         }
     }
 
-    @Override
-    public boolean isAssigned( int row, int col ) {
+    @Override public boolean isAssigned( int row, int col ) {
         return nz_index(row, col) >= 0;
     }
 
-    @Override
-    public void zero() {
+    @Override public void zero() {
         nz_length = 0;
     }
 
-    @Override
-    public int getNonZeroLength() {
+    @Override public int getNonZeroLength() {
         return nz_length;
     }
 
-    @Override
-    public void print() {
+    @Override public void print() {
         print(MatrixIO.DEFAULT_FLOAT_FORMAT);
     }
 
-    @Override
-    public void print( String format ) {
+    @Override public void print( String format ) {
         System.out.println("Type = " + getClass().getSimpleName() + " , rows = " + numRows + " , cols = " + numCols
                 + " , nz_length = " + nz_length);
         for (int row = 0; row < numRows; row++) {
@@ -343,8 +328,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         }
     }
 
-    @Override
-    public void printNonZero() {
+    @Override public void printNonZero() {
         System.out.println("Type = " + getClass().getSimpleName() + " , rows = " + numRows + " , cols = " + numCols
                 + " , nz_length = " + nz_length);
 
@@ -356,24 +340,20 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         }
     }
 
-    @Override
-    public MatrixType getType() {
+    @Override public MatrixType getType() {
         return MatrixType.DTRIPLET;
     }
 
-    @Override
-    public Iterator<CoordinateRealValue> createCoordinateIterator() {
+    @Override public Iterator<CoordinateRealValue> createCoordinateIterator() {
         return new Iterator<>() {
             final CoordinateRealValue coordinate = new CoordinateRealValue();
             int index = 0;
 
-            @Override
-            public boolean hasNext() {
+            @Override public boolean hasNext() {
                 return index < nz_length;
             }
 
-            @Override
-            public CoordinateRealValue next() {
+            @Override public CoordinateRealValue next() {
                 coordinate.row = nz_rowcol.data[index*2];
                 coordinate.col = nz_rowcol.data[index*2 + 1];
                 coordinate.value = nz_value.data[index];

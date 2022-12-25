@@ -18,7 +18,6 @@
 package org.ejml.data;
 
 import org.ejml.EjmlParameters;
-import org.ejml.UtilEjml;
 
 import java.util.Arrays;
 
@@ -31,11 +30,9 @@ public class DMatrixRBlock extends DMatrixD1 {
     public int blockLength;
 
     public DMatrixRBlock( int numRows, int numCols, int blockLength ) {
-        UtilEjml.checkTooLarge(numRows, numCols);
+        assignShape(numRows, numCols);
         this.data = new double[numRows*numCols];
         this.blockLength = blockLength;
-        this.numRows = numRows;
-        this.numCols = numCols;
     }
 
     public DMatrixRBlock( int numRows, int numCols ) {
@@ -46,8 +43,7 @@ public class DMatrixRBlock extends DMatrixD1 {
 
     public void set( DMatrixRBlock A ) {
         this.blockLength = A.blockLength;
-        this.numRows = A.numRows;
-        this.numCols = A.numCols;
+        assignShape(A.numRows, A.numCols);
 
         int N = numCols*numRows;
 
@@ -57,11 +53,10 @@ public class DMatrixRBlock extends DMatrixD1 {
         System.arraycopy(A.data, 0, data, 0, N);
     }
 
-    public static DMatrixRBlock wrap( double data[], int numRows, int numCols, int blockLength ) {
-        DMatrixRBlock ret = new DMatrixRBlock();
+    public static DMatrixRBlock wrap( double[] data, int numRows, int numCols, int blockLength ) {
+        var ret = new DMatrixRBlock();
+        ret.assignShape(numRows, numCols);
         ret.data = data;
-        ret.numRows = numRows;
-        ret.numCols = numCols;
         ret.blockLength = blockLength;
 
         return ret;
@@ -72,19 +67,15 @@ public class DMatrixRBlock extends DMatrixD1 {
     }
 
     @Override public void reshape( int numRows, int numCols, boolean saveValues ) {
-        UtilEjml.checkTooLarge(numRows, numCols);
-        if (numRows*numCols <= data.length) {
-            this.numRows = numRows;
-            this.numCols = numCols;
-        } else {
-            double[] data = new double[numRows*numCols];
+        int numElements = getNumElements();
+        assignShape(numRows, numCols);
+        if (data.length < numRows*numCols) {
+            var data = new double[numRows*numCols];
 
             if (saveValues) {
-                System.arraycopy(this.data, 0, data, 0, getNumElements());
+                System.arraycopy(this.data, 0, data, 0, numElements);
             }
 
-            this.numRows = numRows;
-            this.numCols = numCols;
             this.data = data;
         }
     }

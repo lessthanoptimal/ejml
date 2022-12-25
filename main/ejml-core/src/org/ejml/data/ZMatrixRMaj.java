@@ -88,9 +88,7 @@ public class ZMatrixRMaj extends ZMatrixD1 {
      * @param numCols number of columns
      */
     public ZMatrixRMaj( int numRows, int numCols ) {
-        UtilEjml.checkTooLargeComplex(numRows, numCols);
-        this.numRows = numRows;
-        this.numCols = numCols;
+        assignShape(numRows, numCols);
         this.data = new double[numRows*numCols*2];
     }
 
@@ -101,15 +99,12 @@ public class ZMatrixRMaj extends ZMatrixD1 {
 
     @Override
     public void reshape( int numRows, int numCols ) {
-        UtilEjml.checkTooLargeComplex(numRows, numCols);
-        int newLength = numRows*numCols*2;
+        assignShape(numRows, numCols);
 
+        int newLength = numRows*numCols*2;
         if (newLength > data.length) {
             data = new double[newLength];
         }
-
-        this.numRows = numRows;
-        this.numCols = numCols;
     }
 
     @Override
