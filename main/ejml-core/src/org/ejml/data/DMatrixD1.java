@@ -21,6 +21,8 @@ package org.ejml.data;
 import org.ejml.UtilEjml;
 import org.ejml.ops.MatrixIO;
 
+import static org.ejml.UtilEjml.checkValidMatrixShape;
+
 /**
  * A generic abstract class for matrices whose data is stored in a single 1D array of doubles. The
  * format of the elements in this array is not specified. For example row major, column major,
@@ -43,6 +45,13 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      */
     public int numCols;
 
+    /** Sets the matrix's shape while checking that it's valid */
+    protected void assignShape(int rows, int cols) {
+        checkValidMatrixShape(rows, cols);
+        this.numRows = rows;
+        this.numCols = cols;
+    }
+
     /**
      * Used to get a reference to the internal data.
      *
@@ -52,12 +61,12 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
         return data;
     }
 
-	/**
-	 * Changes the internal array reference.
-	 */
-	public void setData( double[] data ) {
-		this.data = data;
-	}
+    /**
+     * Changes the internal array reference.
+     */
+    public void setData( double[] data ) {
+        this.data = data;
+    }
 
     /**
      * Returns the internal array index for the specified row and column.
@@ -77,9 +86,8 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      *
      * @param b The matrix that this matrix is to be set equal to.
      */
-    public void setTo( DMatrixD1 b )
-    {
-        this.reshape(b.numRows,b.numCols);
+    public void setTo( DMatrixD1 b ) {
+        this.reshape(b.numRows, b.numCols);
 
         int dataLength = b.getNumElements();
 
@@ -104,7 +112,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param index Index of element that is to be set.
      * @param val The new value of the index.
      */
-    public double set( int index , double val ) {
+    public double set( int index, double val ) {
         // See benchmarkFunctionReturn. Pointless return does not degrade performance. Tested on JDK 1.6.0_21
         return data[index] = val;
     }
@@ -124,7 +132,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param index The index which is being modified.
      * @param val The value that is being added.
      */
-    public double plus( int index , double val ) {
+    public double plus( int index, double val ) {
         // See benchmarkFunctionReturn. Pointless return does not degrade performance. Tested on JDK 1.6.0_21
         return data[index] += val;
     }
@@ -144,7 +152,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param index The index which is being modified.
      * @param val The value that is being subtracted.
      */
-    public double minus( int index , double val ) {
+    public double minus( int index, double val ) {
         // See benchmarkFunctionReturn. Pointless return does not degrade performance. Tested on JDK 1.6.0_21
         return data[index] -= val;
     }
@@ -164,7 +172,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param index The index which is being modified.
      * @param val The value that is being multiplied.
      */
-    public double times( int index , double val ) {
+    public double times( int index, double val ) {
         // See benchmarkFunctionReturn. Pointless return does not degrade performance. Tested on JDK 1.6.0_21
         return data[index] *= val;
     }
@@ -184,7 +192,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param index The index which is being modified.
      * @param val The value that is being divided.
      */
-    public double div( int index , double val ) {
+    public double div( int index, double val ) {
         // See benchmarkFunctionReturn. Pointless return does not degrade performance. Tested on JDK 1.6.0_21
         return data[index] /= val;
     }
@@ -211,7 +219,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param numCols The new number of columns in the matrix.
      * @param saveValues If true then the value of each element will be save using a row-major reordering. Typically this should be false.
      */
-    public abstract void reshape(int numRows, int numCols, boolean saveValues);
+    public abstract void reshape( int numRows, int numCols, boolean saveValues );
 
     /**
      * Equivalent to invoking reshape(numRows,numCols,false);
@@ -220,8 +228,8 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param numCols The new number of columns in the matrix.
      */
     @Override
-    public void reshape( int numRows , int numCols ) {
-        reshape(numRows,numCols,false);
+    public void reshape( int numRows, int numCols ) {
+        reshape(numRows, numCols, false);
     }
 
     /**
@@ -236,19 +244,18 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      * @param maxCol last column it will stop at.
      * @return A new MatrixIterator
      */
-    public DMatrixIterator iterator(boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol)
-    {
-        return new DMatrixIterator(this,rowMajor, minRow, minCol, maxRow, maxCol);
+    public DMatrixIterator iterator( boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol ) {
+        return new DMatrixIterator(this, rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
     @Override
     public void print() {
-        MatrixIO.printFancy(System.out,this,MatrixIO.DEFAULT_LENGTH);
+        MatrixIO.printFancy(System.out, this, MatrixIO.DEFAULT_LENGTH);
     }
 
     @Override
     public void print( String format ) {
-        MatrixIO.print(System.out,this, format );
+        MatrixIO.print(System.out, this, format);
     }
 
     /**
@@ -272,7 +279,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      *
      * @param numRows Number of rows
      */
-    public void setNumRows(int numRows) {
+    public void setNumRows( int numRows ) {
         this.numRows = numRows;
     }
 
@@ -281,7 +288,7 @@ public abstract class DMatrixD1 implements ReshapeMatrix, DMatrix {
      *
      * @param numCols Number of columns
      */
-    public void setNumCols(int numCols) {
+    public void setNumCols( int numCols ) {
         this.numCols = numCols;
     }
 }

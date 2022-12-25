@@ -21,7 +21,6 @@ package org.ejml.data;
 import org.ejml.MatrixDimensionException;
 import org.ejml.UtilEjml;
 
-
 /**
  * A generic abstract class for matrices whose data is stored in a single 1D array of doubles. The
  * format of the elements in this array is not specified. For example row major, column major,
@@ -78,9 +77,8 @@ public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
      *
      * @param b The matrix that this matrix is to be set equal to.
      */
-    public void setTo( ZMatrixD1 b )
-    {
-        if( numRows != b.numRows || numCols != b.numCols ) {
+    public void setTo( ZMatrixD1 b ) {
+        if (numRows != b.numRows || numCols != b.numCols) {
             throw new MatrixDimensionException("The two matrices do not have compatible shapes.");
         }
 
@@ -110,7 +108,7 @@ public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
      *
      * @param numRows Number of rows
      */
-    public void setNumRows(int numRows) {
+    public void setNumRows( int numRows ) {
         this.numRows = numRows;
     }
 
@@ -119,7 +117,7 @@ public abstract class ZMatrixD1 implements ZMatrix, ReshapeMatrix {
      *
      * @param numCols Number of columns
      */
-    public void setNumCols(int numCols) {
+    public void setNumCols( int numCols ) {
         this.numCols = numCols;
     }
 

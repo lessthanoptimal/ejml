@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,7 +40,7 @@ public class DGrowArray {
         return length;
     }
 
-    public void reset() { reshape(0); }
+    public void reset() {reshape(0);}
 
     /**
      * Changes the array's length and doesn't attempt to preserve previous values if a new array is required
@@ -78,7 +78,7 @@ public class DGrowArray {
 
     public void add( double value ) {
         if (length >= data.length) {
-            growInternal(Math.min(500_000,data.length+10));
+            growInternal(Math.min(500_000, data.length + 10));
         }
 
         data[length++] = value;

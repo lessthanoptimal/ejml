@@ -25,7 +25,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-
 /**
  * <p>
  * DMatrixRMaj is a row matrix with real elements that are 64-bit floats. A matrix
@@ -48,6 +47,7 @@ import java.util.Arrays;
  * a[8]  a[9]   a[10]  a[11]
  * a[12] a[13]  a[14]  a[15]
  * </pre>
+ *
  * @author Peter Abeles
  */
 public class DMatrixRMaj extends DMatrix1Row {
@@ -73,36 +73,38 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param rowMajor If the array is encoded in a row-major or a column-major format.
      * @param data The formatted 1D array. Not modified.
      */
-    public DMatrixRMaj(int numRows, int numCols, boolean rowMajor, double... data) {
-        UtilEjml.checkTooLarge(numRows,numCols);
-        final int length = numRows * numCols;
-        this.data = new double[ length ];
+    public DMatrixRMaj( int numRows, int numCols, boolean rowMajor, double... data ) {
+        UtilEjml.checkTooLarge(numRows, numCols);
+        final int length = numRows*numCols;
+        this.data = new double[length];
 
         this.numRows = numRows;
         this.numCols = numCols;
 
-        set(numRows,numCols, rowMajor, data);
+        set(numRows, numCols, rowMajor, data);
     }
 
     /**
      * <p>
      * Creates a matrix with the values and shape defined by the 2D array 'data'.
      * It is assumed that 'data' has a row-major formatting:<br>
-     *  <br>
+     * <br>
      * data[ row ][ column ]
      * </p>
+     *
      * @param data 2D array representation of the matrix. Not modified.
      */
-    public DMatrixRMaj(double data[][] ) {
-        this(1,1);
+    public DMatrixRMaj( double data[][] ) {
+        this(1, 1);
         set(data);
     }
 
     /**
      * Creates a column vector the same length as this array
+     *
      * @param data elements in vector. copied
      */
-    public DMatrixRMaj(double data[]) {
+    public DMatrixRMaj( double data[] ) {
         this.data = data.clone();
         this.numRows = this.data.length;
         this.numCols = 1;
@@ -115,9 +117,9 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
      */
-    public DMatrixRMaj(int numRows  , int numCols ) {
-        UtilEjml.checkTooLarge(numRows,numCols);
-        data = new double[ numRows * numCols ];
+    public DMatrixRMaj( int numRows, int numCols ) {
+        UtilEjml.checkTooLarge(numRows, numCols);
+        data = new double[numRows*numCols];
 
         this.numRows = numRows;
         this.numCols = numCols;
@@ -129,8 +131,8 @@ public class DMatrixRMaj extends DMatrix1Row {
      *
      * @param orig The matrix which is to be copied. This is not modified or saved.
      */
-    public DMatrixRMaj(DMatrixRMaj orig ) {
-        this(orig.numRows,orig.numCols);
+    public DMatrixRMaj( DMatrixRMaj orig ) {
+        this(orig.numRows, orig.numCols);
         System.arraycopy(orig.data, 0, this.data, 0, orig.getNumElements());
     }
 
@@ -140,26 +142,26 @@ public class DMatrixRMaj extends DMatrix1Row {
      *
      * @param length The size of the matrice's data array.
      */
-    public DMatrixRMaj(int length ) {
-        data = new double[ length ];
+    public DMatrixRMaj( int length ) {
+        data = new double[length];
     }
 
     /**
      * Default constructor in which nothing is configured. THIS IS ONLY PUBLICLY ACCESSIBLE SO THAT THIS
      * CLASS CAN BE A JAVA BEAN. DON'T USE IT UNLESS YOU REALLY KNOW WHAT YOU'RE DOING!
      */
-    public DMatrixRMaj(){}
+    public DMatrixRMaj() {}
 
     /**
      * Creates a new DMatrixRMaj which contains the same information as the provided Matrix64F.
      *
      * @param mat Matrix whose values will be copied. Not modified.
      */
-    public DMatrixRMaj(DMatrix mat) {
-        this(mat.getNumRows(),mat.getNumCols());
-        for( int i = 0; i < numRows; i++ ) {
-            for( int j = 0; j < numCols; j++ ) {
-                set(i,j, mat.get(i,j));
+    public DMatrixRMaj( DMatrix mat ) {
+        this(mat.getNumRows(), mat.getNumCols());
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                set(i, j, mat.get(i, j));
             }
         }
     }
@@ -174,8 +176,8 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param data Data that is being wrapped. Referenced Saved.
      * @return A matrix which references the provided data internally.
      */
-    public static DMatrixRMaj wrap(int numRows , int numCols , double []data ) {
-        UtilEjml.checkTooLarge(numRows,numCols);
+    public static DMatrixRMaj wrap( int numRows, int numCols, double[] data ) {
+        UtilEjml.checkTooLarge(numRows, numCols);
         DMatrixRMaj s = new DMatrixRMaj();
         s.data = data;
         s.numRows = numRows;
@@ -184,14 +186,13 @@ public class DMatrixRMaj extends DMatrix1Row {
         return s;
     }
 
-    @Override
-    public void reshape(int numRows, int numCols, boolean saveValues) {
-        UtilEjml.checkTooLarge(numRows,numCols);
-        if( data.length < numRows * numCols ) {
-            double []d = new double[ numRows*numCols ];
+    @Override public void reshape( int numRows, int numCols, boolean saveValues ) {
+        UtilEjml.checkTooLarge(numRows, numCols);
+        if (data.length < numRows*numCols) {
+            double[] d = new double[numRows*numCols];
 
-            if( saveValues ) {
-                System.arraycopy(data,0,d,0,getNumElements());
+            if (saveValues) {
+                System.arraycopy(data, 0, d, 0, getNumElements());
             }
 
             this.data = d;
@@ -213,18 +214,16 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param col The column of the element.
      * @param value The element's new value.
      */
-    @Override
-    public void set( int row , int col , double value ) {
-        if( col < 0 || col >= numCols || row < 0 || row >= numRows ) {
-            throw new IllegalArgumentException("Specified element is out of bounds: ("+row+" , "+col+")");
+    @Override public void set( int row, int col, double value ) {
+        if (col < 0 || col >= numCols || row < 0 || row >= numRows) {
+            throw new IllegalArgumentException("Specified element is out of bounds: (" + row + " , " + col + ")");
         }
 
-        data[ row * numCols + col ] = value;
+        data[row*numCols + col] = value;
     }
 
-    @Override
-    public void unsafe_set( int row , int col , double value ) {
-        data[ row * numCols + col ] = value;
+    @Override public void unsafe_set( int row, int col, double value ) {
+        data[row*numCols + col] = value;
     }
 
     /**
@@ -239,12 +238,12 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param value The value that is added to the element
      */
     // todo move to commonops
-    public void add( int row , int col , double value ) {
-        if( col < 0 || col >= numCols || row < 0 || row >= numRows ) {
+    public void add( int row, int col, double value ) {
+        if (col < 0 || col >= numCols || row < 0 || row >= numRows) {
             throw new IllegalArgumentException("Specified element is out of bounds");
         }
 
-        data[ row * numCols + col ] += value;
+        data[row*numCols + col] += value;
     }
 
     /**
@@ -255,23 +254,20 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param col The column of the element.
      * @return The value of the element.
      */
-    @Override
-    public double get( int row , int col ) {
-        if( col < 0 || col >= numCols || row < 0 || row >= numRows ) {
-            throw new IllegalArgumentException("Specified element is out of bounds: "+row+" "+col);
+    @Override public double get( int row, int col ) {
+        if (col < 0 || col >= numCols || row < 0 || row >= numRows) {
+            throw new IllegalArgumentException("Specified element is out of bounds: " + row + " " + col);
         }
 
-        return data[ row * numCols + col ];
+        return data[row*numCols + col];
     }
 
-    @Override
-    public double unsafe_get( int row , int col ) {
-        return data[ row * numCols + col ];
+    @Override public double unsafe_get( int row, int col ) {
+        return data[row*numCols + col];
     }
 
-    @Override
-    public int getIndex( int row , int col ) {
-        return row * numCols + col;
+    @Override public int getIndex( int row, int col ) {
+        return row*numCols + col;
     }
 
     /**
@@ -281,8 +277,8 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param col The element's column.
      * @return True if it is inside the matrices bound, false otherwise.
      */
-    public boolean isInBounds( int row  , int col ) {
-        return( col >= 0 && col < numCols && row >= 0 && row < numRows );
+    public boolean isInBounds( int row, int col ) {
+        return (col >= 0 && col < numCols && row >= 0 && row < numRows);
     }
 
     /**
@@ -293,21 +289,20 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @param rowMajor If the array is encoded in a row-major or a column-major format.
      * @param data The formatted 1D array. Not modified.
      */
-    public void set(int numRows, int numCols, boolean rowMajor, double ...data)
-    {
-        reshape(numRows,numCols);
+    public void set( int numRows, int numCols, boolean rowMajor, double... data ) {
+        reshape(numRows, numCols);
         int length = numRows*numCols;
 
-        if( length > this.data.length )
+        if (length > this.data.length)
             throw new IllegalArgumentException("The length of this matrix's data array is too small.");
 
-        if( rowMajor ) {
-            System.arraycopy(data,0,this.data,0,length);
+        if (rowMajor) {
+            System.arraycopy(data, 0, this.data, 0, length);
         } else {
             int index = 0;
-            for( int i = 0; i < numRows; i++ ) {
-                for( int j = 0; j < numCols; j++ ) {
-                    this.data[index++] = data[j*numRows+i];
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    this.data[index++] = data[j*numRows + i];
                 }
             }
         }
@@ -316,15 +311,14 @@ public class DMatrixRMaj extends DMatrix1Row {
     /**
      * Sets all elements equal to zero.
      */
-    @Override
-    public void zero() {
+    @Override public void zero() {
         Arrays.fill(data, 0, getNumElements(), 0.0);
     }
 
     /**
      * Sets all elements equal to the specified value.
      */
-    public void fill(double value) {
+    public void fill( double value ) {
         Arrays.fill(data, 0, getNumElements(), value);
     }
 
@@ -334,20 +328,18 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @return A new identical matrix.
      */
     @SuppressWarnings({"unchecked"})
-    @Override
-    public DMatrixRMaj copy() {
+    @Override public DMatrixRMaj copy() {
         return new DMatrixRMaj(this);
     }
 
-    @Override
-    public void setTo( Matrix original) {
+    @Override public void setTo( Matrix original ) {
         DMatrix m = (DMatrix)original;
 
-        reshape(original.getNumRows(),original.getNumCols());
+        reshape(original.getNumRows(), original.getNumCols());
 
-        if( original instanceof DMatrixRMaj) {
+        if (original instanceof DMatrixRMaj) {
             // do a faster copy if its of type DMatrixRMaj
-            System.arraycopy(((DMatrixRMaj)m).data,0,data,0,numRows*numCols);
+            System.arraycopy(((DMatrixRMaj)m).data, 0, data, 0, numRows*numCols);
         } else {
             int index = 0;
             for (int i = 0; i < numRows; i++) {
@@ -366,34 +358,31 @@ public class DMatrixRMaj extends DMatrix1Row {
      *
      * @return String representation of the matrix.
      */
-    @Override
-    public String toString() {
+    @Override public String toString() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        MatrixIO.print(new PrintStream(stream),this);
+        MatrixIO.print(new PrintStream(stream), this);
 
         return stream.toString();
     }
 
-    @Override
-    public DMatrixRMaj createLike() {
-        return new DMatrixRMaj(numRows,numCols);
+    @Override public DMatrixRMaj createLike() {
+        return new DMatrixRMaj(numRows, numCols);
     }
 
-    @Override
-    public DMatrixRMaj create(int numRows, int numCols) {
-        return new DMatrixRMaj(numRows,numCols);
+    @Override public DMatrixRMaj create( int numRows, int numCols ) {
+        return new DMatrixRMaj(numRows, numCols);
     }
 
-    @Override
-    public MatrixType getType() {
+    @Override public MatrixType getType() {
         return MatrixType.DDRM;
     }
 
     /**
      * Assigns this matrix using a 2D array representation
+     *
      * @param input 2D array which this matrix will be set to
      */
-    public void set( double[][]input ) {
-        DConvertArrays.convert(input,this);
+    public void set( double[][] input ) {
+        DConvertArrays.convert(input, this);
     }
 }
