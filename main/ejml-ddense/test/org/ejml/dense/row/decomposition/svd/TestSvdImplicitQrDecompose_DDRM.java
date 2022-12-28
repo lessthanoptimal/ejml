@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,31 +28,23 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
-
     boolean compact;
     boolean needU;
     boolean needV;
 
-    @Override
-    public SingularValueDecomposition_F64 createSvd() {
-        return new SvdImplicitQrDecompose_DDRM(compact,needU,needV,false);
+    @Override public SingularValueDecomposition_F64 createSvd() {
+        return new SvdImplicitQrDecompose_DDRM(compact, needU, needV, false);
     }
 
-    @Test
-    public void checkCompact() {
+    @Test void checkCompact() {
         compact = true;
         needU = true;
         needV = true;
         allTests();
     }
 
-    @Test
-    public void checkNotCompact() {
+    @Test void checkNotCompact() {
         compact = false;
         needU = true;
         needV = true;
@@ -63,8 +55,7 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
      * This SVD can be configured to compute or not compute different components
      * Checks to see if it has the expected behavior no matter how it is configured
      */
-    @Test
-    public void checkAllPermutations() {
+    @Test void checkAllPermutations() {
         // test matrices with different shapes.
         // this ensure that transposed and non-transposed are handled correctly
         checkAllPermutations(5, 5);
@@ -75,64 +66,62 @@ public class TestSvdImplicitQrDecompose_DDRM extends StandardSvdChecks_DDRM {
         checkAllPermutations(5, 30);
     }
 
-    private void checkAllPermutations(int numRows, int numCols) {
-
-        for( int a = 0; a < 2; a++ ) {
+    private void checkAllPermutations( int numRows, int numCols ) {
+        for (int a = 0; a < 2; a++) {
             boolean singular = a == 0;
 
-            for( int k = 0; k < 2; k++ ) {
+            for (int k = 0; k < 2; k++) {
                 compact = k == 0;
 
-                SingularValueDecomposition_F64<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact,true,true,false);
+                SingularValueDecomposition_F64<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact, true, true, false);
 
                 DMatrixRMaj A;
 
-                if( singular ) {
-                    double sv[] = new double[ Math.min(numRows,numCols)];
+                if (singular) {
+                    double sv[] = new double[Math.min(numRows, numCols)];
 //                    for( int i = 0; i < sv.length; i++ )
 //                        sv[i] = rand.nextDouble()*2;
 //                    sv[0] = 0;
 
-                    A = RandomMatrices_DDRM.singular(numRows,numCols,rand,sv);
+                    A = RandomMatrices_DDRM.singular(numRows, numCols, rand, sv);
 //                    A = new DMatrixRMaj(numRows,numCols);
                 } else {
-                    A = RandomMatrices_DDRM.rectangle(numRows,numCols,-1,1,rand);
+                    A = RandomMatrices_DDRM.rectangle(numRows, numCols, -1, 1, rand);
                 }
 
                 assertTrue(alg.decompose(A.copy()));
 
-                DMatrixRMaj origU = alg.getU(null,false);
+                DMatrixRMaj origU = alg.getU(null, false);
                 double sv[] = alg.getSingularValues();
-                DMatrixRMaj origV = alg.getV(null,false);
+                DMatrixRMaj origV = alg.getV(null, false);
 
-                for( int i = 0; i < 2; i++ ) {
+                for (int i = 0; i < 2; i++) {
                     needU = i == 0;
-                    for( int j = 0; j < 2; j++ ) {
-                        needV = j==0;
+                    for (int j = 0; j < 2; j++) {
+                        needV = j == 0;
 
-                        testPartial(A,origU,sv,origV,needU,needV);
+                        testPartial(A, origU, sv, origV, needU, needV);
                     }
                 }
             }
         }
     }
 
-    public void testPartial( DMatrixRMaj A ,
-                             DMatrixRMaj U ,
-                             double sv[] ,
-                             DMatrixRMaj V ,
-                             boolean checkU , boolean checkV )
-    {
-        SingularValueDecomposition_F64<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact,checkU,checkV,false);
+    public void testPartial( DMatrixRMaj A,
+                             DMatrixRMaj U,
+                             double sv[],
+                             DMatrixRMaj V,
+                             boolean checkU, boolean checkV ) {
+        SingularValueDecomposition_F64<DMatrixRMaj> alg = new SvdImplicitQrDecompose_DDRM(compact, checkU, checkV, false);
 
         assertTrue(alg.decompose(A.copy()));
 
-        UtilTestMatrix.checkSameElements(UtilEjml.TEST_F64,sv.length,sv,alg.getSingularValues());
+        UtilTestMatrix.checkSameElements(UtilEjml.TEST_F64, sv.length, sv, alg.getSingularValues());
 
-        if( checkU ) {
-            assertTrue(MatrixFeatures_DDRM.isIdentical(U,alg.getU(null,false), UtilEjml.TEST_F64));
+        if (checkU) {
+            assertTrue(MatrixFeatures_DDRM.isIdentical(U, alg.getU(null, false), UtilEjml.TEST_F64));
         }
-        if( checkV )
-            assertTrue(MatrixFeatures_DDRM.isIdentical(V,alg.getV(null,false), UtilEjml.TEST_F64));
+        if (checkV)
+            assertTrue(MatrixFeatures_DDRM.isIdentical(V, alg.getV(null, false), UtilEjml.TEST_F64));
     }
 }
