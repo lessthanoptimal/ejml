@@ -144,7 +144,7 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
     public void testVerySmallValue() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, -1, 1, rand);
 
-        CommonOps_DDRM.scale(Math.pow(UtilEjml.EPS, 12), A);
+        CommonOps_DDRM.scale( Math.pow( UtilEjml.EPS, 12), A);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
