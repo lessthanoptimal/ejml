@@ -21,6 +21,7 @@ package org.ejml.data;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import static org.ejml.UtilEjml.checkValidMatrixShape;
 
 /**
  * A row matrix where the array is stored as a 2D array.
@@ -43,8 +44,9 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
      */
     public int numCols;
 
-    public DenseD2Matrix64F( int numRows , int numCols ) {
-        data = new double[ numRows ][numCols];
+    public DenseD2Matrix64F( int numRows, int numCols ) {
+        checkValidMatrixShape(numRows, numCols);
+        data = new double[numRows][numCols];
         this.numRows = numRows;
         this.numCols = numCols;
     }
@@ -54,14 +56,15 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
 //    }
 
     @Override
-    public void reshape(int numRows, int numCols ) {
-        if( numRows <= data.length ) {
+    public void reshape( int numRows, int numCols ) {
+        checkValidMatrixShape(numRows, numCols);
+        if (numRows <= data.length) {
             this.numRows = numRows;
         } else {
             throw new IllegalArgumentException("Requested number of rows is too great.");
         }
 
-        if( numCols <= data[0].length ) {
+        if (numCols <= data[0].length) {
             this.numCols = numCols;
         } else {
             throw new IllegalArgumentException("Requested number of columns is too great.");
@@ -76,23 +79,23 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public double get(int row, int col) {
+    public double get( int row, int col ) {
         return data[row][col];
     }
 
     @Override
-    public void set(int row, int col, double val) {
+    public void set( int row, int col, double val ) {
         data[row][col] = val;
     }
 
     @Override
-    public double unsafe_get( int row, int col) {
-        return get(row,col);
+    public double unsafe_get( int row, int col ) {
+        return get(row, col);
     }
 
     @Override
-    public void unsafe_set( int row, int col, double val) {
-        set(row,col,val);
+    public void unsafe_set( int row, int col, double val ) {
+        set(row, col, val);
     }
 
     @Override
@@ -110,7 +113,7 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public void print(String format) {
+    public void print( String format ) {
 
     }
 
@@ -121,16 +124,16 @@ public class DenseD2Matrix64F implements Serializable, ReshapeMatrix, DMatrix {
 
     @Override
     public DenseD2Matrix64F createLike() {
-        return new DenseD2Matrix64F(numRows,numCols);
+        return new DenseD2Matrix64F(numRows, numCols);
     }
 
     @Override
-    public DenseD2Matrix64F create(int numRows, int numCols) {
-        return new DenseD2Matrix64F(numRows,numCols);
+    public DenseD2Matrix64F create( int numRows, int numCols ) {
+        return new DenseD2Matrix64F(numRows, numCols);
     }
 
     @Override
-    public void setTo( Matrix original) {
+    public void setTo( Matrix original ) {
         throw new RuntimeException("Not yet supported");
     }
 
