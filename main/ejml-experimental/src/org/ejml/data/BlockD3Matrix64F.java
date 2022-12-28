@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,6 +21,7 @@ package org.ejml.data;
 import org.ejml.EjmlParameters;
 import org.ejml.ops.MatrixIO;
 
+import static org.ejml.UtilEjml.checkValidMatrixShape;
 
 /**
  * Row-major block matrix declared using 3D array.
@@ -41,45 +42,41 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
      */
     public int numCols;
 
-    public BlockD3Matrix64F( int numRows , int numCols , int blockLength)
-    {
+    public BlockD3Matrix64F( int numRows, int numCols, int blockLength ) {
         this.blockLength = blockLength;
 
-        reshape(numRows,numCols);
+        reshape(numRows, numCols);
     }
 
-    public BlockD3Matrix64F( int numRows , int numCols )
-    {
-        this(numRows,numCols, EjmlParameters.BLOCK_WIDTH);
+    public BlockD3Matrix64F( int numRows, int numCols ) {
+        this(numRows, numCols, EjmlParameters.BLOCK_WIDTH);
     }
-
 
     public double[][][] getData() {
         return blocks;
     }
 
     @Override
-    public void reshape(int numRows, int numCols )
-    {
+    public void reshape( int numRows, int numCols ) {
+        checkValidMatrixShape(numRows, numCols);
         this.numRows = numRows;
         this.numCols = numCols;
 
+        int blockM = numRows/blockLength;
+        int blockN = numCols/blockLength;
 
-        int blockM = numRows / blockLength;
-        int blockN = numCols / blockLength;
-
-        if( numRows % blockLength >  0) blockM++;
-        if( numCols % blockLength >  0) blockN++;
+        if (numRows%blockLength > 0) blockM++;
+        if (numCols%blockLength > 0) blockN++;
 
         this.blocks = new double[blockM][blockN][];
 
-        for( int i = 0; i < numRows; i += blockLength ) {
+        for (int i = 0; i < numRows; i += blockLength) {
             int ii = i/blockLength;
 
-            for( int j = 0; j < numCols; j += blockLength ) {
+            for (int j = 0; j < numCols; j += blockLength) {
                 int jj = j/blockLength;
 
-                blocks[ii][jj] = new double[ blockLength*blockLength ];
+                blocks[ii][jj] = new double[blockLength*blockLength];
             }
         }
     }
@@ -90,12 +87,12 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public double get( int row, int col) {
-        int blockM = row / blockLength;
-        int blockN = col / blockLength;
+    public double get( int row, int col ) {
+        int blockM = row/blockLength;
+        int blockN = col/blockLength;
 
-        int m = row % blockLength;
-        int n = col % blockLength;
+        int m = row%blockLength;
+        int n = col%blockLength;
 
         int index = m*blockLength + n;
 
@@ -103,12 +100,12 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public void set( int row, int col, double val) {
-        int blockM = row / blockLength;
-        int blockN = col / blockLength;
+    public void set( int row, int col, double val ) {
+        int blockM = row/blockLength;
+        int blockN = col/blockLength;
 
-        int m = row % blockLength;
-        int n = col % blockLength;
+        int m = row%blockLength;
+        int n = col%blockLength;
 
         int index = m*blockLength + n;
 
@@ -116,13 +113,13 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
     }
 
     @Override
-    public double unsafe_get( int row, int col) {
-        return get(row,col);
+    public double unsafe_get( int row, int col ) {
+        return get(row, col);
     }
 
     @Override
-    public void unsafe_set( int row, int col, double val) {
-        set(row,col,val);
+    public void unsafe_set( int row, int col, double val ) {
+        set(row, col, val);
     }
 
     @Override
@@ -137,11 +134,11 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
 
     @Override
     public void print() {
-        MatrixIO.print(System.out,this);
+        MatrixIO.print(System.out, this);
     }
 
     @Override
-    public void print(String format) {
+    public void print( String format ) {
 
     }
 
@@ -152,16 +149,16 @@ public class BlockD3Matrix64F implements ReshapeMatrix, DMatrix {
 
     @Override
     public BlockD3Matrix64F createLike() {
-        return new BlockD3Matrix64F(numRows,numCols);
+        return new BlockD3Matrix64F(numRows, numCols);
     }
 
     @Override
-    public BlockD3Matrix64F create(int numRows, int numCols) {
-        return new BlockD3Matrix64F(numRows,numCols);
+    public BlockD3Matrix64F create( int numRows, int numCols ) {
+        return new BlockD3Matrix64F(numRows, numCols);
     }
 
     @Override
-    public void setTo( Matrix original) {
+    public void setTo( Matrix original ) {
         throw new RuntimeException("Not supported yet");
     }
 

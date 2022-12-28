@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,8 +25,7 @@ import org.junit.jupiter.api.Test;
  * @author Peter Abeles
  */
 public class TestBlockD3Matrix64F extends EjmlStandardJUnit {
-    @Test
-    public void testGeneric() {
+    @Test void testGeneric() {
         GenericTestsDMatrix g;
         g = new GenericTestsDMatrix() {
             @Override
