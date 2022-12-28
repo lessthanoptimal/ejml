@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,47 +24,39 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author Peter Abeles
- */
 public class TestZMatrixD1 extends EjmlStandardJUnit {
-    @Test
-    public void set_matrix() {
-        ZMatrixD1 a = new ZMatrixRMaj(3,4);
-        a.set(1,3,9,2);
+    @Test void set_matrix() {
+        ZMatrixD1 a = new ZMatrixRMaj(3, 4);
+        a.set(1, 3, 9, 2);
 
-        ZMatrixD1 b = new ZMatrixRMaj(3,4);
+        ZMatrixD1 b = new ZMatrixRMaj(3, 4);
 
         b.setTo(a);
         for (int i = 0; i < a.getDataLength(); i++) {
-            assertEquals(a.data[i],b.data[i], UtilEjml.TEST_F64);
+            assertEquals(a.data[i], b.data[i], UtilEjml.TEST_F64);
         }
         assertEquals(9, b.getReal(1, 3), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void getNumRows() {
-        ZMatrixD1 a = new ZMatrixRMaj(3,4);
-        assertEquals(3,a.getNumRows());
+    @Test void getNumRows() {
+        ZMatrixD1 a = new ZMatrixRMaj(3, 4);
+        assertEquals(3, a.getNumRows());
     }
 
-    @Test
-    public void getNumCols() {
-        ZMatrixD1 a = new ZMatrixRMaj(3,4);
-        assertEquals(4,a.getNumCols());
+    @Test void getNumCols() {
+        ZMatrixD1 a = new ZMatrixRMaj(3, 4);
+        assertEquals(4, a.getNumCols());
     }
 
-    @Test
-    public void setNumRows() {
-        ZMatrixD1 a = new ZMatrixRMaj(3,4);
+    @Test void setNumRows() {
+        ZMatrixD1 a = new ZMatrixRMaj(3, 4);
         a.setNumRows(6);
         assertEquals(6, a.getNumRows());
     }
 
-    @Test
-    public void setNumCols() {
-        ZMatrixD1 a = new ZMatrixRMaj(3,4);
+    @Test void setNumCols() {
+        ZMatrixD1 a = new ZMatrixRMaj(3, 4);
         a.setNumCols(6);
-        assertEquals(6,a.getNumCols());
+        assertEquals(6, a.getNumCols());
     }
 }
