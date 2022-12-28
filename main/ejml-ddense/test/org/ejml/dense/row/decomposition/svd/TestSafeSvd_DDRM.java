@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,17 +27,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
 public class TestSafeSvd_DDRM extends EjmlStandardJUnit {
-
-    @Test
-    public void getSafety() {
-        DMatrixRMaj A = new DMatrixRMaj(3,4);
+   @Test void getSafety() {
+        DMatrixRMaj A = new DMatrixRMaj(3, 4);
 
         // it will need to create a copy in this case
-        Dummy dummy = new Dummy(2,true,true,2,3);
+        Dummy dummy = new Dummy(2, true, true, 2, 3);
 
         SingularValueDecomposition<DMatrixRMaj> decomp = new SafeSvd_DDRM(dummy);
         assertFalse(decomp.inputModified());
@@ -47,7 +42,7 @@ public class TestSafeSvd_DDRM extends EjmlStandardJUnit {
         assertNotSame(A, dummy.passedInMatrix);
 
         // now no need to make a copy
-        dummy = new Dummy(2,true,false,2,3);
+        dummy = new Dummy(2, true, false, 2, 3);
         decomp = new SafeSvd_DDRM(dummy);
         assertFalse(decomp.inputModified());
 
@@ -56,9 +51,8 @@ public class TestSafeSvd_DDRM extends EjmlStandardJUnit {
         assertSame(A, dummy.passedInMatrix);
     }
 
-    @Test
-    public void checkOtherFunctions() {
-        Dummy dummy = new Dummy(2,true,true,2,3);
+   @Test void checkOtherFunctions() {
+        Dummy dummy = new Dummy(2, true, true, 2, 3);
 
         SingularValueDecomposition<DMatrixRMaj> decomp = new SafeSvd_DDRM(dummy);
 
@@ -69,15 +63,15 @@ public class TestSafeSvd_DDRM extends EjmlStandardJUnit {
         assertFalse(dummy.getV_called);
         assertFalse(dummy.getW_called);
 
-        decomp.getU(null,false);
+        decomp.getU(null, false);
         assertTrue(dummy.getU_called);
         decomp.getV(null, false);
         assertTrue(dummy.getV_called);
         decomp.getW(null);
         assertTrue(dummy.getW_called);
 
-        assertEquals(2,decomp.numCols());
-        assertEquals(3,decomp.numRows());
+        assertEquals(2, decomp.numCols());
+        assertEquals(3, decomp.numRows());
     }
 
     @SuppressWarnings({"NullAway"})
@@ -86,76 +80,66 @@ public class TestSafeSvd_DDRM extends EjmlStandardJUnit {
         DMatrix passedInMatrix;
 
         boolean compact;
-        double singular[];
+        double[] singular;
         boolean getU_called;
         boolean getV_called;
         boolean getW_called;
 
-        int numRow,numCol;
+        int numRow, numCol;
         boolean inputModified;
 
-        private Dummy( int numSingular ,
+        private Dummy( int numSingular,
                        boolean compact,
                        boolean inputModified,
-                       int numCol, int numRow) {
-            singular = new double[ numSingular ];
+                       int numCol, int numRow ) {
+            singular = new double[numSingular];
             this.compact = compact;
             this.inputModified = inputModified;
             this.numCol = numCol;
             this.numRow = numRow;
         }
 
-        @Override
-        public double[] getSingularValues() {
+        @Override public double[] getSingularValues() {
             return singular;
         }
 
-        @Override
-        public int numberOfSingularValues() {
+        @Override public int numberOfSingularValues() {
             return singular.length;
         }
 
-        @Override
-        public boolean isCompact() {
+        @Override public boolean isCompact() {
             return compact;
         }
 
-        @Override
-        public DMatrixRMaj getU(DMatrixRMaj U, boolean transposed) {
+        @Override public DMatrixRMaj getU( DMatrixRMaj U, boolean transposed ) {
             getU_called = true;
             return null;
         }
 
-        @Override
-        public DMatrixRMaj getV(DMatrixRMaj V, boolean transposed) {
+        @Override public DMatrixRMaj getV( DMatrixRMaj V, boolean transposed ) {
             getV_called = true;
             return null;
         }
 
-        @Override
-        public DMatrixRMaj getW(DMatrixRMaj W) {
+        @Override public DMatrixRMaj getW( DMatrixRMaj W ) {
             getW_called = true;
             return null;
         }
 
-        @Override
-        public int numRows() {
+        @Override public int numRows() {
             return numRow;
         }
 
-        @Override
-        public int numCols() {
+        @Override public int numCols() {
             return numCol;
         }
 
-        @Override
-        public boolean decompose(DMatrixRMaj orig) {
+        @Override public boolean decompose( DMatrixRMaj orig ) {
             this.passedInMatrix = orig;
             return true;
         }
 
-        @Override
-        public boolean inputModified() {
+        @Override public boolean inputModified() {
             return inputModified;
         }
     }
