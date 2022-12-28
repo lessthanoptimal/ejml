@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -76,6 +76,8 @@ public class GenerateJavaCode32 extends GenerateCode32 {
         prefix32.add("FConvert");
         prefix64.add("GenericTestsDMatrix");
         prefix32.add("GenericTestsFMatrix");
+        prefix64.add("GenericTestsZMatrix");
+        prefix32.add("GenericTestsCMatrix");
 
         int N = prefix64.size();
         for (int i = 0; i < N; i++) {
