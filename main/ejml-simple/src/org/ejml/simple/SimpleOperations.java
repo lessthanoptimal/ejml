@@ -130,16 +130,16 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void print( PrintStream out, Matrix mat, String format );
 
-    void elementOp( T A, ForEachReal op, T output);
+    void elementOp( T A, ElementOpReal op, T output);
 
-    void elementOp( T A, ForEachComplex op, T output);
+    void elementOp( T A, ElementOpComplex op, T output);
 
 
-    @FunctionalInterface interface ForEachReal {
+    @FunctionalInterface interface ElementOpReal {
         double op(int row, int col, double value);
     }
 
-    @FunctionalInterface interface ForEachComplex {
+    @FunctionalInterface interface ElementOpComplex {
         /**
          * @param value (Input) value of element in input matrix. (Output) value that output matrix will have
          */

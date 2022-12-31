@@ -258,43 +258,41 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public /**/double elementSum( ZMatrixRMaj A ) {
 //        return CommonOps_ZDRM.elementSum(A);
-        throw new UnsupportedOperation();
+        throw new UnsupportedOperation("Complex matrix. Use sumComplex instead");
     }
 
     @Override
     public void elementMult( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.elementMult(A,B,output);
-        throw new UnsupportedOperation();
+        CommonOps_ZDRM.elementMultiply(A, B, output);
     }
 
     @Override
     public void elementDiv( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.elementDiv(A,B,output);
-        throw new UnsupportedOperation();
+        CommonOps_ZDRM.elementDivide(A, B, output);
     }
 
     @Override
     public void elementPower( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
+        // NOTE: For this to be supported the second matrix needs to be real
 //        CommonOps_ZDRM.elementPower(A,B,output);
-        throw new UnsupportedOperation();
+        throw new UnsupportedOperation("Complex matrix. If you need this create a feature request");
     }
 
     @Override
     public void elementPower( ZMatrixRMaj A, /**/double b, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.elementPower(A, (double)b, output);
-        throw new UnsupportedOperation();
+        CommonOps_ZDRM.elementPower(A, (double)b, output);
     }
 
     @Override
     public void elementExp( ZMatrixRMaj A, ZMatrixRMaj output ) {
 //        CommonOps_ZDRM.elementExp(A,output);
-        throw new UnsupportedOperation();
+        throw new UnsupportedOperation("Complex matrix. If you need this create a feature request");
     }
 
     @Override
     public void elementLog( ZMatrixRMaj A, ZMatrixRMaj output ) {
 //        CommonOps_ZDRM.elementLog(A,output);
-        throw new UnsupportedOperation();
+        throw new UnsupportedOperation("Complex matrix. If you need this create a feature request");
     }
 
     @Override
@@ -307,16 +305,16 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
         MatrixIO.print(out, (ZMatrixRMaj)mat, format);
     }
 
-    @Override public void elementOp( ZMatrixRMaj A, ForEachReal op, ZMatrixRMaj output ) {
-        throw new RuntimeException("Operation not supported for complex matrices");
+    @Override public void elementOp( ZMatrixRMaj A, ElementOpReal op, ZMatrixRMaj output ) {
+        throw new RuntimeException("Use the complex operation equivalent");
     }
 
-    @Override public void elementOp( ZMatrixRMaj A, ForEachComplex op, ZMatrixRMaj output ) {
+    @Override public void elementOp( ZMatrixRMaj A, ElementOpComplex op, ZMatrixRMaj output ) {
         var value = new Complex_F64();
         for (int row = 0, index = 0; row < A.numRows; row++) {
-            for (int col = 0; col < A.numCols; col++ ) {
+            for (int col = 0; col < A.numCols; col++) {
                 value.real = A.data[index];
-                value.imaginary = A.data[index+1];
+                value.imaginary = A.data[index + 1];
 
                 op.op(row, col, value);
 

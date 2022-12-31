@@ -523,6 +523,32 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
+    @Test void elementMultiply_matrix() {
+        ZMatrixRMaj inA = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+        ZMatrixRMaj inB = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(2, 5, -1, 1, rand);
+
+        Complex_F64 a = new Complex_F64(1.2, -0.3);
+        Complex_F64 b = new Complex_F64();
+        Complex_F64 found = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
+
+        CommonOps_ZDRM.elementMultiply(inA, inB, out);
+
+        for (int i = 0; i < inA.numRows; i++) {
+            for (int j = 0; j < inA.numCols; j++) {
+                inA.get(i, j, a);
+                inB.get(i, j, b);
+                out.get(i, j, found);
+
+                ComplexMath_F64.multiply(a, b, expected);
+
+                assertEquals(expected.real, found.real, UtilEjml.TEST_F64);
+                assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F64);
+            }
+        }
+    }
+
     @Test void elementDivide_right() {
         ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
@@ -564,6 +590,55 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
                 out.get(i, j, found);
 
                 ComplexMath_F64.divide(a, b, expected);
+
+                assertEquals(expected.real, found.real, UtilEjml.TEST_F64);
+                assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test void elementDivide_matrix() {
+        ZMatrixRMaj inA = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+        ZMatrixRMaj inB = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(2, 5, -1, 1, rand);
+
+        Complex_F64 a = new Complex_F64(1.2, -0.3);
+        Complex_F64 b = new Complex_F64();
+        Complex_F64 found = new Complex_F64();
+        Complex_F64 expected = new Complex_F64();
+
+        CommonOps_ZDRM.elementDivide(inA, inB, out);
+
+        for (int i = 0; i < inA.numRows; i++) {
+            for (int j = 0; j < inA.numCols; j++) {
+                inA.get(i, j, a);
+                inB.get(i, j, b);
+                out.get(i, j, found);
+
+                ComplexMath_F64.divide(a, b, expected);
+
+                assertEquals(expected.real, found.real, UtilEjml.TEST_F64);
+                assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test void elementPower_right() {
+        ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+        ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+
+        Complex_F64 a = new Complex_F64();
+        Complex_F64 found = new Complex_F64();
+
+        // power of 2 since it's easy to compute
+        CommonOps_ZDRM.elementPower(in, 2.0, out);
+
+        for (int i = 0; i < in.numRows; i++) {
+            for (int j = 0; j < in.numCols; j++) {
+                in.get(i, j, a);
+                out.get(i, j, found);
+
+                Complex_F64 expected = a.times(a);
 
                 assertEquals(expected.real, found.real, UtilEjml.TEST_F64);
                 assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F64);

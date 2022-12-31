@@ -201,7 +201,7 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj magnitude( ZMatrixD1 input,  @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj magnitude( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
@@ -876,7 +876,7 @@ public class CommonOps_ZDRM {
     }
 
     /**
-     * <p>Performs  element by element multiplication operation with a complex number<br>
+     * <p>Performs element by element multiplication operation with a complex number<br>
      * <br>
      * output<sub>ij</sub> = input<sub>ij</sub> * (real + imaginary*i) <br>
      * </p>
@@ -902,7 +902,35 @@ public class CommonOps_ZDRM {
     }
 
     /**
-     * <p>Performs  element by element division operation with a complex number on the right<br>
+     * <p>Performs complex multiplication between two matrices with the same shape element by element.<br>
+     * <br>
+     * output<sub>ij</sub> = inputA<sub>ij</sub> * inputB<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param inputA First input matrix. Not modified.
+     * @param inputB Second input matrix. Not modified.
+     * @param output Where the results of the operation are stored. Modified.
+     */
+    public static ZMatrixRMaj elementMultiply( ZMatrixD1 inputA, ZMatrixD1 inputB, @Nullable ZMatrixRMaj output ) {
+        UtilEjml.checkSameShape(inputA, inputB, true);
+        output = UtilEjml.reshapeOrDeclare(output, inputA.numRows, inputA.numCols);
+
+        int N = inputA.getDataLength();
+        for (int i = 0; i < N; i += 2) {
+            double realA = inputA.data[i];
+            double imagA = inputA.data[i + 1];
+            double realB = inputB.data[i];
+            double imagB = inputB.data[i + 1];
+
+            output.data[i] = realA*realB - imagA*imagB;
+            output.data[i + 1] = realA*imagB + imagA*realB;
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>Performs element by element division operation with a complex number on the right<br>
      * <br>
      * output<sub>ij</sub> = input<sub>ij</sub> / (real + imaginary*i) <br>
      * </p>
@@ -930,7 +958,7 @@ public class CommonOps_ZDRM {
     }
 
     /**
-     * <p>Performs  element by element division operation with a complex number on the right<br>
+     * <p>Performs element by element division operation with a complex number on the right<br>
      * <br>
      * output<sub>ij</sub> = (real + imaginary*i) / input<sub>ij</sub> <br>
      * </p>
@@ -952,6 +980,70 @@ public class CommonOps_ZDRM {
 
             output.data[i] = (real*inReal + imaginary*inImag)/norm;
             output.data[i + 1] = (imaginary*inReal - real*inImag)/norm;
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>Performs complex division between two matrices with the same shape element by element.<br>
+     * <br>
+     * output<sub>ij</sub> = inputA<sub>ij</sub> / inputB<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param inputA First input matrix. Not modified.
+     * @param inputB Second input matrix. Not modified.
+     * @param output Where the results of the operation are stored. Modified.
+     */
+    public static ZMatrixRMaj elementDivide( ZMatrixD1 inputA, ZMatrixD1 inputB, @Nullable ZMatrixRMaj output ) {
+        UtilEjml.checkSameShape(inputA, inputB, true);
+        output = UtilEjml.reshapeOrDeclare(output, inputA.numRows, inputA.numCols);
+
+        int N = inputA.getDataLength();
+        for (int i = 0; i < N; i += 2) {
+            double realA = inputA.data[i];
+            double imagA = inputA.data[i + 1];
+            double realB = inputB.data[i];
+            double imagB = inputB.data[i + 1];
+
+            double norm = realB*realB + imagB*imagB;
+
+            output.data[i] = (realA*realB + imagA*imagB)/norm;
+            output.data[i + 1] = (imagA*realB - realA*imagB)/norm;
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>Element by element complex power<br>
+     * <br>
+     * output<sub>ij</sub> = inputA<sub>ij</sub> / inputB<sub>ij</sub> <br>
+     * </p>
+     *
+     * @param input Input matrix. Not modified.
+     * @param b Power
+     * @param output Where the results of the operation are stored. Modified.
+     */
+    public static ZMatrixRMaj elementPower( ZMatrixD1 input, double b, @Nullable ZMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
+
+        int N = input.getDataLength();
+        for (int i = 0; i < N; i += 2) {
+            double real = input.data[i];
+            double imag = input.data[i + 1];
+
+            // convert to polar form
+            double r = Math.sqrt(real*real + imag*imag);
+            double theta = Math.atan2(imag, real);
+
+            // apply the power factor
+            r = Math.pow(r, b);
+            theta = theta*b;
+
+            // convert back to standard notation
+            output.data[i] = r*Math.cos(theta);
+            output.data[i + 1] = r*Math.sin(theta);
         }
 
         return output;

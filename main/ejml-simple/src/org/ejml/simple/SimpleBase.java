@@ -1264,7 +1264,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      *
      * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
      */
-    public T elementOp( SimpleOperations.ForEachReal op ) {
+    public T elementOp( SimpleOperations.ElementOpReal op ) {
         T c = createLike();
         ops.elementOp(mat, op, c.mat);
         return c;
@@ -1276,7 +1276,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      *
      * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
      */
-    public T elementOp( SimpleOperations.ForEachComplex op ) {
+    public T elementOp( SimpleOperations.ElementOpComplex op ) {
         T c = createLike();
         try {
             ops.elementOp(mat, op, c.mat);
