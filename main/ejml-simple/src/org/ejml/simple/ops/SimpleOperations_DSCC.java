@@ -362,4 +362,25 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     public void print( PrintStream out, Matrix mat, String format ) {
         MatrixIO.print(out, (DMatrixSparseCSC)mat, format);
     }
+
+    @Override public void elementOp( DMatrixSparseCSC A, ForEachReal op, DMatrixSparseCSC output ) {
+        // Ensure the the output has the same non-zero elements as A
+        output.copyStructure(A);
+
+        for (int col = 0; col < A.numCols; col++) {
+            int idx0 = A.col_idx[col];
+            int idx1 = A.col_idx[col + 1];
+
+            for (int i = idx0; i < idx1; i++) {
+                int row = A.nz_rows[i];
+                double value = A.nz_values[i];
+
+                output.nz_values[i] = (double)op.op(row, col, value);
+            }
+        }
+    }
+
+    @Override public void elementOp( DMatrixSparseCSC A, ForEachComplex op, DMatrixSparseCSC output ) {
+        throw new ConvertToImaginaryException();
+    }
 }

@@ -1259,6 +1259,39 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * <p>Applies a user defined function to a real-valued matrix.</p>
+     * c<sub>i,j</sub> = op(i, j, a<sub>i,j</sub>)
+     *
+     * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
+     */
+    public T elementOp( SimpleOperations.ForEachReal op ) {
+        T c = createLike();
+        ops.elementOp(mat, op, c.mat);
+        return c;
+    }
+
+    /**
+     * <p>Applies a user defined function to a real-valued matrix.</p>
+     * c<sub>i,j</sub> = op(i, j, a<sub>i,j</sub>)
+     *
+     * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
+     */
+    public T elementOp( SimpleOperations.ForEachComplex op ) {
+        T c = createLike();
+        try {
+            ops.elementOp(mat, op, c.mat);
+        } catch (ConvertToImaginaryException e) {
+            // Input matrix isn't complex therefor output isn't complex either
+            T converted = createComplexMatrix(1, 1);
+            converted.setMatrix(ConvertMatrixType.convert(mat, converted.getType()));
+
+            // Try again with a complex matrix that is the equivalent of the input matrix
+            return converted.elementOp(op);
+        }
+        return c;
+    }
+
+    /**
      * <p>
      * Returns a new matrix whose elements are the negative of 'this' matrix's elements.<br>
      * <br>

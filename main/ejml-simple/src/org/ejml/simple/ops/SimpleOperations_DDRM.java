@@ -27,6 +27,7 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.ops.MatrixIO;
+import org.ejml.simple.ConvertToImaginaryException;
 import org.ejml.simple.SimpleOperations;
 
 import java.io.PrintStream;
@@ -304,5 +305,18 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     @Override
     public void print( PrintStream out, Matrix mat, String format ) {
         MatrixIO.print(out, (DMatrixRMaj)mat, format);
+    }
+
+    @Override public void elementOp( DMatrixRMaj A, ForEachReal op, DMatrixRMaj output ) {
+        for (int row = 0, index = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++, index++ ) {
+                output.data[index] =  (double)op.op(row, col, A.data[index]);
+            }
+        }
+    }
+
+    @Override public void elementOp( DMatrixRMaj A, ForEachComplex op, DMatrixRMaj output ) {
+        // Output must be complex
+        throw new ConvertToImaginaryException();
     }
 }
