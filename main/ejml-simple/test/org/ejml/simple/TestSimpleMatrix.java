@@ -796,6 +796,72 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(0, value, UtilEjml.TEST_F64);
     }
 
+    @Test void conjugate_DDRM() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.conjugate();
+
+        assertNotEquals(A.mat, found.mat);
+        assertTrue(A.isIdentical(found, 0.0));
+    }
+
+    @Test void conjugate_FDRM() {
+        SimpleMatrix A = SimpleMatrix.random_FDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.conjugate();
+
+        assertNotEquals(A.mat, found.mat);
+        assertTrue(A.isIdentical(found, 0.0));
+    }
+
+    @Test void conjugate_ZDRM() {
+        SimpleMatrix A = SimpleMatrix.random_ZDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.conjugate();
+
+        assertNotEquals(A.mat, found.mat);
+        assertTrue(MatrixFeatures_ZDRM.isIdentical(CommonOps_ZDRM.conjugate(A.getZDRM(), null),found.getZDRM(), 0.0));
+    }
+
+    @Test void conjugate_CDRM() {
+        SimpleMatrix A = SimpleMatrix.random_CDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.conjugate();
+
+        assertNotEquals(A.mat, found.mat);
+        assertTrue(MatrixFeatures_CDRM.isIdentical(CommonOps_CDRM.conjugate(A.getCDRM(), null),found.getCDRM(), 0.0f));
+    }
+
+    @Test void magnitude_DDRM() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.magnitude();
+
+        assertNotEquals(A.mat, found.mat);
+        CommonOps_DDRM.abs(A.getDDRM());
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A.getDDRM(), found.getDDRM(), 0.0));
+    }
+
+    @Test void magnitude_FDRM() {
+        SimpleMatrix A = SimpleMatrix.random_FDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.magnitude();
+
+        assertNotEquals(A.mat, found.mat);
+        CommonOps_FDRM.abs(A.getFDRM());
+        assertTrue(MatrixFeatures_FDRM.isIdentical(A.getFDRM(), found.getFDRM(), 0.0f));
+    }
+
+    @Test void magnitude_ZDRM() {
+        SimpleMatrix A = SimpleMatrix.random_ZDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.magnitude();
+
+        assertNotEquals(A.mat, found.mat);
+        assertTrue(MatrixFeatures_DDRM.isIdentical(CommonOps_ZDRM.magnitude(A.getZDRM(), null),found.getDDRM(), 0.0));
+    }
+
+    @Test void magnitude_CDRM() {
+        SimpleMatrix A = SimpleMatrix.random_CDRM(5, 7, -1, 1, rand);
+        SimpleMatrix found = A.magnitude();
+
+        assertNotEquals(A.mat, found.mat);
+        assertTrue(MatrixFeatures_FDRM.isIdentical(CommonOps_CDRM.magnitude(A.getCDRM(), null),found.getFDRM(), 0.0f));
+    }
+
     @Test void isInBounds() {
         SimpleMatrix A = new SimpleMatrix(10, 15);
 
