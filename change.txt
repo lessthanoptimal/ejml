@@ -17,7 +17,8 @@ Date format: year/month/day
   * Updated JavaDoc
   * API Consistency: getNumRows, getNumCols
   * Added stripReal() and stripImaginary()
-  * Added conjugate and magnitude
+  * Added conjugate() and magnitude()
+  * Added fillComplex()
 
 ----- Version 0.41.1
 2022/12/04

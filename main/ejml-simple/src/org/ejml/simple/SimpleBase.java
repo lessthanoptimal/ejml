@@ -82,8 +82,16 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * Creates a real matrix with the same floating type as 'this'
      */
-    protected T createRealMatrix( int numRows, int numCols) {
-        MatrixType type = getType().getBits() == 32 ?  MatrixType.FDRM :  MatrixType.DDRM;
+    protected T createRealMatrix( int numRows, int numCols ) {
+        MatrixType type = getType().getBits() == 32 ? MatrixType.FDRM : MatrixType.DDRM;
+        return createMatrix(numRows, numCols, type);
+    }
+
+    /**
+     * Creates a complex matrix with the same floating type as 'this'
+     */
+    protected T createComplexMatrix( int numRows, int numCols ) {
+        MatrixType type = getType().getBits() == 32 ? MatrixType.CDRM : MatrixType.ZDRM;
         return createMatrix(numRows, numCols, type);
     }
 
@@ -502,6 +510,23 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * In-place fills the matrix with a complex value. If the matrix is real valued, then it will become a complex
+     * matrix.
+     */
+    public void fillComplex( double real, double imaginary ) {
+        // change it into a complex matrix
+        if (getType().isReal()) {
+            setMatrix(createComplexMatrix(getNumRows(), getNumCols()).mat);
+        }
+
+        if (getType().getBits() == 32) {
+            CommonOps_CDRM.fill(getCDRM(), (float)real, (float)imaginary);
+        } else {
+            CommonOps_ZDRM.fill(getZDRM(), real, imaginary);
+        }
+    }
+
+    /**
      * Sets all the elements in the matrix equal to zero.
      *
      * @see CommonOps_DDRM#fill(DMatrixD1, double)
@@ -813,6 +838,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * Returns 2D array of doubles using the {@link SimpleBase#get(int, int)} method.
+     *
      * @return 2D array of doubles.
      */
     public double[][] toArray2() {
@@ -1337,7 +1363,6 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
         return ret;
     }
-
 
     /**
      * Returns true of the specified matrix element is valid element inside this matrix.
