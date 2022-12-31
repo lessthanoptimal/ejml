@@ -2770,6 +2770,48 @@ public class CommonOps_DDRM {
     }
 
     /**
+     * Fills all rows in the specified range with zeros
+     *
+     * @param start Index of the first row (inclusivce) to be filled
+     * @param end Index of the last row (exclusive) to be filled
+     */
+    public static void zeroRows(DMatrixRMaj a, int start, int end) {
+        Arrays.fill(a.data, start * a.numCols, end * a.numCols, 0);
+    }
+
+    /**
+     * Shifts all elements up by the specified number of rows.
+     * Vacated rows are set to zero.
+     *
+     * @param a A matrix. Modified.
+     * @param c Number of rows to shift by.
+     */
+    public static void shiftRowsUp(DMatrixRMaj a, int c) {
+        if (c < a.numRows) {
+            System.arraycopy(a.data, c * a.numCols, a.data, 0, (a.numRows - c) * a.numCols);
+            zeroRows(a, a.numRows - c, a.numRows);
+        } else {
+            a.zero();
+        }
+    }
+
+    /**
+     * Shifts all elements down by the specified number of rows
+     * Vacated rows are set to zero.
+     *
+     * @param a A matrix. Modified.
+     * @param c Number of rows to shift by.
+     */
+    public static void shiftRowsDown(DMatrixRMaj a, int c) {
+        if (c < a.numRows) {
+            System.arraycopy(a.data, 0, a.data, c * a.numCols, (a.numRows - c) * a.numCols);
+            zeroRows(a, 0, c);
+        } else {
+            a.zero();
+        }
+    }
+
+    /**
      * <p>Performs absolute value of a matrix:<br>
      * <br>
      * c = abs(a)<br>

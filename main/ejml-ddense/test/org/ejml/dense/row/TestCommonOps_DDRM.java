@@ -917,6 +917,50 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
     }
 
     @Test
+    public void shiftRowsUp() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 6, 0, 1, rand);
+
+        DMatrixRMaj B = new DMatrixRMaj(5, 6);
+
+        for (int n = 0; n <= A.numRows; n++) {
+            B.set(A);
+            CommonOps_DDRM.shiftRowsUp(B, n);
+            for (int row = 0; row < A.numRows - n; row++) {
+                for (int col = 0; col < A.numCols; col++) {
+                    assertEquals(A.get(row + n, col), B.get(row, col), UtilEjml.TEST_F64);
+                }
+            }
+            for (int row = A.numRows - n; row < A.numRows; row++) {
+                for (int col = 0; col < A.numCols; col++) {
+                    assertEquals(0.0, B.get(row, col), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void shiftRowsDown() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 6, 0, 1, rand);
+
+        DMatrixRMaj B = new DMatrixRMaj(5, 6);
+
+        for (int n = 0; n <= A.numRows; n++) {
+            B.set(A);
+            CommonOps_DDRM.shiftRowsDown(B, n);
+            for (int row = 0; row < n; row++) {
+                for (int col = 0; col < A.numCols; col++) {
+                    assertEquals(0.0, B.get(row, col), UtilEjml.TEST_F64);
+                }
+            }
+            for (int row = n; row < A.numRows; row++) {
+                for (int col = 0; col < A.numCols; col++) {
+                    assertEquals(A.get(row - n, col), B.get(row, col), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
+
+    @Test
     public void addEquals() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
