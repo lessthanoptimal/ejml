@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,6 +37,10 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     double get( T A, int row, int column );
 
     void get( T A, int row, int column, Complex_F64 value );
+
+    double getReal( T A, int row, int column );
+
+    double getImaginary( T A, int row, int column );
 
     void fill( T A, double value );
 

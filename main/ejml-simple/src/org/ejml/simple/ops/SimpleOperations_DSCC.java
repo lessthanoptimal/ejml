@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -66,6 +66,14 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     public void get( DMatrixSparseCSC A, int row, int column, /**/Complex_F64 value ) {
         value.real = A.get(row, column);
         value.imaginary = 0;
+    }
+
+    @Override public /**/double getReal( DMatrixSparseCSC A, int row, int column ) {
+        return A.get(row, column);
+    }
+
+    @Override public /**/double getImaginary( DMatrixSparseCSC A, int row, int column ) {
+        return 0;
     }
 
     @Override

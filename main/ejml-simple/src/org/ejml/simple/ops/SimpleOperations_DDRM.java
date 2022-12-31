@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -60,6 +60,14 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     public void get( DMatrixRMaj A, int row, int column, Complex_F64 value ) {
         value.real = A.get(row, column);
         value.imaginary = 0;
+    }
+
+    @Override public /**/double getReal( DMatrixRMaj A, int row, int column ) {
+        return A.get(row, column);
+    }
+
+    @Override public /**/double getImaginary( DMatrixRMaj A, int row, int column ) {
+        return 0;
     }
 
     @Override

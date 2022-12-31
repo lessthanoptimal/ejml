@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -56,6 +56,16 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
         int index = A.getIndex(row, column);
         value.real = A.data[index];
         value.imaginary = A.data[index + 1];
+    }
+
+    @Override public /**/double getReal( ZMatrixRMaj A, int row, int column ) {
+        int index = A.getIndex(row, column);
+        return A.data[index];
+    }
+
+    @Override public /**/double getImaginary( ZMatrixRMaj A, int row, int column ) {
+        int index = A.getIndex(row, column);
+        return A.data[index + 1];
     }
 
     @Override
