@@ -131,6 +131,36 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d, (DMatrixRMaj)s.mat, UtilEjml.TEST_F64);
     }
 
+    @Test void fillComplex() {
+        List<SimpleMatrix> inputs = new ArrayList<>();
+        inputs.add(SimpleMatrix.random_DDRM(3, 4, -1, 1, rand));
+        inputs.add(SimpleMatrix.random_FDRM(3, 4, -1, 1, rand));
+        inputs.add(SimpleMatrix.random_ZDRM(3, 4, -1, 1, rand));
+        inputs.add(SimpleMatrix.random_CDRM(3, 4, -1, 1, rand));
+
+        for (SimpleMatrix A : inputs) {
+            boolean shouldChangeMatrix = A.mat.getType().isReal();
+            Matrix originalMat = A.mat;
+
+            A.fillComplex(1, 2);
+            // Matrix must be complex now
+            assertFalse(A.mat.getType().isReal());
+
+            // if complex then the matrix shouldn't be modified
+            assertEquals(shouldChangeMatrix, originalMat != A.mat);
+
+            // Make sure it has the same value
+            var value = new Complex_F64();
+            for (int row = 0; row < A.getNumRows(); row++) {
+                for (int col = 0; col < A.getNumCols(); col++) {
+                    A.get(row, col, value);
+                    assertEquals(1, value.real);
+                    assertEquals(2, value.imaginary);
+                }
+            }
+        }
+    }
+
     @Test void getMatrix() {
         SimpleMatrix s = new SimpleMatrix(3, 2);
 
@@ -817,7 +847,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix found = A.conjugate();
 
         assertNotEquals(A.mat, found.mat);
-        assertTrue(MatrixFeatures_ZDRM.isIdentical(CommonOps_ZDRM.conjugate(A.getZDRM(), null),found.getZDRM(), 0.0));
+        assertTrue(MatrixFeatures_ZDRM.isIdentical(CommonOps_ZDRM.conjugate(A.getZDRM(), null), found.getZDRM(), 0.0));
     }
 
     @Test void conjugate_CDRM() {
@@ -825,7 +855,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix found = A.conjugate();
 
         assertNotEquals(A.mat, found.mat);
-        assertTrue(MatrixFeatures_CDRM.isIdentical(CommonOps_CDRM.conjugate(A.getCDRM(), null),found.getCDRM(), 0.0f));
+        assertTrue(MatrixFeatures_CDRM.isIdentical(CommonOps_CDRM.conjugate(A.getCDRM(), null), found.getCDRM(), 0.0f));
     }
 
     @Test void magnitude_DDRM() {
@@ -851,7 +881,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix found = A.magnitude();
 
         assertNotEquals(A.mat, found.mat);
-        assertTrue(MatrixFeatures_DDRM.isIdentical(CommonOps_ZDRM.magnitude(A.getZDRM(), null),found.getDDRM(), 0.0));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(CommonOps_ZDRM.magnitude(A.getZDRM(), null), found.getDDRM(), 0.0));
     }
 
     @Test void magnitude_CDRM() {
@@ -859,7 +889,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix found = A.magnitude();
 
         assertNotEquals(A.mat, found.mat);
-        assertTrue(MatrixFeatures_FDRM.isIdentical(CommonOps_CDRM.magnitude(A.getCDRM(), null),found.getFDRM(), 0.0f));
+        assertTrue(MatrixFeatures_FDRM.isIdentical(CommonOps_CDRM.magnitude(A.getCDRM(), null), found.getFDRM(), 0.0f));
     }
 
     @Test void isInBounds() {
@@ -1045,7 +1075,6 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         sA.solve(sB);
         assertTrue(ops.specalized);
     }
-
 
     @Test void stripReal_DDRM() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 4, rand);
