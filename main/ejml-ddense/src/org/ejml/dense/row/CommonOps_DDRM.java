@@ -673,13 +673,13 @@ public class CommonOps_DDRM {
 
     /**
      * <p>
-     * This computes the trace of the matrix:<br>
+     * Computes the matrix trace:<br>
      * <br>
      * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }<br>
      * where n = min(numRows,numCols)
      * </p>
      *
-     * @param a A square matrix. Not modified.
+     * @param a (Input) A matrix
      */
     public static double trace( DMatrix1Row a ) {
         int N = Math.min(a.numRows, a.numCols);

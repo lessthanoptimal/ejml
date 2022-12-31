@@ -162,8 +162,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override public /**/double trace( ZMatrixRMaj A ) {
-//        return CommonOps_ZDRM.trace(A);
-        throw new UnsupportedOperation();
+        throw new UnsupportedOperation("Use traceComplex() instead");
+    }
+
+    @Override public Complex_F64 traceComplex( ZMatrixRMaj A ) {
+        return WorkAroundForComplex.trace(A);
     }
 
     @Override public void setRow( ZMatrixRMaj A, int row, int startColumn, /**/double... values ) {
