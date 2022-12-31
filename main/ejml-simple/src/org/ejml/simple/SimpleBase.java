@@ -19,7 +19,9 @@ package org.ejml.simple;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
+import org.ejml.dense.row.CommonOps_CDRM;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.equation.Equation;
 import org.ejml.ops.ConvertMatrixType;
@@ -61,6 +63,12 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     protected SimpleBase() {}
+
+    private void readObject( java.io.ObjectInputStream in )
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        convertType = new AutomaticSimpleMatrixConvert();
+    }
 
     /**
      * Used internally for creating new instances of SimpleMatrix. If SimpleMatrix is extended
@@ -1406,6 +1414,48 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      */
     public MatrixType getType() {
         return mat.getType();
+    }
+
+    /**
+     * Returns a matrix that contains the real valued portion of a complex matrix. For a real valued matrix
+     * this will return a copy.
+     */
+    public T stripReal() {
+        MatrixType outputType = mat.getType().getBits() == 64 ? MatrixType.DDRM : MatrixType.FDRM;
+
+        T ret = createMatrix(1, 1, outputType);
+
+        // If it's a real matrix just return a copy
+        if (mat.getType().isReal()) {
+            return ret.wrapMatrix(mat.copy());
+        }
+
+        if (mat.getType().getBits() == 32) {
+            return ret.wrapMatrix(CommonOps_CDRM.stripReal((CMatrixD1)mat, null));
+        } else {
+            return ret.wrapMatrix(CommonOps_ZDRM.stripReal((ZMatrixD1)mat, null));
+        }
+    }
+
+    /**
+     * Returns a matrix that contains the imaginary valued portion of a complex matrix. For a real
+     * valued matrix this will return a matrix full of zeros.
+     */
+    public T stripImaginary() {
+        MatrixType outputType = mat.getType().getBits() == 64 ? MatrixType.DDRM : MatrixType.FDRM;
+
+        T ret = createMatrix(1, 1, outputType);
+
+        // If it's a real matrix just return a matrix full of zeros
+        if (mat.getType().isReal()) {
+            return ret.wrapMatrix(mat.createLike());
+        }
+
+        if (mat.getType().getBits() == 32) {
+            return ret.wrapMatrix(CommonOps_CDRM.stripImaginary((CMatrixD1)mat, null));
+        } else {
+            return ret.wrapMatrix(CommonOps_ZDRM.stripImaginary((ZMatrixD1)mat, null));
+        }
     }
 
     /**
