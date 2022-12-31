@@ -5,7 +5,7 @@
 
 #####  Project Website: http://ejml.org
 
-[![Build Status](https://github.com/lessthanoptimal/ejml//workflows/SNAPSHOT/badge.svg)](https://github.com/lessthanoptimal/ejml/actions?query=workflow%3A%22SNAPSHOT%22)
+[![Build Status](https://github.com/lessthanoptimal/ejml/actions/workflows/gradle.yml/badge.svg)](https://github.com/lessthanoptimal/ejml/actions/workflows/gradle.yml)
 
 ## Introduction
 
