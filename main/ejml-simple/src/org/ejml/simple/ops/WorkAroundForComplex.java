@@ -39,4 +39,13 @@ public class WorkAroundForComplex {
     public static void elementSum_F64( ZMatrixRMaj A, Complex_F64 output ) {
         CommonOps_ZDRM.elementSum(A, output);
     }
+
+    public static Complex_F64 determinant( CMatrixRMaj A ) {
+        Complex_F32 found = CommonOps_CDRM.det(A);
+        return new Complex_F64(found.real, found.imaginary);
+    }
+
+    public static Complex_F64 determinant( ZMatrixRMaj A ) {
+        return CommonOps_ZDRM.det(A);
+    }
 }

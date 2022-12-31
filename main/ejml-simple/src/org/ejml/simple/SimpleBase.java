@@ -594,6 +594,21 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * Computes the determinant of a complex matrix. If matrix is real then imaginary component
+     * is always zeor.
+     *
+     * @return The determinant.
+     * @see CommonOps_DDRM#det(DMatrixRMaj)
+     */
+    public Complex_F64 determinantComplex() {
+        Complex_F64 ret = ops.determinantComplex(mat);
+        if (UtilEjml.isUncountable(ret.real))
+            ret.setTo(0, 0);
+        return ret;
+    }
+
+
+    /**
      * <p>
      * Computes the trace of the matrix.
      * </p>
