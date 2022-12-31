@@ -34,8 +34,7 @@ import java.io.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMatrixIO extends EjmlStandardJUnit {
-    @Test
-    public void matlabToDDRM() {
+    @Test void matlabToDDRM() {
         DMatrixRMaj expected = new DMatrixRMaj(
                 new double[][]
                 {{6.00574613E-01 , 6.67556524E-01 , 7.30378628E-02},
@@ -55,8 +54,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected,found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void matrix_market_load_save_DSTR() {
+    @Test void matrix_market_load_save_DSTR() {
         var original = new DMatrixSparseTriplet(3,4,5);
         original.set(1,1,1.5);
         original.set(2,3,2.5);
@@ -69,8 +67,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void matrix_market_load_save_FSTR() {
+    @Test void matrix_market_load_save_FSTR() {
         var original = new FMatrixSparseTriplet(3,4,5);
         original.set(1,1,1.5f);
         original.set(2,3,2.5f);
@@ -83,8 +80,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F32);
     }
 
-    @Test
-    public void matrix_market_load_save_DDRM() {
+    @Test void matrix_market_load_save_DDRM() {
         var original = new DMatrixRMaj(3,4);
         RandomMatrices_DDRM.fillUniform(original, rand);
 
@@ -96,8 +92,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void matrix_market_load_save_FDRM() {
+    @Test void matrix_market_load_save_FDRM() {
         var original = new FMatrixRMaj(3,4);
         RandomMatrices_FDRM.fillUniform(original, rand);
 
@@ -112,8 +107,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
     /**
      * Load an array Matrix Market file with zeros that should be skipped when reading it as a sparse matrix
      */
-    @Test
-    public void matrix_market_load_skipZeros() {
+    @Test void matrix_market_load_skipZeros() {
         var original = new DMatrixRMaj(3,4);
         original.set(1,1,1.5);
         original.set(2,3,2.5);
@@ -132,8 +126,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(original,found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void matrix_market_load_vectorRow() {
+    @Test void matrix_market_load_vectorRow() {
         var text = """
                 %%MatrixMarket matrix array real general
                 %
@@ -151,8 +144,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertEquals(3, found.nz_value.get(2));
     }
 
-    @Test
-    public void matrix_market_load_vectorCol() {
+    @Test void matrix_market_load_vectorCol() {
         var text = """
                 %%MatrixMarket matrix array real general
                 %
@@ -169,8 +161,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertEquals(3, found.nz_value.get(2));
     }
 
-    @Test
-    public void matlab_missing_load_save_dep_msg() throws IOException {
+    @Test void matlab_missing_load_save_dep_msg() throws IOException {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6, 3, rand);
         String msg = assertThrows(IllegalStateException.class, () -> MatrixIO.saveMatlab(A, "temp.mat"))
                 .getMessage();
@@ -180,25 +171,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
                 .getMessage());
     }
 
-    @Test
-    public void load_save_binary() throws IOException {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,3,rand);
-
-        MatrixIO.saveBin(A, "temp.mat");
-
-        DMatrixRMaj A_copy = MatrixIO.loadBin("temp.mat");
-
-        assertNotSame(A, A_copy);
-        assertTrue(MatrixFeatures_DDRM.isEquals(A,A_copy));
-
-        // clean up
-        File f = new File("temp.mat");
-        assertTrue(f.exists());
-        assertTrue(f.delete());
-    }
-
-    @Test
-    public void load_save_dense_csv() throws IOException {
+    @Test void load_save_dense_csv() throws IOException {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6,3,rand);
 
         MatrixIO.saveDenseCSV(A,"temp.csv");
@@ -214,8 +187,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertTrue(f.delete());
     }
 
-    @Test
-    public void load_save_float_csv() throws IOException {
+    @Test void load_save_float_csv() throws IOException {
         DMatrixSparseTriplet A = RandomMatrices_DSTL.uniform(10,8,15,-1,1,rand);
 
         MatrixIO.saveSparseCSV(A,"temp.csv");
@@ -231,8 +203,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertTrue(f.delete());
     }
 
-    @Test
-    public void print_DMatrix() {
+    @Test void print_DMatrix() {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bao);
 
@@ -254,8 +225,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertEquals(expected,found);
     }
 
-    @Test
-    public void print_ZMatrix() {
+    @Test void print_ZMatrix() {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bao);
 
@@ -277,8 +247,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertEquals(expected,found);
     }
 
-    @Test
-    public void printFancy_DMatrix() {
+    @Test void printFancy_DMatrix() {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bao);
 
@@ -300,8 +269,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         assertEquals(expected,found);
     }
 
-    @Test
-    public void printFancy_ZMatrix() {
+    @Test void printFancy_ZMatrix() {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bao);
 
