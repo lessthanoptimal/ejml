@@ -365,6 +365,18 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return ret;
     }
 
+    public static SimpleMatrix random_ZDRM( int numRows, int numCols, double minValue, double maxValue, Random rand ) {
+        var ret = new SimpleMatrix(numRows, numCols, MatrixType.ZDRM);
+        RandomMatrices_ZDRM.fillUniform((ZMatrixRMaj)ret.mat, minValue, maxValue, rand);
+        return ret;
+    }
+
+    public static SimpleMatrix random_CDRM( int numRows, int numCols, float minValue, float maxValue, Random rand ) {
+        var ret = new SimpleMatrix(numRows, numCols, MatrixType.CDRM);
+        RandomMatrices_CDRM.fillUniform((CMatrixRMaj)ret.mat, minValue, maxValue, rand);
+        return ret;
+    }
+
     /**
      * <p>
      * Creates a new vector which is drawn from a multivariate normal distribution with zero mean

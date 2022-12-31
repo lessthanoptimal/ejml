@@ -19,10 +19,7 @@ package org.ejml.simple;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
-import org.ejml.dense.row.CommonOps_CDRM;
-import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.dense.row.CommonOps_ZDRM;
-import org.ejml.dense.row.NormOps_DDRM;
+import org.ejml.dense.row.*;
 import org.ejml.equation.Equation;
 import org.ejml.ops.ConvertMatrixType;
 import org.ejml.ops.DConvertMatrixStruct;
@@ -81,6 +78,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @return A new matrix.
      */
     protected abstract T createMatrix( int numRows, int numCols, MatrixType type );
+
+    /**
+     * Creates a real matrix with the same floating type as 'this'
+     */
+    protected T createRealMatrix( int numRows, int numCols) {
+        MatrixType type = getType().getBits() == 32 ?  MatrixType.FDRM :  MatrixType.DDRM;
+        return createMatrix(numRows, numCols, type);
+    }
 
     protected abstract T wrapMatrix( Matrix m );
 
@@ -1194,6 +1199,48 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * <p>Returns the complex conjugate of this matrix.</p>
+     */
+    public T conjugate() {
+        T A = copy();
+
+        if (A.getType().isReal())
+            return A;
+
+        if (A.getType().getBits() == 32) {
+            CommonOps_CDRM.conjugate(getCDRM(), A.getCDRM());
+        } else {
+            CommonOps_ZDRM.conjugate(getZDRM(), A.getZDRM());
+        }
+
+        return A;
+    }
+
+    /**
+     * <p>Returns a real matrix that has the complex magnitude of each element in the matrix. For a real
+     * matrix this is the abs()</p>
+     */
+    public T magnitude() {
+        T A = createRealMatrix(mat.getNumRows(), mat.getNumCols());
+
+        if (getType().isReal()) {
+            if (getType().getBits() == 32) {
+                CommonOps_FDRM.abs(getFDRM(), A.getFDRM());
+            } else {
+                CommonOps_DDRM.abs(getDDRM(), A.getDDRM());
+            }
+        } else {
+            if (getType().getBits() == 32) {
+                CommonOps_CDRM.magnitude(getCDRM(), A.getFDRM());
+            } else {
+                CommonOps_ZDRM.magnitude(getZDRM(), A.getDDRM());
+            }
+        }
+
+        return A;
+    }
+
+    /**
      * <p>Allows you to perform an equation in-place on this matrix by specifying the right hand side. For information on how to define an equation
      * see {@link org.ejml.equation.Equation}. The variable sequence alternates between variable and it's label String.
      * This matrix is by default labeled as 'A', but is a string is the first object in 'variables' then it will take
@@ -1421,9 +1468,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * this will return a copy.
      */
     public T stripReal() {
-        MatrixType outputType = mat.getType().getBits() == 64 ? MatrixType.DDRM : MatrixType.FDRM;
-
-        T ret = createMatrix(1, 1, outputType);
+        T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         // If it's a real matrix just return a copy
         if (mat.getType().isReal()) {
@@ -1442,9 +1487,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * valued matrix this will return a matrix full of zeros.
      */
     public T stripImaginary() {
-        MatrixType outputType = mat.getType().getBits() == 64 ? MatrixType.DDRM : MatrixType.FDRM;
-
-        T ret = createMatrix(1, 1, outputType);
+        T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         // If it's a real matrix just return a matrix full of zeros
         if (mat.getType().isReal()) {

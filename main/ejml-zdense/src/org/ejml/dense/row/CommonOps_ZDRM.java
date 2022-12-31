@@ -201,8 +201,8 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static void magnitude( ZMatrixD1 input, DMatrixD1 output ) {
-        output.reshape(input.numRows, input.numCols);
+    public static DMatrixRMaj magnitude( ZMatrixD1 input,  @Nullable DMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
 
@@ -212,6 +212,8 @@ public class CommonOps_ZDRM {
 
             output.data[i/2] = Math.sqrt(real*real + imaginary*imaginary);
         }
+
+        return output;
     }
 
     /**
