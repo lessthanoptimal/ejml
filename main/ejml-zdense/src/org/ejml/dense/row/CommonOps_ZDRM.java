@@ -37,7 +37,7 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class CommonOps_ZDRM {
-    private CommonOps_ZDRM(){}
+    private CommonOps_ZDRM() {}
 
     /**
      * <p>
@@ -749,6 +749,32 @@ public class CommonOps_ZDRM {
 
     /**
      * <p>
+     * Computes the matrix trace:<br>
+     * <br>
+     * trace = &sum;<sub>i=1:n</sub> { a<sub>ii</sub> }<br>
+     * where n = min(numRows,numCols)
+     * </p>
+     *
+     * @param input (Input) A matrix
+     * @param output (Output) Storage for the trace. Can be null.
+     * @return The trace's value
+     */
+    public static Complex_F64 trace( ZMatrixRMaj input, @Nullable Complex_F64 output ) {
+        if (output == null)
+            output = new Complex_F64();
+        output.setTo(0, 0);
+
+        int N = Math.min(input.numRows, input.numCols);
+        for (int i = 0; i < N; i++) {
+            output.real += input.getReal(i, i);
+            output.imaginary += input.getImag(i, i);
+        }
+
+        return output;
+    }
+
+    /**
+     * <p>
      * Performs a matrix inversion operation on the specified matrix and stores the results
      * in the same matrix.<br>
      * <br>
@@ -1061,7 +1087,7 @@ public class CommonOps_ZDRM {
      * @param output (Output) Storage for the sum. Can be null.
      * @return The sum of the elements.
      */
-    public static Complex_F64 elementSum(ZMatrixD1 input, @Nullable Complex_F64 output) {
+    public static Complex_F64 elementSum( ZMatrixD1 input, @Nullable Complex_F64 output ) {
         if (output == null)
             output = new Complex_F64();
 

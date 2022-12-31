@@ -48,4 +48,13 @@ public class WorkAroundForComplex {
     public static Complex_F64 determinant( ZMatrixRMaj A ) {
         return CommonOps_ZDRM.det(A);
     }
+
+    public static Complex_F64 trace( CMatrixRMaj A ) {
+        Complex_F32 found = CommonOps_CDRM.trace(A, null);
+        return new Complex_F64(found.real, found.imaginary);
+    }
+
+    public static Complex_F64 trace( ZMatrixRMaj A ) {
+        return CommonOps_ZDRM.trace(A, null);
+    }
 }

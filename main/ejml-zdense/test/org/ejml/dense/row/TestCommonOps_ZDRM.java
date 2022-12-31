@@ -32,8 +32,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
     @Test void identity_one() {
@@ -387,7 +386,6 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
     }
 
     @Test void transposeConjugate_two() {
-
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 5, -1, 1, rand);
         ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5, 4, -1, 1, rand);
 
@@ -405,6 +403,19 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
                 assertEquals(-expected.imaginary, found.imaginary, UtilEjml.TEST_F64);
             }
         }
+    }
+
+    @Test void trace() {
+        ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 5, -1, 1, rand);
+        Complex_F64 found = new Complex_F64(1, 2);
+
+        assertSame(found, CommonOps_ZDRM.trace(a, found));
+
+        double expectedReal = CommonOps_DDRM.trace(CommonOps_ZDRM.stripReal(a, null));
+        double expectedImag = CommonOps_DDRM.trace(CommonOps_ZDRM.stripImaginary(a, null));
+
+        assertEquals(expectedReal, found.real);
+        assertEquals(expectedImag, found.imaginary);
     }
 
     @Test void invert_1() {

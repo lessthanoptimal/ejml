@@ -622,6 +622,18 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
+     * Trace of a complex matrix. If inner matrix is real then imaginary will always be zero.
+     * </p>
+     *
+     * @return The trace of the matrix.
+     * @see CommonOps_DDRM#trace(DMatrix1Row)
+     */
+    public Complex_F64 traceComplex() {
+        return ops.traceComplex(mat);
+    }
+
+    /**
+     * <p>
      * Reshapes the matrix to the specified number of rows and columns. If the total number of elements
      * is &le; number of elements it had before the data is saved. Otherwise a new internal array is
      * declared and the old data lost.
