@@ -325,7 +325,39 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test void plus_beta() {
+    @Test void minus_matrixComplex_scalar() {
+        SimpleMatrix a = SimpleMatrix.random_ZDRM(5, 6, 0, 1, rand);
+        SimpleMatrix found = a.minus(2.5);
+        SimpleMatrix expected = a.minusComplex(2.5, 0.0);
+
+        EjmlUnitTests.assertEquals(found.getZDRM(), expected.getZDRM(), UtilEjml.TEST_F64);
+    }
+
+    @Test void minusComplex() {
+        var list = new ArrayList<SimpleMatrix>();
+        list.add(SimpleMatrix.random_DDRM(3, 2, 0, 1, rand));
+        list.add(SimpleMatrix.random_ZDRM(3, 2, 0, 1, rand));
+
+        for (SimpleMatrix a : list) {
+            double real = -0.14;
+            double imag = 0.07;
+
+            SimpleMatrix c = a.minusComplex(real, imag);
+            assertFalse(c.getType().isReal());
+
+            for (int i = 0; i < a.getNumRows(); i++) {
+                for (int j = 0; j < a.getNumCols(); j++) {
+                    double expectedReal = a.getReal(i, j) - real;
+                    double expectedImag = a.getImag(i, j) - imag;
+
+                    assertEquals(expectedReal, c.getReal(i, j), UtilEjml.TEST_F64);
+                    assertEquals(expectedImag, c.getImag(i, j), UtilEjml.TEST_F64);
+                }
+            }
+        }
+    }
+
+    @Test void plus_beta_real_real() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix c = a.plus(2.5, b);
@@ -334,6 +366,48 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         CommonOps_DDRM.add((DMatrixRMaj)a.mat, 2.5, (DMatrixRMaj)b.mat, c_dense);
 
         EjmlUnitTests.assertEquals(c_dense, c.mat);
+    }
+
+    @Test void plus_beta_complex_complex() {
+        SimpleMatrix a = SimpleMatrix.random_ZDRM(5, 6, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_ZDRM(5, 6, 0, 1, rand);
+        SimpleMatrix found = a.plus(2.5, b);
+        SimpleMatrix expected = a.plus(b.scaleComplex(2.5, 0.0));
+
+        EjmlUnitTests.assertEquals(found.getZDRM(), expected.getZDRM(), UtilEjml.TEST_F64);
+    }
+
+    @Test void plus_beta_complex_real() {
+        SimpleMatrix a = SimpleMatrix.random_ZDRM(5, 6, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(5, 6, 0, 1, rand);
+        SimpleMatrix found = a.plus(2.5, b);
+        SimpleMatrix expected = a.plus(b.scaleComplex(2.5, 0.0));
+
+        EjmlUnitTests.assertEquals(found.getZDRM(), expected.getZDRM(), UtilEjml.TEST_F64);
+    }
+
+    @Test void plusComplex() {
+        var list = new ArrayList<SimpleMatrix>();
+        list.add(SimpleMatrix.random_DDRM(3, 2, 0, 1, rand));
+        list.add(SimpleMatrix.random_ZDRM(3, 2, 0, 1, rand));
+
+        for (SimpleMatrix a : list) {
+            double real = -0.14;
+            double imag = 0.07;
+
+            SimpleMatrix c = a.plusComplex(real, imag);
+            assertFalse(c.getType().isReal());
+
+            for (int i = 0; i < a.getNumRows(); i++) {
+                for (int j = 0; j < a.getNumCols(); j++) {
+                    double expectedReal = a.getReal(i, j) + real;
+                    double expectedImag = a.getImag(i, j) + imag;
+
+                    assertEquals(expectedReal, c.getReal(i, j), UtilEjml.TEST_F64);
+                    assertEquals(expectedImag, c.getImag(i, j), UtilEjml.TEST_F64);
+                }
+            }
+        }
     }
 
     @Test void invert() {
@@ -641,6 +715,29 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         for (int i = 0; i < a.getNumRows(); i++) {
             for (int j = 0; j < a.getNumCols(); j++) {
                 assertEquals(a.get(i, j)*1.5, b.get(i, j), 1e-10);
+            }
+        }
+    }
+
+    @Test void scaleComplex() {
+        var list = new ArrayList<SimpleMatrix>();
+        list.add(SimpleMatrix.random_DDRM(3, 2, 0, 1, rand));
+        list.add(SimpleMatrix.random_ZDRM(3, 2, 0, 1, rand));
+
+        for (SimpleMatrix a : list) {
+            var scalar = new Complex_F64(-0.14, 0.6);
+            var tmp = new Complex_F64();
+
+            SimpleMatrix c = a.scaleComplex(scalar.real, scalar.imaginary);
+            assertFalse(c.getType().isReal());
+
+            for (int i = 0; i < a.getNumRows(); i++) {
+                for (int j = 0; j < a.getNumCols(); j++) {
+                    a.get(i, j, tmp);
+                    Complex_F64 expected = tmp.times(scalar);
+                    assertEquals(expected.real, c.getReal(i, j), UtilEjml.TEST_F64);
+                    assertEquals(expected.imaginary, c.getImag(i, j), UtilEjml.TEST_F64);
+                }
             }
         }
     }

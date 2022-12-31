@@ -91,21 +91,44 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override public void minus( ZMatrixRMaj A, /**/double b, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.subtract(A, (double)b, output);
-        throw new UnsupportedOperation();
+        elementOp(A, ( row, col, value ) -> {value.real -= b;}, output);
+    }
+
+    @Override public void minusComplex( ZMatrixRMaj A, /**/double real, /**/double imag, ZMatrixRMaj output ) {
+        output.reshape(A.numRows, A.numCols);
+        elementOp(A, ( row, col, value ) -> {
+            value.real -= real;
+            value.imaginary -= imag;
+        }, output);
     }
 
     @Override public void plus( ZMatrixRMaj A, /**/double b, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.add(A, (double)b, output);
-        throw new UnsupportedOperation();
+        elementOp(A, ( row, col, value ) -> {value.real += b;}, output);
+    }
+
+    @Override public void plusComplex( ZMatrixRMaj A, /**/double real, /**/double imag, ZMatrixRMaj output ) {
+        output.reshape(A.numRows, A.numCols);
+        elementOp(A, ( row, col, value ) -> {
+            value.real += real;
+            value.imaginary += imag;
+        }, output);
     }
 
     @Override public void plus( ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.add(A, (double)beta, b, output);
-        throw new UnsupportedOperation();
+        // getReal() will be slow
+        elementOp(A, ( row, col, value ) -> {
+            value.real += beta*b.getReal(row, col);
+            value.imaginary += beta*b.getImag(row, col);
+        }, output);
     }
 
     @Override public void plus( /**/double alpha, ZMatrixRMaj A, /**/double beta, ZMatrixRMaj b, ZMatrixRMaj output ) {
+        // getReal() will be slow
+        elementOp(A, ( row, col, valueA ) -> {
+            valueA.real = alpha*valueA.real + beta*b.getReal(row, col);
+            valueA.imaginary = alpha*valueA.imaginary + beta*b.getImag(row, col);
+        }, output);
+
         throw new UnsupportedOperation();
     }
 
@@ -117,6 +140,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override public void scale( ZMatrixRMaj A, /**/double val, ZMatrixRMaj output ) {
         output.setTo(A);
         CommonOps_ZDRM.scale((double)val, 0, output);
+    }
+
+    @Override public void scaleComplex( ZMatrixRMaj A, /**/double real, /**/double imag, ZMatrixRMaj output ) {
+        output.setTo(A);
+        CommonOps_ZDRM.scale((double)real, (double)imag, output);
     }
 
     @Override public void divide( ZMatrixRMaj A, /**/double val, ZMatrixRMaj output ) {
