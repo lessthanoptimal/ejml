@@ -66,8 +66,10 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     double dot( T A, T v );
 
+    /** Multiplies each element by val. Val is a real number */
     void scale( T A, double val, T output );
 
+    /** Divides each element by val. Val is a real number */
     void divide( T A, double val, T output );
 
     boolean invert( T A, T output );
@@ -113,6 +115,12 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     double elementMinAbs( T A );
 
     double elementSum( T A );
+
+    default void elementSumComplex( T A, Complex_F64 output ) {
+        // by default assume it's a real matrix
+        output.imaginary = 0;
+        output.real = elementSum(A);
+    }
 
     void elementMult( T A, T B, T output );
 

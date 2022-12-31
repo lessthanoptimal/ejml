@@ -653,6 +653,26 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(expectedSum, a.elementSum(), UtilEjml.TEST_F64);
     }
 
+    @Test void elementSumComplex_real() {
+        var a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
+
+        double expected = a.elementSum();
+        Complex_F64 found = a.elementSumComplex();
+        assertEquals(expected, found.real, UtilEjml.TEST_F64);
+        assertEquals(0.0, found.imaginary, UtilEjml.TEST_F64);
+    }
+
+    @Test void elementSumComplex_complex() {
+        var a = SimpleMatrix.random_ZDRM(3, 2, 0, 1, rand);
+
+        double expectedReal = a.real().elementSum();
+        double expectedImag = a.imaginary().elementSum();
+
+        Complex_F64 found = a.elementSumComplex();
+        assertEquals(expectedReal, found.real, UtilEjml.TEST_F64);
+        assertEquals(expectedImag, found.imaginary, UtilEjml.TEST_F64);
+    }
+
     @Test void elementMax() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(7, 5, 0, 1, rand);
 

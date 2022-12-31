@@ -22,7 +22,7 @@ Date format: year/month/day
   * API Consistency: getNumRows, getNumCols
   * Added stripReal() and stripImaginary()
   * Added conjugate() and magnitude()
-  * Added fillComplex(), transposeConjugate()
+  * Added fillComplex(), transposeConjugate(), sumComplex()
   * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
 
 ----- Version 0.41.1

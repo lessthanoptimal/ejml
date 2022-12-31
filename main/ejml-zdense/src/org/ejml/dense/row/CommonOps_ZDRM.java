@@ -1051,13 +1051,42 @@ public class CommonOps_ZDRM {
 
     /**
      * <p>
+     * Computes the sum of all the elements in the matrix:<br>
+     * <br>
+     * sum(i=1:m , j=1:n ; a<sub>ij</sub>)
+     * <p>
+     *
+     * @param input An m by n matrix. Not modified.
+     * @param output (Output) Storage for the sum. Can be null.
+     * @return The sum of the elements.
+     */
+    public static Complex_F64 elementSum(ZMatrixD1 input, @Nullable Complex_F64 output) {
+        if (output == null)
+            output = new Complex_F64();
+
+        double sumReal = 0.0;
+        double sumImag = 0.0;
+
+        final int size = input.getDataLength();
+        int i = 0;
+        while (i < size) {
+            sumReal += input.data[i++];
+            sumImag += input.data[i++];
+        }
+
+        output.setTo(sumReal, sumImag);
+        return output;
+    }
+
+    /**
+     * <p>
      * Returns the value of the real element in the matrix that has the minimum value.<br>
      * <br>
      * Min{ a<sub>ij</sub> } for all i and j<br>
      * </p>
      *
      * @param a A matrix. Not modified.
-     * @return The the minimum value out of all the real values.
+     * @return The minimum value out of all the real values.
      */
     public static double elementMinReal( ZMatrixD1 a ) {
         final int size = a.getDataLength();
@@ -1081,7 +1110,7 @@ public class CommonOps_ZDRM {
      * </p>
      *
      * @param a A matrix. Not modified.
-     * @return The the minimum value out of all the real values.
+     * @return The minimum value out of all the real values.
      */
     public static double elementMinImaginary( ZMatrixD1 a ) {
         final int size = a.getDataLength();
@@ -1105,7 +1134,7 @@ public class CommonOps_ZDRM {
      * </p>
      *
      * @param a A matrix. Not modified.
-     * @return The the minimum value out of all the real values.
+     * @return The minimum value out of all the real values.
      */
     public static double elementMaxReal( ZMatrixD1 a ) {
         final int size = a.getDataLength();
@@ -1129,7 +1158,7 @@ public class CommonOps_ZDRM {
      * </p>
      *
      * @param a A matrix. Not modified.
-     * @return The the minimum value out of all the real values.
+     * @return The minimum value out of all the real values.
      */
     public static double elementMaxImaginary( ZMatrixD1 a ) {
         final int size = a.getDataLength();
