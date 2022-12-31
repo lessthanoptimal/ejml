@@ -467,6 +467,25 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(ddet, det, 1e-10);
     }
 
+    @Test void determinantComplex_real() {
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
+
+        Complex_F64 det = a.determinantComplex();
+
+        assertEquals(a.determinant(), det.real, UtilEjml.TEST_F64);
+        assertEquals(0.0, det.imaginary, UtilEjml.TEST_F64);
+    }
+
+    @Test void determinantComplex_complex() {
+        SimpleMatrix a = SimpleMatrix.random_ZDRM(3, 3, 0, 1, rand);
+
+        Complex_F64 found = a.determinantComplex();
+        Complex_F64 expected = CommonOps_ZDRM.det(a.getZDRM());
+
+        assertEquals(expected.real, found.real, UtilEjml.TEST_F64);
+        assertEquals(expected.imaginary, found.imaginary, UtilEjml.TEST_F64);
+    }
+
     @Test void trace() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 

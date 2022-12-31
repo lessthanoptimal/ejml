@@ -154,7 +154,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override public /**/double determinant( ZMatrixRMaj A ) {
-        return CommonOps_ZDRM.det(A).real;
+        throw new UnsupportedOperation("Use determinantComplex() instead");
+    }
+
+    @Override public Complex_F64 determinantComplex( ZMatrixRMaj A ) {
+        return WorkAroundForComplex.determinant(A);
     }
 
     @Override public /**/double trace( ZMatrixRMaj A ) {

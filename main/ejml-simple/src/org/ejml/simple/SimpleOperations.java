@@ -88,6 +88,16 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     double determinant( T A );
 
+    default Complex_F64 determinantComplex( T A ) {
+        var output = new Complex_F64();
+
+        // by default assume it's a real matrix
+        output.imaginary = 0;
+        output.real = determinant(A);
+
+        return output;
+    }
+
     double trace( T A );
 
     void setRow( T A, int row, int startColumn, double... values );

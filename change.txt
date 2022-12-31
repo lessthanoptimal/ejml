@@ -22,7 +22,7 @@ Date format: year/month/day
   * API Consistency: getNumRows, getNumCols
   * Added stripReal() and stripImaginary()
   * Added conjugate() and magnitude()
-  * Added fillComplex(), transposeConjugate(), sumComplex()
+  * Added fillComplex(), transposeConjugate(), sumComplex(), determinantComplex()
   * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
 - Various
   * Ops classes with all static members now have private constructors to drive home the concept of static functions.
