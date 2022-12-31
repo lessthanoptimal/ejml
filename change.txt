@@ -10,15 +10,16 @@ Date format: year/month/day
   * Vector matrices are supported in matrix market.
   * Removed unsafe and deprecated functions loadBin() and saveBin()
 - Negative rows or columns are now illegal
-  * Thanks JozefKutas for pointing out the issue
+  * Thanks JozsefKutas for pointing out the issue
 - SimpleMatrix
-  * Thanks JozsefKutas for getting this neede refresh started
+  * Thanks JozsefKutas for getting this needed refresh started
   * Removed deprecated functions
   * Updated JavaDoc
   * API Consistency: getNumRows, getNumCols
   * Added stripReal() and stripImaginary()
   * Added conjugate() and magnitude()
   * Added fillComplex(), transposeConjugate()
+  * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
 
 ----- Version 0.41.1
 2022/12/04

@@ -32,9 +32,6 @@ import java.io.PrintStream;
 //CUSTOM ignore Complex_F64
 //CUSTOM ignore org.ejml.data.Complex_F64;
 
-/**
- * @author Peter Abeles
- */
 public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void set( ZMatrixRMaj A, int row, int column, /**/double value ) {
@@ -308,5 +305,24 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override
     public void print( PrintStream out, Matrix mat, String format ) {
         MatrixIO.print(out, (ZMatrixRMaj)mat, format);
+    }
+
+    @Override public void elementOp( ZMatrixRMaj A, ForEachReal op, ZMatrixRMaj output ) {
+        throw new RuntimeException("Operation not supported for complex matrices");
+    }
+
+    @Override public void elementOp( ZMatrixRMaj A, ForEachComplex op, ZMatrixRMaj output ) {
+        var value = new Complex_F64();
+        for (int row = 0, index = 0; row < A.numRows; row++) {
+            for (int col = 0; col < A.numCols; col++ ) {
+                value.real = A.data[index];
+                value.imaginary = A.data[index+1];
+
+                op.op(row, col, value);
+
+                output.data[index++] = (double)value.real;
+                output.data[index++] = (double)value.imaginary;
+            }
+        }
     }
 }

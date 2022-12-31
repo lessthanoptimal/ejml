@@ -749,6 +749,20 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
+    @Test void elementExp() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
+
+        SimpleMatrix C = A.elementExp();
+
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
+                double expected = Math.exp(A.get(i, j));
+
+                assertEquals(expected, C.get(i, j));
+            }
+        }
+    }
+
     @Test void elementLog() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
 
@@ -763,16 +777,43 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test void elementExp() {
+    @Test void elementOp_real() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
 
-        SimpleMatrix C = A.elementExp();
+        SimpleMatrix C = A.elementOp(( row, col, value ) -> -value);
+
+        assertEquals(A.getNumRows(), C.getNumRows());
+        assertEquals(A.getNumCols(), C.getNumCols());
 
         for (int i = 0; i < A.getNumRows(); i++) {
             for (int j = 0; j < A.getNumCols(); j++) {
-                double expected = Math.exp(A.get(i, j));
+                double expected = -A.get(i, j);
 
                 assertEquals(expected, C.get(i, j));
+            }
+        }
+    }
+
+    @Test void elementOp_complex() {
+        // Should be able to handle real and complex matrices
+        List<SimpleMatrix> inputs = new ArrayList<>();
+        inputs.add(SimpleMatrix.random_ZDRM(4, 5, 0, 1, rand));
+        inputs.add(SimpleMatrix.random_CDRM(4, 5, 0, 1, rand));
+        inputs.add(SimpleMatrix.random_DDRM(4, 5, 0, 1, rand));
+
+        for (SimpleMatrix A : inputs) {
+            SimpleMatrix C = A.elementOp(( row, col, value ) -> {value.setTo(value.real + row, -col);});
+
+            assertEquals(A.getNumRows(), C.getNumRows());
+            assertEquals(A.getNumCols(), C.getNumCols());
+
+            double tol = A.getType().getBits() == 32 ? UtilEjml.TEST_F32 : UtilEjml.TEST_F64;
+
+            for (int i = 0; i < A.getNumRows(); i++) {
+                for (int j = 0; j < A.getNumCols(); j++) {
+                    assertEquals(A.getReal(i, j) + i, C.getReal(i, j), tol);
+                    assertEquals(-j, C.getImaginary(i, j), tol);
+                }
             }
         }
     }

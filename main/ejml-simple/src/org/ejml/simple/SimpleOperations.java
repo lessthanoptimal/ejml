@@ -129,4 +129,20 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     boolean isIdentical( T A, T B, double tol );
 
     void print( PrintStream out, Matrix mat, String format );
+
+    void elementOp( T A, ForEachReal op, T output);
+
+    void elementOp( T A, ForEachComplex op, T output);
+
+
+    @FunctionalInterface interface ForEachReal {
+        double op(int row, int col, double value);
+    }
+
+    @FunctionalInterface interface ForEachComplex {
+        /**
+         * @param value (Input) value of element in input matrix. (Output) value that output matrix will have
+         */
+        void op(int row, int col, Complex_F64 value);
+    }
 }
