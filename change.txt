@@ -12,9 +12,11 @@ Date format: year/month/day
 - Negative rows or columns are now illegal
   * Thanks JozefKutas for pointing out the issue
 - SimpleMatrix
+  * Thanks JozsefKutas for getting this neede refresh started
   * Removed deprecated functions
   * Updated JavaDoc
   * API Consistency: getNumRows, getNumCols
+  * Added stripReal() and stripImaginary()
 
 ----- Version 0.41.1
 2022/12/04

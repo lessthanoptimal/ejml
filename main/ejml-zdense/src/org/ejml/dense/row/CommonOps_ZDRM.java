@@ -874,7 +874,7 @@ public class CommonOps_ZDRM {
     }
 
     /**
-     * <p>Performs  element by element multiplication operation with a complex numbert<br>
+     * <p>Performs  element by element multiplication operation with a complex number<br>
      * <br>
      * output<sub>ij</sub> = input<sub>ij</sub> * (real + imaginary*i) <br>
      * </p>
