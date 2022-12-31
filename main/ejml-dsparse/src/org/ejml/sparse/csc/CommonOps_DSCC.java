@@ -42,9 +42,12 @@ import java.util.Arrays;
 import static org.ejml.UtilEjml.*;
 
 /**
+ * Most common operations on {@link DMatrixSparseCSC}. For example, addition, matrix multiplication, ... etc
+ *
  * @author Peter Abeles
  */
 public class CommonOps_DSCC {
+    private CommonOps_DSCC(){}
 
     /**
      * Checks to see if row indicies are sorted into ascending order. O(N)

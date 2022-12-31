@@ -41,6 +41,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class MatrixFeatures_DDRM {
+    private MatrixFeatures_DDRM(){}
 
     /**
      * Checks to see if any element in the matrix is NaN.

@@ -37,6 +37,8 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class SingularOps_DDRM {
+    private SingularOps_DDRM(){}
+
 
     /**
      * Returns an array of all the singular values in A sorted in ascending order

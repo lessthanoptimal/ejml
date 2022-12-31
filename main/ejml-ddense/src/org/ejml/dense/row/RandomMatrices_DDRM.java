@@ -32,6 +32,7 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class RandomMatrices_DDRM {
+    private RandomMatrices_DDRM(){}
 
     /**
      * <p>

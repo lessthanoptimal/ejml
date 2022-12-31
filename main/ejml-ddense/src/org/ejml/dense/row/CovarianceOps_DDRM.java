@@ -33,6 +33,7 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class CovarianceOps_DDRM {
+    private CovarianceOps_DDRM(){}
 
     public static double TOL = UtilEjml.TESTP_F64;
 

@@ -34,6 +34,8 @@ import static org.ejml.UtilEjml.reshapeOrDeclare;
  * @author Peter Abeles
  */
 public class CommonOps_MT_DDRM {
+    private CommonOps_MT_DDRM(){}
+
     /**
      * <p>Performs the following operation:<br>
      * <br>

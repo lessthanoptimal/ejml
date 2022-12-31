@@ -61,6 +61,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class NormOps_DDRM {
+    private NormOps_DDRM(){}
 
     /**
      * Normalizes the matrix such that the Frobenius norm is equal to one.

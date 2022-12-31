@@ -37,6 +37,7 @@ import java.util.Arrays;
  * @author Peter Abeles
  */
 public class CommonOps_ZDRM {
+    private CommonOps_ZDRM(){}
 
     /**
      * <p>

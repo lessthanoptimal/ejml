@@ -36,6 +36,8 @@ import static org.ejml.UtilEjml.stringShapes;
  * @author Peter Abeles
  */
 public class CommonOps_MT_DSCC {
+    private CommonOps_MT_DSCC(){}
+
     /**
      * Matrix multiplication C = A*B. Handles optional data structures requires by 
      * {@link #mult(DMatrixSparseCSC, DMatrixSparseCSC, DMatrixSparseCSC, GrowArray)}.

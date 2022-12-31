@@ -26,9 +26,12 @@ import org.ejml.interfaces.decomposition.CholeskySparseDecomposition;
 import org.ejml.sparse.csc.decomposition.chol.CholeskyUpLooking_DSCC;
 
 /**
+ * Functions for computing the features/properties of matrices.
+ *
  * @author Peter Abeles
  */
 public class MatrixFeatures_DSCC {
+    private MatrixFeatures_DSCC(){}
 
     public static boolean isEquals(DMatrixSparseCSC a , DMatrixSparseCSC b ) {
         if( !a.indicesSorted || !b.indicesSorted )
