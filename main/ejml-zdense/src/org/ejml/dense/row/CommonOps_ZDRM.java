@@ -1042,8 +1042,8 @@ public class CommonOps_ZDRM {
             theta = theta*b;
 
             // convert back to standard notation
-            output.data[i] = r*Math.cos(theta);
-            output.data[i + 1] = r*Math.sin(theta);
+            output.data[i] = r*(double)Math.cos(theta);
+            output.data[i + 1] = r*(double)Math.sin(theta);
         }
 
         return output;
