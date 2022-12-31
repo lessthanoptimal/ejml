@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -26,6 +26,8 @@ import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.SimpleMatrix;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -36,11 +38,11 @@ import java.io.IOException;
 public class ExampleMatrixIO {
 
     public static void csv() {
-        DMatrixRMaj A = new DMatrixRMaj(2,3,true,new double[]{1,2,3,4,5,6});
+        var A = new DMatrixRMaj(2, 3, true, new double[]{1, 2, 3, 4, 5, 6});
 
         try {
             MatrixIO.saveDenseCSV(A, "matrix_file.csv");
-            DMatrixRMaj B = MatrixIO.loadCSV("matrix_file.csv",true);
+            DMatrixRMaj B = MatrixIO.loadCSV("matrix_file.csv", true);
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,17 +50,34 @@ public class ExampleMatrixIO {
     }
 
     public static void csv_sparse() {
-        DMatrixSparseCSC A = new DMatrixSparseCSC(5,4);
-        A.set(1,2,4.5);
+        var A = new DMatrixSparseCSC(5, 4);
+        A.set(1, 2, 4.5);
 
         try {
             // Use triplet as an intermediate step when working with sparse matrices
-            DMatrixSparseTriplet A_triple = DConvertMatrixStruct.convert(A,(DMatrixSparseTriplet)null);
+            DMatrixSparseTriplet A_triple = DConvertMatrixStruct.convert(A, (DMatrixSparseTriplet)null);
 
             MatrixIO.saveSparseCSV(A_triple, "matrix_file.csv");
-            DMatrixSparseTriplet B_triple = MatrixIO.loadCSV("matrix_file.csv",true);
+            DMatrixSparseTriplet B_triple = MatrixIO.loadCSV("matrix_file.csv", true);
 
-            DMatrixSparseCSC B = DConvertMatrixStruct.convert(B_triple,(DMatrixSparseCSC)null);
+            DMatrixSparseCSC B = DConvertMatrixStruct.convert(B_triple, (DMatrixSparseCSC)null);
+            B.print();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void matrixMarket() {
+        var A = new DMatrixRMaj(2, 3, true, new double[]{1, 2, 3, 4, 5, 6});
+
+        try (var writer = new FileWriter("matrix_file.txt")) {
+            MatrixIO.saveMatrixMarket(A, "%f", writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (var reader = new FileReader("matrix_file.txt")) {
+            DMatrixRMaj B = MatrixIO.loadMatrixMarketDDRM(reader);
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -66,44 +85,20 @@ public class ExampleMatrixIO {
     }
 
     public static void csv_simple() {
-        SimpleMatrix A = new SimpleMatrix(2,3,true,new double[]{1,2,3,4,5,6});
+        var A = new SimpleMatrix(2, 3, true, new double[]{1, 2, 3, 4, 5, 6});
 
         try {
             A.saveToFileCSV("matrix_file.csv");
-            SimpleMatrix B = new SimpleMatrix(1,1, MatrixType.DDRM).loadCSV("matrix_file.csv");
+            var B = new SimpleMatrix(1, 1, MatrixType.DDRM).loadCSV("matrix_file.csv");
             B.print();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void serializedBinary() {
-        DMatrixRMaj A = new DMatrixRMaj(2,3,true,new double[]{1,2,3,4,5,6});
-
-        try {
-            MatrixIO.saveBin(A, "matrix_file.data");
-            DMatrixRMaj B = MatrixIO.loadBin("matrix_file.data");
-            B.print();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void csv_serializedBinary() {
-        SimpleMatrix A = new SimpleMatrix(2,3,true,new double[]{1,2,3,4,5,6});
-
-        try {
-            A.saveToFileBinary("matrix_file.data");
-            SimpleMatrix B = SimpleMatrix.loadBinary("matrix_file.data");
-            B.print();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    public static void main( String args[] ) {
+    public static void main( String[] args ) {
         csv();
         csv_sparse();
-        serializedBinary();
+        matrixMarket();
     }
 }
