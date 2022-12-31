@@ -115,13 +115,12 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override public void scale( ZMatrixRMaj A, /**/double val, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.scale( (double)val, 0,A,output);
-        throw new UnsupportedOperation();
+        output.setTo(A);
+        CommonOps_ZDRM.scale((double)val, 0, output);
     }
 
     @Override public void divide( ZMatrixRMaj A, /**/double val, ZMatrixRMaj output ) {
-//        CommonOps_ZDRM.divide( A, (double)val,output);
-        throw new UnsupportedOperation();
+        CommonOps_ZDRM.elementDivide(A, (double)val, 0.0, output);
     }
 
     @Override public boolean invert( ZMatrixRMaj A, ZMatrixRMaj output ) {
@@ -175,7 +174,8 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
         }
     }
 
-    @Override public void extract( ZMatrixRMaj src, int srcY0, int srcY1, int srcX0, int srcX1, ZMatrixRMaj dst, int dstY0, int dstX0 ) {
+    @Override
+    public void extract( ZMatrixRMaj src, int srcY0, int srcY1, int srcX0, int srcX1, ZMatrixRMaj dst, int dstY0, int dstX0 ) {
         CommonOps_ZDRM.extract(src, srcY0, srcY1, srcX0, srcX1, dst, dstY0, dstX0);
     }
 
@@ -221,6 +221,10 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     @Override public /**/double elementSum( ZMatrixRMaj A ) {
 //        return CommonOps_ZDRM.elementSum(A);
         throw new UnsupportedOperation("Complex matrix. Use sumComplex instead");
+    }
+
+    @Override public void elementSumComplex( ZMatrixRMaj A, Complex_F64 output ) {
+        WorkAroundForComplex.elementSum_F64(A, output);
     }
 
     @Override public void elementMult( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {

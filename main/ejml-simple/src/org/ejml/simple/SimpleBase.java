@@ -385,7 +385,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * b<sub>i,j</sub> = val*a<sub>i,j</sub>
      * </p>
      *
-     * @param val The multiplication factor.
+     * @param val The multiplication factor. If matrix is complex then the imaginary component is zero.
      * @return The scaled matrix.
      * @see CommonOps_DDRM#scale(double, DMatrixD1)
      */
@@ -401,7 +401,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * b<sub>i,j</sub> = a<sub>i,j</sub>/val
      * </p>
      *
-     * @param val Divisor.
+     * @param val Divisor. If matrix is complex then the imaginary component is zero.
      * @return Matrix with its elements divided by the specified value.
      * @see CommonOps_DDRM#divide(DMatrixD1, double)
      */
@@ -1150,12 +1150,23 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Computes the sum of all the elements in the matrix.
+     * Computes the sum of all the elements in the matrix. Only works on real matrices.
      *
      * @return Sum of all the elements.
      */
     public double elementSum() {
         return ops.elementSum(mat);
+    }
+
+    /**
+     * Computes the sum of all the elements in the matrix. Works with both real and complex matrices.
+     *
+     * @return Sum of all the elements.
+     */
+    public Complex_F64 elementSumComplex() {
+        var sum = new Complex_F64();
+        ops.elementSumComplex(mat, sum);
+        return sum;
     }
 
     /**
@@ -1589,6 +1600,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
+    /** Convenience function. See {@link #stripReal()} */
+    public T real() {
+        return stripReal();
+    }
+
     /**
      * Returns a matrix that contains the imaginary valued portion of a complex matrix. For a real
      * valued matrix this will return a matrix full of zeros.
@@ -1606,6 +1622,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         } else {
             return ret.wrapMatrix(CommonOps_ZDRM.stripImaginary((ZMatrixD1)mat, null));
         }
+    }
+
+    /** Convenience function. See {@link #stripReal()} */
+    public T imaginary() {
+        return stripImaginary();
     }
 
     /**

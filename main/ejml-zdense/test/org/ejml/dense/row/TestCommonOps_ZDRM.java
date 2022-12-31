@@ -646,6 +646,26 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
+    @Test void elementSum() {
+        ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
+
+        Complex_F64 found = CommonOps_ZDRM.elementSum(in, null);
+
+        Complex_F64 a = new Complex_F64();
+        double sumReal = 0;
+        double sumImag = 0;
+        for (int i = 0; i < in.numRows; i++) {
+            for (int j = 0; j < in.numCols; j++) {
+                in.get(i, j, a);
+                sumReal += a.real;
+                sumImag += a.imaginary;
+            }
+        }
+
+        assertEquals(sumReal, found.real, UtilEjml.TEST_F64);
+        assertEquals(sumImag, found.imaginary, UtilEjml.TEST_F64);
+    }
+
     @Test void elementMinReal() {
         ZMatrixRMaj m = new ZMatrixRMaj(3, 4);
         for (int i = 0; i < m.data.length; i++) {
