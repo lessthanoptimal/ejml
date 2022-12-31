@@ -26,7 +26,8 @@ import java.util.Random;
 
 /**
  * <p>
- * {@link SimpleMatrix} is a wrapper around {@link DMatrixRMaj} that provides an
+ * {@link SimpleMatrix} is a wrapper around a primitive matrix type (e.g. {@link DMatrixRMaj} or
+ * {@link FMatrixSparseCSC}) that provides an
  * easy to use object oriented interface for performing matrix operations. It is designed to be
  * more accessible to novice programmers and provide a way to rapidly code up solutions by simplifying
  * memory management and providing easy to use functions.
@@ -42,11 +43,11 @@ import java.util.Random;
  * </p>
  *
  * <p>
- * Working with both {@link DMatrixRMaj} and SimpleMatrix in the same code base is easy.
+ * Working with both a primitive matrix and SimpleMatrix in the same code base is easy.
  * To access the internal DMatrixRMaj in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
  * To turn a DMatrixRMaj into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}. Not
  * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
- * DMatrixRMaj.
+ * matrix.
  * </p>
  *
  * <p>
@@ -153,7 +154,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data 2D array representation of the matrix. Not modified.
      * @see DMatrixRMaj#DMatrixRMaj(double[][])
      */
-    public SimpleMatrix( double data[][] ) {
+    public SimpleMatrix( double[][] data ) {
         setMatrix(new DMatrixRMaj(data));
     }
 
@@ -168,7 +169,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param data 2D array representation of the matrix. Not modified.
      * @see FMatrixRMaj#FMatrixRMaj(float[][])
      */
-    public SimpleMatrix( float data[][] ) {
+    public SimpleMatrix( float[][] data ) {
         setMatrix(new FMatrixRMaj(data));
     }
 
@@ -177,7 +178,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      *
      * @param data 1D array representation of the vector. Not modified.
      */
-    public SimpleMatrix( double data[] ) {
+    public SimpleMatrix( double[] data ) {
         setMatrix(new DMatrixRMaj(data.length, 1, true, data));
     }
 
@@ -186,7 +187,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      *
      * @param data 1D array representation of the vector. Not modified.
      */
-    public SimpleMatrix( float data[] ) {
+    public SimpleMatrix( float[] data ) {
         setMatrix(new FMatrixRMaj(data.length, 1, true, data));
     }
 
@@ -214,26 +215,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public SimpleMatrix( int numRows, int numCols, MatrixType type ) {
         switch (type) {
-            case DDRM:
-                setMatrix(new DMatrixRMaj(numRows, numCols));
-                break;
-            case FDRM:
-                setMatrix(new FMatrixRMaj(numRows, numCols));
-                break;
-            case ZDRM:
-                setMatrix(new ZMatrixRMaj(numRows, numCols));
-                break;
-            case CDRM:
-                setMatrix(new CMatrixRMaj(numRows, numCols));
-                break;
-            case DSCC:
-                setMatrix(new DMatrixSparseCSC(numRows, numCols));
-                break;
-            case FSCC:
-                setMatrix(new FMatrixSparseCSC(numRows, numCols));
-                break;
-            default:
-                throw new RuntimeException("Unknown matrix type");
+            case DDRM -> setMatrix(new DMatrixRMaj(numRows, numCols));
+            case FDRM -> setMatrix(new FMatrixRMaj(numRows, numCols));
+            case ZDRM -> setMatrix(new ZMatrixRMaj(numRows, numCols));
+            case CDRM -> setMatrix(new CMatrixRMaj(numRows, numCols));
+            case DSCC -> setMatrix(new DMatrixSparseCSC(numRows, numCols));
+            case FSCC -> setMatrix(new FMatrixSparseCSC(numRows, numCols));
+            default -> throw new RuntimeException("Unknown matrix type");
         }
     }
 
@@ -254,11 +242,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     public SimpleMatrix( Matrix orig ) {
         Matrix mat;
         if (orig instanceof DMatrixRBlock) {
-            DMatrixRMaj a = new DMatrixRMaj(orig.getNumRows(), orig.getNumCols());
+            var a = new DMatrixRMaj(orig.getNumRows(), orig.getNumCols());
             DConvertMatrixStruct.convert((DMatrixRBlock)orig, a);
             mat = a;
         } else if (orig instanceof FMatrixRBlock) {
-            FMatrixRMaj a = new FMatrixRMaj(orig.getNumRows(), orig.getNumCols());
+            var a = new FMatrixRMaj(orig.getNumRows(), orig.getNumCols());
             FConvertMatrixStruct.convert((FMatrixRBlock)orig, a);
             mat = a;
         } else {
@@ -279,7 +267,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @param internalMat The internal DMatrixRMaj of the returned SimpleMatrix. Will be modified.
      */
     public static SimpleMatrix wrap( Matrix internalMat ) {
-        SimpleMatrix ret = new SimpleMatrix();
+        var ret = new SimpleMatrix();
         ret.setMatrix(internalMat);
         return ret;
     }
@@ -292,7 +280,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @return A matrix filled with the value a.
      */
     public static SimpleMatrix filled( int numRows, int numCols, double a ) {
-        SimpleMatrix res = new SimpleMatrix(numRows, numCols);
+        var res = new SimpleMatrix(numRows, numCols);
         res.fill(a);
         return res;
     }
@@ -318,8 +306,8 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return identity(width, DMatrixRMaj.class);
     }
 
-    public static SimpleMatrix identity( int width, Class type ) {
-        SimpleMatrix ret = new SimpleMatrix(width, width, type);
+    public static SimpleMatrix identity( int width, Class<?> type ) {
+        var ret = new SimpleMatrix(width, width, type);
         ret.ops.setIdentity(ret.mat);
         return ret;
     }
@@ -339,16 +327,14 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @see CommonOps_DDRM#diag(double...)
      */
     public static SimpleMatrix diag( double... vals ) {
-        DMatrixRMaj m = CommonOps_DDRM.diag(vals);
-        SimpleMatrix ret = wrap(m);
-        return ret;
+        return wrap(CommonOps_DDRM.diag(vals));
     }
 
     /**
      * Creates a real valued diagonal matrix of the specified type
      */
-    public static SimpleMatrix diag( Class type, double... vals ) {
-        SimpleMatrix M = new SimpleMatrix(vals.length, vals.length, type);
+    public static SimpleMatrix diag( Class<?> type, double... vals ) {
+        var M = new SimpleMatrix(vals.length, vals.length, type);
         for (int i = 0; i < vals.length; i++) {
             M.set(i, i, vals[i]);
         }
@@ -368,13 +354,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @see RandomMatrices_DDRM#fillUniform(DMatrixRMaj, java.util.Random)
      */
     public static SimpleMatrix random_DDRM( int numRows, int numCols, double minValue, double maxValue, Random rand ) {
-        SimpleMatrix ret = new SimpleMatrix(numRows, numCols);
+        var ret = new SimpleMatrix(numRows, numCols);
         RandomMatrices_DDRM.fillUniform((DMatrixRMaj)ret.mat, minValue, maxValue, rand);
         return ret;
     }
 
     public static SimpleMatrix random_FDRM( int numRows, int numCols, float minValue, float maxValue, Random rand ) {
-        SimpleMatrix ret = new SimpleMatrix(numRows, numCols, FMatrixRMaj.class);
+        var ret = new SimpleMatrix(numRows, numCols, FMatrixRMaj.class);
         RandomMatrices_FDRM.fillUniform((FMatrixRMaj)ret.mat, minValue, maxValue, rand);
         return ret;
     }
@@ -390,26 +376,17 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * @see CovarianceRandomDraw_DDRM
      */
     public static SimpleMatrix randomNormal( SimpleMatrix covariance, Random random ) {
-
-        SimpleMatrix found = new SimpleMatrix(covariance.numRows(), 1, covariance.getType());
-
+        var found = new SimpleMatrix(covariance.numRows(), 1, covariance.getType());
         switch (found.getType()) {
-            case DDRM: {
-                CovarianceRandomDraw_DDRM draw = new CovarianceRandomDraw_DDRM(random, (DMatrixRMaj)covariance.getMatrix());
-
-                draw.next((DMatrixRMaj)found.getMatrix());
+            case DDRM -> {
+                var draw = new CovarianceRandomDraw_DDRM(random, covariance.getMatrix());
+                draw.next(found.getMatrix());
             }
-            break;
-
-            case FDRM: {
-                CovarianceRandomDraw_FDRM draw = new CovarianceRandomDraw_FDRM(random, (FMatrixRMaj)covariance.getMatrix());
-
-                draw.next((FMatrixRMaj)found.getMatrix());
+            case FDRM -> {
+                var draw = new CovarianceRandomDraw_FDRM(random, covariance.getMatrix());
+                draw.next(found.getMatrix());
             }
-            break;
-
-            default:
-                throw new IllegalArgumentException("Matrix type is currently not supported");
+            default -> throw new IllegalArgumentException("Matrix type is currently not supported");
         }
 
         return found;

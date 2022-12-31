@@ -492,59 +492,6 @@ public class MatrixIO {
     }
 
     /**
-     * Saves a matrix to disk using Java binary serialization.
-     *
-     * @param A The matrix being saved.
-     * @param fileName Name of the file its being saved at.
-     */
-    public static void saveBin( DMatrix A, String fileName )
-            throws IOException {
-        FileOutputStream fileStream = new FileOutputStream(fileName);
-        ObjectOutputStream stream = new ObjectOutputStream(fileStream);
-
-        try {
-            stream.writeObject(A);
-            stream.flush();
-        } finally {
-            // clean up
-            try {
-                stream.close();
-            } finally {
-                fileStream.close();
-            }
-        }
-    }
-
-    /**
-     * Loads a {@link DMatrix} which has been saved to file using Java binary
-     * serialization.
-     *
-     * @param fileName The file being loaded.
-     * @return DMatrixRMaj
-     * @deprecated This will be removed in the future due to how unsafe readObject() is.
-     */
-    @Deprecated
-    @SuppressWarnings("BanSerializableRead")
-    public static <T extends DMatrix> T loadBin( String fileName )
-            throws IOException {
-        FileInputStream fileStream = new FileInputStream(fileName);
-        ObjectInputStream stream = new ObjectInputStream(fileStream);
-
-        T ret;
-        try {
-            ret = (T)stream.readObject();
-            if (stream.available() != 0) {
-                throw new RuntimeException("File not completely read?");
-            }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        stream.close();
-        return (T)ret;
-    }
-
-    /**
      * Saves a matrix to disk using in a Column Space Value (CSV) format. For a
      * description of the format see {@link MatrixIO#loadCSV(String, boolean)}.
      *
