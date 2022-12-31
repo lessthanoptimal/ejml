@@ -363,8 +363,8 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         MatrixIO.print(out, (DMatrixSparseCSC)mat, format);
     }
 
-    @Override public void elementOp( DMatrixSparseCSC A, ForEachReal op, DMatrixSparseCSC output ) {
-        // Ensure the the output has the same non-zero elements as A
+    @Override public void elementOp( DMatrixSparseCSC A, ElementOpReal op, DMatrixSparseCSC output ) {
+        // Ensure the output has the same non-zero elements as A
         output.copyStructure(A);
 
         for (int col = 0; col < A.numCols; col++) {
@@ -380,7 +380,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override public void elementOp( DMatrixSparseCSC A, ForEachComplex op, DMatrixSparseCSC output ) {
+    @Override public void elementOp( DMatrixSparseCSC A, ElementOpComplex op, DMatrixSparseCSC output ) {
         throw new ConvertToImaginaryException();
     }
 }

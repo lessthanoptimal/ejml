@@ -307,7 +307,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
         MatrixIO.print(out, (DMatrixRMaj)mat, format);
     }
 
-    @Override public void elementOp( DMatrixRMaj A, ForEachReal op, DMatrixRMaj output ) {
+    @Override public void elementOp( DMatrixRMaj A, ElementOpReal op, DMatrixRMaj output ) {
         for (int row = 0, index = 0; row < A.numRows; row++) {
             for (int col = 0; col < A.numCols; col++, index++ ) {
                 output.data[index] =  (double)op.op(row, col, A.data[index]);
@@ -315,7 +315,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
         }
     }
 
-    @Override public void elementOp( DMatrixRMaj A, ForEachComplex op, DMatrixRMaj output ) {
+    @Override public void elementOp( DMatrixRMaj A, ElementOpComplex op, DMatrixRMaj output ) {
         // Output must be complex
         throw new ConvertToImaginaryException();
     }

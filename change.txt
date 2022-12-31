@@ -11,6 +11,10 @@ Date format: year/month/day
   * Removed unsafe and deprecated functions loadBin() and saveBin()
 - Negative rows or columns are now illegal
   * Thanks JozsefKutas for pointing out the issue
+- Complex Matrix Support
+  * Added elementMultiply(mat, mat, mat)
+  * Added elementDivide(mat, mat, mat)
+  * Added elementPower(math, real, mat)
 - SimpleMatrix
   * Thanks JozsefKutas for getting this needed refresh started
   * Removed deprecated functions
