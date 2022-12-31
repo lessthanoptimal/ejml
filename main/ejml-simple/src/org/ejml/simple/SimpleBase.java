@@ -673,6 +673,17 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * Used to set the complex value of a matrix element.
+     *
+     * @param row The row of the element.
+     * @param col The column of the element.
+     * @param value The value that the element is being assigned to
+     */
+    public void set( int row, int col, Complex_F64 value ) {
+        set(row, col, value.real, value.imaginary);
+    }
+
+    /**
      * <p>
      * Assigns consecutive elements inside a row to the provided array.<br>
      * <br>
@@ -746,6 +757,26 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      */
     public void get( int row, int col, Complex_F64 output ) {
         ops.get(mat, row, col, output);
+    }
+
+    /**
+     * Returns the real component of the element. If a real matrix this is the same as calling {@link #get(int, int)}.
+     *
+     * @param row The row of the element.
+     * @param col The column of the element.
+     */
+    public double getReal( int row, int col ) {
+        return ops.getReal(mat, row, col);
+    }
+
+    /**
+     * Returns the imaginary component of the element. If a real matrix this will always be zero.
+     *
+     * @param row The row of the element.
+     * @param col The column of the element.
+     */
+    public double getImaginary( int row, int col ) {
+        return ops.getImaginary(mat, row, col);
     }
 
     /**
