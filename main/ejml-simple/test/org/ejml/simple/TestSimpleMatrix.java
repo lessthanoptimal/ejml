@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,8 +37,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSimpleMatrix extends EjmlStandardJUnit {
-    @Test
-    public void randomNormal() {
+    @Test void randomNormal() {
         SimpleMatrix Q = SimpleMatrix.diag(5, 3, 12);
         Q.set(0, 1, 0.5);
         Q.set(1, 0, 0.5);
@@ -59,8 +58,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void constructor_1d_array() {
+    @Test void constructor_1d_array() {
         double[] d = new double[]{2, 5, 3, 9, -2, 6, 7, 4};
         SimpleMatrix s = new SimpleMatrix(3, 2, true, d);
         DMatrixRMaj m = new DMatrixRMaj(3, 2, true, d);
@@ -68,8 +66,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals((DMatrixRMaj)m, (DMatrixRMaj)s.getMatrix(), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void constructor_1d_array_simple() {
+    @Test void constructor_1d_array_simple() {
         double[] d = new double[]{2, 5, 3, 9, -2, 6, 7, 4};
         SimpleMatrix s = new SimpleMatrix(d);
         DMatrixRMaj m = new DMatrixRMaj(8, 1, true, d);
@@ -77,8 +74,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals((DMatrixRMaj)m, (DMatrixRMaj)s.getMatrix(), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void constructor_2d_array() {
+    @Test void constructor_2d_array() {
         double[][] d = new double[][]{{1, 2}, {3, 4}, {5, 6}};
 
         SimpleMatrix s = new SimpleMatrix(d);
@@ -87,8 +83,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals((DMatrixRMaj)mat, (DMatrixRMaj)s.getMatrix(), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void constructor_dense() {
+    @Test void constructor_dense() {
         DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(3, 2, rand);
         SimpleMatrix s = new SimpleMatrix(mat);
 
@@ -96,8 +91,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(mat, s.getMatrix());
     }
 
-    @Test
-    public void constructor_simple() {
+    @Test void constructor_simple() {
         SimpleMatrix orig = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix copy = new SimpleMatrix(orig);
 
@@ -105,8 +99,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(orig.mat, copy.mat);
     }
 
-    @Test
-    public void wrap() {
+    @Test void wrap() {
         DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(3, 2, rand);
 
         SimpleMatrix s = SimpleMatrix.wrap(mat);
@@ -114,8 +107,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertSame(s.mat, mat);
     }
 
-    @Test
-    public void identity() {
+    @Test void identity() {
         SimpleMatrix s = SimpleMatrix.identity(3);
 
         DMatrixRMaj d = CommonOps_DDRM.identity(3);
@@ -123,8 +115,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d, (DMatrixRMaj)s.mat, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void ones() {
+    @Test void ones() {
         SimpleMatrix s = SimpleMatrix.ones(3, 3);
 
         DMatrixRMaj d = new DMatrixRMaj(3, 3);
@@ -133,8 +124,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d, (DMatrixRMaj)s.mat, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void filled() {
+    @Test void filled() {
         SimpleMatrix s = SimpleMatrix.filled(3, 3, 2);
 
         DMatrixRMaj d = new DMatrixRMaj(3, 3);
@@ -143,16 +133,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d, (DMatrixRMaj)s.mat, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void getMatrix() {
+    @Test void getMatrix() {
         SimpleMatrix s = new SimpleMatrix(3, 2);
 
         // make sure a new instance isn't returned
         assertSame(s.mat, s.getMatrix());
     }
 
-    @Test
-    public void convertToSparse() {
+    @Test void convertToSparse() {
         var data = new double[]{0, 1, 0, 1};
         var simpleMatrix = new SimpleMatrix(2, 2, true, data);
         assertTrue(simpleMatrix.getType().isDense());
@@ -164,8 +152,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(denseMatrix, simpleMatrix.mat);
     }
 
-    @Test
-    public void transformMatrix() {
+    @Test void transformMatrix() {
         var data = new float[]{0, 1, 0, 1};
         var s = new SimpleMatrix(2, 2, true, data);
 
@@ -179,8 +166,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(sparseDMatrix, denseFMatrix);
     }
 
-    @Test
-    public void transpose() {
+    @Test void transpose() {
         SimpleMatrix orig = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix tran = orig.transpose();
 
@@ -190,8 +176,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(dTran, (DMatrixRMaj)tran.mat, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void mult() {
+    @Test void mult() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(2, 3, 0, 1, rand);
         SimpleMatrix c = a.mult(b);
@@ -202,8 +187,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, (DMatrixRMaj)c.mat, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void kron() {
+    @Test void kron() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(2, 3, 0, 1, rand);
         SimpleMatrix c = a.kron(b);
@@ -233,8 +217,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
 //        EjmlUnitTests.assertEquals(c_dense,c.mat);
 //    }
 
-    @Test
-    public void plus() {
+    @Test void plus() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix c = a.plus(b);
@@ -245,8 +228,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void plus_scalar() {
+    @Test void plus_scalar() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         double b = 2.5;
         SimpleMatrix c = a.plus(b);
@@ -257,8 +239,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void dot() {
+    @Test void dot() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(10, 1, -1, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(10, 1, -1, 1, rand);
 
@@ -271,16 +252,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void isVector() {
+    @Test void isVector() {
         assertTrue(new SimpleMatrix(1, 1).isVector());
         assertTrue(new SimpleMatrix(1, 10).isVector());
         assertTrue(new SimpleMatrix(10, 1).isVector());
         assertFalse(new SimpleMatrix(6, 5).isVector());
     }
 
-    @Test
-    public void minus_matrix_matrix() {
+    @Test void minus_matrix_matrix() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix c = a.minus(b);
@@ -291,8 +270,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void minus_matrix_scalar() {
+    @Test void minus_matrix_scalar() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         double b = 0.14;
         SimpleMatrix c = a.minus(b);
@@ -303,8 +281,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void plus_beta() {
+    @Test void plus_beta() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix c = a.plus(2.5, b);
@@ -315,8 +292,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void invert() {
+    @Test void invert() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         SimpleMatrix inv = a.invert();
 
@@ -326,8 +302,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d_inv, inv.mat);
     }
 
-    @Test
-    public void invert_NaN_INFINITY() {
+    @Test void invert_NaN_INFINITY() {
         SimpleMatrix a = new SimpleMatrix(3, 3);
         try {
             a.fill(Double.NaN);
@@ -344,8 +319,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void pseudoInverse() {
+    @Test void pseudoInverse() {
         // first test it against a non-square zero matrix
         SimpleMatrix inv = new SimpleMatrix(3, 4).pseudoInverse();
         assertEquals(0, inv.normF(), UtilEjml.TEST_F64);
@@ -360,8 +334,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d_inv, inv.mat);
     }
 
-    @Test
-    public void solve() {
+    @Test void solve() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix c = a.solve(b);
@@ -372,8 +345,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void solve_NaN_INFINITY() {
+    @Test void solve_NaN_INFINITY() {
         SimpleMatrix a = new SimpleMatrix(3, 3);
         SimpleMatrix b = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         try {
@@ -394,8 +366,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
     /**
      * See if it solves an over determined system correctly
      */
-    @Test
-    public void solve_notsquare() {
+    @Test void solve_notsquare() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(6, 3, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(6, 2, 0, 1, rand);
         SimpleMatrix c = a.solve(b);
@@ -406,8 +377,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_dense, c.mat);
     }
 
-    @Test
-    public void set_double() {
+    @Test void set_double() {
         SimpleMatrix a = new SimpleMatrix(3, 3);
         a.fill(16.0);
 
@@ -417,8 +387,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d, a.mat);
     }
 
-    @Test
-    public void zero() {
+    @Test void zero() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.zero();
 
@@ -427,8 +396,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(d, a.mat);
     }
 
-    @Test
-    public void normF() {
+    @Test void normF() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         double norm = a.normF();
@@ -437,8 +405,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(dnorm, norm, 1e-10);
     }
 
-    @Test
-    public void conditionP2() {
+    @Test void conditionP2() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         double cond = NormOps_DDRM.conditionP2((DMatrixRMaj)a.getMatrix());
@@ -447,8 +414,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(cond, found);
     }
 
-    @Test
-    public void determinant() {
+    @Test void determinant() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         double det = a.determinant();
@@ -457,8 +423,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(ddet, det, 1e-10);
     }
 
-    @Test
-    public void trace() {
+    @Test void trace() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         double trace = a.trace();
@@ -467,8 +432,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(dtrace, trace, 1e-10);
     }
 
-    @Test
-    public void reshape() {
+    @Test void reshape() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         DMatrixRMaj b = a.mat.copy();
 
@@ -478,16 +442,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(b, a.mat);
     }
 
-    @Test
-    public void set_element() {
+    @Test void set_element() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.set(0, 1, 10.3);
 
         assertEquals(10.3, a.get(0, 1), 1e-6);
     }
 
-    @Test
-    public void setRow() {
+    @Test void setRow() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.setRow(2, 1, 2, 3);
 
@@ -495,8 +457,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(3, a.get(2, 2), 1e-6);
     }
 
-    @Test
-    public void setColumn() {
+    @Test void setColumn() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.setColumn(2, 1, 2, 3);
 
@@ -504,34 +465,30 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(3, a.get(2, 2), 1e-6);
     }
 
-    @Test
-    public void get_2d() {
+    @Test void get_2d() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         assertEquals(((DMatrixRMaj)a.mat).get(0, 1), a.get(0, 1), 1e-6);
     }
 
-    @Test
-    public void get_1d() {
+    @Test void get_1d() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         assertEquals(((DMatrixRMaj)a.mat).get(3), a.get(3), 1e-6);
     }
 
-    @Test
-    public void getIndex() {
+    @Test void getIndex() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
         assertEquals(((DMatrixRMaj)a.mat).getIndex(0, 2), a.getIndex(0, 2), 1e-6);
     }
 
-    @Test
-    public void toArray2() {
+    @Test void toArray2() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
 
         double[][] array2 = a.toArray2();
-        assertEquals(a.numRows(), array2.length);
-        assertEquals(a.numCols(), array2[0].length);
+        assertEquals(a.getNumRows(), array2.length);
+        assertEquals(a.getNumCols(), array2[0].length);
 
         for (int i = 0; i < array2.length; i++) {
             for (int j = 0; j < array2[0].length; j++) {
@@ -540,8 +497,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void copy() {
+    @Test void copy() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         SimpleMatrix b = a.copy();
 
@@ -549,8 +505,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(b.mat, a.mat);
     }
 
-    @Test
-    public void svd() {
+    @Test void svd() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 4, 0, 1, rand);
 
         SimpleSVD<SimpleMatrix> svd = a.svd();
@@ -564,8 +519,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(a.mat, a_found.mat);
     }
 
-    @Test
-    public void eig() {
+    @Test void eig() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(4, 4, 0, 1, rand);
 
         SimpleEVD evd = a.eig();
@@ -579,8 +533,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void insertIntoThis() {
+    @Test void insertIntoThis() {
         SimpleMatrix A = new SimpleMatrix(6, 4);
         SimpleMatrix B = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
 
@@ -593,15 +546,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(A_, A.getMatrix());
     }
 
-    @Test
-    public void combine() {
+    @Test void combine() {
         SimpleMatrix A = new SimpleMatrix(6, 4);
         SimpleMatrix B = SimpleMatrix.random_DDRM(3, 4, 0, 1, rand);
 
         SimpleMatrix C = A.combine(2, 2, B);
 
-        assertEquals(6, C.numRows());
-        assertEquals(6, C.numCols());
+        assertEquals(6, C.getNumRows());
+        assertEquals(6, C.getNumCols());
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
@@ -619,39 +571,36 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void scale() {
+    @Test void scale() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = a.scale(1.5);
 
-        for (int i = 0; i < a.numRows(); i++) {
-            for (int j = 0; j < a.numCols(); j++) {
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++) {
                 assertEquals(a.get(i, j)*1.5, b.get(i, j), 1e-10);
             }
         }
     }
 
-    @Test
-    public void div_scalar() {
+    @Test void div_scalar() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = a.divide(1.5);
 
-        for (int i = 0; i < a.numRows(); i++) {
-            for (int j = 0; j < a.numCols(); j++) {
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++) {
                 assertEquals(a.get(i, j)/1.5, b.get(i, j), 1e-10);
             }
         }
     }
 
-    @Test
-    public void elementSum() {
+    @Test void elementSum() {
         SimpleMatrix a = new SimpleMatrix(7, 4);
 
         double expectedSum = 0;
 
         int index = 0;
-        for (int i = 0; i < a.numRows(); i++) {
-            for (int j = 0; j < a.numCols(); j++, index++) {
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++, index++) {
                 expectedSum += index;
                 a.set(i, j, index);
             }
@@ -660,8 +609,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(expectedSum, a.elementSum(), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementMax() {
+    @Test void elementMax() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(7, 5, 0, 1, rand);
 
         a.set(3, 4, -5);
@@ -670,8 +618,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(4, a.elementMax(), 0.0);
     }
 
-    @Test
-    public void elementMin() {
+    @Test void elementMin() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(7, 5, 4, 10, rand);
 
         a.set(3, 4, -2);
@@ -680,8 +627,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(-2, a.elementMin(), 0.0);
     }
 
-    @Test
-    public void elementMaxAbs() {
+    @Test void elementMaxAbs() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(7, 5, 0, 1, rand);
 
         a.set(3, 4, -5);
@@ -690,8 +636,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(5, a.elementMaxAbs(), 0.0);
     }
 
-    @Test
-    public void elementMinAbs() {
+    @Test void elementMinAbs() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(7, 5, 4, 10, rand);
 
         a.set(3, 4, -2);
@@ -700,15 +645,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(0.5, a.elementMinAbs(), 0.0);
     }
 
-    @Test
-    public void elementMult() {
+    @Test void elementMult() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
 
         SimpleMatrix C = A.elementMult(B);
 
-        for (int i = 0; i < A.numRows(); i++) {
-            for (int j = 0; j < A.numCols(); j++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
                 double expected = A.get(i, j)*B.get(i, j);
 
                 assertEquals(expected, C.get(i, j));
@@ -716,15 +660,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementDiv() {
+    @Test void elementDiv() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
 
         SimpleMatrix C = A.elementDiv(B);
 
-        for (int i = 0; i < A.numRows(); i++) {
-            for (int j = 0; j < A.numCols(); j++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
                 double expected = A.get(i, j)/B.get(i, j);
 
                 assertEquals(expected, C.get(i, j));
@@ -732,15 +675,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementPower_m() {
+    @Test void elementPower_m() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
         SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
 
         SimpleMatrix C = A.elementPower(B);
 
-        for (int i = 0; i < A.numRows(); i++) {
-            for (int j = 0; j < A.numCols(); j++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
                 double expected = Math.pow(A.get(i, j), B.get(i, j));
 
                 assertEquals(expected, C.get(i, j));
@@ -748,15 +690,14 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementPower_s() {
+    @Test void elementPower_s() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
         double b = 1.1;
 
         SimpleMatrix C = A.elementPower(b);
 
-        for (int i = 0; i < A.numRows(); i++) {
-            for (int j = 0; j < A.numCols(); j++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
                 double expected = Math.pow(A.get(i, j), b);
 
                 assertEquals(expected, C.get(i, j));
@@ -764,14 +705,13 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementLog() {
+    @Test void elementLog() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
 
         SimpleMatrix C = A.elementLog();
 
-        for (int i = 0; i < A.numRows(); i++) {
-            for (int j = 0; j < A.numCols(); j++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
                 double expected = Math.log(A.get(i, j));
 
                 assertEquals(expected, C.get(i, j));
@@ -779,14 +719,13 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementExp() {
+    @Test void elementExp() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(4, 5, 0, 1, rand);
 
         SimpleMatrix C = A.elementExp();
 
-        for (int i = 0; i < A.numRows(); i++) {
-            for (int j = 0; j < A.numCols(); j++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
+            for (int j = 0; j < A.getNumCols(); j++) {
                 double expected = Math.exp(A.get(i, j));
 
                 assertEquals(expected, C.get(i, j));
@@ -794,8 +733,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extractMatrix() {
+    @Test void extractMatrix() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(7, 5, 0, 1, rand);
 
         SimpleMatrix b = a.extractMatrix(2, 5, 3, 5);
@@ -810,8 +748,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void diag_extract() {
+    @Test void diag_extract() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 4, 0, 1, rand);
 
         DMatrixRMaj found = a.diag().getMatrix();
@@ -822,8 +759,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(found, expected);
     }
 
-    @Test
-    public void diag_vector() {
+    @Test void diag_vector() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 1, 0, 1, rand);
 
         DMatrixRMaj found = a.diag().getMatrix();
@@ -832,29 +768,27 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(found, expected.getMatrix());
     }
 
-    @Test
-    public void extractVector() {
+    @Test void extractVector() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(10, 7, 0, 1, rand);
 
         SimpleMatrix c = A.extractVector(false, 2);
         SimpleMatrix r = A.extractVector(true, 2);
 
-        assertEquals(A.numCols(), r.numCols());
-        assertEquals(1, r.numRows());
-        assertEquals(A.numRows(), c.numRows());
-        assertEquals(1, c.numCols());
+        assertEquals(A.getNumCols(), r.getNumCols());
+        assertEquals(1, r.getNumRows());
+        assertEquals(A.getNumRows(), c.getNumRows());
+        assertEquals(1, c.getNumCols());
 
-        for (int i = 0; i < A.numCols(); i++) {
+        for (int i = 0; i < A.getNumCols(); i++) {
             assertEquals(A.get(2, i), r.get(i), 1e-10);
         }
 
-        for (int i = 0; i < A.numRows(); i++) {
+        for (int i = 0; i < A.getNumRows(); i++) {
             assertEquals(A.get(i, 2), c.get(i), 1e-10);
         }
     }
 
-    @Test
-    public void negative() {
+    @Test void negative() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
 
         SimpleMatrix A_neg = A.negative();
@@ -864,8 +798,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(0, value, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void isInBounds() {
+    @Test void isInBounds() {
         SimpleMatrix A = new SimpleMatrix(10, 15);
 
         assertTrue(A.isInBounds(0, 0));
@@ -880,8 +813,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertFalse(A.isInBounds(3, 1000));
     }
 
-    @Test
-    public void equation() {
+    @Test void equation() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
 
@@ -920,8 +852,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
     /**
      * More detailed test is done in the CommonOps functin
      */
-    @Test
-    public void concatColumns() {
+    @Test void concatColumns() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B0 = SimpleMatrix.random_DDRM(4, 3, -1, 1, rand);
         SimpleMatrix B1 = SimpleMatrix.random_DDRM(4, 3, -1, 1, rand);
@@ -935,8 +866,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertTrue(C.isIdentical(D, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void concatRows() {
+    @Test void concatRows() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B0 = SimpleMatrix.random_DDRM(4, 3, -1, 1, rand);
         SimpleMatrix B1 = SimpleMatrix.random_DDRM(4, 3, -1, 1, rand);
@@ -950,8 +880,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertTrue(C.isIdentical(D, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void rows() {
+    @Test void rows() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B = A.rows(1, 3);
 
@@ -962,8 +891,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void cols() {
+    @Test void cols() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B = A.rows(1, 3);
 
@@ -974,8 +902,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void serialization() {
+    @Test void serialization() {
         List<Matrix> matrixTypes = new ArrayList<>();
         matrixTypes.add(new DMatrixRMaj(2, 3));
         matrixTypes.add(new FMatrixRMaj(2, 3));
@@ -1024,8 +951,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
     /**
      * See if it correctly calls a specialized function that can handle different matrix types
      */
-    @Test
-    public void mult_specialized() {
+    @Test void mult_specialized() {
         DMatrixSparse A = RandomMatrices_DSCC.rectangle(2, 2, 3, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
@@ -1042,8 +968,7 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
     /**
      * See if it correctly calls a specialized function that can handle different matrix types
      */
-    @Test
-    public void solve_specialized() {
+    @Test void solve_specialized() {
         DMatrixSparse A = RandomMatrices_DSCC.rectangle(2, 2, 3, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2, 2, rand);
 
