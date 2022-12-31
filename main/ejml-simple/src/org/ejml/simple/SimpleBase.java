@@ -43,7 +43,7 @@ import java.lang.reflect.Method;
  *
  * @author Peter Abeles
  */
-@SuppressWarnings({"unchecked", "NullAway.Init"})
+@SuppressWarnings({"unchecked", "NullAway.Init", "ForLoopReplaceableByForEach"})
 public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializable {
 
     static final long serialVersionUID = 2342556642L;
@@ -61,12 +61,6 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     protected SimpleBase() {}
-
-    private void readObject( java.io.ObjectInputStream in )
-            throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        convertType = new AutomaticSimpleMatrixConvert();
-    }
 
     /**
      * Used internally for creating new instances of SimpleMatrix. If SimpleMatrix is extended
@@ -119,22 +113,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     protected static SimpleOperations lookupOps( MatrixType type ) {
-        switch (type) {
-            case DDRM:
-                return new SimpleOperations_DDRM();
-            case FDRM:
-                return new SimpleOperations_FDRM();
-            case ZDRM:
-                return new SimpleOperations_ZDRM();
-            case CDRM:
-                return new SimpleOperations_CDRM();
-            case DSCC:
-                return new SimpleOperations_DSCC();
-            case FSCC:
-                return new SimpleOperations_FSCC();
-            default:
-                throw new RuntimeException("Unknown Matrix Type. " + type);
-        }
+        return switch (type) {
+            case DDRM -> new SimpleOperations_DDRM();
+            case FDRM -> new SimpleOperations_FDRM();
+            case ZDRM -> new SimpleOperations_ZDRM();
+            case CDRM -> new SimpleOperations_CDRM();
+            case DSCC -> new SimpleOperations_DSCC();
+            case FSCC -> new SimpleOperations_FSCC();
+            default -> throw new RuntimeException("Unknown Matrix Type. " + type);
+        };
     }
 
     /**
@@ -663,7 +650,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * Returns the value of the specified matrix element. Performs a bounds check to make sure
      * the requested element is part of the matrix.
      *
-     * NOTE: Complex matrices will throw an exception
+     * <p>NOTE: Complex matrices will throw an exception</p>
      *
      * @param row The row of the element.
      * @param col The column of the element.
@@ -748,7 +735,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * Returns the number of rows in this matrix.
      *
      * @return number of rows.
+     * @deprecated Inconsistent API. Use {@link #getNumRows()} instead.
      */
+    @Deprecated
     public int numRows() {
         return mat.getNumRows();
     }
@@ -757,8 +746,28 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * Returns the number of columns in this matrix.
      *
      * @return number of columns.
+     * @deprecated Inconsistent API. Use {@link #getNumCols()} instead.
      */
+    @Deprecated
     public int numCols() {
+        return mat.getNumCols();
+    }
+
+    /**
+     * Returns the number of rows in this matrix.
+     *
+     * @return number of rows.
+     */
+    public int getNumRows() {
+        return mat.getNumRows();
+    }
+
+    /**
+     * Returns the number of columns in this matrix.
+     *
+     * @return number of columns.
+     */
+    public int getNumCols() {
         return mat.getNumCols();
     }
 
@@ -813,8 +822,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      */
     @Override
     public String toString() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        PrintStream p = new PrintStream(stream);
+        var stream = new ByteArrayOutputStream();
+        var p = new PrintStream(stream);
 
         MatrixIO.print(p, mat);
 
@@ -916,7 +925,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @return SVD
      */
     public SimpleSVD<T> svd() {
-        return new SimpleSVD(mat, false);
+        return new SimpleSVD<>(mat, false);
     }
 
     /**
@@ -925,14 +934,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @return SVD of this matrix.
      */
     public SimpleSVD<T> svd( boolean compact ) {
-        return new SimpleSVD(mat, compact);
+        return new SimpleSVD<>(mat, compact);
     }
 
     /**
      * Returns the Eigen Value Decomposition (EVD) of this matrix.
      */
     public SimpleEVD<T> eig() {
-        return new SimpleEVD(mat);
+        return new SimpleEVD<>(mat);
     }
 
     /**
@@ -1220,13 +1229,12 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         eq.alias((DMatrixRMaj)mat, nameThis);
 
         for (int i = offset; i < variables.length; i += 2) {
-            if (!(variables[i + 1] instanceof String))
+            if (!(variables[i + 1] instanceof String name))
                 throw new IllegalArgumentException("String expected at variables index " + i);
             Object o = variables[i];
-            String name = (String)variables[i + 1];
 
             if (SimpleBase.class.isAssignableFrom(o.getClass())) {
-                eq.alias(((SimpleBase)o).getDDRM(), name);
+                eq.alias(((SimpleBase<T>)o).getDDRM(), name);
             } else if (o instanceof DMatrixRMaj) {
                 eq.alias((DMatrixRMaj)o, name);
             } else if (o instanceof Double) {
@@ -1234,7 +1242,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
             } else if (o instanceof Integer) {
                 eq.alias((Integer)o, name);
             } else {
-                String type = o == null ? "null" : o.getClass().getSimpleName();
+                String type = o.getClass().getSimpleName();
                 throw new IllegalArgumentException("Variable type not supported by Equation! " + type);
             }
         }
@@ -1249,47 +1257,10 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Saves this matrix to a file as a serialized binary object.
-     * </p>
-     *
-     * @see MatrixIO#saveBin(DMatrix, String)
-     */
-    public void saveToFileBinary( String fileName )
-            throws IOException {
-        MatrixIO.saveBin((DMatrixRMaj)mat, fileName);
-    }
-
-    /**
-     * <p>
-     * Loads a new matrix from a serialized binary file.
-     * </p>
-     *
-     * @param fileName File which is to be loaded.
-     * @return The matrix.
-     * @see MatrixIO#loadBin(String)
-     */
-    public static SimpleMatrix loadBinary( String fileName )
-            throws IOException {
-        DMatrix mat = MatrixIO.loadBin(fileName);
-
-        // see if its a DMatrixRMaj
-        if (mat instanceof DMatrixRMaj) {
-            return SimpleMatrix.wrap((DMatrixRMaj)mat);
-        } else {
-            // if not convert it into one and wrap it
-            return SimpleMatrix.wrap(new DMatrixRMaj(mat));
-        }
-    }
-
-    /**
-     * <p>
      * Saves this matrix to a file in a CSV format. For the file format see {@link MatrixIO}.
      * </p>
-     *
-     * @see MatrixIO#saveBin(DMatrix, String)
      */
-    public void saveToFileCSV( String fileName )
-            throws IOException {
+    public void saveToFileCSV( String fileName ) throws IOException {
         MatrixIO.saveDenseCSV((DMatrixRMaj)mat, fileName);
     }
 
@@ -1302,8 +1273,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @return The matrix.
      * @see MatrixIO#loadCSV(String, boolean)
      */
-    public T loadCSV( String fileName )
-            throws IOException {
+    public T loadCSV( String fileName ) throws IOException {
         DMatrix mat = MatrixIO.loadCSV(fileName, true);
 
         T ret = createMatrix(1, 1, mat.getType());
@@ -1312,6 +1282,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
         return ret;
     }
+
 
     /**
      * Returns true of the specified matrix element is valid element inside this matrix.
@@ -1347,7 +1318,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @param matrices Set of matrices
      * @return Resulting matrix
      */
-    public T concatColumns( SimpleBase... matrices ) {
+    public T concatColumns( SimpleBase<?>... matrices ) {
         convertType.specify0(this, matrices);
         T A = convertType.convert(this);
 
@@ -1382,7 +1353,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @param matrices Set of matrices
      * @return Resulting matrix
      */
-    public T concatRows( SimpleBase... matrices ) {
+    public T concatRows( SimpleBase<?>... matrices ) {
         convertType.specify0(this, matrices);
         T A = convertType.convert(this);
 
