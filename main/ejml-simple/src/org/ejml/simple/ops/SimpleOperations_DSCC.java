@@ -47,23 +47,19 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     public transient GrowArray<Workspace_MT_DSCC> workspaceMT = new GrowArray<>(Workspace_MT_DSCC::new);
     public transient GrowArray<DGrowArray> workspaceA = new GrowArray<>(DGrowArray::new);
 
-    @Override
-    public void set( DMatrixSparseCSC A, int row, int column, /**/double value ) {
+    @Override public void set( DMatrixSparseCSC A, int row, int column, /**/double value ) {
         A.set(row, column, (double)value);
     }
 
-    @Override
-    public void set( DMatrixSparseCSC A, int row, int column, /**/double real, /**/double imaginary ) {
+    @Override public void set( DMatrixSparseCSC A, int row, int column, /**/double real, /**/double imaginary ) {
         throw new ConvertToImaginaryException();
     }
 
-    @Override
-    public /**/double get( DMatrixSparseCSC A, int row, int column ) {
+    @Override public /**/double get( DMatrixSparseCSC A, int row, int column ) {
         return A.get(row, column);
     }
 
-    @Override
-    public void get( DMatrixSparseCSC A, int row, int column, /**/Complex_F64 value ) {
+    @Override public void get( DMatrixSparseCSC A, int row, int column, /**/Complex_F64 value ) {
         value.real = A.get(row, column);
         value.imaginary = 0;
     }
@@ -76,8 +72,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         return 0;
     }
 
-    @Override
-    public void fill( DMatrixSparseCSC A, /**/double value ) {
+    @Override public void fill( DMatrixSparseCSC A, /**/double value ) {
         if (value == 0) {
             A.zero();
         } else {
@@ -85,13 +80,11 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override
-    public void transpose( DMatrixSparseCSC input, DMatrixSparseCSC output ) {
+    @Override public void transpose( DMatrixSparseCSC input, DMatrixSparseCSC output ) {
         CommonOps_DSCC.transpose(input, output, gw);
     }
 
-    @Override
-    public void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         if (EjmlConcurrency.useConcurrent(A)) {
             CommonOps_MT_DSCC.mult(A, B, output, workspaceMT);
         } else {
@@ -99,8 +92,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override
-    public void multTransA( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void multTransA( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         var At = new DMatrixSparseCSC(1, 1);
         CommonOps_DSCC.transpose(A, At, gw);
 
@@ -111,13 +103,11 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override
-    public void extractDiag( DMatrixSparseCSC input, DMatrixRMaj output ) {
+    @Override public void extractDiag( DMatrixSparseCSC input, DMatrixRMaj output ) {
         CommonOps_DSCC.extractDiag(input, output);
     }
 
-    @Override
-    public void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
+    @Override public void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
         if (EjmlConcurrency.useConcurrent(A)) {
             CommonOps_MT_DSCC.multTransA(A, B, output, workspaceA);
         } else {
@@ -125,8 +115,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override
-    public void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
+    @Override public void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
         if (EjmlConcurrency.useConcurrent(A)) {
             CommonOps_MT_DSCC.mult(A, B, output, workspaceA);
         } else {
@@ -134,34 +123,28 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override
-    public void kron( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void kron( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
 //        CommonOps_DSCC.kron(A,B,output);
         throw new RuntimeException("Unsupported. Make a feature request if you need this!");
     }
 
-    @Override
-    public void plus( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void plus( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         CommonOps_DSCC.add(1, A, 1, B, output, null, null);
     }
 
-    @Override
-    public void minus( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void minus( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         CommonOps_DSCC.add(1, A, -1, B, output, null, null);
     }
 
-    @Override
-    public void minus( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
+    @Override public void minus( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public void plus( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
+    @Override public void plus( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public void plus( DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
+    @Override public void plus( DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
         if (EjmlConcurrency.useConcurrent(A)) {
             CommonOps_MT_DSCC.add(1, A, (double)beta, b, output, workspaceMT);
         } else {
@@ -178,38 +161,31 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         }
     }
 
-    @Override
-    public /**/double dot( DMatrixSparseCSC A, DMatrixSparseCSC v ) {
+    @Override public /**/double dot( DMatrixSparseCSC A, DMatrixSparseCSC v ) {
         return CommonOps_DSCC.dotInnerColumns(A, 0, v, 0, gw, gx);
     }
 
-    @Override
-    public void scale( DMatrixSparseCSC A, /**/double val, DMatrixSparseCSC output ) {
+    @Override public void scale( DMatrixSparseCSC A, /**/double val, DMatrixSparseCSC output ) {
         CommonOps_DSCC.scale((double)val, A, output);
     }
 
-    @Override
-    public void divide( DMatrixSparseCSC A, /**/double val, DMatrixSparseCSC output ) {
+    @Override public void divide( DMatrixSparseCSC A, /**/double val, DMatrixSparseCSC output ) {
         CommonOps_DSCC.divide(A, (double)val, output);
     }
 
-    @Override
-    public boolean invert( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
+    @Override public boolean invert( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
         return solve(A, output, CommonOps_DSCC.identity(A.numRows, A.numCols));
     }
 
-    @Override
-    public void setIdentity( DMatrixSparseCSC A ) {
+    @Override public void setIdentity( DMatrixSparseCSC A ) {
         CommonOps_DSCC.setIdentity(A);
     }
 
-    @Override
-    public void pseudoInverse( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
+    @Override public void pseudoInverse( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
         throw new RuntimeException("Unsupported");
     }
 
-    @Override
-    public boolean solve( DMatrixSparseCSC A, DMatrixSparseCSC X, DMatrixSparseCSC B ) {
+    @Override public boolean solve( DMatrixSparseCSC A, DMatrixSparseCSC X, DMatrixSparseCSC B ) {
         return CommonOps_DSCC.solve(A, X, B);
     }
 
@@ -217,33 +193,27 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         return CommonOps_DSCC.solve(A, X, B);
     }
 
-    @Override
-    public void zero( DMatrixSparseCSC A ) {
+    @Override public void zero( DMatrixSparseCSC A ) {
         A.zero();
     }
 
-    @Override
-    public /**/double normF( DMatrixSparseCSC A ) {
+    @Override public /**/double normF( DMatrixSparseCSC A ) {
         return NormOps_DSCC.normF(A);
     }
 
-    @Override
-    public /**/double conditionP2( DMatrixSparseCSC A ) {
+    @Override public /**/double conditionP2( DMatrixSparseCSC A ) {
         throw new RuntimeException("Unsupported");
     }
 
-    @Override
-    public /**/double determinant( DMatrixSparseCSC A ) {
+    @Override public /**/double determinant( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.det(A);
     }
 
-    @Override
-    public /**/double trace( DMatrixSparseCSC A ) {
+    @Override public /**/double trace( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.trace(A);
     }
 
-    @Override
-    public void setRow( DMatrixSparseCSC A, int row, int startColumn, /**/double... values ) {
+    @Override public void setRow( DMatrixSparseCSC A, int row, int startColumn, /**/double... values ) {
         // TODO Update with a more efficient algorithm
         for (int i = 0; i < values.length; i++) {
             A.set(row, startColumn + i, (double)values[i]);
@@ -260,8 +230,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         // If not enough, create new arrays and construct it
     }
 
-    @Override
-    public void setColumn( DMatrixSparseCSC A, int column, int startRow,  /**/double... values ) {
+    @Override public void setColumn( DMatrixSparseCSC A, int column, int startRow,  /**/double... values ) {
         // TODO Update with a more efficient algorithm
         for (int i = 0; i < values.length; i++) {
             A.set(startRow + i, column, (double)values[i]);
@@ -273,8 +242,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         CommonOps_DSCC.extract(src, srcY0, srcY1, srcX0, srcX1, dst, dstY0, dstX0);
     }
 
-    @Override
-    public DMatrixSparseCSC diag( DMatrixSparseCSC A ) {
+    @Override public DMatrixSparseCSC diag( DMatrixSparseCSC A ) {
         DMatrixSparseCSC output;
         if (MatrixFeatures_DSCC.isVector(A)) {
             int N = Math.max(A.numCols, A.numRows);
@@ -288,78 +256,63 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         return output;
     }
 
-    @Override
-    public boolean hasUncountable( DMatrixSparseCSC M ) {
+    @Override public boolean hasUncountable( DMatrixSparseCSC M ) {
         return MatrixFeatures_DSCC.hasUncountable(M);
     }
 
-    @Override
-    public void changeSign( DMatrixSparseCSC a ) {
+    @Override public void changeSign( DMatrixSparseCSC a ) {
         CommonOps_DSCC.changeSign(a, a);
     }
 
-    @Override
-    public /**/double elementMax( DMatrixSparseCSC A ) {
+    @Override public /**/double elementMax( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.elementMax(A);
     }
 
-    @Override
-    public /**/double elementMin( DMatrixSparseCSC A ) {
+    @Override public /**/double elementMin( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.elementMin(A);
     }
 
-    @Override
-    public /**/double elementMaxAbs( DMatrixSparseCSC A ) {
+    @Override public /**/double elementMaxAbs( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.elementMaxAbs(A);
     }
 
-    @Override
-    public /**/double elementMinAbs( DMatrixSparseCSC A ) {
+    @Override public /**/double elementMinAbs( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.elementMinAbs(A);
     }
 
-    @Override
-    public /**/double elementSum( DMatrixSparseCSC A ) {
+    @Override public /**/double elementSum( DMatrixSparseCSC A ) {
         return CommonOps_DSCC.elementSum(A);
     }
 
-    @Override
-    public void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void elementMult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         CommonOps_DSCC.elementMult(A, B, output, null, null);
     }
 
-    @Override
-    public void elementDiv( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void elementDiv( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public void elementPower( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
+    @Override public void elementPower( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public void elementPower( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
+    @Override public void elementPower( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public void elementExp( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
+    @Override public void elementExp( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public void elementLog( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
+    @Override public void elementLog( DMatrixSparseCSC A, DMatrixSparseCSC output ) {
         throw new ConvertToDenseException();
     }
 
-    @Override
-    public boolean isIdentical( DMatrixSparseCSC A, DMatrixSparseCSC B, /**/double tol ) {
+    @Override public boolean isIdentical( DMatrixSparseCSC A, DMatrixSparseCSC B, /**/double tol ) {
         return MatrixFeatures_DSCC.isEqualsSort(A, B, (double)tol);
     }
 
-    @Override
-    public void print( PrintStream out, Matrix mat, String format ) {
+    @Override public void print( PrintStream out, Matrix mat, String format ) {
         MatrixIO.print(out, (DMatrixSparseCSC)mat, format);
     }
 
