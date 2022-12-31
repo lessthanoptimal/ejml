@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,12 +35,8 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
-    @Test
-    void identity_one() {
+    @Test void identity_one() {
         ZMatrixRMaj I = CommonOps_ZDRM.identity(4);
         assertEquals(4, I.numRows);
         assertEquals(4, I.numCols);
@@ -48,8 +44,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_ZDRM.isIdentity(I, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void identity_two() {
+    @Test void identity_two() {
         ZMatrixRMaj I = CommonOps_ZDRM.identity(4, 5);
         assertEquals(4, I.numRows);
         assertEquals(5, I.numCols);
@@ -63,8 +58,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_ZDRM.isIdentity(I, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void diag() {
+    @Test void diag() {
         ZMatrixRMaj m = CommonOps_ZDRM.diag(1, 2, 3, 4, 5, 6);
 
         assertEquals(3, m.numRows);
@@ -87,8 +81,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void extractDiag() {
+    @Test void extractDiag() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(3, 4, 0, 1, rand);
 
         for (int i = 0; i < 3; i++) {
@@ -104,8 +97,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void convert() {
+    @Test void convert() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj output = new ZMatrixRMaj(5, 7);
 
@@ -123,8 +115,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void stripReal() {
+    @Test void stripReal() {
         ZMatrixRMaj input = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         DMatrixRMaj output = new DMatrixRMaj(5, 7);
 
@@ -141,8 +132,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void stripImaginary() {
+    @Test void stripImaginary() {
         ZMatrixRMaj input = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         DMatrixRMaj output = new DMatrixRMaj(5, 7);
 
@@ -159,8 +149,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void magnitude() {
+    @Test void magnitude() {
         ZMatrixRMaj input = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         DMatrixRMaj output = new DMatrixRMaj(5, 7);
 
@@ -177,8 +166,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void conjugate() {
+    @Test void conjugate() {
         ZMatrixRMaj matrix = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj found = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
 
@@ -193,8 +181,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void fill() {
+    @Test void fill() {
         ZMatrixRMaj matrix = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
 
         CommonOps_ZDRM.fill(matrix, 2, -1);
@@ -208,8 +195,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void add() {
+    @Test void add() {
         ZMatrixRMaj matrixA = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj matrixB = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
@@ -235,8 +221,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void subtract() {
+    @Test void subtract() {
         ZMatrixRMaj matrixA = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj matrixB = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
@@ -262,8 +247,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void scale() {
+    @Test void scale() {
         Complex_F64 scale = new Complex_F64(2.5, 0.4);
 
         ZMatrixRMaj mat = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
@@ -288,8 +272,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
     /**
      * Make sure the multiplication methods here have the same behavior as the ones in MatrixMatrixMult.
      */
-    @Test
-    void checkAllMatrixMult() {
+    @Test void checkAllMatrixMult() {
         int numChecked = 0;
         Method methods[] = CommonOps_ZDRM.class.getMethods();
 
@@ -323,8 +306,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(16, numChecked);
     }
 
-    @Test
-    void multiply() {
+    @Test void multiply() {
         for (int i = 1; i < 10; i++) {
             for (int j = 1; j < 10; j++) {
                 ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, j, -1, 1, rand);
@@ -341,8 +323,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void transpose_one() {
+    @Test void transpose_one() {
 
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 4, -1, 1, rand);
         ZMatrixRMaj b = a.copy();
@@ -363,8 +344,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void transposeConjugate_one() {
+    @Test void transposeConjugate_one() {
 
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 4, -1, 1, rand);
         ZMatrixRMaj b = a.copy();
@@ -385,8 +365,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void transpose_two() {
+    @Test void transpose_two() {
 
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 5, -1, 1, rand);
         ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5, 4, -1, 1, rand);
@@ -407,8 +386,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void transposeConjugate_two() {
+    @Test void transposeConjugate_two() {
 
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 5, -1, 1, rand);
         ZMatrixRMaj b = RandomMatrices_ZDRM.rectangle(5, 4, -1, 1, rand);
@@ -429,8 +407,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void invert_1() {
+    @Test void invert_1() {
         for (int i = 1; i < 10; i++) {
             ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, rand);
             ZMatrixRMaj A_orig = A.copy();
@@ -444,8 +421,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void invert_2() {
+    @Test void invert_2() {
         for (int i = 1; i < 10; i++) {
             ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, rand);
             ZMatrixRMaj A_orig = A.copy();
@@ -461,8 +437,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void solve() {
+    @Test void solve() {
         // square
         for (int i = 1; i < 10; i++) {
             ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(i, i, rand);
@@ -506,8 +481,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void det() {
+    @Test void det() {
         ZMatrixRMaj A = new ZMatrixRMaj(3, 3, true,
                 0.854634, 0.445620, 0.082836, 0.212460, 0.623783, 0.037631,
                 0.585408, 0.768956, 0.771067, 0.897763, 0.125793, 0.432187,
@@ -525,8 +499,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_ZDRM.isIdentical(A, A_orig, 0));
     }
 
-    @Test
-    void elementMultiply() {
+    @Test void elementMultiply_value() {
         ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
 
@@ -550,8 +523,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void elementDivide_right() {
+    @Test void elementDivide_right() {
         ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
 
@@ -575,8 +547,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void elementDivide_left() {
+    @Test void elementDivide_left() {
         ZMatrixRMaj in = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
         ZMatrixRMaj out = RandomMatrices_ZDRM.rectangle(5, 7, -1, 1, rand);
 
@@ -600,8 +571,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void elementMinReal() {
+    @Test void elementMinReal() {
         ZMatrixRMaj m = new ZMatrixRMaj(3, 4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
@@ -610,8 +580,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(-6, CommonOps_ZDRM.elementMinReal(m), UtilEjml.TEST_F64);
     }
 
-    @Test
-    void elementMinImaginary() {
+    @Test void elementMinImaginary() {
         ZMatrixRMaj m = new ZMatrixRMaj(3, 4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
@@ -620,8 +589,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(-5, CommonOps_ZDRM.elementMinImaginary(m), UtilEjml.TEST_F64);
     }
 
-    @Test
-    void elementMaxReal() {
+    @Test void elementMaxReal() {
         ZMatrixRMaj m = new ZMatrixRMaj(3, 4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
@@ -630,8 +598,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(-6 + 11*2, CommonOps_ZDRM.elementMaxReal(m), UtilEjml.TEST_F64);
     }
 
-    @Test
-    void elementMaxImaginary() {
+    @Test void elementMaxImaginary() {
         ZMatrixRMaj m = new ZMatrixRMaj(3, 4);
         for (int i = 0; i < m.data.length; i++) {
             m.data[i] = -6 + i;
@@ -640,8 +607,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(-5 + 11*2, CommonOps_ZDRM.elementMaxImaginary(m), UtilEjml.TEST_F64);
     }
 
-    @Test
-    void elementMaxMagnitude2() {
+    @Test void elementMaxMagnitude2() {
         ZMatrixRMaj m = RandomMatrices_ZDRM.rectangle(4, 5, -2, 2, rand);
         DMatrixRMaj a = new DMatrixRMaj(m.numRows, m.numCols);
 
@@ -655,8 +621,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    void setIdentity() {
+    @Test void setIdentity() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(4, 5, -2, 2, rand);
 
         CommonOps_ZDRM.setIdentity(a);
@@ -676,8 +641,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void extract_simplified() {
+    @Test void extract_simplified() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10, 12, -2, 2, rand);
         ZMatrixRMaj b = CommonOps_ZDRM.extract(a, 2, 5, 3, 8);
 
@@ -695,8 +659,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void extract_complex() {
+    @Test void extract_complex() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10, 12, -2, 2, rand);
         ZMatrixRMaj b = new ZMatrixRMaj(6, 7);
 
@@ -716,8 +679,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void columnsToVector() {
+    @Test void columnsToVector() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10, 12, -2, 2, rand);
         ZMatrixRMaj v[] = CommonOps_ZDRM.columnsToVector(a, null);
 
@@ -739,8 +701,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void elementMaxAbs() {
+    @Test void elementMaxAbs() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10, 12, -2, 2, rand);
         a.set(5, 6, 10, 12);
 
@@ -749,8 +710,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
         assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    void elementMinAbs() {
+    @Test void elementMinAbs() {
         ZMatrixRMaj a = RandomMatrices_ZDRM.rectangle(10, 12, -8, -2, rand);
         a.set(5, 6, 1, 2);
 
