@@ -204,6 +204,22 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(dTran, (DMatrixRMaj)tran.mat, UtilEjml.TEST_F64);
     }
 
+    @Test void transposeConjugate_real() {
+        SimpleMatrix orig = SimpleMatrix.random_DDRM(5, 2, -1, 1, rand);
+        SimpleMatrix tran = orig.transposeConjugate();
+
+        EjmlUnitTests.assertEquals(orig.transpose().getDDRM(), tran.getDDRM(), UtilEjml.TEST_F64);
+    }
+
+    @Test void transposeConjugate_complex() {
+        SimpleMatrix orig = SimpleMatrix.random_ZDRM(5, 2, -1, 1, rand);
+        SimpleMatrix tran = orig.transposeConjugate();
+
+        ZMatrixRMaj expected = CommonOps_ZDRM.transposeConjugate(orig.getZDRM(), null);
+
+        EjmlUnitTests.assertEquals(expected, tran.getZDRM(), UtilEjml.TEST_F64);
+    }
+
     @Test void mult() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 2, 0, 1, rand);
         SimpleMatrix b = SimpleMatrix.random_DDRM(2, 3, 0, 1, rand);
