@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2019, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,9 +21,12 @@ package org.ejml.sparse.csc;
 import org.ejml.data.DMatrixSparseCSC;
 
 /**
+ * Operations for computing different types of norms.
+ *
  * @author Peter Abeles
  */
 public class NormOps_DSCC {
+    private NormOps_DSCC(){}
 
     public static double fastNormF(DMatrixSparseCSC A ) {
         double total = 0;

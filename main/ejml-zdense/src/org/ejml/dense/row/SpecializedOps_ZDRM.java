@@ -25,9 +25,12 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
 /**
+ * Various highly specialized operations that are probably not of interest to most people.
+ *
  * @author Peter Abeles
  */
 public class SpecializedOps_ZDRM {
+    private SpecializedOps_ZDRM(){}
 
     /**
      * <p>

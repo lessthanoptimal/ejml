@@ -29,6 +29,8 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class RandomMatrices_ZDRM {
+    private RandomMatrices_ZDRM(){}
+
     /**
      * <p>
      * Returns a matrix where all the elements are selected independently from

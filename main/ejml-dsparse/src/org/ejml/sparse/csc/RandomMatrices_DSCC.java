@@ -29,9 +29,12 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * Functions for creating randomly generated sparse matrices.
+ *
  * @author Peter Abeles
  */
 public class RandomMatrices_DSCC {
+    private RandomMatrices_DSCC(){}
 
     /**
      * Randomly generates matrix with the specified number of non-zero elements filled with values from min to max.

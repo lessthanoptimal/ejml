@@ -24,6 +24,8 @@ Date format: year/month/day
   * Added conjugate() and magnitude()
   * Added fillComplex(), transposeConjugate(), sumComplex()
   * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
+- Various
+  * Ops classes with all static members now have private constructors to drive home the concept of static functions.
 
 ----- Version 0.41.1
 2022/12/04

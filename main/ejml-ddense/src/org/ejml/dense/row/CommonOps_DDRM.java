@@ -61,6 +61,8 @@ import static org.ejml.UtilEjml.*;
  */
 @SuppressWarnings({"ForLoopReplaceableByForEach"})
 public class CommonOps_DDRM {
+    private CommonOps_DDRM(){}
+
     /**
      * <p>Performs the following operation:<br>
      * <br>

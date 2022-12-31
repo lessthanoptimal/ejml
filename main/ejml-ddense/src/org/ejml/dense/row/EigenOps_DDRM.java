@@ -35,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Peter Abeles
  */
 public class EigenOps_DDRM {
+    private EigenOps_DDRM(){}
+
     /**
      * <p>
      * Given matrix A and an eigen vector of A, compute the corresponding eigen value. This is

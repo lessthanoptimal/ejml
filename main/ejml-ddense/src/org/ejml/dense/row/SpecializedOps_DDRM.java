@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Peter Abeles
  */
 public class SpecializedOps_DDRM {
+    private SpecializedOps_DDRM(){}
 
     /**
      * <p>

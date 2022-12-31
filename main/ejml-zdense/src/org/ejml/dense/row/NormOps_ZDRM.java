@@ -21,9 +21,13 @@ package org.ejml.dense.row;
 import org.ejml.data.ZMatrixRMaj;
 
 /**
+ * Operations for computing different types of norms.
+ *
  * @author Peter Abeles
  */
 public class NormOps_ZDRM {
+    private NormOps_ZDRM(){}
+
     /**
      * <p>
      * Computes the Frobenius matrix norm:<br>

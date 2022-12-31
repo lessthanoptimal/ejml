@@ -33,6 +33,7 @@ import static org.ejml.UtilEjml.stringShapes;
 
 
 public class CommonOpsWithSemiRing_DSCC {
+    private CommonOpsWithSemiRing_DSCC(){}
 
     public static DMatrixSparseCSC mult(DMatrixSparseCSC A, DMatrixSparseCSC B, @Nullable DMatrixSparseCSC output, DSemiRing semiRing) {
         return mult(A, B, output, semiRing, null, null, null);
