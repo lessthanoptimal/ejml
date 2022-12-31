@@ -54,20 +54,52 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void plus( T A, T B, T output );
 
+    /** output[i,j] = A[i,j] + B[i,j] */
     void minus( T A, T B, T output );
 
+    /** output[i,j] = A[i,j] - b */
     void minus( T A, double b, T output );
 
+    default void minusComplex( T A, double real, double imag, T output ) {
+        // If the value isn't actually complex, treat it like a real value
+        if (imag == 0.0) {
+            minus(A, real, output);
+            return;
+        }
+        throw new ConvertToImaginaryException();
+    }
+
+    /** output[i,j] = A[i,j] + b */
     void plus( T A, double b, T output );
 
+    default void plusComplex( T A, double real, double imag, T output ) {
+        // If the value isn't actually complex, treat it like a real value
+        if (imag == 0.0) {
+            plus(A, real, output);
+            return;
+        }
+        throw new ConvertToImaginaryException();
+    }
+
+    /** output[i,j] = A[i,j] + beta*b[i,j] */
     void plus( T A, double beta, T b, T output );
 
+    /** output[i,j] = alpha*A[i,j] + beta*b[i,j] */
     void plus( double alpha, T A, double beta, T b, T output );
 
     double dot( T A, T v );
 
     /** Multiplies each element by val. Val is a real number */
     void scale( T A, double val, T output );
+
+    default void scaleComplex( T A, double real, double imag, T output ) {
+        // If the value isn't actually complex, treat it like a real value
+        if (imag == 0.0) {
+            scale(A, real, output);
+            return;
+        }
+        throw new ConvertToImaginaryException();
+    }
 
     /** Divides each element by val. Val is a real number */
     void divide( T A, double val, T output );
@@ -109,7 +141,6 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
         return output;
     }
-
 
     void setRow( T A, int row, int startColumn, double... values );
 
@@ -159,19 +190,18 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void print( PrintStream out, Matrix mat, String format );
 
-    void elementOp( T A, ElementOpReal op, T output);
+    void elementOp( T A, ElementOpReal op, T output );
 
-    void elementOp( T A, ElementOpComplex op, T output);
-
+    void elementOp( T A, ElementOpComplex op, T output );
 
     @FunctionalInterface interface ElementOpReal {
-        double op(int row, int col, double value);
+        double op( int row, int col, double value );
     }
 
     @FunctionalInterface interface ElementOpComplex {
         /**
          * @param value (Input) value of element in input matrix. (Output) value that output matrix will have
          */
-        void op(int row, int col, Complex_F64 value);
+        void op( int row, int col, Complex_F64 value );
     }
 }

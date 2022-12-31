@@ -297,6 +297,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
      *
+     * <p>NOTE: If the matrix is complex then 'b' will be treated like a complex number with imaginary = 0.</p>
+     *
      * @param b Value subtracted from each element
      * @return The results of this operation.
      * @see CommonOps_DDRM#subtract(DMatrixD1, double, DMatrixD1)
@@ -308,6 +310,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * Subtracts a complex scalar from each element in the matrix. If the matrix is real, then it will
+     * return a complex matrix unless the imaginary component of the scalar is zero.
+     *
+     * @param real Real component of scalar value
+     * @param imag Imaginary component of scalar value
+     * @return Scaled matrix
+     */
+    public T minusComplex( double real, double imag ) {
+        try {
+            T ret = createLike();
+            ops.minusComplex(mat, real, imag, ret.getMatrix());
+            return ret;
+        } catch (ConvertToImaginaryException e) {
+            // Input matrix isn't complex therefor output isn't complex either
+            T converted = createComplexMatrix(1, 1);
+            converted.setMatrix(ConvertMatrixType.convert(mat, converted.getType()));
+            return converted.minusComplex(real, imag);
+        }
+    }
+
+    /**
      * <p>
      * Returns the result of scalar addition:<br>
      * <br>
@@ -315,6 +338,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * <br>
      * where c is the returned matrix, a is this matrix, and b is the passed in double.
      * </p>
+     *
+     * <p>NOTE: If the matrix is complex then 'b' will be treated like a complex number with imaginary = 0.</p>
      *
      * @param b Value added to each element
      * @return A matrix that contains the results.
@@ -327,6 +352,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * Adds a complex scalar from each element in the matrix. If the matrix is real, then it will
+     * return a complex matrix unless the imaginary component of the scalar is zero.
+     *
+     * @param real Real component of scalar value
+     * @param imag Imaginary component of scalar value
+     * @return Scaled matrix
+     */
+    public T plusComplex( double real, double imag ) {
+        try {
+            T ret = createLike();
+            ops.plusComplex(mat, real, imag, ret.getMatrix());
+            return ret;
+        } catch (ConvertToImaginaryException e) {
+            // Input matrix isn't complex therefor output isn't complex either
+            T converted = createComplexMatrix(1, 1);
+            converted.setMatrix(ConvertMatrixType.convert(mat, converted.getType()));
+            return converted.plusComplex(real, imag);
+        }
+    }
+
+    /**
      * <p>
      * Performs a matrix addition and scale operation.<br>
      * <br>
@@ -334,6 +380,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * <br>
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
+     *
+     * <p>NOTE: If the matrix is complex then 'b' will be treated like a complex number with imaginary = 0.</p>
      *
      * @param B m by n matrix. Not modified.
      * @return A matrix that contains the results.
@@ -393,6 +441,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T ret = createLike();
         ops.scale(mat, val, ret.getMatrix());
         return ret;
+    }
+
+    /**
+     * Scales/multiplies each element in the matrix by the complex number. If the matrix is real, then it will
+     * return a complex matrix unless the imaginary component of the scalar is zero.
+     *
+     * @param real Real component of scalar value
+     * @param imag Imaginary component of scalar value
+     * @return Scaled matrix
+     */
+    public T scaleComplex( double real, double imag ) {
+        try {
+            T ret = createLike();
+            ops.scaleComplex(mat, real, imag, ret.getMatrix());
+            return ret;
+        } catch (ConvertToImaginaryException e) {
+            // Input matrix isn't complex therefor output isn't complex either
+            T converted = createComplexMatrix(1, 1);
+            converted.setMatrix(ConvertMatrixType.convert(mat, converted.getType()));
+            return converted.scaleComplex(real, imag);
+        }
     }
 
     /**
@@ -607,7 +676,6 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-
     /**
      * <p>
      * Computes the trace of the matrix.
@@ -804,6 +872,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      */
     public double getImaginary( int row, int col ) {
         return ops.getImaginary(mat, row, col);
+    }
+
+    /** Short hand for {@link #getImaginary(int, int)} */
+    public double getImag( int row, int col ) {
+        return getImaginary(row, col);
     }
 
     /**
@@ -1758,6 +1831,21 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
                 break;
             default:
                 throw new RuntimeException("Not a sparse matrix!");
+        }
+    }
+
+    /**
+     * Switches from a real to complex matrix
+     */
+    public void convertToComplex() {
+        switch (mat.getType()) {
+            case DDRM -> setMatrix(ConvertMatrixType.convert(mat, MatrixType.ZDRM));
+
+            case FDRM -> setMatrix(ConvertMatrixType.convert(mat, MatrixType.CDRM));
+
+            case ZDRM, CDRM -> {
+            }
+            default -> throw new RuntimeException("Conversion not supported!");
         }
     }
 }
