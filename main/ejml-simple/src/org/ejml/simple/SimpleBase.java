@@ -163,6 +163,24 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * Returns a matrix that is the conjugate transpose. If real then this is the
+     * same as calling {@link #transpose()}.
+     */
+    public T transposeConjugate() {
+        if (getType().isReal()) {
+            return transpose();
+        }
+
+        T ret = createMatrix(mat.getNumCols(), mat.getNumRows(), mat.getType());
+        if (getType().getBits() == 32) {
+            CommonOps_CDRM.transposeConjugate(getCDRM(), ret.getCDRM());
+        } else {
+            CommonOps_ZDRM.transposeConjugate(getZDRM(), ret.getZDRM());
+        }
+        return ret;
+    }
+
+    /**
      * <p>
      * Returns a matrix which is the result of matrix multiplication:<br>
      * <br>
