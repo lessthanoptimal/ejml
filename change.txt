@@ -20,6 +20,7 @@ Date format: year/month/day
   * Removed deprecated functions
   * Updated JavaDoc
   * API Consistency: getNumRows, getNumCols
+  * Added getRow(), getColumn(), setRow(), setColumn() that works with SimpleMatrix directory and handles all types.
   * Added stripReal() and stripImaginary()
   * Added conjugate() and magnitude()
   * Added fillComplex(), transposeConjugate(), sumComplex(), determinantComplex(), traceComplex()

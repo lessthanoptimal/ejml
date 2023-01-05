@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -235,6 +235,42 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         for (int i = 0; i < values.length; i++) {
             A.set(startRow + i, column, (double)values[i]);
         }
+    }
+
+    @Override public /**/double[] getRow( DMatrixSparseCSC A, int row, int col0, int col1 ) {
+        var v = new /**/double[col1 - col0];
+
+        // Exhaustively search every column in the allowed range for rows that match the target
+        // If a match is found copy it's value
+        for (int col = col0; col < col1; col++) {
+            int rowIdx0 = A.col_idx[col];
+            int rowIdx1 = A.col_idx[col + 1];
+
+            for (int i = rowIdx0; i < rowIdx1; i++) {
+                if (row != A.nz_rows[i])
+                    continue;
+                v[col - col0] = A.nz_values[i];
+            }
+        }
+
+        return v;
+    }
+
+    @Override public /**/double[] getColumn( DMatrixSparseCSC A, int col, int row0, int row1 ) {
+        var v = new /**/double[row1 - row0];
+
+        // Go through the target column and find all row elements within the allowed range
+        int rowIdx0 = A.col_idx[col];
+        int rowIdx1 = A.col_idx[col + 1];
+
+        for (int i = rowIdx0; i < rowIdx1; i++) {
+            int row = A.nz_rows[i];
+            if (row < row0 || row >= row1)
+                continue;
+            v[row - row0] = A.nz_values[i];
+        }
+
+        return v;
     }
 
     @Override

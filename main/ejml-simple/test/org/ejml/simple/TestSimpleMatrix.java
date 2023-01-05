@@ -583,10 +583,10 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.set(0, 1, 10.3);
 
-        assertEquals(10.3, a.get(0, 1), 1e-6);
+        assertEquals(10.3, a.get(0, 1), UtilEjml.TEST_F64);
     }
 
-    @Test void setRow() {
+    @Test void setRow_array() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.setRow(2, 1, 2, 3);
 
@@ -594,12 +594,91 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertEquals(3, a.get(2, 2), 1e-6);
     }
 
-    @Test void setColumn() {
+    @Test void setRow_SimpleMatrix_real_real() {
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3, 4, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(1, 4, 0, 1, rand);
+        a.setRow(2, b);
+
+        for (int i = 0; i < a.getNumCols(); i++) {
+            assertEquals(b.get(i), a.get(2, i), UtilEjml.TEST_F64);
+        }
+
+        // Make sure that B being a row or column vector doesn't matter
+        b = SimpleMatrix.random_DDRM(4, 1, 0, 1, rand);
+        a.setRow(2, b);
+
+        for (int i = 0; i < a.getNumCols(); i++) {
+            assertEquals(b.get(i), a.get(2, i), UtilEjml.TEST_F64);
+        }
+    }
+
+    /**
+     * If adding a complex vector to a real matrix, the matrix should be converted into a complex matrix
+     */
+    @Test void setRow_SimpleMatrix_real_complex() {
+        setRow_SimpleMatrix_real_complex(
+                SimpleMatrix.random_DDRM(3, 4, 0, 1, rand),
+                SimpleMatrix.random_ZDRM(1, 4, 0, 1, rand));
+        setRow_SimpleMatrix_real_complex(
+                SimpleMatrix.random_ZDRM(3, 4, 0, 1, rand),
+                SimpleMatrix.random_DDRM(1, 4, 0, 1, rand));
+    }
+
+    void setRow_SimpleMatrix_real_complex( SimpleMatrix a, SimpleMatrix b ) {
+        a.setRow(2, b);
+
+        assertFalse(a.getType().isReal());
+
+        for (int i = 0; i < a.getNumCols(); i++) {
+            assertEquals(b.getReal(0, i), a.getReal(2, i), UtilEjml.TEST_F64);
+            assertEquals(b.getImag(0, i), a.getImag(2, i), UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test void setColumn_array() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
         a.setColumn(2, 1, 2, 3);
 
         assertEquals(2, a.get(1, 2), 1e-6);
         assertEquals(3, a.get(2, 2), 1e-6);
+    }
+
+    @Test void setColumn_SimpleMatrix_real_real() {
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3, 4, 0, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(1, 3, 0, 1, rand);
+        a.setColumn(2, b);
+
+        for (int i = 0; i < a.getNumRows(); i++) {
+            assertEquals(b.get(i), a.get(i, 2), UtilEjml.TEST_F64);
+        }
+
+        // Make sure that B being a row or column vector doesn't matter
+        b = SimpleMatrix.random_DDRM(3, 1, 0, 1, rand);
+        a.setColumn(2, b);
+
+        for (int i = 0; i < a.getNumRows(); i++) {
+            assertEquals(b.get(i), a.get(i, 2), UtilEjml.TEST_F64);
+        }
+    }
+
+    @Test void setColumn_SimpleMatrix_real_complex() {
+        setColumn_SimpleMatrix_real_complex(
+                SimpleMatrix.random_DDRM(3, 4, 0, 1, rand),
+                SimpleMatrix.random_ZDRM(1, 3, 0, 1, rand));
+        setColumn_SimpleMatrix_real_complex(
+                SimpleMatrix.random_ZDRM(3, 4, 0, 1, rand),
+                SimpleMatrix.random_DDRM(1, 3, 0, 1, rand));
+    }
+
+    void setColumn_SimpleMatrix_real_complex( SimpleMatrix a, SimpleMatrix b ) {
+        a.setColumn(2, b);
+
+        assertFalse(a.getType().isReal());
+
+        for (int i = 0; i < a.getNumRows(); i++) {
+            assertEquals(b.getReal(0, i), a.getReal(i, 2), UtilEjml.TEST_F64);
+            assertEquals(b.getImag(0, i), a.getImag(i, 2), UtilEjml.TEST_F64);
+        }
     }
 
     @Test void get_2d() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -198,15 +198,43 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override public void setRow( ZMatrixRMaj A, int row, int startColumn, /**/double... values ) {
-        for (int i = 0; i < values.length; i++) {
-            A.set(row, startColumn + i, (double)values[i], 0);
+        int N = values.length/2;
+        for (int element = 0, indexVal = 0; element < N; element++) {
+            A.set(row, startColumn + element, (double)values[indexVal++], (double)values[indexVal++]);
         }
     }
 
     @Override public void setColumn( ZMatrixRMaj A, int column, int startRow,  /**/double... values ) {
-        for (int i = 0; i < values.length; i++) {
-            A.set(startRow + i, column, (double)values[i], 0);
+        int N = values.length/2;
+        for (int element = 0, indexVal = 0; element < N; element++) {
+            A.set(startRow + element, column, (double)values[indexVal++], (double)values[indexVal++]);
         }
+    }
+
+    @Override public /**/double[] getRow( ZMatrixRMaj A, int row, int idx0, int idx1 ) {
+        var v = new /**/double[2*(idx1 - idx0)];
+
+        int indexV = 0;
+        int indexA = A.getIndex(row, idx0);
+        for (int col = idx0; col < idx1; col++) {
+            v[indexV++] = A.data[indexA++];
+            v[indexV++] = A.data[indexA++];
+        }
+
+        return v;
+    }
+
+    @Override public /**/double[] getColumn( ZMatrixRMaj A, int col, int idx0, int idx1 ) {
+        var v = new /**/double[2*(idx1 - idx0)];
+        int index = A.getIndex(idx0, col);
+
+        int indexV = 0;
+        for (int row = idx0; row < idx1; row++, index += 2*A.numCols) {
+            v[indexV++] = A.data[index];
+            v[indexV++] = A.data[index + 1];
+        }
+
+        return v;
     }
 
     @Override
