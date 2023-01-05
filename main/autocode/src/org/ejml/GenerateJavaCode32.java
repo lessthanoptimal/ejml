@@ -141,6 +141,7 @@ public class GenerateJavaCode32 extends GenerateCode32 {
 
         String[] coreDir = new String[]{
                 "main/ejml-simple/src/org/ejml/simple/ops",
+                "main/ejml-simple/test/org/ejml/simple/ops",
                 "main/ejml-core/src/org/ejml/data",
                 "main/ejml-core/test/org/ejml/data",
                 "main/ejml-core/test/org/ejml",

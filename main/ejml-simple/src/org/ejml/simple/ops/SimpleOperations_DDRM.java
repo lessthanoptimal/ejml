@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -181,6 +181,28 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
         for (int i = 0; i < values.length; i++) {
             A.set(startRow + i, column, (double)values[i]);
         }
+    }
+
+    @Override public /**/double[] getRow( DMatrixRMaj A, int row, int idx0, int idx1 ) {
+        var v = new /**/double[idx1 - idx0];
+
+        int index = A.getIndex(row, idx0);
+        for (int col = idx0; col < idx1; col++) {
+            v[col-idx0] = A.data[index++];
+        }
+
+        return v;
+    }
+
+    @Override public /**/double[] getColumn( DMatrixRMaj A, int col, int row0, int row1 ) {
+        var v = new /**/double[row1 - row0];
+        int index = A.getIndex(row0, col);
+
+        for (int row = row0; row < row1; row++, index += A.numCols) {
+            v[row-row0] = A.data[index];
+        }
+
+        return v;
     }
 
     @Override public void extract( DMatrixRMaj src, int srcY0, int srcY1, int srcX0, int srcX1, DMatrixRMaj dst, int dstY0, int dstX0 ) {

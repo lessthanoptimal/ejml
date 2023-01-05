@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -145,6 +145,10 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     void setRow( T A, int row, int startColumn, double... values );
 
     void setColumn( T A, int column, int startRow, double... values );
+
+    double[] getRow( T A, int row, int col0, int col1 );
+
+    double[] getColumn( T A, int col, int row0, int row1 );
 
     void extract( T src,
                   int srcY0, int srcY1,

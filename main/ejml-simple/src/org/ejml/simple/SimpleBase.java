@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -796,6 +796,41 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
+     * <p>Copies the vector into the specified row. The 'src' vector can be a row or column vector as long as it
+     * has the correct length.</p>
+     *
+     * @param row Row in 'this'
+     * @param src Vector which is to be copied into the row
+     */
+    public void setRow( int row, SimpleMatrix src ) {
+        if (!src.isVector())
+            throw new IllegalArgumentException("Input matrix must be a vector");
+        if (src.getNumElements() != numCols())
+            throw new IllegalArgumentException("Number of elements must match number of columns. src=" +
+                    src.getNumElements() + " cols=" + numCols());
+
+        convertType.specify(this, src);
+
+        // Does it need to convert the type of 'this'?
+        if (convertType.commonType != getType()) {
+            setMatrix(convertType.convert(this).mat);
+        }
+
+        // See if it's a row or column vector and grab the appropriate elements.
+        double[] vector = src.numRows() < src.numCols() ?
+                src.ops.getRow(src.mat, 0, 0, src.getNumElements()) :
+                src.ops.getColumn(src.mat, 0, 0, src.getNumElements());
+
+        // If src is real but output is complex, convert the vector.
+        if (src.getType().isReal() && !getType().isReal()) {
+            vector = vectorRealToComplex(vector);
+        }
+
+        setRow(row, 0, vector);
+        // NOTE: For sparse to sparse this method is very inefficient...
+    }
+
+    /**
      * <p>
      * Assigns consecutive elements inside a column to the provided array.<br>
      * <br>
@@ -808,6 +843,53 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      */
     public void setColumn( int column, int startRow, double... values ) {
         ops.setColumn(mat, column, startRow, values);
+    }
+
+    /**
+     * <p>Copies the vector into the specified column. The 'src' vector can be a row or column vector as long as it
+     * has the correct length.</p>
+     *
+     * @param column Column in 'this'
+     * @param src Vector which is to be copied into the column
+     */
+    public void setColumn( int column, SimpleMatrix src ) {
+        if (!src.isVector())
+            throw new IllegalArgumentException("Input matrix must be a vector");
+        if (src.getNumElements() != numRows())
+            throw new IllegalArgumentException("Number of elements must match number of rows. src=" +
+                    src.getNumElements() + " cols=" + numRows());
+
+        convertType.specify(this, src);
+
+        // Does it need to convert the type of 'this'?
+        if (convertType.commonType != getType()) {
+            setMatrix(convertType.convert(this).mat);
+        }
+
+        // See if it's a row or column vector and grab the appropriate elements.
+        double[] vector = src.numRows() < src.numCols() ?
+                src.ops.getRow(src.mat, 0, 0, src.getNumElements()) :
+                src.ops.getColumn(src.mat, 0, 0, src.getNumElements());
+
+        // If src is real but output is complex, convert the vector.
+        if (src.getType().isReal() && !getType().isReal()) {
+            vector = vectorRealToComplex(vector);
+        }
+
+        setColumn(column, 0, vector);
+        // NOTE: For sparse to sparse this method is very inefficient...
+    }
+
+    /**
+     * Converts a real array/vector into a complex one by setting imaginary component to zero
+     */
+    private static double[] vectorRealToComplex( double[] input ) {
+        var output = new double[input.length*2];
+        for (int i = 0; i < input.length; i++) {
+            output[i*2] = input[i];
+            output[i*2+1] = 0.0;
+        }
+        return output;
     }
 
     /**
@@ -1064,6 +1146,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * @param extractRow If true a row will be extracted.
      * @param element The row or column the vector is contained in.
      * @return Extracted vector.
+     * @see #getRow(int)
+     * @see #getColumn(int)
      */
     public T extractVector( boolean extractRow, int element ) {
         if (extractRow) {
@@ -1071,6 +1155,28 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         } else {
             return extractMatrix(0, SimpleMatrix.END, element, element + 1);
         }
+    }
+
+    /**
+     * Returns the specified row in 'this' matrix as a row vector.
+     *
+     * @param row Row in the matrix
+     * @return Extracted vector
+     * @see #extractVector(boolean, int)
+     */
+    public T getRow( int row ) {
+        return extractVector(true, row);
+    }
+
+    /**
+     * Returns the specified column in 'this' matrix as a column vector.
+     *
+     * @param col Column in the matrix
+     * @return Extracted vector
+     * @see #extractVector(boolean, int)
+     */
+    public T getColumn( int col ) {
+        return extractVector(false, col);
     }
 
     /**
