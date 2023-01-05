@@ -239,6 +239,16 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
+    public T plusi( T B ) {
+        convertType.specify(this, B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
+
+        A.ops.plusi(A.mat, B.mat);
+
+        return A;
+    }
+
     /**
      * <p>
      * Returns the result of matrix subtraction:<br>
@@ -262,6 +272,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
+    public T minusi( T B ) {
+        convertType.specify(this, B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
+
+        A.ops.minusi(A.mat, B.mat);
+        return A;
+    }
+
     /**
      * <p>
      * Returns the result of matrix-double subtraction:<br>
@@ -281,6 +300,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
+    public T minusi( double b ) {
+        ops.minus(mat, b, mat);
+        return (T) this;
+    }
+
     /**
      * <p>
      * Returns the result of scalar addition:<br>
@@ -298,6 +322,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T ret = createLike();
         ops.plus(mat, b, ret.mat);
         return ret;
+    }
+
+    public T plusi( double b ) {
+        ops.plus(mat, b, mat);
+        return (T) this;
     }
 
     /**
@@ -321,6 +350,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T ret = A.createLike();
         A.ops.plus(A.mat, beta, B.mat, ret.mat);
         return ret;
+    }
+
+    public T plusi( double beta, T B ) {
+        convertType.specify(this, B);
+        T A = convertType.convert(this);
+        B = convertType.convert(B);
+
+        A.ops.plusi(A.mat, beta, B.mat);
+        return A;
     }
 
     /**
@@ -369,6 +407,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
+    public T scalei( double val ) {
+        ops.scale(mat, val, mat);
+        return (T) this;
+    }
+
     /**
      * <p>
      * Returns the result of dividing each element by 'val':
@@ -383,6 +426,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T ret = createLike();
         ops.divide(mat, val, ret.getMatrix());
         return ret;
+    }
+
+    public T dividei( double val ) {
+        ops.divide(mat, val, mat);
+        return (T) this;
     }
 
     /**
@@ -411,6 +459,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
+    public T inverti() {
+        if (!ops.invert(mat, mat))
+            throw new SingularMatrixException();
+        if (ops.hasUncountable(mat))
+            throw new SingularMatrixException("Solution contains uncountable numbers");
+
+        return (T) this;
+    }
+
     /**
      * <p>
      * Computes the Moore-Penrose pseudo-inverse
@@ -422,6 +479,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T ret = createLike();
         ops.pseudoInverse(mat, ret.mat);
         return ret;
+    }
+
+    public T pseudoInversei() {
+        ops.pseudoInverse(mat, mat);
+        return (T) this;
     }
 
     /**
@@ -1080,6 +1142,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
+    public T elementMulti( T b ) {
+        convertType.specify(this, b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
+
+        A.ops.elementMult(A.mat, b.mat, A.mat);
+        return A;
+    }
+
     /**
      * <p>
      * Returns a matrix which is the result of an element by element division of 'this' and 'b':
@@ -1097,6 +1168,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T c = A.createLike();
         A.ops.elementDiv(A.mat, b.mat, c.mat);
         return c;
+    }
+
+    public T elementDivi( T b ) {
+        convertType.specify(this, b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
+
+        A.ops.elementDiv(A.mat, b.mat, A.mat);
+        return A;
     }
 
     /**
@@ -1118,6 +1198,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
+    public T elementPoweri( T b ) {
+        convertType.specify(this, b);
+        T A = convertType.convert(this);
+        b = convertType.convert(b);
+
+        A.ops.elementPower(A.mat, b.mat, A.mat);
+        return A;
+    }
+
     /**
      * <p>
      * Returns a matrix which is the result of an element by element power of 'this' and 'b':
@@ -1131,6 +1220,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T c = createLike();
         ops.elementPower(mat, b, c.mat);
         return c;
+    }
+
+    public T elementPoweri( double b ) {
+        ops.elementPower(mat, b, mat);
+        return (T) this;
     }
 
     /**
@@ -1147,6 +1241,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
+    public T elementExpi() {
+        ops.elementExp(mat, mat);
+        return (T) this;
+    }
+
     /**
      * <p>
      * Returns a matrix which is the result of an element by element exp of 'this'
@@ -1159,6 +1258,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T c = createLike();
         ops.elementLog(mat, c.mat);
         return c;
+    }
+
+    public T elementLogi() {
+        ops.elementLog(mat, mat);
+        return (T) this;
     }
 
     /**
@@ -1174,6 +1278,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         T A = copy();
         ops.changeSign(A.mat);
         return A;
+    }
+
+    public T negativei() {
+        ops.changeSign(mat);
+        return (T) this;
     }
 
     /**
