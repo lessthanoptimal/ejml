@@ -95,7 +95,7 @@ public class MatrixIO {
     /**
      * <p>Writes a stream using the Matrix Market Coordinate format.</p>
      *
-     * {@see https://math.nist.gov/MatrixMarket/formats.html}
+     * See <a href="https://math.nist.gov/MatrixMarket/formats.html">NIST MatrixMarket</a>
      *
      * @param matrix The matrix to be written
      * @param floatFormat The format used by printf. "%.4e" is suggested
@@ -126,7 +126,7 @@ public class MatrixIO {
     /**
      * <p>Writes a stream using the Matrix Market Coordinate format.</p>
      *
-     * {@see https://math.nist.gov/MatrixMarket/formats.html}
+     * See <a href="https://math.nist.gov/MatrixMarket/formats.html">NIST MatrixMarket</a>
      *
      * @param matrix The matrix to be written
      * @param floatFormat The format used by printf. "%.4e" is suggested
@@ -157,7 +157,7 @@ public class MatrixIO {
     /**
      * <p>Writes a stream using the Matrix Market Coordinate format.</p>
      *
-     * {@see https://math.nist.gov/MatrixMarket/formats.html}
+     * See <a href="https://math.nist.gov/MatrixMarket/formats.html">NIST MatrixMarket</a>
      *
      * @param matrix The matrix to be written
      * @param floatFormat The format used by printf. "%.4e" is suggested
@@ -187,7 +187,7 @@ public class MatrixIO {
     /**
      * <p>Writes a stream using the Matrix Market Coordinate format.</p>
      *
-     * {@see https://math.nist.gov/MatrixMarket/formats.html}
+     * See <a href="https://math.nist.gov/MatrixMarket/formats.html">NIST MatrixMarket</a>
      *
      * @param matrix The matrix to be written
      * @param floatFormat The format used by printf. "%.4e" is suggested
