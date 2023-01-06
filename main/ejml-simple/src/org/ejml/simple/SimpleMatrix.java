@@ -26,8 +26,8 @@ import java.util.Random;
 
 /**
  * <p>
- * {@link SimpleMatrix} is a wrapper around a primitive matrix type (e.g. {@link DMatrixRMaj} or
- * {@link FMatrixSparseCSC}) that provides an
+ * {@link SimpleMatrix} is a wrapper around a primitive matrix type
+ * (for example, {@link DMatrixRMaj} or {@link FMatrixSparseCSC}) that provides an
  * easy to use object oriented interface for performing matrix operations. It is designed to be
  * more accessible to novice programmers and provide a way to rapidly code up solutions by simplifying
  * memory management and providing easy to use functions.

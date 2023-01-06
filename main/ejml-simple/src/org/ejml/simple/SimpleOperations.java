@@ -54,7 +54,7 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
 
     void plus( T A, T B, T output );
 
-    /** output[i,j] = A[i,j] + B[i,j] */
+    /** output[i,j] = A[i,j] - B[i,j] */
     void minus( T A, T B, T output );
 
     /** output[i,j] = A[i,j] - b */

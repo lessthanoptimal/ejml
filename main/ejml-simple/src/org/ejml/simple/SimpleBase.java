@@ -315,7 +315,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      *
      * @param real Real component of scalar value
      * @param imag Imaginary component of scalar value
-     * @return Scaled matrix
+     * @return The results of this operation.
      */
     public T minusComplex( double real, double imag ) {
         try {
@@ -357,7 +357,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      *
      * @param real Real component of scalar value
      * @param imag Imaginary component of scalar value
-     * @return Scaled matrix
+     * @return The results of this operation.
      */
     public T plusComplex( double real, double imag ) {
         try {
@@ -663,11 +663,11 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * Computes the determinant of a complex matrix. If matrix is real then imaginary component
-     * is always zeor.
+     * Computes the determinant of a complex matrix. If the matrix is real then the imaginary component
+     * is always zero.
      *
      * @return The determinant.
-     * @see CommonOps_DDRM#det(DMatrixRMaj)
+     * @see CommonOps_ZDRM#det(ZMatrixRMaj)
      */
     public Complex_F64 determinantComplex() {
         Complex_F64 ret = ops.determinantComplex(mat);
@@ -690,11 +690,12 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
     /**
      * <p>
-     * Trace of a complex matrix. If inner matrix is real then imaginary will always be zero.
+     * Computes the trace of a complex matrix. If the matrix is real then the imaginary component
+     * is always zero.
      * </p>
      *
      * @return The trace of the matrix.
-     * @see CommonOps_DDRM#trace(DMatrix1Row)
+     * @see CommonOps_ZDRM#trace(ZMatrixRMaj, Complex_F64)
      */
     public Complex_F64 traceComplex() {
         return ops.traceComplex(mat);
@@ -874,7 +875,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ops.getImaginary(mat, row, col);
     }
 
-    /** Short hand for {@link #getImaginary(int, int)} */
+    /** Shorthand for {@link #getImaginary(int, int)} */
     public double getImag( int row, int col ) {
         return getImaginary(row, col);
     }
@@ -1370,7 +1371,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * <p>Applies a user defined function to a real-valued matrix.</p>
+     * <p>Applies a user defined real-valued function to a real-valued matrix.</p>
      * c<sub>i,j</sub> = op(i, j, a<sub>i,j</sub>)
      *
      * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
@@ -1382,7 +1383,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     }
 
     /**
-     * <p>Applies a user defined function to a real-valued matrix.</p>
+     * <p>Applies a user defined complex-valued function to a real or complex-valued matrix.</p>
      * c<sub>i,j</sub> = op(i, j, a<sub>i,j</sub>)
      *
      * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
