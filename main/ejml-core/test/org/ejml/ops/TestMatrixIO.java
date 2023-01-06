@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMatrixIO extends EjmlStandardJUnit {
@@ -216,7 +217,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         out.flush();
 
         // On windows \r is added to the string
-        String found = bao.toString().replace("\r","");
+        String found = bao.toString(UTF_8).replace("\r","");
         String expected =
                 "Type = DDRM , rows = 2 , cols = 1\n" +
                 " 1.1000E+00 \n" +
@@ -238,7 +239,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         out.flush();
 
         // On windows \r is added to the string
-        String found = bao.toString().replace("\r","");
+        String found = bao.toString(UTF_8).replace("\r","");
         String expected =
                 "Type = ZDRM , rows = 2 , cols = 1\n" +
                 " 1.0000E+00 +  1.5000E+00i\n" +
@@ -260,7 +261,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         out.flush();
 
         // On windows \r is added to the string
-        String found = bao.toString().replace("\r","");
+        String found = bao.toString(UTF_8).replace("\r","");
         String expected =
                 "Type = DDRM , rows = 2 , cols = 1\n" +
                 " 1.1       \n" +
@@ -282,7 +283,7 @@ public class TestMatrixIO extends EjmlStandardJUnit {
         out.flush();
 
         // On windows \r is added to the string
-        String found = bao.toString().replace("\r","");
+        String found = bao.toString(UTF_8).replace("\r","");
         String expected =
                 "Type = ZDRM , rows = 2 , cols = 1\n" +
                 " 1          +  1.5i       \n" +
