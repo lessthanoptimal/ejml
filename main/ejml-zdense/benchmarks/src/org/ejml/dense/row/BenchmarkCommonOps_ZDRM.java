@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -97,8 +97,8 @@ public class BenchmarkCommonOps_ZDRM {
     @Benchmark public void identity_A() {CommonOps_ZDRM.identity(size);}
     @Benchmark public void identity_AA() {CommonOps_ZDRM.identity(size, size/2);}
     @Benchmark public void extractDiag() {CommonOps_ZDRM.extractDiag(A, C);}
-    @Benchmark public void stripReal() {CommonOps_ZDRM.stripReal(A, R);}
-    @Benchmark public void stripImaginary() {CommonOps_ZDRM.stripImaginary(A, R);}
+    @Benchmark public void stripReal() {CommonOps_ZDRM.real(A, R);}
+    @Benchmark public void stripImaginary() {CommonOps_ZDRM.imaginary(A, R);}
     @Benchmark public void magnitude() {CommonOps_ZDRM.magnitude(A, R);}
     @Benchmark public void conjugate() {CommonOps_ZDRM.conjugate(A, C);}
     @Benchmark public void fill() {CommonOps_ZDRM.fill(A, -0.5, 1.2);}

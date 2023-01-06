@@ -22,6 +22,7 @@ import org.ejml.ops.MatrixIO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -347,10 +348,10 @@ public class DMatrixRMaj extends DMatrix1Row {
      * @return String representation of the matrix.
      */
     @Override public String toString() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        var stream = new ByteArrayOutputStream();
         MatrixIO.print(new PrintStream(stream), this);
 
-        return stream.toString();
+        return stream.toString(Charset.defaultCharset());
     }
 
     @Override public DMatrixRMaj createLike() {

@@ -120,7 +120,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
 
         Complex_F64 a = new Complex_F64();
 
-        CommonOps_ZDRM.stripReal(input, output);
+        CommonOps_ZDRM.real(input, output);
 
         for (int i = 0; i < input.numRows; i++) {
             for (int j = 0; j < input.numCols; j++) {
@@ -137,7 +137,7 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
 
         Complex_F64 a = new Complex_F64();
 
-        CommonOps_ZDRM.stripImaginary(input, output);
+        CommonOps_ZDRM.imaginary(input, output);
 
         for (int i = 0; i < input.numRows; i++) {
             for (int j = 0; j < input.numCols; j++) {
@@ -411,8 +411,8 @@ public class TestCommonOps_ZDRM extends EjmlStandardJUnit {
 
         assertSame(found, CommonOps_ZDRM.trace(a, found));
 
-        double expectedReal = CommonOps_DDRM.trace(CommonOps_ZDRM.stripReal(a, null));
-        double expectedImag = CommonOps_DDRM.trace(CommonOps_ZDRM.stripImaginary(a, null));
+        double expectedReal = CommonOps_DDRM.trace(CommonOps_ZDRM.real(a, null));
+        double expectedImag = CommonOps_DDRM.trace(CommonOps_ZDRM.imaginary(a, null));
 
         assertEquals(expectedReal, found.real);
         assertEquals(expectedImag, found.imaginary);
