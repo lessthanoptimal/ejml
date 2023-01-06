@@ -162,7 +162,7 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj stripReal( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj real( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();
@@ -179,7 +179,7 @@ public class CommonOps_ZDRM {
      * @param input Complex matrix. Not modified.
      * @param output real matrix. Modified.
      */
-    public static DMatrixRMaj stripImaginary( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
+    public static DMatrixRMaj imaginary( ZMatrixD1 input, @Nullable DMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
 
         final int length = input.getDataLength();

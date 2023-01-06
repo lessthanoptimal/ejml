@@ -34,6 +34,7 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Parent of {@link SimpleMatrix} implements all the standard matrix operations and uses
@@ -1016,7 +1017,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
 
         MatrixIO.print(p, mat);
 
-        return stream.toString();
+        return stream.toString(StandardCharsets.UTF_8);
     }
 
     /**
@@ -1686,7 +1687,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
      * Returns a matrix that contains the real valued portion of a complex matrix. For a real valued matrix
      * this will return a copy.
      */
-    public T stripReal() {
+    public T real() {
         T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         // If it's a real matrix just return a copy
@@ -1695,22 +1696,17 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
 
         if (mat.getType().getBits() == 32) {
-            return ret.wrapMatrix(CommonOps_CDRM.stripReal((CMatrixD1)mat, null));
+            return ret.wrapMatrix(CommonOps_CDRM.real((CMatrixD1)mat, null));
         } else {
-            return ret.wrapMatrix(CommonOps_ZDRM.stripReal((ZMatrixD1)mat, null));
+            return ret.wrapMatrix(CommonOps_ZDRM.real((ZMatrixD1)mat, null));
         }
-    }
-
-    /** Convenience function. See {@link #stripReal()} */
-    public T real() {
-        return stripReal();
     }
 
     /**
      * Returns a matrix that contains the imaginary valued portion of a complex matrix. For a real
      * valued matrix this will return a matrix full of zeros.
      */
-    public T stripImaginary() {
+    public T imaginary() {
         T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         // If it's a real matrix just return a matrix full of zeros
@@ -1719,15 +1715,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
 
         if (mat.getType().getBits() == 32) {
-            return ret.wrapMatrix(CommonOps_CDRM.stripImaginary((CMatrixD1)mat, null));
+            return ret.wrapMatrix(CommonOps_CDRM.imaginary((CMatrixD1)mat, null));
         } else {
-            return ret.wrapMatrix(CommonOps_ZDRM.stripImaginary((ZMatrixD1)mat, null));
+            return ret.wrapMatrix(CommonOps_ZDRM.imaginary((ZMatrixD1)mat, null));
         }
     }
 
-    /** Convenience function. See {@link #stripReal()} */
-    public T imaginary() {
-        return stripImaginary();
+    /** Convenience function. See {@link #imaginary()} */
+    public T imag() {
+        return imaginary();
     }
 
     /**

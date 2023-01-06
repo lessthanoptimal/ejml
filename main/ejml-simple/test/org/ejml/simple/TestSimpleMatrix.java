@@ -1269,91 +1269,91 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         assertTrue(ops.specalized);
     }
 
-    @Test void stripReal_DDRM() {
+    @Test void real_DDRM() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 4, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // The real portion of a real matrix is a copy
-        SimpleMatrix found = sA.stripReal();
+        SimpleMatrix found = sA.real();
         assertNotEquals(A, found.mat);
         assertTrue(MatrixFeatures_DDRM.isIdentical(A, found.getDDRM(), 0.0));
     }
 
-    @Test void stripReal_FDRM() {
+    @Test void real_FDRM() {
         FMatrixRMaj A = RandomMatrices_FDRM.rectangle(2, 4, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // The real portion of a real matrix is a copy
-        SimpleMatrix found = sA.stripReal();
+        SimpleMatrix found = sA.real();
         assertNotEquals(A, found.mat);
         assertTrue(MatrixFeatures_FDRM.isIdentical(A, found.getFDRM(), 0.0f));
     }
 
-    @Test void stripReal_ZDRM() {
+    @Test void real_ZDRM() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5, 8, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // Compare against the procedural implementation
-        SimpleMatrix found = sA.stripReal();
+        SimpleMatrix found = sA.real();
         assertTrue(found.mat.getType().isReal());
 
-        DMatrixRMaj expected = CommonOps_ZDRM.stripReal(A, null);
+        DMatrixRMaj expected = CommonOps_ZDRM.real(A, null);
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found.getDDRM(), 0.0));
     }
 
-    @Test void stripReal_CDRM() {
+    @Test void real_CDRM() {
         CMatrixRMaj A = RandomMatrices_CDRM.rectangle(5, 8, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // Compare against the procedural implementation
-        SimpleMatrix found = sA.stripReal();
+        SimpleMatrix found = sA.real();
         assertTrue(found.mat.getType().isReal());
 
-        FMatrixRMaj expected = CommonOps_CDRM.stripReal(A, null);
+        FMatrixRMaj expected = CommonOps_CDRM.real(A, null);
         assertTrue(MatrixFeatures_FDRM.isIdentical(expected, found.getFDRM(), 0.0f));
     }
 
-    @Test void stripImaginary_DDRM() {
+    @Test void imaginary_DDRM() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 4, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // The imaginary portion of a real matrix is a zeros matrix
-        SimpleMatrix found = sA.stripImaginary();
+        SimpleMatrix found = sA.imaginary();
         assertNotEquals(A, found.mat);
         assertTrue(MatrixFeatures_DDRM.isIdentical(A.createLike(), found.getDDRM(), 0.0));
     }
 
-    @Test void stripImaginary_FDRM() {
+    @Test void imaginary_FDRM() {
         FMatrixRMaj A = RandomMatrices_FDRM.rectangle(2, 4, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // The imaginary portion of a real matrix is a zeros matrix
-        SimpleMatrix found = sA.stripImaginary();
+        SimpleMatrix found = sA.imaginary();
         assertNotEquals(A, found.mat);
         assertTrue(MatrixFeatures_FDRM.isIdentical(A.createLike(), found.getFDRM(), 0.0f));
     }
 
-    @Test void stripImaginary_ZDRM() {
+    @Test void imaginary_ZDRM() {
         ZMatrixRMaj A = RandomMatrices_ZDRM.rectangle(5, 8, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // Compare against the procedural implementation
-        SimpleMatrix found = sA.stripImaginary();
+        SimpleMatrix found = sA.imaginary();
         assertTrue(found.mat.getType().isReal());
 
-        DMatrixRMaj expected = CommonOps_ZDRM.stripImaginary(A, null);
+        DMatrixRMaj expected = CommonOps_ZDRM.imaginary(A, null);
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found.getDDRM(), 0.0));
     }
 
-    @Test void stripImaginary_CDRM() {
+    @Test void imaginary_CDRM() {
         CMatrixRMaj A = RandomMatrices_CDRM.rectangle(5, 8, rand);
         SimpleMatrix sA = SimpleMatrix.wrap(A);
 
         // Compare against the procedural implementation
-        SimpleMatrix found = sA.stripImaginary();
+        SimpleMatrix found = sA.imaginary();
         assertTrue(found.mat.getType().isReal());
 
-        FMatrixRMaj expected = CommonOps_CDRM.stripImaginary(A, null);
+        FMatrixRMaj expected = CommonOps_CDRM.imaginary(A, null);
         assertTrue(MatrixFeatures_FDRM.isIdentical(expected, found.getFDRM(), 0.0f));
     }
 
