@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -277,12 +277,9 @@ public class SvdImplicitQrDecompose_DDRM implements SingularValueDecomposition_F
         numRows = orig.numRows;
         numCols = orig.numCols;
 
-        if (numRows == 0 || numCols == 0)
-            return false;
-
         if (diag == null || diag.length < numColsT) {
             diag = new double[numColsT];
-            off = new double[numColsT - 1];
+            off = new double[Math.max(0, numColsT - 1)];
         }
 
         // if it is a tall matrix and U is not needed then there is faster decomposition algorithm
