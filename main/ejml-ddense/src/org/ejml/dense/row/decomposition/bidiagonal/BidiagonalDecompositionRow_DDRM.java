@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.dense.row.decomposition.bidiagonal;
 
 import org.ejml.data.DMatrixRMaj;
