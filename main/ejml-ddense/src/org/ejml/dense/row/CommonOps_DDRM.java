@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,6 +35,7 @@ import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.ReducedRowEchelonForm_F64;
+import org.ejml.ops.DElementCoorBoolean;
 import org.ejml.ops.DOperatorUnary;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +62,7 @@ import static org.ejml.UtilEjml.*;
  */
 @SuppressWarnings({"ForLoopReplaceableByForEach"})
 public class CommonOps_DDRM {
-    private CommonOps_DDRM(){}
+    private CommonOps_DDRM() {}
 
     /**
      * <p>Performs the following operation:<br>
@@ -1083,7 +1084,7 @@ public class CommonOps_DDRM {
         int numColsC = A.numCols*B.numCols;
         int numRowsC = A.numRows*B.numRows;
 
-        C = reshapeOrDeclare(C,numRowsC, numColsC);
+        C = reshapeOrDeclare(C, numRowsC, numColsC);
 
         // TODO see comment below
         // this will work well for small matrices
@@ -1257,10 +1258,10 @@ public class CommonOps_DDRM {
      * @param dst output matrix. Must be a vector of the correct length.
      */
     public static DMatrixRMaj extract( DMatrixRMaj src, int[] indexes, int length, @Nullable DMatrixRMaj dst ) {
-        if (dst==null)
-            dst = new DMatrixRMaj(length,1);
-        else if (!(MatrixFeatures_DDRM.isVector(dst) && dst.getNumElements()==length) )
-            dst.reshape(length,1);
+        if (dst == null)
+            dst = new DMatrixRMaj(length, 1);
+        else if (!(MatrixFeatures_DDRM.isVector(dst) && dst.getNumElements() == length))
+            dst.reshape(length, 1);
 
         for (int i = 0; i < length; i++) {
             dst.data[i] = src.data[indexes[i]];
@@ -1312,8 +1313,8 @@ public class CommonOps_DDRM {
     public static DMatrixRMaj extractDiag( DMatrixRMaj src, @Nullable DMatrixRMaj dst ) {
         int N = Math.min(src.numRows, src.numCols);
 
-        if( dst == null ) {
-            dst = new DMatrixRMaj(N,1);
+        if (dst == null) {
+            dst = new DMatrixRMaj(N, 1);
         } else {
             if (!MatrixFeatures_DDRM.isVector(dst) || dst.numCols*dst.numCols != N) {
                 dst.reshape(N, 1);
@@ -1376,7 +1377,7 @@ public class CommonOps_DDRM {
      */
     public static void removeColumns( DMatrixRMaj A, int col0, int col1 ) {
         UtilEjml.assertTrue(col0 < col1, "col1 must be >= col0");
-        UtilEjml.assertTrue(col0 >= 0 && col1 <= A.numCols,"Columns which are to be removed must be in bounds");
+        UtilEjml.assertTrue(col0 >= 0 && col1 <= A.numCols, "Columns which are to be removed must be in bounds");
 
         int step = col1 - col0 + 1;
         int offset = 0;
@@ -1459,7 +1460,7 @@ public class CommonOps_DDRM {
      * @param loc (Output) Location of element element.
      * @return The max abs element value of the matrix.
      */
-    public static double elementMaxAbs( DMatrixD1 a, ElementLocation loc  ) {
+    public static double elementMaxAbs( DMatrixD1 a, ElementLocation loc ) {
         return ImplCommonOps_DDRM.elementMaxAbs(a, loc);
     }
 
@@ -1488,7 +1489,7 @@ public class CommonOps_DDRM {
      * @param loc (Output) Location of selected element.
      * @return The value of element in the matrix with the minimum value.
      */
-    public static double elementMin( DMatrixD1 a, ElementLocation loc  ) {
+    public static double elementMin( DMatrixD1 a, ElementLocation loc ) {
         return ImplCommonOps_DDRM.elementMin(a, loc);
     }
 
@@ -2504,6 +2505,7 @@ public class CommonOps_DDRM {
      * @param value value each element is compared against
      * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
+     * @see #elementBoolean for a more generalized element wise binary operator
      */
     public static BMatrixRMaj elementLessThan( DMatrixRMaj A, double value, BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
@@ -2524,6 +2526,7 @@ public class CommonOps_DDRM {
      * @param value value each element is compared against
      * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
+     * @see #elementBoolean for a more generalized element wise binary operator
      */
     public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, double value, BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
@@ -2544,6 +2547,7 @@ public class CommonOps_DDRM {
      * @param value value each element is compared against
      * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
+     * @see #elementBoolean for a more generalized element wise binary operator
      */
     public static BMatrixRMaj elementMoreThan( DMatrixRMaj A, double value, BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
@@ -2564,6 +2568,7 @@ public class CommonOps_DDRM {
      * @param value value each element is compared against
      * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
+     * @see #elementBoolean for a more generalized element wise binary operator
      */
     public static BMatrixRMaj elementMoreThanOrEqual( DMatrixRMaj A, double value, BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
@@ -2584,6 +2589,7 @@ public class CommonOps_DDRM {
      * @param B Input matrix
      * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
+     * @see #elementBoolean for a more generalized element wise binary operator
      */
     public static BMatrixRMaj elementLessThan( DMatrixRMaj A, DMatrixRMaj B, BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
@@ -2604,6 +2610,7 @@ public class CommonOps_DDRM {
      * @param B Input matrix
      * @param output (Optional) Storage for results. Can be null. Is reshaped.
      * @return Boolean matrix with results
+     * @see #elementBoolean for a more generalized element wise binary operator
      */
     public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, DMatrixRMaj B, BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
@@ -2671,7 +2678,7 @@ public class CommonOps_DDRM {
         int rows = Math.max(a.numRows, b.numRows);
         int cols = a.numCols + b.numCols;
 
-        output = reshapeOrDeclare(output,rows,cols);
+        output = reshapeOrDeclare(output, rows, cols);
         output.zero();
 
         insert(a, output, 0, 0);
@@ -2872,5 +2879,30 @@ public class CommonOps_DDRM {
 
     public static DMatrixRMaj apply( DMatrixRMaj input, DOperatorUnary func ) {
         return apply(input, func, input);
+    }
+
+    /**
+     * <p>Applies a binary operator to even element in the input matrix. In the lambda, the coordinate (row, col), and the
+     * value at that element is provided. This is designed to enable arbitrary operations.</p>
+     *
+     * For example, to apply an arbitrary boolean operatorto elements between two matrices, you can do the following:
+     * <pre>BMatrixRMaj found = CommonOps_DDRM.elementBoolean(A, ( row, col, value ) -> B.get(row, col) < value, null);</pre>
+     *
+     * @param input Input matrix
+     * @param func Element wise function that outputs a boolean value
+     * @param output (Optional) Output matrix.
+     * @return Resulting binary matrix
+     */
+    public static BMatrixRMaj elementBoolean( DMatrixRMaj input,
+                                              DElementCoorBoolean func,
+                                              @Nullable BMatrixRMaj output ) {
+        output = UtilEjml.reshapeOrDeclare(output, input.numRows, input.numCols);
+        int numCols = input.numCols;
+
+        for (int i = 0; i < input.data.length; i++) {
+            output.data[i] = func.apply(i/numCols, i%numCols, input.data[i]);
+        }
+
+        return output;
     }
 }

@@ -1782,4 +1782,16 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         checkSameShape(A, B, false);
         assertArrayEquals(expectedResult, B.data);
     }
+
+    @Test void elementBoolean() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 10, rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5, 10, rand);
+        BMatrixRMaj found = CommonOps_DDRM.elementBoolean(A, ( row, col, value ) -> B.get(row, col) < value, null);
+
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(B.get(i, j) < A.get(i, j), found.get(i, j));
+            }
+        }
+    }
 }
