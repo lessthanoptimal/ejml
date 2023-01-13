@@ -40,7 +40,7 @@ public class TestSymmetricQRAlgorithmDecomposition_DDRM extends GeneralEigenDeco
         together = false;
         computeVectors = true;
 
-        checkSizeZero();
+        zeroShapeMatrix();
         checkRandomSymmetric();
         checkIdentity();
         checkAllZeros();
@@ -57,7 +57,7 @@ public class TestSymmetricQRAlgorithmDecomposition_DDRM extends GeneralEigenDeco
         together = true;
         computeVectors = true;
 
-        checkSizeZero();
+        zeroShapeMatrix();
         checkRandomSymmetric();
         checkIdentity();
         checkAllZeros();

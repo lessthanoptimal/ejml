@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -169,10 +169,11 @@ public class SymmetricQREigenHelper_DDRM {
 
     public double[] copyOff( double[] ret ) {
         if (ret == null || ret.length < N - 1) {
-            ret = new double[N - 1];
+            ret = new double[Math.max(0, N - 1)];
         }
 
-        System.arraycopy(off, 0, ret, 0, N - 1);
+        if (N > 0)
+            System.arraycopy(off, 0, ret, 0, N - 1);
 
         return ret;
     }

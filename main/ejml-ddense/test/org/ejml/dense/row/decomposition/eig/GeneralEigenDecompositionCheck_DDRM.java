@@ -41,7 +41,7 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
     public void allTests() {
         computeVectors = true;
 
-        checkSizeZero();
+        zeroShapeMatrix();
         checkRandom();
         checkKnownReal();
         checkKnownComplex();
@@ -71,10 +71,15 @@ public abstract class GeneralEigenDecompositionCheck_DDRM extends EjmlStandardJU
         checkCompanionMatrix();
     }
 
-    public void checkSizeZero() {
+    /**
+     * A zero by zero matrix is acceptable, but produces no eigenvalues. Apparently this is helpful to some people...
+     */
+    public void zeroShapeMatrix() {
         EigenDecomposition_F64<DMatrixRMaj> alg = createDecomposition();
 
-        assertFalse(alg.decompose(new DMatrixRMaj(0, 0)));
+        assertTrue(alg.decompose(new DMatrixRMaj(0, 0)));
+
+        assertEquals(0, alg.getNumberOfEigenvalues());
     }
 
     /**
