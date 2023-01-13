@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,8 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Peter Abeles
  */
 public class TestImplCommonOps_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void extract() {
+    @Test void extract() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
 
         DMatrixRMaj B = new DMatrixRMaj(3,3);

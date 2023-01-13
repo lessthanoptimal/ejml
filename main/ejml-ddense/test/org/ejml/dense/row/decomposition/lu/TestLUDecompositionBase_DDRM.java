@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,7 @@ public class TestLUDecompositionBase_DDRM extends EjmlStandardJUnit {
      * Compare the determinant computed from LU to the value computed from the minor
      * matrix method.
      */
-    @Test
-    public void testDeterminant()
+    @Test void testDeterminant()
     {
         Random rand = new Random(0xfff);
 
@@ -54,8 +53,7 @@ public class TestLUDecompositionBase_DDRM extends EjmlStandardJUnit {
         assertEquals(minorVal,luVal, UtilEjml.TEST_F64_SQ);
     }
 
-    @Test
-    public void _solveVectorInternal() {
+    @Test void _solveVectorInternal() {
         int width = 10;
         DMatrixRMaj LU = RandomMatrices_DDRM.rectangle(width,width,rand);
 

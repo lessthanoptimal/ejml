@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,8 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestLinearSolverAbstract_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void setA_getA() {
+    @Test void setA_getA() {
         DMatrixRMaj A = new DMatrixRMaj(1, 1);
 
         MySolver s = new MySolver();
@@ -40,8 +39,7 @@ public class TestLinearSolverAbstract_DDRM extends EjmlStandardJUnit {
     /**
      * Checks to see if solve is called by the default invert.
      */
-    @Test
-    public void invert() {
+    @Test void invert() {
         MySolver solver = new MySolver();
 
         DMatrixRMaj A = new DMatrixRMaj(1, 1);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,12 +27,8 @@ import org.junit.jupiter.api.Test;
 import static org.ejml.UtilEjml.parse_DDRM;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
 public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void hasUncountable() {
+    @Test void hasUncountable() {
         DMatrixRMaj a = new DMatrixRMaj(4, 4);
 
         // check a negative case first
@@ -46,8 +42,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.hasUncountable(a));
     }
 
-    @Test
-    public void isZeros() {
+    @Test void isZeros() {
         DMatrixRMaj a = new DMatrixRMaj(4, 4);
         a.set(0, 0, 1);
 
@@ -55,8 +50,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isZeros(a, 2));
     }
 
-    @Test
-    public void isVector() {
+    @Test void isVector() {
         DMatrixRMaj a = new DMatrixRMaj(4, 4);
 
         assertFalse(MatrixFeatures_DDRM.isVector(a));
@@ -71,8 +65,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
     /**
      * Check some trial cases.
      */
-    @Test
-    public void isPositiveDefinite() {
+    @Test void isPositiveDefinite() {
         DMatrixRMaj a = UtilEjml.parse_DDRM("2 0 0 2", 2);
         DMatrixRMaj b = UtilEjml.parse_DDRM("0 1 1 0", 2);
         DMatrixRMaj c = UtilEjml.parse_DDRM("0 0 0 0", 2);
@@ -86,8 +79,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(2, a.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void isPositiveSemidefinite() {
+    @Test void isPositiveSemidefinite() {
         DMatrixRMaj a = UtilEjml.parse_DDRM("2 0 0 2", 2);
         DMatrixRMaj b = UtilEjml.parse_DDRM("0 1 1 0", 2);
         DMatrixRMaj c = UtilEjml.parse_DDRM("0 0 0 0", 2);
@@ -101,8 +93,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(2, a.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void isSquare() {
+    @Test void isSquare() {
         DMatrixRMaj a = new DMatrixRMaj(5, 4);
 
         assertFalse(MatrixFeatures_DDRM.isSquare(a));
@@ -111,8 +102,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isSquare(a));
     }
 
-    @Test
-    public void isDiagonalPositive() {
+    @Test void isDiagonalPositive() {
         DMatrixRMaj m = CommonOps_DDRM.identity(3);
         assertTrue(MatrixFeatures_DDRM.isDiagonalPositive(m));
 
@@ -123,8 +113,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isDiagonalPositive(m));
     }
 
-    @Test
-    public void isSymmetric() {
+    @Test void isSymmetric() {
         DMatrixRMaj m = CommonOps_DDRM.identity(3);
         m.set(1, 2, 5);
         m.set(2, 1, 5);
@@ -153,8 +142,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isSymmetric(scalar));
     }
 
-    @Test
-    public void isSkewSymmetric() {
+    @Test void isSkewSymmetric() {
         DMatrixRMaj m = CommonOps_DDRM.identity(3);
         m.set(1, 2, 5);
         m.set(2, 1, -5);
@@ -167,8 +155,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isSkewSymmetric(m, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void isEquals() {
+    @Test void isEquals() {
         String a = "-0.779094   1.682750   0.039239\n" +
                 "   1.304014  -1.880739   1.438741\n" +
                 "  -0.746918   1.382356  -0.520416";
@@ -189,8 +176,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(m, n));
     }
 
-    @Test
-    public void isEquals_boolean() {
+    @Test void isEquals_boolean() {
         BMatrixRMaj a = new BMatrixRMaj(3, 4);
         BMatrixRMaj b = new BMatrixRMaj(3, 4);
 
@@ -203,8 +189,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isEquals(a, b));
     }
 
-    @Test
-    public void isEquals_tol() {
+    @Test void isEquals_tol() {
         String a = "-0.779094   1.682750   0.039239\n" +
                 "   1.304014  -1.880739   1.438741\n" +
                 "  -0.746918   1.382356  -0.520416";
@@ -228,8 +213,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isEquals(m, n, UtilEjml.TEST_F64_SQ));
     }
 
-    @Test
-    public void isEqualsTriangle() {
+    @Test void isEqualsTriangle() {
 
         // see if it works with different sized matrices
         for (int m = 2; m < 10; m += 3) {
@@ -253,10 +237,9 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void isIdentical() {
+    @Test void isIdentical() {
 
-        double values[] = new double[]{1.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY};
+        double[] values = new double[]{1.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY};
 
         for (int i = 0; i < values.length; i++) {
             for (int j = 0; j < values.length; j++) {
@@ -280,8 +263,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(expected, MatrixFeatures_DDRM.isIdentical(A, B, tol));
     }
 
-    @Test
-    public void isInverse() {
+    @Test void isInverse() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 3, -1, 1, rand);
         DMatrixRMaj A_inv = A.copy();
 
@@ -299,8 +281,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
     /**
      * Makes sure it isn't modifying the input
      */
-    @Test
-    public void isInverse_nomodify() {
+    @Test void isInverse_nomodify() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 3, -1, 1, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3, 3, -1, 1, rand);
         DMatrixRMaj A_copy = A.copy();
@@ -312,8 +293,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(B, B_copy, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void hasNaN() {
+    @Test void hasNaN() {
         DMatrixRMaj m = new DMatrixRMaj(3, 3);
         assertFalse(MatrixFeatures_DDRM.hasNaN(m));
 
@@ -321,8 +301,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.hasNaN(m));
     }
 
-    @Test
-    public void isOrthogonal() {
+    @Test void isOrthogonal() {
         // rotation matrices are orthogonal
         double c = Math.cos(0.1);
         double s = Math.sin(0.1);
@@ -341,8 +320,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isOrthogonal(A, UtilEjml.TEST_F64_SQ));
     }
 
-    @Test
-    public void isRowsLinearIndependent() {
+    @Test void isRowsLinearIndependent() {
         // test a positive case
         DMatrixRMaj A = new DMatrixRMaj(2, 3, true, 1, 2, 3, 2, 3, 4);
         assertTrue(MatrixFeatures_DDRM.isRowsLinearIndependent(A));
@@ -356,8 +334,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isRowsLinearIndependent(A));
     }
 
-    @Test
-    public void isConstantVal() {
+    @Test void isConstantVal() {
         DMatrixRMaj a = new DMatrixRMaj(3, 4);
 
         CommonOps_DDRM.fill(a, 2.4);
@@ -369,8 +346,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isConstantVal(a, 2.4, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void isIdentity() {
+    @Test void isIdentity() {
         DMatrixRMaj I = CommonOps_DDRM.identity(4);
 
         assertTrue(MatrixFeatures_DDRM.isIdentity(I, UtilEjml.TEST_F64));
@@ -382,8 +358,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isIdentity(I, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void isNegative() {
+    @Test void isNegative() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj b = a.copy();
         CommonOps_DDRM.scale(-1, b);
@@ -399,8 +374,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertFalse(MatrixFeatures_DDRM.isNegative(a, b, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void isUpperTriangle() {
+    @Test void isUpperTriangle() {
         // test matrices that are upper triangular to various degree hessenberg
         for (int hessenberg = 0; hessenberg < 2; hessenberg++) {
             DMatrixRMaj A = new DMatrixRMaj(6, 6);
@@ -428,8 +402,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void isLowerTriangle() {
+    @Test void isLowerTriangle() {
         // test matrices that are upper triangular to various degree hessenberg
         for (int hessenberg = 0; hessenberg < 2; hessenberg++) {
             DMatrixRMaj A = new DMatrixRMaj(6, 6);
@@ -458,8 +431,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void rank() {
+    @Test void rank() {
         DMatrixRMaj a = UtilEjml.parse_DDRM("2 0 0 2", 2);
         DMatrixRMaj a_copy = a.copy();
 
@@ -471,8 +443,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(1, MatrixFeatures_DDRM.rank(a));
     }
 
-    @Test
-    public void rank_threshold() {
+    @Test void rank_threshold() {
         DMatrixRMaj a = UtilEjml.parse_DDRM("2 0 0 2", 2);
         DMatrixRMaj a_copy = a.copy();
 
@@ -488,8 +459,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(2, MatrixFeatures_DDRM.rank(a, Math.pow(UtilEjml.EPS, 10)));
     }
 
-    @Test
-    public void nullity() {
+    @Test void nullity() {
         DMatrixRMaj a = UtilEjml.parse_DDRM("2 0 0 2", 2);
         DMatrixRMaj a_copy = a.copy();
 
@@ -501,8 +471,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(1, MatrixFeatures_DDRM.nullity(a));
     }
 
-    @Test
-    public void nullity_threshold() {
+    @Test void nullity_threshold() {
         DMatrixRMaj a = UtilEjml.parse_DDRM("2 0 0 2", 2);
         DMatrixRMaj a_copy = a.copy();
 
@@ -518,8 +487,7 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         assertEquals(0, MatrixFeatures_DDRM.nullity(a, Math.pow(UtilEjml.EPS, 10)));
     }
 
-    @Test
-    public void countNonZero() {
+    @Test void countNonZero() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10, 5, rand);
 
         a.set(0, 3, 0);

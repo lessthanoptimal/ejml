@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,8 +39,7 @@ public class TestQrUpdate extends EjmlStandardJUnit {
      * This is then checked by multiplying Q by R and seeing if the augmented A matrix
      * is the result
      */
-    @Test
-    public void testInsertRow() {
+    @Test void testInsertRow() {
         int n = 3;
 
         for( int m = 3; m < 6; m++ ) {
@@ -50,8 +49,7 @@ public class TestQrUpdate extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void testRemoveRow() {
+    @Test void testRemoveRow() {
         int n = 3;
 
         for( int m = 4; m < 6; m++ ) {

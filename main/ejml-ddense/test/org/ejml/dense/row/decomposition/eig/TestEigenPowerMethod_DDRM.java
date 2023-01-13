@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,8 +31,7 @@ public class TestEigenPowerMethod_DDRM extends EjmlStandardJUnit {
     /**
      * Test it against a case
      */
-    @Test
-    public void computeDirect() {
+    @Test void computeDirect() {
         double[] dataA = new double[]{
                 0.499765, 0.626231, 0.759554,
                 0.850879, 0.104374, 0.247645,
@@ -54,8 +53,7 @@ public class TestEigenPowerMethod_DDRM extends EjmlStandardJUnit {
         assertEquals(0.18295, v.get(2, 0), UtilEjml.TEST_F64_SQ);
     }
 
-    @Test
-    public void computeShiftDirect() {
+    @Test void computeShiftDirect() {
         double[] dataA = new double[]{
                 0.499765, 0.626231, 0.759554,
                 0.850879, 0.104374, 0.247645,
@@ -77,8 +75,7 @@ public class TestEigenPowerMethod_DDRM extends EjmlStandardJUnit {
         assertEquals(0.18295, v.get(2, 0), UtilEjml.TEST_F64_SQ);
     }
 
-    @Test
-    public void computeShiftInvert() {
+    @Test void computeShiftInvert() {
         double[] dataA = new double[]{
                 0.499765, 0.626231, 0.759554,
                 0.850879, 0.104374, 0.247645,

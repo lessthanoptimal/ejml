@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,32 +23,26 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.data.DMatrixRMaj;
 import org.junit.jupiter.api.Test;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestSubmatrixOps_DDRM extends EjmlStandardJUnit {
+    @Test void setSubMatrix() {
+        DMatrixRMaj A = new DMatrixRMaj(5, 5);
+        DMatrixRMaj B = new DMatrixRMaj(6, 6);
 
-    @Test
-    public void setSubMatrix() {
-        DMatrixRMaj A = new DMatrixRMaj(5,5);
-        DMatrixRMaj B = new DMatrixRMaj(6,6);
-
-        for( int i = 0; i < A.data.length; i++ ) {
+        for (int i = 0; i < A.data.length; i++) {
             A.data[i] = 1;
         }
 
-        SubmatrixOps_DDRM.setSubMatrix(A,B,1,1,2,3,2,3);
+        SubmatrixOps_DDRM.setSubMatrix(A, B, 1, 1, 2, 3, 2, 3);
 
         // create a matrix that should be identical to B
-        DMatrixRMaj C = new DMatrixRMaj(6,6);
-        for( int i = 2; i < 4; i++ ) {
-            for( int j = 3; j < 6; j++ ) {
-                C.set(i,j,1);
+        DMatrixRMaj C = new DMatrixRMaj(6, 6);
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                C.set(i, j, 1);
             }
         }
 
         // see if they are the same
-        EjmlUnitTests.assertEquals(B,C,0);
+        EjmlUnitTests.assertEquals(B, C, 0);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
-    @Test
-    public void addRowToA() {
+    @Test void addRowToA() {
         int insert = 2;
         int m = 5;
         int n = 3;
@@ -70,8 +69,7 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         assertTrue(MatrixFeatures_DDRM.isIdentical(X_found, X, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void removeRowFromA() {
+    @Test void removeRowFromA() {
         int remove = 2;
         int m = 5;
         int n = 3;

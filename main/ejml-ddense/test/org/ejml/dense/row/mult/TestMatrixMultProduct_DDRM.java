@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,15 +28,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public class TestMatrixMultProduct_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void outer() {
+    @Test void outer() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
-        DMatrixRMaj found = new DMatrixRMaj(20,20);
-        DMatrixRMaj expected = new DMatrixRMaj(20,20);
+        DMatrixRMaj found = new DMatrixRMaj(20, 20);
+        DMatrixRMaj expected = new DMatrixRMaj(20, 20);
 
         MatrixMatrixMult_DDRM.multTransB(A, A, expected);
         MatrixMultProduct_DDRM.outer(A, found);
@@ -44,60 +40,56 @@ public class TestMatrixMultProduct_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void inner_small() {
+    @Test void inner_small() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
-        DMatrixRMaj found = new DMatrixRMaj(10,10);
-        DMatrixRMaj expected = new DMatrixRMaj(10,10);
+        DMatrixRMaj found = new DMatrixRMaj(10, 10);
+        DMatrixRMaj expected = new DMatrixRMaj(10, 10);
 
-        MatrixMatrixMult_DDRM.multTransA_reorder(A,A,expected);
+        MatrixMatrixMult_DDRM.multTransA_reorder(A, A, expected);
         MatrixMultProduct_DDRM.inner_small(A, found);
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void inner_reorder() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
-        DMatrixRMaj found = new DMatrixRMaj(10,10);
-        DMatrixRMaj expected = new DMatrixRMaj(10,10);
+    @Test void inner_reorder() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
+        DMatrixRMaj found = new DMatrixRMaj(10, 10);
+        DMatrixRMaj expected = new DMatrixRMaj(10, 10);
 
-        MatrixMatrixMult_DDRM.multTransA_reorder(A,A,expected);
+        MatrixMatrixMult_DDRM.multTransA_reorder(A, A, expected);
         MatrixMultProduct_DDRM.inner_reorder(A, found);
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void inner_reorder_upper() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
-        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10,10,rand);
-        DMatrixRMaj expected = new DMatrixRMaj(10,10);
+    @Test void inner_reorder_upper() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
+        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixRMaj expected = new DMatrixRMaj(10, 10);
 
-        MatrixMatrixMult_DDRM.multTransA_reorder(A,A,expected);
+        MatrixMatrixMult_DDRM.multTransA_reorder(A, A, expected);
         MatrixMultProduct_DDRM.inner_reorder_upper(A, found);
 
         // only check the upper triangle
-        for( int i = 0; i < found.numRows; i++ ) {
-            for( int j = i; j < found.numCols; j++ ) {
-                assertEquals(expected.get(i,j),found.get(i,j),UtilEjml.TEST_F64);
+        for (int i = 0; i < found.numRows; i++) {
+            for (int j = i; j < found.numCols; j++) {
+                assertEquals(expected.get(i, j), found.get(i, j), UtilEjml.TEST_F64);
             }
         }
     }
 
-    @Test
-    public void inner_reorder_lower() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20,10,rand);
-        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10,10,rand);
-        DMatrixRMaj expected = new DMatrixRMaj(10,10);
+    @Test void inner_reorder_lower() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(20, 10, rand);
+        DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixRMaj expected = new DMatrixRMaj(10, 10);
 
-        MatrixMatrixMult_DDRM.multTransA_reorder(A,A,expected);
+        MatrixMatrixMult_DDRM.multTransA_reorder(A, A, expected);
         MatrixMultProduct_DDRM.inner_reorder_lower(A, found);
 
         // only check the upper triangle
-        for( int i = 0; i < found.numRows; i++ ) {
-            for( int j = 0; j <= i; j++ ) {
-                assertEquals(expected.get(i,j),found.get(i,j),UtilEjml.TEST_F64);
+        for (int i = 0; i < found.numRows; i++) {
+            for (int j = 0; j <= i; j++) {
+                assertEquals(expected.get(i, j), found.get(i, j), UtilEjml.TEST_F64);
             }
         }
     }

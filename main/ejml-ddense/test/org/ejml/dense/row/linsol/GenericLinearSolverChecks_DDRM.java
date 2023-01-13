@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,8 +44,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
 
     protected double tol = UtilEjml.TEST_F64;
 
-    @Test
-    public void solve_dimensionCheck() {
+    @Test void solve_dimensionCheck() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10,4,rand);
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
@@ -97,8 +96,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
     /**
      * Checks to see if the modifyA() flag is set correctly
      */
-    @Test
-    public void modifiesA() {
+    @Test void modifiesA() {
         DMatrixRMaj A_orig = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj A = A_orig.copy();
 
@@ -108,14 +106,13 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
 
         boolean modified = !MatrixFeatures_DDRM.isEquals(A_orig,A);
 
-        assertTrue(modified == solver.modifiesA());
+        assertEquals(modified, solver.modifiesA());
     }
 
     /**
      * Checks to see if the modifyB() flag is set correctly
      */
-    @Test
-    public void modifiesB() {
+    @Test void modifiesB() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 4, rand);
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
@@ -130,14 +127,13 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
 
         boolean modified = !MatrixFeatures_DDRM.isEquals(B_orig,B);
 
-        assertTrue(modified == solver.modifiesB());
+        assertEquals(modified, solver.modifiesB());
     }
 
     /**
      * See if a matrix that is more singular has a lower quality.
      */
-    @Test
-    public void checkQuality() {
+    @Test void checkQuality() {
         DMatrixRMaj A_good = CommonOps_DDRM.diag(4,3,2,1);
         DMatrixRMaj A_bad = CommonOps_DDRM.diag(4, 3, 2, 0.1);
 
@@ -163,8 +159,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
     /**
      * See if quality is scale invariant
      */
-    @Test
-    public void checkQuality_scale() {
+    @Test void checkQuality_scale() {
         DMatrixRMaj A = CommonOps_DDRM.diag(4,3,2,1);
         DMatrixRMaj Asmall = A.copy();
         CommonOps_DDRM.scale(0.01,Asmall);
@@ -189,8 +184,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
     /**
      * A very easy matrix to decompose
      */
-    @Test
-    public void square_trivial() {
+    @Test void square_trivial() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 18, 21.5, 4.9000);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
@@ -210,8 +204,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
      * perform a pivot. Pivots can change the data structure and can cause solve to fail if not
      * handled correctly.
      */
-    @Test
-    public void square_pivot() {
+    @Test void square_pivot() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 8, 33, 15.5);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
@@ -226,26 +219,24 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(x_expected, x, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void square_singular() {
+    @Test void square_singular() {
         DMatrixRMaj A = new DMatrixRMaj(3,3);
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
-        assertTrue(shouldFailSingular == !solver.setA(A));
+        assertEquals(shouldFailSingular, !solver.setA(A));
     }
 
     /**
      * Have it solve for the coefficients in a polynomial
      */
-    @Test
-    public void rectangular() {
+    @Test public void rectangular() {
         if( !shouldWorkRectangle ) {
             // skip this test
             return;
         }
 
-        double t[] = new double[]{-1,-0.75,-0.5,0,0.25,0.5,0.75};
-        double vals[] = new double[7];
+        double[] t = new double[]{-1,-0.75,-0.5,0,0.25,0.5,0.75};
+        double[] vals = new double[7];
         double a=1,b=1.5,c=1.7;
         for( int i = 0; i < t.length; i++ ) {
             vals[i] = a + b*t[i] + c*t[i]*t[i];
@@ -265,7 +256,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
         assertEquals(c,x.get(2,0),tol);
     }
 
-    private DMatrixRMaj createPolyA(double t[] , int dof ) {
+    private DMatrixRMaj createPolyA( double[] t, int dof ) {
         DMatrixRMaj A = new DMatrixRMaj(t.length,3);
 
         for( int j = 0; j < t.length; j++ ) {
@@ -279,8 +270,7 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
         return A;
     }
 
-    @Test
-    public void inverse() {
+    @Test void inverse() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3, 3, rand);
 

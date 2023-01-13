@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,8 +37,7 @@ public class TestSymmetricQRAlgorithmDecomposition_DDRM extends GeneralEigenDeco
         return alg;
     }
 
-    @Test
-    public void justSymmetricTests_separate() {
+    @Test void justSymmetricTests_separate() {
         together = false;
         computeVectors = true;
 
@@ -55,8 +54,7 @@ public class TestSymmetricQRAlgorithmDecomposition_DDRM extends GeneralEigenDeco
         checkKnownSymmetric_JustValue();
     }
 
-    @Test
-    public void justSymmetricTests_together() {
+    @Test void justSymmetricTests_together() {
         together = true;
         computeVectors = true;
 

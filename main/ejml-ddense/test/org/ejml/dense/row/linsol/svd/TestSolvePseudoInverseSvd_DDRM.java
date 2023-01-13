@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,9 +24,6 @@ import org.ejml.dense.row.linsol.GenericSolvePseudoInverseChecks_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Peter Abeles
- */
 public class TestSolvePseudoInverseSvd_DDRM extends GenericLinearSolverChecks_DDRM {
 
     public TestSolvePseudoInverseSvd_DDRM() {
@@ -38,8 +35,7 @@ public class TestSolvePseudoInverseSvd_DDRM extends GenericLinearSolverChecks_DD
         return new SolvePseudoInverseSvd_DDRM(A.numRows,A.numCols);
     }
 
-    @Test
-    public void checkSingularBasic() {
+    @Test void checkSingularBasic() {
         LinearSolverDense<DMatrixRMaj> solver = new SolvePseudoInverseSvd_DDRM(10,10);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);
 

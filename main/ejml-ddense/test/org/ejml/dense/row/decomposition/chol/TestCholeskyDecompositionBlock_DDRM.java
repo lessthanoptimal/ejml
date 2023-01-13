@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,8 +40,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
         canR = false;
     }
 
-    @Test
-    public void checkModifyInput() {
+    @Test void checkModifyInput() {
         checkModifiedInput(new CholeskyDecompositionBlock_DDRM(2));
     }
 
@@ -63,8 +62,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
      * 7   1   6   3
      *
      */
-    @Test
-    public void testWithBlocks() {
+    @Test void testWithBlocks() {
         int W = 4;
         int B = 2;
         checkDMatrixBlock(W, B);
@@ -73,8 +71,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
     /**
      * The block size and the matrix width are not perfectly divisible. see if this is handled correctly.
      */
-    @Test
-    public void testWithBlocksNotDivisible() {
+    @Test void testWithBlocksNotDivisible() {
         int W = 4;
         int B = 3;
         checkDMatrixBlock(W, B);
@@ -83,8 +80,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
     /**
      * The block size is bigger than the matrix.
      */
-    @Test
-    public void testWithBlocksBiggerThanMatrix() {
+    @Test void testWithBlocksBiggerThanMatrix() {
         int W = 4;
         int B = 10;
         checkDMatrixBlock(W, B);

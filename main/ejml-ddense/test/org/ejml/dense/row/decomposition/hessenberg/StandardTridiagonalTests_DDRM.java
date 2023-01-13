@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,8 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class StandardTridiagonalTests_DDRM extends EjmlStandardJUnit {
     protected abstract TridiagonalSimilarDecomposition_F64<DMatrixRMaj> createDecomposition();
 
-    @Test
-    public void fullTest() {
+    @Test void fullTest() {
 
         for( int width = 1; width < 20; width += 2 ) {
 
@@ -61,8 +60,7 @@ public abstract class StandardTridiagonalTests_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void getDiagonal() {
+    @Test void getDiagonal() {
         for( int width = 1; width < 20; width += 2 ) {
 
             DMatrixRMaj A = RandomMatrices_DDRM.symmetric(width,-1,1,rand);
@@ -85,8 +83,7 @@ public abstract class StandardTridiagonalTests_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void transposeFlagForQ() {
+    @Test void transposeFlagForQ() {
         for( int width = 1; width < 20; width += 2 ) {
 
             DMatrixRMaj A = RandomMatrices_DDRM.symmetric(width,-1,1,rand);

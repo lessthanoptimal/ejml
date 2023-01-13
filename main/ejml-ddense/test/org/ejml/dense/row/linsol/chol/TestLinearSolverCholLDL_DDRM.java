@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -32,8 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestLinearSolverCholLDL_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void testInverseAndSolve() {
+    @Test void testInverseAndSolve() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 17, 97, 320);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,8 +49,7 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
      * checks to see if the householder operations and the expected result for all the
      * submatrices.
      */
-    @Test
-    public void householder() {
+    @Test void householder() {
         int width = 5;
 
         for( int i = 0; i < width; i++ ) {
@@ -87,8 +86,7 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
      * Check the results of this function against basic matrix operations
      * which are equivalent.
      */
-    @Test
-    public void updateA() {
+    @Test void updateA() {
         int width = 5;
 
         for( int i = 0; i < width; i++ )

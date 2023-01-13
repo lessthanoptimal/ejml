@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
      * Test it against a specially created matrix which should not require pivots
      * and is full rank.
      */
-    @Test
-    public void noPivot() {
+    @Test void noPivot() {
         DMatrixRMaj A = RandomMatrices_DDRM.orthogonal(6, 3, rand);
 
         // make sure the columns have norms in descending magnitude
@@ -74,8 +73,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
     /**
      * Test it against a rank deficient matrix
      */
-    @Test
-    public void testRankDeficient() {
+    @Test void testRankDeficient() {
         int numRows = 10;
 
         for( int numSingular = 0; numSingular < numRows-1; numSingular++ )  {
@@ -101,8 +99,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
     /**
      * See how the decomposition goes against various matrices of different sizes
      */
-    @Test
-    public void testRandomMatrix() {
+    @Test void testRandomMatrix() {
         checkDecomposition(5, 5 ,false);
         checkDecomposition(10, 5,false);
         checkDecomposition(5, 10,false);
@@ -114,8 +111,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
     /**
      * See if a zero matrix is gracefully handled
      */
-    @Test
-    public void testZeroMatrix() {
+    @Test void testZeroMatrix() {
         DMatrixRMaj A = new DMatrixRMaj(5,5);
 
         QRColPivDecompositionHouseholderColumn_DDRM alg = new QRColPivDecompositionHouseholderColumn_DDRM();

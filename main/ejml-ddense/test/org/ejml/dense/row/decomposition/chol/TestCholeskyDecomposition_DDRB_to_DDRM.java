@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,8 +29,7 @@ import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.
  * @author Peter Abeles
  */
 public class TestCholeskyDecomposition_DDRB_to_DDRM extends GenericCholeskyTests_DDRM {
-    @Test
-    public void checkModifyInput() {
+    @Test void checkModifyInput() {
         checkModifiedInput(new CholeskyDecomposition_DDRB_to_DDRM(true));
         checkModifiedInput(new CholeskyDecomposition_DDRB_to_DDRM(false));
     }

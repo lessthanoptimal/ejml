@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,8 +42,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         return new LinearSolverSafe<DMatrixRMaj>(solver);
     }
 
-    @Test
-    public void setA_dimensionCheck() {
+    @Test void setA_dimensionCheck() {
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
@@ -54,8 +53,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         } catch( RuntimeException ignore ) {}
     }
 
-    @Test
-    public void solve_dimensionCheck() {
+    @Test void solve_dimensionCheck() {
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
@@ -84,8 +82,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         } catch( RuntimeException ignore ) {}
     }
 
-    @Test
-    public void testSolve() {
+    @Test void testSolve() {
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
@@ -107,8 +104,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64_SQ);
     }
 
-    @Test
-    public void testInvert() {
+    @Test void testInvert() {
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
@@ -123,8 +119,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(A_inv,found,UtilEjml.TEST_F64_SQ);
     }
 
-    @Test
-    public void testQuality() {
+    @Test void testQuality() {
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
@@ -140,8 +135,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         assertTrue(qualityB < qualityA);
     }
 
-    @Test
-    public void testQuality_scale() {
+    @Test void testQuality_scale() {
 
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
@@ -162,8 +156,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         return RandomMatrices_DDRM.symmetricPosDef(size,rand);
     }
 
-    @Test
-    public void randomSolveable() {
+    @Test void randomSolveable() {
         LinearSolverDense<DMatrixRMaj> solver = createSolver();
 
             for (int N : new int[]{1, 2, 5, 10, 20}) {

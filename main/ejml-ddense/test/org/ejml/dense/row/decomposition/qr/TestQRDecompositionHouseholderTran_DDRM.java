@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,8 +48,7 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
     /**
      * Sees if computing Q explicitly and applying Q produces the same results
      */
-    @Test
-    public void applyQ() {
+    @Test void applyQ() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
 
         QRDecompositionHouseholderTran_DDRM alg = new QRDecompositionHouseholderTran_DDRM();
@@ -70,8 +69,7 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
     /**
      * Sees if computing Q^T explicitly and applying Q^T produces the same results
      */
-    @Test
-    public void applyTranQ() {
+    @Test void applyTranQ() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
 
         QRDecompositionHouseholderTran_DDRM alg = new QRDecompositionHouseholderTran_DDRM();
@@ -92,8 +90,7 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
     /**
      * A focused check to see if the internal house holder operations are performed correctly.
      */
-    @Test
-    public void householder() {
+    @Test void householder() {
         int width = 5;
 
         for( int i = 0; i < width; i++ ) {
@@ -130,8 +127,7 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
      * Check the results of this function against basic matrix operations
      * which are equivalent.
      */
-    @Test
-    public void updateA() {
+    @Test void updateA() {
         int width = 5;
 
         for( int i = 0; i < width; i++ )

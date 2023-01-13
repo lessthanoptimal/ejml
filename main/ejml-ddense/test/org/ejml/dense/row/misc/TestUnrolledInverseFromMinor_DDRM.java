@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,8 +37,7 @@ public class TestUnrolledInverseFromMinor_DDRM extends EjmlStandardJUnit {
     /**
      * Compare it against LU decomposition
      */
-    @Test
-    public void compareToLU() {
+    @Test void compareToLU() {
 
         for(int N = 2; N <= UnrolledInverseFromMinor_DDRM.MAX; N++ ) {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);

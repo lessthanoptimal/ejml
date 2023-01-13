@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,8 +44,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM extends EjmlStanda
     /**
      * See if it is reducing systems into RREF
      */
-    @Test
-    public void testFormat() {
+    @Test void testFormat() {
         for( int i = 1; i < 10; i++ ) {
             // test square
             checkFormatRandom(1+i,1+i);
@@ -59,16 +58,14 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM extends EjmlStanda
     /**
      * Solve several linear systems and check against solution
      */
-    @Test
-    public void testSolution() {
+    @Test void testSolution() {
         checkSolutionRandom(3,4,3);
         checkSolutionRandom(3,5,3);
         // Tall won't work because with this test because the system is inconsistent
 //        checkSolutionRandom(10,4,3);
     }
 
-    @Test
-    public void testSingular() {
+    @Test void testSingular() {
         DMatrixRMaj A = new DMatrixRMaj(3,4,true,1,2,3,4,3,5,6,7,2,4,6,8,-3,4,9,3);
 
         DMatrixRMaj found = A.copy();
@@ -89,8 +86,7 @@ public abstract class GeneralReducedRowEchelonFormChecks_DDRM extends EjmlStanda
     /**
      * Feed it specific matrices and see if it dies a horrible death
      */
-    @Test
-    public void spotTests() {
+    @Test void spotTests() {
         DMatrixRMaj A = new DMatrixRMaj(4,6,true,
                 0,0,1,-1,-1,4,
                 2,4,2,4,2,4,

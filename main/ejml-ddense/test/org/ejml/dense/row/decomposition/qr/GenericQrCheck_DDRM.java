@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,16 +38,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class GenericQrCheck_DDRM extends EjmlStandardJUnit {
     abstract protected QRDecomposition<DMatrixRMaj> createQRDecomposition();
 
-    @Test
-    public void testModifiedInput() {
+    @Test void testModifiedInput() {
         CheckDecompositionInterface_DDRM.checkModifiedInput(createQRDecomposition());
     }
 
     /**
      * See if it correctly decomposes a square, tall, or wide matrix.
      */
-    @Test
-    public void decompositionShape() {
+    @Test void decompositionShape() {
         checkDecomposition(5, 5 ,false);
         checkDecomposition(10, 5,false);
         checkDecomposition(5, 10,false);
@@ -90,8 +88,7 @@ public abstract class GenericQrCheck_DDRM extends EjmlStandardJUnit {
      * See if passing in a matrix or not providing one to getQ and getR functions
      * has the same result
      */
-    @Test
-    public void checkGetNullVersusNot() {
+    @Test void checkGetNullVersusNot() {
         int width = 5;
         int height = 10;
 
@@ -121,8 +118,7 @@ public abstract class GenericQrCheck_DDRM extends EjmlStandardJUnit {
     /**
      * Depending on if setZero being true or not the size of the R matrix changes
      */
-    @Test
-    public void checkGetRInputSize()
+    @Test void checkGetRInputSize()
     {
         int width = 5;
         int height = 10;
@@ -161,8 +157,7 @@ public abstract class GenericQrCheck_DDRM extends EjmlStandardJUnit {
     /**
      * See if the compact format for Q works
      */
-    @Test
-    public void checkCompactFormat()
+    @Test void checkCompactFormat()
     {
         int height = 10;
         int width = 5;

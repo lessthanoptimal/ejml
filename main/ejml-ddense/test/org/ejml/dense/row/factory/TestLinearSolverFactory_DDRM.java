@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,8 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void general() {
+    @Test void general() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
@@ -47,8 +46,7 @@ public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
         standardTest(A, x, y, solver);
     }
 
-    @Test
-    public void linear() {
+    @Test void linear() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(4,1);
@@ -58,8 +56,7 @@ public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
         standardTest(A, x, y, solver);
     }
 
-    @Test
-    public void leastSquares() {
+    @Test void leastSquares() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
@@ -69,8 +66,7 @@ public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
         standardTest(A, x, y, solver);
     }
 
-    @Test
-    public void symmetric() {
+    @Test void symmetric() {
         DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(5,rand);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(5,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);
@@ -80,8 +76,7 @@ public class TestLinearSolverFactory_DDRM extends EjmlStandardJUnit {
         standardTest(A, x, y, solver);
     }
 
-    @Test
-    public void adjustable() {
+    @Test void adjustable() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(4,1,rand);
         DMatrixRMaj y = new DMatrixRMaj(5,1);

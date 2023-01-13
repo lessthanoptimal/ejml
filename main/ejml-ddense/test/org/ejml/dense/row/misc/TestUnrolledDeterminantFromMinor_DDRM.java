@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,8 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestUnrolledDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void testAll() {
+    @Test void testAll() {
         for(int N = 2; N <= UnrolledDeterminantFromMinor_DDRM.MAX; N++ ) {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
 

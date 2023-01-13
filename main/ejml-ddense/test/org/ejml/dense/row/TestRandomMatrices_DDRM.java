@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,19 +34,15 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
 public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
     /**
      * Checks to see if all the vectors are orthogonal and of unit length.
      */
-    @Test
-    public void span() {
+    @Test void span() {
         // test with combinations of vectors and numbers
         for (int dimension = 3; dimension <= 5; dimension++) {
             for (int numVectors = 1; numVectors <= dimension; numVectors++) {
-                DMatrixRMaj span[] = RandomMatrices_DDRM.span(dimension, numVectors, rand);
+                DMatrixRMaj[] span = RandomMatrices_DDRM.span(dimension, numVectors, rand);
 
                 assertEquals(numVectors, span.length);
 
@@ -64,9 +60,8 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void insideSpan() {
-        DMatrixRMaj span[] = RandomMatrices_DDRM.span(5, 5, rand);
+    @Test void insideSpan() {
+        DMatrixRMaj[] span = RandomMatrices_DDRM.span(5, 5, rand);
 
         DMatrixRMaj A = RandomMatrices_DDRM.insideSpan(span, -1, 1, rand);
 
@@ -89,8 +84,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertEquals(error, 0, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void orthogonal() {
+    @Test void orthogonal() {
         for (int numRows = 3; numRows <= 5; numRows++) {
             for (int numCols = 1; numCols <= numRows; numCols++) {
                 DMatrixRMaj Q = RandomMatrices_DDRM.orthogonal(numRows, numCols, rand);
@@ -104,8 +98,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void diagonal_square() {
+    @Test void diagonal_square() {
         DMatrixRMaj A = RandomMatrices_DDRM.diagonal(5, 1, 10, rand);
 
         assertTrue(CommonOps_DDRM.elementSum(A) > 5);
@@ -116,14 +109,13 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
                 if (i == j) {
                     assertTrue(v >= 1 || v <= 10);
                 } else {
-                    assertTrue(v == 0);
+                    assertEquals(0, v);
                 }
             }
         }
     }
 
-    @Test
-    public void diagonal_general() {
+    @Test void diagonal_general() {
         testDiagonal(5, 3);
         testDiagonal(3, 5);
         testDiagonal(3, 3);
@@ -143,16 +135,15 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
                 if (i == j) {
                     assertTrue(v >= 1 || v <= 10);
                 } else {
-                    assertTrue(v == 0);
+                    assertEquals(0, v);
                 }
             }
         }
     }
 
-    @Test
-    public void singleValues() {
+    @Test void singleValues() {
         // check case when sv is more than or equal to the matrix dimension
-        double sv[] = new double[]{8.2, 6.2, 4.1, 2};
+        double[] sv = new double[]{8.2, 6.2, 4.1, 2};
 
         for (int numRows = 1; numRows <= 4; numRows++) {
             for (int numCols = 1; numCols <= 4; numCols++) {
@@ -179,8 +170,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertEquals(0, svd.getSingularValues()[4], UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void symmetricWithEigenvalues() {
+    @Test void symmetricWithEigenvalues() {
         DMatrixRMaj A = RandomMatrices_DDRM.symmetricWithEigenvalues(5, rand, 1, 2, 3, 4, 5);
 
         // this should be symmetric
@@ -190,7 +180,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         EigenDecomposition_F64<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(A.numRows, true);
         assertTrue(eig.decompose(A));
 
-        double ev[] = new double[5];
+        double[] ev = new double[5];
         for (int i = 0; i < 5; i++) {
             Complex_F64 e = eig.getEigenvalue(i);
             assertTrue(e.isReal());
@@ -207,8 +197,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void addUniform() {
+    @Test void addUniform() {
         DMatrixRMaj A = new DMatrixRMaj(3, 4);
 
         CommonOps_DDRM.fill(A, -2.0);
@@ -220,22 +209,19 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void rectangle() {
+    @Test void rectangle() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
 
         fillUniform1(A);
     }
 
-    @Test
-    public void rectangle_min_max() {
+    @Test void rectangle_min_max() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(30, 20, -1, 1, rand);
 
         checkRandomRange(A);
     }
 
-    @Test
-    public void fillUniform() {
+    @Test void fillUniform() {
         DMatrixRMaj A = new DMatrixRMaj(5, 4);
 
         RandomMatrices_DDRM.fillUniform(A, rand);
@@ -261,8 +247,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertTrue(total > 0);
     }
 
-    @Test
-    public void setRandomB() {
+    @Test void setRandomB() {
         BMatrixRMaj A = new BMatrixRMaj(5, 4);
 
         RandomMatrices_DDRM.setRandomB(A, rand);
@@ -281,8 +266,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertEquals(20, numTrue + numFalse);
     }
 
-    @Test
-    public void fillUniform_min_max() {
+    @Test void fillUniform_min_max() {
         DMatrixRMaj A = new DMatrixRMaj(30, 20);
         RandomMatrices_DDRM.fillUniform(A, -1, 1, rand);
 
@@ -313,15 +297,13 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertTrue(numPos > 0);
     }
 
-    @Test
-    public void rectangleGaussian() {
+    @Test void rectangleGaussian() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangleGaussian(30, 20, 2, 0.5, rand);
 
         checkGaussian(A);
     }
 
-    @Test
-    public void fillGaussian() {
+    @Test void fillGaussian() {
         DMatrixRMaj A = new DMatrixRMaj(30, 20);
 
         RandomMatrices_DDRM.fillGaussian(A, 2, 0.5, rand);
@@ -357,8 +339,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertTrue(numPos > 0);
     }
 
-    @Test
-    public void symmetricPosDef() {
+    @Test void symmetricPosDef() {
         for (int i = 0; i < 10; i++) {
             DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(6 + i, rand);
 
@@ -366,8 +347,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void symmetric() {
+    @Test void symmetric() {
         DMatrixRMaj A = RandomMatrices_DDRM.symmetric(10, -1, 1, rand);
 
         assertTrue(MatrixFeatures_DDRM.isSymmetric(A, UtilEjml.TEST_F64));
@@ -380,8 +360,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         assertTrue(max > 0 && max <= 1);
     }
 
-    @Test
-    public void triangularUpper() {
+    @Test void triangularUpper() {
         for (int hess = 0; hess < 3; hess++) {
             DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(10, hess, -1, 1, rand);
 
@@ -399,8 +378,7 @@ public class TestRandomMatrices_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void triangularLower() {
+    @Test void triangularLower() {
         for (int hess = 0; hess < 3; hess++) {
             DMatrixRMaj A = RandomMatrices_DDRM.triangularLower(10, hess, -1, 1, rand);
             assertTrue(MatrixFeatures_DDRM.isLowerTriangle(A, hess, UtilEjml.TEST_F64));

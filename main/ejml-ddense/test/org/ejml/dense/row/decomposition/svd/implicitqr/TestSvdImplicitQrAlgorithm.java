@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,8 +36,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
      * Computes the singular values of a bidiagonal matrix that is all ones.
      * From exercise 5.9.45 in Fundamentals of Matrix Computations.
      */
-    @Test
-    public void oneBidiagonalMatrix() {
+    @Test void oneBidiagonalMatrix() {
         SvdImplicitQrAlgorithm_DDRM svd = new SvdImplicitQrAlgorithm_DDRM(true);
         for (int N = 5; N < 10; N++) {
             double[] diag = new double[N];
@@ -63,8 +62,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
     /**
      * A trivial case where all the elements are diagonal. It should do nothing here.
      */
-    @Test
-    public void knownDiagonal() {
+    @Test void knownDiagonal() {
         double[] diag = new double[]{1, 2, 3, 4, 5};
         double[] off = new double[diag.length - 1];
 
@@ -83,8 +81,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
     /**
      * Sees if it handles the case where there is a zero on the diagonal
      */
-    @Test
-    public void zeroOnDiagonal() {
+    @Test void zeroOnDiagonal() {
         double[] diag = new double[]{1, 2, 3, 4, 5, 6};
         double[] off = new double[]{2, 2, 2, 2, 2};
 
@@ -105,8 +102,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
         assertEquals(1, countNumFound(svd, 0.00000, 1e-4));
     }
 
-    @Test
-    public void knownCaseSquare() {
+    @Test void knownCaseSquare() {
         DMatrixRMaj A = UtilEjml.parse_DDRM("-3   1   3  -3   0\n" +
                 "   2  -4   0  -2   0\n" +
                 "   1  -4   4   1  -3\n" +
@@ -129,8 +125,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
     /**
      * This makes sure the U and V matrices are being correctly by the push code.
      */
-    @Test
-    public void zeroOnDiagonalFull() {
+    @Test void zeroOnDiagonalFull() {
         for (int where = 0; where < 6; where++) {
             double[] diag = new double[]{1, 2, 3, 4, 5, 6};
             double[] off = new double[]{2, 2, 2, 2, 2};
@@ -144,8 +139,7 @@ public class TestSvdImplicitQrAlgorithm extends EjmlStandardJUnit {
     /**
      * Decomposes a random matrix and see if the decomposition can reconstruct the original
      */
-    @Test
-    public void randomMatricesFullDecompose() {
+    @Test void randomMatricesFullDecompose() {
 
         for (int N = 2; N <= 20; N++) {
             double[] diag = new double[N];

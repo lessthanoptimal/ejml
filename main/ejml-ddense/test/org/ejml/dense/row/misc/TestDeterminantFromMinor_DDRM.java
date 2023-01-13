@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,8 +34,7 @@ public class TestDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
     /**
      * Compare it against the algorithm for 4 by 4 matrices.
      */
-    @Test
-    public void compareTo4x4() {
+    @Test void compareTo4x4() {
         double[] mat = new double[]{5 ,-2 ,-4 ,0.5, 0.1, 91, 8, 66, 1, -2, 10, -4, -0.2, 7, -4, 0.8};
 
         double val = NaiveDeterminant.recursive(new DMatrixRMaj(4,4,true,mat));
@@ -49,8 +48,7 @@ public class TestDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
     /**
      * Compare it against the results found using Octave.
      */
-    @Test
-    public void compareTo5x5() {
+    @Test void compareTo5x5() {
         double[] mat = new double[]{5 ,-2, -4, 0.5, -0.3, 0.1, 91, 8, 66, 13, 1, -2, 10, -4, -0.01, -0.2, 7, -4, 0.8, -22, 5, 19, -23, 0.001, 87};
 
         DeterminantFromMinor_DDRM minor = new DeterminantFromMinor_DDRM(5);
@@ -59,8 +57,7 @@ public class TestDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
         assertEquals(-4745296.629148000851274 ,minorVal, 100*UtilEjml.TEST_F64_SQ);
     }
 
-    @Test
-    public void compareToNaive10x10() {
+    @Test void compareToNaive10x10() {
         Random rand = new Random(0xfff);
 
         int width = 10;
@@ -78,8 +75,7 @@ public class TestDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
     /**
      * Compare it against the naive algorithm and see if it gets the same results.
      */
-    @Test
-    public void computeMediumSized() {
+    @Test void computeMediumSized() {
         Random rand = new Random(0xfff);
 
         for( int width = 5; width < 12; width++ ) {
@@ -100,8 +96,7 @@ public class TestDeterminantFromMinor_DDRM extends EjmlStandardJUnit {
     /**
      * Make sure it produces the same results when it is called twice
      */
-    @Test
-    public void testMultipleCalls() {
+    @Test void testMultipleCalls() {
         Random rand = new Random(0xfff);
 
         int width = 6;

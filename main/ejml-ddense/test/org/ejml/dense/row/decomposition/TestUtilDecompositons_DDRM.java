@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,16 +31,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Peter Abeles
  */
 public class TestUtilDecompositons_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void checkIdentity_null() {
+    @Test void checkIdentity_null() {
         DMatrixRMaj A = UtilDecompositons_DDRM.ensureIdentity(null,4,3);
         assertTrue(MatrixFeatures_DDRM.isIdentity(A, UtilEjml.TEST_F64));
         assertEquals(4,A.numRows);
         assertEquals(3,A.numCols);
     }
 
-    @Test
-    public void checkIdentity_random() {
+    @Test void checkIdentity_random() {
         DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(2,5,rand);
         DMatrixRMaj A = UtilDecompositons_DDRM.ensureIdentity(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isIdentity(A, UtilEjml.TEST_F64));
@@ -49,8 +47,7 @@ public class TestUtilDecompositons_DDRM extends EjmlStandardJUnit {
         assertSame(A, orig);
     }
 
-    @Test
-    public void checkZeros_null() {
+    @Test void checkZeros_null() {
         DMatrixRMaj A = UtilDecompositons_DDRM.ensureZeros(null,4,3);
         assertTrue(MatrixFeatures_DDRM.isZeros(A, UtilEjml.TEST_F64));
         RandomMatrices_DDRM.fillUniform(A,rand);
@@ -58,8 +55,7 @@ public class TestUtilDecompositons_DDRM extends EjmlStandardJUnit {
         assertEquals(3,A.numCols);
     }
 
-    @Test
-    public void checkZeros_random() {
+    @Test void checkZeros_random() {
         DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(2,5,rand);
         DMatrixRMaj A = UtilDecompositons_DDRM.ensureZeros(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isZeros(A, UtilEjml.TEST_F64));
@@ -68,28 +64,24 @@ public class TestUtilDecompositons_DDRM extends EjmlStandardJUnit {
         assertEquals(3,A.numCols);
     }
 
-    @Test
-    public void checkZerosLT_null() {
+    @Test void checkZerosLT_null() {
         DMatrixRMaj A = UtilDecompositons_DDRM.checkZerosLT(null,4,3);
         assertTrue(MatrixFeatures_DDRM.isUpperTriangle(A,0, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkZerosLT_random() {
+    @Test void checkZerosLT_random() {
         DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(4,3,rand);
         DMatrixRMaj A = UtilDecompositons_DDRM.checkZerosLT(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isUpperTriangle(A, 0, UtilEjml.TEST_F64));
         assertSame(A, orig);
     }
 
-    @Test
-    public void checkZerosUT_null() {
+    @Test void checkZerosUT_null() {
         DMatrixRMaj A = UtilDecompositons_DDRM.checkZerosUT(null,4,3);
         assertTrue(MatrixFeatures_DDRM.isLowerTriangle(A,0, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkZerosUT_random() {
+    @Test void checkZerosUT_random() {
         DMatrixRMaj orig = RandomMatrices_DDRM.rectangle(4,3,rand);
         DMatrixRMaj A = UtilDecompositons_DDRM.checkZerosUT(orig,4,3);
         assertTrue(MatrixFeatures_DDRM.isLowerTriangle(A, 0, UtilEjml.TEST_F64));

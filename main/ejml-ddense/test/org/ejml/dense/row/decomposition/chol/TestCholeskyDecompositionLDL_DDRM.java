@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,13 +31,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Peter Abeles
  */
 public class TestCholeskyDecompositionLDL_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void checkModifyInput() {
+    @Test void checkModifyInput() {
         checkModifiedInput(new CholeskyDecompositionLDL_DDRM());
     }
 
-    @Test
-    public void testDecompose() {
+    @Test void testDecompose() {
         DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
 
 
@@ -59,8 +57,7 @@ public class TestCholeskyDecompositionLDL_DDRM extends EjmlStandardJUnit {
     /**
      * If it is not positive definite it should fail
      */
-    @Test
-    public void testNotPositiveDefinate() {
+    @Test void testNotPositiveDefinate() {
         DMatrixRMaj A = new DMatrixRMaj(2, 2, true, 1, -1, -1, -2);
 
         CholeskyDecompositionLDL_DDRM alg = new CholeskyDecompositionLDL_DDRM();

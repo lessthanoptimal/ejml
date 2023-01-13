@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,8 +38,7 @@ public class TestSolvePseudoInverseQrp_DDRM extends GenericLinearSolverChecks_DD
         return new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),true);
     }
 
-    @Test
-    public void checkSingularBasic() {
+    @Test void checkSingularBasic() {
         LinearSolverDense<DMatrixRMaj> solver =
                 new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),true);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);
@@ -47,8 +46,7 @@ public class TestSolvePseudoInverseQrp_DDRM extends GenericLinearSolverChecks_DD
         checks.all();
     }
 
-    @Test
-    public void checkSingularFull() {
+    @Test void checkSingularFull() {
         LinearSolverDense<DMatrixRMaj> solver =
                 new SolvePseudoInverseQrp_DDRM(new QRColPivDecompositionHouseholderColumn_DDRM(),false);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);

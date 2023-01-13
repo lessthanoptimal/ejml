@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,37 +30,32 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestInvertUsingSolve_DDRM extends EjmlStandardJUnit {
     double tol = UtilEjml.TEST_F64;
 
     /**
      * See if it can invert a matrix that is known to be invertable.
      */
-    @Test
-    public void invert() {
-        DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3,3,rand);
+    @Test void invert() {
+        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        DMatrixRMaj A_inv = RandomMatrices_DDRM.rectangle(3, 3, rand);
 
         LUDecompositionAlt_DDRM decomp = new LUDecompositionAlt_DDRM();
         LinearSolverDense solver = new LinearSolverLu_DDRM(decomp);
 
         solver.setA(A);
-        InvertUsingSolve_DDRM.invert(solver,A,A_inv);
+        InvertUsingSolve_DDRM.invert(solver, A, A_inv);
 
-        DMatrixRMaj I = RandomMatrices_DDRM.rectangle(3,3,rand);
+        DMatrixRMaj I = RandomMatrices_DDRM.rectangle(3, 3, rand);
 
-        CommonOps_DDRM.mult(A,A_inv,I);
+        CommonOps_DDRM.mult(A, A_inv, I);
 
-        for( int i = 0; i < I.numRows; i++ ) {
-            for( int j = 0; j < I.numCols; j++ ) {
-                if( i == j )
-                    assertEquals(1,I.get(i,j),tol);
+        for (int i = 0; i < I.numRows; i++) {
+            for (int j = 0; j < I.numCols; j++) {
+                if (i == j)
+                    assertEquals(1, I.get(i, j), tol);
                 else
-                    assertEquals(0,I.get(i,j),tol);
+                    assertEquals(0, I.get(i, j), tol);
             }
         }
     }

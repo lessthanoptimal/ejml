@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,8 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestUnrolledCholesky_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void lower_CompareToClass() {
+    @Test void lower_CompareToClass() {
         CholeskyDecomposition_F64<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(true);
 
         for (int size = 1; size <= UnrolledCholesky_DDRM.MAX; size++) {
@@ -55,8 +54,7 @@ public class TestUnrolledCholesky_DDRM extends EjmlStandardJUnit {
     /**
      * Give it matrices which are not SPD and see if it fails
      */
-    @Test
-    public void lower_CompareToClass_NonSPD() {
+    @Test void lower_CompareToClass_NonSPD() {
         for (int size = 2; size <= UnrolledCholesky_DDRM.MAX; size++) {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(size,size,rand);
 
@@ -69,8 +67,7 @@ public class TestUnrolledCholesky_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void upper_CompareToClass() {
+    @Test void upper_CompareToClass() {
         CholeskyDecomposition_F64<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(false);
 
         for (int size = 1; size <= UnrolledCholesky_DDRM.MAX; size++) {
@@ -90,8 +87,7 @@ public class TestUnrolledCholesky_DDRM extends EjmlStandardJUnit {
     /**
      * Give it matrices which are not SPD and see if it fails
      */
-    @Test
-    public void upper_CompareToClass_NonSPD() {
+    @Test void upper_CompareToClass_NonSPD() {
         for (int size = 2; size <= UnrolledCholesky_DDRM.MAX; size++) {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(size,size,rand);
 

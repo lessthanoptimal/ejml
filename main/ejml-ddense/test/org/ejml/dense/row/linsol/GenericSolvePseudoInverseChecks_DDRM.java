@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,8 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
     LinearSolverDense<DMatrixRMaj> solver;
 
-    public GenericSolvePseudoInverseChecks_DDRM(LinearSolverDense<DMatrixRMaj> solver) {
-        this.solver = new LinearSolverSafe<DMatrixRMaj>( solver );
+    public GenericSolvePseudoInverseChecks_DDRM( LinearSolverDense<DMatrixRMaj> solver ) {
+        this.solver = new LinearSolverSafe<DMatrixRMaj>(solver);
     }
 
     public void all() {
@@ -54,12 +54,12 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
      * Shouldn't blow if it the input matrix is zero. But there is no solution...
      */
     public void zeroMatrix() {
-        DMatrixRMaj A = new DMatrixRMaj(3,3);
-        DMatrixRMaj y = new DMatrixRMaj(3,1,true,4,7,8);
+        DMatrixRMaj A = new DMatrixRMaj(3, 3);
+        DMatrixRMaj y = new DMatrixRMaj(3, 1, true, 4, 7, 8);
 
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj x = new DMatrixRMaj(3,1);
+        DMatrixRMaj x = new DMatrixRMaj(3, 1);
         solver.solve(y, x);
 
         assertFalse(MatrixFeatures_DDRM.hasUncountable(x));
@@ -70,15 +70,15 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
      */
     public void underDetermined_wide_solve() {
         // create a matrix where two rows are linearly dependent
-        DMatrixRMaj A = new DMatrixRMaj(2,3,true,1,2,3,2,3,4);
+        DMatrixRMaj A = new DMatrixRMaj(2, 3, true, 1, 2, 3, 2, 3, 4);
 
-        DMatrixRMaj y = new DMatrixRMaj(2,1,true,4,7);
+        DMatrixRMaj y = new DMatrixRMaj(2, 1, true, 4, 7);
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj x = new DMatrixRMaj(3,1);
-        solver.solve(y,x);
+        DMatrixRMaj x = new DMatrixRMaj(3, 1);
+        solver.solve(y, x);
 
-        DMatrixRMaj found = new DMatrixRMaj(2,1);
+        DMatrixRMaj found = new DMatrixRMaj(2, 1);
         CommonOps_DDRM.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
@@ -90,22 +90,22 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
      */
     public void underDetermined_wide_inv() {
         // create a matrix where two rows are linearly dependent
-        DMatrixRMaj A = new DMatrixRMaj(2,3,true,1,2,3,2,3,4);
+        DMatrixRMaj A = new DMatrixRMaj(2, 3, true, 1, 2, 3, 2, 3, 4);
 
-        DMatrixRMaj y = new DMatrixRMaj(2,1,true,4,7);
+        DMatrixRMaj y = new DMatrixRMaj(2, 1, true, 4, 7);
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj x = new DMatrixRMaj(3,1);
-        solver.solve(y,x);
+        DMatrixRMaj x = new DMatrixRMaj(3, 1);
+        solver.solve(y, x);
 
         // now test the pseudo inverse
-        DMatrixRMaj A_pinv = new DMatrixRMaj(3,2);
-        DMatrixRMaj found = new DMatrixRMaj(3,1);
+        DMatrixRMaj A_pinv = new DMatrixRMaj(3, 2);
+        DMatrixRMaj found = new DMatrixRMaj(3, 1);
         solver.invert(A_pinv);
 
-        CommonOps_DDRM.mult(A_pinv,y,found);
+        CommonOps_DDRM.mult(A_pinv, y, found);
 
-        assertTrue(MatrixFeatures_DDRM.isEquals(x, found,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(x, found, UtilEjml.TEST_F64));
     }
 
     /**
@@ -113,15 +113,15 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
      */
     public void underDetermined_tall_solve() {
         // create a matrix where two rows are linearly dependent
-        DMatrixRMaj A = new DMatrixRMaj(3,2,true,1,2,1,2,2,4);
+        DMatrixRMaj A = new DMatrixRMaj(3, 2, true, 1, 2, 1, 2, 2, 4);
 
-        DMatrixRMaj y = new DMatrixRMaj(3,1,true,4,4,8);
+        DMatrixRMaj y = new DMatrixRMaj(3, 1, true, 4, 4, 8);
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj x = new DMatrixRMaj(2,1);
-        solver.solve(y,x);
+        DMatrixRMaj x = new DMatrixRMaj(2, 1);
+        solver.solve(y, x);
 
-        DMatrixRMaj found = new DMatrixRMaj(3,1);
+        DMatrixRMaj found = new DMatrixRMaj(3, 1);
         CommonOps_DDRM.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
@@ -133,15 +133,15 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
      */
     public void singular_solve() {
         // create a matrix where two rows are linearly dependent
-        DMatrixRMaj A = new DMatrixRMaj(3,3,true,1,2,3,2,3,4,2,3,4);
+        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 3, 2, 3, 4, 2, 3, 4);
 
-        DMatrixRMaj y = new DMatrixRMaj(3,1,true,4,7,7);
+        DMatrixRMaj y = new DMatrixRMaj(3, 1, true, 4, 7, 7);
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj x = new DMatrixRMaj(3,1);
-        solver.solve(y,x);
+        DMatrixRMaj x = new DMatrixRMaj(3, 1);
+        solver.solve(y, x);
 
-        DMatrixRMaj found = new DMatrixRMaj(3,1);
+        DMatrixRMaj found = new DMatrixRMaj(3, 1);
         CommonOps_DDRM.mult(A, x, found);
 
         // there are multiple 'x' which will generate the same solution, see if this is one of them
@@ -153,21 +153,21 @@ public class GenericSolvePseudoInverseChecks_DDRM extends EjmlStandardJUnit {
      */
     public void singular_inv() {
         // create a matrix where two rows are linearly dependent
-        DMatrixRMaj A = new DMatrixRMaj(3,3,true,1,2,3,2,3,4,2,3,4);
+        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 3, 2, 3, 4, 2, 3, 4);
 
-        DMatrixRMaj y = new DMatrixRMaj(3,1,true,4,7,7);
+        DMatrixRMaj y = new DMatrixRMaj(3, 1, true, 4, 7, 7);
         assertTrue(solver.setA(A));
 
-        DMatrixRMaj x = new DMatrixRMaj(3,1);
-        solver.solve(y,x);
+        DMatrixRMaj x = new DMatrixRMaj(3, 1);
+        solver.solve(y, x);
 
         // now test the pseudo inverse
-        DMatrixRMaj A_pinv = new DMatrixRMaj(3,3);
-        DMatrixRMaj found = new DMatrixRMaj(3,1);
+        DMatrixRMaj A_pinv = new DMatrixRMaj(3, 3);
+        DMatrixRMaj found = new DMatrixRMaj(3, 1);
         solver.invert(A_pinv);
 
-        CommonOps_DDRM.mult(A_pinv,y,found);
+        CommonOps_DDRM.mult(A_pinv, y, found);
 
-        assertTrue(MatrixFeatures_DDRM.isEquals(x, found,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(x, found, UtilEjml.TEST_F64));
     }
 }

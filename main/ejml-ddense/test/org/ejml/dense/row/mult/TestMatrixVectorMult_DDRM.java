@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,170 +33,155 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestMatrixVectorMult_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void checkShapesOfInput() {
+    @Test void checkShapesOfInput() {
         CheckMatrixVectorMultShape_DDRM check = new CheckMatrixVectorMultShape_DDRM(MatrixVectorMult_DDRM.class);
         check.checkAll();
     }
 
-    @Test
-    public void mult() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(2,3, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
+    @Test void mult() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(2, 3, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 1, rand);
 
-        MatrixVectorMult_DDRM.mult(a,b,c);
+        MatrixVectorMult_DDRM.mult(a, b, c);
 
-        UtilTestMatrix.checkMat(c,5,14);
+        UtilTestMatrix.checkMat(c, 5, 14);
     }
 
-    @Test
-    public void mult_zero() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(2,3, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
+    @Test void mult_zero() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(2, 3, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 1, rand);
 
-        MatrixVectorMult_DDRM.mult(a,b,c);
+        MatrixVectorMult_DDRM.mult(a, b, c);
 
-        UtilTestMatrix.checkMat(c,5,14);
+        UtilTestMatrix.checkMat(c, 5, 14);
     }
 
-    @Test
-    public void multAdd() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(2,3, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = new DMatrixRMaj(2,1, true, 2, 6);
+    @Test void multAdd() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(2, 3, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = new DMatrixRMaj(2, 1, true, 2, 6);
 
-        MatrixVectorMult_DDRM.multAdd(a,b,c);
+        MatrixVectorMult_DDRM.multAdd(a, b, c);
 
-        UtilTestMatrix.checkMat(c,7,20);
+        UtilTestMatrix.checkMat(c, 7, 20);
     }
 
-    @Test
-    public void multTransA_small() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(3,2, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
+    @Test void multTransA_small() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(3, 2, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 1, rand);
 
-        MatrixVectorMult_DDRM.multTransA_small(a,b,c);
+        MatrixVectorMult_DDRM.multTransA_small(a, b, c);
 
-        UtilTestMatrix.checkMat(c,10,13);
+        UtilTestMatrix.checkMat(c, 10, 13);
     }
 
-    @Test
-    public void multTransA_reorder() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(3,2, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2,1,rand);
+    @Test void multTransA_reorder() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(3, 2, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 1, rand);
 
-        MatrixVectorMult_DDRM.multTransA_reorder(a,b,c);
+        MatrixVectorMult_DDRM.multTransA_reorder(a, b, c);
 
-        UtilTestMatrix.checkMat(c,10,13);
+        UtilTestMatrix.checkMat(c, 10, 13);
     }
 
-    @Test
-    public void multAddTransA_small() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(3,2, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = new DMatrixRMaj(2,1, true, 2, 6);
+    @Test void multAddTransA_small() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(3, 2, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = new DMatrixRMaj(2, 1, true, 2, 6);
 
-        MatrixVectorMult_DDRM.multAddTransA_small(a,b,c);
+        MatrixVectorMult_DDRM.multAddTransA_small(a, b, c);
 
-        UtilTestMatrix.checkMat(c,12,19);
+        UtilTestMatrix.checkMat(c, 12, 19);
     }
 
-    @Test
-    public void multAddTransA_reorder() {
-        double d[] = new double[]{0,1,2,3,4,5};
-        DMatrixRMaj a = new DMatrixRMaj(3,2, true, d);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, d);
-        DMatrixRMaj c = new DMatrixRMaj(2,1, true, 2, 6);
+    @Test void multAddTransA_reorder() {
+        double d[] = new double[]{0, 1, 2, 3, 4, 5};
+        DMatrixRMaj a = new DMatrixRMaj(3, 2, true, d);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, d);
+        DMatrixRMaj c = new DMatrixRMaj(2, 1, true, 2, 6);
 
-        MatrixVectorMult_DDRM.multAddTransA_reorder(a,b,c);
+        MatrixVectorMult_DDRM.multAddTransA_reorder(a, b, c);
 
-        UtilTestMatrix.checkMat(c,12,19);
+        UtilTestMatrix.checkMat(c, 12, 19);
     }
 
-    @Test
-    public void checkZeroRowsColumns() throws InvocationTargetException, IllegalAccessException {
-        checkZeros(5,0);
-        checkZeros(0,5);
+    @Test void checkZeroRowsColumns() throws InvocationTargetException, IllegalAccessException {
+        checkZeros(5, 0);
+        checkZeros(0, 5);
     }
 
-    @Test
-    public void innerProduct() {
-        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5,1,rand);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,5,rand);
-        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5,1,rand);
+    @Test void innerProduct() {
+        DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5, 1, rand);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5, 5, rand);
+        DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5, 1, rand);
 
-        DMatrixRMaj tmp = new DMatrixRMaj(5,1);
-        CommonOps_DDRM.multTransA(a,B,tmp);
-        double expected = VectorVectorMult_DDRM.innerProd(tmp,c);
-        double found = MatrixVectorMult_DDRM.innerProduct(a.data,0,B,c.data,0);
-        assertEquals(expected,found, UtilEjml.TEST_F64);
+        DMatrixRMaj tmp = new DMatrixRMaj(5, 1);
+        CommonOps_DDRM.multTransA(a, B, tmp);
+        double expected = VectorVectorMult_DDRM.innerProd(tmp, c);
+        double found = MatrixVectorMult_DDRM.innerProduct(a.data, 0, B, c.data, 0);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
 
         // now have offsets
         int offsetA = 1;
         int offsetC = 2;
         double[] _a = new double[10];
         double[] _c = new double[10];
-        System.arraycopy(a.data,0,_a,offsetA,5);
-        System.arraycopy(c.data,0,_c,offsetC,5);
+        System.arraycopy(a.data, 0, _a, offsetA, 5);
+        System.arraycopy(c.data, 0, _c, offsetC, 5);
 
-        found = MatrixVectorMult_DDRM.innerProduct(_a,offsetA,B,_c,offsetC);
-        assertEquals(expected,found, UtilEjml.TEST_F64);
+        found = MatrixVectorMult_DDRM.innerProduct(_a, offsetA, B, _c, offsetC);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
     /**
      * Sees if all the matrix multiplications produce the expected results against the provided
      * known solution.
      */
-    private void checkZeros( int rowsA , int colsA  )
-            throws InvocationTargetException, IllegalAccessException
-    {
+    private void checkZeros( int rowsA, int colsA )
+            throws InvocationTargetException, IllegalAccessException {
 
         int numChecked = 0;
         Method methods[] = MatrixVectorMult_DDRM.class.getMethods();
 
-        for( Method method : methods ) {
+        for (Method method : methods) {
             String name = method.getName();
 
             // only look at function which perform matrix multiplications
-            if( !name.contains("mult") )
+            if (!name.contains("mult"))
                 continue;
 
 //            System.out.println(name);
 
-            DMatrixRMaj a = new DMatrixRMaj(rowsA,colsA);
-            DMatrixRMaj b = new DMatrixRMaj(colsA,1);
-            DMatrixRMaj c = RandomMatrices_DDRM.rectangle(rowsA,1,rand);
+            DMatrixRMaj a = new DMatrixRMaj(rowsA, colsA);
+            DMatrixRMaj b = new DMatrixRMaj(colsA, 1);
+            DMatrixRMaj c = RandomMatrices_DDRM.rectangle(rowsA, 1, rand);
 
             boolean add = name.contains("multAdd");
 
-            if( name.contains("TransAB")) {
+            if (name.contains("TransAB")) {
                 CommonOps_DDRM.transpose(a);
                 CommonOps_DDRM.transpose(b);
-            } else if( name.contains("TransA")) {
+            } else if (name.contains("TransA")) {
                 CommonOps_DDRM.transpose(a);
-            } else if( name.contains("TransB")) {
+            } else if (name.contains("TransB")) {
                 CommonOps_DDRM.transpose(b);
             }
 
             DMatrixRMaj original = c.copy();
-            invoke(method,a,b,c);
+            invoke(method, a, b, c);
 
-            if( add ) {
+            if (add) {
                 assertTrue(MatrixFeatures_DDRM.isEquals(original, c));
             } else {
                 assertTrue(MatrixFeatures_DDRM.isZeros(c, UtilEjml.TEST_F64));
@@ -204,13 +189,13 @@ public class TestMatrixVectorMult_DDRM extends EjmlStandardJUnit {
             numChecked++;
         }
 
-        assertEquals(numChecked,6);
+        assertEquals(numChecked, 6);
     }
 
-    public static void invoke(Method func,
-                              DMatrixRMaj a, DMatrixRMaj b, DMatrixRMaj c)
+    public static void invoke( Method func,
+                               DMatrixRMaj a, DMatrixRMaj b, DMatrixRMaj c )
             throws IllegalAccessException, InvocationTargetException {
-        if( func.getParameterTypes().length == 3 ) {
+        if (func.getParameterTypes().length == 3) {
             func.invoke(null, a, b, c);
         } else {
             throw new RuntimeException("WTF?");

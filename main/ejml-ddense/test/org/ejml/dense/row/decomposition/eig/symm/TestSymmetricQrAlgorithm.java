@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,7 @@ public class TestSymmetricQrAlgorithm extends EjmlStandardJUnit {
     /**
      * There should no need to do anything in this case.
      */
-    @Test
-    public void shouldNotChange() {
+    @Test void shouldNotChange() {
         double[] diag = new double[]{2,3,4,5,6};
         double[] off = new double[diag.length-1];
 
@@ -52,8 +51,7 @@ public class TestSymmetricQrAlgorithm extends EjmlStandardJUnit {
     /**
      * The tridiagonal matrix has off diagonal terms now
      */
-    @Test
-    public void hasOffDiagonal() {
+    @Test void hasOffDiagonal() {
         double[] diag = new double[]{2,3,4,5,6};
         double[] off = new double[diag.length-1];
 
@@ -77,8 +75,7 @@ public class TestSymmetricQrAlgorithm extends EjmlStandardJUnit {
      * Test it against a matrix that has zeros along the diagonal but non zero values along
      * the off diagonal elements.
      */
-    @Test
-    public void zeroDiagonalNotZeroOff() {
+    @Test void zeroDiagonalNotZeroOff() {
         int N = 5;
         double[] diag = new double[N];
         double[] off = new double[N-1];
@@ -103,8 +100,7 @@ public class TestSymmetricQrAlgorithm extends EjmlStandardJUnit {
     /**
      * Provide a test case where the same eigenvalue is repeated a few times
      */
-    @Test
-    public void multipleEigenvalues() {
+    @Test void multipleEigenvalues() {
         DMatrixRMaj A = new DMatrixRMaj(5,5, true, 2.191140, -0.098491, -0.397037, 0.367426, -0.208338, -0.098491, 2.776741, 0.623341, 0.624798, 0.401906, -0.397037, 0.623341, 3.571302, -0.239631, -0.264573, 0.367426, 0.624798, -0.239631, 3.625034, -0.162896, -0.208338, 0.401906, -0.264573, -0.162896, 3.835783);
 
         TridiagonalDecompositionHouseholder_DDRM tridiag = new TridiagonalDecompositionHouseholder_DDRM();

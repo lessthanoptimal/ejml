@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,11 +31,10 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 public class TestLinearSolver_DDRB_to_DDRM extends GenericLinearSolverChecks_DDRM {
 
     @Override
-    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver( DMatrixRMaj A ) {
 
         LinearSolverDense<DMatrixRBlock> solver = new QrHouseHolderSolver_DDRB();
 
         return new LinearSolver_DDRB_to_DDRM(solver);
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,8 +33,7 @@ public class TestLinearSolverLuBase_DDRM extends EjmlStandardJUnit {
      * Make sure that improve solution doesn't make things worse. This test does
      * not realy test to see if it makes things better.
      */
-    @Test
-    public void testImproveSol_noharm() {
+    @Test void testImproveSol_noharm() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
         DMatrixRMaj b = new DMatrixRMaj(3,1, true, 8, 33, 15.5);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);

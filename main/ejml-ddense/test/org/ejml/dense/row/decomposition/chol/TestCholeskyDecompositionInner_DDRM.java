@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,7 @@ public class TestCholeskyDecompositionInner_DDRM extends GenericCholeskyTests_DD
         return new CholeskyDecompositionInner_DDRM(lower);
     }
 
-    @Test
-    public void checkModifyInput() {
+    @Test void checkModifyInput() {
         checkModifiedInput(new CholeskyDecompositionInner_DDRM(true));
         checkModifiedInput(new CholeskyDecompositionInner_DDRM(false));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,84 +29,76 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestEigenOps_DDRM extends EjmlStandardJUnit {
     /**
      * Compute an eigen value and compare against a known solution from octave.
      */
-    @Test
-    public void computeEigenValue() {
-        DMatrixRMaj A = new DMatrixRMaj(3,3,
+    @Test void computeEigenValue() {
+        DMatrixRMaj A = new DMatrixRMaj(3, 3,
                 true, 0.053610, 0.030405, 0.892620, 0.090954, 0.074065, 0.875797, 0.105369, 0.928981, 0.965506);
 
-        DMatrixRMaj u = new DMatrixRMaj(3,1,
+        DMatrixRMaj u = new DMatrixRMaj(3, 1,
                 true, -0.4502917, -0.4655377, -0.7619134);
 
-        double value = EigenOps_DDRM.computeEigenValue(A,u);
+        double value = EigenOps_DDRM.computeEigenValue(A, u);
 
-        assertEquals(1.59540,value,1e-4);
+        assertEquals(1.59540, value, 1e-4);
     }
 
     /**
      * Give it a matrix that describes a Markov process and see if it produces 1
      */
-    @Test
-    public void boundLargestEigenValue_markov() {
+    @Test void boundLargestEigenValue_markov() {
         // create the matrix
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3,3,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 3, rand);
 
-        for( int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++) {
             double total = 0;
-            for( int j = 0; j < 3; j++ ) {
-                total += A.get(i,j);
+            for (int j = 0; j < 3; j++) {
+                total += A.get(i, j);
             }
 
-            for( int j = 0; j < 3; j++ ) {
-                A.set(i,j,A.get(i,j)/total);
+            for (int j = 0; j < 3; j++) {
+                A.set(i, j, A.get(i, j)/total);
             }
         }
 
-        double[] val = EigenOps_DDRM.boundLargestEigenValue(A,null);
+        double[] val = EigenOps_DDRM.boundLargestEigenValue(A, null);
 
-        assertEquals(1.0,val[0], UtilEjml.TEST_F64);
-        assertEquals(1.0,val[1],UtilEjml.TEST_F64);
+        assertEquals(1.0, val[0], UtilEjml.TEST_F64);
+        assertEquals(1.0, val[1], UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void createMatrixV() {
-        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(3,-1,1,rand);
+    @Test void createMatrixV() {
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(3, -1, 1, rand);
 
-        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows, true);
         assertTrue(decomp.decompose(A));
 
         DMatrixRMaj V = EigenOps_DDRM.createMatrixV(decomp);
 
-        for( int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++) {
             DMatrixRMaj v = decomp.getEigenVector(i);
 
-            for( int j = 0; j < 3; j++ ) {
-                assertEquals(V.get(j,i),v.get(j),UtilEjml.TEST_F64);
+            for (int j = 0; j < 3; j++) {
+                assertEquals(V.get(j, i), v.get(j), UtilEjml.TEST_F64);
             }
         }
     }
 
-    @Test
-    public void createMatrixD() {
-        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(3,-1,1,rand);
+    @Test void createMatrixD() {
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(3, -1, 1, rand);
 
-        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows,true);
+        EigenDecomposition_F64<DMatrixRMaj> decomp = DecompositionFactory_DDRM.eig(A.numRows, true);
         assertTrue(decomp.decompose(A));
 
         DMatrixRMaj D = EigenOps_DDRM.createMatrixD(decomp);
 
-        for( int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++) {
             Complex_F64 e = decomp.getEigenvalue(i);
 
-            if( e.isReal() ) {
-                assertEquals(e.real,D.get(i,i),1e-10);
+            if (e.isReal()) {
+                assertEquals(e.real, D.get(i, i), 1e-10);
             }
         }
     }

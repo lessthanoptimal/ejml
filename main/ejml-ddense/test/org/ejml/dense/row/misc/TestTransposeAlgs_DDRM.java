@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,8 +27,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTransposeAlgs_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void square() {
+    @Test void square() {
         DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(5,5,rand);
         DMatrixRMaj matTran = mat.copy();
 
@@ -40,8 +39,7 @@ public class TestTransposeAlgs_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEqualsTrans(mat,matTran,0);
     }
 
-    @Test
-    public void block() {
+    @Test void block() {
         // check various shapes to make sure blocking is handled correctly
         for( int numRows = 1; numRows < 15; numRows += 2 ) {
             for( int numCols = 1; numCols < 15; numCols += 2) {
@@ -58,8 +56,7 @@ public class TestTransposeAlgs_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void standard() {
+    @Test void standard() {
         DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(5,7,rand);
         DMatrixRMaj matTran = new DMatrixRMaj(7,5);
 

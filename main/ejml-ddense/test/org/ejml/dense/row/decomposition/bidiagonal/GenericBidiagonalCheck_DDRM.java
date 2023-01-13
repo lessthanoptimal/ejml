@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -37,13 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class GenericBidiagonalCheck_DDRM extends EjmlStandardJUnit {
     abstract protected BidiagonalDecomposition_F64<DMatrixRMaj> createQRDecomposition();
 
-    @Test
-    public void testModifiedInput() {
+    @Test void testModifiedInput() {
         CheckDecompositionInterface_DDRM.checkModifiedInput(createQRDecomposition());
     }
 
-    @Test
-    public void testRandomMatrices() {
+    @Test void testRandomMatrices() {
         BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
 
         for( int i = 0; i < 10; i++ ) {
@@ -66,8 +64,7 @@ public abstract class GenericBidiagonalCheck_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void testIdentity() {
+    @Test void testIdentity() {
         SimpleMatrix A = SimpleMatrix.identity(5, DMatrixRMaj.class);
 
         BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();
@@ -77,8 +74,7 @@ public abstract class GenericBidiagonalCheck_DDRM extends EjmlStandardJUnit {
         checkGeneric(A.getDDRM(), decomp);
     }
 
-    @Test
-    public void testZero() {
+    @Test void testZero() {
         SimpleMatrix A = new SimpleMatrix(5,5, DMatrixRMaj.class);
 
         BidiagonalDecomposition_F64<DMatrixRMaj> decomp = createQRDecomposition();

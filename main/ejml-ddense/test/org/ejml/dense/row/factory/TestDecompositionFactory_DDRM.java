@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,8 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestDecompositionFactory_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void quality_eig() {
+    @Test void quality_eig() {
         // I'm assuming it can process this matrix with no problems
         DMatrixRMaj A = RandomMatrices_DDRM.symmetric(5,-1,1,rand);
 
@@ -53,8 +52,7 @@ public class TestDecompositionFactory_DDRM extends EjmlStandardJUnit {
         assertTrue(origQuality < UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void quality_svd() {
+    @Test void quality_svd() {
         // I'm assuming it can process this matrix with no problems
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
 

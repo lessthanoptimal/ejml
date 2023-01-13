@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,7 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
     /**
      * Decomposes the matrix, extracts H and Q, then sees if it can recompute A using similar matrix stuff.
      */
-    @Test
-    public void testItAllTogether() {
+    @Test void testItAllTogether() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,5,rand);
 
         checkItAll(A);
@@ -73,8 +72,7 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
     /**
      * Make sure it doesn't change the input
      */
-    @Test
-    public void testInputUnmodified() {
+    @Test void testInputUnmodified() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,4,rand);
         DMatrixRMaj B = A.copy();
 
@@ -106,8 +104,7 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
      * is done by extracting the vectors, computing reflectors, and multipling them by A and seeing
      * if it has the expected response.
      */
-    @Test
-    public void testHouseholderVectors()
+    @Test void testHouseholderVectors()
     {
         int N = 5;
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
@@ -161,8 +158,7 @@ public class TestHessenbergSimilarDecomposition_DDRM extends EjmlStandardJUnit {
     /**
      * Compute the overall Q matrix from the stored u vectors. See if the extract H is the same as the expected H.
      */
-    @Test
-    public void testH() {
+    @Test void testH() {
         int N = 5;
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(N,N,rand);
 

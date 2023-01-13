@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,17 +30,14 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import static org.ejml.UtilEjml.checkSameShape;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCommonOps_DDRM extends EjmlStandardJUnit {
     double tol = UtilEjml.TEST_F64;
 
-    @Test
-    public void checkMatrixMultInputShape() {
+    @Test void checkMatrixMultInputShape() {
         CheckMatrixMultShape_DDRM check = new CheckMatrixMultShape_DDRM(CommonOps_DDRM.class);
         check.checkAll();
     }
@@ -48,8 +45,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
     /**
      * Make sure the multiplication methods here have the same behavior as the ones in MatrixMatrixMult.
      */
-    @Test
-    public void checkMatrixMultAll() {
+    @Test void checkMatrixMultAll() {
         int numChecked = 0;
         Method[] methods = CommonOps_DDRM.class.getMethods();
 
@@ -86,22 +82,19 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
                     System.out.println("Failed: Function = " + name + "  alpha = " + hasAlpha);
                     oneFailed = true;
                 }
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
             numChecked++;
         }
         assertEquals(16, numChecked);
-        assertTrue(!oneFailed);
+        assertFalse(oneFailed);
     }
 
     /**
      * See if zeros in rows and columns are handled correctly.
      */
-    @Test
-    public void checkAllMatrixMult_Zeros() {
+    @Test void checkAllMatrixMult_Zeros() {
         int numChecked = 0;
         Method[] methods = CommonOps_DDRM.class.getMethods();
 
@@ -138,7 +131,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
             numChecked++;
         }
         assertEquals(16, numChecked);
-        assertTrue(!oneFailed);
+        assertFalse(oneFailed);
     }
 
     private Method findCheck( String name, boolean hasAlpha ) {
@@ -267,8 +260,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         return true;
     }
 
-    @Test
-    public void dot() {
+    @Test void dot() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10, 1, rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(1, 10, rand);
 
@@ -282,8 +274,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void multInner() {
+    @Test void multInner() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10, 4, rand);
         DMatrixRMaj found = RandomMatrices_DDRM.rectangle(4, 4, rand);
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(4, 4, rand);
@@ -294,8 +285,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, tol));
     }
 
-    @Test
-    public void multOuter() {
+    @Test void multOuter() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(10, 4, rand);
         DMatrixRMaj found = RandomMatrices_DDRM.rectangle(10, 10, rand);
         DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(10, 10, rand);
@@ -306,8 +296,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, tol));
     }
 
-    @Test
-    public void elementMult_two() {
+    @Test void elementMult_two() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj a_orig = a.copy();
@@ -319,8 +308,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementMult_three() {
+    @Test void elementMult_three() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5, 4, rand);
@@ -332,8 +320,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementDiv_two() {
+    @Test void elementDiv_two() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj a_orig = a.copy();
@@ -345,8 +332,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementDiv_three() {
+    @Test void elementDiv_three() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(5, 4, rand);
@@ -358,8 +344,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void multRows() {
+    @Test void multRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj found = A.copy();
         double[] values = UtilEjml.randomVector_F64(rand, 5);
@@ -373,8 +358,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void divideRows() {
+    @Test void divideRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj found = A.copy();
         double[] values = UtilEjml.randomVector_F64(rand, 5);
@@ -388,8 +372,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void multCols() {
+    @Test void multCols() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj found = A.copy();
         double[] values = UtilEjml.randomVector_F64(rand, 5);
@@ -403,8 +386,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void divideCols() {
+    @Test void divideCols() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj found = A.copy();
         double[] values = UtilEjml.randomVector_F64(rand, 5);
@@ -418,8 +400,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void divideRowsCols() {
+    @Test void divideRowsCols() {
         int rows = 5;
         int cols = 7;
 
@@ -457,8 +438,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void solve() {
+    @Test void solve() {
         DMatrixRMaj a = new DMatrixRMaj(2, 2, true, 1, 2, 7, -3);
         DMatrixRMaj b = RandomMatrices_DDRM.rectangle(2, 5, rand);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 5, rand);
@@ -474,8 +454,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(c_exp, c, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void solveSPD() {
+    @Test void solveSPD() {
         for (int N = 1; N <= 20; N++) {
             DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(N, rand);
 
@@ -494,8 +473,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void transpose_inplace() {
+    @Test void transpose_inplace() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 3, true, 0, 1, 2, 3, 4, 5, 6, 7, 8);
         DMatrixRMaj matTran = new DMatrixRMaj(3, 3);
 
@@ -505,8 +483,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(mat, matTran, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void transpose() {
+    @Test void transpose() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 2, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj matTran = new DMatrixRMaj(2, 3);
 
@@ -522,8 +499,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void trace() {
+    @Test void trace() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 3, true, 0, 1, 2, 3, 4, 5, 6, 7, 8);
 
         assertEquals(12, CommonOps_DDRM.trace(mat), 1e-6);
@@ -538,8 +514,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(12, CommonOps_DDRM.trace(B), 1e-6);
     }
 
-    @Test
-    public void invert() {
+    @Test void invert() {
         for (int i = 1; i <= 10; i++) {
             DMatrixRMaj a = RandomMatrices_DDRM.rectangle(i, i, rand);
 
@@ -559,8 +534,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void invertSPD() {
+    @Test void invertSPD() {
         for (int i = 1; i <= 20; i++) {
             DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(i, rand);
 
@@ -578,8 +552,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
      * Checked against by computing a solution to the linear system then
      * seeing if the solution produces the expected output
      */
-    @Test
-    public void pinv() {
+    @Test void pinv() {
         // check wide matrix
         DMatrixRMaj A = new DMatrixRMaj(2, 4, true, 1, 2, 3, 4, 5, 6, 7, 8);
         DMatrixRMaj A_inv = new DMatrixRMaj(4, 2);
@@ -607,8 +580,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(b, found, UtilEjml.TEST_F64_SQ));
     }
 
-    @Test
-    public void columnsToVectors() {
+    @Test void columnsToVectors() {
         DMatrixRMaj M = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
         DMatrixRMaj[] v = CommonOps_DDRM.columnsToVector(M, null);
@@ -627,8 +599,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void identity() {
+    @Test void identity() {
         DMatrixRMaj A = CommonOps_DDRM.identity(4);
 
         assertEquals(4, A.numRows);
@@ -637,8 +608,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(4, CommonOps_DDRM.elementSum(A), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void identity_rect() {
+    @Test void identity_rect() {
         DMatrixRMaj A = CommonOps_DDRM.identity(4, 6);
 
         assertEquals(4, A.numRows);
@@ -647,8 +617,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(4, CommonOps_DDRM.elementSum(A), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void setIdentity() {
+    @Test void setIdentity() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 4, rand);
 
         CommonOps_DDRM.setIdentity(A);
@@ -659,8 +628,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(4, CommonOps_DDRM.elementSum(A), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void diag() {
+    @Test void diag() {
         DMatrixRMaj A = CommonOps_DDRM.diag(2.0, 3.0, 6.0, 7.0);
 
         assertEquals(4, A.numRows);
@@ -674,8 +642,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(18, CommonOps_DDRM.elementSum(A), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void diag_rect() {
+    @Test void diag_rect() {
         DMatrixRMaj A = CommonOps_DDRM.diagR(4, 6, 2.0, 3.0, 6.0, 7.0);
 
         assertEquals(4, A.numRows);
@@ -689,8 +656,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(18, CommonOps_DDRM.elementSum(A), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void kron() {
+    @Test void kron() {
         DMatrixRMaj A = new DMatrixRMaj(2, 2, true, 1, 2, 3, 4);
         DMatrixRMaj B = new DMatrixRMaj(1, 2, true, 4, 5);
 
@@ -720,8 +686,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extract() {
+    @Test void extract() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
 
         DMatrixRMaj B = new DMatrixRMaj(2, 3);
@@ -735,8 +700,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extract_ret() {
+    @Test void extract_ret() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extract(A, 1, 3, 2, 5);
@@ -751,8 +715,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extract_no_limits() {
+    @Test void extract_no_limits() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
         DMatrixRMaj B = new DMatrixRMaj(3, 4);
 
@@ -768,8 +731,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extract_array_two() {
+    @Test void extract_array_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
 
         int[] rows = new int[6];
@@ -791,8 +753,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extract_array_one() {
+    @Test void extract_array_one() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, 0, 1, rand);
 
         int[] indexes = new int[6];
@@ -810,8 +771,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void insert_array_two() {
+    @Test void insert_array_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 1, 0, 1, rand);
 
         int[] rows = new int[6];
@@ -831,8 +791,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extractDiag() {
+    @Test void extractDiag() {
         DMatrixRMaj a = RandomMatrices_DDRM.rectangle(3, 4, 0, 1, rand);
 
         for (int i = 0; i < 3; i++) {
@@ -847,8 +806,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extractRow() {
+    @Test void extractRow() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 6, 0, 1, rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extractRow(A, 3, null);
@@ -861,8 +819,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void extractColumn() {
+    @Test void extractColumn() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 6, 0, 1, rand);
 
         DMatrixRMaj B = CommonOps_DDRM.extractColumn(A, 3, null);
@@ -875,8 +832,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void removeColumns() {
+    @Test void removeColumns() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 6, 0, 1, rand);
 
         DMatrixRMaj B = A.copy();
@@ -896,8 +852,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void insert() {
+    @Test void insert() {
         DMatrixRMaj A = new DMatrixRMaj(5, 5);
         for (int i = 0; i < A.numRows; i++) {
             for (int j = 0; j < A.numCols; j++) {
@@ -916,8 +871,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void addEquals() {
+    @Test void addEquals() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
 
@@ -927,8 +881,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(b, 5, 4, 3, 2, 1, 0);
     }
 
-    @Test
-    public void addEquals_beta() {
+    @Test void addEquals_beta() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
 
@@ -938,8 +891,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(b, 5, 4, 3, 2, 1, 0);
     }
 
-    @Test
-    public void add() {
+    @Test void add() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
@@ -951,8 +903,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, 5, 5, 5, 5, 5, 5);
     }
 
-    @Test
-    public void add_beta() {
+    @Test void add_beta() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
@@ -964,8 +915,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, 10, 9, 8, 7, 6, 5);
     }
 
-    @Test
-    public void add_alpha_beta() {
+    @Test void add_alpha_beta() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
@@ -977,8 +927,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, 10, 10, 10, 10, 10, 10);
     }
 
-    @Test
-    public void add_alpha() {
+    @Test void add_alpha() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 4, 3, 2, 1, 0);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
@@ -990,8 +939,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, 5, 6, 7, 8, 9, 10);
     }
 
-    @Test
-    public void add_scalar_c() {
+    @Test void add_scalar_c() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
@@ -1001,8 +949,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, 2, 3, 4, 5, 6, 7);
     }
 
-    @Test
-    public void add_scalar() {
+    @Test void add_scalar() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
 
         CommonOps_DDRM.add(a, 2.0);
@@ -1010,8 +957,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(a, 2, 3, 4, 5, 6, 7);
     }
 
-    @Test
-    public void subEquals() {
+    @Test void subEquals() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 5, 5, 5, 5, 5);
 
@@ -1021,8 +967,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(b, 5, 5, 5, 5, 5, 5);
     }
 
-    @Test
-    public void subtract_matrix_matrix() {
+    @Test void subtract_matrix_matrix() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj b = new DMatrixRMaj(2, 3, true, 5, 5, 5, 5, 5, 5);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
@@ -1034,8 +979,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, -5, -4, -3, -2, -1, 0);
     }
 
-    @Test
-    public void subtract_matrix_double() {
+    @Test void subtract_matrix_double() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
@@ -1045,8 +989,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, -2, -1, 0, 1, 2, 3);
     }
 
-    @Test
-    public void subtract_double_matrix() {
+    @Test void subtract_double_matrix() {
         DMatrixRMaj a = new DMatrixRMaj(2, 3, true, 0, 1, 2, 3, 4, 5);
         DMatrixRMaj c = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
@@ -1056,8 +999,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         UtilTestMatrix.checkMat(c, 2, 1, 0, -1, -2, -3);
     }
 
-    @Test
-    public void scale() {
+    @Test void scale() {
         double s = 2.5;
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
@@ -1070,8 +1012,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(d[3]*s, mat.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void scale_two_input() {
+    @Test void scale_two_input() {
         double s = 2.5;
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
@@ -1090,8 +1031,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(d[3]*s, r.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void scaleRow() {
+    @Test void scaleRow() {
         double scale = 1.5;
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 3, rand);
         DMatrixRMaj B = A.copy();
@@ -1111,8 +1051,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void scaleCol() {
+    @Test void scaleCol() {
         double scale = 1.5;
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 3, rand);
         DMatrixRMaj B = A.copy();
@@ -1132,8 +1071,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void div_scalar_mat() {
+    @Test void div_scalar_mat() {
         double s = 2.5;
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
@@ -1146,8 +1084,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(s/d[3], mat.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void div_mat_scalar() {
+    @Test void div_mat_scalar() {
         double s = 2.5;
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
@@ -1160,8 +1097,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(mat.get(1, 1), d[3]/s, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void div_mat_scalar_out() {
+    @Test void div_mat_scalar_out() {
         double s = 2.5;
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
@@ -1180,8 +1116,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(d[3]/s, r.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void div_scalar_mat_out() {
+    @Test void div_scalar_mat_out() {
         double s = 2.5;
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
@@ -1200,8 +1135,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(s/d[3], r.get(1, 1), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void changeSign_one() {
+    @Test void changeSign_one() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 3, rand);
         DMatrixRMaj A_orig = A.copy();
 
@@ -1212,8 +1146,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void changeSign_two() {
+    @Test void changeSign_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(2, 3, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(2, 3, rand);
 
@@ -1224,8 +1157,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void fill_dense() {
+    @Test void fill_dense() {
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
 
@@ -1236,8 +1168,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void fill_block() {
+    @Test void fill_block() {
         // pick the size such that it doesn't nicely line up along blocks
         DMatrixRBlock mat = new DMatrixRBlock(10, 14, 3);
 
@@ -1248,8 +1179,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void zero() {
+    @Test void zero() {
         double[] d = new double[]{10, 12.5, -2, 5.5};
         DMatrixRMaj mat = new DMatrixRMaj(2, 2, true, d);
 
@@ -1260,16 +1190,14 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementMax() {
+    @Test void elementMax() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
 
         double m = CommonOps_DDRM.elementMax(mat);
         assertEquals(7, m, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementMax_location() {
+    @Test void elementMax_location() {
         var loc = new ElementLocation();
         var mat = new DMatrixRMaj(3, 3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
 
@@ -1279,16 +1207,14 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(1, loc.col);
     }
 
-    @Test
-    public void elementMin() {
+    @Test void elementMin() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 3, true, 0, 1, 2, -3, 4, 5, 6, 7, 8);
 
         double m = CommonOps_DDRM.elementMin(mat);
         assertEquals(-3, m, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementMin_location() {
+    @Test void elementMin_location() {
         var loc = new ElementLocation();
         var mat = new DMatrixRMaj(3, 3, true, 0, 1, 2, -3, 4, 5, 6, 7, 8);
 
@@ -1298,16 +1224,14 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(0, loc.col);
     }
 
-    @Test
-    public void elementMinAbs() {
+    @Test void elementMinAbs() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
 
         double m = CommonOps_DDRM.elementMinAbs(mat);
         assertEquals(0, m, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementMinAbs_location() {
+    @Test void elementMinAbs_location() {
         var loc = new ElementLocation();
         var mat = new DMatrixRMaj(3, 3, true, 0, 1, -2, 3, 4, 5, 6, 7, -8);
 
@@ -1317,16 +1241,14 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(0, loc.col);
     }
 
-    @Test
-    public void elementMaxAbs() {
+    @Test void elementMaxAbs() {
         DMatrixRMaj mat = new DMatrixRMaj(3, 3, true, 0, 1, 2, 3, 4, 5, -6, 7, -8);
 
         double m = CommonOps_DDRM.elementMaxAbs(mat);
         assertEquals(8, m, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementMaxAbs_location() {
+    @Test void elementMaxAbs_location() {
         var loc = new ElementLocation();
         var mat = new DMatrixRMaj(3, 3, true, 0, 1, 2, 3, 4, 5, -6, 7, -8);
 
@@ -1336,8 +1258,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(2, loc.col);
     }
 
-    @Test
-    public void elementSum() {
+    @Test void elementSum() {
         DMatrixRMaj M = RandomMatrices_DDRM.rectangle(5, 5, rand);
         // make it smaller than the original size to make sure it is bounding
         // the summation correctly
@@ -1353,8 +1274,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(sum, CommonOps_DDRM.elementSum(M), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementSumAbs() {
+    @Test void elementSumAbs() {
         DMatrixRMaj M = RandomMatrices_DDRM.rectangle(5, 5, rand);
         // make it smaller than the original size to make sure it is bounding
         // the summation correctly
@@ -1370,8 +1290,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(sum, CommonOps_DDRM.elementSum(M), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void elementPower_mm() {
+    @Test void elementPower_mm() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
@@ -1384,8 +1303,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementPower_ms() {
+    @Test void elementPower_ms() {
         double a = 1.3;
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
@@ -1398,8 +1316,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementPower_sm() {
+    @Test void elementPower_sm() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
         double b = 1.1;
         DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
@@ -1412,8 +1329,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementLog() {
+    @Test void elementLog() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
@@ -1425,8 +1341,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void elementExp() {
+    @Test void elementExp() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj C = RandomMatrices_DDRM.rectangle(4, 5, rand);
 
@@ -1438,12 +1353,11 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void sumRows() {
+    @Test void sumRows() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj output = new DMatrixRMaj(4, 1);
 
-        assertTrue(output == CommonOps_DDRM.sumRows(input, output));
+        assertSame(output, CommonOps_DDRM.sumRows(input, output));
 
         for (int i = 0; i < input.numRows; i++) {
             double total = 0;
@@ -1459,12 +1373,11 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void minRows() {
+    @Test void minRows() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj output = new DMatrixRMaj(4, 1);
 
-        assertTrue(output == CommonOps_DDRM.minRows(input, output));
+        assertSame(output, CommonOps_DDRM.minRows(input, output));
 
         for (int i = 0; i < input.numRows; i++) {
             double min = input.get(i, 0);
@@ -1480,12 +1393,11 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void maxRows() {
+    @Test void maxRows() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj output = new DMatrixRMaj(4, 1);
 
-        assertTrue(output == CommonOps_DDRM.maxRows(input, output));
+        assertSame(output, CommonOps_DDRM.maxRows(input, output));
 
         for (int i = 0; i < input.numRows; i++) {
             double max = input.get(i, 0);
@@ -1501,12 +1413,11 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void sumCols() {
+    @Test void sumCols() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj output = new DMatrixRMaj(1, 5);
 
-        assertTrue(output == CommonOps_DDRM.sumCols(input, output));
+        assertSame(output, CommonOps_DDRM.sumCols(input, output));
 
         for (int i = 0; i < input.numCols; i++) {
             double total = 0;
@@ -1522,12 +1433,11 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void minCols() {
+    @Test void minCols() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj output = new DMatrixRMaj(1, 5);
 
-        assertTrue(output == CommonOps_DDRM.minCols(input, output));
+        assertSame(output, CommonOps_DDRM.minCols(input, output));
 
         for (int i = 0; i < input.numCols; i++) {
             double min = input.get(0, i);
@@ -1543,12 +1453,11 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(output, output2, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void maxCols() {
+    @Test void maxCols() {
         DMatrixRMaj input = RandomMatrices_DDRM.rectangle(4, 5, rand);
         DMatrixRMaj output = new DMatrixRMaj(1, 5);
 
-        assertTrue(output == CommonOps_DDRM.maxCols(input, output));
+        assertSame(output, CommonOps_DDRM.maxCols(input, output));
 
         for (int i = 0; i < input.numCols; i++) {
             double max = input.get(0, i);
@@ -1603,8 +1512,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(found, expected));
     }
 
-    @Test
-    public void elementLessThan_double() {
+    @Test void elementLessThan_double() {
         DMatrixRMaj A = new DMatrixRMaj(3, 4);
         BMatrixRMaj expected = new BMatrixRMaj(3, 4);
         BMatrixRMaj found = new BMatrixRMaj(3, 4);
@@ -1620,8 +1528,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found));
     }
 
-    @Test
-    public void elementLessThanOrEqual_double() {
+    @Test void elementLessThanOrEqual_double() {
         DMatrixRMaj A = new DMatrixRMaj(3, 4);
         BMatrixRMaj expected = new BMatrixRMaj(3, 4);
         BMatrixRMaj found = new BMatrixRMaj(3, 4);
@@ -1637,8 +1544,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found));
     }
 
-    @Test
-    public void elementMoreThan_double() {
+    @Test void elementMoreThan_double() {
         DMatrixRMaj A = new DMatrixRMaj(3, 4);
         BMatrixRMaj expected = new BMatrixRMaj(3, 4);
         BMatrixRMaj found = new BMatrixRMaj(3, 4);
@@ -1654,8 +1560,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found));
     }
 
-    @Test
-    public void elementMoreThanOrEqual_double() {
+    @Test void elementMoreThanOrEqual_double() {
         DMatrixRMaj A = new DMatrixRMaj(3, 4);
         BMatrixRMaj expected = new BMatrixRMaj(3, 4);
         BMatrixRMaj found = new BMatrixRMaj(3, 4);
@@ -1671,8 +1576,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found));
     }
 
-    @Test
-    public void elementLessThan_matrix() {
+    @Test void elementLessThan_matrix() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 4, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3, 4, rand);
         BMatrixRMaj expected = new BMatrixRMaj(3, 4);
@@ -1688,8 +1592,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found));
     }
 
-    @Test
-    public void elementLessThanOrEqual_matrix() {
+    @Test void elementLessThanOrEqual_matrix() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 4, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3, 4, rand);
         BMatrixRMaj expected = new BMatrixRMaj(3, 4);
@@ -1705,8 +1608,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(expected, found));
     }
 
-    @Test
-    public void elements() {
+    @Test void elements() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 4, rand);
 
         BMatrixRMaj B = RandomMatrices_DDRM.randomBinary(3, 4, rand);
@@ -1725,8 +1627,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(1, found.getNumCols());
     }
 
-    @Test
-    public void countTrue() {
+    @Test void countTrue() {
         BMatrixRMaj B = RandomMatrices_DDRM.randomBinary(4, 5, rand);
 
         int index = 0;
@@ -1741,8 +1642,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         assertEquals(index, CommonOps_DDRM.countTrue(B));
     }
 
-    @Test
-    public void concatColumns() {
+    @Test void concatColumns() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 4, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5, 6, rand);
 
@@ -1754,8 +1654,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         checkEquals(out, 0, 4, B);
     }
 
-    @Test
-    public void concatColumnsMulti() {
+    @Test void concatColumnsMulti() {
         DMatrixRMaj a = CommonOps_DDRM.concatColumnsMulti();
         assertEquals(0, a.numRows);
         assertEquals(0, a.numCols);
@@ -1778,8 +1677,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void concatRows() {
+    @Test void concatRows() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 4, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5, 6, rand);
 
@@ -1792,8 +1690,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         checkEquals(out, 3, 0, B);
     }
 
-    @Test
-    public void concatRowsMulti() {
+    @Test void concatRowsMulti() {
         DMatrixRMaj a = CommonOps_DDRM.concatRowsMulti();
         assertEquals(0, a.numRows);
         assertEquals(0, a.numCols);
@@ -1808,8 +1705,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         checkEquals(a, 3, 0, B);
     }
 
-    @Test
-    public void permuteRowInv() {
+    @Test void permuteRowInv() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
         DMatrixRMaj B = new DMatrixRMaj(5, 4);
         int[] pinv = new int[]{2, 1, 3, 4, 0};
@@ -1823,8 +1719,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void abs_one() {
+    @Test void abs_one() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, -1, 1, rand);
         DMatrixRMaj C = A.copy();
 
@@ -1837,8 +1732,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void abs_two() {
+    @Test void abs_two() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, -1, 1, rand);
         DMatrixRMaj C = new DMatrixRMaj(5, 4);
 
@@ -1851,8 +1745,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void symmLowerToFull() {
+    @Test void symmLowerToFull() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, rand);
         DMatrixRMaj O = A.copy();
 
@@ -1864,8 +1757,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void symmUpperToFull() {
+    @Test void symmUpperToFull() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, rand);
         DMatrixRMaj O = A.copy();
 
@@ -1877,8 +1769,7 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void applyFunc() {
+    @Test void applyFunc() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(10, 10, rand);
         DMatrixRMaj B = A.copy();
         CommonOps_DDRM.apply(A, ( double x ) -> 2*x + 1, B);
@@ -1889,6 +1780,6 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
         }
 
         checkSameShape(A, B, false);
-        assertTrue(Arrays.equals(expectedResult, B.data));
+        assertArrayEquals(expectedResult, B.data);
     }
 }

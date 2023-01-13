@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,8 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Peter Abeles
  */
 public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
-    @Test
-    public void invert_inplace() {
+    @Test void invert_inplace() {
         DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj L_inv = L.copy();
@@ -49,8 +48,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentity(I,UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void invert() {
+    @Test void invert() {
         DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj L_inv = L.copy();
@@ -64,8 +62,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentity(I, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void solveL_vector() {
+    @Test void solveL_vector() {
         for( int m : new int[]{1,2,5,10,20,50}) {
             DMatrixRMaj L = createRandomLowerTriangular(m);
 
@@ -98,8 +95,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
         return L;
     }
 
-    @Test
-    public void solveL_matrix() {
+    @Test void solveL_matrix() {
         for( int m : new int[]{1,2,5,10,20,50}) {
             DMatrixRMaj L = createRandomLowerTriangular(m);
 
@@ -114,8 +110,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void solveTranL() {
+    @Test void solveTranL() {
         DMatrixRMaj L = createRandomLowerTriangular(3);
 
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,1,rand);
@@ -132,8 +127,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found,UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void solveU() {
+    @Test void solveU() {
         for( int m : new int[]{1,2,5,10,20,50}) {
             DMatrixRMaj U = createRandomUpperTriangular(m);
 
@@ -148,8 +142,7 @@ public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void solveU_submatrix() {
+    @Test void solveU_submatrix() {
 
         // create U and B. Insert into a larger matrix
         DMatrixRMaj U_orig = RandomMatrices_DDRM.rectangle(3,3,rand);

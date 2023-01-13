@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,16 +39,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUnit {
     public abstract LUDecomposition<DMatrixRMaj> create(int numRows , int numCols );
 
-    @Test
-    public void testModifiedInput() {
+    @Test void testModifiedInput() {
         CheckDecompositionInterface_DDRM.checkModifiedInput(create(0,0));
     }
 
     /**
      * Uses the decomposition returned from octave, which uses LAPACK
      */
-    @Test
-    public void testDecomposition()
+    @Test void testDecomposition()
     {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
 
@@ -71,8 +69,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void testDecomposition2()
+    @Test void testDecomposition2()
     {
         for( int i = 2; i <= 20; i++ ) {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(i,i,-1,1,rand);
@@ -91,8 +88,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         }
     }
 
-    @Test
-    public void zeroMatrix() {
+    @Test void zeroMatrix() {
         DMatrixRMaj A = new DMatrixRMaj(3,3);
 
         LUDecomposition<DMatrixRMaj> alg = create(3,3);
@@ -110,8 +106,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void testSingular(){
+    @Test void testSingular(){
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 3, 2, 4, 6, 4, 4, 0);
 
         LUDecomposition alg = create(3,3);
@@ -119,8 +114,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(alg.isSingular());
     }
 
-    @Test
-    public void testNearlySingular(){
+    @Test void testNearlySingular(){
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 3, 2, 4, 6.1, 4, 4, 0);
 
         LUDecomposition alg = create(3,3);
@@ -132,8 +126,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
      * Checks to see how it handles getLower getUpper functions with and without
      * a matrix being provided.
      */
-    @Test
-    public void getLower_getUpper() {
+    @Test void getLower_getUpper() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 5, 2, 3, 1.5, -2, 8, -3, 4.7, -0.5);
 
         LUDecomposition<DMatrixRMaj> alg = create(3,3);
@@ -153,8 +146,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(MatrixFeatures_DDRM.isEquals(U_provided,U_ret));
     }
 
-    @Test
-    public void testFat() {
+    @Test void testFat() {
         DMatrixRMaj A = new DMatrixRMaj(2,3, true, 1, 2, 3, 2, 4, 6.1);
 
         LUDecomposition<DMatrixRMaj> alg = create(2,3);
@@ -171,8 +163,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void testTall() {
+    @Test void testTall() {
         DMatrixRMaj A = new DMatrixRMaj(3,2, true, 1, 2, 3, 2, 4, 6.1);
 
         LUDecomposition<DMatrixRMaj> alg = create(3,2);
@@ -189,8 +180,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A,UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void testRowPivotVector() {
+    @Test void testRowPivotVector() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(4,5,rand);
         LUDecomposition<DMatrixRMaj> alg = create(A.numRows,A.numCols);
 

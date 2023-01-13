@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,11 +20,7 @@ package org.ejml.dense.row.mult;
 
 import org.ejml.CheckMultiThreadAgainstSingleThread;
 
-/**
- * @author Peter Abeles
- */
-public class TestMatrixMatrixMult_MT_DDRM extends CheckMultiThreadAgainstSingleThread
-{
+public class TestMatrixMatrixMult_MT_DDRM extends CheckMultiThreadAgainstSingleThread {
     public TestMatrixMatrixMult_MT_DDRM() {
         super(MatrixMatrixMult_DDRM.class, MatrixMatrixMult_MT_DDRM.class, 24);
     }

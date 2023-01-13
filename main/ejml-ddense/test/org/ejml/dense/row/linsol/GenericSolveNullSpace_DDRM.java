@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,119 +29,111 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public abstract class GenericSolveNullSpace_DDRM extends EjmlStandardJUnit {
     public abstract SolveNullSpace<DMatrixRMaj> createSolver();
 
-    @Test
-    public void random_1() {
-
+    @Test void random_1() {
         SolveNullSpace<DMatrixRMaj> solver = createSolver();
 
-        DMatrixRMaj ns = new DMatrixRMaj(1,1);
+        DMatrixRMaj ns = new DMatrixRMaj(1, 1);
 
         int cols = 5;
         double[] sv = new double[cols];
-        for (int rows : new int[]{cols,10,20,200}) {
-            DMatrixRMaj r = new DMatrixRMaj(rows,1);
+        for (int rows : new int[]{cols, 10, 20, 200}) {
+            DMatrixRMaj r = new DMatrixRMaj(rows, 1);
 
             for (int i = 0; i < 10; i++) {
-                for ( int v = 0; v < cols; v++ ) {
+                for (int v = 0; v < cols; v++) {
                     sv[v] = rand.nextDouble()*4;
                 }
                 sv[rand.nextInt(cols)] = 0;
 
-                DMatrixRMaj A = RandomMatrices_DDRM.singular(rows,cols,rand,sv);
+                DMatrixRMaj A = RandomMatrices_DDRM.singular(rows, cols, rand, sv);
 
                 DMatrixRMaj copy = A.copy();
 
-                assertTrue(solver.process(copy,1,ns));
+                assertTrue(solver.process(copy, 1, ns));
                 // make sure it's not a trivial solution
-                assertEquals(1, NormOps_DDRM.normF(ns),1e-4);
+                assertEquals(1, NormOps_DDRM.normF(ns), 1e-4);
 
                 // test it with the definition of a null space
-                CommonOps_DDRM.mult(A,ns,r);
+                CommonOps_DDRM.mult(A, ns, r);
 
-                assertEquals(0,NormOps_DDRM.normF(r),1e-4);
+                assertEquals(0, NormOps_DDRM.normF(r), 1e-4);
             }
         }
     }
 
-    @Test
-    public void random_N() {
+    @Test void random_N() {
         SolveNullSpace<DMatrixRMaj> solver = createSolver();
 
-        DMatrixRMaj ns = new DMatrixRMaj(1,1);
+        DMatrixRMaj ns = new DMatrixRMaj(1, 1);
 
         int cols = 10;
         int rows = 500;
         double[] sv = new double[cols];
         int ns_length = 3;
 
-        DMatrixRMaj r = new DMatrixRMaj(rows,ns_length);
+        DMatrixRMaj r = new DMatrixRMaj(rows, ns_length);
 
-        for ( int v = 0; v < cols; v++ ) {
+        for (int v = 0; v < cols; v++) {
             sv[v] = rand.nextDouble()*4;
         }
         for (int i = 0; i < ns_length; i++) {
             sv[i] = 0;
         }
-        DMatrixRMaj A = RandomMatrices_DDRM.singular(rows,cols,rand,sv);
+        DMatrixRMaj A = RandomMatrices_DDRM.singular(rows, cols, rand, sv);
 
         DMatrixRMaj copy = A.copy();
 
-        assertTrue(solver.process(copy,ns_length,ns));
-        assertEquals(ns_length,ns.numCols);
+        assertTrue(solver.process(copy, ns_length, ns));
+        assertEquals(ns_length, ns.numCols);
 
 
         // make sure it's not a trivial solution
         for (int i = 0; i < ns_length; i++) {
-            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,ns.numCols-3+i,null);
-            assertEquals(1, NormOps_DDRM.normF(column),1e-4);
+            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns, ns.numCols - 3 + i, null);
+            assertEquals(1, NormOps_DDRM.normF(column), 1e-4);
         }
 
-        CommonOps_DDRM.mult(A,ns,r);
-        assertEquals(0,NormOps_DDRM.normF(r),1e-4);
+        CommonOps_DDRM.mult(A, ns, r);
+        assertEquals(0, NormOps_DDRM.normF(r), 1e-4);
     }
 
-    @Test
-    public void underDetermined() {
+    @Test void underDetermined() {
         SolveNullSpace<DMatrixRMaj> solver = createSolver();
 
-        DMatrixRMaj ns = new DMatrixRMaj(1,1);
+        DMatrixRMaj ns = new DMatrixRMaj(1, 1);
 
         int rows = 6;
         int cols = 9;
         double[] sv = new double[cols];
-        int ns_length = cols-rows;
+        int ns_length = cols - rows;
 
-        DMatrixRMaj r = new DMatrixRMaj(rows,ns_length);
+        DMatrixRMaj r = new DMatrixRMaj(rows, ns_length);
 
-        for ( int v = 0; v < cols; v++ ) {
+        for (int v = 0; v < cols; v++) {
             sv[v] = rand.nextDouble()*4;
         }
 
-        DMatrixRMaj A = RandomMatrices_DDRM.singular(rows,cols,rand,sv);
+        DMatrixRMaj A = RandomMatrices_DDRM.singular(rows, cols, rand, sv);
 
         DMatrixRMaj copy = A.copy();
 
-        assertTrue(solver.process(copy,ns_length,ns));
-        assertEquals(ns_length,ns.numCols);
+        assertTrue(solver.process(copy, ns_length, ns));
+        assertEquals(ns_length, ns.numCols);
 
         // make sure it's not a trivial solution
         for (int i = 0; i < ns_length; i++) {
-            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,i,null);
-            assertEquals(1, NormOps_DDRM.normF(column),1e-4);
+            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns, i, null);
+            assertEquals(1, NormOps_DDRM.normF(column), 1e-4);
         }
 
-        CommonOps_DDRM.mult(A,ns,r);
-        assertEquals(0,NormOps_DDRM.normF(r),1e-4);
+        CommonOps_DDRM.mult(A, ns, r);
+        assertEquals(0, NormOps_DDRM.normF(r), 1e-4);
     }
 
-    @Test
-    public void handleHardMatrix() {
+    @Test public void handleHardMatrix() {
         double[][] array = new double[][]{
                 {0.0000000000, 0.0000000000, 0.0000000000, 1.3416407865, -1.4638501094, -1.0000000000, 1.9492820629, -2.1268410962, -1.4529090667},
                 {-1.3416407865, 1.4638501094, 1.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 1.8336130868, -2.0006358965, -1.3666945021},
@@ -157,21 +149,21 @@ public abstract class GenericSolveNullSpace_DDRM extends EjmlStandardJUnit {
 
         SolveNullSpace<DMatrixRMaj> solver = createSolver();
 
-        DMatrixRMaj ns = new DMatrixRMaj(1,1);
+        DMatrixRMaj ns = new DMatrixRMaj(1, 1);
 
         DMatrixRMaj A = new DMatrixRMaj(array);
 
-        assertTrue(solver.process(A.copy(),1,ns));
-        assertEquals(1,ns.numCols);
+        assertTrue(solver.process(A.copy(), 1, ns));
+        assertEquals(1, ns.numCols);
 
         // make sure it's not a trivial solution
         for (int i = 0; i < 1; i++) {
-            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns,i,null);
-            assertEquals(1, NormOps_DDRM.normF(column),1e-4);
+            DMatrixRMaj column = CommonOps_DDRM.extractColumn(ns, i, null);
+            assertEquals(1, NormOps_DDRM.normF(column), 1e-4);
         }
 
-        DMatrixRMaj r = new DMatrixRMaj(A.numRows,1);
-        CommonOps_DDRM.mult(A,ns,r);
-        assertEquals(0,NormOps_DDRM.normF(r),1e-4);
+        DMatrixRMaj r = new DMatrixRMaj(A.numRows, 1);
+        CommonOps_DDRM.mult(A, ns, r);
+        assertEquals(0, NormOps_DDRM.normF(r), 1e-4);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,8 +42,7 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
 
     public abstract CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower );
 
-    @Test
-    public void testDecomposeL() {
+    @Test void testDecomposeL() {
         if( !canL ) return;
 
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
@@ -58,8 +57,7 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void testDecomposeR() {
+    @Test void testDecomposeR() {
         if( !canR ) return;
 
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
@@ -77,8 +75,7 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
     /**
      * If it is not positive definate it should fail
      */
-    @Test
-    public void testNotPositiveDefinite() {
+    @Test void testNotPositiveDefinite() {
         DMatrixRMaj A = new DMatrixRMaj(2,2, true, 1, -1, -1, -2);
 
         CholeskyDecomposition_F64<DMatrixRMaj> alg = create(true);
@@ -89,8 +86,7 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
      * The correctness of getT(null) has been tested else where effectively. This
      * checks to see if it handles the case where an input is provided correctly.
      */
-    @Test
-    public void getT() {
+    @Test void getT() {
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
         CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(true);
@@ -108,8 +104,7 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
      * Test across several different matrix sizes and upper/lower decompositions using
      * the definition of cholesky.
      */
-    @Test
-    public void checkWithDefinition() {
+    @Test void checkWithDefinition() {
         for( int i = 0; i < 2; i++ ) {
             boolean lower = i == 0;
             if( lower && !canL )
@@ -141,8 +136,7 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
         assertTrue(A.isIdentical(found, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void checkDeterminant() {
+    @Test void checkDeterminant() {
         for( int i = 0; i < 2; i++ ) {
             boolean lower = i == 0;
             if( lower && !canL )

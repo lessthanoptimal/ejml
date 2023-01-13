@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,8 +36,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
     /**
      * See if the naive implementation and this version produce the same results.
      */
-    @Test
-    public void testAgainstNaive() {
+    @Test void testAgainstNaive() {
         for( int i = 1; i <= 5; i++ ) {
             for( int j = 1; j <= 5; j++ ) {
                 checkNaive(i,j);
@@ -79,8 +78,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         assertTrue(MatrixFeatures_DDRM.isIdentical(A.getDDRM(),foundA, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void testComputeU()
+    @Test void testComputeU()
     {
         int m = 7;
         int n = 5;
@@ -125,8 +123,7 @@ public class TestBidiagonalDecompositionRow_DDRM extends GenericBidiagonalCheck_
         }
     }
 
-    @Test
-    public void testComputeV()
+    @Test void testComputeV()
     {
         int m = 7;
         int n = 5;
