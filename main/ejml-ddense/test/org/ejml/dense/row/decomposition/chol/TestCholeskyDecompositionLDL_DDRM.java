@@ -27,23 +27,18 @@ import org.junit.jupiter.api.Test;
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.checkModifiedInput;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Peter Abeles
- */
 public class TestCholeskyDecompositionLDL_DDRM extends EjmlStandardJUnit {
     @Test void checkModifyInput() {
         checkModifiedInput(new CholeskyDecompositionLDL_DDRM());
     }
 
     @Test void testDecompose() {
-        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
-
-
-        DMatrixRMaj L = new DMatrixRMaj(3, 3, true, 1, 0, 0, 2, 1, 0, 4, 5, 1);
+        var A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 7, 23, 4, 23, 98);
+        var L = new DMatrixRMaj(3, 3, true, 1, 0, 0, 2, 1, 0, 4, 5, 1);
 
         double[] D = new double[]{1, 3, 7};
 
-        CholeskyDecompositionLDL_DDRM cholesky = new CholeskyDecompositionLDL_DDRM();
+        var cholesky = new CholeskyDecompositionLDL_DDRM();
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj foundL = cholesky.getL();
@@ -58,9 +53,9 @@ public class TestCholeskyDecompositionLDL_DDRM extends EjmlStandardJUnit {
      * If it is not positive definite it should fail
      */
     @Test void testNotPositiveDefinate() {
-        DMatrixRMaj A = new DMatrixRMaj(2, 2, true, 1, -1, -1, -2);
+        var A = new DMatrixRMaj(2, 2, true, 1, -1, -1, -2);
 
-        CholeskyDecompositionLDL_DDRM alg = new CholeskyDecompositionLDL_DDRM();
+        var alg = new CholeskyDecompositionLDL_DDRM();
         assertFalse(alg.decompose(A));
     }
 }

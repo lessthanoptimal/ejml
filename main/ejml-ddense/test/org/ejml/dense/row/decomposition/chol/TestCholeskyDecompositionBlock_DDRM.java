@@ -30,13 +30,9 @@ import org.junit.jupiter.api.Test;
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.checkModifiedInput;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DDRM {
 
-    public TestCholeskyDecompositionBlock_DDRM(){
+    public TestCholeskyDecompositionBlock_DDRM() {
         canR = false;
     }
 
@@ -45,22 +41,21 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
     }
 
     @Override
-    public CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower) {
-        if( !lower )
+    public CholeskyDecomposition_F64<DMatrixRMaj> create( boolean lower ) {
+        if (!lower)
             throw new IllegalArgumentException("Doesn't support upper form");
 
         return new CholeskyDecompositionBlock_DDRM(1);
     }
 
     /**
-     *
-     * L =
-     *
+     * L =<br>
+     * <pre>
      * 2   0   0   0
      * 1   5   0   0
      * 3   2   4   0
      * 7   1   6   3
-     *
+     * </pre>
      */
     @Test void testWithBlocks() {
         int W = 4;
@@ -86,7 +81,7 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
         checkDMatrixBlock(W, B);
     }
 
-    private void checkDMatrixBlock(int w, int b) {
+    private void checkDMatrixBlock( int w, int b ) {
         DMatrixRMaj A = new DMatrixRMaj(w, w, true, 4, 2, 6, 14, 2, 26, 13, 12, 6, 13, 29, 47, 14, 12, 47, 95);
 
         DMatrixRMaj A_inv = new DMatrixRMaj(w, w);
@@ -104,6 +99,6 @@ public class TestCholeskyDecompositionBlock_DDRM extends GenericCholeskyTests_DD
         assertTrue(solver.setA(A));
         solver.invert(A_inv);
 
-        EjmlUnitTests.assertEquals(A_inv,A_inv_block, UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(A_inv, A_inv_block, UtilEjml.TEST_F64_SQ);
     }
 }

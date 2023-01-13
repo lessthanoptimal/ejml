@@ -32,51 +32,46 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
- * @author Peter Abeles
- */
 public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
     boolean canL = true;
     boolean canR = true;
 
-    public abstract CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower );
+    public abstract CholeskyDecomposition_F64<DMatrixRMaj> create( boolean lower );
 
     @Test void testDecomposeL() {
-        if( !canL ) return;
+        if (!canL) return;
 
-        DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
-        DMatrixRMaj L = new DMatrixRMaj(3,3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
+        DMatrixRMaj L = new DMatrixRMaj(3, 3, true, 1, 0, 0, 2, 3, 0, 4, 5, 7);
 
         CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(true);
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj foundL = cholesky.getT(null);
 
-        EjmlUnitTests.assertEquals(L,foundL,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(L, foundL, UtilEjml.TEST_F64);
     }
 
     @Test void testDecomposeR() {
-        if( !canR ) return;
+        if (!canR) return;
 
-        DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-
-        DMatrixRMaj R = new DMatrixRMaj(3,3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
+        var A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        var R = new DMatrixRMaj(3, 3, true, 1, 2, 4, 0, 3, 5, 0, 0, 7);
 
         CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(false);
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj foundR = cholesky.getT(null);
 
-        EjmlUnitTests.assertEquals(R,foundR,UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(R, foundR, UtilEjml.TEST_F64);
     }
 
     /**
      * If it is not positive definate it should fail
      */
     @Test void testNotPositiveDefinite() {
-        DMatrixRMaj A = new DMatrixRMaj(2,2, true, 1, -1, -1, -2);
+        var A = new DMatrixRMaj(2, 2, true, 1, -1, -1, -2);
 
         CholeskyDecomposition_F64<DMatrixRMaj> alg = create(true);
         assertFalse(alg.decompose(A));
@@ -87,17 +82,17 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
      * checks to see if it handles the case where an input is provided correctly.
      */
     @Test void getT() {
-        DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        var A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
 
         CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(true);
 
         assertTrue(cholesky.decompose(A));
 
         DMatrixRMaj L_null = cholesky.getT(null);
-        DMatrixRMaj L_provided = RandomMatrices_DDRM.rectangle(3,3,rand);
-        assertTrue( L_provided == cholesky.getT(L_provided));
+        DMatrixRMaj L_provided = RandomMatrices_DDRM.rectangle(3, 3, rand);
+        assertTrue(L_provided == cholesky.getT(L_provided));
 
-        assertTrue(MatrixFeatures_DDRM.isEquals(L_null,L_provided));
+        assertTrue(MatrixFeatures_DDRM.isEquals(L_null, L_provided));
     }
 
     /**
@@ -105,29 +100,29 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
      * the definition of cholesky.
      */
     @Test void checkWithDefinition() {
-        for( int i = 0; i < 2; i++ ) {
+        for (int i = 0; i < 2; i++) {
             boolean lower = i == 0;
-            if( lower && !canL )
+            if (lower && !canL)
                 continue;
-            if( !lower && !canR )
+            if (!lower && !canR)
                 continue;
 
-            for( int size = 1; size < 10; size++ ) {
+            for (int size = 1; size < 10; size++) {
                 checkWithDefinition(lower, size);
             }
         }
     }
 
-    private void checkWithDefinition(boolean lower, int size) {
-        SimpleMatrix A = SimpleMatrix.wrap( RandomMatrices_DDRM.symmetricPosDef(size,rand));
+    private void checkWithDefinition( boolean lower, int size ) {
+        SimpleMatrix A = SimpleMatrix.wrap(RandomMatrices_DDRM.symmetricPosDef(size, rand));
 
         CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(lower);
-        assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky,(DMatrixRMaj)A.getMatrix()));
+        assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky, (DMatrixRMaj)A.getMatrix()));
 
         SimpleMatrix T = SimpleMatrix.wrap(cholesky.getT(null));
         SimpleMatrix found;
 
-        if( lower ) {
+        if (lower) {
             found = T.mult(T.transpose());
         } else {
             found = T.transpose().mult(T);
@@ -137,32 +132,32 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
     }
 
     @Test void checkDeterminant() {
-        for( int i = 0; i < 2; i++ ) {
+        for (int i = 0; i < 2; i++) {
             boolean lower = i == 0;
-            if( lower && !canL )
+            if (lower && !canL)
                 continue;
-            if( !lower && !canR )
+            if (!lower && !canR)
                 continue;
 
-            for( int size = 1; size < 20; size += 2 ) {
+            for (int size = 1; size < 20; size += 2) {
                 checkDeterminant(lower, size);
             }
         }
     }
 
-    public void checkDeterminant( boolean lower , int size ) {
+    public void checkDeterminant( boolean lower, int size ) {
 
-        LUDecomposition_F64<DMatrixRMaj> lu = DecompositionFactory_DDRM.lu(size,size);
+        LUDecomposition_F64<DMatrixRMaj> lu = DecompositionFactory_DDRM.lu(size, size);
         CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(lower);
 
-        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(size,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(size, rand);
 
-        assertTrue(DecompositionFactory_DDRM.decomposeSafe(lu,A));
-        assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky,A));
+        assertTrue(DecompositionFactory_DDRM.decomposeSafe(lu, A));
+        assertTrue(DecompositionFactory_DDRM.decomposeSafe(cholesky, A));
 
         double expected = lu.computeDeterminant().real;
         double found = cholesky.computeDeterminant().real;
 
-        assertEquals(expected,found,UtilEjml.TEST_F64);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 }

@@ -24,10 +24,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.ejml.dense.row.decomposition.CheckDecompositionInterface_DDRM.checkModifiedInput;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestCholeskyDecomposition_DDRB_to_DDRM extends GenericCholeskyTests_DDRM {
     @Test void checkModifyInput() {
         checkModifiedInput(new CholeskyDecomposition_DDRB_to_DDRM(true));
@@ -35,7 +31,7 @@ public class TestCholeskyDecomposition_DDRB_to_DDRM extends GenericCholeskyTests
     }
 
     @Override
-    public CholeskyDecomposition_F64<DMatrixRMaj> create(boolean lower) {
+    public CholeskyDecomposition_F64<DMatrixRMaj> create( boolean lower ) {
         return new CholeskyDecomposition_DDRB_to_DDRM(lower);
     }
 }

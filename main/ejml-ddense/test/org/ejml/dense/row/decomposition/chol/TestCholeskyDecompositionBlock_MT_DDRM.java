@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,12 +29,8 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 class TestCholeskyDecompositionBlock_MT_DDRM extends EjmlStandardJUnit {
-    @Test
-    void compare() {
+    @Test void compare() {
         int blockLength = 13;
         DMatrixRMaj A = RandomMatrices_DDRM.symmetricPosDef(150, new Random(234));
         DMatrixRMaj B = A.copy();
