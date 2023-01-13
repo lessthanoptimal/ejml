@@ -42,12 +42,19 @@ public abstract class GenericQrCheck_DDRM extends EjmlStandardJUnit {
      * See if it correctly decomposes a square, tall, or wide matrix.
      */
     @Test void decompositionShape() {
-        checkDecomposition(5, 5, false);
-        checkDecomposition(10, 5, false);
-        checkDecomposition(5, 10, false);
-        checkDecomposition(5, 5, true);
-        checkDecomposition(10, 5, true);
-        checkDecomposition(5, 10, true);
+        for (boolean compact : new boolean[]{false, true}) {
+            checkDecomposition(5, 5, compact);
+            checkDecomposition(10, 5, compact);
+            checkDecomposition(5, 10, compact);
+        }
+    }
+
+    @Test void zeroShapedMatrix() {
+        for (boolean compact : new boolean[]{false, true}) {
+            checkDecomposition(0, 0, compact);
+            checkDecomposition(0, 5, compact);
+            checkDecomposition(5, 0, compact);
+        }
     }
 
     private void checkDecomposition( int height, int width, boolean compact ) {

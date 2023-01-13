@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -793,6 +793,8 @@ public class BlockHouseHolder_DDRB {
     public static void initializeW( final int blockLength,
                                     final DSubmatrixD1 W, final DSubmatrixD1 Y,
                                     final int widthB, final double b ) {
+        if (widthB <= 0)
+            return;
 
         final double[] dataW = W.original.data;
         final double[] dataY = Y.original.data;
