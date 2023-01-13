@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,8 +27,6 @@ import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouse
 import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouseholder_MT_DDRM;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,23 +39,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestSymmetricQRAlgorithmDecomposition_MT_DDRM extends EjmlStandardJUnit {
     int size = 100;
 
-    @Test
-    void compareToSingle() {
+    @Test void compareToSingle() {
         compareToSingle(false);
         compareToSingle(true);
     }
-    void compareToSingle(boolean vectors) {
 
-        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(size,-1,1,rand);
+    void compareToSingle( boolean vectors ) {
+
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(size, -1, 1, rand);
         DMatrixRMaj B = A.copy();
 
-        var single = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_DDRM(),vectors);
-        var concurrent = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_MT_DDRM(),vectors);
+        var single = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_DDRM(), vectors);
+        var concurrent = new SymmetricQRAlgorithmDecomposition_DDRM(new TridiagonalDecompositionHouseholder_MT_DDRM(), vectors);
 
         assertTrue(single.decompose(A));
         assertTrue(concurrent.decompose(B));
 
-        assertTrue(MatrixFeatures_DDRM.isEquals(A,B, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(A, B, UtilEjml.TEST_F64));
 
         assertEquals(single.getNumberOfEigenvalues(), concurrent.getNumberOfEigenvalues());
         int numEigen = single.getNumberOfEigenvalues();
@@ -70,7 +68,7 @@ public class TestSymmetricQRAlgorithmDecomposition_MT_DDRM extends EjmlStandardJ
 
             DMatrixRMaj singleVec = single.getEigenVector(i);
             DMatrixRMaj concurVec = concurrent.getEigenVector(i);
-            assertTrue(MatrixFeatures_DDRM.isIdentical(singleVec,concurVec,UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(singleVec, concurVec, UtilEjml.TEST_F64));
         }
     }
 }

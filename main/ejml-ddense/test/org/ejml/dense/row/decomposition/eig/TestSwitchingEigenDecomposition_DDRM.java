@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,17 +19,14 @@
 package org.ejml.dense.row.decomposition.eig;
 
 import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.junit.jupiter.api.Test;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestSwitchingEigenDecomposition_DDRM extends GeneralEigenDecompositionCheck_DDRM {
     @Override
-    public EigenDecomposition_F64 createDecomposition() {
-        return new SwitchingEigenDecomposition_DDRM(0,computeVectors, UtilEjml.TEST_F64);
+    public EigenDecomposition_F64<DMatrixRMaj> createDecomposition() {
+        return new SwitchingEigenDecomposition_DDRM(0, computeVectors, UtilEjml.TEST_F64);
     }
 
     @Test
