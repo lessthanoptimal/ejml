@@ -27,19 +27,10 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM {
-
-    Random rand = new Random(0xff);
-
     @Override
     protected QRDecomposition<DMatrixRMaj> createQRDecomposition() {
         return new QRDecompositionHouseholderTran_DDRM();
@@ -49,42 +40,42 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
      * Sees if computing Q explicitly and applying Q produces the same results
      */
     @Test void applyQ() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
 
         QRDecompositionHouseholderTran_DDRM alg = new QRDecompositionHouseholderTran_DDRM();
 
         assertTrue(alg.decompose(A));
 
-        DMatrixRMaj Q = alg.getQ(null,false);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,2,rand);
+        DMatrixRMaj Q = alg.getQ(null, false);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5, 2, rand);
 
-        DMatrixRMaj expected = new DMatrixRMaj(B.numRows,B.numCols);
-        CommonOps_DDRM.mult(Q,B,expected);
+        DMatrixRMaj expected = new DMatrixRMaj(B.numRows, B.numCols);
+        CommonOps_DDRM.mult(Q, B, expected);
 
         alg.applyQ(B);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,B, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected, B, UtilEjml.TEST_F64));
     }
 
     /**
      * Sees if computing Q^T explicitly and applying Q^T produces the same results
      */
     @Test void applyTranQ() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5,4,rand);
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 4, rand);
 
         QRDecompositionHouseholderTran_DDRM alg = new QRDecompositionHouseholderTran_DDRM();
 
         assertTrue(alg.decompose(A));
 
-        DMatrixRMaj Q = alg.getQ(null,false);
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5,2,rand);
+        DMatrixRMaj Q = alg.getQ(null, false);
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(5, 2, rand);
 
-        DMatrixRMaj expected = new DMatrixRMaj(B.numRows,B.numCols);
-        CommonOps_DDRM.multTransA(Q,B,expected);
+        DMatrixRMaj expected = new DMatrixRMaj(B.numRows, B.numCols);
+        CommonOps_DDRM.multTransA(Q, B, expected);
 
         alg.applyTranQ(B);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,B,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected, B, UtilEjml.TEST_F64));
     }
 
     /**
@@ -93,33 +84,33 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
     @Test void householder() {
         int width = 5;
 
-        for( int i = 0; i < width; i++ ) {
-            checkSubHouse(i , width);
+        for (int i = 0; i < width; i++) {
+            checkSubHouse(i, width);
         }
     }
 
-    private void checkSubHouse(int w , int width) {
-        DebugQR qr = new DebugQR(width,width);
+    private void checkSubHouse( int w, int width ) {
+        DebugQR qr = new DebugQR(width, width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(width, width, DMatrixRMaj.class);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(), rand);
 
-        qr.householder(w,(DMatrixRMaj)A.getMatrix());
+        qr.householder(w, (DMatrixRMaj)A.getMatrix());
 
-        SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getU(w)).extractMatrix(w,width,0,1);
+        SimpleMatrix U = new SimpleMatrix(width, 1, true, qr.getU(w)).extractMatrix(w, width, 0, 1);
 
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRMaj.class);
+        SimpleMatrix I = SimpleMatrix.identity(width - w, DMatrixRMaj.class);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
 
         // check the expected properties of Q
-        assertTrue(Q.isIdentical(Q.transpose(),1e-6));
-        assertTrue(Q.isIdentical(Q.invert(),1e-6));
+        assertTrue(Q.isIdentical(Q.transpose(), 1e-6));
+        assertTrue(Q.isIdentical(Q.invert(), 1e-6));
 
-        SimpleMatrix result = Q.mult(A.extractMatrix(w,width,w,width));
+        SimpleMatrix result = Q.mult(A.extractMatrix(w, width, w, width));
 
-        for( int i = 1; i < width-w; i++ ) {
-            assertEquals(0,result.get(i,0),1e-5);
+        for (int i = 1; i < width - w; i++) {
+            assertEquals(0, result.get(i, 0), 1e-5);
         }
     }
 
@@ -130,68 +121,66 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
     @Test void updateA() {
         int width = 5;
 
-        for( int i = 0; i < width; i++ )
-            checkSubMatrix(width,i);
+        for (int i = 0; i < width; i++)
+            checkSubMatrix(width, i);
     }
 
-    private void checkSubMatrix(int width , int w ) {
-        DebugQR qr = new DebugQR(width,width);
+    private void checkSubMatrix( int width, int w ) {
+        var qr = new DebugQR(width, width);
 
         double gamma = 0.2;
         double tau = 0.75;
 
-        SimpleMatrix U = new SimpleMatrix(width,1, DMatrixRMaj.class);
-        SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
+        var U = new SimpleMatrix(width, 1, DMatrixRMaj.class);
+        var A = new SimpleMatrix(width, width, DMatrixRMaj.class);
 
-        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)U.getMatrix(),rand);
-        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)U.getMatrix(), rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(), rand);
 
-        CommonOps_DDRM.transpose((DMatrixRMaj)A.getMatrix(),qr.getQR());
+        CommonOps_DDRM.transpose((DMatrixRMaj)A.getMatrix(), qr.getQR());
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRMaj.class);
+        SimpleMatrix I = SimpleMatrix.identity(width - w, DMatrixRMaj.class);
 
-        SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
-        u_sub.set(0,0,1);// assumed to be 1 in the algorithm
-        SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
+        SimpleMatrix u_sub = U.extractMatrix(w, width, 0, 1);
+        u_sub.set(0, 0, 1);// assumed to be 1 in the algorithm
+        SimpleMatrix A_sub = A.extractMatrix(w, width, w, width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,((DMatrixRMaj)U.getMatrix()).getData(),gamma,tau);
+        qr.updateA(w, ((DMatrixRMaj)U.getMatrix()).getData(), gamma, tau);
 
         DMatrixRMaj found = qr.getQR();
 
-        for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found.get(w,i),UtilEjml.TEST_F64);
+        for (int i = w + 1; i < width; i++) {
+            assertEquals(U.get(i, 0), found.get(w, i), UtilEjml.TEST_F64);
         }
 
         // the right should be the same
-        for( int i = w; i < width; i++ ) {
-            for( int j = w+1; j < width; j++ ) {
-                double a = (double)expected.get(i-w,j-w);
-                double b = found.get(j,i);
+        for (int i = w; i < width; i++) {
+            for (int j = w + 1; j < width; j++) {
+                double a = (double)expected.get(i - w, j - w);
+                double b = found.get(j, i);
 
-                assertEquals(a,b,1e-6);
+                assertEquals(a, b, 1e-6);
             }
         }
     }
 
-    private static class DebugQR extends QRDecompositionHouseholderTran_DDRM
-    {
-
-        public DebugQR(int numRows, int numCols) {
-            setExpectedMaxSize(numRows,numCols);
+    private static class DebugQR extends QRDecompositionHouseholderTran_DDRM {
+        public DebugQR( int numRows, int numCols ) {
+            setExpectedMaxSize(numRows, numCols);
             this.numRows = numRows;
             this.numCols = numCols;
         }
 
-        public void householder( int j , DMatrixRMaj A ) {
-            CommonOps_DDRM.transpose(A,QR);
+        public void householder( int j, DMatrixRMaj A ) {
+            CommonOps_DDRM.transpose(A, QR);
 
             super.householder(j);
         }
 
-        public void updateA( int w , double u[] , double gamma , double tau ) {
-            System.arraycopy(u,0,this.QR.data,w*QR.numRows,u.length);
+        public void updateA( int w, double[] u, double gamma, double tau ) {
+            System.arraycopy(u, 0, this.QR.data, w*QR.numRows, u.length);
             this.gamma = gamma;
             this.tau = tau;
 
@@ -199,7 +188,7 @@ public class TestQRDecompositionHouseholderTran_DDRM extends GenericQrCheck_DDRM
         }
 
         public double[] getU( int w ) {
-            System.arraycopy(QR.data,w*numRows,v,0,numRows);
+            System.arraycopy(QR.data, w*numRows, v, 0, numRows);
             v[w] = 1;
             return v;
         }

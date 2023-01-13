@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,12 +20,10 @@ package org.ejml.dense.row.decomposition.qr;
 
 import org.ejml.interfaces.decomposition.QRDecomposition;
 
-
 /**
  * @author Peter Abeles
  */
 public class TestQRDecomposition_DDRB_to_DDRM extends GenericQrCheck_DDRM {
-
     @Override
     protected QRDecomposition createQRDecomposition() {
         return new QRDecomposition_DDRB_to_DDRM();

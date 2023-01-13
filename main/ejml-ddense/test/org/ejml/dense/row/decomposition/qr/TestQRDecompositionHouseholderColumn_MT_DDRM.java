@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,17 +27,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public class TestQRDecompositionHouseholderColumn_MT_DDRM extends EjmlStandardJUnit {
-    @Test
-    void compare() {
-        DMatrixRMaj A = new DMatrixRMaj(200,50);
-        DMatrixRMaj expQ = new DMatrixRMaj(1,1);
-        DMatrixRMaj expR = new DMatrixRMaj(1,1);
-        DMatrixRMaj fndQ = new DMatrixRMaj(1,1);
-        DMatrixRMaj fndR = new DMatrixRMaj(1,1);
+    @Test void compare() {
+        DMatrixRMaj A = new DMatrixRMaj(200, 50);
+        DMatrixRMaj expQ = new DMatrixRMaj(1, 1);
+        DMatrixRMaj expR = new DMatrixRMaj(1, 1);
+        DMatrixRMaj fndQ = new DMatrixRMaj(1, 1);
+        DMatrixRMaj fndR = new DMatrixRMaj(1, 1);
 
         var single = new QRDecompositionHouseholderColumn_DDRM();
         var thread = new QRDecompositionHouseholderColumn_MT_DDRM();
@@ -46,18 +42,18 @@ public class TestQRDecompositionHouseholderColumn_MT_DDRM extends EjmlStandardJU
         assertFalse(thread.inputModified());
 
         for (int i = 0; i < 5; i++) {
-            RandomMatrices_DDRM.fillUniform(A,-1,1,rand);
+            RandomMatrices_DDRM.fillUniform(A, -1, 1, rand);
             assertTrue(single.decompose(A));
             assertTrue(thread.decompose(A));
 
-            single.getQ(expQ,true);
-            single.getR(expR,true);
+            single.getQ(expQ, true);
+            single.getR(expR, true);
 
-            thread.getQ(fndQ,true);
-            thread.getR(fndR,true);
+            thread.getQ(fndQ, true);
+            thread.getR(fndR, true);
 
-            EjmlUnitTests.assertEquals(expQ,fndQ);
-            EjmlUnitTests.assertEquals(fndR,fndR);
+            EjmlUnitTests.assertEquals(expQ, fndQ);
+            EjmlUnitTests.assertEquals(fndR, fndR);
         }
     }
 }

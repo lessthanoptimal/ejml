@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,57 +29,53 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestQrHelperFunctions_MT_DDRM extends EjmlStandardJUnit {
-	final int N = 200;
-	DMatrixRMaj Q;
-	public double[] u = new double[N];
-	public double[] temp = new double[N];
+    final int N = 200;
+    DMatrixRMaj Q;
+    public double[] u = new double[N];
+    public double[] temp = new double[N];
 
-	@BeforeEach
-	void init() {
-		Q = RandomMatrices_DDRM.rectangle(N,N,-1,1, rand);
-		for (int i = 0; i < N; i++) {
-			u[i] = (double) rand.nextGaussian();
-		}
-	}
+    @BeforeEach
+    void init() {
+        Q = RandomMatrices_DDRM.rectangle(N, N, -1, 1, rand);
+        for (int i = 0; i < N; i++) {
+            u[i] = (double)rand.nextGaussian();
+        }
+    }
 
-	@Test
-	void rank1UpdateMultR_u0() {
-		DMatrixRMaj expected = Q.copy();
+    @Test void rank1UpdateMultR_u0() {
+        DMatrixRMaj expected = Q.copy();
 
-		QrHelperFunctions_MT_DDRM.rank1UpdateMultR_u0(Q,u,0.9,1.2,1,0,N,temp);
-		QrHelperFunctions_DDRM.rank1UpdateMultR_u0(expected,u,0.9,1.2,1,0,N,temp);
+        QrHelperFunctions_MT_DDRM.rank1UpdateMultR_u0(Q, u, 0.9, 1.2, 1, 0, N, temp);
+        QrHelperFunctions_DDRM.rank1UpdateMultR_u0(expected, u, 0.9, 1.2, 1, 0, N, temp);
 
-		assertTrue(MatrixFeatures_DDRM.isEquals(expected,Q, UtilEjml.TEST_F64));
-	}
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected, Q, UtilEjml.TEST_F64));
+    }
 
-	@Test
-	void rank1UpdateMultR() {
-		DMatrixRMaj expected = Q.copy();
+    @Test void rank1UpdateMultR() {
+        DMatrixRMaj expected = Q.copy();
 
-		QrHelperFunctions_MT_DDRM.rank1UpdateMultR(Q,u,1.2,1,0,N,temp);
-		QrHelperFunctions_DDRM.rank1UpdateMultR(expected,u,1.2,1,0,N,temp);
+        QrHelperFunctions_MT_DDRM.rank1UpdateMultR(Q, u, 1.2, 1, 0, N, temp);
+        QrHelperFunctions_DDRM.rank1UpdateMultR(expected, u, 1.2, 1, 0, N, temp);
 
-		assertTrue(MatrixFeatures_DDRM.isEquals(expected,Q, UtilEjml.TEST_F64));
-	}
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected, Q, UtilEjml.TEST_F64));
+    }
 
-	@Test
-	void rank1UpdateMultR_offU() {
-		DMatrixRMaj expected = Q.copy();
+    @Test void rank1UpdateMultR_offU() {
+        DMatrixRMaj expected = Q.copy();
 
-		QrHelperFunctions_MT_DDRM.rank1UpdateMultR(Q,u,0,1.2,0,1,N, temp);
-		QrHelperFunctions_DDRM.rank1UpdateMultR(expected,u,0,1.2,0,1,N, temp);
+        QrHelperFunctions_MT_DDRM.rank1UpdateMultR(Q, u, 0, 1.2, 0, 1, N, temp);
+        QrHelperFunctions_DDRM.rank1UpdateMultR(expected, u, 0, 1.2, 0, 1, N, temp);
 
-		assertTrue(MatrixFeatures_DDRM.isEquals(expected,Q, UtilEjml.TEST_F64));
-	}
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected, Q, UtilEjml.TEST_F64));
+    }
 
-	@Test
-	void rank1UpdateMultL() {
-		DMatrixRMaj expected = Q.copy();
+    @Test void rank1UpdateMultL() {
+        DMatrixRMaj expected = Q.copy();
 
-		QrHelperFunctions_MT_DDRM.rank1UpdateMultL(Q,u,1.2,1,0,N);
-		QrHelperFunctions_DDRM.rank1UpdateMultL(expected,u,1.2,1,0,N);
+        QrHelperFunctions_MT_DDRM.rank1UpdateMultL(Q, u, 1.2, 1, 0, N);
+        QrHelperFunctions_DDRM.rank1UpdateMultL(expected, u, 1.2, 1, 0, N);
 
-		assertTrue(MatrixFeatures_DDRM.isEquals(expected,Q, UtilEjml.TEST_F64));
-	}
+        assertTrue(MatrixFeatures_DDRM.isEquals(expected, Q, UtilEjml.TEST_F64));
+    }
 }
 
