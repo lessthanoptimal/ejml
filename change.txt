@@ -25,6 +25,10 @@ Date format: year/month/day
   * Added conjugate() and magnitude()
   * Added fillComplex(), transposeConjugate(), sumComplex(), determinantComplex(), traceComplex()
   * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
+- Handling of zero sized matrices
+  * Unit tests ensure decompositions and linear solvers can process 0x0, Mx0, 0xN matrices.
+  * Requested by JozsefKutas and others. Note: I've never personally had a desire for this...
+  * Only rigorously tested with DDRM
 - Various
   * Ops classes with all static members now have private constructors to drive home the concept of static functions.
 
