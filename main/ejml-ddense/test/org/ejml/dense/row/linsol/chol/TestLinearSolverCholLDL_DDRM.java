@@ -27,26 +27,22 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestLinearSolverCholLDL_DDRM extends EjmlStandardJUnit {
     @Test void testInverseAndSolve() {
-        DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, 17, 97, 320);
-        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
+        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, 17, 97, 320);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3, 1, rand);
 
         LinearSolverCholLDL_DDRM solver = new LinearSolverCholLDL_DDRM();
         assertTrue(solver.setA(A));
         solver.invert(A);
-        solver.solve(b,x);
+        solver.solve(b, x);
 
 
-        DMatrixRMaj A_inv = new DMatrixRMaj(3,3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
-        DMatrixRMaj x_expected = new DMatrixRMaj(3,1, true, 1, 2, 3);
+        DMatrixRMaj A_inv = new DMatrixRMaj(3, 3, true, 1.453515, -0.199546, -0.013605, -0.199546, 0.167800, -0.034014, -0.013605, -0.034014, 0.020408);
+        DMatrixRMaj x_expected = new DMatrixRMaj(3, 1, true, 1, 2, 3);
 
-        EjmlUnitTests.assertEquals(A_inv,A, UtilEjml.TEST_F64_SQ);
-        EjmlUnitTests.assertEquals(x_expected,x,UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(A_inv, A, UtilEjml.TEST_F64_SQ);
+        EjmlUnitTests.assertEquals(x_expected, x, UtilEjml.TEST_F64_SQ);
     }
 }

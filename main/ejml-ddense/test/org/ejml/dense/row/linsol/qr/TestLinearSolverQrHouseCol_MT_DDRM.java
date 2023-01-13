@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestLinearSolverQrHouseCol_MT_DDRM extends EjmlStandardJUnit {
     @Test void compare() {
-        DMatrixRMaj A = new DMatrixRMaj(400,90);
-        DMatrixRMaj B = new DMatrixRMaj(400,2);
-        DMatrixRMaj expX = new DMatrixRMaj(1,1);
-        DMatrixRMaj fndX = new DMatrixRMaj(1,1);
+        DMatrixRMaj A = new DMatrixRMaj(400, 90);
+        DMatrixRMaj B = new DMatrixRMaj(400, 2);
+        DMatrixRMaj expX = new DMatrixRMaj(1, 1);
+        DMatrixRMaj fndX = new DMatrixRMaj(1, 1);
 
         var single = new LinearSolverQrHouseCol_DDRM();
         var thread = new LinearSolverQrHouseCol_MT_DDRM();
@@ -43,15 +43,15 @@ public class TestLinearSolverQrHouseCol_MT_DDRM extends EjmlStandardJUnit {
         assertFalse(thread.modifiesB());
 
         for (int i = 0; i < 5; i++) {
-            RandomMatrices_DDRM.fillUniform(A,-1,1,rand);
-            RandomMatrices_DDRM.fillUniform(B,-1,1,rand);
+            RandomMatrices_DDRM.fillUniform(A, -1, 1, rand);
+            RandomMatrices_DDRM.fillUniform(B, -1, 1, rand);
             assertTrue(single.setA(A));
             assertTrue(thread.setA(A));
 
-            single.solve(B,expX);
-            thread.solve(B,fndX);
+            single.solve(B, expX);
+            thread.solve(B, fndX);
 
-            EjmlUnitTests.assertEquals(expX,fndX);
+            EjmlUnitTests.assertEquals(expX, fndX);
         }
     }
 }

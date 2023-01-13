@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,10 +22,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.decomposition.chol.CholeskyDecompositionInner_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestLinearSolverChol_DDRM extends BaseCholeskySolveTests_DDRM {
 
     @Override
@@ -33,5 +29,4 @@ public class TestLinearSolverChol_DDRM extends BaseCholeskySolveTests_DDRM {
         CholeskyDecompositionInner_DDRM alg = new CholeskyDecompositionInner_DDRM(true);
         return new LinearSolverChol_DDRM(alg);
     }
-
 }

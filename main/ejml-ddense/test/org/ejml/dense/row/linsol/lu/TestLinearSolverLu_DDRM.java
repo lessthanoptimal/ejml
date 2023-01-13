@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,10 +23,6 @@ import org.ejml.dense.row.decomposition.lu.LUDecompositionAlt_DDRM;
 import org.ejml.dense.row.linsol.GenericLinearSolverChecks_DDRM;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestLinearSolverLu_DDRM extends GenericLinearSolverChecks_DDRM {
 
     public TestLinearSolverLu_DDRM() {
@@ -35,7 +31,7 @@ public class TestLinearSolverLu_DDRM extends GenericLinearSolverChecks_DDRM {
     }
 
     @Override
-    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
+    protected LinearSolverDense<DMatrixRMaj> createSolver( DMatrixRMaj A ) {
         LUDecompositionAlt_DDRM decomp = new LUDecompositionAlt_DDRM();
 
         return new LinearSolverLu_DDRM(decomp);

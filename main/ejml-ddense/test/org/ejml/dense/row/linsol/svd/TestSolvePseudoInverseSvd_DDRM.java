@@ -31,12 +31,12 @@ public class TestSolvePseudoInverseSvd_DDRM extends GenericLinearSolverChecks_DD
     }
 
     @Override
-    protected LinearSolverDense<DMatrixRMaj> createSolver(DMatrixRMaj A ) {
-        return new SolvePseudoInverseSvd_DDRM(A.numRows,A.numCols);
+    protected LinearSolverDense<DMatrixRMaj> createSolver( DMatrixRMaj A ) {
+        return new SolvePseudoInverseSvd_DDRM(A.numRows, A.numCols);
     }
 
     @Test void checkSingularBasic() {
-        LinearSolverDense<DMatrixRMaj> solver = new SolvePseudoInverseSvd_DDRM(10,10);
+        LinearSolverDense<DMatrixRMaj> solver = new SolvePseudoInverseSvd_DDRM(10, 10);
         GenericSolvePseudoInverseChecks_DDRM checks = new GenericSolvePseudoInverseChecks_DDRM(solver);
 
         checks.all();
