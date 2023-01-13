@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 /**
  * Technically a class by this name doesn't exist. This is just the same class with concurrent algorithms being used
  * inside
@@ -45,20 +44,20 @@ public class TestWatchedDoubleStepQRDecomposition_MT_DDRM extends EjmlStandardJU
         compareToSingle(false);
         compareToSingle(true);
     }
-    void compareToSingle(boolean vectors) {
 
-        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(size,-1,1,rand);
+    void compareToSingle( boolean vectors ) {
+        DMatrixRMaj A = RandomMatrices_DDRM.symmetric(size, -1, 1, rand);
         DMatrixRMaj B = A.copy();
 
         var single = new WatchedDoubleStepQRDecomposition_DDRM(new HessenbergSimilarDecomposition_DDRM(),
-                new WatchedDoubleStepQREigen_DDRM(),vectors);
+                new WatchedDoubleStepQREigen_DDRM(), vectors);
         var concurrent = new WatchedDoubleStepQRDecomposition_DDRM(new HessenbergSimilarDecomposition_MT_DDRM(),
-                new WatchedDoubleStepQREigen_DDRM(),vectors);
+                new WatchedDoubleStepQREigen_DDRM(), vectors);
 
         assertTrue(single.decompose(A));
         assertTrue(concurrent.decompose(B));
 
-        assertTrue(MatrixFeatures_DDRM.isEquals(A,B, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isEquals(A, B, UtilEjml.TEST_F64));
 
         assertEquals(single.getNumberOfEigenvalues(), concurrent.getNumberOfEigenvalues());
         int numEigen = single.getNumberOfEigenvalues();
@@ -71,7 +70,7 @@ public class TestWatchedDoubleStepQRDecomposition_MT_DDRM extends EjmlStandardJU
 
             DMatrixRMaj singleVec = single.getEigenVector(i);
             DMatrixRMaj concurVec = concurrent.getEigenVector(i);
-            assertTrue(MatrixFeatures_DDRM.isIdentical(singleVec,concurVec,UtilEjml.TEST_F64));
+            assertTrue(MatrixFeatures_DDRM.isIdentical(singleVec, concurVec, UtilEjml.TEST_F64));
         }
     }
 }

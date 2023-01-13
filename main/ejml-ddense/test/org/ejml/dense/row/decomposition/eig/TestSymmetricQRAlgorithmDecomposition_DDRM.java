@@ -21,7 +21,6 @@ package org.ejml.dense.row.decomposition.eig;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.junit.jupiter.api.Test;
 
-
 /**
  * @author Peter Abeles
  */
@@ -31,7 +30,7 @@ public class TestSymmetricQRAlgorithmDecomposition_DDRM extends GeneralEigenDeco
     @Override
     public EigenDecomposition_F64 createDecomposition() {
         SymmetricQRAlgorithmDecomposition_DDRM alg = new SymmetricQRAlgorithmDecomposition_DDRM(computeVectors);
-        if( computeVectors )
+        if (computeVectors)
             alg.setComputeVectorsWithValues(together);
 
         return alg;
