@@ -67,6 +67,26 @@ public abstract class GenericCholeskyTests_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(R, foundR, UtilEjml.TEST_F64);
     }
 
+    @Test void zeroShapeMatrix() {
+        var A = new DMatrixRMaj(0, 0);
+
+        if (canL) {
+            CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(true);
+            assertTrue(cholesky.decompose(A));
+            DMatrixRMaj found = cholesky.getT(null);
+            assertEquals(0, found.numRows);
+            assertEquals(0, found.numCols);
+        }
+
+        if (canR) {
+            CholeskyDecomposition_F64<DMatrixRMaj> cholesky = create(false);
+            assertTrue(cholesky.decompose(A));
+            DMatrixRMaj found = cholesky.getT(null);
+            assertEquals(0, found.numRows);
+            assertEquals(0, found.numCols);
+        }
+    }
+
     /**
      * If it is not positive definate it should fail
      */
