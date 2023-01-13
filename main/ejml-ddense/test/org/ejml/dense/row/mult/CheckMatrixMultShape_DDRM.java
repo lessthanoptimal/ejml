@@ -78,6 +78,7 @@ public class CheckMatrixMultShape_DDRM extends EjmlStandardJUnit {
             try {
                 checkPositive(method, transA, transB);
                 checkNegative(method, transA, transB);
+                checkZeros(method, transA, transB);
             } catch (Throwable e) {
                 System.out.println("Failed on " + name);
                 e.printStackTrace();
@@ -88,6 +89,18 @@ public class CheckMatrixMultShape_DDRM extends EjmlStandardJUnit {
 
         // make sure some functions were checked!
         assertTrue(numChecked != 0);
+    }
+
+    /**
+     * See if it can handle zeros along one or more dimensions.
+     */
+    private void checkZeros( Method func, boolean transA, boolean transB )
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
+        checkPositive(func, transA, transB, 0, 0, 0);
+        checkPositive(func, transA, transB, 0, 3, 4);
+        checkPositive(func, transA, transB, 2, 0, 4);
+        checkPositive(func, transA, transB, 2, 3, 0);
     }
 
     /**
