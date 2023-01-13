@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -119,6 +119,8 @@ public class BidiagonalDecompositionRow_DDRM
 
     @Override
     public void getDiagonal( double[] diag, double[] off ) {
+        if (n <= 0)
+            return;
         diag[0] = UBV.get(0);
         for (int i = 1; i < n; i++) {
             diag[i] = UBV.unsafe_get(i, i);

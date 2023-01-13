@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -148,6 +148,12 @@ public class SvdImplicitQrAlgorithm_DDRM {
         initParam(numRows, numCols);
         this.diag = diag;
         this.off = off;
+
+        // Handle pathological case with zero sized matrix
+        if (diag.length <= 0) {
+            maxValue = 0.0;
+            return;
+        }
 
         maxValue = Math.abs(diag[0]);
         for (int i = 1; i < N; i++) {

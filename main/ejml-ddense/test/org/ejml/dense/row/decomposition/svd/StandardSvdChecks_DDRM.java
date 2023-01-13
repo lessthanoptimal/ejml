@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,7 +38,7 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
     boolean omitVerySmallValues = false;
 
     public void allTests() {
-        testSizeZero();
+        zeroShapeMatrix();
         testDecompositionOfTrivial();
         testWide();
         testTall();
@@ -49,19 +49,37 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
 
         if (!omitVerySmallValues)
             testVerySmallValue();
-        testZero();
+        testZeroValued();
         testLargeToSmall();
         testIdentity();
         testLarger();
         testLots();
     }
 
-    public void testSizeZero() {
-        SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
+    /**
+     * Matrix with zero for its rows, columns, or both should be handled correctly
+     */
+    public void zeroShapeMatrix() {
+        zeroShapeMatrix(0, 0);
+        zeroShapeMatrix(2, 0);
+        zeroShapeMatrix(0, 2);
+    }
 
-        assertFalse(alg.decompose(new DMatrixRMaj(0, 0)));
-        assertFalse(alg.decompose(new DMatrixRMaj(0, 2)));
-        assertFalse(alg.decompose(new DMatrixRMaj(2, 0)));
+    private void zeroShapeMatrix( int numRows, int numCols ) {
+        var A = new DMatrixRMaj(numRows, numCols);
+
+        SingularValueDecomposition<DMatrixRMaj> svd = createSvd();
+        assertTrue(svd.decompose(A));
+
+        // Test by multiplying the decomposition
+        SimpleMatrix U = SimpleMatrix.wrap(svd.getU(null, false));
+        SimpleMatrix Vt = SimpleMatrix.wrap(svd.getV(null, true));
+        SimpleMatrix W = SimpleMatrix.wrap(svd.getW(null));
+
+        // Should get results with the same shape back
+        SimpleMatrix found = U.mult(W).mult(Vt);
+        assertEquals(numRows, found.getNumRows());
+        assertEquals(numCols, found.getNumCols());
     }
 
     public void testDecompositionOfTrivial() {
@@ -99,11 +117,10 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
         checkComponents(alg, A);
     }
 
-    public void testZero() {
-
+    public void testZeroValued() {
         for (int i = 1; i <= 16; i += 5) {
             for (int j = 1; j <= 16; j += 5) {
-                DMatrixRMaj A = new DMatrixRMaj(i, j);
+                var A = new DMatrixRMaj(i, j);
 
                 SingularValueDecomposition_F64<DMatrixRMaj> alg = createSvd();
                 assertTrue(alg.decompose(A));
@@ -144,7 +161,7 @@ public abstract class StandardSvdChecks_DDRM extends EjmlStandardJUnit {
     public void testVerySmallValue() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(5, 5, -1, 1, rand);
 
-        CommonOps_DDRM.scale( Math.pow( UtilEjml.EPS, 12), A);
+        CommonOps_DDRM.scale(Math.pow(UtilEjml.EPS, 12), A);
 
         SingularValueDecomposition<DMatrixRMaj> alg = createSvd();
         assertTrue(alg.decompose(A));
