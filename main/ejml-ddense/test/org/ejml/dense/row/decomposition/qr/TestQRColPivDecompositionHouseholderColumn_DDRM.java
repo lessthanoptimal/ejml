@@ -39,12 +39,12 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
         DMatrixRMaj A = RandomMatrices_DDRM.orthogonal(6, 3, rand);
 
         // make sure the columns have norms in descending magnitude
-        for( int i = 0; i < A.numCols; i++ ) {
+        for (int i = 0; i < A.numCols; i++) {
 
-            double scale = (A.numCols-i)*3;
+            double scale = (A.numCols - i)*3;
 
-            for( int j = 0; j < A.numRows; j++ ) {
-                A.set(j,i,scale*A.get(j,i));
+            for (int j = 0; j < A.numRows; j++) {
+                A.set(j, i, scale*A.get(j, i));
             }
         }
 
@@ -55,15 +55,15 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
         DMatrixRMaj Q = alg.getQ(null, false);
         DMatrixRMaj R = alg.getR(null, false);
 
-        DMatrixRMaj found = new DMatrixRMaj(A.numRows,A.numCols);
-        CommonOps_DDRM.mult(Q,R,found);
+        DMatrixRMaj found = new DMatrixRMaj(A.numRows, A.numCols);
+        CommonOps_DDRM.mult(Q, R, found);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(A,found, UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A, found, UtilEjml.TEST_F64));
 
         // check the pivots
         int pivots[] = alg.getColPivots();
-        for( int i = 0; i < A.numCols; i++ ) {
-            assertEquals(i,pivots[i]);
+        for (int i = 0; i < A.numCols; i++) {
+            assertEquals(i, pivots[i]);
         }
 
         DMatrixRMaj P = alg.getColPivotMatrix(null);
@@ -76,15 +76,15 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
     @Test void testRankDeficient() {
         int numRows = 10;
 
-        for( int numSingular = 0; numSingular < numRows-1; numSingular++ )  {
+        for (int numSingular = 0; numSingular < numRows - 1; numSingular++) {
 
             // construct a singular matrix from its SVD decomposition
-            SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,numRows,rand));
-            SimpleMatrix S = SimpleMatrix.diag( DMatrixRMaj.class, 1,2,3,4,5,6,7,8,9,10);
-            SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows,numRows,rand));
+            SimpleMatrix U = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows, numRows, rand));
+            SimpleMatrix S = SimpleMatrix.diag(DMatrixRMaj.class, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+            SimpleMatrix V = SimpleMatrix.wrap(RandomMatrices_DDRM.orthogonal(numRows, numRows, rand));
 
-            for( int i = 0; i < numSingular; i++ ) {
-                S.set(i,i,0);
+            for (int i = 0; i < numSingular; i++) {
+                S.set(i, i, 0);
             }
 
             SimpleMatrix A = U.mult(S).mult(V.transpose());
@@ -92,7 +92,7 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
             QRColPivDecompositionHouseholderColumn_DDRM alg = new QRColPivDecompositionHouseholderColumn_DDRM();
             assertTrue(alg.decompose((DMatrixRMaj)A.getMatrix()));
 
-            checkDecomposition(false,(DMatrixRMaj)A.getMatrix(),alg);
+            checkDecomposition(false, (DMatrixRMaj)A.getMatrix(), alg);
         }
     }
 
@@ -100,19 +100,19 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
      * See how the decomposition goes against various matrices of different sizes
      */
     @Test void testRandomMatrix() {
-        checkDecomposition(5, 5 ,false);
-        checkDecomposition(10, 5,false);
-        checkDecomposition(5, 10,false);
-        checkDecomposition(5, 5 ,true);
-        checkDecomposition(10, 5,true);
-        checkDecomposition(5, 10,true);
+        checkDecomposition(5, 5, false);
+        checkDecomposition(10, 5, false);
+        checkDecomposition(5, 10, false);
+        checkDecomposition(5, 5, true);
+        checkDecomposition(10, 5, true);
+        checkDecomposition(5, 10, true);
     }
 
     /**
      * See if a zero matrix is gracefully handled
      */
     @Test void testZeroMatrix() {
-        DMatrixRMaj A = new DMatrixRMaj(5,5);
+        DMatrixRMaj A = new DMatrixRMaj(5, 5);
 
         QRColPivDecompositionHouseholderColumn_DDRM alg = new QRColPivDecompositionHouseholderColumn_DDRM();
         assertTrue(alg.decompose(A));
@@ -121,10 +121,9 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
         checkDecomposition(true, A, alg);
     }
 
-    private void checkDecomposition( int numRows , int numCols , boolean compact )
-    {
+    private void checkDecomposition( int numRows, int numCols, boolean compact ) {
 
-        for( int i = 0; i < 10; i++ ) {
+        for (int i = 0; i < 10; i++) {
             DMatrixRMaj A = RandomMatrices_DDRM.rectangle(numRows, numCols, rand);
 
             QRColPivDecompositionHouseholderColumn_DDRM alg = new QRColPivDecompositionHouseholderColumn_DDRM();
@@ -134,8 +133,8 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
         }
     }
 
-    private void checkDecomposition(boolean compact, DMatrixRMaj a,
-                                    QRColPivDecompositionHouseholderColumn_DDRM alg) {
+    private void checkDecomposition( boolean compact, DMatrixRMaj a,
+                                     QRColPivDecompositionHouseholderColumn_DDRM alg ) {
         SimpleMatrix Q = SimpleMatrix.wrap(alg.getQ(null, compact));
         SimpleMatrix R = SimpleMatrix.wrap(alg.getR(null, compact));
         SimpleMatrix P = SimpleMatrix.wrap(alg.getColPivotMatrix(null));
@@ -151,7 +150,6 @@ public class TestQRColPivDecompositionHouseholderColumn_DDRM extends EjmlStandar
 //        System.out.println("asdfasdf");
 //        expected.print();
 //        found.print();
-        assertTrue(expected.isIdentical(found,UtilEjml.TEST_F64));
+        assertTrue(expected.isIdentical(found, UtilEjml.TEST_F64));
     }
-
 }

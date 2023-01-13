@@ -25,20 +25,10 @@ import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DDRM {
-
-    Random rand = new Random(0xff);
-
-
     @Override
     protected QRDecomposition<DMatrixRMaj> createQRDecomposition() {
         return new QRDecompositionHouseholderColumn_DDRM();
@@ -52,33 +42,33 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
     @Test void householder() {
         int width = 5;
 
-        for( int i = 0; i < width; i++ ) {
-            checkSubHouse(i , width);
+        for (int i = 0; i < width; i++) {
+            checkSubHouse(i, width);
         }
     }
 
-    private void checkSubHouse(int w , int width) {
-        DebugQR qr = new DebugQR(width,width);
+    private void checkSubHouse( int w, int width ) {
+        DebugQR qr = new DebugQR(width, width);
 
-        SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
-        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
+        SimpleMatrix A = new SimpleMatrix(width, width, DMatrixRMaj.class);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(), rand);
 
-        qr.householder(w,(DMatrixRMaj)A.getMatrix());
+        qr.householder(w, (DMatrixRMaj)A.getMatrix());
 
-        SimpleMatrix U = new SimpleMatrix(width,1, true, qr.getQR()[w]).extractMatrix(w,width,0,1);
-        U.set(0,0,1); // this is not explicity set and is assumed to be 1
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRMaj.class);
+        SimpleMatrix U = new SimpleMatrix(width, 1, true, qr.getQR()[w]).extractMatrix(w, width, 0, 1);
+        U.set(0, 0, 1); // this is not explicity set and is assumed to be 1
+        SimpleMatrix I = SimpleMatrix.identity(width - w, DMatrixRMaj.class);
         SimpleMatrix Q = I.minus(U.mult(U.transpose()).scale(qr.getGamma()));
 
 
         // check the expected properties of Q
-        assertTrue(Q.isIdentical(Q.transpose(),1e-6));
-        assertTrue(Q.isIdentical(Q.invert(),1e-6));
+        assertTrue(Q.isIdentical(Q.transpose(), 1e-6));
+        assertTrue(Q.isIdentical(Q.invert(), 1e-6));
 
-        SimpleMatrix result = Q.mult(A.extractMatrix(w,width,w,width));
+        SimpleMatrix result = Q.mult(A.extractMatrix(w, width, w, width));
 
-        for( int i = 1; i < width-w; i++ ) {
-            assertEquals(0,result.get(i,0),1e-5);
+        for (int i = 1; i < width - w; i++) {
+            assertEquals(0, result.get(i, 0), 1e-5);
         }
     }
 
@@ -89,73 +79,72 @@ public class TestQRDecompositionHouseholderColumn_DDRM extends GenericQrCheck_DD
     @Test void updateA() {
         int width = 5;
 
-        for( int i = 0; i < width; i++ )
-            checkSubMatrix(width,i);
+        for (int i = 0; i < width; i++)
+            checkSubMatrix(width, i);
     }
 
-    private void checkSubMatrix(int width , int w ) {
-        DebugQR qr = new DebugQR(width,width);
+    private void checkSubMatrix( int width, int w ) {
+        DebugQR qr = new DebugQR(width, width);
 
         double gamma = 0.2;
         double tau = 0.75;
 
-        SimpleMatrix U = new SimpleMatrix(width,1, DMatrixRMaj.class);
-        SimpleMatrix A = new SimpleMatrix(width,width, DMatrixRMaj.class);
+        SimpleMatrix U = new SimpleMatrix(width, 1, DMatrixRMaj.class);
+        SimpleMatrix A = new SimpleMatrix(width, width, DMatrixRMaj.class);
 
-        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)U.getMatrix(),rand);
-        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(),rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)U.getMatrix(), rand);
+        RandomMatrices_DDRM.fillUniform((DMatrixRMaj)A.getMatrix(), rand);
 
         qr.convertToColumnMajor((DMatrixRMaj)A.getMatrix());
 
         // compute the results using standard matrix operations
-        SimpleMatrix I = SimpleMatrix.identity(width-w, DMatrixRMaj.class);
+        SimpleMatrix I = SimpleMatrix.identity(width - w, DMatrixRMaj.class);
 
-        SimpleMatrix u_sub = U.extractMatrix(w,width,0,1);
-        u_sub.set(0,0,1);// assumed to be 1 in the algorithm
-        SimpleMatrix A_sub = A.extractMatrix(w,width,w,width);
+        SimpleMatrix u_sub = U.extractMatrix(w, width, 0, 1);
+        u_sub.set(0, 0, 1);// assumed to be 1 in the algorithm
+        SimpleMatrix A_sub = A.extractMatrix(w, width, w, width);
         SimpleMatrix expected = I.minus(u_sub.mult(u_sub.transpose()).scale(gamma)).mult(A_sub);
 
-        qr.updateA(w,((DMatrixRMaj)U.getMatrix()).getData(),gamma,tau);
+        qr.updateA(w, ((DMatrixRMaj)U.getMatrix()).getData(), gamma, tau);
 
         double[][] found = qr.getQR();
 
-        for( int i = w+1; i < width; i++ ) {
-            assertEquals(U.get(i,0),found[w][i], UtilEjml.TEST_F64);
+        for (int i = w + 1; i < width; i++) {
+            assertEquals(U.get(i, 0), found[w][i], UtilEjml.TEST_F64);
         }
 
         // the right should be the same
-        for( int i = w; i < width; i++ ) {
-            for( int j = w+1; j < width; j++ ) {
-                double a = (double)expected.get(i-w,j-w);
+        for (int i = w; i < width; i++) {
+            for (int j = w + 1; j < width; j++) {
+                double a = (double)expected.get(i - w, j - w);
                 double b = found[j][i];
 
-                assertEquals(a,b,1e-6);
+                assertEquals(a, b, 1e-6);
             }
         }
     }
 
-    private static class DebugQR extends QRDecompositionHouseholderColumn_DDRM
-    {
+    private static class DebugQR extends QRDecompositionHouseholderColumn_DDRM {
 
-        public DebugQR( int numRows , int numCols ) {
-            setExpectedMaxSize(numRows,numCols);
+        public DebugQR( int numRows, int numCols ) {
+            setExpectedMaxSize(numRows, numCols);
             this.numCols = numCols;
             this.numRows = numRows;
         }
 
-        public void householder( int j , DMatrixRMaj A ) {
+        public void householder( int j, DMatrixRMaj A ) {
             convertToColumnMajor(A);
 
             super.householder(j);
         }
 
         @Override
-        protected void convertToColumnMajor(DMatrixRMaj A) {
+        protected void convertToColumnMajor( DMatrixRMaj A ) {
             super.convertToColumnMajor(A);
         }
 
-        public void updateA( int w , double u[] , double gamma , double tau ) {
-            System.arraycopy(u,0,this.dataQR[w],0,u.length);
+        public void updateA( int w, double u[], double gamma, double tau ) {
+            System.arraycopy(u, 0, this.dataQR[w], 0, u.length);
             this.gamma = gamma;
             this.tau = tau;
 
