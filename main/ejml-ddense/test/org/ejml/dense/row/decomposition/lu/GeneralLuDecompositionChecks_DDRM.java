@@ -33,9 +33,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-/**
- * @author Peter Abeles
- */
 public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUnit {
     public abstract LUDecomposition<DMatrixRMaj> create(int numRows , int numCols );
 
@@ -88,7 +85,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         }
     }
 
-    @Test void zeroMatrix() {
+    @Test void zeroValuedMatrix() {
         DMatrixRMaj A = new DMatrixRMaj(3,3);
 
         LUDecomposition<DMatrixRMaj> alg = create(3,3);
@@ -106,10 +103,33 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         assertTrue(MatrixFeatures_DDRM.isIdentical(A_found,A, UtilEjml.TEST_F64));
     }
 
+    /**
+     * See if it handles a matrix with dimension 0x0 correctly
+     */
+    @Test void zeroDimension() {
+        var A = new DMatrixRMaj(0,0);
+
+        LUDecomposition<DMatrixRMaj> alg = create(A.numRows, A.numCols);
+
+        assertTrue(alg.decompose(A));
+
+        // This is undefined
+//        assertTrue(alg.isSingular());
+
+        DMatrixRMaj L = alg.getLower(null);
+        DMatrixRMaj U = alg.getUpper(null);
+
+        assertEquals(0, L.numRows);
+        assertEquals(0, L.numCols);
+
+        assertEquals(0, U.numRows);
+        assertEquals(0, U.numCols);
+    }
+
     @Test void testSingular(){
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 3, 2, 4, 6, 4, 4, 0);
 
-        LUDecomposition alg = create(3,3);
+        LUDecomposition<DMatrixRMaj> alg = create(3,3);
         assertTrue(alg.decompose(A));
         assertTrue(alg.isSingular());
     }
@@ -117,7 +137,7 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
     @Test void testNearlySingular(){
         DMatrixRMaj A = new DMatrixRMaj(3,3, true, 1, 2, 3, 2, 4, 6.1, 4, 4, 0);
 
-        LUDecomposition alg = create(3,3);
+        LUDecomposition<DMatrixRMaj> alg = create(3,3);
         assertTrue(alg.decompose(A));
         assertFalse(alg.isSingular());
     }
@@ -136,8 +156,8 @@ public abstract class GeneralLuDecompositionChecks_DDRM extends EjmlStandardJUni
         DMatrixRMaj L_provided = RandomMatrices_DDRM.rectangle(3,3,rand);
         DMatrixRMaj U_provided = RandomMatrices_DDRM.rectangle(3,3,rand);
 
-        assertTrue(L_provided == alg.getLower(L_provided));
-        assertTrue(U_provided == alg.getUpper(U_provided));
+        assertSame(L_provided, alg.getLower(L_provided));
+        assertSame(U_provided, alg.getUpper(U_provided));
 
         DMatrixRMaj L_ret = alg.getLower(null);
         DMatrixRMaj U_ret = alg.getUpper(null);
