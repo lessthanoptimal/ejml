@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -87,7 +87,7 @@ public class HessenbergSimilarDecomposition_DDRM
     public boolean decompose( DMatrixRMaj A ) {
         if (A.numRows != A.numCols)
             throw new IllegalArgumentException("A must be square.");
-        if (A.numRows <= 0)
+        if (A.numRows < 0)
             return false;
 
         QH = A;

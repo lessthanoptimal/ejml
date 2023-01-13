@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -72,7 +72,6 @@ public class WatchedDoubleStepQRDecomposition_DDRM
 
     @Override
     public boolean decompose( DMatrixRMaj A ) {
-
         if (!hessenberg.decompose(A))
             return false;
 

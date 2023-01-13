@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -48,7 +48,7 @@ public class WatchedDoubleStepQREigenvector_DDRM {
     LinearSolverDense solver;
 
     Complex_F64[] origEigenvalues;
-    int N;
+    int N = -1;
 
     int[] splits;
     int numSplits;

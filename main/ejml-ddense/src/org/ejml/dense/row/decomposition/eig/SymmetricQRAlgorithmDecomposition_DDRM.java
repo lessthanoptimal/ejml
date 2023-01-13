@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -132,8 +132,6 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
     public boolean decompose( DMatrixRMaj orig ) {
         if (orig.numCols != orig.numRows)
             throw new IllegalArgumentException("Matrix must be square.");
-        if (orig.numCols <= 0)
-            return false;
 
         int N = orig.numRows;
 
@@ -145,7 +143,7 @@ public class SymmetricQRAlgorithmDecomposition_DDRM
         double[] off = this.off;
         if (diag == null || diag.length < N) {
             this.diag = diag = new double[N];
-            this.off = off = new double[N - 1];
+            this.off = off = new double[Math.max(0, N - 1)];
         }
         decomp.getDiagonal(diag, off);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -46,7 +46,7 @@ public class WatchedDoubleStepQREigen_DDRM {
 
     private Random rand = new Random(0x2342);
 
-    private int N;
+    private int N = -1;
 
     DMatrixRMaj A;
     protected DMatrixRMaj u;
