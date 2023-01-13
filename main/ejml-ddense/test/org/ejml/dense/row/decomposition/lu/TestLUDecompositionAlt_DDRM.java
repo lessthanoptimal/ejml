@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,9 +18,6 @@
 
 package org.ejml.dense.row.decomposition.lu;
 
-/**
- * @author Peter Abeles
- */
 public class TestLUDecompositionAlt_DDRM extends GeneralLuDecompositionChecks_DDRM {
     @Override
     public LUDecompositionBase_DDRM create(int numRows, int numCols) {
