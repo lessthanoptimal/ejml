@@ -97,6 +97,21 @@ public abstract class GenericLinearSolverChecks_DDRM extends EjmlStandardJUnit {
     }
 
     /**
+     * Should accept a 0x0 matrix.
+     */
+    @Test void zeroSizedMatrix() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(0, 0, rand);
+
+        LinearSolverDense<DMatrixRMaj> solver = createSafeSolver(A);
+        assertTrue(solver.setA(A));
+
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(0, 0, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(0, 0, rand);
+
+        solver.solve(b, x);
+    }
+
+    /**
      * Checks to see if the modifyA() flag is set correctly
      */
     @Test void modifiesA() {
