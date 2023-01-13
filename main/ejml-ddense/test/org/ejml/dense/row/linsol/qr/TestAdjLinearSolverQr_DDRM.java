@@ -31,9 +31,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
     @Test void addRowToA() {
         int insert = 2;
@@ -41,7 +38,7 @@ public class TestAdjLinearSolverQr_DDRM extends GenericLinearSolverChecks_DDRM {
         int n = 3;
 
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(m, n, rand);
-        double row[] = new double[]{1, 2, 3};
+        double[] row = new double[]{1, 2, 3};
 
         // create the modified A
         DMatrixRMaj A_e = RandomMatrices_DDRM.rectangle(m + 1, n, rand);

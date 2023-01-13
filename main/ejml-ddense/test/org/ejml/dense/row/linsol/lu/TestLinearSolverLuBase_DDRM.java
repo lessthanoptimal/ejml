@@ -34,10 +34,10 @@ public class TestLinearSolverLuBase_DDRM extends EjmlStandardJUnit {
      * not realy test to see if it makes things better.
      */
     @Test void testImproveSol_noharm() {
-        DMatrixRMaj A = new DMatrixRMaj(3,3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
-        DMatrixRMaj b = new DMatrixRMaj(3,1, true, 8, 33, 15.5);
-        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3,1,rand);
-        DMatrixRMaj x_improved = new DMatrixRMaj(3,1);
+        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 0, 1, 2, -2, 4, 9, 0.5, 0, 5);
+        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, 8, 33, 15.5);
+        DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3, 1, rand);
+        DMatrixRMaj x_improved = new DMatrixRMaj(3, 1);
 
         LUDecompositionAlt_DDRM alg = new LUDecompositionAlt_DDRM();
 
@@ -45,11 +45,11 @@ public class TestLinearSolverLuBase_DDRM extends EjmlStandardJUnit {
 
         LinearSolverLu_DDRM solver = new LinearSolverLu_DDRM(alg);
         assertTrue(solver.setA(A));
-        solver.solve(x,b);
-        solver.improveSol(x_improved,b);
+        solver.solve(x, b);
+        solver.improveSol(x_improved, b);
 
 //        DMatrixRMaj x_truth = new DMatrixRMaj(3,1,new double[]{1,2,3});
 
-        EjmlUnitTests.assertEquals(x,x_improved, UtilEjml.TEST_F64);
+        EjmlUnitTests.assertEquals(x, x_improved, UtilEjml.TEST_F64);
     }
 }

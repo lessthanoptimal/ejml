@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.linsol.GenericSolveNullSpace_DDRM;
 import org.ejml.interfaces.SolveNullSpace;
 
-/**
- * @author Peter Abeles
- */
 public class TestSolveNullSpaceQR_DDRM extends GenericSolveNullSpace_DDRM {
     @Override
     public SolveNullSpace<DMatrixRMaj> createSolver() {
