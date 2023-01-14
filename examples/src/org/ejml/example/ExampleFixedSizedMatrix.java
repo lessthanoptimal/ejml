@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,8 +35,8 @@ import org.ejml.simple.SimpleMatrix;
 public class ExampleFixedSizedMatrix {
     public static void main( String[] args ) {
         // declare the matrix
-        DMatrix3x3 a = new DMatrix3x3();
-        DMatrix3x3 b = new DMatrix3x3();
+        var a = new DMatrix3x3();
+        var b = new DMatrix3x3();
 
         // Can assign values the usual way
         for (int i = 0; i < 3; i++) {
@@ -60,8 +60,8 @@ public class ExampleFixedSizedMatrix {
 
         // matrix-vector operations are also supported
         // Constructors for vectors and matrices can be used to initialize its value
-        DMatrix3 v = new DMatrix3(1, 2, 3);
-        DMatrix3 result = new DMatrix3();
+        var v = new DMatrix3(1, 2, 3);
+        var result = new DMatrix3();
 
         CommonOps_DDF3.mult(a, v, result);
 

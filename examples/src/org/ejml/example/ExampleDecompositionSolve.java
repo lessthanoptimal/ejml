@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2018, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -43,7 +43,7 @@ public class ExampleDecompositionSolve {
     public static void main(String[] args) {
         // create a random matrix that can be solved
         int N = 5;
-        Random rand = new Random(234);
+        var rand = new Random(234);
 
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(N,N,N*N/4,rand);
         RandomMatrices_DSCC.ensureNotSingular(A,rand);

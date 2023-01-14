@@ -44,7 +44,7 @@ import java.nio.charset.StandardCharsets;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked", "NullAway.Init", "ForLoopReplaceableByForEach"})
-public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMatrix<T>, Serializable {
+public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMatrix, Serializable {
 
     static final long serialVersionUID = 2342556642L;
 
@@ -146,7 +146,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         };
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T transpose() {
         T ret = createMatrix(mat.getNumCols(), mat.getNumRows(), mat.getType());
 
@@ -155,7 +155,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T transposeConjugate() {
         if (getType().isReal()) {
             return transpose();
@@ -170,8 +170,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
-    @Override public T mult( T B ) {
+    /** {@inheritDoc} */
+    @Override public T mult( ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
 
         // Look to see if there is a special function for handling this case
@@ -195,8 +196,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
-    @Override public T kron( T B ) {
+    /** {@inheritDoc} */
+    @Override public T kron( ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -208,8 +210,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
-    @Override public T plus( T B ) {
+    /** {@inheritDoc} */
+    @Override public T plus( ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -221,8 +224,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
-    @Override public T minus( T B ) {
+    /** {@inheritDoc} */
+    @Override public T minus( ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -232,14 +236,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T minus( double b ) {
         T ret = createLike();
         ops.minus(mat, b, ret.mat);
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T minusComplex( double real, double imag ) {
         try {
             T ret = createLike();
@@ -253,14 +257,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T plus( double b ) {
         T ret = createLike();
         ops.plus(mat, b, ret.mat);
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T plusComplex( double real, double imag ) {
         try {
             T ret = createLike();
@@ -274,8 +278,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
-    @Override public T plus( double beta, T B ) {
+    /** {@inheritDoc} */
+    @Override public T plus( double beta, ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -285,8 +290,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
-    @Override public double dot( T v ) {
+    /** {@inheritDoc} */
+    @Override public double dot( ImmutableMatrix _v ) {
+        T v = (T)_v;
         convertType.specify(this, v);
         T A = convertType.convert(this);
         v = convertType.convert(v);
@@ -300,19 +306,19 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return A.ops.dot(A.mat, v.getMatrix());
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public boolean isVector() {
         return mat.getNumRows() == 1 || mat.getNumCols() == 1;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T scale( double val ) {
         T ret = createLike();
         ops.scale(mat, val, ret.getMatrix());
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T scaleComplex( double real, double imag ) {
         try {
             T ret = createLike();
@@ -326,14 +332,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T divide( double val ) {
         T ret = createLike();
         ops.divide(mat, val, ret.getMatrix());
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T invert() {
         T ret = createLike();
 
@@ -345,15 +351,16 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T pseudoInverse() {
         T ret = createLike();
         ops.pseudoInverse(mat, ret.mat);
         return ret;
     }
 
-    /** @inheritDoc */
-    @Override public T solve( T B ) {
+    /** {@inheritDoc} */
+    @Override public T solve( ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
 
         // Look to see if there is a special function for handling this case
@@ -438,17 +445,17 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         fill(0);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double normF() {
         return ops.normF(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double conditionP2() {
         return ops.conditionP2(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double determinant() {
         double ret = ops.determinant(mat);
         if (UtilEjml.isUncountable(ret))
@@ -456,7 +463,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public Complex_F64 determinantComplex() {
         Complex_F64 ret = ops.determinantComplex(mat);
         if (UtilEjml.isUncountable(ret.real))
@@ -464,12 +471,12 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double trace() {
         return ops.trace(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public Complex_F64 traceComplex() {
         return ops.traceComplex(mat);
     }
@@ -664,12 +671,12 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return output;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double get( int row, int col ) {
         return ops.get(mat, row, col);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double get( int index ) {
         MatrixType type = mat.getType();
 
@@ -684,32 +691,32 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public void get( int row, int col, Complex_F64 output ) {
         ops.get(mat, row, col, output);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double getReal( int row, int col ) {
         return ops.getReal(mat, row, col);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double getImaginary( int row, int col ) {
         return ops.getImaginary(mat, row, col);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public int getIndex( int row, int col ) {
         return row*mat.getNumCols() + col;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public DMatrixIterator iterator( boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol ) {
         return new DMatrixIterator((DMatrixRMaj)mat, rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T copy() {
         T ret = createLike();
         ret.getMatrix().setTo(this.getMatrix());
@@ -738,27 +745,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return mat.getNumCols();
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public int getNumRows() {
         return mat.getNumRows();
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public int getNumCols() {
         return mat.getNumCols();
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public void print() {
         mat.print();
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public void print( String format ) {
         ops.print(System.out, mat, format);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double[][] toArray2() {
         double[][] array = new double[mat.getNumRows()][mat.getNumCols()];
         for (int r = 0; r < mat.getNumRows(); r++) {
@@ -787,7 +794,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return stream.toString(StandardCharsets.UTF_8);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T extractMatrix( int y0, int y1, int x0, int x1 ) {
         if (y0 == SimpleMatrix.END) y0 = mat.getNumRows();
         if (y1 == SimpleMatrix.END) y1 = mat.getNumRows();
@@ -801,7 +808,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T extractVector( boolean extractRow, int element ) {
         if (extractRow) {
             return extractMatrix(element, element + 1, 0, SimpleMatrix.END);
@@ -810,29 +817,30 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T getRow( int row ) {
         return extractVector(true, row);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T getColumn( int col ) {
         return extractVector(false, col);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T diag() {
         return wrapMatrix(ops.diag(mat));
     }
 
-    /** @inheritDoc */
-    @Override public boolean isIdentical( T a, double tol ) {
+    /** {@inheritDoc} */
+    @Override public boolean isIdentical( ImmutableMatrix _a, double tol ) {
+        T a = (T)_a;
         if (a.getType() != getType())
             return false;
         return ops.isIdentical(mat, a.mat, tol);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public boolean hasUncountable() {
         return ops.hasUncountable(mat);
     }
@@ -888,8 +896,9 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         ops.extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dst, destY0, destX0);
     }
 
-    /** @inheritDoc */
-    @Override public T combine( int insertRow, int insertCol, T B ) {
+    /** {@inheritDoc} */
+    @Override public T combine( int insertRow, int insertCol, ImmutableMatrix _B ) {
+        T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -922,100 +931,103 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double elementMax() {
         return ops.elementMax(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double elementMin() {
         return ops.elementMin(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double elementMaxAbs() {
         return ops.elementMaxAbs(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double elementMinAbs() {
         return ops.elementMinAbs(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public double elementSum() {
         return ops.elementSum(mat);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public Complex_F64 elementSumComplex() {
         var sum = new Complex_F64();
         ops.elementSumComplex(mat, sum);
         return sum;
     }
 
-    /** @inheritDoc */
-    @Override public T elementMult( T b ) {
-        convertType.specify(this, b);
+    /** {@inheritDoc} */
+    @Override public T elementMult( ImmutableMatrix _B ) {
+        T B = (T)_B;
+        convertType.specify(this, B);
         T A = convertType.convert(this);
-        b = convertType.convert(b);
+        B = convertType.convert(B);
 
         T c = A.createLike();
-        A.ops.elementMult(A.mat, b.mat, c.mat);
+        A.ops.elementMult(A.mat, B.mat, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
-    @Override public T elementDiv( T b ) {
-        convertType.specify(this, b);
+    /** {@inheritDoc} */
+    @Override public T elementDiv( ImmutableMatrix _B ) {
+        T B = (T)_B;
+        convertType.specify(this, (T)B);
         T A = convertType.convert(this);
-        b = convertType.convert(b);
+        B = convertType.convert((T)B);
 
         T c = A.createLike();
-        A.ops.elementDiv(A.mat, b.mat, c.mat);
+        A.ops.elementDiv(A.mat, B.mat, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
-    @Override public T elementPower( T b ) {
-        convertType.specify(this, b);
+    /** {@inheritDoc} */
+    @Override public T elementPower( ImmutableMatrix _B ) {
+        T B = (T)_B;
+        convertType.specify(this, B);
         T A = convertType.convert(this);
-        b = convertType.convert(b);
+        B = convertType.convert(B);
 
         T c = A.createLike();
-        A.ops.elementPower(A.mat, b.mat, c.mat);
+        A.ops.elementPower(A.mat, B.mat, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T elementPower( double b ) {
         T c = createLike();
         ops.elementPower(mat, b, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T elementExp() {
         T c = createLike();
         ops.elementExp(mat, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T elementLog() {
         T c = createLike();
         ops.elementLog(mat, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T elementOp( SimpleOperations.ElementOpReal op ) {
         T c = createLike();
         ops.elementOp(mat, op, c.mat);
         return c;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T elementOp( SimpleOperations.ElementOpComplex op ) {
         T c = createLike();
         try {
@@ -1031,14 +1043,14 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return c;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T negative() {
         T A = copy();
         ops.changeSign(A.mat);
         return A;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T conjugate() {
         T A = copy();
 
@@ -1054,7 +1066,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return A;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T magnitude() {
         T A = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
@@ -1145,16 +1157,16 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         eq.process(equation);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public void saveToFileCSV( String fileName ) throws IOException {
         MatrixIO.saveDenseCSV((DMatrixRMaj)mat, fileName);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public void saveToMatrixMarket( String fileName ) throws IOException {
         final String format = ".15e";
 
-        try (var writer = new FileWriter(fileName)) {
+        try (var writer = new FileWriter(fileName, StandardCharsets.UTF_8)) {
             if (mat instanceof DMatrixRMaj)
                 MatrixIO.saveMatrixMarket((DMatrixRMaj)mat, format, writer);
             else if (mat instanceof FMatrixRMaj)
@@ -1188,7 +1200,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return ret;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public boolean isInBounds( int row, int col ) {
         return row >= 0 && col >= 0 && row < mat.getNumRows() && col < mat.getNumCols();
     }
@@ -1200,7 +1212,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         System.out.println("[rows = " + numRows() + " , cols = " + numCols() + " ]");
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public int bits() {
         return mat.getType().getBits();
     }
@@ -1275,22 +1287,22 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         return (T)combined;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T rows( int begin, int end ) {
         return extractMatrix(begin, end, 0, SimpleMatrix.END);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T cols( int begin, int end ) {
         return extractMatrix(0, SimpleMatrix.END, begin, end);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public MatrixType getType() {
         return mat.getType();
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T real() {
         T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
@@ -1306,7 +1318,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T imaginary() {
         T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
@@ -1322,7 +1334,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
         }
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override public T createLike() {
         return createMatrix(numRows(), numCols(), getType());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,6 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.simple.ImmutableMatrix;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -32,7 +33,7 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class KalmanFilterSimple implements KalmanFilter {
     // kinematics description
-    private SimpleMatrix F, Q, H;
+    private ImmutableMatrix F, Q, H;
 
     // sytem state estimate
     private SimpleMatrix x, P;
@@ -58,17 +59,17 @@ public class KalmanFilterSimple implements KalmanFilter {
 
     @Override public void update( DMatrixRMaj _z, DMatrixRMaj _R ) {
         // a fast way to make the matrices usable by SimpleMatrix
-        SimpleMatrix z = SimpleMatrix.wrap(_z);
-        SimpleMatrix R = SimpleMatrix.wrap(_R);
+        ImmutableMatrix z = SimpleMatrix.wrap(_z);
+        ImmutableMatrix R = SimpleMatrix.wrap(_R);
 
         // y = z - H x
-        SimpleMatrix y = z.minus(H.mult(x));
+        ImmutableMatrix y = z.minus(H.mult(x));
 
         // S = H P H' + R
-        SimpleMatrix S = H.mult(P).mult(H.transpose()).plus(R);
+        ImmutableMatrix S = H.mult(P).mult(H.transpose()).plus(R);
 
         // K = PH'S^(-1)
-        SimpleMatrix K = P.mult(H.transpose().mult(S.invert()));
+        ImmutableMatrix K = P.mult(H.transpose().mult(S.invert()));
 
         // x = x + Ky
         x = x.plus(K.mult(y));
