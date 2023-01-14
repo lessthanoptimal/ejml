@@ -19,7 +19,10 @@ package org.ejml.simple;
 
 import org.ejml.UtilEjml;
 import org.ejml.data.*;
-import org.ejml.dense.row.*;
+import org.ejml.dense.row.CommonOps_CDRM;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.CommonOps_FDRM;
+import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.equation.Equation;
 import org.ejml.ops.ConvertMatrixType;
 import org.ejml.ops.DConvertMatrixStruct;
@@ -28,10 +31,7 @@ import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ops.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -44,7 +44,7 @@ import java.nio.charset.StandardCharsets;
  * @author Peter Abeles
  */
 @SuppressWarnings({"unchecked", "NullAway.Init", "ForLoopReplaceableByForEach"})
-public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializable {
+public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMatrix<T>, Serializable {
 
     static final long serialVersionUID = 2342556642L;
 
@@ -146,16 +146,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         };
     }
 
-    /**
-     * <p>
-     * Returns the transpose of this matrix.<br>
-     * a<sup>T</sup>
-     * </p>
-     *
-     * @return A matrix that is n by m.
-     * @see CommonOps_DDRM#transpose(DMatrixRMaj, DMatrixRMaj)
-     */
-    public T transpose() {
+    /** @inheritDoc */
+    @Override public T transpose() {
         T ret = createMatrix(mat.getNumCols(), mat.getNumRows(), mat.getType());
 
         ops.transpose(mat, ret.mat);
@@ -163,11 +155,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * Returns a matrix that is the conjugate transpose. If real then this is the
-     * same as calling {@link #transpose()}.
-     */
-    public T transposeConjugate() {
+    /** @inheritDoc */
+    @Override public T transposeConjugate() {
         if (getType().isReal()) {
             return transpose();
         }
@@ -181,20 +170,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of matrix multiplication:<br>
-     * <br>
-     * c = a * b <br>
-     * <br>
-     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
-     * </p>
-     *
-     * @param B A matrix that is n by bn. Not modified.
-     * @return The results of this operation.
-     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
-     */
-    public T mult( T B ) {
+    /** @inheritDoc */
+    @Override public T mult( T B ) {
         convertType.specify(this, B);
 
         // Look to see if there is a special function for handling this case
@@ -218,18 +195,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Computes the Kronecker product between this matrix and the provided B matrix:<br>
-     * <br>
-     * C = kron(A,B)
-     * </p>
-     *
-     * @param B The right matrix in the operation. Not modified.
-     * @return Kronecker product between this matrix and B.
-     * @see CommonOps_DDRM#kron(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
-     */
-    public T kron( T B ) {
+    /** @inheritDoc */
+    @Override public T kron( T B ) {
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -241,20 +208,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Returns the result of matrix addition:<br>
-     * <br>
-     * c = a + b <br>
-     * <br>
-     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
-     * </p>
-     *
-     * @param B m by n matrix. Not modified.
-     * @return The results of this operation.
-     * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
-     */
-    public T plus( T B ) {
+    /** @inheritDoc */
+    @Override public T plus( T B ) {
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -266,20 +221,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Returns the result of matrix subtraction:<br>
-     * <br>
-     * c = a - b <br>
-     * <br>
-     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
-     * </p>
-     *
-     * @param B m by n matrix. Not modified.
-     * @return The results of this operation.
-     * @see CommonOps_DDRM#subtract(DMatrixD1, DMatrixD1, DMatrixD1)
-     */
-    public T minus( T B ) {
+    /** @inheritDoc */
+    @Override public T minus( T B ) {
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -289,36 +232,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Returns the result of matrix-double subtraction:<br>
-     * <br>
-     * c = a - b <br>
-     * <br>
-     * where c is the returned matrix, a is this matrix, and b is the passed in double.
-     * </p>
-     *
-     * <p>NOTE: If the matrix is complex then 'b' will be treated like a complex number with imaginary = 0.</p>
-     *
-     * @param b Value subtracted from each element
-     * @return The results of this operation.
-     * @see CommonOps_DDRM#subtract(DMatrixD1, double, DMatrixD1)
-     */
-    public T minus( double b ) {
+    /** @inheritDoc */
+    @Override public T minus( double b ) {
         T ret = createLike();
         ops.minus(mat, b, ret.mat);
         return ret;
     }
 
-    /**
-     * Subtracts a complex scalar from each element in the matrix. If the matrix is real, then it will
-     * return a complex matrix unless the imaginary component of the scalar is zero.
-     *
-     * @param real Real component of scalar value
-     * @param imag Imaginary component of scalar value
-     * @return The results of this operation.
-     */
-    public T minusComplex( double real, double imag ) {
+    /** @inheritDoc */
+    @Override public T minusComplex( double real, double imag ) {
         try {
             T ret = createLike();
             ops.minusComplex(mat, real, imag, ret.getMatrix());
@@ -331,36 +253,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /**
-     * <p>
-     * Returns the result of scalar addition:<br>
-     * <br>
-     * c = a + b<br>
-     * <br>
-     * where c is the returned matrix, a is this matrix, and b is the passed in double.
-     * </p>
-     *
-     * <p>NOTE: If the matrix is complex then 'b' will be treated like a complex number with imaginary = 0.</p>
-     *
-     * @param b Value added to each element
-     * @return A matrix that contains the results.
-     * @see CommonOps_DDRM#add(DMatrixD1, double, DMatrixD1)
-     */
-    public T plus( double b ) {
+    /** @inheritDoc */
+    @Override public T plus( double b ) {
         T ret = createLike();
         ops.plus(mat, b, ret.mat);
         return ret;
     }
 
-    /**
-     * Adds a complex scalar from each element in the matrix. If the matrix is real, then it will
-     * return a complex matrix unless the imaginary component of the scalar is zero.
-     *
-     * @param real Real component of scalar value
-     * @param imag Imaginary component of scalar value
-     * @return The results of this operation.
-     */
-    public T plusComplex( double real, double imag ) {
+    /** @inheritDoc */
+    @Override public T plusComplex( double real, double imag ) {
         try {
             T ret = createLike();
             ops.plusComplex(mat, real, imag, ret.getMatrix());
@@ -373,22 +274,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /**
-     * <p>
-     * Performs a matrix addition and scale operation.<br>
-     * <br>
-     * c = a + &beta;*b <br>
-     * <br>
-     * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
-     * </p>
-     *
-     * <p>NOTE: If the matrix is complex then 'b' will be treated like a complex number with imaginary = 0.</p>
-     *
-     * @param B m by n matrix. Not modified.
-     * @return A matrix that contains the results.
-     * @see CommonOps_DDRM#add(DMatrixD1, double, DMatrixD1, DMatrixD1)
-     */
-    public T plus( double beta, T B ) {
+    /** @inheritDoc */
+    @Override public T plus( double beta, T B ) {
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -398,13 +285,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
-     *
-     * @param v The second vector in the dot product. Not modified.
-     * @return dot product
-     */
-    public double dot( T v ) {
+    /** @inheritDoc */
+    @Override public double dot( T v ) {
         convertType.specify(this, v);
         T A = convertType.convert(this);
         v = convertType.convert(v);
@@ -418,41 +300,20 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return A.ops.dot(A.mat, v.getMatrix());
     }
 
-    /**
-     * Returns true if this matrix is a vector. A vector is defined as a matrix
-     * that has either one row or column.
-     *
-     * @return Returns true for vectors and false otherwise.
-     */
-    public boolean isVector() {
+    /** @inheritDoc */
+    @Override public boolean isVector() {
         return mat.getNumRows() == 1 || mat.getNumCols() == 1;
     }
 
-    /**
-     * <p>
-     * Returns the result of scaling each element by 'val':<br>
-     * b<sub>i,j</sub> = val*a<sub>i,j</sub>
-     * </p>
-     *
-     * @param val The multiplication factor. If matrix is complex then the imaginary component is zero.
-     * @return The scaled matrix.
-     * @see CommonOps_DDRM#scale(double, DMatrixD1)
-     */
-    public T scale( double val ) {
+    /** @inheritDoc */
+    @Override public T scale( double val ) {
         T ret = createLike();
         ops.scale(mat, val, ret.getMatrix());
         return ret;
     }
 
-    /**
-     * Scales/multiplies each element in the matrix by the complex number. If the matrix is real, then it will
-     * return a complex matrix unless the imaginary component of the scalar is zero.
-     *
-     * @param real Real component of scalar value
-     * @param imag Imaginary component of scalar value
-     * @return Scaled matrix
-     */
-    public T scaleComplex( double real, double imag ) {
+    /** @inheritDoc */
+    @Override public T scaleComplex( double real, double imag ) {
         try {
             T ret = createLike();
             ops.scaleComplex(mat, real, imag, ret.getMatrix());
@@ -465,38 +326,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /**
-     * <p>
-     * Returns the result of dividing each element by 'val':
-     * b<sub>i,j</sub> = a<sub>i,j</sub>/val
-     * </p>
-     *
-     * @param val Divisor. If matrix is complex then the imaginary component is zero.
-     * @return Matrix with its elements divided by the specified value.
-     * @see CommonOps_DDRM#divide(DMatrixD1, double)
-     */
-    public T divide( double val ) {
+    /** @inheritDoc */
+    @Override public T divide( double val ) {
         T ret = createLike();
         ops.divide(mat, val, ret.getMatrix());
         return ret;
     }
 
-    /**
-     * <p>
-     * Returns the inverse of this matrix.<br>
-     * <br>
-     * b = a<sup>-1</sup><br>
-     * </p>
-     *
-     * <p>
-     * If the matrix could not be inverted then SingularMatrixException is thrown. Even
-     * if no exception is thrown the matrix could still be singular or nearly singular.
-     * </p>
-     *
-     * @return The inverse of this matrix.
-     * @see CommonOps_DDRM#invert(DMatrixRMaj, DMatrixRMaj)
-     */
-    public T invert() {
+    /** @inheritDoc */
+    @Override public T invert() {
         T ret = createLike();
 
         if (!ops.invert(mat, ret.mat))
@@ -507,38 +345,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Computes the Moore-Penrose pseudo-inverse
-     * </p>
-     *
-     * @return inverse computed using the pseudo inverse.
-     */
-    public T pseudoInverse() {
+    /** @inheritDoc */
+    @Override public T pseudoInverse() {
         T ret = createLike();
         ops.pseudoInverse(mat, ret.mat);
         return ret;
     }
 
-    /**
-     * <p>
-     * Solves for X in the following equation:<br>
-     * <br>
-     * x = a<sup>-1</sup>b<br>
-     * <br>
-     * where 'a' is this matrix and 'b' is an n by p matrix.
-     * </p>
-     *
-     * <p>
-     * If the system could not be solved then SingularMatrixException is thrown. Even
-     * if no exception is thrown 'a' could still be singular or nearly singular.
-     * </p>
-     *
-     * @param B n by p matrix. Not modified.
-     * @return The solution for 'x' that is n by p.
-     * @see CommonOps_DDRM#solve(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
-     */
-    public T solve( T B ) {
+    /** @inheritDoc */
+    @Override public T solve( T B ) {
         convertType.specify(this, B);
 
         // Look to see if there is a special function for handling this case
@@ -623,82 +438,39 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         fill(0);
     }
 
-    /**
-     * <p>
-     * Computes the Frobenius normal of the matrix:<br>
-     * <br>
-     * normF = Sqrt{  &sum;<sub>i=1:m</sub> &sum;<sub>j=1:n</sub> { a<sub>ij</sub><sup>2</sup>}   }
-     * </p>
-     *
-     * @return The matrix's Frobenius normal.
-     * @see NormOps_DDRM#normF(DMatrixD1)
-     */
-    public double normF() {
+    /** @inheritDoc */
+    @Override public double normF() {
         return ops.normF(mat);
     }
 
-    /**
-     * <p>
-     * The condition p = 2 number of a matrix is used to measure the sensitivity of the linear
-     * system <b>Ax=b</b>. A value near one indicates that it is a well conditioned matrix.
-     * </p>
-     *
-     * @return The condition number.
-     * @see NormOps_DDRM#conditionP2(DMatrixRMaj)
-     */
-    public double conditionP2() {
+    /** @inheritDoc */
+    @Override public double conditionP2() {
         return ops.conditionP2(mat);
     }
 
-    /**
-     * Computes the determinant of the matrix.
-     *
-     * @return The determinant.
-     * @see CommonOps_DDRM#det(DMatrixRMaj)
-     */
-    public double determinant() {
+    /** @inheritDoc */
+    @Override public double determinant() {
         double ret = ops.determinant(mat);
         if (UtilEjml.isUncountable(ret))
             return 0;
         return ret;
     }
 
-    /**
-     * Computes the determinant of a complex matrix. If the matrix is real then the imaginary component
-     * is always zero.
-     *
-     * @return The determinant.
-     * @see CommonOps_ZDRM#det(ZMatrixRMaj)
-     */
-    public Complex_F64 determinantComplex() {
+    /** @inheritDoc */
+    @Override public Complex_F64 determinantComplex() {
         Complex_F64 ret = ops.determinantComplex(mat);
         if (UtilEjml.isUncountable(ret.real))
             ret.setTo(0, 0);
         return ret;
     }
 
-    /**
-     * <p>
-     * Computes the trace of the matrix.
-     * </p>
-     *
-     * @return The trace of the matrix.
-     * @see CommonOps_DDRM#trace(DMatrix1Row)
-     */
-    public double trace() {
+    /** @inheritDoc */
+    @Override public double trace() {
         return ops.trace(mat);
     }
 
-    /**
-     * <p>
-     * Computes the trace of a complex matrix. If the matrix is real then the imaginary component
-     * is always zero.
-     * </p>
-     *
-     * @return The trace of the matrix.
-     * @see CommonOps_ZDRM#trace(ZMatrixRMaj, Complex_F64)
-     */
-    public Complex_F64 traceComplex() {
+    /** @inheritDoc */
+    @Override public Complex_F64 traceComplex() {
         return ops.traceComplex(mat);
     }
 
@@ -887,33 +659,18 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         var output = new double[input.length*2];
         for (int i = 0; i < input.length; i++) {
             output[i*2] = input[i];
-            output[i*2+1] = 0.0;
+            output[i*2 + 1] = 0.0;
         }
         return output;
     }
 
-    /**
-     * Returns the value of the specified matrix element. Performs a bounds check to make sure
-     * the requested element is part of the matrix.
-     *
-     * <p>NOTE: Complex matrices will throw an exception</p>
-     *
-     * @param row The row of the element.
-     * @param col The column of the element.
-     * @return The value of the element.
-     */
-    public double get( int row, int col ) {
+    /** @inheritDoc */
+    @Override public double get( int row, int col ) {
         return ops.get(mat, row, col);
     }
 
-    /**
-     * Returns the value of the matrix at the specified index of the 1D row major array.
-     *
-     * @param index The element's index whose value is to be returned
-     * @return The value of the specified element.
-     * @see DMatrixRMaj#get(int)
-     */
-    public double get( int index ) {
+    /** @inheritDoc */
+    @Override public double get( int index ) {
         MatrixType type = mat.getType();
 
         if (type.isReal()) {
@@ -927,76 +684,33 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /**
-     * Used to get the complex value of a matrix element.
-     *
-     * @param row The row of the element.
-     * @param col The column of the element.
-     * @param output Storage for the value
-     */
-    public void get( int row, int col, Complex_F64 output ) {
+    /** @inheritDoc */
+    @Override public void get( int row, int col, Complex_F64 output ) {
         ops.get(mat, row, col, output);
     }
 
-    /**
-     * Returns the real component of the element. If a real matrix this is the same as calling {@link #get(int, int)}.
-     *
-     * @param row The row of the element.
-     * @param col The column of the element.
-     */
-    public double getReal( int row, int col ) {
+    /** @inheritDoc */
+    @Override public double getReal( int row, int col ) {
         return ops.getReal(mat, row, col);
     }
 
-    /**
-     * Returns the imaginary component of the element. If a real matrix this will always be zero.
-     *
-     * @param row The row of the element.
-     * @param col The column of the element.
-     */
-    public double getImaginary( int row, int col ) {
+    /** @inheritDoc */
+    @Override public double getImaginary( int row, int col ) {
         return ops.getImaginary(mat, row, col);
     }
 
-    /** Shorthand for {@link #getImaginary(int, int)} */
-    public double getImag( int row, int col ) {
-        return getImaginary(row, col);
-    }
-
-    /**
-     * Returns the index in the matrix's array.
-     *
-     * @param row The row number.
-     * @param col The column number.
-     * @return The index of the specified element.
-     * @see DMatrixRMaj#getIndex(int, int)
-     */
-    public int getIndex( int row, int col ) {
+    /** @inheritDoc */
+    @Override public int getIndex( int row, int col ) {
         return row*mat.getNumCols() + col;
     }
 
-    /**
-     * Creates a new iterator for traversing through a submatrix inside this matrix. It can be traversed
-     * by row or by column. Range of elements is inclusive, e.g. minRow = 0 and maxRow = 1 will include rows
-     * 0 and 1. The iteration starts at (minRow,minCol) and ends at (maxRow,maxCol)
-     *
-     * @param rowMajor true means it will traverse through the submatrix by row first, false by columns.
-     * @param minRow first row it will start at.
-     * @param minCol first column it will start at.
-     * @param maxRow last row it will stop at.
-     * @param maxCol last column it will stop at.
-     * @return A new MatrixIterator
-     */
-    public DMatrixIterator iterator( boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol ) {
+    /** @inheritDoc */
+    @Override public DMatrixIterator iterator( boolean rowMajor, int minRow, int minCol, int maxRow, int maxCol ) {
         return new DMatrixIterator((DMatrixRMaj)mat, rowMajor, minRow, minCol, maxRow, maxCol);
     }
 
-    /**
-     * Creates and returns a matrix which is identical to this one.
-     *
-     * @return A new identical matrix.
-     */
-    public T copy() {
+    /** @inheritDoc */
+    @Override public T copy() {
         T ret = createLike();
         ret.getMatrix().setTo(this.getMatrix());
         return ret;
@@ -1024,57 +738,28 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return mat.getNumCols();
     }
 
-    /**
-     * Returns the number of rows in this matrix.
-     *
-     * @return number of rows.
-     */
-    public int getNumRows() {
+    /** @inheritDoc */
+    @Override public int getNumRows() {
         return mat.getNumRows();
     }
 
-    /**
-     * Returns the number of columns in this matrix.
-     *
-     * @return number of columns.
-     */
-    public int getNumCols() {
+    /** @inheritDoc */
+    @Override public int getNumCols() {
         return mat.getNumCols();
     }
 
-    /**
-     * Returns the number of elements in this matrix, which is equal to
-     * the number of rows times the number of columns.
-     *
-     * @return The number of elements in the matrix.
-     */
-    public int getNumElements() {
-        return mat.getNumCols()*mat.getNumRows();
-    }
-
-    /**
-     * Prints the matrix to standard out.
-     */
-    public void print() {
+    /** @inheritDoc */
+    @Override public void print() {
         mat.print();
     }
 
-    /**
-     * <p>
-     * Prints the matrix to standard out given a {@link java.io.PrintStream#printf} style floating point format,
-     * e.g. print("%f").
-     * </p>
-     */
-    public void print( String format ) {
+    /** @inheritDoc */
+    @Override public void print( String format ) {
         ops.print(System.out, mat, format);
     }
 
-    /**
-     * Returns 2D array of doubles using the {@link SimpleBase#get(int, int)} method.
-     *
-     * @return 2D array of doubles.
-     */
-    public double[][] toArray2() {
+    /** @inheritDoc */
+    @Override public double[][] toArray2() {
         double[][] array = new double[mat.getNumRows()][mat.getNumCols()];
         for (int r = 0; r < mat.getNumRows(); r++) {
             for (int c = 0; c < mat.getNumCols(); c++) {
@@ -1102,29 +787,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return stream.toString(StandardCharsets.UTF_8);
     }
 
-    /**
-     * <p>
-     * Creates a new SimpleMatrix which is a submatrix of this matrix.
-     * </p>
-     * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1<br>
-     * <br>
-     * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
-     * original matrix.
-     * </p>
-     *
-     * <p>
-     * If any of the inputs are set to SimpleMatrix.END then it will be set to the last row
-     * or column in the matrix.
-     * </p>
-     *
-     * @param y0 Start row.
-     * @param y1 Stop row + 1.
-     * @param x0 Start column.
-     * @param x1 Stop column + 1.
-     * @return The submatrix.
-     */
-    public T extractMatrix( int y0, int y1, int x0, int x1 ) {
+    /** @inheritDoc */
+    @Override public T extractMatrix( int y0, int y1, int x0, int x1 ) {
         if (y0 == SimpleMatrix.END) y0 = mat.getNumRows();
         if (y1 == SimpleMatrix.END) y1 = mat.getNumRows();
         if (x0 == SimpleMatrix.END) x0 = mat.getNumCols();
@@ -1137,19 +801,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * <p>
-     * Extracts a row or column from this matrix. The returned vector will either be a row
-     * or column vector depending on the input type.
-     * </p>
-     *
-     * @param extractRow If true a row will be extracted.
-     * @param element The row or column the vector is contained in.
-     * @return Extracted vector.
-     * @see #getRow(int)
-     * @see #getColumn(int)
-     */
-    public T extractVector( boolean extractRow, int element ) {
+    /** @inheritDoc */
+    @Override public T extractVector( boolean extractRow, int element ) {
         if (extractRow) {
             return extractMatrix(element, element + 1, 0, SimpleMatrix.END);
         } else {
@@ -1157,60 +810,30 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /**
-     * Returns the specified row in 'this' matrix as a row vector.
-     *
-     * @param row Row in the matrix
-     * @return Extracted vector
-     * @see #extractVector(boolean, int)
-     */
-    public T getRow( int row ) {
+    /** @inheritDoc */
+    @Override public T getRow( int row ) {
         return extractVector(true, row);
     }
 
-    /**
-     * Returns the specified column in 'this' matrix as a column vector.
-     *
-     * @param col Column in the matrix
-     * @return Extracted vector
-     * @see #extractVector(boolean, int)
-     */
-    public T getColumn( int col ) {
+    /** @inheritDoc */
+    @Override public T getColumn( int col ) {
         return extractVector(false, col);
     }
 
-    /**
-     * <p>
-     * If a vector then a square matrix is returned if a matrix then a vector of diagonal ements is returned
-     * </p>
-     *
-     * @return Diagonal elements inside a vector or a square matrix with the same diagonal elements.
-     * @see CommonOps_DDRM#extractDiag(DMatrixRMaj, DMatrixRMaj)
-     */
-    public T diag() {
+    /** @inheritDoc */
+    @Override public T diag() {
         return wrapMatrix(ops.diag(mat));
     }
 
-    /**
-     * Checks to see if matrix 'a' is the same as this matrix within the specified
-     * tolerance.
-     *
-     * @param a The matrix it is being compared against.
-     * @param tol How similar they must be to be equals.
-     * @return If they are equal within tolerance of each other.
-     */
-    public boolean isIdentical( T a, double tol ) {
+    /** @inheritDoc */
+    @Override public boolean isIdentical( T a, double tol ) {
         if (a.getType() != getType())
             return false;
         return ops.isIdentical(mat, a.mat, tol);
     }
 
-    /**
-     * Checks to see if any of the elements in this matrix are either NaN or infinite.
-     *
-     * @return True of an element is NaN or infinite. False otherwise.
-     */
-    public boolean hasUncountable() {
+    /** @inheritDoc */
+    @Override public boolean hasUncountable() {
         return ops.hasUncountable(mat);
     }
 
@@ -1265,29 +888,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         ops.extract(src, 0, src.getNumRows(), 0, src.getNumCols(), dst, destY0, destX0);
     }
 
-    /**
-     * <p>
-     * Creates a new matrix that is a combination of this matrix and matrix B. B is
-     * written into A at the specified location if needed the size of A is increased by
-     * growing it. A is grown by padding the new area with zeros.
-     * </p>
-     *
-     * <p>
-     * While useful when adding data to a matrix which will be solved for it is also much
-     * less efficient than predeclaring a matrix and inserting data into it.
-     * </p>
-     *
-     * <p>
-     * If insertRow or insertCol is set to SimpleMatrix.END then it will be combined
-     * at the last row or column respectively.
-     * <p>
-     *
-     * @param insertRow Row where matrix B is written in to.
-     * @param insertCol Column where matrix B is written in to.
-     * @param B The matrix that is written into A.
-     * @return A new combined matrix.
-     */
-    public T combine( int insertRow, int insertCol, T B ) {
+    /** @inheritDoc */
+    @Override public T combine( int insertRow, int insertCol, T B ) {
         convertType.specify(this, B);
         T A = convertType.convert(this);
         B = convertType.convert(B);
@@ -1320,73 +922,40 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * Returns the maximum real value of all the elements in this matrix.
-     *
-     * @return Largest real value of any element.
-     */
-    public double elementMax() {
+    /** @inheritDoc */
+    @Override public double elementMax() {
         return ops.elementMax(mat);
     }
 
-    /**
-     * Returns the minimum real value of all the elements in this matrix.
-     *
-     * @return Smallest real value of any element.
-     */
-    public double elementMin() {
+    /** @inheritDoc */
+    @Override public double elementMin() {
         return ops.elementMin(mat);
     }
 
-    /**
-     * Returns the maximum absolute value of all the elements in this matrix. This is
-     * equivalent to the infinite p-norm of the matrix.
-     *
-     * @return Largest absolute value of any element.
-     */
-    public double elementMaxAbs() {
+    /** @inheritDoc */
+    @Override public double elementMaxAbs() {
         return ops.elementMaxAbs(mat);
     }
 
-    /**
-     * Returns the minimum absolute value of all the elements in this matrix.
-     *
-     * @return Smallest absolute value of any element.
-     */
-    public double elementMinAbs() {
+    /** @inheritDoc */
+    @Override public double elementMinAbs() {
         return ops.elementMinAbs(mat);
     }
 
-    /**
-     * Computes the sum of all the elements in the matrix. Only works on real matrices.
-     *
-     * @return Sum of all the elements.
-     */
-    public double elementSum() {
+    /** @inheritDoc */
+    @Override public double elementSum() {
         return ops.elementSum(mat);
     }
 
-    /**
-     * Computes the sum of all the elements in the matrix. Works with both real and complex matrices.
-     *
-     * @return Sum of all the elements.
-     */
-    public Complex_F64 elementSumComplex() {
+    /** @inheritDoc */
+    @Override public Complex_F64 elementSumComplex() {
         var sum = new Complex_F64();
         ops.elementSumComplex(mat, sum);
         return sum;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of an element by element multiplication of 'this' and 'b':
-     * c<sub>i,j</sub> = a<sub>i,j</sub>*b<sub>i,j</sub>
-     * </p>
-     *
-     * @param b A simple matrix.
-     * @return The element by element multiplication of 'this' and 'b'.
-     */
-    public T elementMult( T b ) {
+    /** @inheritDoc */
+    @Override public T elementMult( T b ) {
         convertType.specify(this, b);
         T A = convertType.convert(this);
         b = convertType.convert(b);
@@ -1396,16 +965,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of an element by element division of 'this' and 'b':
-     * c<sub>i,j</sub> = a<sub>i,j</sub>/b<sub>i,j</sub>
-     * </p>
-     *
-     * @param b A simple matrix.
-     * @return The element by element division of 'this' and 'b'.
-     */
-    public T elementDiv( T b ) {
+    /** @inheritDoc */
+    @Override public T elementDiv( T b ) {
         convertType.specify(this, b);
         T A = convertType.convert(this);
         b = convertType.convert(b);
@@ -1415,16 +976,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of an element by element power of 'this' and 'b':
-     * c<sub>i,j</sub> = a<sub>i,j</sub> ^ b<sub>i,j</sub>
-     * </p>
-     *
-     * @param b A simple matrix.
-     * @return The element by element power of 'this' and 'b'.
-     */
-    public T elementPower( T b ) {
+    /** @inheritDoc */
+    @Override public T elementPower( T b ) {
         convertType.specify(this, b);
         T A = convertType.convert(this);
         b = convertType.convert(b);
@@ -1434,68 +987,36 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of an element by element power of 'this' and 'b':
-     * c<sub>i,j</sub> = a<sub>i,j</sub> ^ b
-     * </p>
-     *
-     * @param b Scalar
-     * @return The element by element power of 'this' and 'b'.
-     */
-    public T elementPower( double b ) {
+    /** @inheritDoc */
+    @Override public T elementPower( double b ) {
         T c = createLike();
         ops.elementPower(mat, b, c.mat);
         return c;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of an element by element exp of 'this'
-     * c<sub>i,j</sub> = Math.exp(a<sub>i,j</sub>)
-     * </p>
-     *
-     * @return The element by element power of 'this' and 'b'.
-     */
-    public T elementExp() {
+    /** @inheritDoc */
+    @Override public T elementExp() {
         T c = createLike();
         ops.elementExp(mat, c.mat);
         return c;
     }
 
-    /**
-     * <p>
-     * Returns a matrix which is the result of an element by element exp of 'this'
-     * c<sub>i,j</sub> = Math.log(a<sub>i,j</sub>)
-     * </p>
-     *
-     * @return The element by element power of 'this' and 'b'.
-     */
-    public T elementLog() {
+    /** @inheritDoc */
+    @Override public T elementLog() {
         T c = createLike();
         ops.elementLog(mat, c.mat);
         return c;
     }
 
-    /**
-     * <p>Applies a user defined real-valued function to a real-valued matrix.</p>
-     * c<sub>i,j</sub> = op(i, j, a<sub>i,j</sub>)
-     *
-     * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
-     */
-    public T elementOp( SimpleOperations.ElementOpReal op ) {
+    /** @inheritDoc */
+    @Override public T elementOp( SimpleOperations.ElementOpReal op ) {
         T c = createLike();
         ops.elementOp(mat, op, c.mat);
         return c;
     }
 
-    /**
-     * <p>Applies a user defined complex-valued function to a real or complex-valued matrix.</p>
-     * c<sub>i,j</sub> = op(i, j, a<sub>i,j</sub>)
-     *
-     * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
-     */
-    public T elementOp( SimpleOperations.ElementOpComplex op ) {
+    /** @inheritDoc */
+    @Override public T elementOp( SimpleOperations.ElementOpComplex op ) {
         T c = createLike();
         try {
             ops.elementOp(mat, op, c.mat);
@@ -1510,25 +1031,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return c;
     }
 
-    /**
-     * <p>
-     * Returns a new matrix whose elements are the negative of 'this' matrix's elements.<br>
-     * <br>
-     * b<sub>ij</sub> = -a<sub>ij</sub>
-     * </p>
-     *
-     * @return A matrix that is the negative of the original.
-     */
-    public T negative() {
+    /** @inheritDoc */
+    @Override public T negative() {
         T A = copy();
         ops.changeSign(A.mat);
         return A;
     }
 
-    /**
-     * <p>Returns the complex conjugate of this matrix.</p>
-     */
-    public T conjugate() {
+    /** @inheritDoc */
+    @Override public T conjugate() {
         T A = copy();
 
         if (A.getType().isReal())
@@ -1543,11 +1054,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return A;
     }
 
-    /**
-     * <p>Returns a real matrix that has the complex magnitude of each element in the matrix. For a real
-     * matrix this is the abs()</p>
-     */
-    public T magnitude() {
+    /** @inheritDoc */
+    @Override public T magnitude() {
         T A = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         if (getType().isReal()) {
@@ -1637,13 +1145,27 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         eq.process(equation);
     }
 
-    /**
-     * <p>
-     * Saves this matrix to a file in a CSV format. For the file format see {@link MatrixIO}.
-     * </p>
-     */
-    public void saveToFileCSV( String fileName ) throws IOException {
+    /** @inheritDoc */
+    @Override public void saveToFileCSV( String fileName ) throws IOException {
         MatrixIO.saveDenseCSV((DMatrixRMaj)mat, fileName);
+    }
+
+    /** @inheritDoc */
+    @Override public void saveToMatrixMarket( String fileName ) throws IOException {
+        final String format = ".15e";
+
+        try (var writer = new FileWriter(fileName)) {
+            if (mat instanceof DMatrixRMaj)
+                MatrixIO.saveMatrixMarket((DMatrixRMaj)mat, format, writer);
+            else if (mat instanceof FMatrixRMaj)
+                MatrixIO.saveMatrixMarket((FMatrixRMaj)mat, format, writer);
+            else if (mat instanceof DMatrixSparseCSC)
+                MatrixIO.saveMatrixMarket((DMatrixSparseCSC)mat, format, writer);
+            else if (mat instanceof FMatrixSparseCSC)
+                MatrixIO.saveMatrixMarket((FMatrixSparseCSC)mat, format, writer);
+            else
+                throw new IllegalArgumentException("Internal matrix type isn'y yet support for matrix market");
+        }
     }
 
     /**
@@ -1666,14 +1188,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return ret;
     }
 
-    /**
-     * Returns true of the specified matrix element is valid element inside this matrix.
-     *
-     * @param row Row index.
-     * @param col Column index.
-     * @return true if it is a valid element in the matrix.
-     */
-    public boolean isInBounds( int row, int col ) {
+    /** @inheritDoc */
+    @Override public boolean isInBounds( int row, int col ) {
         return row >= 0 && col >= 0 && row < mat.getNumRows() && col < mat.getNumCols();
     }
 
@@ -1684,10 +1200,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         System.out.println("[rows = " + numRows() + " , cols = " + numCols() + " ]");
     }
 
-    /**
-     * Size of internal array elements. 32 or 64 bits
-     */
-    public int bits() {
+    /** @inheritDoc */
+    @Override public int bits() {
         return mat.getType().getBits();
     }
 
@@ -1761,40 +1275,23 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         return (T)combined;
     }
 
-    /**
-     * Extracts the specified rows from the matrix.
-     *
-     * @param begin First row (inclusive).
-     * @param end Last row (exclusive).
-     * @return Submatrix that contains the specified rows.
-     */
-    public T rows( int begin, int end ) {
+    /** @inheritDoc */
+    @Override public T rows( int begin, int end ) {
         return extractMatrix(begin, end, 0, SimpleMatrix.END);
     }
 
-    /**
-     * Extracts the specified columns from the matrix.
-     *
-     * @param begin First column (inclusive).
-     * @param end Last column (exclusive).
-     * @return Submatrix that contains the specified columns.
-     */
-    public T cols( int begin, int end ) {
+    /** @inheritDoc */
+    @Override public T cols( int begin, int end ) {
         return extractMatrix(0, SimpleMatrix.END, begin, end);
     }
 
-    /**
-     * Returns the type of matrix it is wrapping.
-     */
-    public MatrixType getType() {
+    /** @inheritDoc */
+    @Override public MatrixType getType() {
         return mat.getType();
     }
 
-    /**
-     * Returns a matrix that contains the real valued portion of a complex matrix. For a real valued matrix
-     * this will return a copy.
-     */
-    public T real() {
+    /** @inheritDoc */
+    @Override public T real() {
         T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         // If it's a real matrix just return a copy
@@ -1809,11 +1306,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /**
-     * Returns a matrix that contains the imaginary valued portion of a complex matrix. For a real
-     * valued matrix this will return a matrix full of zeros.
-     */
-    public T imaginary() {
+    /** @inheritDoc */
+    @Override public T imaginary() {
         T ret = createRealMatrix(mat.getNumRows(), mat.getNumCols());
 
         // If it's a real matrix just return a matrix full of zeros
@@ -1828,17 +1322,8 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
         }
     }
 
-    /** Convenience function. See {@link #imaginary()} */
-    public T imag() {
-        return imaginary();
-    }
-
-    /**
-     * Creates a matrix that is the same type and shape
-     *
-     * @return New matrix
-     */
-    public T createLike() {
+    /** @inheritDoc */
+    @Override public T createLike() {
         return createMatrix(numRows(), numCols(), getType());
     }
 
