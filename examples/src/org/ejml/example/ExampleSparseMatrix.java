@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -45,7 +45,7 @@ public class ExampleSparseMatrix {
         // NOTE: It is very important to you set 'initLength' to the actual number of elements in the final array
         //       If you don't it will be forced to thrash memory as it grows its internal data structures.
         //       Failure to heed this advice will make construction of large matrices 4x slower and use 2x more memory
-        DMatrixSparseTriplet work = new DMatrixSparseTriplet(5, 4, 5);
+        var work = new DMatrixSparseTriplet(5, 4, 5);
         work.addItem(0, 1, 1.2);
         work.addItem(3, 0, 3);
         work.addItem(1, 1, 22.21234);
@@ -67,15 +67,15 @@ public class ExampleSparseMatrix {
 
         System.out.println("Done generating random matrices");
         // storage for the initial solution
-        DMatrixSparseCSC y = new DMatrixSparseCSC(ROWS, XCOLS, 0);
-        DMatrixSparseCSC z = new DMatrixSparseCSC(ROWS, XCOLS, 0);
+        var y = new DMatrixSparseCSC(ROWS, XCOLS, 0);
+        var z = new DMatrixSparseCSC(ROWS, XCOLS, 0);
 
         // To demonstration how to perform sparse math let's multiply:
         //                  y=A*x
         // Optional storage is set to null so that it will declare it internally
         long before = System.currentTimeMillis();
-        IGrowArray workA = new IGrowArray(A.numRows);
-        DGrowArray workB = new DGrowArray(A.numRows);
+        var workA = new IGrowArray(A.numRows);
+        var workB = new DGrowArray(A.numRows);
         for (int i = 0; i < 100; i++) {
             CommonOps_DSCC.mult(A, x, y, workA, workB);
             CommonOps_DSCC.add(1.5, y, 0.75, y, z, workA, workB);
@@ -86,8 +86,8 @@ public class ExampleSparseMatrix {
 
         DMatrixRMaj Ad = DConvertMatrixStruct.convert(A, (DMatrixRMaj)null);
         DMatrixRMaj xd = DConvertMatrixStruct.convert(x, (DMatrixRMaj)null);
-        DMatrixRMaj yd = new DMatrixRMaj(y.numRows, y.numCols);
-        DMatrixRMaj zd = new DMatrixRMaj(y.numRows, y.numCols);
+        var yd = new DMatrixRMaj(y.numRows, y.numCols);
+        var zd = new DMatrixRMaj(y.numRows, y.numCols);
 
         before = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {

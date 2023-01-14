@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.simple;
 
 import org.ejml.data.*;
@@ -32,7 +31,7 @@ import java.io.IOException;
  *
  * @author Peter Abeles
  */
-public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
+public interface ImmutableMatrix {
     /**
      * <p>
      * Returns the transpose of this matrix.<br>
@@ -42,13 +41,13 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return A matrix that is n by m.
      * @see CommonOps_DDRM#transpose(DMatrixRMaj, DMatrixRMaj)
      */
-    T transpose();
+    <T extends ImmutableMatrix> T transpose();
 
     /**
      * Returns a matrix that is the conjugate transpose. If real then this is the
      * same as calling {@link #transpose()}.
      */
-    T transposeConjugate();
+    <T extends ImmutableMatrix> T transposeConjugate();
 
     /**
      * <p>
@@ -63,7 +62,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return The results of this operation.
      * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    T mult( T B );
+    <T extends ImmutableMatrix> T mult( ImmutableMatrix B );
 
     /**
      * <p>
@@ -76,7 +75,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return Kronecker product between this matrix and B.
      * @see CommonOps_DDRM#kron(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
      */
-    T kron( T B );
+    <T extends ImmutableMatrix> T kron( ImmutableMatrix B );
 
     /**
      * <p>
@@ -90,7 +89,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param B m by n matrix. Not modified.
      * @return The results of this operation.
      */
-    T plus( T B );
+    <T extends ImmutableMatrix> T plus( ImmutableMatrix B );
 
 
     /**
@@ -106,7 +105,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return The results of this operation.
      * @see CommonOps_DDRM#subtract(DMatrixD1, DMatrixD1, DMatrixD1)
      */
-    T minus( T B );
+    <T extends ImmutableMatrix> T minus( ImmutableMatrix B );
 
     /**
      * <p>
@@ -123,7 +122,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return The results of this operation.
      * @see CommonOps_DDRM#subtract(DMatrixD1, double, DMatrixD1)
      */
-    T minus( double b );
+    <T extends ImmutableMatrix> T minus( double b );
 
     /**
      * Subtracts a complex scalar from each element in the matrix. If the matrix is real, then it will
@@ -133,7 +132,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param imag Imaginary component of scalar value
      * @return The results of this operation.
      */
-    T minusComplex( double real, double imag );
+    <T extends ImmutableMatrix> T minusComplex( double real, double imag );
 
 
     /**
@@ -151,7 +150,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return A matrix that contains the results.
      * @see CommonOps_DDRM#add(DMatrixD1, double, DMatrixD1)
      */
-    T plus( double b );
+    <T extends ImmutableMatrix> T plus( double b );
 
     /**
      * Adds a complex scalar from each element in the matrix. If the matrix is real, then it will
@@ -161,7 +160,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param imag Imaginary component of scalar value
      * @return The results of this operation.
      */
-    T plusComplex( double real, double imag );
+    <T extends ImmutableMatrix> T plusComplex( double real, double imag );
 
     /**
      * <p>
@@ -178,7 +177,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return A matrix that contains the results.
      * @see CommonOps_DDRM#add(DMatrixD1, double, DMatrixD1, DMatrixD1)
      */
-    T plus( double beta, T B );
+    <T extends ImmutableMatrix> T plus( double beta, ImmutableMatrix B );
 
     /**
      * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
@@ -186,7 +185,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param v The second vector in the dot product. Not modified.
      * @return dot product
      */
-    double dot( T v );
+    double dot( ImmutableMatrix v );
 
     /**
      * Returns true if this matrix is a vector. A vector is defined as a matrix
@@ -206,7 +205,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return The scaled matrix.
      * @see CommonOps_DDRM#scale(double, DMatrixD1)
      */
-    T scale( double val );
+    <T extends ImmutableMatrix> T scale( double val );
 
     /**
      * Scales/multiplies each element in the matrix by the complex number. If the matrix is real, then it will
@@ -216,7 +215,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param imag Imaginary component of scalar value
      * @return Scaled matrix
      */
-    T scaleComplex( double real, double imag );
+    <T extends ImmutableMatrix> T scaleComplex( double real, double imag );
 
     /**
      * <p>
@@ -228,7 +227,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return Matrix with its elements divided by the specified value.
      * @see CommonOps_DDRM#divide(DMatrixD1, double)
      */
-    T divide( double val );
+    <T extends ImmutableMatrix> T divide( double val );
 
     /**
      * <p>
@@ -245,7 +244,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return The inverse of this matrix.
      * @see CommonOps_DDRM#invert(DMatrixRMaj, DMatrixRMaj)
      */
-    T invert();
+    <T extends ImmutableMatrix> T invert();
 
     /**
      * <p>
@@ -254,7 +253,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * @return inverse computed using the pseudo inverse.
      */
-    T pseudoInverse();
+    <T extends ImmutableMatrix> T pseudoInverse();
 
     /**
      * <p>
@@ -274,7 +273,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return The solution for 'x' that is n by p.
      * @see CommonOps_DDRM#solve(DMatrixRMaj, DMatrixRMaj, DMatrixRMaj)
      */
-    T solve( T B );
+    <T extends ImmutableMatrix> T solve( ImmutableMatrix B );
 
     /**
      * <p>
@@ -384,7 +383,9 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
     double getImaginary( int row, int col );
 
     /** Shorthand for {@link #getImaginary(int, int)} */
-    double getImag( int row, int col );
+    default double getImag( int row, int col ) {
+        return getImaginary(row, col);
+    }
 
     /**
      * Returns the index in the matrix's array.
@@ -415,7 +416,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * @return A new identical matrix.
      */
-    T copy();
+    <T extends ImmutableMatrix> T copy();
 
     /**
      * Returns the number of rows in this matrix.
@@ -483,7 +484,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param x1 Stop column + 1.
      * @return The submatrix.
      */
-    T extractMatrix( int y0, int y1, int x0, int x1 );
+    <T extends ImmutableMatrix> T extractMatrix( int y0, int y1, int x0, int x1 );
 
     /**
      * <p>
@@ -497,7 +498,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @see #getRow(int)
      * @see #getColumn(int)
      */
-    T extractVector( boolean extractRow, int element );
+    <T extends ImmutableMatrix> T extractVector( boolean extractRow, int element );
 
     /**
      * Returns the specified row in 'this' matrix as a row vector.
@@ -506,7 +507,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return Extracted vector
      * @see #extractVector(boolean, int)
      */
-    T getRow( int row );
+    <T extends ImmutableMatrix> T getRow( int row );
 
     /**
      * Returns the specified column in 'this' matrix as a column vector.
@@ -515,7 +516,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return Extracted vector
      * @see #extractVector(boolean, int)
      */
-    T getColumn( int col );
+    <T extends ImmutableMatrix> T getColumn( int col );
 
     /**
      * <p>
@@ -525,7 +526,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @return Diagonal elements inside a vector or a square matrix with the same diagonal elements.
      * @see CommonOps_DDRM#extractDiag(DMatrixRMaj, DMatrixRMaj)
      */
-    T diag();
+    <T extends ImmutableMatrix> T diag();
 
     /**
      * Checks to see if matrix 'a' is the same as this matrix within the specified
@@ -535,7 +536,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param tol How similar they must be to be equals.
      * @return If they are equal within tolerance of each other.
      */
-    boolean isIdentical( T a, double tol );
+    boolean isIdentical( ImmutableMatrix a, double tol );
 
     /**
      * Checks to see if any of the elements in this matrix are either NaN or infinite.
@@ -566,7 +567,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param B The matrix that is written into A.
      * @return A new combined matrix.
      */
-    T combine( int insertRow, int insertCol, T B );
+    <T extends ImmutableMatrix> T combine( int insertRow, int insertCol, ImmutableMatrix B );
 
     /**
      * Returns the maximum real value of all the elements in this matrix.
@@ -620,7 +621,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param b A simple matrix.
      * @return The element by element multiplication of 'this' and 'b'.
      */
-    T elementMult( T b );
+    <T extends ImmutableMatrix> T elementMult( ImmutableMatrix b );
 
     /**
      * <p>
@@ -631,7 +632,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param b A simple matrix.
      * @return The element by element division of 'this' and 'b'.
      */
-    T elementDiv( T b );
+    <T extends ImmutableMatrix> T elementDiv( ImmutableMatrix b );
 
     /**
      * <p>
@@ -642,7 +643,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param b A simple matrix.
      * @return The element by element power of 'this' and 'b'.
      */
-    T elementPower( T b );
+    <T extends ImmutableMatrix> T elementPower( ImmutableMatrix b );
 
     /**
      * <p>
@@ -653,7 +654,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param b Scalar
      * @return The element by element power of 'this' and 'b'.
      */
-    T elementPower( double b );
+    <T extends ImmutableMatrix> T elementPower( double b );
 
     /**
      * <p>
@@ -663,7 +664,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * @return The element by element power of 'this' and 'b'.
      */
-    T elementExp();
+    <T extends ImmutableMatrix> T elementExp();
 
     /**
      * <p>
@@ -673,7 +674,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * @return The element by element power of 'this' and 'b'.
      */
-    T elementLog();
+    <T extends ImmutableMatrix> T elementLog();
 
     /**
      * <p>Applies a user defined real-valued function to a real-valued matrix.</p>
@@ -681,7 +682,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
      */
-    T elementOp( SimpleOperations.ElementOpReal op );
+    <T extends ImmutableMatrix> T elementOp( SimpleOperations.ElementOpReal op );
 
     /**
      * <p>Applies a user defined complex-valued function to a real or complex-valued matrix.</p>
@@ -689,7 +690,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * <p>If the matrix is sparse then this is only applied to non-zero elements</p>
      */
-    T elementOp( SimpleOperations.ElementOpComplex op );
+    <T extends ImmutableMatrix> T elementOp( SimpleOperations.ElementOpComplex op );
 
     /**
      * <p>
@@ -700,18 +701,18 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * @return A matrix that is the negative of the original.
      */
-    T negative();
+    <T extends ImmutableMatrix> T negative();
 
     /**
      * <p>Returns the complex conjugate of this matrix.</p>
      */
-    T conjugate();
+    <T extends ImmutableMatrix> T conjugate();
 
     /**
      * <p>Returns a real matrix that has the complex magnitude of each element in the matrix. For a real
      * matrix this is the abs()</p>
      */
-    T magnitude();
+    <T extends ImmutableMatrix> T magnitude();
 
     /**
      * <p>
@@ -748,7 +749,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param end Last row (exclusive).
      * @return Submatrix that contains the specified rows.
      */
-    T rows( int begin, int end );
+    <T extends ImmutableMatrix> T rows( int begin, int end );
 
     /**
      * Extracts the specified columns from the matrix.
@@ -757,7 +758,7 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * @param end Last column (exclusive).
      * @return Submatrix that contains the specified columns.
      */
-    T cols( int begin, int end );
+    <T extends ImmutableMatrix> T cols( int begin, int end );
 
     /**
      * Returns the type of matrix it is wrapping.
@@ -768,16 +769,16 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      * Returns a matrix that contains the real valued portion of a complex matrix. For a real valued matrix
      * this will return a copy.
      */
-    T real();
+    <T extends ImmutableMatrix> T real();
 
     /**
      * Returns a matrix that contains the imaginary valued portion of a complex matrix. For a real
      * valued matrix this will return a matrix full of zeros.
      */
-    T imaginary();
+    <T extends ImmutableMatrix> T imaginary();
 
     /** Convenience function. See {@link #imaginary()} */
-    default T imag() {
+    default ImmutableMatrix imag() {
         return imaginary();
     }
 
@@ -786,5 +787,5 @@ public interface ImmutableMatrix<T extends ImmutableMatrix<T>> {
      *
      * @return New matrix
      */
-    T createLike();
+    <T extends ImmutableMatrix> T createLike();
 }

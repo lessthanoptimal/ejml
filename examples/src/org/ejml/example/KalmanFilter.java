@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,7 +34,6 @@ import org.ejml.data.DMatrixRMaj;
  * @author Peter Abeles
  */
 public interface KalmanFilter {
-
     /**
      * Specify the kinematics model of the Kalman filter. This must be called
      * first before any other functions.
@@ -43,8 +42,7 @@ public interface KalmanFilter {
      * @param Q plant noise.
      * @param H measurement projection matrix.
      */
-    void configure(DMatrixRMaj F, DMatrixRMaj Q ,
-                          DMatrixRMaj H);
+    void configure( DMatrixRMaj F, DMatrixRMaj Q, DMatrixRMaj H );
 
     /**
      * The prior state estimate and covariance.
@@ -52,7 +50,7 @@ public interface KalmanFilter {
      * @param x The estimated system state.
      * @param P The covariance of the estimated system state.
      */
-    void setState(DMatrixRMaj x , DMatrixRMaj P );
+    void setState( DMatrixRMaj x, DMatrixRMaj P );
 
     /**
      * Predicts the state of the system forward one time step.
@@ -65,7 +63,7 @@ public interface KalmanFilter {
      * @param z Measurement.
      * @param R Measurement covariance.
      */
-    void update(DMatrixRMaj z , DMatrixRMaj R );
+    void update( DMatrixRMaj z, DMatrixRMaj R );
 
     /**
      * Returns the current estimated state of the system.

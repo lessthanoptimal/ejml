@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,7 +38,7 @@ public class QRExampleSimple {
     private SimpleMatrix QR;
 
     // used for computing Q
-    private double gammas[];
+    private double[] gammas;
 
     /**
      * Computes the QR decomposition of the provided matrix.
@@ -49,39 +49,39 @@ public class QRExampleSimple {
 
         this.QR = A.copy();
 
-        int N = Math.min(A.numCols(),A.numRows());
-        gammas = new double[ A.numCols() ];
+        int N = Math.min(A.getNumCols(), A.getNumRows());
+        gammas = new double[A.getNumCols()];
 
-        for( int i = 0; i < N; i++ ) {
+        for (int i = 0; i < N; i++) {
             // use extract matrix to get the column that is to be zeroed
-            SimpleMatrix v = QR.extractMatrix(i, END,i,i+1);
+            SimpleMatrix v = QR.extractMatrix(i, END, i, i + 1);
             double max = v.elementMaxAbs();
 
-            if( max > 0 && v.getNumElements() > 1 ) {
+            if (max > 0 && v.getNumElements() > 1) {
                 // normalize to reduce overflow issues
                 v = v.divide(max);
 
                 // compute the magnitude of the vector
                 double tau = v.normF();
 
-                if( v.get(0) < 0 )
+                if (v.get(0) < 0)
                     tau *= -1.0;
 
                 double u_0 = v.get(0) + tau;
                 double gamma = u_0/tau;
 
                 v = v.divide(u_0);
-                v.set(0,1.0);
+                v.set(0, 1.0);
 
                 // extract the submatrix of A which is being operated on
-                SimpleMatrix A_small = QR.extractMatrix(i,END,i,END);
+                SimpleMatrix A_small = QR.extractMatrix(i, END, i, END);
 
                 // A = (I - &gamma;*u*u<sup>T</sup>)A
-                A_small = A_small.plus(-gamma,v.mult(v.transpose()).mult(A_small));
+                A_small = A_small.plus(-gamma, v.mult(v.transpose()).mult(A_small));
 
                 // save the results
-                QR.insertIntoThis(i,i,A_small);
-                QR.insertIntoThis(i+1,i,v.extractMatrix(1,END,0,1));
+                QR.insertIntoThis(i, i, A_small);
+                QR.insertIntoThis(i + 1, i, v.extractMatrix(1, END, 0, 1));
 
                 // Alternatively, the two lines above can be replaced with in-place equations
                 // READ THE JAVADOC TO UNDERSTAND HOW THIS WORKS!
@@ -98,18 +98,18 @@ public class QRExampleSimple {
      * Returns the Q matrix.
      */
     public SimpleMatrix getQ() {
-        SimpleMatrix Q = SimpleMatrix.identity(QR.numRows());
+        SimpleMatrix Q = SimpleMatrix.identity(QR.getNumRows());
 
-        int N = Math.min(QR.numCols(),QR.numRows());
+        int N = Math.min(QR.getNumCols(), QR.getNumRows());
 
         // compute Q by first extracting the householder vectors from the columns of QR and then applying it to Q
-        for( int j = N-1; j>= 0; j-- ) {
-            SimpleMatrix u = new SimpleMatrix(QR.numRows(),1);
-            u.insertIntoThis(j,0,QR.extractMatrix(j, END,j,j+1));
-            u.set(j,1.0);
+        for (int j = N - 1; j >= 0; j--) {
+            SimpleMatrix u = new SimpleMatrix(QR.getNumRows(), 1);
+            u.insertIntoThis(j, 0, QR.extractMatrix(j, END, j, j + 1));
+            u.set(j, 1.0);
 
             // A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
-            Q = Q.plus(-gammas[j],u.mult(u.transpose()).mult(Q));
+            Q = Q.plus(-gammas[j], u.mult(u.transpose()).mult(Q));
         }
 
         return Q;
@@ -119,13 +119,13 @@ public class QRExampleSimple {
      * Returns the R matrix.
      */
     public SimpleMatrix getR() {
-        SimpleMatrix R = new SimpleMatrix(QR.numRows(),QR.numCols());
+        SimpleMatrix R = new SimpleMatrix(QR.getNumRows(), QR.getNumCols());
 
-        int N = Math.min(QR.numCols(),QR.numRows());
+        int N = Math.min(QR.getNumCols(), QR.getNumRows());
 
-        for( int i = 0; i < N; i++ ) {
-            for( int j = i; j < QR.numCols(); j++ ) {
-                R.set(i,j, QR.get(i,j));
+        for (int i = 0; i < N; i++) {
+            for (int j = i; j < QR.getNumCols(); j++) {
+                R.set(i, j, QR.get(i, j));
             }
         }
 
