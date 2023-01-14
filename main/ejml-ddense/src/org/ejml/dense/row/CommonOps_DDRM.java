@@ -2507,7 +2507,7 @@ public class CommonOps_DDRM {
      * @return Boolean matrix with results
      * @see #elementBoolean for a more generalized element wise binary operator
      */
-    public static BMatrixRMaj elementLessThan( DMatrixRMaj A, double value, BMatrixRMaj output ) {
+    public static BMatrixRMaj elementLessThan( DMatrixRMaj A, double value, @Nullable BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
 
         int N = A.getNumElements();
@@ -2528,7 +2528,7 @@ public class CommonOps_DDRM {
      * @return Boolean matrix with results
      * @see #elementBoolean for a more generalized element wise binary operator
      */
-    public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, double value, BMatrixRMaj output ) {
+    public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, double value, @Nullable BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
 
         int N = A.getNumElements();
@@ -2549,7 +2549,7 @@ public class CommonOps_DDRM {
      * @return Boolean matrix with results
      * @see #elementBoolean for a more generalized element wise binary operator
      */
-    public static BMatrixRMaj elementMoreThan( DMatrixRMaj A, double value, BMatrixRMaj output ) {
+    public static BMatrixRMaj elementMoreThan( DMatrixRMaj A, double value, @Nullable BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
 
         int N = A.getNumElements();
@@ -2570,7 +2570,7 @@ public class CommonOps_DDRM {
      * @return Boolean matrix with results
      * @see #elementBoolean for a more generalized element wise binary operator
      */
-    public static BMatrixRMaj elementMoreThanOrEqual( DMatrixRMaj A, double value, BMatrixRMaj output ) {
+    public static BMatrixRMaj elementMoreThanOrEqual( DMatrixRMaj A, double value, @Nullable BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
 
         int N = A.getNumElements();
@@ -2591,7 +2591,7 @@ public class CommonOps_DDRM {
      * @return Boolean matrix with results
      * @see #elementBoolean for a more generalized element wise binary operator
      */
-    public static BMatrixRMaj elementLessThan( DMatrixRMaj A, DMatrixRMaj B, BMatrixRMaj output ) {
+    public static BMatrixRMaj elementLessThan( DMatrixRMaj A, DMatrixRMaj B, @Nullable BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
 
         int N = A.getNumElements();
@@ -2612,7 +2612,7 @@ public class CommonOps_DDRM {
      * @return Boolean matrix with results
      * @see #elementBoolean for a more generalized element wise binary operator
      */
-    public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, DMatrixRMaj B, BMatrixRMaj output ) {
+    public static BMatrixRMaj elementLessThanOrEqual( DMatrixRMaj A, DMatrixRMaj B, @Nullable BMatrixRMaj output ) {
         output = UtilEjml.reshapeOrDeclare(output, A.numRows, A.numCols);
 
         int N = A.getNumElements();
