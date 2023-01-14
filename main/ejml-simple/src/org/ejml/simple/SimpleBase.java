@@ -1649,6 +1649,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements Serializabl
     /**
      * <p>
      * Loads a new matrix from a CSV file. For the file format see {@link MatrixIO}.
+     * The returned matrix will be the same matrix type as 'this'.
      * </p>
      *
      * @param fileName File which is to be loaded.
