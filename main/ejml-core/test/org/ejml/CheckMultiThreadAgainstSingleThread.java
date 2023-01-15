@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,10 +19,7 @@
 package org.ejml;
 
 import org.ejml.data.*;
-import org.ejml.dense.row.MatrixFeatures_DDRM;
-import org.ejml.dense.row.MatrixFeatures_FDRM;
-import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.dense.row.RandomMatrices_FDRM;
+import org.ejml.dense.row.*;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -171,13 +168,23 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
     protected void declareParamStandard(Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle) {
         for( int i = 0; i < typesThreaded.length; i++ ) {
             if(typesThreaded[i].isAssignableFrom(FMatrixRMaj.class)) {
-                FMatrixRMaj m = new FMatrixRMaj(size, size);
+                var m = new FMatrixRMaj(size, size);
                 RandomMatrices_FDRM.fillUniform(m, -1, 1, rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
             } else if(typesThreaded[i].isAssignableFrom(DMatrixRMaj.class)) {
-                DMatrixRMaj m = new DMatrixRMaj(size,size);
+                var m = new DMatrixRMaj(size,size);
                 RandomMatrices_DDRM.fillUniform(m,-1,1,rand);
+                inputsThreaded[i] = m.copy();
+                inputsSingle[i] = m;
+            } else if(typesThreaded[i].isAssignableFrom(CMatrixRMaj.class)) {
+                var m = new CMatrixRMaj(size,size);
+                RandomMatrices_CDRM.fillUniform(m,-1,1,rand);
+                inputsThreaded[i] = m.copy();
+                inputsSingle[i] = m;
+            } else if(typesThreaded[i].isAssignableFrom(ZMatrixRMaj.class)) {
+                var m = new ZMatrixRMaj(size,size);
+                RandomMatrices_ZDRM.fillUniform(m,-1,1,rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
             } else if(Submatrix.class.isAssignableFrom(typesThreaded[i])) {
@@ -201,33 +208,41 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
         if( a == null ) {
             return b == null;
         } else if( Double.class == a.getClass() ) {
-            double valA = ((Double)a).doubleValue();
-            double valB = ((Double)b).doubleValue();
+            double valA = (Double)a;
+            double valB = (Double)b;
 
             return Math.abs(valA-valB) < UtilEjml.TEST_F64;
         } else if( Float.class == a.getClass() ) {
-            double valA = ((Float)a).floatValue();
-            double valB = ((Float)b).floatValue();
+            double valA = (Float)a;
+            double valB = (Float)b;
 
             return Math.abs(valA-valB) < UtilEjml.TEST_F32;
         } else if(Submatrix.class.isAssignableFrom(a.getClass()) ) {
             compareSubmatrices((Submatrix)a,(Submatrix)b);
         } else if(FMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
-            FMatrixRMaj bb = (FMatrixRMaj)b;
-            FMatrixRMaj aa = (FMatrixRMaj)a;
+            var bb = (FMatrixRMaj)b;
+            var aa = (FMatrixRMaj)a;
             return MatrixFeatures_FDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
         } else if(DMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
-            DMatrixRMaj bb = (DMatrixRMaj)b;
-            DMatrixRMaj aa = (DMatrixRMaj)a;
+            var bb = (DMatrixRMaj)b;
+            var aa = (DMatrixRMaj)a;
             return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
         } else if(FMatrixRBlock.class.isAssignableFrom(a.getClass()) ) {
-            FMatrixRBlock bb = (FMatrixRBlock)b;
-            FMatrixRBlock aa = (FMatrixRBlock)a;
+            var bb = (FMatrixRBlock)b;
+            var aa = (FMatrixRBlock)a;
             return MatrixFeatures_FDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
         } else if(DMatrixRBlock.class.isAssignableFrom(a.getClass()) ) {
-            DMatrixRBlock bb = (DMatrixRBlock)b;
-            DMatrixRBlock aa = (DMatrixRBlock)a;
+            var bb = (DMatrixRBlock)b;
+            var aa = (DMatrixRBlock)a;
             return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
+        } else if(CMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+            var bb = (CMatrixRMaj)b;
+            var aa = (CMatrixRMaj)a;
+            return MatrixFeatures_CDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
+        } else if(ZMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+            var bb = (ZMatrixRMaj)b;
+            var aa = (ZMatrixRMaj)a;
+            return MatrixFeatures_ZDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
         } else if( Boolean.class == a.getClass() ) {
             return true;
         } else if( Integer.class == a.getClass() ) {

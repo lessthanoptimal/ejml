@@ -27,6 +27,8 @@ Date format: year/month/day
   * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
 - CommonOps_DDRM
   * Added elementBoolean(matrix, lambda) for arbitrary element-wise boolean operators
+- MatrixMatrixMult_ZDRM
+  * Added concurrent versions of several matrix multiplication ops
 - Handling of zero sized matrices
   * Unit tests ensure decompositions and linear solvers can process 0x0, Mx0, 0xN matrices.
   * Requested by JozsefKutas and others. Note: I've never personally had a desire for this...
