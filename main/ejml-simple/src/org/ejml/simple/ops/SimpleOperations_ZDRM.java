@@ -17,9 +17,11 @@
  */
 package org.ejml.simple.ops;
 
+import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.Matrix;
 import org.ejml.data.ZMatrixRMaj;
+import org.ejml.dense.row.CommonOps_MT_ZDRM;
 import org.ejml.dense.row.CommonOps_ZDRM;
 import org.ejml.dense.row.MatrixFeatures_ZDRM;
 import org.ejml.dense.row.NormOps_ZDRM;
@@ -70,11 +72,19 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
     }
 
     @Override public void mult( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
-        CommonOps_ZDRM.mult(A, B, output);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_ZDRM.mult(A, B, output);
+        } else {
+            CommonOps_ZDRM.mult(A, B, output);
+        }
     }
 
     @Override public void multTransA( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
-        CommonOps_ZDRM.multTransA(A, B, output);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_ZDRM.multTransA(A, B, output);
+        } else {
+            CommonOps_ZDRM.multTransA(A, B, output);
+        }
     }
 
     @Override public void kron( ZMatrixRMaj A, ZMatrixRMaj B, ZMatrixRMaj output ) {
