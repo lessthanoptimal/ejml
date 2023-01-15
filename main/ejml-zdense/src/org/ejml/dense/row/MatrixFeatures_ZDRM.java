@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -30,7 +30,7 @@ import org.ejml.dense.row.mult.VectorVectorMult_ZDRM;
  */
 @SuppressWarnings("Duplicates")
 public class MatrixFeatures_ZDRM {
-    private MatrixFeatures_ZDRM(){}
+    private MatrixFeatures_ZDRM() {}
 
     /**
      * Checks to see if the matrix is a vector or not.

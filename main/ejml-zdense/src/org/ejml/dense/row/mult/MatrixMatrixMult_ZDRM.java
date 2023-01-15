@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 
 /**
  * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>
- * 
+ *
  *
  * <p>DO NOT MODIFY. Automatically generated code created by GeneratorMatrixMatrixMult_ZDRM</p>
  *
@@ -36,29 +36,28 @@ import javax.annotation.Generated;
 @Generated("org.ejml.dense.row.mult.GeneratorMatrixMatrixMult_ZDRM")
 @SuppressWarnings("Duplicates")
 public class MatrixMatrixMult_ZDRM {
-    public static void mult_reorder(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void mult_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
-            CommonOps_ZDRM.fill(c,0,0);
+        if (a.numCols == 0 || a.numRows == 0) {
+            CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA,imagA;
+        double realA, imagA;
 
-        int indexCbase= 0;
+        int indexCbase = 0;
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
-        for( int i = 0; i < a.numRows; i++ ) {
+        for (int i = 0; i < a.numRows; i++) {
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -66,10 +65,10 @@ public class MatrixMatrixMult_ZDRM {
             int indexC = indexCbase;
             int end = indexB + strideB;
 
-                realA = a.data[indexA++];
-                imagA = a.data[indexA++];
+            realA = a.data[indexA++];
+            imagA = a.data[indexA++];
 
-            while( indexB < end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imgB = b.data[indexB++];
 
@@ -78,14 +77,14 @@ public class MatrixMatrixMult_ZDRM {
             }
 
             // now add to it
-            while( indexB != endOfKLoop ) { // k loop
+            while (indexB != endOfKLoop) { // k loop
                 indexC = indexCbase;
                 end = indexB + strideB;
 
                 realA = a.data[indexA++];
                 imagA = a.data[indexA++];
 
-                while( indexB < end ) { // j loop
+                while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
                     double imgB = b.data[indexB++];
 
@@ -97,14 +96,12 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void mult_small(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void mult_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
@@ -114,20 +111,20 @@ public class MatrixMatrixMult_ZDRM {
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
                 double imgTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
                 int end = indexA + strideA;
-                while( indexA < end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB+1];
+                    double imgB = b.data[indexB + 1];
 
                     realTotal += realA*realB - imagA*imgB;
                     imgTotal += realA*imgB + imagA*realB;
@@ -142,46 +139,44 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void multTransA_reorder(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransA_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
-            CommonOps_ZDRM.fill(c,0,0);
+        if (a.numCols == 0 || a.numRows == 0) {
+            CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA,imagA;
+        double realA, imagA;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexC_start = i*c.numCols*2;
 
             // first assign R
             realA = a.data[i*2];
-            imagA = a.data[i*2+1];
+            imagA = a.data[i*2 + 1];
             int indexB = 0;
-            int end = indexB+b.numCols*2;
+            int end = indexB + b.numCols*2;
             int indexC = indexC_start;
-            while( indexB<end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] = realA*realB + imagA*imagB;
                 c.data[indexC++] = realA*imagB - imagA*realB;
             }
             // now increment it
-            for( int k = 1; k < a.numRows; k++ ) {
-            realA = a.getReal(k,i);
-            imagA = a.getImag(k,i);
-                end = indexB+b.numCols*2;
+            for (int k = 1; k < a.numRows; k++) {
+                realA = a.getReal(k, i);
+                imagA = a.getImag(k, i);
+                end = indexB + b.numCols*2;
                 indexC = indexC_start;
                 // this is the loop for j
-                while( indexB<end ) {
+                while (indexB < end) {
                     double realB = b.data[indexB++];
                     double imagB = b.data[indexB++];
                     c.data[indexC++] += realA*realB + imagA*imagB;
@@ -191,20 +186,19 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransA_small(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransA_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numCols; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
                 int end = indexB + b.numRows*b.numCols*2;
@@ -213,11 +207,11 @@ public class MatrixMatrixMult_ZDRM {
                 double imagTotal = 0;
 
                 // loop for k
-                for(; indexB < end; indexB += b.numCols*2 ) {
+                for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA+1];
+                    double imagA = a.data[indexA + 1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB+1];
+                    double imagB = b.data[indexB + 1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -229,29 +223,28 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numCols ) {
+        else if (a.numCols != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
         int aIndexStart = 0;
 
-        for( int xA = 0; xA < a.numRows; xA++ ) {
+        for (int xA = 0; xA < a.numRows; xA++) {
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
-            for( int xB = 0; xB < b.numRows; xB++ ) {
+            for (int xB = 0; xB < b.numRows; xB++) {
                 int indexA = aIndexStart;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                while( indexA<end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
                     double realB = b.data[indexB++];
@@ -267,30 +260,29 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransAB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransAB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexB = 0;
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
                 int end = indexB + b.numCols*2;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( ;indexB<end; ) {
+                for (; indexB < end; ) {
                     double realA = a.data[indexA];
-                    double imagA = -a.data[indexA+1];
+                    double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
                     double imagB = -b.data[indexB++];
                     realTotal += realA*realB - imagA*imagB;
@@ -304,38 +296,37 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransAB_aux(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c , @Nullable double []aux)
-    {
-        if( a == c || b == c )
+    public static void multTransAB_aux( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( aux == null ) aux = new double[ a.numRows*2 ];
+        if (aux == null) aux = new double[a.numRows*2];
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
-            CommonOps_ZDRM.fill(c,0,0);
+        if (a.numCols == 0 || a.numRows == 0) {
+            CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
         int indexC = 0;
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
-            for( int k = 0; k < b.numCols; k++ ) {
-                aux[k*2]   = a.data[indexA];
-                aux[k*2+1] = a.data[indexA+1];
+            for (int k = 0; k < b.numCols; k++) {
+                aux[k*2] = a.data[indexA];
+                aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
 
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexAux = 0;
                 int indexB = j*b.numCols*2;
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( int k = 0; k < b.numCols; k++ ) {
+                for (int k = 0; k < b.numCols; k++) {
                     double realA = aux[indexAux++];
                     double imagA = -aux[indexAux++];
                     double realB = b.data[indexB++];
@@ -349,28 +340,27 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAdd_reorder(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAdd_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
+        if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA,imagA;
+        double realA, imagA;
 
-        int indexCbase= 0;
+        int indexCbase = 0;
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
-        for( int i = 0; i < a.numRows; i++ ) {
+        for (int i = 0; i < a.numRows; i++) {
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -378,10 +368,10 @@ public class MatrixMatrixMult_ZDRM {
             int indexC = indexCbase;
             int end = indexB + strideB;
 
-                realA = a.data[indexA++];
-                imagA = a.data[indexA++];
+            realA = a.data[indexA++];
+            imagA = a.data[indexA++];
 
-            while( indexB < end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imgB = b.data[indexB++];
 
@@ -390,14 +380,14 @@ public class MatrixMatrixMult_ZDRM {
             }
 
             // now add to it
-            while( indexB != endOfKLoop ) { // k loop
+            while (indexB != endOfKLoop) { // k loop
                 indexC = indexCbase;
                 end = indexB + strideB;
 
                 realA = a.data[indexA++];
                 imagA = a.data[indexA++];
 
-                while( indexB < end ) { // j loop
+                while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
                     double imgB = b.data[indexB++];
 
@@ -409,14 +399,12 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void multAdd_small(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAdd_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
@@ -426,20 +414,20 @@ public class MatrixMatrixMult_ZDRM {
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
                 double imgTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
                 int end = indexA + strideA;
-                while( indexA < end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB+1];
+                    double imgB = b.data[indexB + 1];
 
                     realTotal += realA*realB - imagA*imgB;
                     imgTotal += realA*imgB + imagA*realB;
@@ -454,45 +442,43 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void multAddTransA_reorder(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransA_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
+        if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA,imagA;
+        double realA, imagA;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexC_start = i*c.numCols*2;
 
             // first assign R
             realA = a.data[i*2];
-            imagA = a.data[i*2+1];
+            imagA = a.data[i*2 + 1];
             int indexB = 0;
-            int end = indexB+b.numCols*2;
+            int end = indexB + b.numCols*2;
             int indexC = indexC_start;
-            while( indexB<end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] += realA*realB + imagA*imagB;
                 c.data[indexC++] += realA*imagB - imagA*realB;
             }
             // now increment it
-            for( int k = 1; k < a.numRows; k++ ) {
-            realA = a.getReal(k,i);
-            imagA = a.getImag(k,i);
-                end = indexB+b.numCols*2;
+            for (int k = 1; k < a.numRows; k++) {
+                realA = a.getReal(k, i);
+                imagA = a.getImag(k, i);
+                end = indexB + b.numCols*2;
                 indexC = indexC_start;
                 // this is the loop for j
-                while( indexB<end ) {
+                while (indexB < end) {
                     double realB = b.data[indexB++];
                     double imagB = b.data[indexB++];
                     c.data[indexC++] += realA*realB + imagA*imagB;
@@ -502,20 +488,19 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransA_small(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransA_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numCols; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
                 int end = indexB + b.numRows*b.numCols*2;
@@ -524,11 +509,11 @@ public class MatrixMatrixMult_ZDRM {
                 double imagTotal = 0;
 
                 // loop for k
-                for(; indexB < end; indexB += b.numCols*2 ) {
+                for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA+1];
+                    double imagA = a.data[indexA + 1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB+1];
+                    double imagB = b.data[indexB + 1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -540,29 +525,28 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numCols ) {
+        else if (a.numCols != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
         int aIndexStart = 0;
 
-        for( int xA = 0; xA < a.numRows; xA++ ) {
+        for (int xA = 0; xA < a.numRows; xA++) {
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
-            for( int xB = 0; xB < b.numRows; xB++ ) {
+            for (int xB = 0; xB < b.numRows; xB++) {
                 int indexA = aIndexStart;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                while( indexA<end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
                     double realB = b.data[indexB++];
@@ -578,30 +562,29 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransAB(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransAB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexB = 0;
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
                 int end = indexB + b.numCols*2;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( ;indexB<end; ) {
+                for (; indexB < end; ) {
                     double realA = a.data[indexA];
-                    double imagA = -a.data[indexA+1];
+                    double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
                     double imagB = -b.data[indexB++];
                     realTotal += realA*realB - imagA*imagB;
@@ -615,37 +598,36 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransAB_aux(ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c , @Nullable double []aux)
-    {
-        if( a == c || b == c )
+    public static void multAddTransAB_aux( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( aux == null ) aux = new double[ a.numRows*2 ];
+        if (aux == null) aux = new double[a.numRows*2];
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
+        if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
         int indexC = 0;
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
-            for( int k = 0; k < b.numCols; k++ ) {
-                aux[k*2]   = a.data[indexA];
-                aux[k*2+1] = a.data[indexA+1];
+            for (int k = 0; k < b.numCols; k++) {
+                aux[k*2] = a.data[indexA];
+                aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
 
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexAux = 0;
                 int indexB = j*b.numCols*2;
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( int k = 0; k < b.numCols; k++ ) {
+                for (int k = 0; k < b.numCols; k++) {
                     double realA = aux[indexAux++];
                     double imagA = -aux[indexAux++];
                     double realB = b.data[indexB++];
@@ -659,29 +641,28 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void mult_reorder(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void mult_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
-            CommonOps_ZDRM.fill(c,0,0);
+        if (a.numCols == 0 || a.numRows == 0) {
+            CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA,imagA;
-        double realTmp,imagTmp;
-        int indexCbase= 0;
+        double realA, imagA;
+        double realTmp, imagTmp;
+        int indexCbase = 0;
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
-        for( int i = 0; i < a.numRows; i++ ) {
+        for (int i = 0; i < a.numRows; i++) {
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -694,7 +675,7 @@ public class MatrixMatrixMult_ZDRM {
             realA = realAlpha*realTmp - imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp + imagAlpha*realTmp;
 
-            while( indexB < end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imgB = b.data[indexB++];
 
@@ -703,16 +684,16 @@ public class MatrixMatrixMult_ZDRM {
             }
 
             // now add to it
-            while( indexB != endOfKLoop ) { // k loop
+            while (indexB != endOfKLoop) { // k loop
                 indexC = indexCbase;
                 end = indexB + strideB;
 
-            realTmp = a.data[indexA++];
-            imagTmp = a.data[indexA++];
-            realA = realAlpha*realTmp - imagAlpha*imagTmp;
-            imagA = realAlpha*imagTmp + imagAlpha*realTmp;
+                realTmp = a.data[indexA++];
+                imagTmp = a.data[indexA++];
+                realA = realAlpha*realTmp - imagAlpha*imagTmp;
+                imagA = realAlpha*imagTmp + imagAlpha*realTmp;
 
-                while( indexB < end ) { // j loop
+                while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
                     double imgB = b.data[indexB++];
 
@@ -724,14 +705,12 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void mult_small(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void mult_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
@@ -741,20 +720,20 @@ public class MatrixMatrixMult_ZDRM {
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
                 double imgTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
                 int end = indexA + strideA;
-                while( indexA < end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB+1];
+                    double imgB = b.data[indexB + 1];
 
                     realTotal += realA*realB - imagA*imgB;
                     imgTotal += realA*imgB + imagA*realB;
@@ -769,51 +748,49 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void multTransA_reorder(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransA_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
-            CommonOps_ZDRM.fill(c,0,0);
+        if (a.numCols == 0 || a.numRows == 0) {
+            CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA,imagA;
-        double realTmp,imagTmp;
+        double realA, imagA;
+        double realTmp, imagTmp;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexC_start = i*c.numCols*2;
 
             // first assign R
             realTmp = a.data[i*2];
-            imagTmp = a.data[i*2+1];
+            imagTmp = a.data[i*2 + 1];
             realA = realAlpha*realTmp + imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp - imagAlpha*realTmp;
             int indexB = 0;
-            int end = indexB+b.numCols*2;
+            int end = indexB + b.numCols*2;
             int indexC = indexC_start;
-            while( indexB<end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] = realA*realB + imagA*imagB;
                 c.data[indexC++] = realA*imagB - imagA*realB;
             }
             // now increment it
-            for( int k = 1; k < a.numRows; k++ ) {
-            realTmp = a.getReal(k,i);
-            imagTmp = a.getImag(k,i);
-            realA = realAlpha*realTmp + imagAlpha*imagTmp;
-            imagA = realAlpha*imagTmp - imagAlpha*realTmp;
-                end = indexB+b.numCols*2;
+            for (int k = 1; k < a.numRows; k++) {
+                realTmp = a.getReal(k, i);
+                imagTmp = a.getImag(k, i);
+                realA = realAlpha*realTmp + imagAlpha*imagTmp;
+                imagA = realAlpha*imagTmp - imagAlpha*realTmp;
+                end = indexB + b.numCols*2;
                 indexC = indexC_start;
                 // this is the loop for j
-                while( indexB<end ) {
+                while (indexB < end) {
                     double realB = b.data[indexB++];
                     double imagB = b.data[indexB++];
                     c.data[indexC++] += realA*realB + imagA*imagB;
@@ -823,20 +800,19 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransA_small(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransA_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numCols; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
                 int end = indexB + b.numRows*b.numCols*2;
@@ -845,11 +821,11 @@ public class MatrixMatrixMult_ZDRM {
                 double imagTotal = 0;
 
                 // loop for k
-                for(; indexB < end; indexB += b.numCols*2 ) {
+                for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA+1];
+                    double imagA = a.data[indexA + 1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB+1];
+                    double imagB = b.data[indexB + 1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -861,29 +837,28 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numCols ) {
+        else if (a.numCols != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
         int aIndexStart = 0;
 
-        for( int xA = 0; xA < a.numRows; xA++ ) {
+        for (int xA = 0; xA < a.numRows; xA++) {
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
-            for( int xB = 0; xB < b.numRows; xB++ ) {
+            for (int xB = 0; xB < b.numRows; xB++) {
                 int indexA = aIndexStart;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                while( indexA<end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
                     double realB = b.data[indexB++];
@@ -899,30 +874,29 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransAB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multTransAB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexB = 0;
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
                 int end = indexB + b.numCols*2;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( ;indexB<end; ) {
+                for (; indexB < end; ) {
                     double realA = a.data[indexA];
-                    double imagA = -a.data[indexA+1];
+                    double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
                     double imagB = -b.data[indexB++];
                     realTotal += realA*realB - imagA*imagB;
@@ -936,38 +910,37 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multTransAB_aux(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c , @Nullable double []aux)
-    {
-        if( a == c || b == c )
+    public static void multTransAB_aux( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( aux == null ) aux = new double[ a.numRows*2 ];
+        if (aux == null) aux = new double[a.numRows*2];
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
-            CommonOps_ZDRM.fill(c,0,0);
+        if (a.numCols == 0 || a.numRows == 0) {
+            CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
         int indexC = 0;
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
-            for( int k = 0; k < b.numCols; k++ ) {
-                aux[k*2]   = a.data[indexA];
-                aux[k*2+1] = a.data[indexA+1];
+            for (int k = 0; k < b.numCols; k++) {
+                aux[k*2] = a.data[indexA];
+                aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
 
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexAux = 0;
                 int indexB = j*b.numCols*2;
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( int k = 0; k < b.numCols; k++ ) {
+                for (int k = 0; k < b.numCols; k++) {
                     double realA = aux[indexAux++];
                     double imagA = -aux[indexAux++];
                     double realB = b.data[indexB++];
@@ -981,28 +954,27 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAdd_reorder(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAdd_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
+        if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA,imagA;
-        double realTmp,imagTmp;
-        int indexCbase= 0;
+        double realA, imagA;
+        double realTmp, imagTmp;
+        int indexCbase = 0;
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
-        for( int i = 0; i < a.numRows; i++ ) {
+        for (int i = 0; i < a.numRows; i++) {
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -1015,7 +987,7 @@ public class MatrixMatrixMult_ZDRM {
             realA = realAlpha*realTmp - imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp + imagAlpha*realTmp;
 
-            while( indexB < end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imgB = b.data[indexB++];
 
@@ -1024,16 +996,16 @@ public class MatrixMatrixMult_ZDRM {
             }
 
             // now add to it
-            while( indexB != endOfKLoop ) { // k loop
+            while (indexB != endOfKLoop) { // k loop
                 indexC = indexCbase;
                 end = indexB + strideB;
 
-            realTmp = a.data[indexA++];
-            imagTmp = a.data[indexA++];
-            realA = realAlpha*realTmp - imagAlpha*imagTmp;
-            imagA = realAlpha*imagTmp + imagAlpha*realTmp;
+                realTmp = a.data[indexA++];
+                imagTmp = a.data[indexA++];
+                realA = realAlpha*realTmp - imagAlpha*imagTmp;
+                imagA = realAlpha*imagTmp + imagAlpha*realTmp;
 
-                while( indexB < end ) { // j loop
+                while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
                     double imgB = b.data[indexB++];
 
@@ -1045,14 +1017,12 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void multAdd_small(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAdd_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numRows ) {
+        else if (a.numCols != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
@@ -1062,20 +1032,20 @@ public class MatrixMatrixMult_ZDRM {
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
-        for( int i = 0; i < a.numRows; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numRows; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
                 double imgTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
                 int end = indexA + strideA;
-                while( indexA < end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB+1];
+                    double imgB = b.data[indexB + 1];
 
                     realTotal += realA*realB - imagA*imgB;
                     imgTotal += realA*imgB + imagA*realB;
@@ -1090,50 +1060,48 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-
-    public static void multAddTransA_reorder(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransA_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
+        if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA,imagA;
-        double realTmp,imagTmp;
+        double realA, imagA;
+        double realTmp, imagTmp;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexC_start = i*c.numCols*2;
 
             // first assign R
             realTmp = a.data[i*2];
-            imagTmp = a.data[i*2+1];
+            imagTmp = a.data[i*2 + 1];
             realA = realAlpha*realTmp + imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp - imagAlpha*realTmp;
             int indexB = 0;
-            int end = indexB+b.numCols*2;
+            int end = indexB + b.numCols*2;
             int indexC = indexC_start;
-            while( indexB<end ) {
+            while (indexB < end) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] += realA*realB + imagA*imagB;
                 c.data[indexC++] += realA*imagB - imagA*realB;
             }
             // now increment it
-            for( int k = 1; k < a.numRows; k++ ) {
-            realTmp = a.getReal(k,i);
-            imagTmp = a.getImag(k,i);
-            realA = realAlpha*realTmp + imagAlpha*imagTmp;
-            imagA = realAlpha*imagTmp - imagAlpha*realTmp;
-                end = indexB+b.numCols*2;
+            for (int k = 1; k < a.numRows; k++) {
+                realTmp = a.getReal(k, i);
+                imagTmp = a.getImag(k, i);
+                realA = realAlpha*realTmp + imagAlpha*imagTmp;
+                imagA = realAlpha*imagTmp - imagAlpha*realTmp;
+                end = indexB + b.numCols*2;
                 indexC = indexC_start;
                 // this is the loop for j
-                while( indexB<end ) {
+                while (indexB < end) {
                     double realB = b.data[indexB++];
                     double imagB = b.data[indexB++];
                     c.data[indexC++] += realA*realB + imagA*imagB;
@@ -1143,20 +1111,19 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransA_small(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransA_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numRows ) {
+        else if (a.numRows != b.numRows) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numCols != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numCols != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
-            for( int j = 0; j < b.numCols; j++ ) {
+        for (int i = 0; i < a.numCols; i++) {
+            for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
                 int end = indexB + b.numRows*b.numCols*2;
@@ -1165,11 +1132,11 @@ public class MatrixMatrixMult_ZDRM {
                 double imagTotal = 0;
 
                 // loop for k
-                for(; indexB < end; indexB += b.numCols*2 ) {
+                for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA+1];
+                    double imagA = a.data[indexA + 1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB+1];
+                    double imagB = b.data[indexB + 1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -1181,29 +1148,28 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numCols != b.numCols ) {
+        else if (a.numCols != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numRows != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numRows != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
         int aIndexStart = 0;
 
-        for( int xA = 0; xA < a.numRows; xA++ ) {
+        for (int xA = 0; xA < a.numRows; xA++) {
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
-            for( int xB = 0; xB < b.numRows; xB++ ) {
+            for (int xB = 0; xB < b.numRows; xB++) {
                 int indexA = aIndexStart;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                while( indexA<end ) {
+                while (indexA < end) {
                     double realA = a.data[indexA++];
                     double imagA = a.data[indexA++];
                     double realB = b.data[indexB++];
@@ -1219,30 +1185,29 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransAB(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c)
-    {
-        if( a == c || b == c )
+    public static void multAddTransAB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
         int indexC = 0;
 
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexB = 0;
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
                 int end = indexB + b.numCols*2;
 
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( ;indexB<end; ) {
+                for (; indexB < end; ) {
                     double realA = a.data[indexA];
-                    double imagA = -a.data[indexA+1];
+                    double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
                     double imagB = -b.data[indexB++];
                     realTotal += realA*realB - imagA*imagB;
@@ -1256,37 +1221,36 @@ public class MatrixMatrixMult_ZDRM {
         }
     }
 
-    public static void multAddTransAB_aux(double realAlpha , double imagAlpha , ZMatrixRMaj a , ZMatrixRMaj b , ZMatrixRMaj c , @Nullable double []aux)
-    {
-        if( a == c || b == c )
+    public static void multAddTransAB_aux( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
+        if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
-        else if( a.numRows != b.numCols ) {
+        else if (a.numRows != b.numCols) {
             throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
-        } else if( a.numCols != c.numRows || b.numRows != c.numCols ) {
+        } else if (a.numCols != c.numRows || b.numRows != c.numCols) {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if( aux == null ) aux = new double[ a.numRows*2 ];
+        if (aux == null) aux = new double[a.numRows*2];
 
-        if( a.numCols == 0 || a.numRows == 0 ) {
+        if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
         int indexC = 0;
-        for( int i = 0; i < a.numCols; i++ ) {
+        for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
-            for( int k = 0; k < b.numCols; k++ ) {
-                aux[k*2]   = a.data[indexA];
-                aux[k*2+1] = a.data[indexA+1];
+            for (int k = 0; k < b.numCols; k++) {
+                aux[k*2] = a.data[indexA];
+                aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
 
-            for( int j = 0; j < b.numRows; j++ ) {
+            for (int j = 0; j < b.numRows; j++) {
                 int indexAux = 0;
                 int indexB = j*b.numCols*2;
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for( int k = 0; k < b.numCols; k++ ) {
+                for (int k = 0; k < b.numCols; k++) {
                     double realA = aux[indexAux++];
                     double imagA = -aux[indexAux++];
                     double realB = b.data[indexB++];
@@ -1299,5 +1263,4 @@ public class MatrixMatrixMult_ZDRM {
             }
         }
     }
-
 }

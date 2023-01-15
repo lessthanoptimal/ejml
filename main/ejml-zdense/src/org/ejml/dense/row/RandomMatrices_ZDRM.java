@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -28,7 +28,7 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class RandomMatrices_ZDRM {
-    private RandomMatrices_ZDRM(){}
+    private RandomMatrices_ZDRM() {}
 
     /**
      * <p>
