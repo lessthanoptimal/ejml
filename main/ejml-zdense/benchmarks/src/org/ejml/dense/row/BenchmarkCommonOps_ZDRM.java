@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,10 +31,10 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("ALL")
-@BenchmarkMode({Mode.AverageTime, Mode.Throughput})
+@BenchmarkMode({Mode.AverageTime})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
-@Measurement(iterations = 5)
+@Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
 public class BenchmarkCommonOps_ZDRM {
