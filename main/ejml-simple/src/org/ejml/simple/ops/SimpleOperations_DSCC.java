@@ -126,15 +126,23 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override public void kron( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
 //        CommonOps_DSCC.kron(A,B,output);
-        throw new RuntimeException("Unsupported. Make a feature request if you need this!");
+        throw new RuntimeException("Unsupported for DSCC. Make a feature request if you need this!");
     }
 
     @Override public void plus( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
-        CommonOps_DSCC.add(1, A, 1, B, output, null, null);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.add(1, A, 1, B, output, workspaceMT);
+        } else {
+            CommonOps_DSCC.add(1, A, 1, B, output, null, null);
+        }
     }
 
     @Override public void minus( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
-        CommonOps_DSCC.add(1, A, -1, B, output, null, null);
+        if (EjmlConcurrency.useConcurrent(A)) {
+            CommonOps_MT_DSCC.add(1, A, -1, B, output, workspaceMT);
+        } else {
+            CommonOps_DSCC.add(1, A, -1, B, output, null, null);
+        }
     }
 
     @Override public void minus( DMatrixSparseCSC A, /**/double b, DMatrixSparseCSC output ) {
