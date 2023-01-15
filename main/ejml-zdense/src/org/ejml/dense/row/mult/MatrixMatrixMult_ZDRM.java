@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Generated;
 
+//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
+
 /**
  * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>
  *
@@ -49,15 +51,16 @@ public class MatrixMatrixMult_ZDRM {
             CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA, imagA;
 
-        int indexCbase = 0;
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            double realA, imagA;
+            int indexCbase = i*strideC;
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -70,10 +73,10 @@ public class MatrixMatrixMult_ZDRM {
 
             while (indexB < end) {
                 double realB = b.data[indexB++];
-                double imgB = b.data[indexB++];
+                double imagB = b.data[indexB++];
 
-                c.data[indexC++] = realA*realB - imagA*imgB;
-                c.data[indexC++] = realA*imgB + imagA*realB;
+                c.data[indexC++] = realA*realB - imagA*imagB;
+                c.data[indexC++] = realA*imagB + imagA*realB;
             }
 
             // now add to it
@@ -86,14 +89,14 @@ public class MatrixMatrixMult_ZDRM {
 
                 while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
-                    double imgB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
 
-                    c.data[indexC++] += realA*realB - imagA*imgB;
-                    c.data[indexC++] += realA*imgB + imagA*realB;
+                    c.data[indexC++] += realA*realB - imagA*imagB;
+                    c.data[indexC++] += realA*imagB + imagA*realB;
                 }
             }
-            indexCbase += strideC;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void mult_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -105,16 +108,16 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int aIndexStart = 0;
-        int indexC = 0;
-
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            int aIndexStart = i*strideA;
+            int indexC = i*strideB;
             for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
-                double imgTotal = 0;
+                double imagTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
@@ -124,19 +127,19 @@ public class MatrixMatrixMult_ZDRM {
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB + 1];
+                    double imagB = b.data[indexB + 1];
 
-                    realTotal += realA*realB - imagA*imgB;
-                    imgTotal += realA*imgB + imagA*realB;
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
 
                     indexB += strideB;
                 }
 
                 c.data[indexC++] = realTotal;
-                c.data[indexC++] = imgTotal;
+                c.data[indexC++] = imagTotal;
             }
-            aIndexStart += strideA;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransA_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -152,18 +155,19 @@ public class MatrixMatrixMult_ZDRM {
             CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA, imagA;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            double realA, imagA;
             int indexC_start = i*c.numCols*2;
 
             // first assign R
             realA = a.data[i*2];
             imagA = a.data[i*2 + 1];
             int indexB = 0;
-            int end = indexB + b.numCols*2;
+            int end = indexB+b.numCols*2;
             int indexC = indexC_start;
-            while (indexB < end) {
+            while( indexB < end ) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] = realA*realB + imagA*imagB;
@@ -184,6 +188,7 @@ public class MatrixMatrixMult_ZDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransA_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -195,9 +200,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*2*b.numCols;
             for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
@@ -209,9 +215,9 @@ public class MatrixMatrixMult_ZDRM {
                 // loop for k
                 for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA + 1];
+                    double imagA = a.data[indexA+1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB + 1];
+                    double imagB = b.data[indexB+1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -221,6 +227,7 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] = imagTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -232,10 +239,11 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, xA -> {
         for (int xA = 0; xA < a.numRows; xA++) {
+            int indexC = xA*b.numRows*2;
+            int aIndexStart = xA*a.numCols*2;
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
             for (int xB = 0; xB < b.numRows; xB++) {
@@ -256,8 +264,8 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] = realTotal;
                 c.data[indexC++] = imagTotal;
             }
-            aIndexStart += a.numCols*2;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransAB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -269,9 +277,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*b.numRows*2;
             int indexB = 0;
             for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
@@ -280,7 +289,7 @@ public class MatrixMatrixMult_ZDRM {
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for (; indexB < end; ) {
+                for (; indexB<end; ) {
                     double realA = a.data[indexA];
                     double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
@@ -294,8 +303,10 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] = imagTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     public static void multTransAB_aux( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
         if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -305,7 +316,7 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if (aux == null) aux = new double[a.numRows*2];
+        if (aux == null) aux = new double[ a.numRows*2 ];
 
         if (a.numCols == 0 || a.numRows == 0) {
             CommonOps_ZDRM.fill(c, 0, 0);
@@ -315,7 +326,7 @@ public class MatrixMatrixMult_ZDRM {
         for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
             for (int k = 0; k < b.numCols; k++) {
-                aux[k*2] = a.data[indexA];
+                aux[k*2]     = a.data[indexA];
                 aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
@@ -339,6 +350,7 @@ public class MatrixMatrixMult_ZDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     public static void multAdd_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         if (a == c || b == c)
@@ -352,15 +364,16 @@ public class MatrixMatrixMult_ZDRM {
         if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA, imagA;
 
-        int indexCbase = 0;
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            double realA, imagA;
+            int indexCbase = i*strideC;
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -373,10 +386,10 @@ public class MatrixMatrixMult_ZDRM {
 
             while (indexB < end) {
                 double realB = b.data[indexB++];
-                double imgB = b.data[indexB++];
+                double imagB = b.data[indexB++];
 
-                c.data[indexC++] += realA*realB - imagA*imgB;
-                c.data[indexC++] += realA*imgB + imagA*realB;
+                c.data[indexC++] += realA*realB - imagA*imagB;
+                c.data[indexC++] += realA*imagB + imagA*realB;
             }
 
             // now add to it
@@ -389,14 +402,14 @@ public class MatrixMatrixMult_ZDRM {
 
                 while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
-                    double imgB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
 
-                    c.data[indexC++] += realA*realB - imagA*imgB;
-                    c.data[indexC++] += realA*imgB + imagA*realB;
+                    c.data[indexC++] += realA*realB - imagA*imagB;
+                    c.data[indexC++] += realA*imagB + imagA*realB;
                 }
             }
-            indexCbase += strideC;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAdd_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -408,16 +421,16 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int aIndexStart = 0;
-        int indexC = 0;
-
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            int aIndexStart = i*strideA;
+            int indexC = i*strideB;
             for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
-                double imgTotal = 0;
+                double imagTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
@@ -427,19 +440,19 @@ public class MatrixMatrixMult_ZDRM {
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB + 1];
+                    double imagB = b.data[indexB + 1];
 
-                    realTotal += realA*realB - imagA*imgB;
-                    imgTotal += realA*imgB + imagA*realB;
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
 
                     indexB += strideB;
                 }
 
                 c.data[indexC++] += realTotal;
-                c.data[indexC++] += imgTotal;
+                c.data[indexC++] += imagTotal;
             }
-            aIndexStart += strideA;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransA_reorder( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -454,18 +467,19 @@ public class MatrixMatrixMult_ZDRM {
         if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA, imagA;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            double realA, imagA;
             int indexC_start = i*c.numCols*2;
 
             // first assign R
             realA = a.data[i*2];
             imagA = a.data[i*2 + 1];
             int indexB = 0;
-            int end = indexB + b.numCols*2;
+            int end = indexB+b.numCols*2;
             int indexC = indexC_start;
-            while (indexB < end) {
+            while( indexB < end ) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] += realA*realB + imagA*imagB;
@@ -486,6 +500,7 @@ public class MatrixMatrixMult_ZDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransA_small( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -497,9 +512,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*2*b.numCols;
             for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
@@ -511,9 +527,9 @@ public class MatrixMatrixMult_ZDRM {
                 // loop for k
                 for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA + 1];
+                    double imagA = a.data[indexA+1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB + 1];
+                    double imagB = b.data[indexB+1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -523,6 +539,7 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] += imagTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -534,10 +551,11 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, xA -> {
         for (int xA = 0; xA < a.numRows; xA++) {
+            int indexC = xA*b.numRows*2;
+            int aIndexStart = xA*a.numCols*2;
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
             for (int xB = 0; xB < b.numRows; xB++) {
@@ -558,8 +576,8 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] += realTotal;
                 c.data[indexC++] += imagTotal;
             }
-            aIndexStart += a.numCols*2;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransAB( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -571,9 +589,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*b.numRows*2;
             int indexB = 0;
             for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
@@ -582,7 +601,7 @@ public class MatrixMatrixMult_ZDRM {
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for (; indexB < end; ) {
+                for (; indexB<end; ) {
                     double realA = a.data[indexA];
                     double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
@@ -596,8 +615,10 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] += imagTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     public static void multAddTransAB_aux( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
         if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -607,7 +628,7 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if (aux == null) aux = new double[a.numRows*2];
+        if (aux == null) aux = new double[ a.numRows*2 ];
 
         if (a.numCols == 0 || a.numRows == 0) {
             return;
@@ -616,7 +637,7 @@ public class MatrixMatrixMult_ZDRM {
         for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
             for (int k = 0; k < b.numCols; k++) {
-                aux[k*2] = a.data[indexA];
+                aux[k*2]     = a.data[indexA];
                 aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
@@ -640,6 +661,7 @@ public class MatrixMatrixMult_ZDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     public static void mult_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         if (a == c || b == c)
@@ -654,15 +676,16 @@ public class MatrixMatrixMult_ZDRM {
             CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA, imagA;
-        double realTmp, imagTmp;
-        int indexCbase = 0;
+
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            double realTmp,imagTmp;            double realA, imagA;
+            int indexCbase = i*strideC;
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -677,10 +700,10 @@ public class MatrixMatrixMult_ZDRM {
 
             while (indexB < end) {
                 double realB = b.data[indexB++];
-                double imgB = b.data[indexB++];
+                double imagB = b.data[indexB++];
 
-                c.data[indexC++] = realA*realB - imagA*imgB;
-                c.data[indexC++] = realA*imgB + imagA*realB;
+                c.data[indexC++] = realA*realB - imagA*imagB;
+                c.data[indexC++] = realA*imagB + imagA*realB;
             }
 
             // now add to it
@@ -695,14 +718,14 @@ public class MatrixMatrixMult_ZDRM {
 
                 while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
-                    double imgB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
 
-                    c.data[indexC++] += realA*realB - imagA*imgB;
-                    c.data[indexC++] += realA*imgB + imagA*realB;
+                    c.data[indexC++] += realA*realB - imagA*imagB;
+                    c.data[indexC++] += realA*imagB + imagA*realB;
                 }
             }
-            indexCbase += strideC;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void mult_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -714,16 +737,16 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int aIndexStart = 0;
-        int indexC = 0;
-
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            int aIndexStart = i*strideA;
+            int indexC = i*strideB;
             for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
-                double imgTotal = 0;
+                double imagTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
@@ -733,19 +756,19 @@ public class MatrixMatrixMult_ZDRM {
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB + 1];
+                    double imagB = b.data[indexB + 1];
 
-                    realTotal += realA*realB - imagA*imgB;
-                    imgTotal += realA*imgB + imagA*realB;
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
 
                     indexB += strideB;
                 }
 
-                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imgTotal;
-                c.data[indexC++] = realAlpha*imgTotal + imagAlpha*realTotal;
+                c.data[indexC++] = realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
             }
-            aIndexStart += strideA;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransA_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -761,10 +784,11 @@ public class MatrixMatrixMult_ZDRM {
             CommonOps_ZDRM.fill(c, 0, 0);
             return;
         }
-        double realA, imagA;
-        double realTmp, imagTmp;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            double realA, imagA;
+            double realTmp,imagTmp;
             int indexC_start = i*c.numCols*2;
 
             // first assign R
@@ -773,9 +797,9 @@ public class MatrixMatrixMult_ZDRM {
             realA = realAlpha*realTmp + imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp - imagAlpha*realTmp;
             int indexB = 0;
-            int end = indexB + b.numCols*2;
+            int end = indexB+b.numCols*2;
             int indexC = indexC_start;
-            while (indexB < end) {
+            while( indexB < end ) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] = realA*realB + imagA*imagB;
@@ -798,6 +822,7 @@ public class MatrixMatrixMult_ZDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransA_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -809,9 +834,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*2*b.numCols;
             for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
@@ -823,9 +849,9 @@ public class MatrixMatrixMult_ZDRM {
                 // loop for k
                 for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA + 1];
+                    double imagA = a.data[indexA+1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB + 1];
+                    double imagB = b.data[indexB+1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -835,6 +861,7 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -846,10 +873,11 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, xA -> {
         for (int xA = 0; xA < a.numRows; xA++) {
+            int indexC = xA*b.numRows*2;
+            int aIndexStart = xA*a.numCols*2;
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
             for (int xB = 0; xB < b.numRows; xB++) {
@@ -870,8 +898,8 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] = realAlpha*realTotal - imagAlpha*imagTotal;
                 c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
             }
-            aIndexStart += a.numCols*2;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multTransAB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -883,9 +911,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*b.numRows*2;
             int indexB = 0;
             for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
@@ -894,7 +923,7 @@ public class MatrixMatrixMult_ZDRM {
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for (; indexB < end; ) {
+                for (; indexB<end; ) {
                     double realA = a.data[indexA];
                     double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
@@ -908,8 +937,10 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] = realAlpha*imagTotal + imagAlpha*realTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     public static void multTransAB_aux( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
         if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -919,7 +950,7 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if (aux == null) aux = new double[a.numRows*2];
+        if (aux == null) aux = new double[ a.numRows*2 ];
 
         if (a.numCols == 0 || a.numRows == 0) {
             CommonOps_ZDRM.fill(c, 0, 0);
@@ -929,7 +960,7 @@ public class MatrixMatrixMult_ZDRM {
         for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
             for (int k = 0; k < b.numCols; k++) {
-                aux[k*2] = a.data[indexA];
+                aux[k*2]     = a.data[indexA];
                 aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
@@ -953,6 +984,7 @@ public class MatrixMatrixMult_ZDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
 
     public static void multAdd_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
         if (a == c || b == c)
@@ -966,15 +998,16 @@ public class MatrixMatrixMult_ZDRM {
         if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA, imagA;
-        double realTmp, imagTmp;
-        int indexCbase = 0;
+
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
         int strideC = c.getRowStride();
         int endOfKLoop = b.numRows*strideB;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            double realTmp,imagTmp;            double realA, imagA;
+            int indexCbase = i*strideC;
             int indexA = i*strideA;
 
             // need to assign c.data to a value initially
@@ -989,10 +1022,10 @@ public class MatrixMatrixMult_ZDRM {
 
             while (indexB < end) {
                 double realB = b.data[indexB++];
-                double imgB = b.data[indexB++];
+                double imagB = b.data[indexB++];
 
-                c.data[indexC++] += realA*realB - imagA*imgB;
-                c.data[indexC++] += realA*imgB + imagA*realB;
+                c.data[indexC++] += realA*realB - imagA*imagB;
+                c.data[indexC++] += realA*imagB + imagA*realB;
             }
 
             // now add to it
@@ -1007,14 +1040,14 @@ public class MatrixMatrixMult_ZDRM {
 
                 while (indexB < end) { // j loop
                     double realB = b.data[indexB++];
-                    double imgB = b.data[indexB++];
+                    double imagB = b.data[indexB++];
 
-                    c.data[indexC++] += realA*realB - imagA*imgB;
-                    c.data[indexC++] += realA*imgB + imagA*realB;
+                    c.data[indexC++] += realA*realB - imagA*imagB;
+                    c.data[indexC++] += realA*imagB + imagA*realB;
                 }
             }
-            indexCbase += strideC;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAdd_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -1026,16 +1059,16 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int aIndexStart = 0;
-        int indexC = 0;
-
         int strideA = a.getRowStride();
         int strideB = b.getRowStride();
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, i -> {
         for (int i = 0; i < a.numRows; i++) {
+            int aIndexStart = i*strideA;
+            int indexC = i*strideB;
             for (int j = 0; j < b.numCols; j++) {
                 double realTotal = 0;
-                double imgTotal = 0;
+                double imagTotal = 0;
 
                 int indexA = aIndexStart;
                 int indexB = j*2;
@@ -1045,19 +1078,19 @@ public class MatrixMatrixMult_ZDRM {
                     double imagA = a.data[indexA++];
 
                     double realB = b.data[indexB];
-                    double imgB = b.data[indexB + 1];
+                    double imagB = b.data[indexB + 1];
 
-                    realTotal += realA*realB - imagA*imgB;
-                    imgTotal += realA*imgB + imagA*realB;
+                    realTotal += realA*realB - imagA*imagB;
+                    imagTotal += realA*imagB + imagA*realB;
 
                     indexB += strideB;
                 }
 
-                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imgTotal;
-                c.data[indexC++] += realAlpha*imgTotal + imagAlpha*realTotal;
+                c.data[indexC++] += realAlpha*realTotal - imagAlpha*imagTotal;
+                c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
-            aIndexStart += strideA;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransA_reorder( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -1072,10 +1105,11 @@ public class MatrixMatrixMult_ZDRM {
         if (a.numCols == 0 || a.numRows == 0) {
             return;
         }
-        double realA, imagA;
-        double realTmp, imagTmp;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            double realA, imagA;
+            double realTmp,imagTmp;
             int indexC_start = i*c.numCols*2;
 
             // first assign R
@@ -1084,9 +1118,9 @@ public class MatrixMatrixMult_ZDRM {
             realA = realAlpha*realTmp + imagAlpha*imagTmp;
             imagA = realAlpha*imagTmp - imagAlpha*realTmp;
             int indexB = 0;
-            int end = indexB + b.numCols*2;
+            int end = indexB+b.numCols*2;
             int indexC = indexC_start;
-            while (indexB < end) {
+            while( indexB < end ) {
                 double realB = b.data[indexB++];
                 double imagB = b.data[indexB++];
                 c.data[indexC++] += realA*realB + imagA*imagB;
@@ -1109,6 +1143,7 @@ public class MatrixMatrixMult_ZDRM {
                 }
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransA_small( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -1120,9 +1155,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*2*b.numCols;
             for (int j = 0; j < b.numCols; j++) {
                 int indexA = i*2;
                 int indexB = j*2;
@@ -1134,9 +1170,9 @@ public class MatrixMatrixMult_ZDRM {
                 // loop for k
                 for (; indexB < end; indexB += b.numCols*2) {
                     double realA = a.data[indexA];
-                    double imagA = a.data[indexA + 1];
+                    double imagA = a.data[indexA+1];
                     double realB = b.data[indexB];
-                    double imagB = b.data[indexB + 1];
+                    double imagB = b.data[indexB+1];
                     realTotal += realA*realB + imagA*imagB;
                     imagTotal += realA*imagB - imagA*realB;
                     indexA += a.numCols*2;
@@ -1146,6 +1182,7 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -1157,10 +1194,11 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
-        int aIndexStart = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, xA -> {
         for (int xA = 0; xA < a.numRows; xA++) {
+            int indexC = xA*b.numRows*2;
+            int aIndexStart = xA*a.numCols*2;
             int end = aIndexStart + b.numCols*2;
             int indexB = 0;
             for (int xB = 0; xB < b.numRows; xB++) {
@@ -1181,8 +1219,8 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] += realAlpha*realTotal - imagAlpha*imagTotal;
                 c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
-            aIndexStart += a.numCols*2;
         }
+        //CONCURRENT_ABOVE });
     }
 
     public static void multAddTransAB( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
@@ -1194,9 +1232,10 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        int indexC = 0;
 
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {
         for (int i = 0; i < a.numCols; i++) {
+            int indexC = i*b.numRows*2;
             int indexB = 0;
             for (int j = 0; j < b.numRows; j++) {
                 int indexA = i*2;
@@ -1205,7 +1244,7 @@ public class MatrixMatrixMult_ZDRM {
                 double realTotal = 0;
                 double imagTotal = 0;
 
-                for (; indexB < end; ) {
+                for (; indexB<end; ) {
                     double realA = a.data[indexA];
                     double imagA = -a.data[indexA + 1];
                     double realB = b.data[indexB++];
@@ -1219,8 +1258,10 @@ public class MatrixMatrixMult_ZDRM {
                 c.data[indexC++] += realAlpha*imagTotal + imagAlpha*realTotal;
             }
         }
+        //CONCURRENT_ABOVE });
     }
 
+    //CONCURRENT_OMIT_BEGIN
     public static void multAddTransAB_aux( double realAlpha, double imagAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {
         if (a == c || b == c)
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -1230,7 +1271,7 @@ public class MatrixMatrixMult_ZDRM {
             throw new MatrixDimensionException("The results matrix does not have the desired dimensions");
         }
 
-        if (aux == null) aux = new double[a.numRows*2];
+        if (aux == null) aux = new double[ a.numRows*2 ];
 
         if (a.numCols == 0 || a.numRows == 0) {
             return;
@@ -1239,7 +1280,7 @@ public class MatrixMatrixMult_ZDRM {
         for (int i = 0; i < a.numCols; i++) {
             int indexA = i*2;
             for (int k = 0; k < b.numCols; k++) {
-                aux[k*2] = a.data[indexA];
+                aux[k*2]     = a.data[indexA];
                 aux[k*2 + 1] = a.data[indexA + 1];
                 indexA += a.numCols*2;
             }
@@ -1263,4 +1304,6 @@ public class MatrixMatrixMult_ZDRM {
             }
         }
     }
+    //CONCURRENT_OMIT_END
+
 }

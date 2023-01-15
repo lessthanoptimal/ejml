@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -59,6 +59,7 @@ public class AutocodeConcurrentApp {
                 "main/ejml-ddense/src/org/ejml/dense/block/decomposition/hessenberg",
                 "main/ejml-ddense/src/org/ejml/dense/block/linsol/chol",
                 "main/ejml-ddense/src/org/ejml/dense/block/linsol/qr",
+                "main/ejml-zdense/src/org/ejml/dense/row/mult",
         };
 
         String[] files = new String[]{
