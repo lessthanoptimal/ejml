@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -25,7 +25,7 @@ import org.ejml.data.ZMatrixRMaj;
  * @author Peter Abeles
  */
 public class NormOps_ZDRM {
-    private NormOps_ZDRM(){}
+    private NormOps_ZDRM() {}
 
     /**
      * <p>
@@ -57,6 +57,6 @@ public class NormOps_ZDRM {
             total += real*real + imag*imag;
         }
 
-        return scale * (double)Math.sqrt(total);
+        return scale*(double)Math.sqrt(total);
     }
 }
