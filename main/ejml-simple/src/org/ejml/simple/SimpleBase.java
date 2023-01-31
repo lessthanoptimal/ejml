@@ -43,8 +43,8 @@ import java.nio.charset.StandardCharsets;
  *
  * @author Peter Abeles
  */
-@SuppressWarnings({"unchecked", "NullAway.Init", "ForLoopReplaceableByForEach"})
-public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMatrix, Serializable {
+@SuppressWarnings({"unchecked", "NullAway.Init", "ForLoopReplaceableByForEach", "rawtypes"})
+public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix<T>, Serializable {
 
     static final long serialVersionUID = 2342556642L;
 
@@ -171,7 +171,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T mult( ImmutableMatrix _B ) {
+    @Override public T mult( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
 
@@ -197,7 +197,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T kron( ImmutableMatrix _B ) {
+    @Override public T kron( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -211,7 +211,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T plus( ImmutableMatrix _B ) {
+    @Override public T plus( ConstMatrix _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -225,7 +225,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T minus( ImmutableMatrix _B ) {
+    @Override public T minus( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -279,7 +279,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T plus( double beta, ImmutableMatrix _B ) {
+    @Override public T plus( double beta, ConstMatrix _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -291,7 +291,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public double dot( ImmutableMatrix _v ) {
+    @Override public double dot( ConstMatrix _v ) {
         T v = (T)_v;
         convertType.specify(this, v);
         T A = convertType.convert(this);
@@ -359,7 +359,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T solve( ImmutableMatrix _B ) {
+    @Override public T solve( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
 
@@ -833,7 +833,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public boolean isIdentical( ImmutableMatrix _a, double tol ) {
+    @Override public boolean isIdentical( ConstMatrix<?> _a, double tol ) {
         T a = (T)_a;
         if (a.getType() != getType())
             return false;
@@ -897,7 +897,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T combine( int insertRow, int insertCol, ImmutableMatrix _B ) {
+    @Override public T combine( int insertRow, int insertCol, ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -964,7 +964,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T elementMult( ImmutableMatrix _B ) {
+    @Override public T elementMult( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -976,7 +976,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T elementDiv( ImmutableMatrix _B ) {
+    @Override public T elementDiv( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, (T)B);
         T A = convertType.convert(this);
@@ -988,7 +988,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ImmutableMa
     }
 
     /** {@inheritDoc} */
-    @Override public T elementPower( ImmutableMatrix _B ) {
+    @Override public T elementPower( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);

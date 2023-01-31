@@ -19,7 +19,7 @@
 package org.ejml.example;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.simple.ImmutableMatrix;
+import org.ejml.simple.ConstMatrix;
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -33,7 +33,7 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class KalmanFilterSimple implements KalmanFilter {
     // kinematics description
-    private ImmutableMatrix F, Q, H;
+    private ConstMatrix<SimpleMatrix> F, Q, H;
 
     // sytem state estimate
     private SimpleMatrix x, P;
@@ -59,17 +59,17 @@ public class KalmanFilterSimple implements KalmanFilter {
 
     @Override public void update( DMatrixRMaj _z, DMatrixRMaj _R ) {
         // a fast way to make the matrices usable by SimpleMatrix
-        ImmutableMatrix z = SimpleMatrix.wrap(_z);
-        ImmutableMatrix R = SimpleMatrix.wrap(_R);
+        SimpleMatrix z = SimpleMatrix.wrap(_z);
+        SimpleMatrix R = SimpleMatrix.wrap(_R);
 
         // y = z - H x
-        ImmutableMatrix y = z.minus(H.mult(x));
+        ConstMatrix<?> y = z.minus(H.mult(x));
 
         // S = H P H' + R
-        ImmutableMatrix S = H.mult(P).mult(H.transpose()).plus(R);
+        ConstMatrix<?> S = H.mult(P).mult(H.transpose()).plus(R);
 
         // K = PH'S^(-1)
-        ImmutableMatrix K = P.mult(H.transpose().mult(S.invert()));
+        ConstMatrix<?> K = P.mult(H.transpose().mult(S.invert()));
 
         // x = x + Ky
         x = x.plus(K.mult(y));
