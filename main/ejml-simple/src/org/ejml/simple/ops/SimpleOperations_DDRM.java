@@ -17,7 +17,6 @@
  */
 package org.ejml.simple.ops;
 
-import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.Matrix;
@@ -31,6 +30,8 @@ import org.ejml.simple.ConvertToImaginaryException;
 import org.ejml.simple.SimpleOperations;
 
 import java.io.PrintStream;
+
+import static org.ejml.concurrency.EjmlConcurrency.useConcurrent;
 
 //CUSTOM ignore Complex_F64
 //CUSTOM ignore org.ejml.data.Complex_F64;
@@ -72,7 +73,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override public void transpose( DMatrixRMaj input, DMatrixRMaj output ) {
-        if (EjmlConcurrency.useConcurrent(input)) {
+        if (useConcurrent(input)) {
             CommonOps_MT_DDRM.transpose(input, output);
         } else {
             CommonOps_DDRM.transpose(input, output);
@@ -80,7 +81,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override public void mult( DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(B)) {
             CommonOps_MT_DDRM.mult(A, B, output);
         } else {
             CommonOps_DDRM.mult(A, B, output);
@@ -88,7 +89,7 @@ public class SimpleOperations_DDRM implements SimpleOperations<DMatrixRMaj> {
     }
 
     @Override public void multTransA( DMatrixRMaj A, DMatrixRMaj B, DMatrixRMaj output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(B)) {
             CommonOps_MT_DDRM.multTransA(A, B, output);
         } else {
             CommonOps_DDRM.multTransA(A, B, output);

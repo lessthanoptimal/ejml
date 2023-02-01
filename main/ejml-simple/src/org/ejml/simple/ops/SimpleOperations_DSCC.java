@@ -17,7 +17,6 @@
  */
 package org.ejml.simple.ops;
 
-import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.*;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ConvertToDenseException;
@@ -31,6 +30,8 @@ import org.ejml.sparse.csc.mult.Workspace_MT_DSCC;
 import pabeles.concurrency.GrowArray;
 
 import java.io.PrintStream;
+
+import static org.ejml.concurrency.EjmlConcurrency.useConcurrent;
 
 /**
  * Implementation of {@link org.ejml.simple.SimpleOperations} for {@link DMatrixSparseCSC}.
@@ -85,7 +86,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     }
 
     @Override public void mult( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(B)) {
             CommonOps_MT_DSCC.mult(A, B, output, workspaceMT);
         } else {
             CommonOps_DSCC.mult(A, B, output);
@@ -96,7 +97,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
         var At = new DMatrixSparseCSC(1, 1);
         CommonOps_DSCC.transpose(A, At, gw);
 
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(B)) {
             CommonOps_MT_DSCC.mult(A, B, output, workspaceMT);
         } else {
             CommonOps_DSCC.mult(At, B, output, gw, gx);
@@ -108,7 +109,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     }
 
     @Override public void multTransA( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(B)) {
             CommonOps_MT_DSCC.multTransA(A, B, output, workspaceA);
         } else {
             CommonOps_DSCC.multTransA(A, B, output, null);
@@ -116,7 +117,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     }
 
     @Override public void mult( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixRMaj output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A)) {
             CommonOps_MT_DSCC.mult(A, B, output, workspaceA);
         } else {
             CommonOps_DSCC.mult(A, B, output);
@@ -145,7 +146,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     }
 
     @Override public void plus( DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(b)) {
             CommonOps_MT_DSCC.add(1, A, (double)beta, b, output, workspaceMT);
         } else {
             CommonOps_DSCC.add(1, A, (double)beta, b, output, gw, gx);
@@ -154,7 +155,7 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
 
     @Override
     public void plus( /**/double alpha, DMatrixSparseCSC A, /**/double beta, DMatrixSparseCSC b, DMatrixSparseCSC output ) {
-        if (EjmlConcurrency.useConcurrent(A)) {
+        if (useConcurrent(A) || useConcurrent(b)) {
             CommonOps_MT_DSCC.add((double)alpha, A, (double)beta, b, output, workspaceMT);
         } else {
             CommonOps_DSCC.add((double)alpha, A, (double)beta, b, output, gw, gx);
