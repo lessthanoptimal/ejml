@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -23,6 +23,7 @@ import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.FConvertMatrixStruct;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>
@@ -359,10 +360,34 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return ret;
     }
 
+    /**
+     * Creates a DDRM random matrix with values from 0.0 to 1.0. Random number generator is
+     * {@link ThreadLocalRandom#current()}.
+     */
+    public static SimpleMatrix random( int numRows, int numCols ) {
+        return random_DDRM(numRows, numCols, 0.0, 1.0, ThreadLocalRandom.current());
+    }
+
+    /**
+     * Creates a DDRM random matrix with values from 0.0 to 1.0. Random number generator is
+     * {@link ThreadLocalRandom#current()}.
+     */
+    public static SimpleMatrix random_DDRM( int numRows, int numCols ) {
+        return random_DDRM(numRows, numCols, 0.0, 1.0, ThreadLocalRandom.current());
+    }
+
     public static SimpleMatrix random_FDRM( int numRows, int numCols, float minValue, float maxValue, Random rand ) {
         var ret = new SimpleMatrix(numRows, numCols, FMatrixRMaj.class);
         RandomMatrices_FDRM.fillUniform((FMatrixRMaj)ret.mat, minValue, maxValue, rand);
         return ret;
+    }
+
+    /**
+     * Creates a FDRM random matrix with values from 0.0 to 1.0. Random number generator is
+     * {@link ThreadLocalRandom#current()}.
+     */
+    public static SimpleMatrix random_FDRM( int numRows, int numCols ) {
+        return random_FDRM(numRows, numCols, 0.0f, 1.0f, ThreadLocalRandom.current());
     }
 
     public static SimpleMatrix random_ZDRM( int numRows, int numCols, double minValue, double maxValue, Random rand ) {
@@ -371,10 +396,26 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return ret;
     }
 
+    /**
+     * Creates a ZDRM random matrix with values from 0.0 to 1.0. Random number generator is
+     * {@link ThreadLocalRandom#current()}.
+     */
+    public static SimpleMatrix random_ZDRM( int numRows, int numCols ) {
+        return random_ZDRM(numRows, numCols, 0.0, 1.0, ThreadLocalRandom.current());
+    }
+
     public static SimpleMatrix random_CDRM( int numRows, int numCols, float minValue, float maxValue, Random rand ) {
         var ret = new SimpleMatrix(numRows, numCols, MatrixType.CDRM);
         RandomMatrices_CDRM.fillUniform((CMatrixRMaj)ret.mat, minValue, maxValue, rand);
         return ret;
+    }
+
+    /**
+     * Creates a CDRM random matrix with values from 0.0 to 1.0. Random number generator is
+     * {@link ThreadLocalRandom#current()}.
+     */
+    public static SimpleMatrix random_CDRM( int numRows, int numCols ) {
+        return random_CDRM(numRows, numCols, 0.0f, 1.0f, ThreadLocalRandom.current());
     }
 
     /**

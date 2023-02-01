@@ -25,6 +25,7 @@ Date format: year/month/day
   * Added conjugate() and magnitude()
   * Added fillComplex(), transposeConjugate(), sumComplex(), determinantComplex(), traceComplex()
   * Added elementOp(()->{}) for real and complex matrices. Allows user defined element wise operators.
+  * Added simplified functions to create random matrices
 - CommonOps_DDRM
   * Added elementBoolean(matrix, lambda) for arbitrary element-wise boolean operators
 - MatrixMatrixMult_ZDRM
