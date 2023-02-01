@@ -15,10 +15,9 @@ Date format: year/month/day
   * Added elementMultiply(mat, mat, mat)
   * Added elementDivide(mat, mat, mat)
   * Added elementPower(math, real, mat)
-- ImmutableMatrix
-  * SimpleMatrix that can't be modified.
+- ConstMatrix
+  * Interface that only implements operations that are read only.
   * Requested by many People
-  * Interface for functions in a SimpleMatrix that don't modify the original. More room for growth here.
 - SimpleMatrix
   * Thanks JozsefKutas for getting this needed refresh started
   * Removed deprecated functions
@@ -39,7 +38,7 @@ Date format: year/month/day
   * Unit tests ensure decompositions and linear solvers can process 0x0, Mx0, 0xN matrices.
   * Requested by JozsefKutas and others. Note: I've never personally had a desire for this...
   * Only rigorously tested with DDRM
-ConvertMatrixData
+- ConvertMatrixData
   * Can now convert boolean matrices into different data types
 - Various
   * Ops classes with all static members now have private constructors to drive home the concept of static functions.

@@ -26,12 +26,15 @@ import org.ejml.ops.MatrixIO;
 import java.io.IOException;
 
 /**
- * A "shallow immutable" matrix that implements all the readonly functions in {@link SimpleBase}. None of the
- * function calls will modify the original matrix and a new matrix instance is always returned. It's "shallow
- * immutable" because it's possible to downcast into a modifiable data type or to simply save a reference to
- * the original matrix and modify that. This interface acts as a strong suggestion that the matrix
- * should not be modified and that one should not modify it externally. However, the only way to ensure that
- * no external code modifies this matrix is to create a local copy that can't be accessed externally.
+ * <p>Interface that only implements operations in {@link SimpleBase} that are read only.</p>
+ *
+ * <p>
+ * A "shallow immutable" matrix where none of its API allow you to modify the matrix. However (similar to const
+ * in C++) you can access the modifiable matrix by downcasting to {@link SimpleMatrix} or by externally modifying
+ * in a function that has access to the original object. This interface acts as a strong suggestion that the matrix
+ * should not be modified. However, the only way to ensure that no external code modifies this matrix is to create a
+ * local copy that can't be accessed externally.
+ * </p>
  *
  * @author Peter Abeles
  */
