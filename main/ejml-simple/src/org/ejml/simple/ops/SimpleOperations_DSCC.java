@@ -17,6 +17,7 @@
  */
 package org.ejml.simple.ops;
 
+import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.*;
 import org.ejml.ops.MatrixIO;
 import org.ejml.simple.ConvertToDenseException;
