@@ -2,6 +2,12 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.43
+2023/XX/XX
+
+- TODO concurrency for complex https://github.com/lessthanoptimal/ejml/issues/176
+- TODO Support Java Modules
+
 ----- Version 0.42
 2023/02/10
 
