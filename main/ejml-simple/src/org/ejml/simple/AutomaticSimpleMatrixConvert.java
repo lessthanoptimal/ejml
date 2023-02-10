@@ -30,20 +30,20 @@ import org.ejml.ops.ConvertMatrixType;
 public class AutomaticSimpleMatrixConvert {
     MatrixType commonType;
 
-    public void specify0( SimpleBase a, SimpleBase... inputs ) {
-        SimpleBase array[] = new SimpleBase[inputs.length + 1];
+    public void specify0( ConstMatrix<?> a, ConstMatrix<?>... inputs ) {
+        var array = new ConstMatrix[inputs.length + 1];
         System.arraycopy(inputs, 0, array, 0, inputs.length);
         array[inputs.length] = a;
         specify(array);
     }
 
-    public void specify( SimpleBase... inputs ) {
+    public void specify( ConstMatrix<?>... inputs ) {
         boolean dense = false;
         boolean real = true;
         int bits = 32;
 
-        for (SimpleBase s : inputs) {
-            MatrixType t = s.mat.getType();
+        for (ConstMatrix<?> s : inputs) {
+            MatrixType t = s.getType();
             if (t.isDense())
                 dense = true;
             if (!t.isReal())
@@ -55,7 +55,7 @@ public class AutomaticSimpleMatrixConvert {
         commonType = MatrixType.lookup(dense, real, bits);
     }
 
-    public <T extends SimpleBase<T>> T convert( SimpleBase matrix ) {
+    public <T extends SimpleBase<T>> T convert( SimpleBase<?> matrix ) {
         if (matrix.getType() == commonType)
             return (T)matrix;
 

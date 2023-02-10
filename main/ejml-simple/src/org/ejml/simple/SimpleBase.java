@@ -211,7 +211,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
     }
 
     /** {@inheritDoc} */
-    @Override public T plus( ConstMatrix _B ) {
+    @Override public T plus( ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -279,7 +279,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
     }
 
     /** {@inheritDoc} */
-    @Override public T plus( double beta, ConstMatrix _B ) {
+    @Override public T plus( double beta, ConstMatrix<?> _B ) {
         T B = (T)_B;
         convertType.specify(this, B);
         T A = convertType.convert(this);
@@ -291,7 +291,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
     }
 
     /** {@inheritDoc} */
-    @Override public double dot( ConstMatrix _v ) {
+    @Override public double dot( ConstMatrix<?> _v ) {
         T v = (T)_v;
         convertType.specify(this, v);
         T A = convertType.convert(this);
@@ -581,7 +581,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
      * @param row Row in 'this'
      * @param src Vector which is to be copied into the row
      */
-    public void setRow( int row, SimpleMatrix src ) {
+    public void setRow( int row, ConstMatrix<?> src ) {
         if (!src.isVector())
             throw new IllegalArgumentException("Input matrix must be a vector");
         if (src.getNumElements() != numCols())
@@ -596,9 +596,10 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         }
 
         // See if it's a row or column vector and grab the appropriate elements.
-        double[] vector = src.numRows() < src.numCols() ?
-                src.ops.getRow(src.mat, 0, 0, src.getNumElements()) :
-                src.ops.getColumn(src.mat, 0, 0, src.getNumElements());
+        var bsrc = (SimpleBase)src;
+        double[] vector = src.getNumRows() < src.getNumCols() ?
+                bsrc.ops.getRow(bsrc.mat, 0, 0, src.getNumElements()) :
+                bsrc.ops.getColumn(bsrc.mat, 0, 0, src.getNumElements());
 
         // If src is real but output is complex, convert the vector.
         if (src.getType().isReal() && !getType().isReal()) {
@@ -631,7 +632,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
      * @param column Column in 'this'
      * @param src Vector which is to be copied into the column
      */
-    public void setColumn( int column, SimpleMatrix src ) {
+    public void setColumn( int column, ConstMatrix<?> src ) {
         if (!src.isVector())
             throw new IllegalArgumentException("Input matrix must be a vector");
         if (src.getNumElements() != numRows())
@@ -646,9 +647,10 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         }
 
         // See if it's a row or column vector and grab the appropriate elements.
-        double[] vector = src.numRows() < src.numCols() ?
-                src.ops.getRow(src.mat, 0, 0, src.getNumElements()) :
-                src.ops.getColumn(src.mat, 0, 0, src.getNumElements());
+        var bsrc = (SimpleBase)src;
+        double[] vector = src.getNumRows() < src.getNumCols() ?
+                bsrc.ops.getRow(bsrc.mat, 0, 0, src.getNumElements()) :
+                bsrc.ops.getColumn(bsrc.mat, 0, 0, src.getNumElements());
 
         // If src is real but output is complex, convert the vector.
         if (src.getType().isReal() && !getType().isReal()) {
@@ -1217,24 +1219,16 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         return mat.getType().getBits();
     }
 
-    /**
-     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
-     * are set to zero.</p>
-     *
-     * A = [ this, m[0] , ... , m[n-1] ]
-     *
-     * @param matrices Set of matrices
-     * @return Resulting matrix
-     */
-    public T concatColumns( SimpleBase<?>... matrices ) {
+    /** {@inheritDoc} */
+    @Override public T concatColumns( ConstMatrix<?>... matrices ) {
         convertType.specify0(this, matrices);
         T A = convertType.convert(this);
 
         int numCols = A.numCols();
         int numRows = A.numRows();
         for (int i = 0; i < matrices.length; i++) {
-            numRows = Math.max(numRows, matrices[i].numRows());
-            numCols += matrices[i].numCols();
+            numRows = Math.max(numRows, matrices[i].getNumRows());
+            numCols += matrices[i].getNumCols();
         }
 
         SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows, numCols));
@@ -1242,7 +1236,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         A.ops.extract(A.mat, 0, A.numRows(), 0, A.numCols(), combined.mat, 0, 0);
         int col = A.numCols();
         for (int i = 0; i < matrices.length; i++) {
-            Matrix m = convertType.convert(matrices[i]).mat;
+            Matrix m = convertType.convert((SimpleBase)matrices[i]).mat;
             int cols = m.getNumCols();
             int rows = m.getNumRows();
             A.ops.extract(m, 0, rows, 0, cols, combined.mat, 0, col);
@@ -1252,24 +1246,16 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         return (T)combined;
     }
 
-    /**
-     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
-     * are set to zero.</p>
-     *
-     * A = [ this; m[0] ; ... ; m[n-1] ]
-     *
-     * @param matrices Set of matrices
-     * @return Resulting matrix
-     */
-    public T concatRows( SimpleBase<?>... matrices ) {
+    /** {@inheritDoc} */
+    @Override public T concatRows( ConstMatrix<?>... matrices ) {
         convertType.specify0(this, matrices);
         T A = convertType.convert(this);
 
         int numCols = A.numCols();
         int numRows = A.numRows();
         for (int i = 0; i < matrices.length; i++) {
-            numRows += matrices[i].numRows();
-            numCols = Math.max(numCols, matrices[i].numCols());
+            numRows += matrices[i].getNumRows();
+            numCols = Math.max(numCols, matrices[i].getNumCols());
         }
 
         SimpleMatrix combined = SimpleMatrix.wrap(convertType.commonType.create(numRows, numCols));
@@ -1277,7 +1263,7 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         A.ops.extract(A.mat, 0, A.numRows(), 0, A.numCols(), combined.mat, 0, 0);
         int row = A.numRows();
         for (int i = 0; i < matrices.length; i++) {
-            Matrix m = convertType.convert(matrices[i]).mat;
+            Matrix m = convertType.convert((SimpleBase)matrices[i]).mat;
             int cols = m.getNumCols();
             int rows = m.getNumRows();
             A.ops.extract(m, 0, rows, 0, cols, combined.mat, row, 0);
