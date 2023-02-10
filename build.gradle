@@ -197,7 +197,7 @@ subprojects {
     }
 
     // Skip these codeless directories when publishing jars locally or to a remote destination
-    if (['main', 'examples', 'main:autocode', 'regression'].contains(name)) {
+    if (['main', 'examples', 'autocode', 'regression'].contains(name)) {
         project.jar.enabled = false
         project.tasks.publish.enabled = false
     }
