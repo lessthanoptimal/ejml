@@ -2,8 +2,8 @@ Change log for EJML
 
 Date format: year/month/day
 
------ Version 0.41.2
-20XX
+----- Version 0.42
+2023/02/10
 
 - MatrixIO
   * Fixed Matrix Market save. Thanks Adam Logowski for pointing out the issue
