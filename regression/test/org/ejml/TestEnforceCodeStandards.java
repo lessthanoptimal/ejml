@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -53,7 +53,7 @@ public class TestEnforceCodeStandards {
 		String pathToMain = path("main");
 
 		CheckForbiddenLanguage checker = new CheckForbiddenLanguage();
-		CheckForbiddenHelper.forbidNonExplicitVar(checker, true);
+		CheckForbiddenHelper.forbidNonExplicitVar(checker, true, true);
 		CheckForbiddenHelper.forbidForEach(checker);
 
 		File[] moduleDirectories = new File(pathToMain).listFiles();
