@@ -36,6 +36,9 @@ import java.io.IOException;
  * local copy that can't be accessed externally.
  * </p>
  *
+ * <p>NOTE: Implementations of ConstMatrix must extend {@link SimpleBase} or else it won't work when given as
+ * input to any class based off of {@link SimpleBase}.</p>
+ *
  * @author Peter Abeles
  */
 public interface ConstMatrix<T extends ConstMatrix<T>> {
@@ -65,7 +68,7 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * where c is the returned matrix, a is this matrix, and b is the passed in matrix.
      * </p>
      *
-     * @param B A matrix that is n by bn. Not modified.
+     * @param B A matrix that is n by p. Not modified.
      * @return The results of this operation.
      * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
@@ -97,7 +100,6 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * @return The results of this operation.
      */
     T plus( ConstMatrix<?> B );
-
 
     /**
      * <p>
@@ -140,7 +142,6 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * @return The results of this operation.
      */
     T minusComplex( double real, double imag );
-
 
     /**
      * <p>
@@ -766,6 +767,28 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * @return Submatrix that contains the specified columns.
      */
     T cols( int begin, int end );
+
+    /**
+     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ this, m[0] , ... , m[n-1] ]
+     *
+     * @param matrices Set of matrices
+     * @return Resulting matrix
+     */
+    T concatColumns( ConstMatrix<?>... matrices );
+
+    /**
+     * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
+     * are set to zero.</p>
+     *
+     * A = [ this; m[0] ; ... ; m[n-1] ]
+     *
+     * @param matrices Set of matrices
+     * @return Resulting matrix
+     */
+    T concatRows( ConstMatrix<?>... matrices );
 
     /**
      * Returns the type of matrix it is wrapping.
