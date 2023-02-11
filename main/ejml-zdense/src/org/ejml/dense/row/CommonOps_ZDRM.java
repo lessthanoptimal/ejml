@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,6 +29,8 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+
+import static org.ejml.UtilEjml.reshapeOrDeclare;
 
 /**
  * Common operations on complex numbers
@@ -274,15 +276,17 @@ public class CommonOps_ZDRM {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void add( ZMatrixD1 a, ZMatrixD1 b, ZMatrixD1 c ) {
+    public static <T extends ZMatrixD1> T add( T a, T b, @Nullable T c ) {
         UtilEjml.checkSameShape(a, b, true);
-        c.reshape(a.numRows, b.numCols);
+        c = UtilEjml.reshapeOrDeclare(c, a);
 
         final int length = a.getDataLength();
 
         for (int i = 0; i < length; i++) {
             c.data[i] = a.data[i] + b.data[i];
         }
+
+        return c;
     }
 
     /**
@@ -300,15 +304,17 @@ public class CommonOps_ZDRM {
      * @param b A Matrix. Not modified.
      * @param c A Matrix where the results are stored. Modified.
      */
-    public static void subtract( ZMatrixD1 a, ZMatrixD1 b, ZMatrixD1 c ) {
+    public static <T extends ZMatrixD1> T subtract( T a, T b, @Nullable T c ) {
         UtilEjml.checkSameShape(a, b, true);
-        c.reshape(a.numRows, b.numCols);
+        c = UtilEjml.reshapeOrDeclare(c, a);
 
         final int length = a.getDataLength();
 
         for (int i = 0; i < length; i++) {
             c.data[i] = a.data[i] - b.data[i];
         }
+
+        return c;
     }
 
     /**
@@ -337,6 +343,37 @@ public class CommonOps_ZDRM {
     }
 
     /**
+     * <p>
+     * Performs an element by element scalar multiplication.<br>
+     * <br>
+     * b<sub>ij</sub> = &alpha;*a<sub>ij</sub>
+     * </p>
+     *
+     * @param a The matrix that is to be scaled.
+     * @param output The scaled matrix. If null a new instance is created. Modified.
+     * @param alphaReal real component of scale factor
+     * @param alphaImag imaginary component of scale factor
+     * @return The scaled matrix.
+     */
+    public static <T extends ZMatrixD1>T scale( double alphaReal, double alphaImag, T a, @Nullable T output ) {
+        output = reshapeOrDeclare(output, a);
+
+        // on very small matrices (2 by 2) the call to getNumElements() can slow it down
+        // slightly compared to other libraries since it involves an extra multiplication.
+        final int size = a.getNumElements()*2;
+
+        for (int i = 0; i < size; i += 2) {
+            double real = a.data[i];
+            double imag = a.data[i + 1];
+
+            output.data[i] = real*alphaReal - imag*alphaImag;
+            output.data[i + 1] = real*alphaImag + imag*alphaReal;
+        }
+
+        return output;
+    }
+
+    /**
      * <p>Performs the following operation:<br>
      * <br>
      * c = a * b <br>
@@ -348,12 +385,18 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+    public static ZMatrixRMaj mult( ZMatrixRMaj a, ZMatrixRMaj b, @Nullable ZMatrixRMaj c ) {
+        UtilEjml.checkSameInstance(a, c);
+        UtilEjml.checkSameInstance(b, c);
+        c = reshapeOrDeclare(c, a, a.numRows, b.numCols);
+
         if (b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.mult_reorder(a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.mult_small(a, b, c);
         }
+
+        return c;
     }
 
     /**
@@ -370,12 +413,19 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void mult( double realAlpha, double imgAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+    public static ZMatrixRMaj mult( double realAlpha, double imgAlpha, ZMatrixRMaj a, ZMatrixRMaj b,
+                                    @Nullable ZMatrixRMaj c ) {
+        UtilEjml.checkSameInstance(a, c);
+        UtilEjml.checkSameInstance(b, c);
+        c = reshapeOrDeclare(c, a, a.numRows, b.numCols);
+
         if (b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.mult_reorder(realAlpha, imgAlpha, a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.mult_small(realAlpha, imgAlpha, a, b, c);
         }
+
+        return c;
     }
 
     /**
@@ -390,12 +440,18 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+    public static ZMatrixRMaj multAdd( ZMatrixRMaj a, ZMatrixRMaj b, @Nullable ZMatrixRMaj c ) {
+        UtilEjml.checkSameInstance(a, c);
+        UtilEjml.checkSameInstance(b, c);
+        c = reshapeOrDeclare(c, a, a.numRows, b.numCols);
+
         if (b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multAdd_reorder(a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.multAdd_small(a, b, c);
         }
+
+        return c;
     }
 
     /**
@@ -412,12 +468,19 @@ public class CommonOps_ZDRM {
      * @param b The right matrix in the multiplication operation. Not modified.
      * @param c Where the results of the operation are stored. Modified.
      */
-    public static void multAdd( double realAlpha, double imgAlpha, ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {
+    public static ZMatrixRMaj multAdd( double realAlpha, double imgAlpha, ZMatrixRMaj a, ZMatrixRMaj b,
+                                       @Nullable ZMatrixRMaj c ) {
+        UtilEjml.checkSameInstance(a, c);
+        UtilEjml.checkSameInstance(b, c);
+        c = reshapeOrDeclare(c, a, a.numRows, b.numCols);
+
         if (b.numCols >= EjmlParameters.CMULT_COLUMN_SWITCH) {
             MatrixMatrixMult_ZDRM.multAdd_reorder(realAlpha, imgAlpha, a, b, c);
         } else {
             MatrixMatrixMult_ZDRM.multAdd_small(realAlpha, imgAlpha, a, b, c);
         }
+
+        return c;
     }
 
     /**

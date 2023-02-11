@@ -24,10 +24,15 @@ import org.ejml.UtilEjml;
 import org.ejml.concurrency.EjmlConcurrency;
 import org.ejml.data.*;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.CommonOps_MT_DDRM;
+import org.ejml.dense.row.CommonOps_ZDRM;
+import org.ejml.dense.row.SpecializedOps_DDRM;
+import org.ejml.dense.row.decomposition.TriangularSolver_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.dense.row.factory.LinearSolverFactory_MT_DDRM;
 import org.ejml.dense.row.misc.TransposeAlgs_DDRM;
 import org.ejml.dense.row.misc.TransposeAlgs_MT_DDRM;
+import org.ejml.dense.row.misc.UnrolledCholesky_DDRM;
 import org.ejml.dense.row.misc.UnrolledInverseFromMinor_DDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_DDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_MT_DDRM;
@@ -43,10 +48,11 @@ import static org.ejml.UtilEjml.reshapeOrDeclare;
 import static org.ejml.concurrency.EjmlConcurrency.useConcurrent;
 
 /**
- * <p>Performs standard matrix operations but has more automation in selecting which algorithm to run and automatically
- * handles all workspace variables. The goal is to simply the procedural API. The downside is that you
- * have less control over memory management and absolute certainty that you know which implementation
- * is going to be run.</p>
+ * <p>
+ * Generalized Common Operations for all matrix types. Designed to simplify using the procedural interface
+ * by having a central location for everything and managing workspace variables. For high performance users
+ * there is a slight downside in the loss of control and ability to tightly control memory.
+ * </p>
  * <p>
  * For example,
  * {@link org.ejml.dense.row.CommonOps_DDRM} is always single threaded and {@link org.ejml.dense.row.CommonOps_MT_DDRM}
@@ -58,10 +64,7 @@ import static org.ejml.concurrency.EjmlConcurrency.useConcurrent;
  *
  * @author Peter Abeles
  */
-public class MatrixMath {
-    // TODO invert symm
-    // TODO scale
-    // TODO transpose square
+public class CommonOps {
     // TODO SVD and Eigen
 
     // Thread specific workspace variables
@@ -73,23 +76,84 @@ public class MatrixMath {
     private final static ThreadLocal<DGrowArray> workspaceGX = ThreadLocal.withInitial(DGrowArray::new);
 
     /**
+     * @see CommonOps_DDRM#add(DMatrixD1, DMatrixD1, DMatrixD1)
+     */
+    public static <T extends DMatrixD1> T add( final T A, final T B, @Nullable T output ) {
+        return CommonOps_DDRM.add(A, B, output);
+    }
+
+    /**
+     * @see CommonOps_ZDRM#add(ZMatrixD1, ZMatrixD1, ZMatrixD1)
+     */
+    public static <T extends ZMatrixD1> T add( final T A, final T B, @Nullable T output ) {
+        return CommonOps_ZDRM.add(A, B, output);
+    }
+
+    /**
+     * @see CommonOps_DSCC#add(double, DMatrixSparseCSC, double, DMatrixSparseCSC, DMatrixSparseCSC, IGrowArray, DGrowArray)
+     */
+    public static DMatrixSparseCSC add( double alpha, DMatrixSparseCSC A, double beta, DMatrixSparseCSC B,
+                                        @Nullable DMatrixSparseCSC output ) {
+        if (EjmlConcurrency.useConcurrent(A)) {
+            return CommonOps_MT_DSCC.add(alpha, A, beta, B, output, workspaceMT.get());
+        } else {
+            return CommonOps_DSCC.add(alpha, A, beta, B, output, workspaceGW.get(), workspaceGX.get());
+        }
+    }
+
+    /**
+     * @see CommonOps_DDRM#scale(double, DMatrixD1, DMatrixD1)
+     */
+    public static <T extends DMatrixD1> T scale( double alpha, T A, T B ) {
+        return CommonOps_DDRM.scale(alpha, A, B);
+    }
+
+    /**
+     * @see CommonOps_ZDRM#scale(double, double, ZMatrixD1, ZMatrixD1)
+     */
+    public static <T extends ZMatrixD1> T scale( double alphaReal, double alphaImag, T A, T B ) {
+        return CommonOps_ZDRM.scale(alphaReal, alphaImag, A, B);
+    }
+
+    /**
+     * @see CommonOps_DSCC#scale
+     */
+    public static void scale( double scalar, DMatrixSparseCSC A, DMatrixSparseCSC outputB ) {
+        CommonOps_DSCC.scale(scalar, A, outputB);
+    }
+
+    /**
+     * @see CommonOps_DDRM#divide(double, DMatrixD1, DMatrixD1)
+     */
+    public static <T extends DMatrixD1> T divide( double alpha, T A, T B ) {
+        return CommonOps_DDRM.divide(alpha, A, B);
+    }
+
+    /**
+     * @see CommonOps_DSCC#divide
+     */
+    public static void divide( double scalar, DMatrixSparseCSC A, DMatrixSparseCSC outputB ) {
+        CommonOps_DSCC.divide(scalar, A, outputB);
+    }
+
+    /**
      * @see CommonOps_DDRM#mult(DMatrix1Row, DMatrix1Row, DMatrix1Row)
      */
-    public static <T extends DMatrix1Row> T mult( T a, T b, @Nullable T output ) {
-        output = reshapeOrDeclare(output, a, a.numRows, b.numCols);
-        UtilEjml.checkSameInstance(a, output);
-        UtilEjml.checkSameInstance(b, output);
+    public static <T extends DMatrix1Row> T mult( T A, T B, @Nullable T output ) {
+        output = reshapeOrDeclare(output, A, A.numRows, B.numCols);
+        UtilEjml.checkSameInstance(A, output);
+        UtilEjml.checkSameInstance(B, output);
 
-        if (b.numCols == 1) {
-            MatrixVectorMult_DDRM.mult(a, b, output);
-        } else if (b.numCols >= EjmlParameters.MULT_COLUMN_SWITCH) {
+        if (B.numCols == 1) {
+            MatrixVectorMult_DDRM.mult(A, B, output);
+        } else if (B.numCols >= EjmlParameters.MULT_COLUMN_SWITCH) {
             if (EjmlConcurrency.isUseConcurrent()) {
-                MatrixMatrixMult_MT_DDRM.mult_reorder(a, b, output);
+                MatrixMatrixMult_MT_DDRM.mult_reorder(A, B, output);
             } else {
-                MatrixMatrixMult_DDRM.mult_reorder(a, b, output);
+                MatrixMatrixMult_DDRM.mult_reorder(A, B, output);
             }
         } else {
-            MatrixMatrixMult_DDRM.mult_small(a, b, output);
+            MatrixMatrixMult_DDRM.mult_small(A, B, output);
         }
 
         return output;
@@ -149,10 +213,35 @@ public class MatrixMath {
     }
 
     /**
+     * @see org.ejml.dense.row.CommonOps_DDRM#transpose(DMatrixRMaj)
+     */
+    public static void transpose( DMatrixRMaj A ) {
+        if (useConcurrent(A)) {
+            CommonOps_MT_DDRM.transpose(A);
+        } else {
+            CommonOps_DDRM.transpose(A);
+        }
+    }
+
+    /**
      * @see CommonOps_DDRM#det(DMatrixRMaj)
      */
     public static double det( DMatrixRMaj mat ) {
         return CommonOps_DDRM.det(mat);
+    }
+
+    /**
+     * @see CommonOps_ZDRM#det(ZMatrixRMaj)
+     */
+    public static Complex_F64 det( ZMatrixRMaj mat ) {
+        return CommonOps_ZDRM.det(mat);
+    }
+
+    /**
+     * @see CommonOps_DSCC#det(DMatrixSparseCSC)
+     */
+    public static double det( DMatrixSparseCSC mat ) {
+        return CommonOps_DSCC.det(mat);
     }
 
     /**
@@ -179,17 +268,17 @@ public class MatrixMath {
     /**
      * @see CommonOps_DDRM#invert(DMatrixRMaj, DMatrixRMaj)
      */
-    public static boolean invert( DMatrixRMaj A, DMatrixRMaj result ) {
-        result.reshape(A.numRows, A.numCols);
+    public static boolean invert( DMatrixRMaj A, DMatrixRMaj output ) {
+        output.reshape(A.numRows, A.numCols);
 
         if (A.numCols <= UnrolledInverseFromMinor_DDRM.MAX) {
             if (A.numCols != A.numRows) {
                 throw new MatrixDimensionException("Must be a square matrix.");
             }
-            if (result.numCols >= 2) {
-                UnrolledInverseFromMinor_DDRM.inv(A, result);
+            if (output.numCols >= 2) {
+                UnrolledInverseFromMinor_DDRM.inv(A, output);
             } else {
-                result.set(0, 1.0/A.get(0));
+                output.set(0, 1.0/A.get(0));
             }
             return true;
         }
@@ -208,7 +297,43 @@ public class MatrixMath {
         if (!solver.setA(A))
             return false;
 
-        solver.invert(result);
+        solver.invert(output);
+        return true;
+    }
+
+    /**
+     * @see CommonOps_DDRM#invertSPD(DMatrixRMaj, DMatrixRMaj)
+     */
+    public static boolean invertSPD( DMatrixRMaj A, DMatrixRMaj output ) {
+        if (A.numRows != A.numCols)
+            throw new IllegalArgumentException("Must be a square matrix");
+        output.reshape(A.numRows, A.numCols);
+
+        if (A.numCols <= UnrolledCholesky_DDRM.MAX) {
+            // L*L' = A
+            if (!UnrolledCholesky_DDRM.lower(A, output))
+                return false;
+            // L = inv(L)
+            TriangularSolver_DDRM.invertLower(output.data, output.numCols);
+            // inv(A) = inv(L')*inv(L)
+            SpecializedOps_DDRM.multLowerTranA(output);
+            return true;
+        }
+
+        LinearSolverDense<DMatrixRMaj> solver;
+
+        if (useConcurrent(A)) {
+            solver = LinearSolverFactory_MT_DDRM.chol(A.numRows);
+        } else {
+            solver = LinearSolverFactory_DDRM.chol(A.numRows);
+        }
+        if (solver.modifiesA())
+            A = A.copy();
+
+        if (!solver.setA(A))
+            return false;
+
+        solver.invert(output);
         return true;
     }
 }

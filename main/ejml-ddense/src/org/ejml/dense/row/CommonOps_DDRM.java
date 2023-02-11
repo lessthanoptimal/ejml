@@ -824,33 +824,33 @@ public class CommonOps_DDRM {
      * Matrix inverse for symmetric positive definite matrices. For small matrices an unrolled
      * cholesky is used. Otherwise a standard decomposition.
      *
-     * @param mat (Input) SPD matrix
-     * @param result (Output) Inverted matrix.
+     * @param A (Input) SPD matrix
+     * @param output (Output) Inverted matrix.
      * @return true if it could invert the matrix false if it could not.
      * @see UnrolledCholesky_DDRM
      * @see LinearSolverFactory_DDRM#chol(int)
      */
-    public static boolean invertSPD( DMatrixRMaj mat, DMatrixRMaj result ) {
-        if (mat.numRows != mat.numCols)
+    public static boolean invertSPD( DMatrixRMaj A, DMatrixRMaj output ) {
+        if (A.numRows != A.numCols)
             throw new IllegalArgumentException("Must be a square matrix");
-        result.reshape(mat.numRows, mat.numRows);
+        output.reshape(A.numRows, A.numRows);
 
-        if (mat.numRows <= UnrolledCholesky_DDRM.MAX) {
+        if (A.numRows <= UnrolledCholesky_DDRM.MAX) {
             // L*L' = A
-            if (!UnrolledCholesky_DDRM.lower(mat, result))
+            if (!UnrolledCholesky_DDRM.lower(A, output))
                 return false;
             // L = inv(L)
-            TriangularSolver_DDRM.invertLower(result.data, result.numCols);
+            TriangularSolver_DDRM.invertLower(output.data, output.numCols);
             // inv(A) = inv(L')*inv(L)
-            SpecializedOps_DDRM.multLowerTranA(result);
+            SpecializedOps_DDRM.multLowerTranA(output);
         } else {
-            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.chol(mat.numCols);
+            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.chol(A.numCols);
             if (solver.modifiesA())
-                mat = mat.copy();
+                A = A.copy();
 
-            if (!solver.setA(mat))
+            if (!solver.setA(A))
                 return false;
-            solver.invert(result);
+            solver.invert(output);
         }
 
         return true;
@@ -2283,17 +2283,20 @@ public class CommonOps_DDRM {
      * </p>
      *
      * @param alpha the amount each element is multiplied by.
-     * @param a The matrix that is to be scaled. Not modified.
-     * @param b Where the scaled matrix is stored. Modified.
+     * @param A The matrix that is to be scaled. Not modified.
+     * @param B The scaled matrix. If null a new instance is created. Modified.
+     * @return The scaled matrix.
      */
-    public static void scale( double alpha, DMatrixD1 a, DMatrixD1 b ) {
-        b.reshape(a.numRows, a.numCols);
+    public static <T extends DMatrixD1> T scale( double alpha, T A, @Nullable T B ) {
+        B = reshapeOrDeclare(B, A, A.numRows, A.numCols);
 
-        final int size = a.getNumElements();
+        final int size = A.getNumElements();
 
         for (int i = 0; i < size; i++) {
-            b.data[i] = a.data[i]*alpha;
+            B.data[i] = A.data[i]*alpha;
         }
+
+        return B;
     }
 
     /**
