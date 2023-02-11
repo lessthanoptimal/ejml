@@ -95,14 +95,8 @@ public class SimpleOperations_DSCC implements SimpleSparseOperations<DMatrixSpar
     }
 
     @Override public void multTransA( DMatrixSparseCSC A, DMatrixSparseCSC B, DMatrixSparseCSC output ) {
-        var At = new DMatrixSparseCSC(1, 1);
-        CommonOps_DSCC.transpose(A, At, gw);
-
-        if (useConcurrent(A) || useConcurrent(B)) {
-            CommonOps_MT_DSCC.mult(A, B, output, workspaceMT);
-        } else {
-            CommonOps_DSCC.mult(At, B, output, gw, gx);
-        }
+        // multTransA(sparse, dense, dense) is what's supported
+        throw new RuntimeException("Unsupported for DSCC. Make a feature request if you need this!");
     }
 
     @Override public void extractDiag( DMatrixSparseCSC input, DMatrixRMaj output ) {
