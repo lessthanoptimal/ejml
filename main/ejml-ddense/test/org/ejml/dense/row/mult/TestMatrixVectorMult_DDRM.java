@@ -21,10 +21,14 @@ package org.ejml.dense.row.mult;
 import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparse;
+import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.data.UtilTestMatrix;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -141,6 +145,56 @@ public class TestMatrixVectorMult_DDRM extends EjmlStandardJUnit {
         System.arraycopy(c.data, 0, _c, offsetC, 5);
 
         found = MatrixVectorMult_DDRM.innerProduct(_a, offsetA, B, _c, offsetC);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_sparse() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixSparse c = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj c2 = new DMatrixRMaj(c);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, c2);
+        double found = MatrixVectorMult_DDRM.innerProduct(a, b, c);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_sparse_csc() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj c2 = new DMatrixRMaj(c);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, c2);
+        double found = MatrixVectorMult_DDRM.innerProduct(a, b, c);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_sparse_symmetric() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj a2 = new DMatrixRMaj(a);
+        DMatrixRMaj b = RandomMatrices_DDRM.symmetricPosDef(10, rand);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, a2);
+        double found = MatrixVectorMult_DDRM.innerProductSelfSymmetrical((DMatrixSparse) a, b);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_sparse_symmetric_csc() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj a2 = new DMatrixRMaj(a);
+        DMatrixRMaj b = RandomMatrices_DDRM.symmetricPosDef(10, rand);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, a2);
+        double found = MatrixVectorMult_DDRM.innerProductSelfSymmetrical(a, b);
         assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
