@@ -176,7 +176,7 @@ public class MatrixMatrixMult_DDRM {
             CommonOps_DDRM.fill(C, 0);
             return;
         }
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
 
