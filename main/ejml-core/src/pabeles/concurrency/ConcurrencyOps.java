@@ -62,7 +62,7 @@ public class ConcurrencyOps {
         try {
             pool.submit(() -> IntStream.range(start, endExclusive).parallel().forEach(consumer)).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -84,7 +84,7 @@ public class ConcurrencyOps {
             int iterations = range/step + ((range%step == 0) ? 0 : 1);
             pool.submit(() -> IntStream.range(0, iterations).parallel().forEach(i -> consumer.accept(start + i*step))).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,7 +105,7 @@ public class ConcurrencyOps {
         try {
             pool.submit(new IntObjectTask<>(start, endExclusive, step, pool.getParallelism(), -1, workspace, consumer)).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -142,7 +142,7 @@ public class ConcurrencyOps {
         try {
             pool.submit(new IntRangeTask(start, endExclusive, block, consumer)).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
