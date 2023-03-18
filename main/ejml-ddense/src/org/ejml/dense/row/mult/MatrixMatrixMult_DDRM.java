@@ -238,7 +238,6 @@ public class MatrixMatrixMult_DDRM {
         UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numRows);
 
-
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int cIndex = i*B.numRows;
@@ -436,7 +435,7 @@ public class MatrixMatrixMult_DDRM {
         if (A.numCols == 0 || A.numRows == 0) {
             return;
         }
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
 
@@ -498,7 +497,6 @@ public class MatrixMatrixMult_DDRM {
         UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
         UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         UtilEjml.assertShape(A.numCols == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -698,7 +696,7 @@ public class MatrixMatrixMult_DDRM {
             CommonOps_DDRM.fill(C, 0);
             return;
         }
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
 
@@ -760,7 +758,6 @@ public class MatrixMatrixMult_DDRM {
         UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
         UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         C.reshape(A.numCols, B.numRows);
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
@@ -959,7 +956,7 @@ public class MatrixMatrixMult_DDRM {
         if (A.numCols == 0 || A.numRows == 0) {
             return;
         }
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
             int indexC_start = i*C.numCols;
 
@@ -1021,7 +1018,6 @@ public class MatrixMatrixMult_DDRM {
         UtilEjml.assertTrue(A != C && B != C, "Neither 'A' or 'B' can be the same matrix as 'C'");
         UtilEjml.assertShape(A.numRows, B.numCols, "The 'A' and 'B' matrices do not have compatible dimensions");
         UtilEjml.assertShape(A.numCols == C.numRows && B.numRows == C.numCols, "C is not compatible with A and B");
-
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {
         for (int i = 0; i < A.numCols; i++) {
