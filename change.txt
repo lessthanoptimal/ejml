@@ -5,6 +5,9 @@ Date format: year/month/day
 ----- Version 0.43
 2023/XX/XX
 
+- Fixed multiple bugs in MatrixMatrixMult_MT where it was iterating over the wrong number of elements
+  * Thanks to hageldave for finding and fixing the problem
+
 - TODO concurrency for complex https://github.com/lessthanoptimal/ejml/issues/176
 - TODO Support Java Modules
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -333,7 +333,7 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
 
         String foo =
                 header + makeBoundsCheck(true,false, null,!add)+handleZeros(add)+
-                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numRows, i -> {\n" +
+                        "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, A.numCols, i -> {\n" +
                         "        for (int i = 0; i < A.numCols; i++) {\n" +
                         "            int indexC_start = i*C.numCols;\n" +
                         "\n" +
@@ -369,9 +369,9 @@ public class GenerateMatrixMatrixMult_DDRM extends CodeGeneratorBase {
         String assignment = add ? "plus" : "set";
 
         if( alpha ) {
-            valLine = "C."+assignment+"( cIndex++ , alpha*total );\n";
+            valLine = "C."+assignment+"(cIndex++, alpha*total);\n";
         } else {
-            valLine = "C."+assignment+"( cIndex++ , total );\n";
+            valLine = "C."+assignment+"(cIndex++, total);\n";
         }
 
         String foo =

@@ -165,6 +165,9 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
     }
 
     protected void declareParamStandard( Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle ) {
+        // Randomize the size
+        int size = (int)(rand.nextInt(this.size/4) + this.size*3/4);
+
         for (int i = 0; i < typesThreaded.length; i++) {
             if (typesThreaded[i].isAssignableFrom(FMatrixRMaj.class)) {
                 var m = new FMatrixRMaj(size, size);
