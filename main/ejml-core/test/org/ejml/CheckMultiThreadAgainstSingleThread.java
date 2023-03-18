@@ -43,7 +43,7 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
     Class singleClass;
     Class threadedClass;
 
-    protected CheckMultiThreadAgainstSingleThread(Class singleClass, Class threadedClass, int expectedFunctions) {
+    protected CheckMultiThreadAgainstSingleThread( Class singleClass, Class threadedClass, int expectedFunctions ) {
         this.singleClass = singleClass;
         this.threadedClass = threadedClass;
         this.expectedFunctions = expectedFunctions;
@@ -53,26 +53,26 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
     void compareToSingle() {
         Method[] methods = threadedClass.getDeclaredMethods();
         int found = 0;
-        for( Method tm : methods ) {
-            if(!isTestMethod(tm))
+        for (Method tm : methods) {
+            if (!isTestMethod(tm))
                 continue;
 
 //            System.out.println("Looking at "+tm.getName()+" length="+tm.getParameterTypes().length);
 
             Method sm = findMatch(tm);
-            if( sm == null ) {
-                fail("Failed to find match for "+tm.getName()+" args.length "+tm.getParameterTypes().length);
+            if (sm == null) {
+                fail("Failed to find match for " + tm.getName() + " args.length " + tm.getParameterTypes().length);
                 return;
             }
-            compareBothMethods(tm,sm);
+            compareBothMethods(tm, sm);
             found++;
         }
-        assertEquals(found,expectedFunctions);
+        assertEquals(found, expectedFunctions);
     }
 
     protected boolean isTestMethod( Method m ) {
         Class[] params = m.getParameterTypes();
-        if( params.length == 0 )
+        if (params.length == 0)
             return false;
 
         if (!Modifier.isStatic(m.getModifiers()))
@@ -81,37 +81,37 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
         if (!Modifier.isPublic(m.getModifiers()))
             return false;
 
-        for( Class p : params ) {
-            if( Matrix.class.isAssignableFrom(p) || Submatrix.class.isAssignableFrom(p) )
+        for (Class p : params) {
+            if (Matrix.class.isAssignableFrom(p) || Submatrix.class.isAssignableFrom(p))
                 return true;
         }
         return false;
     }
 
-    private @Nullable Method findMatch(Method threadedM ) {
-        for( Method m : singleClass.getMethods()) {
-            if( isMatch(threadedM,m)) {
+    private @Nullable Method findMatch( Method threadedM ) {
+        for (Method m : singleClass.getMethods()) {
+            if (isMatch(threadedM, m)) {
                 return m;
             }
         }
         return null;
     }
 
-    private boolean isMatch( Method fixed , Method common ) {
-        if( fixed.getName().compareTo(common.getName()) != 0 )
+    private boolean isMatch( Method fixed, Method common ) {
+        if (fixed.getName().compareTo(common.getName()) != 0)
             return false;
 
         Class[] typesFixed = fixed.getParameterTypes();
         Class[] typesCommon = common.getParameterTypes();
 
-        if( typesFixed.length != typesCommon.length )
+        if (typesFixed.length != typesCommon.length)
             return false;
 
         for (int i = 0; i < typesFixed.length; i++) {
-            if( Matrix.class.isAssignableFrom(typesFixed[i]) != Matrix.class.isAssignableFrom(typesCommon[i])) {
+            if (Matrix.class.isAssignableFrom(typesFixed[i]) != Matrix.class.isAssignableFrom(typesCommon[i])) {
                 return false;
             }
-            if( Submatrix.class.isAssignableFrom(typesFixed[i]) != Submatrix.class.isAssignableFrom(typesCommon[i])) {
+            if (Submatrix.class.isAssignableFrom(typesFixed[i]) != Submatrix.class.isAssignableFrom(typesCommon[i])) {
                 return false;
             }
         }
@@ -122,29 +122,28 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
         return returnFixed == returnCommon;
     }
 
-    private boolean compareBothMethods(Method threaded , Method single ) {
+    private boolean compareBothMethods( Method threaded, Method single ) {
         Class[] typesThreaded = threaded.getParameterTypes();
-        Object[] inputsThreaded = new Object[ typesThreaded.length ];
-        Object[] inputsSingle = new Object[ typesThreaded.length ];
+        Object[] inputsThreaded = new Object[typesThreaded.length];
+        Object[] inputsSingle = new Object[typesThreaded.length];
 
         for (int trail = 0; trail < numTrials; trail++) {
             try {
-                declareParamStandard(typesThreaded,inputsThreaded,inputsSingle);
-                Object retThread = threaded.invoke(null,inputsThreaded);
-                Object retSingle = single.invoke(null,inputsSingle);
+                declareParamStandard(typesThreaded, inputsThreaded, inputsSingle);
+                Object retThread = threaded.invoke(null, inputsThreaded);
+                Object retSingle = single.invoke(null, inputsSingle);
 
                 // If "common" returns the output matrix don't require the "fixed" implement to also
                 boolean ignoreReturn = retThread == null
                         && retSingle != null && Matrix.class.isAssignableFrom(retSingle.getClass());
 
-                if( !ignoreReturn && !checkEquivalent(retThread,retSingle) )
+                if (!ignoreReturn && !checkEquivalent(retThread, retSingle))
                     return false;
 
-                for( int i = 0; i < inputsThreaded.length; i++ ) {
-                    if( !checkEquivalent(inputsThreaded[i],inputsSingle[i]) )
+                for (int i = 0; i < inputsThreaded.length; i++) {
+                    if (!checkEquivalent(inputsThreaded[i], inputsSingle[i]))
                         return false;
                 }
-
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
                 fail("IllegalAccessException");
@@ -161,91 +160,91 @@ public abstract class CheckMultiThreadAgainstSingleThread extends EjmlStandardJU
         throw new RuntimeException("Must override this function if submatrices are involved");
     }
 
-    protected void compareSubmatrices( Submatrix subA , Submatrix subB ) {
+    protected void compareSubmatrices( Submatrix subA, Submatrix subB ) {
         throw new RuntimeException("Must override this function if submatrices are involved");
     }
 
-    protected void declareParamStandard(Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle) {
-        for( int i = 0; i < typesThreaded.length; i++ ) {
-            if(typesThreaded[i].isAssignableFrom(FMatrixRMaj.class)) {
+    protected void declareParamStandard( Class[] typesThreaded, Object[] inputsThreaded, Object[] inputsSingle ) {
+        for (int i = 0; i < typesThreaded.length; i++) {
+            if (typesThreaded[i].isAssignableFrom(FMatrixRMaj.class)) {
                 var m = new FMatrixRMaj(size, size);
                 RandomMatrices_FDRM.fillUniform(m, -1, 1, rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
-            } else if(typesThreaded[i].isAssignableFrom(DMatrixRMaj.class)) {
-                var m = new DMatrixRMaj(size,size);
-                RandomMatrices_DDRM.fillUniform(m,-1,1,rand);
+            } else if (typesThreaded[i].isAssignableFrom(DMatrixRMaj.class)) {
+                var m = new DMatrixRMaj(size, size);
+                RandomMatrices_DDRM.fillUniform(m, -1, 1, rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
-            } else if(typesThreaded[i].isAssignableFrom(CMatrixRMaj.class)) {
-                var m = new CMatrixRMaj(size,size);
-                RandomMatrices_CDRM.fillUniform(m,-1,1,rand);
+            } else if (typesThreaded[i].isAssignableFrom(CMatrixRMaj.class)) {
+                var m = new CMatrixRMaj(size, size);
+                RandomMatrices_CDRM.fillUniform(m, -1, 1, rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
-            } else if(typesThreaded[i].isAssignableFrom(ZMatrixRMaj.class)) {
-                var m = new ZMatrixRMaj(size,size);
-                RandomMatrices_ZDRM.fillUniform(m,-1,1,rand);
+            } else if (typesThreaded[i].isAssignableFrom(ZMatrixRMaj.class)) {
+                var m = new ZMatrixRMaj(size, size);
+                RandomMatrices_ZDRM.fillUniform(m, -1, 1, rand);
                 inputsThreaded[i] = m.copy();
                 inputsSingle[i] = m;
-            } else if(Submatrix.class.isAssignableFrom(typesThreaded[i])) {
+            } else if (Submatrix.class.isAssignableFrom(typesThreaded[i])) {
                 long seed = rand.nextLong();
                 inputsThreaded[i] = createSubmatrix(seed);
                 inputsSingle[i] = createSubmatrix(seed);
-            } else if( float.class == typesThreaded[i] ) {
+            } else if (float.class == typesThreaded[i]) {
                 inputsThreaded[i] = 2.5f;
                 inputsSingle[i] = 2.5f;
-            } else if( double.class == typesThreaded[i] ) {
+            } else if (double.class == typesThreaded[i]) {
                 inputsThreaded[i] = 2.5;
                 inputsSingle[i] = 2.5;
-            } else if( int.class == typesThreaded[i] ) {
+            } else if (int.class == typesThreaded[i]) {
                 inputsThreaded[i] = 1;  // handle tailored towards extractRow and extractCol
                 inputsSingle[i] = 1;
             }
         }
     }
 
-    protected boolean checkEquivalent( Object a , Object b ) {
-        if( a == null ) {
+    protected boolean checkEquivalent( Object a, Object b ) {
+        if (a == null) {
             return b == null;
-        } else if( Double.class == a.getClass() ) {
+        } else if (Double.class == a.getClass()) {
             double valA = (Double)a;
             double valB = (Double)b;
 
-            return Math.abs(valA-valB) < UtilEjml.TEST_F64;
-        } else if( Float.class == a.getClass() ) {
+            return Math.abs(valA - valB) < UtilEjml.TEST_F64;
+        } else if (Float.class == a.getClass()) {
             double valA = (Float)a;
             double valB = (Float)b;
 
-            return Math.abs(valA-valB) < UtilEjml.TEST_F32;
-        } else if(Submatrix.class.isAssignableFrom(a.getClass()) ) {
-            compareSubmatrices((Submatrix)a,(Submatrix)b);
-        } else if(FMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+            return Math.abs(valA - valB) < UtilEjml.TEST_F32;
+        } else if (Submatrix.class.isAssignableFrom(a.getClass())) {
+            compareSubmatrices((Submatrix)a, (Submatrix)b);
+        } else if (FMatrixRMaj.class.isAssignableFrom(a.getClass())) {
             var bb = (FMatrixRMaj)b;
             var aa = (FMatrixRMaj)a;
             return MatrixFeatures_FDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
-        } else if(DMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+        } else if (DMatrixRMaj.class.isAssignableFrom(a.getClass())) {
             var bb = (DMatrixRMaj)b;
             var aa = (DMatrixRMaj)a;
             return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
-        } else if(FMatrixRBlock.class.isAssignableFrom(a.getClass()) ) {
+        } else if (FMatrixRBlock.class.isAssignableFrom(a.getClass())) {
             var bb = (FMatrixRBlock)b;
             var aa = (FMatrixRBlock)a;
             return MatrixFeatures_FDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
-        } else if(DMatrixRBlock.class.isAssignableFrom(a.getClass()) ) {
+        } else if (DMatrixRBlock.class.isAssignableFrom(a.getClass())) {
             var bb = (DMatrixRBlock)b;
             var aa = (DMatrixRBlock)a;
             return MatrixFeatures_DDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
-        } else if(CMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+        } else if (CMatrixRMaj.class.isAssignableFrom(a.getClass())) {
             var bb = (CMatrixRMaj)b;
             var aa = (CMatrixRMaj)a;
             return MatrixFeatures_CDRM.isIdentical(aa, bb, UtilEjml.TEST_F32);
-        } else if(ZMatrixRMaj.class.isAssignableFrom(a.getClass()) ) {
+        } else if (ZMatrixRMaj.class.isAssignableFrom(a.getClass())) {
             var bb = (ZMatrixRMaj)b;
             var aa = (ZMatrixRMaj)a;
             return MatrixFeatures_ZDRM.isIdentical(aa, bb, UtilEjml.TEST_F64);
-        } else if( Boolean.class == a.getClass() ) {
+        } else if (Boolean.class == a.getClass()) {
             return true;
-        } else if( Integer.class == a.getClass() ) {
+        } else if (Integer.class == a.getClass()) {
             return true;
         } else {
             fail("Not sure what this is");
