@@ -18,7 +18,6 @@
 package org.ejml.sparse.csc.mult;
 
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparse;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
@@ -37,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkMatrixVectorMult_DDRM {
+public class BenchmarkMatrixVectorMult_DSCC {
 
     //    @Param({"5", "1000", "3000"})
     @Param({"3000"})
@@ -47,7 +46,7 @@ public class BenchmarkMatrixVectorMult_DDRM {
     @Param({"0.2"})
     public double density;
 
-    private DMatrixSparse A;
+    private DMatrixSparseCSC A;
     private DMatrixRMaj B;
     private double[] a;
 
@@ -62,14 +61,12 @@ public class BenchmarkMatrixVectorMult_DDRM {
     // @formatter:off
 //    @Benchmark public void innerProduct_dense() { MatrixVectorMult_DDRM.innerProduct(a, 0, B, a, 0);} // can be very slow
     @Benchmark public void innerProduct_sparse() { MatrixVectorMult_DSCC.innerProduct(A, B, A);}
-    @Benchmark public void innerProduct_sparse_csc() { MatrixVectorMult_DSCC.innerProduct((DMatrixSparseCSC) A, B, (DMatrixSparseCSC) A);}
     @Benchmark public void innerProduct_symmetric_sparse() { MatrixVectorMult_DSCC.innerProductSelfSymmetrical(A, B);}
-    @Benchmark public void innerProduct_symmetric_sparse_csc() { MatrixVectorMult_DSCC.innerProductSelfSymmetrical((DMatrixSparseCSC) A, B);}
     // @formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkMatrixVectorMult_DDRM.class.getSimpleName())
+                .include(BenchmarkMatrixVectorMult_DSCC.class.getSimpleName())
                 .build();
         new Runner(opt).run();
     }
