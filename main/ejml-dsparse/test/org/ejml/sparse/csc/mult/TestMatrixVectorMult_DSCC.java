@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,27 +21,26 @@ package org.ejml.sparse.csc.mult;
 import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DMatrixSparse;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.mult.MatrixVectorMult_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
 import org.ejml.ops.DConvertMatrixStruct;
+import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.RandomMatrices_DSCC;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author Peter Abeles
- */
 public class TestMatrixVectorMult_DSCC extends EjmlStandardJUnit {
-    @Test
-    public void mult_A_v() {
+    @Test void mult_A_v() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,4,14,rand);
 
         int offset = 2;
-        double v[] = new double[]{0,1,2,3,4,5,6,7};
-        double found[] = new double[7];
+        double[] v = new double[]{0,1,2,3,4,5,6,7};
+        double[] found = new double[7];
 
         DMatrixRMaj Ad = DConvertMatrixStruct.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj vd = new DMatrixRMaj(4,1);
@@ -57,13 +56,12 @@ public class TestMatrixVectorMult_DSCC extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void multAdd_A_v() {
+    @Test void multAdd_A_v() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,4,14,rand);
 
         int offset = 2;
-        double v[] = new double[]{0,1,2,3,4,5,6,7};
-        double found[] = new double[7];
+        double[] v = new double[]{0,1,2,3,4,5,6,7};
+        double[] found = new double[7];
         found[2] = 3;
 
 
@@ -82,13 +80,12 @@ public class TestMatrixVectorMult_DSCC extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void mult_v_A() {
+    @Test void mult_v_A() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,4,14,rand);
 
         int offset = 1;
-        double v[] = new double[]{0,1,2,3,4,5,6,7};
-        double found[] = new double[5];
+        double[] v = new double[]{0,1,2,3,4,5,6,7};
+        double[] found = new double[5];
 
         DMatrixRMaj Ad = DConvertMatrixStruct.convert(A,(DMatrixRMaj)null);
         DMatrixRMaj vd = new DMatrixRMaj(6,1);
@@ -104,14 +101,13 @@ public class TestMatrixVectorMult_DSCC extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void innerProduct() {
+    @Test void innerProduct_array() {
         DMatrixSparseCSC A = RandomMatrices_DSCC.rectangle(6,4,14,rand);
 
         int offsetV = 1;
-        double v[] = new double[]{0,1,2,3,4,5,6,7};
+        double[] v = new double[]{0,1,2,3,4,5,6,7};
         int offsetW = 2;
-        double w[] = new double[]{2,0,1,9,3,1,6,7};
+        double[] w = new double[]{2,0,1,9,3,1,6,7};
 
         double found = MatrixVectorMult_DSCC.innerProduct(v,offsetV,A,w,offsetW);
 
@@ -124,5 +120,56 @@ public class TestMatrixVectorMult_DSCC extends EjmlStandardJUnit {
         double expected = VectorVectorMult_DDRM.innerProdA(vd,Ad,wd);
 
         assertEquals(expected,found, UtilEjml.TEST_F64);
+    }
+
+
+    @Test void innerProduct_sparse() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixSparse c = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj c2 = new DMatrixRMaj(c);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, c2);
+        double found = MatrixVectorMult_DSCC.innerProduct(a, b, c);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_csc() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj b = RandomMatrices_DDRM.rectangle(10, 10, rand);
+        DMatrixSparseCSC c = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj c2 = new DMatrixRMaj(c);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, c2);
+        double found = MatrixVectorMult_DSCC.innerProduct(a, b, c);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_symmetric() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj a2 = new DMatrixRMaj(a);
+        DMatrixRMaj b = RandomMatrices_DDRM.symmetricPosDef(10, rand);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, a2);
+        double found = MatrixVectorMult_DSCC.innerProductSelfSymmetrical(a, b);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProduct_symmetric_csc() {
+        DMatrixSparseCSC a = RandomMatrices_DSCC.rectangle(10, 1, 6, rand);
+        DMatrixRMaj a2 = new DMatrixRMaj(a);
+        DMatrixRMaj b = RandomMatrices_DDRM.symmetricPosDef(10, rand);
+
+        DMatrixRMaj tmp = new DMatrixRMaj(10, 1);
+        CommonOps_DSCC.multTransA(a, b, tmp, null);
+        double expected = CommonOps_DDRM.dot(tmp, a2);
+        double found = MatrixVectorMult_DSCC.innerProductSelfSymmetrical(a, b);
+        assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 }
