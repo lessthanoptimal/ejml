@@ -20,7 +20,6 @@ package org.ejml.sparse.csc.mult;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrix1Row;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DMatrixSparse;
 import org.ejml.data.DMatrixSparseCSC;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 
@@ -135,37 +134,40 @@ public class MatrixVectorMult_DSCC {
         return output;
     }
 
-    private static void checkInnerProductArguments( DMatrixSparse A, DMatrix1Row B, DMatrixSparse C) {
+    private static void checkInnerProductArguments( DMatrixSparseCSC A, DMatrix1Row B, DMatrixSparseCSC C ) {
         UtilEjml.assertTrue(MatrixFeatures_DDRM.isVector(A), "'A' must be a vector");
+        UtilEjml.assertEq(1, A.numCols, "'A' must be a column vector");
         UtilEjml.assertShape(A.getNumElements(), B.numRows, "Length of 'A' vector not equal to number of rows in 'B' matrix");
         UtilEjml.assertTrue(MatrixFeatures_DDRM.isVector(C), "'C' must be a vector");
+        UtilEjml.assertEq(1, C.numCols, "'C' must be a column vector");
         UtilEjml.assertShape(C.getNumElements(), B.numCols, "Length of 'C' vector not equal to number of columns in 'B' matrix");
     }
 
     /**
      * scalar = A<sup>T</sup>*B*C
      *
-     * @param A (Input) A vector that has length m.
+     * @param A (Input) A column vector that has length m.
      * @param B (Input) A matrix that is m by n.
-     * @param C (Input)  A vector that has length n.
+     * @param C (Input) A column vector that has length n.
      */
-    public static double innerProduct( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixSparseCSC C) {
+    public static double innerProduct( DMatrixSparseCSC A, DMatrixRMaj B, DMatrixSparseCSC C ) {
         checkInnerProductArguments(A, B, C);
 
         double output = 0.0;
         for (int i = 0; i < A.nz_length; i++) {
-            int b_offset = A.nz_rows[i] * B.numCols;
+            int b_offset = A.nz_rows[i]*B.numCols;
             double sum = 0.0;
             for (int j = 0; j < C.nz_length; j++) {
-                sum += C.nz_values[j] * B.data[b_offset + C.nz_rows[j]];
+                sum += C.nz_values[j]*B.data[b_offset + C.nz_rows[j]];
             }
-            output += A.nz_values[i] * sum;
+            output += A.nz_values[i]*sum;
         }
         return output;
     }
 
-    private static void checkInnerProductSelfSymmetricalArguments( DMatrixSparse A, DMatrix1Row B) {
+    private static void checkInnerProductSelfSymmetricalArguments( DMatrixSparseCSC A, DMatrix1Row B ) {
         UtilEjml.assertTrue(MatrixFeatures_DDRM.isVector(A), "'A' must be a vector");
+        UtilEjml.assertEq(1, A.numCols, "'A' must be a column vector");
         UtilEjml.assertTrue(MatrixFeatures_DDRM.isSquare(B), "'B' must be a square matrix");
         UtilEjml.assertShape(A.getNumElements(), B.numRows, "Length of 'A' vector not equal to number of rows / columns in 'B' matrix");
     }
@@ -173,23 +175,23 @@ public class MatrixVectorMult_DSCC {
     /**
      * scalar = A<sup>T</sup>*B*A
      *
-     * @param A (Input) A vector that has length n.
+     * @param A (Input) A column vector that has length n.
      * @param B (Input) A matrix that is n by n and symmetrical.
      */
-    public static double innerProductSelfSymmetrical(DMatrixSparseCSC A, DMatrixRMaj B) {
+    public static double innerProductSelfSymmetrical( DMatrixSparseCSC A, DMatrixRMaj B ) {
         checkInnerProductSelfSymmetricalArguments(A, B);
 
         double output = 0.0;
         for (int i = 0; i < A.nz_length; i++) {
             int index1 = A.nz_rows[i];
             double value1 = A.nz_values[i];
-            int b_offset = index1 * B.numCols;
+            int b_offset = index1*B.numCols;
             double diagonalValue = B.data[b_offset + index1];
             double sum = 0.0;
             for (int j = i + 1; j < A.nz_length; j++) {
-                sum += A.nz_values[j] * B.data[b_offset + A.nz_rows[j]];
+                sum += A.nz_values[j]*B.data[b_offset + A.nz_rows[j]];
             }
-            output += Math.pow(value1, 2) * diagonalValue + value1 * (sum + sum);
+            output += value1*value1*diagonalValue + value1*(sum + sum);
         }
         return output;
     }
