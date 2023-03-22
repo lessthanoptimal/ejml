@@ -7,6 +7,8 @@ Date format: year/month/day
 
 - Fixed multiple bugs in MatrixMatrixMult_MT where it was iterating over the wrong number of elements
   * Thanks to hageldave for finding and fixing the problem
+- Added new sparse inner product
+  * Thanks spensonshih for the PR
 
 - TODO concurrency for complex https://github.com/lessthanoptimal/ejml/issues/176
 - TODO Support Java Modules
