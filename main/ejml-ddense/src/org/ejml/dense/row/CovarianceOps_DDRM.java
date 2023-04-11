@@ -32,7 +32,7 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class CovarianceOps_DDRM {
-    private CovarianceOps_DDRM(){}
+    private CovarianceOps_DDRM() {}
 
     public static double TOL = UtilEjml.TESTP_F64;
 
@@ -48,10 +48,11 @@ public class CovarianceOps_DDRM {
     }
 
     /**
-     * Performs a variety of tests to see if the provided matrix is a valid
-     * covariance matrix.
+     * Performs a variety of tests to see if the provided matrix is a valid covariance matrix, performing
+     * the fastest checks first.
      *
-     * @return 0 = is valid 1 = failed positive diagonal, 2 = failed on symmetry, 2 = failed on positive definite
+     * @return 0 = is valid 1 = failed: has negative diagonals, 2 = failed: not symmetry,
+     * 3 = failed: not semi positive definite
      */
     public static int isValid( DMatrixRMaj cov ) {
         if (!MatrixFeatures_DDRM.isDiagonalNotNegative(cov))
