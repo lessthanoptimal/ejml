@@ -9,6 +9,9 @@ Date format: year/month/day
   * Thanks to hageldave for finding and fixing the problem
 - Added new sparse inner product
   * Thanks spensonshih for the PR
+- MatrixFeatures_DDRM.isDiagonalPositive incorrectly tested for >= 0 and not > 0.
+  * Thanks TobiasLangner-TomTom for reporting the issue
+- Added MatrixFeatures_DDRM.isDiagonalNotNegative
 
 - TODO concurrency for complex https://github.com/lessthanoptimal/ejml/issues/176
 - TODO Support Java Modules

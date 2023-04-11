@@ -106,11 +106,28 @@ public class TestMatrixFeatures_DDRM extends EjmlStandardJUnit {
         DMatrixRMaj m = CommonOps_DDRM.identity(3);
         assertTrue(MatrixFeatures_DDRM.isDiagonalPositive(m));
 
+        m.set(1, 1, 0);
+        assertFalse(MatrixFeatures_DDRM.isDiagonalPositive(m));
+
         m.set(1, 1, -1);
         assertFalse(MatrixFeatures_DDRM.isDiagonalPositive(m));
 
         m.set(1, 1, Double.NaN);
         assertFalse(MatrixFeatures_DDRM.isDiagonalPositive(m));
+    }
+
+    @Test void isDiagonalNotNegative() {
+        DMatrixRMaj m = CommonOps_DDRM.identity(3);
+        assertTrue(MatrixFeatures_DDRM.isDiagonalNotNegative(m));
+
+        m.set(1, 1, 0);
+        assertTrue(MatrixFeatures_DDRM.isDiagonalNotNegative(m));
+
+        m.set(1, 1, -1);
+        assertFalse(MatrixFeatures_DDRM.isDiagonalNotNegative(m));
+
+        m.set(1, 1, Double.NaN);
+        assertFalse(MatrixFeatures_DDRM.isDiagonalNotNegative(m));
     }
 
     @Test void isSymmetric() {

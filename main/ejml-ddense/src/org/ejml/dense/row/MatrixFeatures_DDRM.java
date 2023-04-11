@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -40,7 +40,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  * @author Peter Abeles
  */
 public class MatrixFeatures_DDRM {
-    private MatrixFeatures_DDRM(){}
+    private MatrixFeatures_DDRM() {}
 
     /**
      * Checks to see if any element in the matrix is NaN.
@@ -551,6 +551,20 @@ public class MatrixFeatures_DDRM {
     }
 
     /**
+     * Checks to see if diagonal element are all not negative, i.e. greater than or equal to 0.
+     *
+     * @param a A matrix. Not modified.
+     * @return True if diagonal element are all not negative. False otherwise.
+     */
+    public static boolean isDiagonalNotNegative( DMatrixRMaj a ) {
+        for (int i = 0; i < a.numRows; i++) {
+            if (!(a.get(i, i) >= 0))
+                return false;
+        }
+        return true;
+    }
+
+    /**
      * Checks to see if all the diagonal elements in the matrix are positive.
      *
      * @param a A matrix. Not modified.
@@ -558,7 +572,7 @@ public class MatrixFeatures_DDRM {
      */
     public static boolean isDiagonalPositive( DMatrixRMaj a ) {
         for (int i = 0; i < a.numRows; i++) {
-            if (!(a.get(i, i) >= 0))
+            if (!(a.get(i, i) > 0))
                 return false;
         }
         return true;

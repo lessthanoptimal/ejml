@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,7 +44,7 @@ public class CovarianceOps_DDRM {
      * @return true if valid and false if invalid
      */
     public static boolean isValidFast( DMatrixRMaj cov ) {
-        return MatrixFeatures_DDRM.isDiagonalPositive(cov);
+        return MatrixFeatures_DDRM.isDiagonalNotNegative(cov);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CovarianceOps_DDRM {
      * @return 0 = is valid 1 = failed positive diagonal, 2 = failed on symmetry, 2 = failed on positive definite
      */
     public static int isValid( DMatrixRMaj cov ) {
-        if (!MatrixFeatures_DDRM.isDiagonalPositive(cov))
+        if (!MatrixFeatures_DDRM.isDiagonalNotNegative(cov))
             return 1;
 
         if (!MatrixFeatures_DDRM.isSymmetric(cov, TOL))
