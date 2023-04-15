@@ -1,3 +1,6 @@
+- TODO concurrency for complex https://github.com/lessthanoptimal/ejml/issues/176
+- TODO Support Java Modules
+
 - Block bidiagonal
 - Explore having the various implementations of MatrixMult_* internally invoke an interface that can be swapped
   * Performance hit for small matrices?
