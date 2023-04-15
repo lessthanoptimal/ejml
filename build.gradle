@@ -30,7 +30,7 @@ allprojects {
     apply plugin: 'com.peterabeles.gversion'
 
     group = 'org.ejml'
-    version = '0.43'
+    version = '0.44-SNAPSHOT'
 
     project.ext.commons_io_version = '2.11.0'
     project.ext.lombok_version = '1.18.24'
