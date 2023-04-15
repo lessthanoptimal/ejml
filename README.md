@@ -52,18 +52,16 @@ EJML is in Maven central repository and can easily be added to Gradle, Maven, an
 
 This will add the entire library.  Alternatively, you can include the required modules individually:
 
-|     Name         |                 Description                           
-|------------------|-------------------------------------------------------
-| ejml-core        | Contains core data structures and common code
-| ejml-fdense      | Algorithms for dense real 32-bit floats
-| ejml-ddense      | Algorithms for dense real 64-bit floats
-| ejml-cdense      | Algorithms for dense complex 32-bit floats
-| ejml-zdense      | Algorithms for dense complex 64-bit floats
-| ejml-fsparse     | Algorithms for sparse real 32-bit floats
-| ejml-dsparse     | Algorithms for sparse real 64-bit floats
-| ejml-simple      | Object oriented SimpleMatrix and Equations interfaces
-
----------------------------------------------------------------------------
+| Name                | Description                                           |
+|---------------------|-------------------------------------------------------|
+| ejml-core           | Contains core data structures and common code         |
+| ejml-fdense         | Algorithms for dense real 32-bit floats               |
+| ejml-ddense         | Algorithms for dense real 64-bit floats               |
+| ejml-cdense         | Algorithms for dense complex 32-bit floats            |
+| ejml-zdense         | Algorithms for dense complex 64-bit floats            |
+| ejml-fsparse        | Algorithms for sparse real 32-bit floats              |
+| ejml-dsparse        | Algorithms for sparse real 64-bit floats              |
+| ejml-simple         | Object oriented SimpleMatrix and Equations interfaces |
 
 ## Building
 
