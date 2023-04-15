@@ -11,16 +11,16 @@
 - Create zip of source and library directory
   * From a fresh checkout
   VERSION=v0.37
-  cd ejml;git checkout $VERSION;./gradlew autogenerate;rm -rf .git;cd ..;zip -r ejml-$VERSION-src.zip ejml
-  cd ejml;./gradlew createLibraryDirectory;mv libraries ..;cd ..;mv libraries ejml-$VERSION-libs;zip -r ejml-$VERSION-libs.zip ejml-$VERSION-libs
+  cd ejml&&git checkout $VERSION&&./gradlew autogenerate&&rm -rf .git&&cd ..&&zip -r ejml-$VERSION-src.zip ejml
+  cd ejml&&./gradlew createLibraryDirectory&&mv libraries ..&&cd ..&&mv libraries ejml-$VERSION-libs&&zip -r ejml-$VERSION-libs.zip ejml-$VERSION-libs
 - Update javadoc on website
-  cd ejml;rm -rf build/docs/javadoc;./gradlew alljavadoc;cd build/docs/;zip -r javadoc.zip javadoc
+  cd ejml&&rm -rf build/docs/javadoc&&./gradlew alljavadoc&&cd build/docs/&&zip -r javadoc.zip javadoc
 
 -----
 Push to central:
 
 - Do a clean build and upload to Sonatype
-  ./gradlew clean;git clean -fd main;./gradlew autogenerate;./gradlew assemble;./gradlew publish -Dorg.gradle.parallel=false
+  ./gradlew clean&&git clean -fd main&&./gradlew autogenerate&&./gradlew assemble&&./gradlew publish -Dorg.gradle.parallel=false
 
 - Then go to the website  https://oss.sonatype.org/
   * click close button
