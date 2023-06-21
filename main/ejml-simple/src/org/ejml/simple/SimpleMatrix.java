@@ -40,13 +40,13 @@ import java.util.concurrent.ThreadLocalRandom;
  * management and writing of code in general. It also allows operations to be chained, as is shown
  * below:<br>
  * <br>
- * SimpleMatrix K = P.mult(H.transpose().mult(S.invert()));
+ * {@code SimpleMatrix K = P.mult(H.transpose().mult(S.invert()));}
  * </p>
  *
  * <p>
  * Working with both a primitive matrix and SimpleMatrix in the same code base is easy.
- * To access the internal DMatrixRMaj in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
- * To turn a DMatrixRMaj into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}. Not
+ * To access the internal Matrix in a SimpleMatrix simply call {@link SimpleMatrix#getMatrix()}.
+ * To turn a Matrix into a SimpleMatrix use {@link SimpleMatrix#wrap(org.ejml.data.Matrix)}. Not
  * all operations in EJML are provided for SimpleMatrix, but can be accessed by extracting the internal
  * matrix.
  * </p>
@@ -74,13 +74,13 @@ import java.util.concurrent.ThreadLocalRandom;
  * </p>
  *
  * <p>
- * If SimpleMatrix is extended then the protected function {link #createMatrix} should be extended and return
+ * If SimpleMatrix is extended then the protected function {@link #createMatrix} should be extended and return
  * the child class. The results of SimpleMatrix operations will then be of the correct matrix type.
  * </p>
  *
  * <p>
- * The object oriented approach used in SimpleMatrix was originally inspired by Jama.
- * http://math.nist.gov/javanumerics/jama/
+ * The object oriented approach used in SimpleMatrix was originally inspired by
+ * <a href=http://math.nist.gov/javanumerics/jama/>JAMA</a>.
  * </p>
  *
  * @author Peter Abeles
@@ -203,12 +203,19 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         setMatrix(new DMatrixRMaj(numRows, numCols));
     }
 
-    public SimpleMatrix( int numRows, int numCols, Class type ) {
+    /**
+     * Creates a new matrix that is initially set to zero with the specified dimensions and type.
+     *
+     * @param numRows The number of rows in the matrix.
+     * @param numCols The number of columns in the matrix.
+     * @param type The matrix type
+     */
+    public SimpleMatrix( int numRows, int numCols, Class<?> type ) {
         this(numRows, numCols, MatrixType.lookup(type));
     }
 
     /**
-     * Create a simple matrix of the specified type
+     * Creates a new matrix that is initially set to zero with the specified dimensions and type.
      *
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
@@ -274,10 +281,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Returns a filled matrix (numRows x numCols) of the value a.
-     * @param numRows The number of numRows.
-     * @param numCols The number of columns.
-     * @param a The number to fill the matrix with.
+     * Creates a new matrix filled with the specified value. This will wrap a {@link DMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the matrix.
+     * @param numCols The number of columns in the matrix.
+     * @param a The value to fill the matrix with.
      * @return A matrix filled with the value a.
      */
     public static SimpleMatrix filled( int numRows, int numCols, double a ) {
@@ -287,9 +295,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Returns a matrix of ones.
-     * @param numRows The number of numRows.
-     * @param numCols The number of columns.
+     * Creates a new matrix filled with ones. This will wrap a {@link DMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the matrix.
+     * @param numCols The number of columns in the matrix.
      * @return A matrix of ones.
      */
     public static SimpleMatrix ones( int numRows, int numCols ) {
@@ -297,7 +306,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a new identity matrix with the specified size.
+     * Creates a new identity matrix with the specified size. This will wrap a {@link DMatrixRMaj}.
      *
      * @param width The width and height of the matrix.
      * @return An identity matrix.
@@ -307,6 +316,13 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return identity(width, DMatrixRMaj.class);
     }
 
+    /**
+     * Creates a new identity matrix with the specified size and type.
+     *
+     * @param width The width and height of the matrix.
+     * @param type The matrix type
+     * @return An identity matrix.
+     */
     public static SimpleMatrix identity( int width, Class<?> type ) {
         var ret = new SimpleMatrix(width, width, type);
         ret.ops.setIdentity(ret.mat);
@@ -316,7 +332,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     /**
      * <p>
      * Creates a matrix where all but the diagonal elements are zero. The values
-     * of the diagonal elements are specified by the parameter 'vals'.
+     * of the diagonal elements are specified by the parameter 'vals'. This will wrap a {@link DMatrixRMaj}.
      * </p>
      *
      * <p>
@@ -332,7 +348,12 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a real valued diagonal matrix of the specified type
+     * Creates a matrix where all but the diagonal elements are zero. The values
+     * of the diagonal elements are specified by the parameter 'vals'.
+     *
+     * @param type The matrix type
+     * @param vals The values of the diagonal elements.
+     * @return A diagonal matrix.
      */
     public static SimpleMatrix diag( Class<?> type, double... vals ) {
         var M = new SimpleMatrix(vals.length, vals.length, type);
@@ -343,16 +364,16 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * <p>
-     * Creates a new SimpleMatrix with random elements drawn from a uniform distribution from minValue to maxValue.
-     * </p>
+     * Creates a random matrix with values drawn from the uniform distribution from minValue (inclusive) to
+     * maxValue (exclusive). This will wrap a {@link DMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
      * @param minValue Lower bound
      * @param maxValue Upper bound
-     * @param rand The random number generator that's used to fill the matrix. @return The new random matrix.
-     * @see RandomMatrices_DDRM#fillUniform(DMatrixRMaj, java.util.Random)
+     * @param rand The random number generator that's used to fill the matrix.
+     * @return The new random matrix.
+     * @see RandomMatrices_DDRM#fillUniform(DMatrixD1, double, double, java.util.Random)
      */
     public static SimpleMatrix random_DDRM( int numRows, int numCols, double minValue, double maxValue, Random rand ) {
         var ret = new SimpleMatrix(numRows, numCols);
@@ -361,21 +382,39 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a DDRM random matrix with values from 0.0 to 1.0. Random number generator is
-     * {@link ThreadLocalRandom#current()}.
+     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
+     * @see #random_DDRM(int, int)
      */
     public static SimpleMatrix random( int numRows, int numCols ) {
         return random_DDRM(numRows, numCols, 0.0, 1.0, ThreadLocalRandom.current());
     }
 
     /**
-     * Creates a DDRM random matrix with values from 0.0 to 1.0. Random number generator is
-     * {@link ThreadLocalRandom#current()}.
+     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link DMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
      */
     public static SimpleMatrix random_DDRM( int numRows, int numCols ) {
         return random_DDRM(numRows, numCols, 0.0, 1.0, ThreadLocalRandom.current());
     }
 
+    /**
+     * Creates a random matrix with values drawn from the uniform distribution from minValue (inclusive) to
+     * maxValue (exclusive). This will wrap a {@link FMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
+     * @param minValue Lower bound
+     * @param maxValue Upper bound
+     * @param rand The random number generator that's used to fill the matrix.
+     * @return The new random matrix.
+     * @see RandomMatrices_FDRM#fillUniform(FMatrixD1, float, float, java.util.Random)
+     */
     public static SimpleMatrix random_FDRM( int numRows, int numCols, float minValue, float maxValue, Random rand ) {
         var ret = new SimpleMatrix(numRows, numCols, FMatrixRMaj.class);
         RandomMatrices_FDRM.fillUniform((FMatrixRMaj)ret.mat, minValue, maxValue, rand);
@@ -383,13 +422,28 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a FDRM random matrix with values from 0.0 to 1.0. Random number generator is
-     * {@link ThreadLocalRandom#current()}.
+     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link FMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
      */
     public static SimpleMatrix random_FDRM( int numRows, int numCols ) {
         return random_FDRM(numRows, numCols, 0.0f, 1.0f, ThreadLocalRandom.current());
     }
 
+    /**
+     * Creates a random matrix with real and complex components drawn from the uniform distribution from
+     * minValue (inclusive) to maxValue (exclusive). This will wrap a {@link ZMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
+     * @param minValue Lower bound
+     * @param maxValue Upper bound
+     * @param rand The random number generator that's used to fill the matrix.
+     * @return The new random matrix.
+     * @see RandomMatrices_ZDRM#fillUniform(ZMatrixD1, double, double, java.util.Random)
+     */
     public static SimpleMatrix random_ZDRM( int numRows, int numCols, double minValue, double maxValue, Random rand ) {
         var ret = new SimpleMatrix(numRows, numCols, MatrixType.ZDRM);
         RandomMatrices_ZDRM.fillUniform((ZMatrixRMaj)ret.mat, minValue, maxValue, rand);
@@ -397,13 +451,28 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a ZDRM random matrix with values from 0.0 to 1.0. Random number generator is
-     * {@link ThreadLocalRandom#current()}.
+     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link ZMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
      */
     public static SimpleMatrix random_ZDRM( int numRows, int numCols ) {
         return random_ZDRM(numRows, numCols, 0.0, 1.0, ThreadLocalRandom.current());
     }
 
+    /**
+     * Creates a random matrix with real and complex components drawn from the uniform distribution from
+     * minValue (inclusive) to maxValue (exclusive). This will wrap a {@link CMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
+     * @param minValue Lower bound
+     * @param maxValue Upper bound
+     * @param rand The random number generator that's used to fill the matrix.
+     * @return The new random matrix.
+     * @see RandomMatrices_CDRM#fillUniform(CMatrixD1, float, float, java.util.Random)
+     */
     public static SimpleMatrix random_CDRM( int numRows, int numCols, float minValue, float maxValue, Random rand ) {
         var ret = new SimpleMatrix(numRows, numCols, MatrixType.CDRM);
         RandomMatrices_CDRM.fillUniform((CMatrixRMaj)ret.mat, minValue, maxValue, rand);
@@ -411,8 +480,11 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a CDRM random matrix with values from 0.0 to 1.0. Random number generator is
-     * {@link ThreadLocalRandom#current()}.
+     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link CMatrixRMaj}.
+     *
+     * @param numRows The number of rows in the new matrix
+     * @param numCols The number of columns in the new matrix
      */
     public static SimpleMatrix random_CDRM( int numRows, int numCols ) {
         return random_CDRM(numRows, numCols, 0.0f, 1.0f, ThreadLocalRandom.current());
@@ -425,6 +497,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      * </p>
      *
      * @param covariance Covariance of the multivariate normal distribution
+     * @param random The random number generator that's used to fill the matrix.
      * @return Vector randomly drawn from the distribution
      * @see CovarianceRandomDraw_DDRM
      */
@@ -498,4 +571,5 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 //
 //        return ret;
 //    }
+
 }
