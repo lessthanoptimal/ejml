@@ -188,7 +188,7 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
     T plus( double beta, ConstMatrix<?> B );
 
     /**
-     * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
+     * Computes the dot product (or inner product) between this vector and vector 'v'.
      *
      * @param v The second vector in the dot product. Not modified.
      * @return dot product
