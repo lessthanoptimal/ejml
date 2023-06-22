@@ -709,6 +709,28 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         // NOTE: For sparse to sparse this method is very inefficient...
     }
 
+    /** {@inheritDoc} */
+    @Deprecated
+    @Override public T rows( int begin, int end ) {
+        return extractMatrix(begin, end, 0, SimpleMatrix.END);
+    }
+
+    /** {@inheritDoc} */
+    @Override public T getRows( int begin, int end ) {
+        return extractMatrix(begin, end, 0, SimpleMatrix.END);
+    }
+
+    /** {@inheritDoc} */
+    @Deprecated
+    @Override public T cols( int begin, int end ) {
+        return extractMatrix(0, SimpleMatrix.END, begin, end);
+    }
+
+    /** {@inheritDoc} */
+    @Override public T getColumns( int begin, int end ) {
+        return extractMatrix(0, SimpleMatrix.END, begin, end);
+    }
+
     /**
      * Converts a real array/vector into a complex one by setting imaginary component to zero
      */
@@ -1319,16 +1341,6 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         }
 
         return (T)combined;
-    }
-
-    /** {@inheritDoc} */
-    @Override public T rows( int begin, int end ) {
-        return extractMatrix(begin, end, 0, SimpleMatrix.END);
-    }
-
-    /** {@inheritDoc} */
-    @Override public T cols( int begin, int end ) {
-        return extractMatrix(0, SimpleMatrix.END, begin, end);
     }
 
     /** {@inheritDoc} */

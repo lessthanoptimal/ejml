@@ -179,14 +179,14 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <td>Get the {@code i}<sup>th</sup> row.</td></tr>
  *     <tr><td>{@link #getColumn(int)}</td>
  *     <td>Get the {@code j}<sup>th</sup> column.</td></tr>
+ *     <tr><td>{@link #getRows(int, int)}</td>
+ *     <td>Extract the specified rows.</td></tr>
+ *     <tr><td>{@link #getColumns(int, int)}</td>
+ *     <td>Extract the specified columns.</td></tr>
  *     <tr><td>{@link #extractVector(boolean, int)}</td>
  *     <td>Extract the specified row or column vector.</td></tr>
  *     <tr><td>{@link #extractMatrix(int, int, int, int)}</td>
  *     <td>Extract the specified submatrix.</td></tr>
- *     <tr><td>{@link #rows(int, int)}</td>
- *     <td>Extract the specified rows.</td></tr>
- *     <tr><td>{@link #cols(int, int)}</td>
- *     <td>Extract the specified columns.</td></tr>
  *     <tr><td>{@link #diag()}</td>
  *     <td>Extract the matrix diagonal, or construct a diagonal matrix from a vector.</td></tr>
  * </table>

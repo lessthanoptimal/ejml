@@ -681,6 +681,28 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
+    @Test void getRows() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
+        SimpleMatrix B = A.getRows(1, 3);
+
+        for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < 7; j++) {
+                assertEquals(A.get(i, j), B.get(i - 1, j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test void getColumns() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
+        SimpleMatrix B = A.getColumns(2, 4);
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 2; j < 4; j++) {
+                assertEquals(A.get(i, j), B.get(i, j - 2), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
     @Test void get_2d() {
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 3, 0, 1, rand);
 
@@ -1244,28 +1266,6 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         D.insertIntoThis(9, 0, B1);
 
         assertTrue(C.isIdentical(D, UtilEjml.TEST_F64));
-    }
-
-    @Test void rows() {
-        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
-        SimpleMatrix B = A.rows(1, 3);
-
-        for (int i = 1; i < 3; i++) {
-            for (int j = 0; j < 7; j++) {
-                assertEquals(A.get(i, j), B.get(i - 1, j), UtilEjml.TEST_F64);
-            }
-        }
-    }
-
-    @Test void cols() {
-        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
-        SimpleMatrix B = A.rows(1, 3);
-
-        for (int i = 1; i < 3; i++) {
-            for (int j = 0; j < 7; j++) {
-                assertEquals(A.get(i, j), B.get(i - 1, j), UtilEjml.TEST_F64);
-            }
-        }
     }
 
     @Test void serialization() {
