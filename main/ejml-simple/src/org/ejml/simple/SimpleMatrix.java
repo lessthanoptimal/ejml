@@ -52,14 +52,26 @@ import java.util.concurrent.ThreadLocalRandom;
  * </p>
  *
  * <p>
- * EXTENDING: SimpleMatrix contains a list of narrowly focused functions for linear algebra. To harness
+ * The object oriented approach used in SimpleMatrix was originally inspired by
+ * <a href=http://math.nist.gov/javanumerics/jama/>JAMA</a>.
+ * </p>
+ *
+ * <h3>Extending</h3>
+ * <p>
+ * SimpleMatrix contains a list of narrowly focused functions for linear algebra. To harness
  * the functionality for another application and to the number of functions it supports it is recommended
  * that one extends {@link SimpleBase} instead. This way the returned matrix type's of SimpleMatrix functions
  * will be of the appropriate types. See StatisticsMatrix inside of the examples directory.
  * </p>
  *
  * <p>
- * PERFORMANCE: The disadvantage of using this class is that it is more resource intensive, since
+ * If SimpleMatrix is extended then the protected function {@link #createMatrix} should be extended and return
+ * the child class. The results of SimpleMatrix operations will then be of the correct matrix type.
+ * </p>
+ *
+ * <h3>Performance</h3>
+ * <p>
+ * The disadvantage of using this class is that it is more resource intensive, since
  * it creates a new matrix each time an operation is performed. This makes the JavaVM work harder and
  * Java automatically initializes the matrix to be all zeros. Typically operations on small matrices
  * or operations that have a runtime linear with the number of elements are the most affected. More
@@ -73,15 +85,196 @@ import java.util.concurrent.ThreadLocalRandom;
  * neck is a more computationally complex operation. The best approach is benchmark and then optimize the code.
  * </p>
  *
- * <p>
- * If SimpleMatrix is extended then the protected function {@link #createMatrix} should be extended and return
- * the child class. The results of SimpleMatrix operations will then be of the correct matrix type.
- * </p>
+ * <h3>Creating matrices</h3>
+ * <ul>
+ *     <li>{@link #SimpleMatrix()}</li>
+ *     <li>{@link #SimpleMatrix(double[])}</li>
+ *     <li>{@link #SimpleMatrix(double[][])}</li>
+ *     <li>{@link #SimpleMatrix(float[])}</li>
+ *     <li>{@link #SimpleMatrix(float[][])}</li>
+ *     <li>{@link #SimpleMatrix(int, int)}</li>
+ *     <li>{@link #SimpleMatrix(int, int, boolean, double...)}</li>
+ *     <li>{@link #SimpleMatrix(int, int, boolean, float...)}</li>
+ *     <li>{@link #SimpleMatrix(int, int, Class)}</li>
+ *     <li>{@link #SimpleMatrix(int, int, MatrixType)}</li>
+ *     <li>{@link #SimpleMatrix(Matrix)}</li>
+ *     <li>{@link #SimpleMatrix(SimpleMatrix)}</li>
+ *     <li>{@link #wrap(Matrix)}</li>
+ *     <li>{@link #filled(int, int, double)}</li>
+ *     <li>{@link #ones(int, int)}</li>
+ *     <li>{@link #diag(double...)}</li>
+ *     <li>{@link #diag(Class, double...)}</li>
+ *     <li>{@link #identity(int)}</li>
+ *     <li>{@link #identity(int, Class)}</li>
+ *     <li>{@link #random(int, int)}</li>
+ *     <li>{@link #random_DDRM(int, int, double, double, Random)}</li>
+ *     <li>{@link #random_DDRM(int, int)}</li>
+ *     <li>{@link #random_FDRM(int, int, float, float, Random)}</li>
+ *     <li>{@link #random_FDRM(int, int)}</li>
+ *     <li>{@link #random_ZDRM(int, int, double, double, Random)}</li>
+ *     <li>{@link #random_ZDRM(int, int)}</li>
+ *     <li>{@link #random_CDRM(int, int, float, float, Random)}</li>
+ *     <li>{@link #random_CDRM(int, int)}</li>
+ *     <li>{@link #randomNormal(SimpleMatrix, Random)}</li>
+ *     <li>{@link #createLike()}</li>
+ *     <li>{@link #copy()}</li>
+ * </ul>
  *
- * <p>
- * The object oriented approach used in SimpleMatrix was originally inspired by
- * <a href=http://math.nist.gov/javanumerics/jama/>JAMA</a>.
- * </p>
+ * <ul>
+ *     <li>{@link #createLike()}</li>
+ *     <li>{@link #copy()}</li>
+ * </ul>
+ *
+ * <h3>Getting elements, rows and columns</h3>
+ * <ul>
+ *     <li>{@link #get(int)}</li>
+ *     <li>{@link #get(int, int)}</li>
+ *     <li>{@link #get(int, int, Complex_F64)}</li>
+ *     <li>{@link #getReal(int, int)}</li>
+ *     <li>{@link #getImaginary(int, int)}</li>
+ *     <li>{@link #getRow(int)} (int)}</li>
+ *     <li>{@link #getColumn(int)}</li>
+ *     <li>{@link #rows(int, int)} (int)}</li>
+ *     <li>{@link #cols(int, int)}</li>
+ *     <li>{@link #extractVector(boolean, int)}</li>
+ *     <li>{@link #extractMatrix(int, int, int, int)}</li>
+ *     <li>{@link #diag()}</li>
+ * </ul>
+ *
+ * <h3>Setting elements, rows and columns</h3>
+ * <ul>
+ *     <li>{@link #set(int, double)}</li>
+ *     <li>{@link #set(int, int, double)}</li>
+ *     <li>{@link #set(int, int, Complex_F64)}</li>
+ *     <li>{@link #set(int, int, double, double)}</li>
+ *     <li>{@link #setRow(int, int, double...)}</li>
+ *     <li>{@link #setRow(int, ConstMatrix)}</li>
+ *     <li>{@link #setColumn(int, int, double...)}</li>
+ *     <li>{@link #setColumn(int, ConstMatrix)}</li>
+ *     <li>{@link #setTo(SimpleBase)}</li>
+ *     <li>{@link #insertIntoThis(int, int, SimpleBase)}</li>
+ *     <li>{@link #fill(double)}</li>
+ *     <li>{@link #fillComplex(double, double)}</li>
+ *     <li>{@link #zero()}</li>
+ * </ul>
+ *
+ * <h3>Matrix arithmetic</h3>
+ * <ul>
+ *     <li>{@link #plus(double)}</li>
+ *     <li>{@link #plusComplex(double, double)}</li>
+ *     <li>{@link #plus(ConstMatrix)}</li>
+ *     <li>{@link #plus(double, ConstMatrix)}</li>
+ *     <li>{@link #minus(double)}</li>
+ *     <li>{@link #minusComplex(double, double)}</li>
+ *     <li>{@link #minus(ConstMatrix)}</li>
+ *     <li>{@link #scale(double)}</li>
+ *     <li>{@link #scaleComplex(double, double)}</li>
+ *     <li>{@link #mult(ConstMatrix)}</li>
+ *     <li>{@link #dot(ConstMatrix)}</li>
+ *     <li>{@link #divide(double)}</li>
+ *     <li>{@link #negative()}</li>
+ *     <li>{@link #real()}</li>
+ *     <li>{@link #imaginary()}</li>
+ *     <li>{@link #magnitude()}</li>
+ *     <li>{@link #transpose()}</li>
+ *     <li>{@link #transposeConjugate()}</li>
+ * </ul>
+ *
+ * <h3>Elementwise operations</h3>
+ * <ul>
+ *     <li>{@link #elementMult(ConstMatrix)}</li>
+ *     <li>{@link #elementDiv(ConstMatrix)}</li>
+ *     <li>{@link #elementPower(double)}</li>
+ *     <li>{@link #elementPower(ConstMatrix)}</li>
+ *     <li>{@link #elementExp()}</li>
+ *     <li>{@link #elementLog()}</li>
+ *     <li>{@link #elementOp(SimpleOperations.ElementOpReal)}</li>
+ *     <li>{@link #elementOp(SimpleOperations.ElementOpComplex)}</li>
+ * </ul>
+ *
+ * <h3>Aggregations</h3>
+ * <ul>
+ *     <li>{@link #elementSum()}</li>
+ *     <li>{@link #elementSumComplex()}</li>
+ *     <li>{@link #elementMax()}</li>
+ *     <li>{@link #elementMaxAbs()}</li>
+ *     <li>{@link #elementMin()}</li>
+ *     <li>{@link #elementMinAbs()}</li>
+ * </ul>
+ *
+ * <h3>Linear algebra</h3>
+ * <ul>
+ *     <li>{@link #solve(ConstMatrix)}</li>
+ *     <li>{@link #invert()}</li>
+ *     <li>{@link #pseudoInverse()}</li>
+ *     <li>{@link #kron(ConstMatrix)}</li>
+ *     <li>{@link #determinant()}</li>
+ *     <li>{@link #determinantComplex()}</li>
+ *     <li>{@link #trace()}</li>
+ *     <li>{@link #traceComplex()}</li>
+ *     <li>{@link #normF()}</li>
+ *     <li>{@link #conditionP2()}</li>
+ *     <li>{@link #eig()}</li>
+ *     <li>{@link #svd()}</li>
+ *     <li>{@link #svd(boolean)}</li>
+ * </ul>
+ *
+ * <h3>Combining matrices</h3>
+ * <ul>
+ *     <li>{@link #combine(int, int, ConstMatrix)}</li>
+ *     <li>{@link #concatRows(ConstMatrix[])}</li>
+ *     <li>{@link #concatColumns(ConstMatrix[])}</li>
+ * </ul>
+ *
+ * <h3>Matrix properties</h3>
+ * <ul>
+ *     <li>{@link #getNumRows()}</li>
+ *     <li>{@link #getNumCols()}</li>
+ *     <li>{@link #getType()}</li>
+ *     <li>{@link #bits()}</li>
+ *     <li>{@link #isVector()}</li>
+ *     <li>{@link #isIdentical(ConstMatrix, double)}</li>
+ *     <li>{@link #hasUncountable()}</li>
+ * </ul>
+ *
+ * <h3>Converting and reshaping</h3>
+ * <ul>
+ *     <li>{@link #convertToDense()}</li>
+ *     <li>{@link #convertToComplex()}</li>
+ *     <li>{@link #convertToSparse()}</li>
+ *     <li>{@link #reshape(int, int)}</li>
+ * </ul>
+ *
+ * <h3>Accessing the internal matrix</h3>
+ * <ul>
+ *     <li>{@link #getMatrix()}</li>
+ *     <li>{@link #getDDRM()}</li>
+ *     <li>{@link #getFDRM()}</li>
+ *     <li>{@link #getZDRM()}</li>
+ *     <li>{@link #getCDRM()}</li>
+ *     <li>{@link #getDSCC()}</li>
+ *     <li>{@link #getFSCC()}</li>
+ * </ul>
+ *
+ * <h3>Loading and saving</h3>
+ * <ul>
+ *     <li>{@link #loadCSV(String)}</li>
+ *     <li>{@link #saveToFileCSV(String)}</li>
+ *     <li>{@link #saveToMatrixMarket(String)}</li>
+ * </ul>
+ *
+ * <h3>Miscellaneous</h3>
+ * <ul>
+ *     <li>{@link #iterator(boolean, int, int, int, int)}</li>
+ *     <li>{@link #getIndex(int, int)}</li>
+ *     <li>{@link #isInBounds(int, int)}</li>
+ *     <li>{@link #equation(String, Object...)}</li>
+ *     <li>{@link #toString()}</li>
+ *     <li>{@link #toArray2()}</li>
+ *     <li>{@link #print()}</li>
+ *     <li>{@link #print(String)}</li>
+ *     <li>{@link #printDimensions()}</li>
+ * </ul>
  *
  * @author Peter Abeles
  */
