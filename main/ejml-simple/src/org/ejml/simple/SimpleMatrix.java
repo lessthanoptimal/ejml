@@ -86,195 +86,345 @@ import java.util.concurrent.ThreadLocalRandom;
  * </p>
  *
  * <h3>Creating matrices</h3>
- * <ul>
- *     <li>{@link #SimpleMatrix()}</li>
- *     <li>{@link #SimpleMatrix(double[])}</li>
- *     <li>{@link #SimpleMatrix(double[][])}</li>
- *     <li>{@link #SimpleMatrix(float[])}</li>
- *     <li>{@link #SimpleMatrix(float[][])}</li>
- *     <li>{@link #SimpleMatrix(int, int)}</li>
- *     <li>{@link #SimpleMatrix(int, int, boolean, double...)}</li>
- *     <li>{@link #SimpleMatrix(int, int, boolean, float...)}</li>
- *     <li>{@link #SimpleMatrix(int, int, Class)}</li>
- *     <li>{@link #SimpleMatrix(int, int, MatrixType)}</li>
- *     <li>{@link #SimpleMatrix(Matrix)}</li>
- *     <li>{@link #SimpleMatrix(SimpleMatrix)}</li>
- *     <li>{@link #wrap(Matrix)}</li>
- *     <li>{@link #filled(int, int, double)}</li>
- *     <li>{@link #ones(int, int)}</li>
- *     <li>{@link #diag(double...)}</li>
- *     <li>{@link #diag(Class, double...)}</li>
- *     <li>{@link #identity(int)}</li>
- *     <li>{@link #identity(int, Class)}</li>
- *     <li>{@link #random(int, int)}</li>
- *     <li>{@link #random_DDRM(int, int, double, double, Random)}</li>
- *     <li>{@link #random_DDRM(int, int)}</li>
- *     <li>{@link #random_FDRM(int, int, float, float, Random)}</li>
- *     <li>{@link #random_FDRM(int, int)}</li>
- *     <li>{@link #random_ZDRM(int, int, double, double, Random)}</li>
- *     <li>{@link #random_ZDRM(int, int)}</li>
- *     <li>{@link #random_CDRM(int, int, float, float, Random)}</li>
- *     <li>{@link #random_CDRM(int, int)}</li>
- *     <li>{@link #randomNormal(SimpleMatrix, Random)}</li>
- *     <li>{@link #createLike()}</li>
- *     <li>{@link #copy()}</li>
- * </ul>
- *
- * <ul>
- *     <li>{@link #createLike()}</li>
- *     <li>{@link #copy()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #SimpleMatrix(int, int, Class)}</td>
+ *     <td>Create a matrix filled with zeros with the specified internal type.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(int, int, MatrixType)}</td>
+ *     <td>Create a matrix filled with zeros with the specified internal matrix type.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(int, int)}</td>
+ *     <td>Create a matrix filled with zeros.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(int, int, boolean, double...)}</td>
+ *     <td>Create a matrix with the provided double values, in either row-major or column-major order.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(int, int, boolean, float...)}</td>
+ *     <td>Create a matrix with the provided float values, in either row-major or column-major order.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(double[][])}</td>
+ *     <td>Create a matrix from a 2D double array.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(float[][])}</td>
+ *     <td>Create a matrix from a 2D float array.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(double[])}</td>
+ *     <td>Create a column vector from a 1D double array.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(float[])}</td>
+ *     <td>Create a column vector from a 1D float array.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(Matrix)}</td>
+ *     <td>Create a matrix copying the provided Matrix.</td></tr>
+ *     <tr><td>{@link #SimpleMatrix(SimpleMatrix)}</td>
+ *     <td>Create a matrix copying the provided SimpleMatrix.</td></tr>
+ *     <tr><td>{@link #wrap(Matrix)}</td>
+ *     <td>Create a matrix wrapping the provided Matrix.</td></tr>
+ *     <tr><td>{@link #filled(int, int, double)}</td>
+ *     <td>Create a matrix filled with the specified value.</td></tr>
+ *     <tr><td>{@link #ones(int, int)}</td>
+ *     <td>Create a matrix filled with ones.</td></tr>
+ *     <tr><td>{@link #diag(double...)}</td>
+ *     <td>Create a diagonal matrix.</td></tr>
+ *     <tr><td>{@link #diag(Class, double...)}</td>
+ *     <td>Create a diagonal matrix with the specified internal type.</td></tr>
+ *     <tr><td>{@link #identity(int)}</td>
+ *     <td>Create an identity matrix.</td></tr>
+ *     <tr><td>{@link #identity(int, Class)}</td>
+ *     <td>Create an identity matrix with the specified internal type.</td></tr>
+ *     <tr><td>{@link #random(int, int)}</td>
+ *     <td>Create a random {@link DMatrixRMaj} with values drawn from a continuous uniform distribution on the
+ *         unit interval.</td></tr>
+ *     <tr><td>{@link #random_DDRM(int, int, double, double, Random)}</td>
+ *     <td>Create a random {@link DMatrixRMaj} with values drawn from a continuous uniform distribution using the
+ *         provided random number generator.</td></tr>
+ *     <tr><td>{@link #random_DDRM(int, int)}</td>
+ *     <td>Create a random {@link DMatrixRMaj} with values drawn from a continuous uniform distribution on the
+ *         unit interval.</td></tr>
+ *     <tr><td>{@link #random_FDRM(int, int, float, float, Random)}</td>
+ *     <td>Create a random {@link FMatrixRMaj} with values drawn from a continuous uniform distribution using the
+ *         provided random number generator.</td></tr>
+ *     <tr><td>{@link #random_FDRM(int, int)}</td>
+ *     <td>Create a random {@link FMatrixRMaj} with values drawn from a continuous uniform distribution on the
+ *         unit interval.</td></tr>
+ *     <tr><td>{@link #random_ZDRM(int, int, double, double, Random)}</td>
+ *     <td>Create a random {@link ZMatrixRMaj} with values drawn from a continuous uniform distribution using the
+ *         provided random number generator.</td></tr>
+ *     <tr><td>{@link #random_ZDRM(int, int)}</td>
+ *     <td>Create a random {@link ZMatrixRMaj} with values drawn from a continuous uniform distribution on the
+ *         unit interval.</td></tr>
+ *     <tr><td>{@link #random_CDRM(int, int, float, float, Random)}</td>
+ *     <td>Create a random {@link CMatrixRMaj} with values drawn from a continuous uniform distribution using the
+ *         provided random number generator.</td></tr>
+ *     <tr><td>{@link #random_CDRM(int, int)}</td>
+ *     <td>Create a random {@link CMatrixRMaj} with values drawn from a continuous uniform distribution on the
+ *         unit interval.</td></tr>
+ *     <tr><td>{@link #randomNormal(SimpleMatrix, Random)}</td>
+ *     <td>Create a random vector drawn from a multivariate normal distribution
+ *         with the specified covariance.</td></tr>
+ *     <tr><td>{@link #createLike()}</td>
+ *     <td>Create a matrix with the same shape and internal type as this matrix.</td></tr>
+ *     <tr><td>{@link #copy()}</td>
+ *     <td>Create a copy of this matrix.</td></tr>
+ * </table>
  *
  * <h3>Getting elements, rows and columns</h3>
- * <ul>
- *     <li>{@link #get(int)}</li>
- *     <li>{@link #get(int, int)}</li>
- *     <li>{@link #get(int, int, Complex_F64)}</li>
- *     <li>{@link #getReal(int, int)}</li>
- *     <li>{@link #getImaginary(int, int)}</li>
- *     <li>{@link #getRow(int)} (int)}</li>
- *     <li>{@link #getColumn(int)}</li>
- *     <li>{@link #rows(int, int)} (int)}</li>
- *     <li>{@link #cols(int, int)}</li>
- *     <li>{@link #extractVector(boolean, int)}</li>
- *     <li>{@link #extractMatrix(int, int, int, int)}</li>
- *     <li>{@link #diag()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #get(int)}</td>
+ *     <td>Get the value of the {@code i}<sup>th</sup> entry in row-major order.</td></tr>
+ *     <tr><td>{@link #get(int, int)}</td>
+ *     <td>Get the value of the {@code i,j}<sup>th</sup> entry.</td></tr>
+ *     <tr><td>{@link #get(int, int, Complex_F64)}</td>
+ *     <td>Get the value of the {@code i,j}<sup>th</sup> entry as a complex number.</td></tr>
+ *     <tr><td>{@link #getReal(int, int)}</td>
+ *     <td>Get the real component of the {@code i,j}<sup>th</sup> entry.</td></tr>
+ *     <tr><td>{@link #getImaginary(int, int)}</td>
+ *     <td>Get the imaginary component of the {@code i,j}<sup>th</sup> entry.</td></tr>
+ *     <tr><td>{@link #getRow(int)}</td>
+ *     <td>Get the {@code i}<sup>th</sup> row.</td></tr>
+ *     <tr><td>{@link #getColumn(int)}</td>
+ *     <td>Get the {@code j}<sup>th</sup> column.</td></tr>
+ *     <tr><td>{@link #extractVector(boolean, int)}</td>
+ *     <td>Extract the specified row or column vector.</td></tr>
+ *     <tr><td>{@link #extractMatrix(int, int, int, int)}</td>
+ *     <td>Extract the specified submatrix.</td></tr>
+ *     <tr><td>{@link #rows(int, int)} (int)}</td>
+ *     <td>Extract the specified rows.</td></tr>
+ *     <tr><td>{@link #cols(int, int)}</td>
+ *     <td>Extract the specified columns.</td></tr>
+ *     <tr><td>{@link #diag()}</td>
+ *     <td>Extract the matrix diagonal, or construct a diagonal matrix from a vector.</td></tr>
+ * </table>
  *
  * <h3>Setting elements, rows and columns</h3>
- * <ul>
- *     <li>{@link #set(int, double)}</li>
- *     <li>{@link #set(int, int, double)}</li>
- *     <li>{@link #set(int, int, Complex_F64)}</li>
- *     <li>{@link #set(int, int, double, double)}</li>
- *     <li>{@link #setRow(int, int, double...)}</li>
- *     <li>{@link #setRow(int, ConstMatrix)}</li>
- *     <li>{@link #setColumn(int, int, double...)}</li>
- *     <li>{@link #setColumn(int, ConstMatrix)}</li>
- *     <li>{@link #setTo(SimpleBase)}</li>
- *     <li>{@link #insertIntoThis(int, int, SimpleBase)}</li>
- *     <li>{@link #fill(double)}</li>
- *     <li>{@link #fillComplex(double, double)}</li>
- *     <li>{@link #zero()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #set(int, double)}</td>
+ *     <td>Set the value of the {@code i}<sup>th</sup> entry in row-major order.</td></tr>
+ *     <tr><td>{@link #set(int, int, double)}</td>
+ *     <td>Set the value of the {@code i,j}<sup>th</sup> entry.</td></tr>
+ *     <tr><td>{@link #set(int, int, Complex_F64)}</td>
+ *     <td>Set the value of the {@code i,j}<sup>th</sup> entry as a complex number.</td></tr>
+ *     <tr><td>{@link #set(int, int, double, double)}</td>
+ *     <td>Set the real and imaginary components of the {@code i,j}<sup>th</sup> entry.</td></tr>
+ *     <tr><td>{@link #setRow(int, ConstMatrix)}</td>
+ *     <td>Set the {@code i}<sup>th</sup> row.</td></tr>
+ *     <tr><td>{@link #setRow(int, int, double...)}</td>
+ *     <td>Set the values in the {@code i}<sup>th</sup> row.</td></tr>
+ *     <tr><td>{@link #setColumn(int, ConstMatrix)}</td>
+ *     <td>Set the {@code j}<sup>th</sup> column.</td></tr>
+ *     <tr><td>{@link #setColumn(int, int, double...)}</td>
+ *     <td>Set the values in the {@code j}<sup>th</sup> column.</td></tr>
+ *     <tr><td>{@link #setTo(SimpleBase)}</td>
+ *     <td>Set the elements of this matrix to be equal to elements from another matrix.</td></tr>
+ *     <tr><td>{@link #insertIntoThis(int, int, SimpleBase)}</td>
+ *     <td>Insert values from another matrix, starting in position {@code i,j}.</td></tr>
+ *     <tr><td>{@link #fill(double)}</td>
+ *     <td>Set all elements of this matrix to be equal to specified value.</td></tr>
+ *     <tr><td>{@link #fillComplex(double, double)}</td>
+ *     <td>Set all elements of this matrix to be equal to specified complex value.</td></tr>
+ *     <tr><td>{@link #zero()}</td>
+ *     <td>Set all elements of this matrix to zero.</td></tr>
+ * </table>
  *
- * <h3>Matrix arithmetic</h3>
- * <ul>
- *     <li>{@link #plus(double)}</li>
- *     <li>{@link #plusComplex(double, double)}</li>
- *     <li>{@link #plus(ConstMatrix)}</li>
- *     <li>{@link #plus(double, ConstMatrix)}</li>
- *     <li>{@link #minus(double)}</li>
- *     <li>{@link #minusComplex(double, double)}</li>
- *     <li>{@link #minus(ConstMatrix)}</li>
- *     <li>{@link #scale(double)}</li>
- *     <li>{@link #scaleComplex(double, double)}</li>
- *     <li>{@link #mult(ConstMatrix)}</li>
- *     <li>{@link #dot(ConstMatrix)}</li>
- *     <li>{@link #divide(double)}</li>
- *     <li>{@link #negative()}</li>
- *     <li>{@link #real()}</li>
- *     <li>{@link #imaginary()}</li>
- *     <li>{@link #magnitude()}</li>
- *     <li>{@link #transpose()}</li>
- *     <li>{@link #transposeConjugate()}</li>
- * </ul>
+ * <h3>Basic operations</h3>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #plus(double)}</td>
+ *     <td>Add a scalar value.</td></tr>
+ *     <tr><td>{@link #plusComplex(double, double)}</td>
+ *     <td>Add a complex scalar value.</td></tr>
+ *     <tr><td>{@link #plus(ConstMatrix)}</td>
+ *     <td>Add another matrix.</td></tr>
+ *     <tr><td>{@link #plus(double, ConstMatrix)}</td>
+ *     <td>Add another matrix, first applying the specified scale factor.</td></tr>
+ *     <tr><td>{@link #minus(double)}</td>
+ *     <td>Subtract a scalar value.</td></tr>
+ *     <tr><td>{@link #minusComplex(double, double)}</td>
+ *     <td>Subtract a complex scalar value.</td></tr>
+ *     <tr><td>{@link #minus(ConstMatrix)}</td>
+ *     <td>Subtract another matrix.</td></tr>
+ *     <tr><td>{@link #scale(double)}</td>
+ *     <td>Multiply by a scalar value.</td></tr>
+ *     <tr><td>{@link #scaleComplex(double, double)}</td>
+ *     <td>Multiply by a complex scalar value.</td></tr>
+ *     <tr><td>{@link #divide(double)}</td>
+ *     <td>Divided by a scalar value.</td></tr>
+ *     <tr><td>{@link #mult(ConstMatrix)}</td>
+ *     <td>Multiply with another matrix.</td></tr>
+ *     <tr><td>{@link #dot(ConstMatrix)}</td>
+ *     <td>Calculate the dot product with another vector.</td></tr>
+ *     <tr><td>{@link #negative()}</td>
+ *     <td>Get the negative of each entry.</td></tr>
+ *     <tr><td>{@link #real()}</td>
+ *     <td>Get the real component of each entry.</td></tr>
+ *     <tr><td>{@link #imaginary()}</td>
+ *     <td>Get the imaginary component of each entry.</td></tr>
+ *     <tr><td>{@link #magnitude()}</td>
+ *     <td>Get the imaginary component of each entry.</td></tr>
+ *     <tr><td>{@link #transpose()}</td>
+ *     <td>Get the transpose.</td></tr>
+ *     <tr><td>{@link #transposeConjugate()}</td>
+ *     <td>Get the conjugate transpose.</td></tr>
+ *     <tr><td>{@link #equation(String, Object...)}</td>
+ *     <td>Perform an equation in place on the matrix.</td></tr>
+ * </table>
  *
  * <h3>Elementwise operations</h3>
- * <ul>
- *     <li>{@link #elementMult(ConstMatrix)}</li>
- *     <li>{@link #elementDiv(ConstMatrix)}</li>
- *     <li>{@link #elementPower(double)}</li>
- *     <li>{@link #elementPower(ConstMatrix)}</li>
- *     <li>{@link #elementExp()}</li>
- *     <li>{@link #elementLog()}</li>
- *     <li>{@link #elementOp(SimpleOperations.ElementOpReal)}</li>
- *     <li>{@link #elementOp(SimpleOperations.ElementOpComplex)}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #elementMult(ConstMatrix)}</td>
+ *     <td>Perform element by element multiplication with another matrix.</td></tr>
+ *     <tr><td>{@link #elementDiv(ConstMatrix)}</td>
+ *     <td>Perform element by element division with another matrix.</td></tr>
+ *     <tr><td>{@link #elementPower(double)}</td>
+ *     <td>Raise each entry to the specified power.</td></tr>
+ *     <tr><td>{@link #elementPower(ConstMatrix)}</td>
+ *     <td>Raise each entry to the corresponding power in another matrix.</td></tr>
+ *     <tr><td>{@link #elementExp()}</td>
+ *     <td>Compute the exponent of each entry.</td></tr>
+ *     <tr><td>{@link #elementLog()}</td>
+ *     <td>Compute the logarithm of each entry.</td></tr>
+ *     <tr><td>{@link #elementOp(SimpleOperations.ElementOpReal)}</td>
+ *     <td>Apply the specified real-valued function to each entry.</td></tr>
+ *     <tr><td>{@link #elementOp(SimpleOperations.ElementOpComplex)}</td>
+ *     <td>Apply the specified complex-valued function to each entry.</td></tr>
+ * </table>
  *
  * <h3>Aggregations</h3>
- * <ul>
- *     <li>{@link #elementSum()}</li>
- *     <li>{@link #elementSumComplex()}</li>
- *     <li>{@link #elementMax()}</li>
- *     <li>{@link #elementMaxAbs()}</li>
- *     <li>{@link #elementMin()}</li>
- *     <li>{@link #elementMinAbs()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #elementSum()}</td>
+ *     <td>Compute the sum of all elements of this matrix.</td></tr>
+ *     <tr><td>{@link #elementSumComplex()}</td>
+ *     <td>Compute the sum of all elements of a complex matrix.</td></tr>
+ *     <tr><td>{@link #elementMax()}</td>
+ *     <td>Compute the maximum of all elements of this matrix.</td></tr>
+ *     <tr><td>{@link #elementMaxAbs()}</td>
+ *     <td>Compute the maximum absolute value of all elements of this matrix.</td></tr>
+ *     <tr><td>{@link #elementMin()}</td>
+ *     <td>Compute the minimum of all elements of this matrix.</td></tr>
+ *     <tr><td>{@link #elementMinAbs()}</td>
+ *     <td>Compute the minimum absolute value of all elements of this matrix.</td></tr>
+ * </table>
  *
  * <h3>Linear algebra</h3>
- * <ul>
- *     <li>{@link #solve(ConstMatrix)}</li>
- *     <li>{@link #invert()}</li>
- *     <li>{@link #pseudoInverse()}</li>
- *     <li>{@link #kron(ConstMatrix)}</li>
- *     <li>{@link #determinant()}</li>
- *     <li>{@link #determinantComplex()}</li>
- *     <li>{@link #trace()}</li>
- *     <li>{@link #traceComplex()}</li>
- *     <li>{@link #normF()}</li>
- *     <li>{@link #conditionP2()}</li>
- *     <li>{@link #eig()}</li>
- *     <li>{@link #svd()}</li>
- *     <li>{@link #svd(boolean)}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #solve(ConstMatrix)}</td>
+ *     <td>Solve the equation {@code Ax = b}.</td></tr>
+ *     <tr><td>{@link #conditionP2()}</td>
+ *     <td>Compute the matrix condition number.</td></tr>
+ *     <tr><td>{@link #invert()}</td>
+ *     <td>Compute the matrix inverse.</td></tr>
+ *     <tr><td>{@link #pseudoInverse()}</td>
+ *     <td>Compute the Moore-Penrose pseudo-inverse.</td></tr>
+ *     <tr><td>{@link #determinant()}</td>
+ *     <td>Compute the determinant.</td></tr>
+ *     <tr><td>{@link #determinantComplex()}</td>
+ *     <td>Compute the determinant of a complex matrix.</td></tr>
+ *     <tr><td>{@link #trace()}</td>
+ *     <td>Compute the trace.</td></tr>
+ *     <tr><td>{@link #traceComplex()}</td>
+ *     <td>Compute the trace of a complex matrix.</td></tr>
+ *     <tr><td>{@link #normF()}</td>
+ *     <td>Compute the Frobenius norm.</td></tr>
+ *     <tr><td>{@link #eig()}</td>
+ *     <td>Compute the eigenvalue decomposition.</td></tr>
+ *     <tr><td>{@link #svd()}</td>
+ *     <td>Compute the singular value decomposition.</td></tr>
+ *     <tr><td>{@link #svd(boolean)}</td>
+ *     <td>Compute the singular value decomposition in compact or full format.</td></tr>
+ * </table>
  *
  * <h3>Combining matrices</h3>
- * <ul>
- *     <li>{@link #combine(int, int, ConstMatrix)}</li>
- *     <li>{@link #concatRows(ConstMatrix[])}</li>
- *     <li>{@link #concatColumns(ConstMatrix[])}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #combine(int, int, ConstMatrix)}</td>
+ *     <td>Combine with another matrix.</td></tr>
+ *     <tr><td>{@link #concatRows(ConstMatrix...)}</td>
+ *     <td>Concatenate vertically with one or more other matrices.</td></tr>
+ *     <tr><td>{@link #concatColumns(ConstMatrix...)}</td>
+ *     <td>Concatenate horizontally with one or more other matrices.</td></tr>
+ *     <tr><td>{@link #kron(ConstMatrix)}</td>
+ *     <td>Compute the Kronecker product with another matrix.</td></tr>
+ * </table>
  *
  * <h3>Matrix properties</h3>
- * <ul>
- *     <li>{@link #getNumRows()}</li>
- *     <li>{@link #getNumCols()}</li>
- *     <li>{@link #getType()}</li>
- *     <li>{@link #bits()}</li>
- *     <li>{@link #isVector()}</li>
- *     <li>{@link #isIdentical(ConstMatrix, double)}</li>
- *     <li>{@link #hasUncountable()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #getNumRows()}</td>
+ *     <td>Get the number of rows.</td></tr>
+ *     <tr><td>{@link #getNumCols()}</td>
+ *     <td>Get the number of columns.</td></tr>
+ *     <tr><td>{@link #bits()}</td>
+ *     <td>Get the size of the internal array elements (32 or 64).</td></tr>
+ *     <tr><td>{@link #isVector()}</td>
+ *     <td>Check if this matrix is a vector.</td></tr>
+ *     <tr><td>{@link #isIdentical(ConstMatrix, double)}</td>
+ *     <td>Check if this matrix is the same as another matrix, up to the specified tolerance.</td></tr>
+ *     <tr><td>{@link #hasUncountable()}</td>
+ *     <td>Check if any of the matrix elements are NaN or infinite.</td></tr>
+ * </table>
  *
  * <h3>Converting and reshaping</h3>
- * <ul>
- *     <li>{@link #convertToDense()}</li>
- *     <li>{@link #convertToComplex()}</li>
- *     <li>{@link #convertToSparse()}</li>
- *     <li>{@link #reshape(int, int)}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #convertToComplex()}</td>
+ *     <td>Convert to a complex matrix.</td></tr>
+ *     <tr><td>{@link #convertToDense()}</td>
+ *     <td>Convert to a dense matrix.</td></tr>
+ *     <tr><td>{@link #convertToSparse()}</td>
+ *     <td>Convert to a sparse matrix.</td></tr>
+ *     <tr><td>{@link #reshape(int, int)}</td>
+ *     <td>Change the number of rows and columns.</td></tr>
+ * </table>
  *
  * <h3>Accessing the internal matrix</h3>
- * <ul>
- *     <li>{@link #getMatrix()}</li>
- *     <li>{@link #getDDRM()}</li>
- *     <li>{@link #getFDRM()}</li>
- *     <li>{@link #getZDRM()}</li>
- *     <li>{@link #getCDRM()}</li>
- *     <li>{@link #getDSCC()}</li>
- *     <li>{@link #getFSCC()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #getType()}</td>
+ *     <td>Get the type of the wrapped matrix.</td></tr>
+ *     <tr><td>{@link #getMatrix()}</td>
+ *     <td>Get the wrapped matrix.</td></tr>
+ *     <tr><td>{@link #getDDRM()}</td>
+ *     <td>Get the wrapped matrix as a {@link DMatrixRMaj}.</td></tr>
+ *     <tr><td>{@link #getFDRM()}</td>
+ *     <td>Get the wrapped matrix as a {@link FMatrixRMaj}.</td></tr>
+ *     <tr><td>{@link #getZDRM()}</td>
+ *     <td>Get the wrapped matrix as a {@link ZMatrixRMaj}.</td></tr>
+ *     <tr><td>{@link #getCDRM()}</td>
+ *     <td>Get the wrapped matrix as a {@link CMatrixRMaj}.</td></tr>
+ *     <tr><td>{@link #getDSCC()}</td>
+ *     <td>Get the wrapped matrix as a {@link DMatrixSparseCSC}.</td></tr>
+ *     <tr><td>{@link #getFSCC()}</td>
+ *     <td>Get the wrapped matrix as a {@link FMatrixSparseCSC}.</td></tr>
+ * </table>
  *
  * <h3>Loading and saving</h3>
- * <ul>
- *     <li>{@link #loadCSV(String)}</li>
- *     <li>{@link #saveToFileCSV(String)}</li>
- *     <li>{@link #saveToMatrixMarket(String)}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #loadCSV(String)}</td>
+ *     <td>Load a matrix from a CSV file.</td></tr>
+ *     <tr><td>{@link #saveToFileCSV(String)}</td>
+ *     <td>Save this matrix to a CSV file.</td></tr>
+ *     <tr><td>{@link #saveToMatrixMarket(String)}</td>
+ *     <td>Save this matrix in matrix market format.</td></tr>
+ * </table>
  *
  * <h3>Miscellaneous</h3>
- * <ul>
- *     <li>{@link #iterator(boolean, int, int, int, int)}</li>
- *     <li>{@link #getIndex(int, int)}</li>
- *     <li>{@link #isInBounds(int, int)}</li>
- *     <li>{@link #equation(String, Object...)}</li>
- *     <li>{@link #toString()}</li>
- *     <li>{@link #toArray2()}</li>
- *     <li>{@link #print()}</li>
- *     <li>{@link #print(String)}</li>
- *     <li>{@link #printDimensions()}</li>
- * </ul>
+ * <table>
+ *     <tr><th>Method</th><th>Description</th></tr>
+ *     <tr><td>{@link #iterator(boolean, int, int, int, int)}</td>
+ *     <td>Create an iterator for traversing a submatrix.</td></tr>
+ *     <tr><td>{@link #getIndex(int, int)}</td>
+ *     <td>Get the row-major index corresponding to {@code i,j}.</td></tr>
+ *     <tr><td>{@link #isInBounds(int, int)}</td>
+ *     <td>Check if the indices {@code i,j} are in bounds.</td></tr>
+ *     <tr><td>{@link #toString()}</td>
+ *     <td>Get the string representation of the matrix.</td></tr>
+ *     <tr><td>{@link #toArray2()}</td>
+ *     <td>Convert the matrix to a 2D array of doubles.</td></tr>
+ *     <tr><td>{@link #print()}</td>
+ *     <td>Print the matrix to standard out.</td></tr>
+ *     <tr><td>{@link #print(String)}</td>
+ *     <td>Print the matrix to standard out using the specified floating point format.</td></tr>
+ *     <tr><td>{@link #printDimensions()}</td>
+ *     <td>Print the number of rows and columns.</td></tr>
+ * </table>
  *
  * @author Peter Abeles
  */
@@ -408,7 +558,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a new matrix that is initially set to zero with the specified dimensions and type.
+     * Creates a new matrix that is initially set to zero with the specified dimensions and matrix type.
      *
      * @param numRows The number of rows in the matrix.
      * @param numCols The number of columns in the matrix.
@@ -462,10 +612,10 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     protected SimpleMatrix() {}
 
     /**
-     * Creates a new SimpleMatrix with the specified DMatrixRMaj used as its internal matrix. This means
-     * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in DMatrixRMaj.
+     * Creates a new SimpleMatrix with the specified Matrix used as its internal matrix. This means
+     * that the reference is saved and calls made to the returned SimpleMatrix will modify the passed in Matrix.
      *
-     * @param internalMat The internal DMatrixRMaj of the returned SimpleMatrix. Will be modified.
+     * @param internalMat The internal Matrix of the returned SimpleMatrix. Will be modified.
      */
     public static SimpleMatrix wrap( Matrix internalMat ) {
         var ret = new SimpleMatrix();
@@ -557,7 +707,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from minValue (inclusive) to
+     * Creates a random matrix with values drawn from the continuous uniform distribution from minValue (inclusive) to
      * maxValue (exclusive). This will wrap a {@link DMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
@@ -575,7 +725,8 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     * Creates a random matrix with values drawn from the continuous uniform distribution from 0.0 (inclusive) to
+     * 1.0 (exclusive).
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -586,7 +737,8 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
+     * Creates a random matrix with values drawn from the continuous uniform distribution from 0.0 (inclusive) to
+     * 1.0 (exclusive).
      * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link DMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
@@ -597,7 +749,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from minValue (inclusive) to
+     * Creates a random matrix with values drawn from the continuous uniform distribution from minValue (inclusive) to
      * maxValue (exclusive). This will wrap a {@link FMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
@@ -615,8 +767,9 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
-     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link FMatrixRMaj}.
+     * Creates a random matrix with values drawn from the continuous uniform distribution from 0.0 (inclusive) to
+     * 1.0 (exclusive). The random number generator is {@link ThreadLocalRandom#current()}.
+     * This will wrap a {@link FMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -626,7 +779,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with real and complex components drawn from the uniform distribution from
+     * Creates a random matrix with real and complex components drawn from the continuous uniform distribution from
      * minValue (inclusive) to maxValue (exclusive). This will wrap a {@link ZMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
@@ -644,8 +797,9 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
-     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link ZMatrixRMaj}.
+     * Creates a random matrix with values drawn from the continuous uniform distribution from 0.0 (inclusive) to
+     * 1.0 (exclusive). The random number generator is {@link ThreadLocalRandom#current()}.
+     * This will wrap a {@link ZMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
@@ -655,7 +809,7 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with real and complex components drawn from the uniform distribution from
+     * Creates a random matrix with real and complex components drawn from the continuous uniform distribution from
      * minValue (inclusive) to maxValue (exclusive). This will wrap a {@link CMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
@@ -673,8 +827,9 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
-     * Creates a random matrix with values drawn from the uniform distribution from 0.0 (inclusive) to 1.0 (exclusive).
-     * The random number generator is {@link ThreadLocalRandom#current()}. This will wrap a {@link CMatrixRMaj}.
+     * Creates a random matrix with values drawn from the continuous uniform distribution from 0.0 (inclusive) to
+     * 1.0 (exclusive). The random number generator is {@link ThreadLocalRandom#current()}.
+     * This will wrap a {@link CMatrixRMaj}.
      *
      * @param numRows The number of rows in the new matrix
      * @param numCols The number of columns in the new matrix
