@@ -181,7 +181,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <td>Extract the specified row or column vector.</td></tr>
  *     <tr><td>{@link #extractMatrix(int, int, int, int)}</td>
  *     <td>Extract the specified submatrix.</td></tr>
- *     <tr><td>{@link #rows(int, int)} (int)}</td>
+ *     <tr><td>{@link #rows(int, int)}</td>
  *     <td>Extract the specified rows.</td></tr>
  *     <tr><td>{@link #cols(int, int)}</td>
  *     <td>Extract the specified columns.</td></tr>
