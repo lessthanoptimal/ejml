@@ -112,18 +112,22 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <td>Create a matrix copying the provided SimpleMatrix.</td></tr>
  *     <tr><td>{@link #wrap(Matrix)}</td>
  *     <td>Create a matrix wrapping the provided Matrix.</td></tr>
+ *     <tr><td>{@link #filled(int, int, double, Class)}</td>
+ *     <td>Create a matrix filled with the specified value with the specified internal type.</td></tr>
  *     <tr><td>{@link #filled(int, int, double)}</td>
  *     <td>Create a matrix filled with the specified value.</td></tr>
+ *     <tr><td>{@link #ones(int, int, Class)}</td>
+ *     <td>Create a matrix filled with ones with the specified internal type.</td></tr>
  *     <tr><td>{@link #ones(int, int)}</td>
  *     <td>Create a matrix filled with ones.</td></tr>
- *     <tr><td>{@link #diag(double...)}</td>
- *     <td>Create a diagonal matrix.</td></tr>
  *     <tr><td>{@link #diag(Class, double...)}</td>
  *     <td>Create a diagonal matrix with the specified internal type.</td></tr>
- *     <tr><td>{@link #identity(int)}</td>
- *     <td>Create an identity matrix.</td></tr>
+ *     <tr><td>{@link #diag(double...)}</td>
+ *     <td>Create a diagonal matrix.</td></tr>
  *     <tr><td>{@link #identity(int, Class)}</td>
  *     <td>Create an identity matrix with the specified internal type.</td></tr>
+ *     <tr><td>{@link #identity(int)}</td>
+ *     <td>Create an identity matrix.</td></tr>
  *     <tr><td>{@link #random(int, int)}</td>
  *     <td>Create a random {@link DMatrixRMaj} with values drawn from a continuous uniform distribution on the
  *         unit interval.</td></tr>
@@ -638,6 +642,21 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
     }
 
     /**
+     * Creates a new matrix filled with the specified value with the specified type.
+     *
+     * @param numRows The number of rows in the matrix.
+     * @param numCols The number of columns in the matrix.
+     * @param a The value to fill the matrix with.
+     * @param type The matrix type
+     * @return A matrix filled with the value a.
+     */
+    public static SimpleMatrix filled( int numRows, int numCols, double a, Class<?> type ) {
+        var res = new SimpleMatrix(numRows, numCols, type);
+        res.fill(a);
+        return res;
+    }
+
+    /**
      * Creates a new matrix filled with ones. This will wrap a {@link DMatrixRMaj}.
      *
      * @param numRows The number of rows in the matrix.
@@ -646,6 +665,18 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
      */
     public static SimpleMatrix ones( int numRows, int numCols ) {
         return filled(numRows, numCols, 1);
+    }
+
+    /**
+     * Creates a new matrix filled with ones with the specified type.
+     *
+     * @param numRows The number of rows in the matrix.
+     * @param numCols The number of columns in the matrix.
+     * @param type The matrix type
+     * @return A matrix of ones.
+     */
+    public static SimpleMatrix ones( int numRows, int numCols, Class<?> type ) {
+        return filled(numRows, numCols, 1, type);
     }
 
     /**
