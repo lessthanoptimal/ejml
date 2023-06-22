@@ -173,6 +173,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <td>Get the real component of the {@code i,j}<sup>th</sup> entry.</td></tr>
  *     <tr><td>{@link #getImaginary(int, int)}</td>
  *     <td>Get the imaginary component of the {@code i,j}<sup>th</sup> entry.</td></tr>
+ *     <tr><td>{@link #getImag(int, int)}</td>
+ *     <td>Alias for {@link #getImaginary(int, int)}</td></tr>
  *     <tr><td>{@link #getRow(int)}</td>
  *     <td>Get the {@code i}<sup>th</sup> row.</td></tr>
  *     <tr><td>{@link #getColumn(int)}</td>
@@ -253,6 +255,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <td>Get the real component of each entry.</td></tr>
  *     <tr><td>{@link #imaginary()}</td>
  *     <td>Get the imaginary component of each entry.</td></tr>
+ *     <tr><td>{@link #imag()}</td>
+ *     <td>Alias for {@link #imaginary()}.</td></tr>
  *     <tr><td>{@link #magnitude()}</td>
  *     <td>Get the imaginary component of each entry.</td></tr>
  *     <tr><td>{@link #transpose()}</td>
@@ -350,6 +354,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <td>Get the number of rows.</td></tr>
  *     <tr><td>{@link #getNumCols()}</td>
  *     <td>Get the number of columns.</td></tr>
+ *     <tr><td>{@link #getNumElements()}</td>
+ *     <td>Get the number of elements.</td></tr>
  *     <tr><td>{@link #bits()}</td>
  *     <td>Get the size of the internal array elements (32 or 64).</td></tr>
  *     <tr><td>{@link #isVector()}</td>
