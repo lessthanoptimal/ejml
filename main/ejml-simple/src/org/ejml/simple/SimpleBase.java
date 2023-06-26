@@ -104,32 +104,80 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
      * when an operation is needed that is not provided by this class.
      * </p>
      *
-     * @return Reference to the internal DMatrixRMaj.
+     * @return Reference to the internal matrix.
      */
     public <InnerType extends Matrix> InnerType getMatrix() {
         return (InnerType)mat;
     }
 
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally if this is a {@link DMatrixRMaj}.
+     * Otherwise attempts to convert the internal matrix to a {@link DMatrixRMaj}.
+     * </p>
+     *
+     * @return Reference to the internal matrix or converted internal matrix.
+     */
     public DMatrixRMaj getDDRM() {
         return (mat.getType() == MatrixType.DDRM) ? (DMatrixRMaj)mat : (DMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.DDRM);
     }
 
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally if this is a {@link FMatrixRMaj}.
+     * Otherwise attempts to convert the internal matrix to a {@link FMatrixRMaj}.
+     * </p>
+     *
+     * @return Reference to the internal matrix or converted internal matrix.
+     */
     public FMatrixRMaj getFDRM() {
         return (mat.getType() == MatrixType.FDRM) ? (FMatrixRMaj)mat : (FMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.FDRM);
     }
 
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally if this is a {@link ZMatrixRMaj}.
+     * Otherwise attempts to convert the internal matrix to a {@link ZMatrixRMaj}.
+     * </p>
+     *
+     * @return Reference to the internal matrix or converted internal matrix.
+     */
     public ZMatrixRMaj getZDRM() {
         return (mat.getType() == MatrixType.ZDRM) ? (ZMatrixRMaj)mat : (ZMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.ZDRM);
     }
 
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally if this is a {@link CMatrixRMaj}.
+     * Otherwise attempts to convert the internal matrix to a {@link CMatrixRMaj}.
+     * </p>
+     *
+     * @return Reference to the internal matrix or converted internal matrix.
+     */
     public CMatrixRMaj getCDRM() {
         return (mat.getType() == MatrixType.CDRM) ? (CMatrixRMaj)mat : (CMatrixRMaj)ConvertMatrixType.convert(mat, MatrixType.CDRM);
     }
 
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally if this is a {@link DMatrixSparseCSC}.
+     * Otherwise attempts to convert the internal matrix to a {@link DMatrixSparseCSC}.
+     * </p>
+     *
+     * @return Reference to the internal matrix or converted internal matrix.
+     */
     public DMatrixSparseCSC getDSCC() {
         return (mat.getType() == MatrixType.DSCC) ? (DMatrixSparseCSC)mat : (DMatrixSparseCSC)ConvertMatrixType.convert(mat, MatrixType.DSCC);
     }
 
+    /**
+     * <p>
+     * Returns a reference to the matrix that it uses internally if this is a {@link FMatrixSparseCSC}.
+     * Otherwise attempts to convert the internal matrix to a {@link FMatrixSparseCSC}.
+     * </p>
+     *
+     * @return Reference to the internal matrix or converted internal matrix.
+     */
     public FMatrixSparseCSC getFSCC() {
         return (mat.getType() == MatrixType.FSCC) ? (FMatrixSparseCSC)mat : (FMatrixSparseCSC)ConvertMatrixType.convert(mat, MatrixType.FSCC);
     }
@@ -337,6 +385,20 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
         T ret = createLike();
         ops.divide(mat, val, ret.getMatrix());
         return ret;
+    }
+
+    /** {@inheritDoc} */
+    @Override public T divideComplex( double real, double imag ) {
+        try {
+            T ret = createLike();
+            ops.divideComplex(mat, real, imag, ret.getMatrix());
+            return ret;
+        } catch (ConvertToImaginaryException e) {
+            // Input matrix isn't complex therefor output isn't complex either
+            T converted = createComplexMatrix(1, 1);
+            converted.setMatrix(ConvertMatrixType.convert(mat, converted.getType()));
+            return converted.divideComplex(real, imag);
+        }
     }
 
     /** {@inheritDoc} */

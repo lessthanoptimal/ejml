@@ -188,7 +188,7 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
     T plus( double beta, ConstMatrix<?> B );
 
     /**
-     * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
+     * Computes the dot product (or inner product) between this vector and vector 'v'.
      *
      * @param v The second vector in the dot product. Not modified.
      * @return dot product
@@ -236,6 +236,16 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * @see CommonOps_DDRM#divide(DMatrixD1, double)
      */
     T divide( double val );
+
+    /**
+     * Divides each element in the matrix by the complex number. If the matrix is real, then it will
+     * return a complex matrix unless the imaginary component of the scalar is zero.
+     *
+     * @param real Real component of scalar value
+     * @param imag Imaginary component of scalar value
+     * @return Scaled matrix
+     */
+    T divideComplex( double real, double imag );
 
     /**
      * <p>

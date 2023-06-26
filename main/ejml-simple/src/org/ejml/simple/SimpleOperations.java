@@ -104,6 +104,15 @@ public interface SimpleOperations<T extends Matrix> extends Serializable {
     /** Divides each element by val. Val is a real number */
     void divide( T A, double val, T output );
 
+    default void divideComplex( T A, double real, double imag, T output ) {
+        // If the value isn't actually complex, treat it like a real value
+        if (imag == 0.0) {
+            divide(A, real, output);
+            return;
+        }
+        throw new ConvertToImaginaryException();
+    }
+
     boolean invert( T A, T output );
 
     void setIdentity( T A );
