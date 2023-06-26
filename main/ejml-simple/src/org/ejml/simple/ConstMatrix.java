@@ -188,7 +188,7 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
     T plus( double beta, ConstMatrix<?> B );
 
     /**
-     * Computes the dot product (a.k.a. inner product) between this vector and vector 'v'.
+     * Computes the dot product (or inner product) between this vector and vector 'v'.
      *
      * @param v The second vector in the dot product. Not modified.
      * @return dot product
@@ -527,6 +527,46 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
     T getColumn( int col );
 
     /**
+     * Extracts the specified rows from the matrix.
+     *
+     * @param begin First row (inclusive).
+     * @param end Last row (exclusive).
+     * @return Submatrix that contains the specified rows.
+     * @deprecated Inconsistent API. Use {@link #getRows(int, int)} instead.
+     */
+    @Deprecated
+    T rows( int begin, int end );
+
+    /**
+     * Extracts the specified rows from the matrix.
+     *
+     * @param begin First row (inclusive).
+     * @param end Last row (exclusive).
+     * @return Submatrix that contains the specified rows.
+     */
+    T getRows( int begin, int end );
+
+    /**
+     * Extracts the specified columns from the matrix.
+     *
+     * @param begin First column (inclusive).
+     * @param end Last column (exclusive).
+     * @return Submatrix that contains the specified columns.
+     * @deprecated Inconsistent API. Use {@link #getColumns(int, int)} instead.
+     */
+    @Deprecated
+    T cols( int begin, int end );
+
+    /**
+     * Extracts the specified columns from the matrix.
+     *
+     * @param begin First column (inclusive).
+     * @param end Last column (exclusive).
+     * @return Submatrix that contains the specified columns.
+     */
+    T getColumns( int begin, int end );
+
+    /**
      * <p>
      * If a vector then a square matrix is returned if a matrix then a vector of diagonal ements is returned
      * </p>
@@ -749,24 +789,6 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * Size of internal array elements. 32 or 64 bits
      */
     int bits();
-
-    /**
-     * Extracts the specified rows from the matrix.
-     *
-     * @param begin First row (inclusive).
-     * @param end Last row (exclusive).
-     * @return Submatrix that contains the specified rows.
-     */
-    T rows( int begin, int end );
-
-    /**
-     * Extracts the specified columns from the matrix.
-     *
-     * @param begin First column (inclusive).
-     * @param end Last column (exclusive).
-     * @return Submatrix that contains the specified columns.
-     */
-    T cols( int begin, int end );
 
     /**
      * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
