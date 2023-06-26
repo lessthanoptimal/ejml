@@ -162,6 +162,11 @@ public class SimpleOperations_ZDRM implements SimpleOperations<ZMatrixRMaj> {
         CommonOps_ZDRM.elementDivide(A, (double)val, 0.0, output);
     }
 
+    @Override public void divideComplex( ZMatrixRMaj A, /**/double real, /**/double imag, ZMatrixRMaj output ) {
+        output.setTo(A);
+        CommonOps_ZDRM.elementDivide(A, (double)real, (double)imag, output);
+    }
+
     @Override public boolean invert( ZMatrixRMaj A, ZMatrixRMaj output ) {
         return CommonOps_ZDRM.invert(A, output);
     }

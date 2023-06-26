@@ -388,6 +388,20 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
     }
 
     /** {@inheritDoc} */
+    @Override public T divideComplex( double real, double imag ) {
+        try {
+            T ret = createLike();
+            ops.divideComplex(mat, real, imag, ret.getMatrix());
+            return ret;
+        } catch (ConvertToImaginaryException e) {
+            // Input matrix isn't complex therefor output isn't complex either
+            T converted = createComplexMatrix(1, 1);
+            converted.setMatrix(ConvertMatrixType.convert(mat, converted.getType()));
+            return converted.divideComplex(real, imag);
+        }
+    }
+
+    /** {@inheritDoc} */
     @Override public T invert() {
         T ret = createLike();
 

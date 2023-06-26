@@ -238,6 +238,16 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
     T divide( double val );
 
     /**
+     * Divides each element in the matrix by the complex number. If the matrix is real, then it will
+     * return a complex matrix unless the imaginary component of the scalar is zero.
+     *
+     * @param real Real component of scalar value
+     * @param imag Imaginary component of scalar value
+     * @return Scaled matrix
+     */
+    T divideComplex( double real, double imag );
+
+    /**
      * <p>
      * Returns the inverse of this matrix.<br>
      * <br>
