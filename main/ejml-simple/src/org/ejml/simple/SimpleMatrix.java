@@ -244,7 +244,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <tr><td>{@link #scaleComplex(double, double)}</td>
  *     <td>Multiply by a complex scalar value.</td></tr>
  *     <tr><td>{@link #divide(double)}</td>
- *     <td>Divided by a scalar value.</td></tr>
+ *     <td>Divide by a scalar value.</td></tr>
  *     <tr><td>{@link #mult(ConstMatrix)}</td>
  *     <td>Multiply with another matrix.</td></tr>
  *     <tr><td>{@link #dot(ConstMatrix)}</td>
