@@ -24,6 +24,7 @@ import org.ejml.data.DMatrix4;
 import org.ejml.data.DMatrixRMaj;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestDConvertArrays extends EjmlStandardJUnit {
@@ -35,6 +36,18 @@ public class TestDConvertArrays extends EjmlStandardJUnit {
         assertEquals(1,m.get(0,1), UtilEjml.TEST_F64);
         assertEquals(2,m.get(1,0), UtilEjml.TEST_F64);
         assertEquals(3,m.get(1,1), UtilEjml.TEST_F64);
+    }
+
+    @Test
+    public void ddrm_to_dd() {
+        double[][] expected = {{0, 1}, {2, 3}};
+        double[][] dd = DConvertArrays.convert(new DMatrixRMaj(expected));
+
+        assertArrayEquals(expected, dd);
+        assertEquals(0,dd[0][0], UtilEjml.TEST_F64);
+        assertEquals(1,dd[0][1], UtilEjml.TEST_F64);
+        assertEquals(2,dd[1][0], UtilEjml.TEST_F64);
+        assertEquals(3,dd[1][1], UtilEjml.TEST_F64);
     }
 
 //    @Test

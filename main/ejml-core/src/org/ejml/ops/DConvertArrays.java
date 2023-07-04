@@ -58,6 +58,24 @@ public class DConvertArrays {
         return dst;
     }
 
+    /**
+     * Convert a {@link DMatrixRMaj} to a two-dimensional array,
+     * given DMatrixRMaj can take a double[][] as input to constructor
+     *
+     * @param src is an input DMatrixRMaj
+     * @return a 2D array contains the same elements as the input matrix
+     */
+    public static double[][] convert( DMatrixRMaj src ) {
+        double[][] array = new double[src.numRows][src.numCols];
+        for (int row = 0; row < src.numRows; row++) {
+            for (int column = 0; column < src.numCols; column++) {
+                array[row][column] = src.get(row, column);
+            }
+        }
+
+        return array;
+    }
+
 //    public static DMatrixSparseCSC convert(double[][]src , @Nullable DMatrixSparseCSC dst ) {
 //        int rows = src.length;
 //        if( rows == 0 )
