@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.ops;
 
 import org.ejml.UtilEjml;
@@ -69,7 +68,7 @@ public class DConvertArrays {
         double[][] array = new double[src.numRows][src.numCols];
         for (int row = 0; row < src.numRows; row++) {
             for (int column = 0; column < src.numCols; column++) {
-                array[row][column] = src.get(row, column);
+                array[row][column] = src.unsafe_get(row, column);
             }
         }
 
