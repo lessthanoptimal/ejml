@@ -210,9 +210,9 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         double[][] actual = new DMatrixRMaj(expected).get2DData();
 
         assertArrayEquals(expected, actual);
-        assertEquals(0,actual[0][0], UtilEjml.TEST_F64);
-        assertEquals(1,actual[0][1], UtilEjml.TEST_F64);
-        assertEquals(2,actual[1][0], UtilEjml.TEST_F64);
-        assertEquals(3,actual[1][1], UtilEjml.TEST_F64);
+        assertEquals(0, actual[0][0], UtilEjml.TEST_F64);
+        assertEquals(1, actual[0][1], UtilEjml.TEST_F64);
+        assertEquals(2, actual[1][0], UtilEjml.TEST_F64);
+        assertEquals(3, actual[1][1], UtilEjml.TEST_F64);
     }
 }

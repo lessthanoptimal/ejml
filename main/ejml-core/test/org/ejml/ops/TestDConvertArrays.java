@@ -30,12 +30,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestDConvertArrays extends EjmlStandardJUnit {
     @Test
     public void dd_to_ddrm() {
-        DMatrixRMaj m = DConvertArrays.convert(new double[][]{{0,1},{2,3}},(DMatrixRMaj)null);
+        DMatrixRMaj m = DConvertArrays.convert(new double[][]{{0, 1}, {2, 3}}, (DMatrixRMaj)null);
 
-        assertEquals(0,m.get(0,0), UtilEjml.TEST_F64);
-        assertEquals(1,m.get(0,1), UtilEjml.TEST_F64);
-        assertEquals(2,m.get(1,0), UtilEjml.TEST_F64);
-        assertEquals(3,m.get(1,1), UtilEjml.TEST_F64);
+        assertEquals(0, m.get(0, 0), UtilEjml.TEST_F64);
+        assertEquals(1, m.get(0, 1), UtilEjml.TEST_F64);
+        assertEquals(2, m.get(1, 0), UtilEjml.TEST_F64);
+        assertEquals(3, m.get(1, 1), UtilEjml.TEST_F64);
     }
 
     @Test
@@ -44,10 +44,10 @@ public class TestDConvertArrays extends EjmlStandardJUnit {
         double[][] dd = DConvertArrays.convert(new DMatrixRMaj(expected));
 
         assertArrayEquals(expected, dd);
-        assertEquals(0,dd[0][0], UtilEjml.TEST_F64);
-        assertEquals(1,dd[0][1], UtilEjml.TEST_F64);
-        assertEquals(2,dd[1][0], UtilEjml.TEST_F64);
-        assertEquals(3,dd[1][1], UtilEjml.TEST_F64);
+        assertEquals(0, dd[0][0], UtilEjml.TEST_F64);
+        assertEquals(1, dd[0][1], UtilEjml.TEST_F64);
+        assertEquals(2, dd[1][0], UtilEjml.TEST_F64);
+        assertEquals(3, dd[1][1], UtilEjml.TEST_F64);
     }
 
 //    @Test
@@ -65,11 +65,11 @@ public class TestDConvertArrays extends EjmlStandardJUnit {
 
     @Test
     public void dd_to_d4() {
-        DMatrix4 m = DConvertArrays.convert(new double[][]{{0,1,2,3}},(DMatrix4) null);
+        DMatrix4 m = DConvertArrays.convert(new double[][]{{0, 1, 2, 3}}, (DMatrix4)null);
 
-        assertEquals(0,m.a1, UtilEjml.TEST_F64);
-        assertEquals(1,m.a2, UtilEjml.TEST_F64);
-        assertEquals(2,m.a3, UtilEjml.TEST_F64);
-        assertEquals(3,m.a4, UtilEjml.TEST_F64);
+        assertEquals(0, m.a1, UtilEjml.TEST_F64);
+        assertEquals(1, m.a2, UtilEjml.TEST_F64);
+        assertEquals(2, m.a3, UtilEjml.TEST_F64);
+        assertEquals(3, m.a4, UtilEjml.TEST_F64);
     }
 }
