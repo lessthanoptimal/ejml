@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -373,5 +373,15 @@ public class DMatrixRMaj extends DMatrix1Row {
      */
     public void set( double[][] input ) {
         DConvertArrays.convert(input, this);
+    }
+
+    /**
+     * Export this matrix using a 2D array representation.
+     *
+     * @return 2D representation of the matrix
+     * @see DMatrixD1#getData() to get a 1D array representation
+     */
+    public double[][] get2DData() {
+        return DConvertArrays.convert(this);
     }
 }
