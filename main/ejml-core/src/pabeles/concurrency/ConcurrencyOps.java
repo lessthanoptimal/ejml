@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -195,6 +195,9 @@ public class ConcurrencyOps {
         final ForkJoinPool pool = ConcurrencyOps.pool;
         int numThreads = pool.getParallelism();
 
+        // Make sure there are no stale results, even if nothing is run
+        workspace.reset();
+
         int range = endExclusive - start;
         if (range == 0) // nothing to do here!
             return;
@@ -222,6 +225,9 @@ public class ConcurrencyOps {
         final ForkJoinPool pool = ConcurrencyOps.pool;
         int numThreads = pool.getParallelism();
 
+        // Make sure there are no stale results, even if nothing is run
+        workspace.reset();
+
         int range = endExclusive - start;
         if (range == 0) // nothing to do here!
             return;
@@ -235,7 +241,6 @@ public class ConcurrencyOps {
 
     private static <T> void runLoopBlocks( int start, int endExclusive, GrowArray<T> workspace,
                                            IntRangeObjectConsumer<T> consumer, ForkJoinPool pool, int blockSize ) {
-        workspace.reset();
         try {
             pool.submit(new IntRangeObjectTask<>(start, endExclusive, blockSize, workspace, consumer)).get();
         } catch (InterruptedException | ExecutionException e) {

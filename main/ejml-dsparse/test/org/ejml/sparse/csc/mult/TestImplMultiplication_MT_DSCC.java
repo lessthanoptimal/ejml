@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -50,7 +50,11 @@ class TestImplMultiplication_MT_DSCC extends EjmlStandardJUnit {
             mult_s_s(5, 10, 5);
             mult_s_s(5, 5, 10);
         }
+
+        // See comment in mult_s_s. This triggered a bug
+        mult_s_s(10, 10, 0);
     }
+
 
     private void mult_s_s( int rowsA, int colsA, int colsB ) {
         int nz_a = RandomMatrices_DSCC.nonzero(rowsA, colsA, 0.05, 0.7, rand);
@@ -61,6 +65,10 @@ class TestImplMultiplication_MT_DSCC extends EjmlStandardJUnit {
         DMatrixSparseCSC b = RandomMatrices_DSCC.rectangle(colsA, colsB, nz_b, -1, 1, rand);
         DMatrixSparseCSC expected = RandomMatrices_DSCC.rectangle(rowsA, colsB, nz_c, -1, 1, rand);
         DMatrixSparseCSC found = expected.copy();
+
+        // Make sure the work space is cleaned up. There was a bug where if b has zero columns stitching would
+        // throw an exception if this wasn't empty
+        workSpaceMT.grow();
 
         ImplMultiplication_DSCC.mult(a, b, expected, null, null);
         ImplMultiplication_MT_DSCC.mult(a, b, found, workSpaceMT);
