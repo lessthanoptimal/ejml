@@ -2,6 +2,14 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.43.1
+2023/Sep/23
+
+- Fixed low level bug in ConcurrentyOps where it was not clearing the workspace in all situations,
+resulting in really weird bugs in downstream customers of EJML
+- Javadoc clean up, Thanks jozef Kutas
+-Added DMatrixRMaj.get2DData() which returns the matrix encoded as a 2D array
+
 ----- Version 0.43
 2023/04/15
 
