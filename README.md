@@ -66,9 +66,9 @@ This will add the entire library.  Alternatively, you can include the required m
 ## Building
 
 Unless you need a bleeding edge new feature or are contributing to EJML you probably don't need to build it yourself
-since pre-build jars are readily available on Maven Central.  Gradle is the official tool environment for EJML. Java 11
-or higher is required to build EJML, but it will generate Java 8 (a.k.a. Java 1.8) byte code. This is because it uses
-a few recent language features.
+since pre-build jars are readily available on Maven Central.  Gradle is the official tool environment for EJML. Java 17
+or higher is required to build EJML, but it will generate Java 11 byte code. This is because it uses a few recent
+language features.
 
 To build EJML from the command line use the following commands. These will generate all the source code and install
 it in your local Maven repository. 
