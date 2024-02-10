@@ -157,7 +157,9 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         if (row < 0 || row >= numRows || col < 0 || col >= numCols)
             throw new IllegalArgumentException("Outside of matrix bounds");
 
-        unsafe_set(row, col, value);
+        if (value != 0.0) {
+            unsafe_set(row, col, value);
+        }
     }
 
     /**
@@ -171,7 +173,7 @@ public class DMatrixSparseTriplet implements DMatrixSparse {
         int index = nz_index(row, col);
         if (index < 0)
             addItem(row, col, value);
-        else {
+        else if (value != 0.0) {
             nz_value.data[index] = value;
         }
     }
