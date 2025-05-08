@@ -172,7 +172,7 @@ tasks.named<Javadoc>("javadoc") {
         links("https://docs.oracle.com/en/java/javase/11/docs/api/")
     }
     isFailOnError = false
-    // Disable to stop it from spamming stdout on snapshot builds
+    // Disable to stop it from spamming stdout on snapshot builds and speed them up
     enabled = !project.version.toString().contains("SNAPSHOT")
 }
 
@@ -187,40 +187,42 @@ tasks.withType<JavaCompile>().configureEach {
     val skip = pathStr.contains("Benchmarks") ||
             pathStr.contains("examples") ||
             pathStr.contains("regression") ||
-            nameStr.contains("Test")
+            nameStr.contains("Test") ||
+            nameStr == "compileModuleInfo" // need for java9module
 
-    if (!skip) {
-        options.errorprone.isEnabled.set(true)
-        options.errorprone.disableWarningsInGeneratedCode.set(true)
-        options.errorprone.disable(
-            "TypeParameterUnusedInFormals",
-            "StringSplitter",
-            "InconsistentCapitalization",
-            "AssignmentExpression",          // used throughout and intentional
-            "HidingField",                   // sometimes done when specific type is known by child; clean up later
-            "ClassNewInstance",              // deprecated, but replacement is more verbose with ignored errors
-            "FloatingPointLiteralPrecision", // too many false positives in test code
-            "MissingSummary",
-            "UnescapedEntity",
-            "EmptyBlockTag",
-        )
-        options.errorprone.error(
-            "MissingOverride",
-            "MissingCasesInEnumSwitch",
-            "BadInstanceof",
-            "EmptyCatch",
-            "NarrowingCompoundAssignment",
-            "JdkObsolete",
-        )
+    if (skip)
+        return@configureEach
 
-        if (nameStr.startsWith("compileTest")) {
-            options.errorprone.disable("ReferenceEquality", "IntLongMath", "ClassCanBeStatic")
-        }
+    options.errorprone.isEnabled.set(true)
+    options.errorprone.disableWarningsInGeneratedCode.set(true)
+    options.errorprone.disable(
+        "TypeParameterUnusedInFormals",
+        "StringSplitter",
+        "InconsistentCapitalization",
+        "AssignmentExpression",          // used throughout and intentional
+        "HidingField",                   // sometimes done when specific type is known by child; clean up later
+        "ClassNewInstance",              // deprecated, but replacement is more verbose with ignored errors
+        "FloatingPointLiteralPrecision", // too many false positives in test code
+        "MissingSummary",
+        "UnescapedEntity",
+        "EmptyBlockTag",
+    )
+    options.errorprone.error(
+        "MissingOverride",
+        "MissingCasesInEnumSwitch",
+        "BadInstanceof",
+        "EmptyCatch",
+        "NarrowingCompoundAssignment",
+        "JdkObsolete",
+    )
 
-        options.errorprone.check("NullAway", CheckSeverity.ERROR)
-        options.errorprone.option("NullAway:TreatGeneratedAsUnannotated", "true")
-        options.errorprone.option("NullAway:AnnotatedPackages", "org.ejml")
+    if (nameStr.startsWith("compileTest")) {
+        options.errorprone.disable("ReferenceEquality", "IntLongMath", "ClassCanBeStatic")
     }
+
+    options.errorprone.check("NullAway", CheckSeverity.ERROR)
+    options.errorprone.option("NullAway:TreatGeneratedAsUnannotated", "true")
+    options.errorprone.option("NullAway:AnnotatedPackages", "org.ejml")
 }
 
 // Skip jar publishing for these codeless container modules

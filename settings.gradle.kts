@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 
 include("main:ejml-test", "main:ejml-core","main:ejml-experimental","main:ejml-ddense","main:ejml-zdense",
     "main:ejml-simple","examples","main:ejml-all","main:ejml-fdense","main:ejml-cdense","main:autocode",
-    "main:ejml-dsparse","main:ejml-fsparse","main:ejml-kotlin",
+    "main:ejml-dsparse","main:ejml-fsparse","main:ejml-kotlin", "main:ejml-java9module",
     "regression")
 
 plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0" }
