@@ -780,6 +780,10 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
         return cols(getNumCols() - count, SimpleMatrix.END);
     }
 
+    /// Converts a vector into a square matrix with the vector's values along the diagonal, or if a rectangular matrix
+    /// creates a vector from the diagonal elements
+    T toDiagonal();
+
     /**
      * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements
      * are set to zero.</p>

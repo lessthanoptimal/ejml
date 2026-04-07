@@ -1332,6 +1332,25 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
     }
 
     /** {@inheritDoc} */
+    @Override public T toDiagonal() {
+        var out = createMatrix(0, 0, getType());
+        if (isVector()) {
+            int n = getNumElements();
+            out.reshape(n, n);
+            for (int i = 0; i < n; i++) {
+                out.set(i, i, get(i));
+            }
+        } else {
+            int n = Math.min(getNumRows(), getNumCols());
+            out.reshape(n, 1);
+            for (int i = 0; i < n; i++) {
+                out.set(i, get(i, i));
+            }
+        }
+        return out;
+    }
+
+    /** {@inheritDoc} */
     @Override public MatrixType getType() {
         return mat.getType();
     }

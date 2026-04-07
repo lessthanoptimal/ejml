@@ -1307,6 +1307,49 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
         }
     }
 
+    @Test void toDiagonal() {
+        var A = SimpleMatrix.diag(1, 2, 3, 4);
+        SimpleMatrix v = A.toDiagonal();
+        assertEquals(4, v.getNumRows());
+        assertEquals(1, v.getNumCols());
+
+        for (int i = 0; i < 4; i++) {
+            assertEquals(i + 1, v.get(i));
+        }
+
+        SimpleMatrix a = v.toDiagonal();
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                if (row == col)
+                    assertEquals(row + 1, a.get(row, col));
+                else
+                    assertEquals(0.0, a.get(row, col));
+            }
+        }
+    }
+
+    @Test void toDiagonal_rectangle() {
+        var A = SimpleMatrix.random_DDRM(5, 10);
+        SimpleMatrix found = A.toDiagonal();
+
+        assertEquals(5, found.getNumRows());
+        assertEquals(1, found.getNumCols());
+
+        for (int i = 0; i < found.getNumElements(); i++) {
+            assertEquals(A.get(i, i), found.get(i));
+        }
+
+        A = SimpleMatrix.random_DDRM(10, 5);
+        found = A.toDiagonal();
+
+        assertEquals(5, found.getNumRows());
+        assertEquals(1, found.getNumCols());
+
+        for (int i = 0; i < found.getNumElements(); i++) {
+            assertEquals(A.get(i, i), found.get(i));
+        }
+    }
+
     @Test void serialization() {
         List<Matrix> matrixTypes = new ArrayList<>();
         matrixTypes.add(new DMatrixRMaj(2, 3));
