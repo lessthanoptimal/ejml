@@ -35,6 +35,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSimpleMatrix extends EjmlStandardJUnit {
+    @Test void diagSub() {
+        SimpleMatrix A = SimpleMatrix.diagSub(1, 4, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0);
+        assertEquals(3, A.getNumRows());
+        assertEquals(3, A.getNumCols());
+        assertEquals(2.0, A.get(0, 0));
+        assertEquals(3.0, A.get(1, 1));
+        assertEquals(4.0, A.get(2, 2));
+    }
+
     @Test void randomNormal() {
         SimpleMatrix Q = SimpleMatrix.diag(5, 3, 12);
         Q.set(0, 1, 0.5);

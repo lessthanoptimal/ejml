@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -696,6 +696,21 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
         return wrap(CommonOps_DDRM.diag(vals));
     }
 
+    /// Creates a square dense matrix with diagonal elements from a sub array
+    ///
+    /// @param idx0 low extent, inclusive
+    /// @param idx1 upper extent, exclusive
+    /// @param vals array of values for digonal elements
+    public static SimpleMatrix diagSub( int idx0, int idx1, double... vals ) {
+        int n = idx1 - idx0;
+        var A = new DMatrixRMaj(n, n);
+        for (int i = 0; i < n; i++) {
+            double v = vals[i + idx0];
+            A.set(i, i, v);
+        }
+        return new SimpleMatrix(A);
+    }
+
     /**
      * Creates a matrix where all but the diagonal elements are zero. The values
      * of the diagonal elements are specified by the parameter 'vals'.
@@ -925,5 +940,4 @@ public class SimpleMatrix extends SimpleBase<SimpleMatrix> {
 //
 //        return ret;
 //    }
-
 }

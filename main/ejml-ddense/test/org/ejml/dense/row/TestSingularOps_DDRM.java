@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -93,6 +93,46 @@ public class TestSingularOps_DDRM extends EjmlStandardJUnit {
                 assertTrue(MatrixFeatures_DDRM.isIdentical(A, found, UtilEjml.TEST_F64));
             }
         }
+    }
+
+    @Test void svd_compact() {
+        // Test different shape matrices in compact and full modes
+        svd_compact(10, 10, true);
+        svd_compact(10, 5, true);
+        svd_compact(5, 10, true);
+        svd_compact(10, 10, false);
+        svd_compact(10, 5, false);
+        svd_compact(5, 10, false);
+    }
+
+    // Tests the size and results using the definition of an SVD
+    void svd_compact( int rows, int cols, boolean compact ) {
+        DMatrixRMaj U = new DMatrixRMaj(1, 1);
+        DGrowArray sv = new DGrowArray();
+        DMatrixRMaj Vt = new DMatrixRMaj(1, 1);
+
+        var A = RandomMatrices_DDRM.rectangle(rows, cols, rand);
+        SingularOps_DDRM.svd(A, compact, U, sv, Vt);
+        assertEquals(rows, U.numRows);
+        assertEquals(compact ? Math.min(rows, cols) : rows, U.numCols);
+        assertEquals(compact ? Math.min(rows, cols) : cols, Vt.numRows);
+        assertEquals(cols, Vt.numCols);
+        assertEquals(Math.min(rows, cols), sv.length);
+
+        if (!compact) {
+            assertTrue(MatrixFeatures_DDRM.isOrthogonal(U, UtilEjml.TESTP_F64));
+            assertTrue(MatrixFeatures_DDRM.isOrthogonal(Vt, UtilEjml.TESTP_F64));
+        }
+
+        // Test by reconstructing the original matrix from the decomposition
+        var W = new SimpleMatrix(U.numCols, Vt.numRows);
+        for (int i = 0; i < sv.length; i++) {
+            W.set(i,i, sv.get(i));
+        }
+
+        SimpleMatrix found = SimpleMatrix.wrap(U).mult(W).mult(SimpleMatrix.wrap(Vt));
+
+        assertTrue(found.isIdentical(SimpleMatrix.wrap(A), UtilEjml.TEST_F64));
     }
 
     @Test void descendingOrder() {

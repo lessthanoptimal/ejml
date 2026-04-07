@@ -777,7 +777,7 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
     /// Returns a new matrix that is a column submatrix starting from the upper extent. 'count' is the number of
     /// columns it will return. The column range will be from numCols - count, to numCols.
     default T colsUpper( int count ) {
-        return cols(SimpleMatrix.END, getNumCols() - count);
+        return cols(getNumCols() - count, SimpleMatrix.END);
     }
 
     /**

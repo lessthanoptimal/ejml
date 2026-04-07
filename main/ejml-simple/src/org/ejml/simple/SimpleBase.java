@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -845,15 +845,15 @@ public abstract class SimpleBase<T extends SimpleBase<T>> implements ConstMatrix
     }
 
     /** {@inheritDoc} */
-    @Override public T extractMatrix( int y0, int y1, int x0, int x1 ) {
-        if (y0 == SimpleMatrix.END) y0 = mat.getNumRows();
-        if (y1 == SimpleMatrix.END) y1 = mat.getNumRows();
-        if (x0 == SimpleMatrix.END) x0 = mat.getNumCols();
-        if (x1 == SimpleMatrix.END) x1 = mat.getNumCols();
+    @Override public T extractMatrix( int row0, int row1, int col0, int col1 ) {
+        if (row0 == SimpleMatrix.END) row0 = mat.getNumRows();
+        if (row1 == SimpleMatrix.END) row1 = mat.getNumRows();
+        if (col0 == SimpleMatrix.END) col0 = mat.getNumCols();
+        if (col1 == SimpleMatrix.END) col1 = mat.getNumCols();
 
-        T ret = createMatrix(y1 - y0, x1 - x0, mat.getType());
+        T ret = createMatrix(row1 - row0, col1 - col0, mat.getType());
 
-        ops.extract(mat, y0, y1, x0, x1, ret.mat, 0, 0);
+        ops.extract(mat, row0, row1, col0, col1, ret.mat, 0, 0);
 
         return ret;
     }

@@ -149,24 +149,36 @@ public class SingularOps_DDRM {
         return count;
     }
 
-    /**
-     * Computes the SVD and sorts singular values in descending order. While easier to use this can reduce performance
-     * when performed on small matrices numerous times.
-     *
-     * U*W*V<sup>T</sup> = A
-     *
-     * @param A (Input) Matrix being decomposed
-     * @param U (Output) Storage for U. If null then it's ignored.
-     * @param sv (Output) sorted list of singular values. Can be null.
-     * @param Vt (Output) Storage for transposed V. Can be null.
-     */
+    /// Computes the SVD and sorts singular values in descending order. While easier to use this can reduce performance
+    /// when performed on small matrices numerous times. By default, this uses a compact decomposition.
+    ///
+    /// U\*W\*V<sup>T</sup> = A
+    ///
+    /// @param A (Input) Matrix being decomposed
+    /// @param U (Output) Storage for U. If null then it's ignored.
+    /// @param sv (Output) sorted list of singular values. Can be null.
+    /// @param Vt (Output) Storage for transposed V. Can be null.
     public static boolean svd( DMatrixRMaj A, @Nullable DMatrixRMaj U, @Nullable DGrowArray sv, @Nullable DMatrixRMaj Vt ) {
+        return svd(A, true, U, sv, Vt);
+    }
 
+    /// Computes the SVD and sorts singular values in descending order. While easier to use this can reduce performance
+    /// when performed on small matrices numerous times.
+    ///
+    /// U\*W\*V<sup>T</sup> = A
+    ///
+    /// @param A (Input) Matrix being decomposed
+    /// @param compact (Input) True if a compact SVD is returned.
+    /// @param U (Output) Storage for U. If null then it's ignored.
+    /// @param sv (Output) sorted list of singular values. Can be null.
+    /// @param Vt (Output) Storage for transposed V. Can be null.
+    public static boolean svd( DMatrixRMaj A, boolean compact,
+                               @Nullable DMatrixRMaj U, @Nullable DGrowArray sv, @Nullable DMatrixRMaj Vt) {
         boolean needU = U != null;
         boolean needV = Vt != null;
 
         SingularValueDecomposition_F64<DMatrixRMaj> svd =
-                DecompositionFactory_DDRM.svd(A.numRows, A.numCols, needU, needV, true);
+                DecompositionFactory_DDRM.svd(A.numRows, A.numCols, needU, needV, compact);
 
         if (svd.inputModified()) {
             A = A.copy();
