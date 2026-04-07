@@ -125,7 +125,7 @@ public class TestSingularOps_DDRM extends EjmlStandardJUnit {
         }
 
         // Test by reconstructing the original matrix from the decomposition
-        var W = new SimpleMatrix(U.numCols, Vt.numRows);
+        var W = new SimpleMatrix(U.numCols, Vt.numRows, U.getType());
         for (int i = 0; i < sv.length; i++) {
             W.set(i,i, sv.get(i));
         }
