@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -475,7 +475,7 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * Creates a new SimpleMatrix which is a submatrix of this matrix.
      * </p>
      * <p>
-     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; y1 and x0 &le; j &lt; x1<br>
+     * s<sub>i-y0 , j-x0</sub> = o<sub>ij</sub> for all y0 &le; i &lt; row1 and x0 &le; j &lt; x1<br>
      * <br>
      * where 's<sub>ij</sub>' is an element in the submatrix and 'o<sub>ij</sub>' is an element in the
      * original matrix.
@@ -486,13 +486,13 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * or column in the matrix.
      * </p>
      *
-     * @param y0 Start row.
-     * @param y1 Stop row + 1.
-     * @param x0 Start column.
-     * @param x1 Stop column + 1.
+     * @param row0 Row start index, inclusive.
+     * @param row1 Row stop index, exclusive.
+     * @param col0 Column start index, inclusive.
+     * @param col1 Column stop index, exclusive.
      * @return The submatrix.
      */
-    T extractMatrix( int y0, int y1, int x0, int x1 );
+    T extractMatrix( int row0, int row1, int col0, int col1 );
 
     /**
      * <p>
@@ -767,6 +767,18 @@ public interface ConstMatrix<T extends ConstMatrix<T>> {
      * @return Submatrix that contains the specified columns.
      */
     T cols( int begin, int end );
+
+    /// Returns a new matrix that is a row submatrix starting from the upper extent. 'count' is the number of rows
+    /// it will return. The row range will be from numRows - count, to numRows.
+    default T rowsUpper( int count ) {
+        return rows(getNumRows() - count, SimpleMatrix.END);
+    }
+
+    /// Returns a new matrix that is a column submatrix starting from the upper extent. 'count' is the number of
+    /// columns it will return. The column range will be from numCols - count, to numCols.
+    default T colsUpper( int count ) {
+        return cols(SimpleMatrix.END, getNumCols() - count);
+    }
 
     /**
      * <p>Concatenates all the matrices together along their columns. If the rows do not match the upper elements

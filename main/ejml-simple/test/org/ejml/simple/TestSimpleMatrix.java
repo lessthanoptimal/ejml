@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1249,6 +1249,8 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
     @Test void rows() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
         SimpleMatrix B = A.rows(1, 3);
+        assertEquals(2, B.getNumRows());
+        assertEquals(7, B.getNumCols());
 
         for (int i = 1; i < 3; i++) {
             for (int j = 0; j < 7; j++) {
@@ -1259,11 +1261,39 @@ public class TestSimpleMatrix extends EjmlStandardJUnit {
 
     @Test void cols() {
         SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
-        SimpleMatrix B = A.rows(1, 3);
+        SimpleMatrix B = A.cols(1, 3);
+        assertEquals(5, B.getNumRows());
+        assertEquals(2, B.getNumCols());
 
-        for (int i = 1; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 1; j < 3; j++) {
+                assertEquals(A.get(i, j), B.get(i, j - 1), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test void rowsUpper() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
+        SimpleMatrix B = A.rowsUpper(2);
+        assertEquals(2, B.getNumRows());
+        assertEquals(7, B.getNumCols());
+
+        for (int i = 3; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
-                assertEquals(A.get(i, j), B.get(i - 1, j), UtilEjml.TEST_F64);
+                assertEquals(A.get(i, j), B.get(i - 3, j), UtilEjml.TEST_F64);
+            }
+        }
+    }
+
+    @Test void colsUpper() {
+        SimpleMatrix A = SimpleMatrix.random_DDRM(5, 7, -1, 1, rand);
+        SimpleMatrix B = A.colsUpper(2);
+        assertEquals(5, B.getNumRows());
+        assertEquals(2, B.getNumCols());
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 5; j < 7; j++) {
+                assertEquals(A.get(i, j), B.get(i, j - 5), UtilEjml.TEST_F64);
             }
         }
     }
