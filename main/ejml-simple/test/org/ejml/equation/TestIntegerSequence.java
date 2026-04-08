@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -24,78 +24,94 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestIntegerSequence extends EjmlStandardJUnit {
-    @Test
-    public void explicit() {
-
-        TokenList.Token a = new TokenList.Token(new VariableInteger(4));
-        TokenList.Token b = new TokenList.Token(new VariableInteger(6));
-        TokenList.Token c = new TokenList.Token(new VariableInteger(-3));
+    @Test void explicit() {
+        var a = new TokenList.Token(new VariableInteger(4));
+        var b = new TokenList.Token(new VariableInteger(6));
+        var c = new TokenList.Token(new VariableInteger(-3));
 
         a.next = a;
         compare(new IntegerSequence.Explicit(a), 4);
         a.next = b;
-        compare(new IntegerSequence.Explicit(a,b), 4, 6);
+        compare(new IntegerSequence.Explicit(a, b), 4, 6);
         b.next = c;
-        compare(new IntegerSequence.Explicit(a,c), 4, 6 , -3);
+        compare(new IntegerSequence.Explicit(a, c), 4, 6, -3);
     }
 
-    @Test
-    public void checkFor_two() {
-        TokenList.Token a = new TokenList.Token(new VariableInteger(4));
-        TokenList.Token b = new TokenList.Token(new VariableInteger(7));
+    @Test void checkFor_two() {
+        var a = new TokenList.Token(new VariableInteger(4));
+        var b = new TokenList.Token(new VariableInteger(7));
 
-        compare(new IntegerSequence.For(a,null,b), 4,5,6,7);
+        compare(new IntegerSequence.For(a, null, b), 4, 5, 6, 7);
     }
 
-    @Test
-    public void checkFor_three() {
-        TokenList.Token a = new TokenList.Token(new VariableInteger(4));
-        TokenList.Token b = new TokenList.Token(new VariableInteger(2));
-        TokenList.Token c = new TokenList.Token(new VariableInteger(12));
+    // Check the length for ranges
+    @Test void checkFor_two_length() {
+        var a = new TokenList.Token(new VariableInteger(4));
+        var b = new TokenList.Token(new VariableInteger(2));
+        var c = new TokenList.Token(new VariableInteger(1));
 
-        compare(new IntegerSequence.For(a,b,c), 4,6,8,10,12);
+        var case0 = new IntegerSequence.For(b, null,a);
+        case0.initialize(10);
+        var case1 = new IntegerSequence.For(b, null,b);
+        case1.initialize(10);
+        var case2 = new IntegerSequence.For(b, null,c);
+        case2.initialize(10);
+
+        assertEquals(3, case0.length);
+        assertEquals(1, case1.length);
+        assertEquals(0, case2.length);
+
+        // Give it an invalid range
+        try {
+            new IntegerSequence.For(a, null,c).initialize(10);
+            fail("Should have thrown an exception");
+        } catch (RuntimeException ignore) {
+        }
     }
 
-    @Test
-    public void range_zero() {
-        compare(new IntegerSequence.Range(null,null), 0,1,2,3,4,5,6,7,8,9,10);
+    @Test void checkFor_three() {
+        var a = new TokenList.Token(new VariableInteger(4));
+        var b = new TokenList.Token(new VariableInteger(2));
+        var c = new TokenList.Token(new VariableInteger(12));
+
+        compare(new IntegerSequence.For(a, b, c), 4, 6, 8, 10, 12);
     }
 
-    @Test
-    public void range_one() {
-        TokenList.Token a = new TokenList.Token(new VariableInteger(4));
-
-        compare(new IntegerSequence.Range(a,null), 4,5,6,7,8,9,10);
+    @Test void range_zero() {
+        compare(new IntegerSequence.Range(null, null), 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     }
 
-    @Test
-    public void range_two() {
-        TokenList.Token a = new TokenList.Token(new VariableInteger(4));
-        TokenList.Token b = new TokenList.Token(new VariableInteger(2));
-        compare(new IntegerSequence.Range(a,b), 4,6,8,10);
+    @Test void range_one() {
+        var a = new TokenList.Token(new VariableInteger(4));
+
+        compare(new IntegerSequence.Range(a, null), 4, 5, 6, 7, 8, 9, 10);
     }
 
-    @Test
-    public void combined() {
-        TokenList.Token a = new TokenList.Token(new VariableInteger(4));
-        TokenList.Token b = new TokenList.Token(new VariableInteger(7));
+    @Test void range_two() {
+        var a = new TokenList.Token(new VariableInteger(4));
+        var b = new TokenList.Token(new VariableInteger(2));
+        compare(new IntegerSequence.Range(a, b), 4, 6, 8, 10);
+    }
 
-        VariableIntegerSequence varA = new VariableIntegerSequence(new IntegerSequence.For(a,null,b));
-        VariableScalar varB = new VariableInteger(7);
+    @Test void combined() {
+        var a = new TokenList.Token(new VariableInteger(4));
+        var b = new TokenList.Token(new VariableInteger(7));
 
-        TokenList.Token tokenA = new TokenList.Token(varA);
-        TokenList.Token tokenB = new TokenList.Token(varB);
+        var varA = new VariableIntegerSequence(new IntegerSequence.For(a, null, b));
+        var varB = new VariableInteger(7);
+
+        var tokenA = new TokenList.Token(varA);
+        var tokenB = new TokenList.Token(varB);
         tokenA.next = tokenB;
 
-        compare(new IntegerSequence.Combined(tokenA,tokenB), 4, 5, 6, 7,7);
+        compare(new IntegerSequence.Combined(tokenA, tokenB), 4, 5, 6, 7, 7);
     }
 
-
-    private void compare( IntegerSequence sequence , int ...expected ) {
+    private void compare( IntegerSequence sequence, int... expected ) {
         sequence.initialize(10);
         for (int i = 0; i < expected.length; i++) {
             assertTrue(sequence.hasNext());
-            assertEquals( expected[i], sequence.next() );
+            assertEquals(expected[i], sequence.next());
         }
         assertFalse(sequence.hasNext());
     }

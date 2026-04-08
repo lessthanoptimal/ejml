@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.equation;
 
 import org.jetbrains.annotations.Nullable;
@@ -157,8 +156,8 @@ public interface IntegerSequence {
             if (valStep <= 0) {
                 throw new IllegalArgumentException("step size must be a positive integer");
             }
-            if (valEnd < valStart) {
-                throw new IllegalArgumentException("end value must be >= the start value");
+            if (valEnd < valStart - 1) {
+                throw new IllegalArgumentException("end value must be >= the start - 1 value");
             }
 
             where = 0;
