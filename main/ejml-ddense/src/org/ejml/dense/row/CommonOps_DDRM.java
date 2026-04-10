@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -1369,14 +1369,14 @@ public class CommonOps_DDRM {
     }
 
     /**
-     * Removes columns from the matrix.
+     * Removes columns from the matrix. No memory is created and everything is done in place.
      *
      * @param A Matrix. Modified
      * @param col0 First column
      * @param col1 Last column, inclusive.
      */
     public static void removeColumns( DMatrixRMaj A, int col0, int col1 ) {
-        UtilEjml.assertTrue(col0 < col1, "col1 must be >= col0");
+        UtilEjml.assertTrue(col0 <= col1, "col1 must be >= col0");
         UtilEjml.assertTrue(col0 >= 0 && col1 <= A.numCols, "Columns which are to be removed must be in bounds");
 
         int step = col1 - col0 + 1;
@@ -1391,6 +1391,32 @@ public class CommonOps_DDRM {
             }
         }
         A.numCols -= step;
+    }
+
+    /**
+     * Removes rows from the matrix. No memory is created and everything is done in place.
+     *
+     * @param A Matrix. Modified
+     * @param row0 First column
+     * @param row1 Last column, inclusive.
+     */
+    public static void removeRows( DMatrixRMaj A, int row0, int row1 ) {
+        UtilEjml.assertTrue(row0 <= row1, "row1 must be >= row0");
+        UtilEjml.assertTrue(row0 >= 0 && row1 <= A.numRows, "Rows which are to be removed must be in bounds");
+
+        int step = row1 - row0 + 1;
+        int length = A.numCols*step;
+
+        // copy over full blocks
+        int srcRow;
+        for (srcRow = row0 + step; srcRow < A.numRows - step; srcRow += step) {
+            System.arraycopy(A.data, srcRow*A.numCols, A.data, (srcRow - step)*A.numCols, length);
+        }
+
+        // Copy over the remainder
+        System.arraycopy(A.data, srcRow*A.numCols, A.data, (srcRow - step)*A.numCols, (A.numRows - srcRow)*A.numCols);
+
+        A.numRows -= step;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -848,6 +848,22 @@ public class TestCommonOps_DDRM extends EjmlStandardJUnit {
                 } else if (col > 4) {
                     assertEquals(A.get(row, col), B.get(row, col - 2), UtilEjml.TEST_F64);
                 }
+            }
+        }
+    }
+
+    @Test void removeRows() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(6, 5, 0, 1, rand);
+        DMatrixRMaj B = A.copy();
+        CommonOps_DDRM.removeRows(B, 3, 4);
+
+        assertEquals(B.numCols, A.numCols);
+        assertEquals(B.numRows, A.numRows - 2);
+
+        for (int row = 0; row < B.numRows; row++) {
+            int srcRow = row < 3 ? row : row + 2;
+            for (int col = 0; col < B.numCols; col++) {
+                assertEquals(A.get(srcRow, col), B.get(row, col), UtilEjml.TEST_F64);
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -123,6 +123,7 @@ public class BenchmarkCommonOps_DDRM {
     @Benchmark public void extractRow() { CommonOps_DDRM.extractRow(A, 1, Vb); }
     @Benchmark public void extractColumn() { CommonOps_DDRM.extractColumn(A, 1, Vb); }
     @Benchmark public void removeColumns() { CommonOps_DDRM.removeColumns(A.copy(), 1, A.numCols - 1); }
+    @Benchmark public void removeRows() { CommonOps_DDRM.removeRows(A.copy(), 1, A.numRows - 2); }
     @Benchmark public void insert_whole() { C.reshape(A.numRows - 2, A.numCols - 2); CommonOps_DDRM.insert(C, B, 1, 0); }
     @Benchmark public void elementMax() { CommonOps_DDRM.elementMax(A); }
     @Benchmark public void elementMaxAbs() { CommonOps_DDRM.elementMaxAbs(A); }
