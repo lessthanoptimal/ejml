@@ -736,7 +736,6 @@ public abstract class Operation {
 
                 @Override
                 public void process() {
-
                     DMatrixRMaj msrc = ((VariableMatrix)src).matrix;
                     DMatrixRMaj mdst = ((VariableMatrix)dst).matrix;
 
@@ -760,7 +759,9 @@ public abstract class Operation {
                             }
                         }
                     } else if (range.size() == 2) {
-                        if (extractSimpleExtents(range.get(0), extents, true, mdst.getNumRows()) &&
+                        if (msrc.getNumElements() == 0) {
+                            removeRowsOrCols(mdst);
+                        } else if (extractSimpleExtents(range.get(0), extents, true, mdst.getNumRows()) &&
                                 extractSimpleExtents(range.get(1), extents, false, mdst.getNumCols())) {
 
                             int numRows = extents.row1 - extents.row0 + 1;
@@ -776,6 +777,45 @@ public abstract class Operation {
                         }
                     } else {
                         throw new RuntimeException("Unexpected number of ranges. Should have been caught earlier");
+                    }
+                }
+
+                private void removeRowsOrCols( DMatrixRMaj mdst ) {
+                    // if the src is an empty matrix then this is a remove rows or columns operation
+                    boolean allRows = Operation.isEntireRange(range.get(0));
+                    boolean allCols = Operation.isEntireRange(range.get(1));
+
+                    if (!allRows && !allCols)
+                        throw new RuntimeException("Empty matrix assignment for row/col removal but none of the ranges are for all elements");
+
+                    if (allRows && allCols) {
+                        mdst.reshape(0, 0);
+                    } else if (allRows) {
+                        if (extractSimpleExtents(range.get(1), extents, false, mdst.numCols)) {
+                            CommonOps_DDRM.removeColumns(mdst, extents.col0, extents.col1);
+                        } else {
+                            extractArrayExtent(range.get(1), mdst.numCols, colExtent);
+
+                            // Remove in reverse to avoid changing the order
+                            Arrays.sort(colExtent.array, 0, colExtent.length);
+                            for (int i = colExtent.length - 1; i >= 0; i--) {
+                                int col = colExtent.array[i];
+                                CommonOps_DDRM.removeColumns(mdst, col, col);
+                            }
+                        }
+                    } else {
+                        if (extractSimpleExtents(range.get(0), extents, true, mdst.numRows)) {
+                            CommonOps_DDRM.removeRows(mdst, extents.row0, extents.row1);
+                        } else {
+                            extractArrayExtent(range.get(0), mdst.numRows, rowExtent);
+
+                            // Remove in reverse to avoid changing the order
+                            Arrays.sort(rowExtent.array, 0, rowExtent.length);
+                            for (int i = rowExtent.length - 1; i >= 0; i--) {
+                                int row = rowExtent.array[i];
+                                CommonOps_DDRM.removeRows(mdst, row, row);
+                            }
+                        }
                     }
                 }
             };
@@ -1108,7 +1148,7 @@ public abstract class Operation {
     }
 
     /// Implements max where the request is to find the max value along all rows or all columns of a matrix
-    public static Info max_two_axis( VariableMatrix varA, final VariableScalar varP, ManagerTempVariables manager) {
+    public static Info max_two_axis( VariableMatrix varA, final VariableScalar varP, ManagerTempVariables manager ) {
         var ret = new Info();
         final VariableMatrix output = manager.createMatrix();
         ret.output = output;
@@ -1204,7 +1244,7 @@ public abstract class Operation {
     }
 
     /// Implements min where the request is to find the max value along all rows or all columns of a matrix
-    public static Info min_two_axis( VariableMatrix varA, final VariableScalar varP, ManagerTempVariables manager) {
+    public static Info min_two_axis( VariableMatrix varA, final VariableScalar varP, ManagerTempVariables manager ) {
         var ret = new Info();
         final VariableMatrix output = manager.createMatrix();
         ret.output = output;
@@ -1752,6 +1792,18 @@ public abstract class Operation {
             e.col1 = upper;
         }
         return true;
+    }
+
+    /// Returns true if the variable specifies a range sequence that includes all elements in the range
+    private static boolean isEntireRange( Variable v ) {
+        if (v.getType() != VariableType.INTEGER_SEQUENCE)
+            return false;
+
+        var sequence = ((VariableIntegerSequence)v).sequence;
+        if (sequence.getType() != IntegerSequence.Type.RANGE)
+            return false;
+
+        return ((IntegerSequence.Range)sequence).isEntireRange();
     }
 
     private static void extractArrayExtent( Variable var, int length, ArrayExtent extent ) {

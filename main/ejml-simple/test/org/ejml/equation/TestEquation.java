@@ -473,6 +473,91 @@ public class TestEquation extends EjmlStandardJUnit {
         assertEquals(expected, b, UtilEjml.TEST_F64);
     }
 
+    @Test void assignEmptyMatrix() {
+        var eq = new Equation();
+        eq.process("A = []");
+        DMatrixRMaj A = eq.lookupDDRM("A");
+        assertEquals(0, A.numRows);
+        assertEquals(0, A.numCols);
+    }
+
+    @Test void removeAll() {
+        var eq = new Equation();
+        eq.process("A = [1 2 3 4 5]'*[1 2 3 4]");
+        eq.process("A = []");
+        assertEquals(0, eq.lookupDDRM("A").getNumElements());
+    }
+
+    @Test void removeRows_range() {
+        var eq = new Equation();
+        eq.process("A = [1 2 3 4 5]'*[1 2 3 4]");
+        eq.process("B=A");
+        eq.process("A(2:3,:) = []");
+        var A = eq.lookupDDRM("A");
+        assertTrue(3 == A.numRows && 4 == A.numCols);
+
+        var B = eq.lookupDDRM("B");
+        for (int i = 0; i < A.numRows; i++) {
+            int srcI = i < 2 ? i : i + 2;
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(B.get(srcI, j), A.get(i, j));
+            }
+        }
+    }
+
+    @Test void removeColumns_range() {
+        var eq = new Equation();
+        eq.process("A = [1 2 3 4]'*[1 2 3 4 5]");
+        eq.process("B=A");
+        eq.process("A(:,2:3) = []");
+        var A = eq.lookupDDRM("A");
+        assertTrue(4 == A.numRows && 3 == A.numCols);
+
+        var B = eq.lookupDDRM("B");
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                int srcJ = j < 2 ? j : j + 2;
+                assertEquals(B.get(i, srcJ), A.get(i, j));
+            }
+        }
+    }
+
+    @Test void removeRows_array() {
+        var eq = new Equation();
+        eq.process("A = [1 2 3 4 5]'*[1 2 3 4]");
+        eq.process("B=A");
+        eq.process("A(3 2,:) = []");
+        // Note that 3 is before 2, this is to ensure that it sorts the rows before removal
+
+        var A = eq.lookupDDRM("A");
+        assertTrue(3 == A.numRows && 4 == A.numCols);
+
+        var B = eq.lookupDDRM("B");
+        for (int i = 0; i < A.numRows; i++) {
+            int srcI = i < 2 ? i : i + 2;
+            for (int j = 0; j < A.numCols; j++) {
+                assertEquals(B.get(srcI, j), A.get(i, j));
+            }
+        }
+    }
+
+    @Test void removeColumns_array() {
+        var eq = new Equation();
+        eq.process("A = [1 2 3 4]'*[1 2 3 4 5]");
+        eq.process("B=A");
+        eq.process("A(:,3 2) = []");
+        var A = eq.lookupDDRM("A");
+        assertTrue(4 == A.numRows && 3 == A.numCols);
+
+        var B = eq.lookupDDRM("B");
+        for (int i = 0; i < A.numRows; i++) {
+            for (int j = 0; j < A.numCols; j++) {
+                int srcJ = j < 2 ? j : j + 2;
+                assertEquals(B.get(i, srcJ), A.get(i, j));
+            }
+        }
+    }
+
     @Test void compile_assign_IntSequence_Case0() {
         var eq = new Equation();
 

@@ -294,6 +294,11 @@ public interface IntegerSequence {
             this.step = step == null ? null : (VariableInteger)step.getVariable();
         }
 
+        /// See if it specifies the entire range, e.g. :
+        public boolean isEntireRange() {
+            return start == null && step == null;
+        }
+
         @Override
         public int length() {
             return length;

@@ -64,8 +64,10 @@ import static org.ejml.equation.TokenList.Type;
  * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");  // create a 3x3 matrix then multiply it by x
  * eq.process("x(1:3,5:9) = [a ; b]*2");      // fill the sub-matrix with the result
  * eq.process("x(:) = a(4:2:20)");            // fill all elements of x with the specified elements in 'a'
+ * eq.process("x(2:, 3) = 6;                  // Fills all elements in column 3 with row >= 2 with 6.
  * eq.process("x( 4 3 ) = a");                // fill only the specified number sequences with 'a'
  * eq.process("x = [2:3:25 1 4]");            // create a row matrix from the number sequence
+ * eq.process("x(:, 2:3) = []");              // Removes columns 2 to 3, inclusive.
  * </pre>
  *
  * When accessing array elements it returns scalar values:
@@ -205,7 +207,7 @@ import static org.ejml.equation.TokenList.Type;
  * <pre>
  * 1) Explicit:
  *    Example: "1 2 4 0"
- *    Example: "1 2,-7,4"     Commas needed to create negative numbers. Otherwise it will be subtraction.
+ *    Example: "1 2,-7,4"     Commas needed to create negative numbers. Otherwise, it will be subtraction.
  * 2) for:
  *    Example:  "2:10"        Sequence of "2 3 4 5 6 7 8 9 10"
  *    Example:  "2:2:10"      Sequence of "2 4 6 8 10"
@@ -1143,12 +1145,17 @@ public class Equation {
                     throw new RuntimeException("No matching left bracket for right");
 
                 TokenList.Token start = left.remove(left.size() - 1);
-
-                // Compute everything inside the [ ], this will leave a
-                // series of variables and semi-colons hopefully
-                TokenList bracketLet = tokens.extractSubList(start.next, t.previous);
-                parseBlockNoParentheses(bracketLet, sequence, true);
-                MatrixConstructor constructor = constructMatrix(bracketLet);
+                MatrixConstructor constructor;
+                if (start.next == t) {
+                    // Special case. Create an empty matrix
+                    constructor = new MatrixConstructor(functions.getManagerTemp());
+                } else {
+                    // Compute everything inside the [ ], this will leave a
+                    // series of variables and semicolons hopefully
+                    TokenList bracketLeft = tokens.extractSubList(start.next, t.previous);
+                    parseBlockNoParentheses(bracketLeft, sequence, true);
+                    constructor = constructMatrix(bracketLeft);
+                }
 
                 // define the matrix op and inject into token list
                 Operation.Info info = Operation.matrixConstructor(constructor);
@@ -1170,7 +1177,7 @@ public class Equation {
 
     private MatrixConstructor constructMatrix( TokenList bracketLet ) {
         // Go through the bracket and construct the matrix
-        MatrixConstructor constructor = new MatrixConstructor(functions.getManagerTemp());
+        var constructor = new MatrixConstructor(functions.getManagerTemp());
 
         TokenList.Token n = bracketLet.first;
 

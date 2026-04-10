@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.equation;
 
+import lombok.Getter;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 
@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class MatrixConstructor {
 
-    VariableMatrix output;
+    final @Getter VariableMatrix output;
     List<Item> items = new ArrayList<Item>();
 
     public MatrixConstructor( ManagerTempVariables manager ) {
@@ -52,6 +52,12 @@ public class MatrixConstructor {
     }
 
     public void construct() {
+        // Special case for an empty matrix
+        if (items.isEmpty()) {
+            output.matrix.reshape(0, 0);
+            return;
+        }
+
         // make sure the last item is and end row
         if (!items.get(items.size() - 1).endRow)
             endRow();
@@ -106,13 +112,7 @@ public class MatrixConstructor {
         }
     }
 
-    public VariableMatrix getOutput() {
-        return output;
-    }
-
     protected void setToRequiredSize( DMatrixRMaj matrix ) {
-
-
         int matrixRow = 0;
         int matrixCol = 0;
         List<Item> row = new ArrayList<Item>();
