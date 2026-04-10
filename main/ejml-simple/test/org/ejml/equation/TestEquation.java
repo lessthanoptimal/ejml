@@ -29,19 +29,17 @@ import org.junit.jupiter.api.Test;
 import static org.ejml.equation.TokenList.Type;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("deprecation")
 public class TestEquation extends EjmlStandardJUnit {
 
-    /**
-     * Basic test which checks ability parse basic operators and order of operation
-     */
-    @Test
-    public void compile_basic() {
-        Equation eq = new Equation();
+    /// Basic test which checks ability parse basic operators and order of operation
+    @Test void compile_basic() {
+        var eq = new Equation();
 
-        SimpleMatrix A = new SimpleMatrix(5, 6);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(5, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random_DDRM(5, 4, -1, 1, rand);
-        SimpleMatrix D = SimpleMatrix.random_DDRM(4, 6, -1, 1, rand);
+        var A = new SimpleMatrix(5, 6);
+        var B = SimpleMatrix.random_DDRM(5, 6, -1, 1, rand);
+        var C = SimpleMatrix.random_DDRM(5, 4, -1, 1, rand);
+        var D = SimpleMatrix.random_DDRM(4, 6, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -49,41 +47,35 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.alias(D, "D");
 
         Sequence sequence = eq.compile("A=B+C*D-B");
-        SimpleMatrix expected = C.mult(D);
+        var expected = C.mult(D);
         sequence.perform();
-        assertTrue(expected.isIdentical(A,1e-15));
+        assertTrue(expected.isIdentical(A, 1e-15));
     }
 
-    /**
-     * Output is included in input
-     */
-    @Test
-    public void compile_output() {
-        Equation eq = new Equation();
+    /// Output is included in input
+    @Test void compile_output() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
 
         Sequence sequence = eq.compile("A=A*B");
-        SimpleMatrix expected = A.mult(B);
+        var expected = A.mult(B);
         sequence.perform();
-        assertTrue(expected.isIdentical(A,1e-15));
+        assertTrue(expected.isIdentical(A, 1e-15));
     }
 
-    /**
-     * Results are assigned to a sub-matrix
-     */
-    @Test
-    public void compile_assign_submatrix() {
-        Equation eq = new Equation();
+    /// Results are assigned to a sub-matrix
+    @Test void compile_assign_submatrix() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(2, 5, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(2, 5, -1, 1, rand);
 
-        SimpleMatrix A_orig = A.copy();
+        var A_orig = A.copy();
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -93,7 +85,7 @@ public class TestEquation extends EjmlStandardJUnit {
 
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 6; x++) {
-                if( x < 5 && y >= 2 && y <= 3 ) {
+                if (x < 5 && y >= 2 && y <= 3) {
                     assertEquals(A.get(y, x), B.get(y - 2, x));
                 } else {
                     assertEquals(A.get(y, x), A_orig.get(y, x), x + " " + y);
@@ -102,14 +94,13 @@ public class TestEquation extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void compile_assign_submatrix_special() {
-        Equation eq = new Equation();
+    @Test void compile_assign_submatrix_special() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
 
-        SimpleMatrix A_orig = A.copy();
+        var A_orig = A.copy();
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -118,7 +109,7 @@ public class TestEquation extends EjmlStandardJUnit {
 
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 5; x++) {
-                if( y >= 2 ) {
+                if (y >= 2) {
                     assertEquals(A.get(y, x), B.get(y - 2, x));
                 } else {
                     assertEquals(A.get(y, x), A_orig.get(y, x), x + " " + y);
@@ -127,33 +118,32 @@ public class TestEquation extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void compile_assign_submatrix_scalar() {
-        Equation eq = new Equation();
+    @Test void compile_assign_submatrix_scalar() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
 
         // single element
         eq.process("A(1,2)=0.5");
 
-        assertEquals(A.get(1, 2), 0.5, UtilEjml.TEST_F64);
+        assertEquals(0.5, A.get(1, 2), UtilEjml.TEST_F64);
 
         // multiple elements
         eq.process("A(1:2,2:4)=0.5");
 
         for (int i = 1; i <= 2; i++) {
             for (int j = 2; j <= 4; j++) {
-                assertEquals(A.get(i, j), 0.5, UtilEjml.TEST_F64);
+                assertEquals(0.5, A.get(i, j), UtilEjml.TEST_F64);
             }
         }
     }
-    @Test
-    public void compile_assign_submatrix_IndexMath() {
-        Equation eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+    @Test void compile_assign_submatrix_IndexMath() {
+        var eq = new Equation();
+
+        var A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
 
         eq.alias(A, "A");
 
@@ -167,20 +157,16 @@ public class TestEquation extends EjmlStandardJUnit {
 
         for (int i = 0; i <= 2; i++) {
             for (int j = 2; j <= 3; j++) {
-                assertEquals(A.get(i, j), 0.5, UtilEjml.TEST_F64);
+                assertEquals(0.5, A.get(i, j), UtilEjml.TEST_F64);
             }
         }
     }
 
+    /// Lazily declare a variable. Which means it is not explicitly aliased
+    @Test void assign_lazy() {
+        var eq = new Equation();
 
-    /**
-     * Lazily declare a variable. Which means it is not explicitly aliased
-     */
-    @Test
-    public void assign_lazy() {
-        Equation eq = new Equation();
-
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
         eq.alias(A, "A");
         eq.process("B=A");
 
@@ -189,23 +175,17 @@ public class TestEquation extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isEquals(A.getMatrix(), B));
     }
 
-    /**
-     * Place an unknown variable on the right and see if it blows up
-     */
-    @Test
-    public void assign_lazy_right() {
+    /// Place an unknown variable on the right and see if it blows up
+    @Test void assign_lazy_right() {
         Assertions.assertThrows(RuntimeException.class, () -> new Equation().process("B=A"));
     }
 
-    /**
-     * See if matrices are automatically resized when assinged a value
-     */
-    @Test
-    public void assign_resize_lazy() {
-        Equation eq = new Equation();
+    /// See if matrices are automatically resized when assinged a value
+    @Test void assign_resize_lazy() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(2, 3, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 5, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(2, 3, -1, 1, rand);
         eq.alias(A, "A");
         eq.alias(B, "B");
         eq.process("B=A");
@@ -213,14 +193,13 @@ public class TestEquation extends EjmlStandardJUnit {
         assertTrue(A.isIdentical(B, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void compile_parentheses() {
-        Equation eq = new Equation();
+    @Test void compile_parentheses() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix R = new SimpleMatrix(6, 6);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -228,27 +207,26 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.alias(R, "R");
 
         eq.process("R=A*(B+C)");
-        SimpleMatrix expected = A.mult(B.plus(C));
+        var expected = A.mult(B.plus(C));
         assertTrue(expected.isIdentical(R, 1e-15));
 
         // try again with pointless ones
         eq.process("R=(A*((B+(C))))");
-        assertTrue(expected.isIdentical(R,1e-15));
+        assertTrue(expected.isIdentical(R, 1e-15));
     }
 
-    @Test
-    public void compile_parentheses_extract() {
-        Equation eq = new Equation();
+    @Test void compile_parentheses_extract() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
 
         Sequence sequence = eq.compile("A=B(2:7,1:6)");
         sequence.perform();
-        assertTrue(A.isIdentical(B.extractMatrix(2,8,1,7), 1e-15));
+        assertTrue(A.isIdentical(B.extractMatrix(2, 8, 1, 7), 1e-15));
 
         // get single values now
         A = SimpleMatrix.random_DDRM(6, 1, -1, 1, rand);
@@ -262,33 +240,31 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.alias(A, "A");
         sequence = eq.compile("A=(B(2:7,3:6))(0:0,1:2)");
         sequence.perform();
-        assertTrue(A.isIdentical(B.extractMatrix(2,3,4,6), 1e-15));
+        assertTrue(A.isIdentical(B.extractMatrix(2, 3, 4, 6), 1e-15));
     }
 
-    @Test
-    public void compile_parentheses_extractSpecial() {
-        Equation eq = new Equation();
+    @Test void compile_parentheses_extractSpecial() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 8, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 8, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
 
         eq.process("A=B(2:,:)");
-        assertTrue(A.isIdentical(B.extractMatrix(2,8,0,8), 1e-15));
+        assertTrue(A.isIdentical(B.extractMatrix(2, 8, 0, 8), 1e-15));
 
         B = SimpleMatrix.random_DDRM(6, 10, -1, 1, rand);
         eq.alias(B, "B");
         eq.process("A=B(:,2:)");
-        assertTrue(A.isIdentical(B.extractMatrix(0,6,2,10), 1e-15));
+        assertTrue(A.isIdentical(B.extractMatrix(0, 6, 2, 10), 1e-15));
     }
 
-    @Test
-    public void compile_parentheses_extractScalar_2D() {
-        Equation eq = new Equation();
+    @Test void compile_parentheses_extractScalar_2D() {
+        var eq = new Equation();
 
-        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(B, "B");
 
@@ -298,11 +274,10 @@ public class TestEquation extends EjmlStandardJUnit {
         assertEquals(eq.lookupDouble("A"), B.get(1, 2), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void compile_parentheses_extractScalar_1D() {
-        Equation eq = new Equation();
+    @Test void compile_parentheses_extractScalar_1D() {
+        var eq = new Equation();
 
-        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(B, "B");
 
@@ -319,27 +294,25 @@ public class TestEquation extends EjmlStandardJUnit {
         assertEquals(eq.lookupDouble("C"), B.get(1, 2), UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void compile_parentheses_extract_IndexMath() {
-        Equation eq = new Equation();
+    @Test void compile_parentheses_extract_IndexMath() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(8, 8, -1, 1, rand);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
-        eq.alias(1,"i");
+        eq.alias(1, "i");
 
         Sequence sequence = eq.compile("A=B((2-i):7,1:(6+i))");
         sequence.perform();
-        assertTrue(A.isIdentical(B.extractMatrix(1,8,1,8), 1e-15));
+        assertTrue(A.isIdentical(B.extractMatrix(1, 8, 1, 8), 1e-15));
     }
 
-    @Test
-    public void compile_neg() {
-        Equation eq = new Equation();
+    @Test void compile_neg() {
+        var eq = new Equation();
 
-        eq.alias(1, "A",2, "B");
+        eq.alias(1, "A", 2, "B");
 
         eq.process("A=-B");
         assertEquals(-2, eq.lookupInteger("A"));
@@ -347,19 +320,18 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.process("A=B--B");
         assertEquals(4, eq.lookupInteger("A"));
         eq.process("A=B+-B");
-        assertEquals(0,eq.lookupInteger("A"));
+        assertEquals(0, eq.lookupInteger("A"));
         eq.process("A=B---5");
         assertEquals(2 - 5, eq.lookupInteger("A"));
         eq.process("A=B--5");
-        assertEquals(2+5,eq.lookupInteger("A"));
+        assertEquals(2 + 5, eq.lookupInteger("A"));
     }
 
-    @Test
-    public void compile_constructMatrix_scalars() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_scalars() {
+        var eq = new Equation();
 
-        SimpleMatrix expected = new SimpleMatrix(new double[][]{{0,1,2,3},{4,5,6,7},{8,1,1,1}});
-        SimpleMatrix A = new SimpleMatrix(3,4);
+        var expected = new SimpleMatrix(new double[][]{{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 1, 1, 1}});
+        var A = new SimpleMatrix(3, 4);
 
         eq.alias(A, "A");
         Sequence sequence = eq.compile("A=[0 1 2 3; 4 5 6 7;8 1 1 1]");
@@ -367,87 +339,80 @@ public class TestEquation extends EjmlStandardJUnit {
         assertTrue(A.isIdentical(expected, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void compile_constructMatrix_doubles() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_doubles() {
+        var eq = new Equation();
 
         eq.process("A=[1 2 3 4.5 6 7.7 8.8 9]");
         DMatrixRMaj found = eq.lookupDDRM("A");
 
-        double[] expected = new double[]{1,2,3,4.5,6,7.7,8.8,9};
+        double[] expected = new double[]{1, 2, 3, 4.5, 6, 7.7, 8.8, 9};
 
         for (int i = 0; i < expected.length; i++) {
-            assertEquals(found.get(i),expected[i],UtilEjml.TEST_F64);
+            assertEquals(found.get(i), expected[i], UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_constructMatrix_for() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_for() {
+        var eq = new Equation();
 
         eq.process("A=[ 2:2:10 12 14 ]");
         DMatrixRMaj found = eq.lookupDDRM("A");
 
-        assertEquals(7,found.getNumCols());
-        assertEquals(1,found.getNumRows());
+        assertEquals(7, found.getNumCols());
+        assertEquals(1, found.getNumRows());
 
         for (int i = 0; i < 7; i++) {
-            assertEquals(found.get(i),2+2*i,UtilEjml.TEST_F64);
+            assertEquals(found.get(i), 2 + 2*i, UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_constructMatrix_commas() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_commas() {
+        var eq = new Equation();
 
         eq.process("A=[1 2 , 3, 4.5,-6 7]");
         DMatrixRMaj found = eq.lookupDDRM("A");
 
-        double[] expected = new double[]{1,2,3,4.5,-6,7};
+        double[] expected = new double[]{1, 2, 3, 4.5, -6, 7};
 
         for (int i = 0; i < expected.length; i++) {
-            assertEquals(found.get(i),expected[i],UtilEjml.TEST_F64);
+            assertEquals(found.get(i), expected[i], UtilEjml.TEST_F64);
         }
     }
 
+    @Test void compile_constructMatrix_MatrixAndScalar() {
+        var eq = new Equation();
 
-    @Test
-    public void compile_constructMatrix_MatrixAndScalar() {
-        Equation eq = new Equation();
-
-        SimpleMatrix A = new SimpleMatrix(new double[][]{{0,1,2,3}});
-        SimpleMatrix found = new SimpleMatrix(1,5);
+        var A = new SimpleMatrix(new double[][]{{0, 1, 2, 3}});
+        var found = new SimpleMatrix(1, 5);
 
         eq.alias(A, "A");
         eq.alias(found, "found");
         Sequence sequence = eq.compile("found=[A 4]");
         sequence.perform();
         for (int i = 0; i < 5; i++) {
-            assertEquals(found.get(0,i),i,1e-4);
+            assertEquals(found.get(0, i), i, 1e-4);
         }
     }
 
-    @Test
-    public void compile_constructMatrix_Operations() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_Operations() {
+        var eq = new Equation();
 
-        SimpleMatrix A = new SimpleMatrix(new double[][]{{0,1,2,3}});
-        SimpleMatrix found = new SimpleMatrix(5,1);
+        var A = new SimpleMatrix(new double[][]{{0, 1, 2, 3}});
+        var found = new SimpleMatrix(5, 1);
 
         eq.alias(A, "A");
         eq.alias(found, "found");
         Sequence sequence = eq.compile("found=[A' ; 4]");
         sequence.perform();
         for (int i = 0; i < 5; i++) {
-            assertEquals(found.get(i,0),i,1e-4);
+            assertEquals(found.get(i, 0), i, 1e-4);
         }
     }
 
-    @Test
-    public void compile_constructMatrix_Inner() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_Inner() {
+        var eq = new Equation();
 
-        SimpleMatrix found = new SimpleMatrix(3,2);
+        var found = new SimpleMatrix(3, 2);
 
         eq.alias(found, "found");
         Sequence sequence = eq.compile("found=[[1 2 3]' [4 5 [6]]']");
@@ -455,105 +420,97 @@ public class TestEquation extends EjmlStandardJUnit {
         int index = 1;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 3; y++) {
-                assertEquals(found.get(y,x),index++,UtilEjml.TEST_F64,x+" "+y);
+                assertEquals(found.get(y, x), index++, UtilEjml.TEST_F64, x + " " + y);
             }
         }
     }
 
-    @Test
-    public void compile_constructMatrix_ForSequence_Case0() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_ForSequence_Case0() {
+        var eq = new Equation();
 
         eq.process("found=[[1:4]' [2:2:8]']");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 2; x++) {
-                assertEquals((x+1)*(y+1),found.get(y,x),UtilEjml.TEST_F64,x+" "+y);
+                assertEquals((x + 1)*(y + 1), found.get(y, x), UtilEjml.TEST_F64, x + " " + y);
             }
         }
     }
 
-    @Test
-    public void compile_constructMatrix_ForSequence_Case1() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_ForSequence_Case1() {
+        var eq = new Equation();
 
         eq.process("found=[1:4 5:1:8]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
-        assertEquals(1,found.numRows());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
+        assertEquals(1, found.numRows());
         assertEquals(8, found.numCols());
 
         for (int x = 0; x < 8; x++) {
-            assertEquals(x+1,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(x + 1, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_constructMatrix_ForSequence_Case2() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_ForSequence_Case2() {
+        var eq = new Equation();
 
         eq.process("found=[1 2 3 4 5:1:8]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
-        assertEquals(1,found.numRows());
-        assertEquals(8,found.numCols());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("found"));
+        assertEquals(1, found.numRows());
+        assertEquals(8, found.numCols());
 
         for (int x = 0; x < 8; x++) {
-            assertEquals(x+1,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(x + 1, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_constructMatrix_ParenSubMatrixAndComma() {
-        Equation eq = new Equation();
+    @Test void compile_constructMatrix_ParenSubMatrixAndComma() {
+        var eq = new Equation();
 
         eq.process("b=normF([[1 2],1])");
         double b = eq.lookupDouble("b");
-        double expected = Math.sqrt(1+4+1);
+        double expected = Math.sqrt(1 + 4 + 1);
 
-        assertEquals(expected,b,UtilEjml.TEST_F64);
-
+        assertEquals(expected, b, UtilEjml.TEST_F64);
     }
 
-    @Test
-    public void compile_assign_IntSequence_Case0() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case0() {
+        var eq = new Equation();
 
         eq.process("a=5:1:8");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
-        assertEquals(1,found.numRows());
-        assertEquals(4,found.numCols());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+        assertEquals(1, found.numRows());
+        assertEquals(4, found.numCols());
 
         for (int x = 0; x < 4; x++) {
-            assertEquals(x+5,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(x + 5, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
     // not sure how I feel about this, but its better to explicity check this behavior
-    @Test
-    public void compile_assign_IntSequence_Case1() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case1() {
+        var eq = new Equation();
 
         eq.process("a=2 3 4 5 6");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
-        assertEquals(1,found.numRows());
-        assertEquals(5,found.numCols());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+        assertEquals(1, found.numRows());
+        assertEquals(5, found.numCols());
 
         for (int x = 0; x < 5; x++) {
-            assertEquals(x+2,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(x + 2, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_assign_IntSequence_Case2() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case2() {
+        var eq = new Equation();
 
-        String[] tests = new String[]{"2 3 4 5 6 7:9","2:4 5 6 7 8 9"};
+        String[] tests = new String[]{"2 3 4 5 6 7:9", "2:4 5 6 7 8 9"};
 
-        for( String s : tests ) {
+        for (String s : tests) {
             eq.process("a=" + s);
             eq.process("b=[a]");
-            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+            var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
             assertEquals(1, found.numRows());
             assertEquals(8, found.numCols());
 
@@ -563,16 +520,15 @@ public class TestEquation extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void compile_assign_IntSequence_Case3() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case3() {
+        var eq = new Equation();
 
-        String[] tests = new String[]{"2 3:5","2:4 5"};
+        String[] tests = new String[]{"2 3:5", "2:4 5"};
 
-        for( String s : tests ) {
-            eq.process("a="+s);
+        for (String s : tests) {
+            eq.process("a=" + s);
             eq.process("b=[a]");
-            SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+            var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
             assertEquals(1, found.numRows());
             assertEquals(4, found.numCols());
 
@@ -582,62 +538,58 @@ public class TestEquation extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    public void compile_assign_IntSequence_Case4() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case4() {
+        var eq = new Equation();
 
         // needs to realize () is not a function call
         eq.process("a=3 2 1 0 (-1) (-2)");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
-        assertEquals(1,found.numRows());
-        assertEquals(6,found.numCols());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+        assertEquals(1, found.numRows());
+        assertEquals(6, found.numCols());
 
         for (int x = 0; x < 6; x++) {
-            assertEquals(3-x,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(3 - x, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_assign_IntSequence_Case5() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case5() {
+        var eq = new Equation();
 
         // subtraction should have a higher priority than explicit list
         eq.process("a=3 2 1 5 - 3 - 2");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
-        assertEquals(1,found.numRows());
-        assertEquals(4,found.numCols());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+        assertEquals(1, found.numRows());
+        assertEquals(4, found.numCols());
 
         for (int x = 0; x < 4; x++) {
-            assertEquals(3-x,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(3 - x, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_assign_IntSequence_Case6() {
-        Equation eq = new Equation();
+    @Test void compile_assign_IntSequence_Case6() {
+        var eq = new Equation();
 
         // Use commas to clarify the meaning of negative
         eq.process("a=3 2 1,0,-1,0 - 2");
         eq.process("b=[a]");
-        SimpleMatrix found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
-        assertEquals(1,found.numRows());
-        assertEquals(6,found.numCols());
+        var found = SimpleMatrix.wrap(eq.lookupDDRM("b"));
+        assertEquals(1, found.numRows());
+        assertEquals(6, found.numCols());
 
         for (int x = 0; x < 6; x++) {
-            assertEquals(3-x,found.get(0,x),UtilEjml.TEST_F64);
+            assertEquals(3 - x, found.get(0, x), UtilEjml.TEST_F64);
         }
     }
 
-    @Test
-    public void compile_transpose() {
-        Equation eq = new Equation();
+    @Test void compile_transpose() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix R = new SimpleMatrix(6, 6);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -645,19 +597,18 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.alias(R, "R");
 
         Sequence sequence = eq.compile("R=A'*(B'+C)'+inv(B)'");
-        SimpleMatrix expected = A.transpose().mult(B.transpose().plus(C).transpose()).plus(B.invert().transpose());
+        var expected = A.transpose().mult(B.transpose().plus(C).transpose()).plus(B.invert().transpose());
         sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
     }
 
-    @Test
-    public void compile_elementWise() {
-        Equation eq = new Equation();
+    @Test void compile_elementWise() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix R = new SimpleMatrix(6, 6);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -665,17 +616,16 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.alias(R, "R");
 
         Sequence sequence = eq.compile("R=A.*(B./C)");
-        SimpleMatrix expected = A.elementMult(B.elementDiv(C));
+        var expected = A.elementMult(B.elementDiv(C));
         sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
     }
 
-    @Test
-    public void compile_double() {
-        Equation eq = new Equation();
+    @Test void compile_double() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
         double C = 2.5;
         double D = 1.7;
 
@@ -687,7 +637,7 @@ public class TestEquation extends EjmlStandardJUnit {
         VariableDouble E = eq.lookupVariable("E");
 
         Sequence sequence = eq.compile("A=2.5*B");
-        SimpleMatrix expected = B.scale(C);
+        var expected = B.scale(C);
         sequence.perform();
         assertTrue(expected.isIdentical(A, 1e-15));
 
@@ -697,7 +647,7 @@ public class TestEquation extends EjmlStandardJUnit {
 
         sequence = eq.compile("E=2.5*D");
         sequence.perform();
-        assertEquals(C * D, E.value, UtilEjml.TEST_F64);
+        assertEquals(C*D, E.value, UtilEjml.TEST_F64);
 
         // try exponential formats
         sequence = eq.compile("E=2.001e-6*1e3");
@@ -705,17 +655,14 @@ public class TestEquation extends EjmlStandardJUnit {
         assertEquals(2.001e-6*1e3, E.value, UtilEjml.TEST_F64);
     }
 
-    /**
-     * Function with one input
-     */
-    @Test
-    public void compile_function_one() {
-        Equation eq = new Equation();
+    /// Function with one input
+    @Test void compile_function_one() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
-        SimpleMatrix R = new SimpleMatrix(6, 6);
+        var A = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var C = SimpleMatrix.random_DDRM(6, 6, -1, 1, rand);
+        var R = new SimpleMatrix(6, 6);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
@@ -724,13 +671,13 @@ public class TestEquation extends EjmlStandardJUnit {
 
         // easy case
         Sequence sequence = eq.compile("R=inv(A)");
-        SimpleMatrix expected = A.invert();
+        var expected = A.invert();
         sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
 
         // harder case
         sequence = eq.compile("R=inv(A)+det((A+B)*C)*B");
-        expected = A.invert().plus( B.scale(A.plus(B).mult(C).determinant()));
+        expected = A.invert().plus(B.scale(A.plus(B).mult(C).determinant()));
         sequence.perform();
         assertTrue(expected.isIdentical(R, 1e-15));
 
@@ -738,26 +685,24 @@ public class TestEquation extends EjmlStandardJUnit {
         try {
             eq.compile("R=inv*B");
             fail("Implement");
-        } catch( RuntimeException ignore ){}
+        } catch (RuntimeException ignore) {
+        }
     }
 
-    /**
-     * Function with two input
-     */
-    @Test
-    public void compile_function_N() {
-        Equation eq = new Equation();
+    /// Function with two input
+    @Test void compile_function_N() {
+        var eq = new Equation();
 
-        SimpleMatrix A = SimpleMatrix.random_DDRM(3, 4, -1, 1, rand);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
-        SimpleMatrix R = new SimpleMatrix(12, 20);
+        var A = SimpleMatrix.random_DDRM(3, 4, -1, 1, rand);
+        var B = SimpleMatrix.random_DDRM(4, 5, -1, 1, rand);
+        var R = new SimpleMatrix(12, 20);
 
         eq.alias(A, "A");
         eq.alias(B, "B");
         eq.alias(R, "R");
 
         eq.process("R=kron(A,B)");
-        SimpleMatrix expected = A.kron(B);
+        var expected = A.kron(B);
         assertTrue(expected.isIdentical(R, 1e-15));
 
         eq.process("R=kron(A+(A')',(B+B))");
@@ -765,11 +710,10 @@ public class TestEquation extends EjmlStandardJUnit {
         assertTrue(expected.isIdentical(R, 1e-15));
     }
 
-    @Test
-    public void handleParentheses() {
-        Equation eq = new Equation();
+    @Test void handleParentheses() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
-        eq.functions.setManagerTemp( managerTemp );
+        eq.functions.setManagerTemp(managerTemp);
 
         eq.alias(new DMatrixRMaj(1, 1), "A");
         eq.alias(new DMatrixRMaj(1, 1), "B");
@@ -777,85 +721,83 @@ public class TestEquation extends EjmlStandardJUnit {
 
         // handle empty case
         Sequence sequence = new Sequence();
-        TokenList tokens = eq.extractTokens("((()))()",managerTemp);
-        eq.handleParentheses(tokens,sequence);
-        assertEquals(0,sequence.operations.size());
-        assertEquals(0,tokens.size);
+        TokenList tokens = eq.extractTokens("((()))()", managerTemp);
+        eq.handleParentheses(tokens, sequence);
+        assertEquals(0, sequence.operations.size());
+        assertEquals(0, tokens.size);
 
         // embedded with just one variable
         sequence = new Sequence();
-        tokens = eq.extractTokens("(((A)))",managerTemp);
+        tokens = eq.extractTokens("(((A)))", managerTemp);
         eq.insertFunctionsAndVariables(tokens);
-        eq.handleParentheses(tokens,sequence);
-        assertEquals(0,sequence.operations.size());
-        assertEquals(1,tokens.size);
-        assertSame(tokens.first.getType(), Type.VARIABLE);
+        eq.handleParentheses(tokens, sequence);
+        assertEquals(0, sequence.operations.size());
+        assertEquals(1, tokens.size);
+        assertSame(Type.VARIABLE, tokens.first.getType());
 
         // pointless
         sequence = new Sequence();
-        tokens = eq.extractTokens("((A)*(B)+(C))",managerTemp);
+        tokens = eq.extractTokens("((A)*(B)+(C))", managerTemp);
         eq.insertFunctionsAndVariables(tokens);
-        eq.handleParentheses(tokens,sequence);
-        assertEquals(2,sequence.operations.size());
-        assertEquals(1,tokens.size);
-        assertSame(tokens.first.getType(), Type.VARIABLE);
+        eq.handleParentheses(tokens, sequence);
+        assertEquals(2, sequence.operations.size());
+        assertEquals(1, tokens.size);
+        assertSame(Type.VARIABLE, tokens.first.getType());
     }
 
-    @Test
-    public void parseOperations() {
-        Equation eq = new Equation();
+    @Test void parseOperations() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
-        eq.functions.setManagerTemp( managerTemp );
+        eq.functions.setManagerTemp(managerTemp);
 
         eq.alias(new DMatrixRMaj(1, 1), "A");
         eq.alias(new DMatrixRMaj(1, 1), "B");
         eq.alias(new DMatrixRMaj(1, 1), "C");
 
         // give it an empty list
-        TokenList tokens = eq.extractTokens("",managerTemp);
+        TokenList tokens = eq.extractTokens("", managerTemp);
         eq.insertFunctionsAndVariables(tokens);
 
         Sequence sequence = new Sequence();
 
         eq.parseOperationsLR(new Symbol[]{Symbol.TIMES}, tokens, sequence);
-        assertEquals(0,sequence.operations.size());
-        assertEquals(0,tokens.size);
+        assertEquals(0, sequence.operations.size());
+        assertEquals(0, tokens.size);
 
         // other cases
-        tokens = eq.extractTokens("B+B-A*B*A",managerTemp);
+        tokens = eq.extractTokens("B+B-A*B*A", managerTemp);
         eq.insertFunctionsAndVariables(tokens);
         sequence = new Sequence();
 
         eq.parseOperationsLR(new Symbol[]{Symbol.TIMES}, tokens, sequence);
 
-        assertEquals(2,sequence.operations.size());
-        assertEquals(5,tokens.size);
-        assertSame(tokens.last.getType(), Type.VARIABLE);
+        assertEquals(2, sequence.operations.size());
+        assertEquals(5, tokens.size);
+        assertSame(Type.VARIABLE, tokens.last.getType());
         assertSame(Symbol.MINUS, tokens.last.previous.getSymbol());
 
-        tokens = eq.extractTokens("B+B*B*A-B",managerTemp);
+        tokens = eq.extractTokens("B+B*B*A-B", managerTemp);
         eq.insertFunctionsAndVariables(tokens);
         sequence = new Sequence();
 
         eq.parseOperationsLR(new Symbol[]{Symbol.PLUS, Symbol.MINUS}, tokens, sequence);
 
-        assertEquals(2,sequence.operations.size());
+        assertEquals(2, sequence.operations.size());
         assertEquals(5, tokens.size);
-        assertSame(tokens.last.getType(), Type.VARIABLE);
+        assertSame(Type.VARIABLE, tokens.last.getType());
         assertSame(Symbol.TIMES, tokens.last.previous.getSymbol());
         assertSame(Symbol.TIMES, tokens.first.next.next.next.getSymbol());
     }
 
-    @Test
-    public void createOp() {
-        Equation eq = new Equation();
+    @Test void createOp() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
-        eq.functions.setManagerTemp( managerTemp );
+        eq.functions.setManagerTemp(managerTemp);
 
         eq.alias(new DMatrixRMaj(1, 1), "A");
         eq.alias(new DMatrixRMaj(1, 1), "B");
 
-        TokenList tokens = eq.extractTokens("A=A*B",managerTemp);
+        TokenList tokens = eq.extractTokens("A=A*B", managerTemp);
 
         TokenList.Token t0 = tokens.first.next.next;
         TokenList.Token t1 = t0.next;
@@ -863,17 +805,16 @@ public class TestEquation extends EjmlStandardJUnit {
 
         Sequence sequence = new Sequence();
 
-        TokenList.Token found = eq.createOp(t0,t1,t2,tokens,sequence);
-        assertSame(found.getType(), Type.VARIABLE);
+        TokenList.Token found = eq.createOp(t0, t1, t2, tokens, sequence);
+        assertSame(Type.VARIABLE, found.getType());
         assertEquals(3, tokens.size);
         assertSame(Symbol.ASSIGN, tokens.first.next.getSymbol());
         assertSame(found, tokens.last);
         assertEquals(1, sequence.operations.size());
     }
 
-    @Test
-    public void lookupVariable() {
-        Equation eq = new Equation();
+    @Test void lookupVariable() {
+        var eq = new Equation();
         eq.alias(new DMatrixRMaj(1, 1), "A");
         eq.alias(new DMatrixRMaj(1, 1), "BSD");
 
@@ -882,204 +823,262 @@ public class TestEquation extends EjmlStandardJUnit {
         assertNull(eq.lookupVariable("dDD"));
     }
 
-    @Test
-    public void extractTokens() {
-        Equation eq = new Equation();
+    @Test void extractTokens() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        TokenList list = eq.extractTokens("A = A*A + BSD*(A+BSD) -A*BSD",managerTemp);
+        TokenList list = eq.extractTokens("A = A*A + BSD*(A+BSD) -A*BSD", managerTemp);
 
         TokenList.Token t = list.getFirst();
 
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
-        assertEquals("BSD", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
-        assertEquals("BSD", t.word); t = t.next;
-        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol());
+        t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol());
+        t = t.next;
+        assertEquals("BSD", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol());
+        t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol());
+        t = t.next;
+        assertEquals("BSD", t.word);
+        t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
         assertEquals("BSD", t.word);
         assertNull(t.next);
     }
 
-    @Test
-    public void extractTokens_elementWise() {
-        Equation eq = new Equation();
+    @Test void extractTokens_elementWise() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        TokenList list = eq.extractTokens("A = (A.*A)./BSD",managerTemp);
+        TokenList list = eq.extractTokens("A = (A.*A)./BSD", managerTemp);
 
         TokenList.Token t = list.getFirst();
 
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
-        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.ELEMENT_TIMES, t.getSymbol()); t = t.next;
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
-        assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol()); t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol());
+        t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.ELEMENT_TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol());
+        t = t.next;
         assertEquals("BSD", t.word);
         assertNull(t.next);
     }
 
-    @Test
-    public void extractTokens_integers() {
-        Equation eq = new Equation();
+    @Test void extractTokens_integers() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        TokenList list = eq.extractTokens("A*2 + 345 + 56*BSD*934",managerTemp);
+        TokenList list = eq.extractTokens("A*2 + 345 + 56*BSD*934", managerTemp);
 
         TokenList.Token t = list.getFirst();
 
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals(2, ((VariableInteger) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
-        assertEquals(345, ((VariableInteger) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
-        assertEquals(56, ((VariableInteger) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals("BSD", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals(934, ((VariableInteger) t.getVariable()).value);
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals(2, ((VariableInteger)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol());
+        t = t.next;
+        assertEquals(345, ((VariableInteger)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol());
+        t = t.next;
+        assertEquals(56, ((VariableInteger)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals("BSD", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals(934, ((VariableInteger)t.getVariable()).value);
         assertNull(t.next);
     }
 
-    @Test
-    public void extractTokens_doubles() {
-        Equation eq = new Equation();
+    @Test void extractTokens_doubles() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        TokenList list = eq.extractTokens("A*2. + 345.034 + 0.123*BSD*5.1",managerTemp);
+        TokenList list = eq.extractTokens("A*2. + 345.034 + 0.123*BSD*5.1", managerTemp);
 
         TokenList.Token t = list.getFirst();
 
-        assertEquals("A", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals(2, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
-        assertEquals(345.034, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.PLUS, t.getSymbol()); t = t.next;
-        assertEquals(0.123, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals("BSD", t.word); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals(5.1, ((VariableDouble) t.getVariable()).value);
+        assertEquals("A", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals(2, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol());
+        t = t.next;
+        assertEquals(345.034, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.PLUS, t.getSymbol());
+        t = t.next;
+        assertEquals(0.123, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals("BSD", t.word);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals(5.1, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
     }
 
-    /**
-     * See if the minus symbol is handled correctly. It's meaning can very depending on the situation.
-     */
-    @Test
-    public void extractTokens_minus() {
-        Equation eq = new Equation();
+    /// See if the minus symbol is handled correctly. It's meaning can very depending on the situation.
+    @Test void extractTokens_minus() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        TokenList list = eq.extractTokens("- 1.2",managerTemp);
+        TokenList list = eq.extractTokens("- 1.2", managerTemp);
         TokenList.Token t = list.getFirst();
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals(1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("-1.2",managerTemp);
+        list = eq.extractTokens("-1.2", managerTemp);
         t = list.getFirst();
-        assertEquals(-1.2, ((VariableDouble) t.getVariable()).value);
+        assertEquals(-1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("2.1-1.2",managerTemp);
+        list = eq.extractTokens("2.1-1.2", managerTemp);
         t = list.getFirst();
-        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertEquals(2.1, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals(1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("2.1 -1.2",managerTemp);
+        list = eq.extractTokens("2.1 -1.2", managerTemp);
         t = list.getFirst();
-        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertEquals(2.1, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals(1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("2.1 - -1.2",managerTemp);
+        list = eq.extractTokens("2.1 - -1.2", managerTemp);
         t = list.getFirst();
-        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals(-1.2, ((VariableDouble) t.getVariable()).value);
+        assertEquals(2.1, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals(-1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("inv(2.1) -1.2",managerTemp);
+        list = eq.extractTokens("inv(2.1) -1.2", managerTemp);
         t = list.getFirst();
-        assertEquals("inv", t.word); t = t.next;
-        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
-        assertEquals(2.1, ((VariableDouble) t.getVariable()).value); t = t.next;
-        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertEquals("inv", t.word);
+        t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol());
+        t = t.next;
+        assertEquals(2.1, ((VariableDouble)t.getVariable()).value);
+        t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals(1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("= -1.2",managerTemp);
+        list = eq.extractTokens("= -1.2", managerTemp);
         t = list.getFirst();
-        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
-        assertEquals(-1.2, ((VariableDouble) t.getVariable()).value);
+        assertSame(Symbol.ASSIGN, t.getSymbol());
+        t = t.next;
+        assertEquals(-1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
 
-        list = eq.extractTokens("= - 1.2",managerTemp);
+        list = eq.extractTokens("= - 1.2", managerTemp);
         t = list.getFirst();
-        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
-        assertSame(Symbol.MINUS, t.getSymbol()); t = t.next;
-        assertEquals(1.2, ((VariableDouble) t.getVariable()).value);
+        assertSame(Symbol.ASSIGN, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.MINUS, t.getSymbol());
+        t = t.next;
+        assertEquals(1.2, ((VariableDouble)t.getVariable()).value);
         assertNull(t.next);
     }
 
-    @Test
-    public void insertFunctionsAndVariables() {
-        Equation eq = new Equation();
+    @Test void insertFunctionsAndVariables() {
+        var eq = new Equation();
         ManagerTempVariables managerTemp = new ManagerTempVariables();
 
-        eq.alias(new DMatrixRMaj(1,1),"A");
-        eq.alias(new DMatrixRMaj(1,1),"BSD");
+        eq.alias(new DMatrixRMaj(1, 1), "A");
+        eq.alias(new DMatrixRMaj(1, 1), "BSD");
 
         Variable v0 = eq.lookupVariable("A");
         Variable v1 = eq.lookupVariable("BSD");
 
-        TokenList list = eq.extractTokens("A = inv(A.*A)./BSD",managerTemp);
+        TokenList list = eq.extractTokens("A = inv(A.*A)./BSD", managerTemp);
         eq.insertFunctionsAndVariables(list);
 
         TokenList.Token t = list.getFirst();
 
-        assertSame(v0, t.getVariable()); t = t.next;
-        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
-        assertSame(Type.FUNCTION, t.getType()); t = t.next;
-        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
-        assertSame(v0, t.getVariable()); t = t.next;
-        assertSame(Symbol.ELEMENT_TIMES, t.getSymbol()); t = t.next;
-        assertSame(v0, t.getVariable()); t = t.next;
-        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
-        assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol()); t = t.next;
+        assertSame(v0, t.getVariable());
+        t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol());
+        t = t.next;
+        assertSame(Type.FUNCTION, t.getType());
+        t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol());
+        t = t.next;
+        assertSame(v0, t.getVariable());
+        t = t.next;
+        assertSame(Symbol.ELEMENT_TIMES, t.getSymbol());
+        t = t.next;
+        assertSame(v0, t.getVariable());
+        t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.ELEMENT_DIVIDE, t.getSymbol());
+        t = t.next;
         assertSame(v1, t.getVariable());
         assertNull(t.next);
     }
 
-    @Test
-    public void isTargetOp() {
-        Symbol[] targets = new Symbol[]{Symbol.PERIOD,Symbol.TIMES,Symbol.TRANSPOSE};
-        assertTrue(Equation.isTargetOp(new TokenList.Token(Symbol.TIMES),targets));
+    @Test void isTargetOp() {
+        Symbol[] targets = new Symbol[]{Symbol.PERIOD, Symbol.TIMES, Symbol.TRANSPOSE};
+        assertTrue(Equation.isTargetOp(new TokenList.Token(Symbol.TIMES), targets));
         assertFalse(Equation.isTargetOp(new TokenList.Token(Symbol.RDIVIDE), targets));
     }
 
-    @Test
-    public void isLetter() {
+    @Test void isLetter() {
         assertTrue(Equation.isLetter('a'));
         assertTrue(Equation.isLetter('_'));
         assertTrue(Equation.isLetter('5'));
@@ -1094,8 +1093,7 @@ public class TestEquation extends EjmlStandardJUnit {
         assertFalse(Equation.isLetter('='));
     }
 
-    @Test
-    public void gracefullyHandleBadCode() {
+    @Test void gracefullyHandleBadCode() {
         checkForParseException("a(2,4:5)");
         checkForParseException("a(2,4:5");
         checkForParseException("m=[3:4:]");
@@ -1103,43 +1101,48 @@ public class TestEquation extends EjmlStandardJUnit {
     }
 
     private void checkForParseException( String code ) {
-        Assertions.assertThrows(ParseError.class,()->{
-            Equation eq = new Equation();
+        Assertions.assertThrows(ParseError.class, () -> {
+            var eq = new Equation();
             eq.process(code);
         });
     }
 
-    @Test
-    public void macro() {
+    @Test void macro() {
         ManagerTempVariables managerTemp = new ManagerTempVariables();
-        Equation eq = new Equation();
+        var eq = new Equation();
 
         eq.process("macro foo( a , b , c) = c*(a*b)");
-        TokenList tokens = eq.extractTokens("H=foo(1,2,3)",managerTemp);
+        TokenList tokens = eq.extractTokens("H=foo(1,2,3)", managerTemp);
         eq.insertMacros(tokens);
 
         TokenList.Token t = tokens.getFirst();
 
-        assertEquals("H", t.word); t = t.next;
-        assertSame(Symbol.ASSIGN, t.getSymbol()); t = t.next;
-        assertEquals(3, ((VariableInteger) t.variable).value); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertSame(Symbol.PAREN_LEFT, t.getSymbol()); t = t.next;
-        assertEquals(1, ((VariableInteger) t.variable).value); t = t.next;
-        assertSame(Symbol.TIMES, t.getSymbol()); t = t.next;
-        assertEquals(2, ((VariableInteger) t.variable).value); t = t.next;
-        assertSame(Symbol.PAREN_RIGHT, t.getSymbol()); t = t.next;
+        assertEquals("H", t.word);
+        t = t.next;
+        assertSame(Symbol.ASSIGN, t.getSymbol());
+        t = t.next;
+        assertEquals(3, ((VariableInteger)t.variable).value);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertSame(Symbol.PAREN_LEFT, t.getSymbol());
+        t = t.next;
+        assertEquals(1, ((VariableInteger)t.variable).value);
+        t = t.next;
+        assertSame(Symbol.TIMES, t.getSymbol());
+        t = t.next;
+        assertEquals(2, ((VariableInteger)t.variable).value);
+        t = t.next;
+        assertSame(Symbol.PAREN_RIGHT, t.getSymbol());
+        t = t.next;
         assertNull(t);
     }
 
-    /**
-     * Hard to test output for correctness. Basically just checsk to see if it crashes
-     */
-    @Test
-    public void print() {
+    /// Hard to test output for correctness. Basically just checsk to see if it crashes
+    @Test void print() {
         // Disable unit test
         System.setOut(super.systemOut);
-        Equation eq = new Equation();
+        var eq = new Equation();
         eq.print("[1 2;3 4]");
         eq.process("A=[1 2;3 4;5 6]");
         eq.print("A");
