@@ -30,220 +30,224 @@ import java.util.Random;
 
 import static org.ejml.equation.TokenList.Type;
 
-/**
- * <p>
- * Equation allows the user to manipulate matrices in a more compact symbolic way, similar to Matlab and Octave.
- * Aliases are made to Matrices and scalar values which can then be manipulated by specifying an equation in a string.
- * These equations can either be "pre-compiled" [1] into a sequence of operations or immediately executed. While the
- * former is more verbose, when dealing with small matrices it significantly faster and runs close to the speed of
- * normal handwritten code.
- * </p>
- * <p>
- * Each string represents a single line and must have one and only one assignment '=' operator. Temporary variables
- * are handled transparently to the user. Temporary variables are declared at compile time, but resized at runtime.
- * If the inputs are not resized and the code is precompiled, then no new memory will be declared. When a matrix
- * is assigned the results of an operation it is resized so that it can store the results.
- * </p>
- * <p>
- * The compiler currently produces simplistic code. For example, if it encounters the following equation "a = b*c' it
- * will not invoke multTransB(b,c,a), but will explicitly transpose c and then call mult(). In the future it
- * will recognize such shortcuts.
- * </p>
- *
- * Usage example:
- * <pre>
- * Equation eq = new Equation();
- * eq.alias(x,"x", P,"P", Q,"Q");
- *
- * eq.process("x = F*x");
- * eq.process("P = F*P*F' + Q");
- * </pre>
- * Which will modify the matrices 'x' and 'P'. Support for sub-matrices and inline matrix construction is also
- * available.
- * <pre>
- * eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");  // create a 3x3 matrix then multiply it by x
- * eq.process("x(1:3,5:9) = [a ; b]*2");      // fill the sub-matrix with the result
- * eq.process("x(:) = a(4:2:20)");            // fill all elements of x with the specified elements in 'a'
- * eq.process("x(2:, 3) = 6;                  // Fills all elements in column 3 with row >= 2 with 6.
- * eq.process("x( 4 3 ) = a");                // fill only the specified number sequences with 'a'
- * eq.process("x = [2:3:25 1 4]");            // create a row matrix from the number sequence
- * eq.process("x(:, 2:3) = []");              // Removes columns 2 to 3, inclusive.
- * </pre>
- *
- * When accessing array elements it returns scalar values:
- * <pre>
- * eq.process("x = P(1,2)"); // x is a scalar and equal to the element row=1 and col=2 in P
- * eq.process("x = P(4)");   // x is a scalar and it will access the 5-th element in P using row-major ordering.
- *                           // Note that Matlab is column major. If P is 3x2, then P(4) is the same as P(2, 0)
- * </pre>
- *
- * To pre-compile one of the above lines, do the following instead:
- * <pre>
- * Sequence predictX = eq.compile("x = F*x");
- * predictX.perform();
- * </pre>
- * Then you can invoke it as much as you want without the "expensive" compilation step. If you are dealing with
- * larger matrices (e.g. 100 by 100) then it is likely that the compilation step has an insignificant runtime
- * cost.
- *
- * Variables can also be lazily declared and their type inferred under certain conditions. For example:
- * <pre>
- * eq.alias(A,"A", B,"B");
- * eq.process("C = A*B");
- * DMatrixRMaj C = eq.lookupMatrix("C");
- * </pre>
- * In this case 'C' was lazily declared. To access the variable, or any others, you can use one of the lookup*()
- * functions.
- *
- * Sometimes you don't get the results you expect, and it can be helpful to print out the tokens and which operations
- * the compiler selected. To do this set the second parameter to eq.compile() or eq.process() to true:
- * <pre>
- * Code:
- * eq.process("C=2.1*B'*A",true);
- *
- * Output:
- * Parsed tokens:
- * ------------
- * Word:C
- * ASSIGN
- * VarSCALAR
- * TIMES
- * VarMATRIX
- * TRANSPOSE
- * TIMES
- * VarMATRIX
- *
- * Operations:
- * ------------
- * transpose-m
- * multiply-ms
- * multiply-mm
- * copy-mm
- * </pre>
- *
- * <h2>Built in Constants</h2>
- * <pre>
- * pi = Math.PI
- * e  = Math.E
- * </pre>
- *
- * <h2>Supported functions</h2>
- * <pre>
- * eye(n)       Create an identity matrix which is 'n' by 'n'. Input must be integer.
- * eye(A)       Create an identity matrix which is A.numRows by A.numCols
- * eye(a,b)     Create an 'a' by 'b' identity matrix. Inputs must be scalar.
- * normF(A)     Frobenius normal of the matrix.
- * normP(A,p)   P-norm for a matrix or vector. p=1 or p=2 is typical.
- * sum(A)       Sum of every element in A
- * sum(A,d)     Sum of rows for d = 0 and columns for d = 1
- * det(A)       Determinant of the matrix
- * inv(A)       Inverse of a matrix
- * pinv(A)      Pseudo-inverse of a matrix
- * rref(A)      Reduced row echelon form of A
- * trace(A)     Trace of the matrix
- * zeros(r,c)   Matrix full of zeros with r rows and c columns.
- * ones(r,c)    Matrix full of ones with r rows and c columns.
- * rand(r,c)    Matrix filled with i.i.d uniform numbers from 0 to 1
- * randn(r,c)   Matrix filled with i.i.d normal distribution with mean of zero and stdev of 1
- * rng(seed)    Specifies the random number generator's seed
- * diag(A)      If a vector then returns a square matrix with diagonal elements filled with vector
- * diag(A)      If a matrix then it returns the diagonal elements as a column vector
- * dot(A,B)     Returns the dot product of two vectors as a double. Does not work on general matrices.
- * solve(A,B)   Returns the solution X from A*X = B.
- * kron(A,B)    Kronecker product
- * abs(A)       Absolute value of A.
- * max(A)       Element with the largest value in A.
- * max(A,d)     Vector containing largest element along the rows (d=0) or columns (d=1)
- * max(a,b)     Returns the max value of a or b. Both a and b are scalars.
- * min(A)       Element with the smallest value in A.
- * min(A,d)     Vector containing largest element along the rows (d=0) or columns (d=1)
- * min(a,b)     Returns the min value of a or b. Both a and b are scalars.
- * pow(a,b)     Computes a to the power of b. Can also be invoked with "a^b" scalars only.
- * sqrt(a)      Computes the square root of a.
- * sin(a)       Math.sin(a) for scalars only
- * size(a,b)    Returns the number of elements along rows (b=0) or columns (b=1)
- * cos(a)       Math.cos(a) for scalars only
- * atan(a)      Math.atan(a) for scalars only
- * atan2(a,b)   Math.atan2(a,b) for scalars only
- * exp(a)       Math.exp(a) for scalars is also an element-wise matrix operator
- * log(a)       Math.log(a) for scalars is also an element-wise matrix operator
- * scalar(a)    Converts a 1x1 matrix into a scalar.
- * </pre>
- *
- * <h2>Supported operations</h2>
- * <pre>
- * '*'        multiplication (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
- * '+'        addition (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
- * '-'        subtraction (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
- * '/'        divide (Matrix-Scalar, Scalar-Scalar)
- * '/'        matrix solve "x=b/A" is equivalent to x=solve(A,b) (Matrix-Matrix)
- * '^'        Scalar power. a^b is a to the power of b.
- * '\'        left-divide. Same as divide but reversed. e.g. x=A\b is x=solve(A,b)
- * '.*'       element-wise multiplication (Matrix-Matrix)
- * './'       element-wise division (Matrix-Matrix)
- * '.^'       element-wise power. (scalar-scalar) (matrix-matrix) (scalar-matrix) (matrix-scalar)
- * '''        matrix transpose
- * '='        assignment by value (Matrix-Matrix, Scalar-Scalar)
- * </pre>
- * Order of operations:  [ ' ] precedes [ ^ .^ ] precedes [ *  /  .*  ./ ] precedes [ +  - ]
- *
- * <h2>Specialized submatrix and matrix construction syntax</h2>
- * <pre>
- * Extracts a sub-matrix from A with rows 1 to 10 (inclusive) and column 3.
- *               A(1:10,3)
- * Extracts a sub-matrix from A with rows 2 to numRows-1 (inclusive) and all the columns.
- *               A(2:,:)
- * Will concat A and B along their columns and then concat the result with  C along their rows.
- *                [A,B;C]
- * Defines a 3x2 matrix.
- *            [1 2; 3 4; 4 5]
- * You can also perform operations inside:
- *            [[2 3 4]';[4 5 6]']
- * Will assign B to the sub-matrix in A.
- *             A(1:3,4:8) = B
- * </pre>
- *
- * <h2>Integer Number Sequences</h2>
- * Previous example code has made much use of integer number sequences. There are three different types of integer number
- * sequences 'explicit', 'for', and 'for-range'.
- * <pre>
- * 1) Explicit:
- *    Example: "1 2 4 0"
- *    Example: "1 2,-7,4"     Commas needed to create negative numbers. Otherwise, it will be subtraction.
- * 2) for:
- *    Example:  "2:10"        Sequence of "2 3 4 5 6 7 8 9 10"
- *    Example:  "2:2:10"      Sequence of "2 4 6 8 10"
- * 3) for-range:
- *    Example:  "2:"          Sequence of "2 3 ... max"
- *    Example:  "2:2:"        Sequence of "2 4 ... max"
- * 4) combined:
- *    Example:  "1 2 7:10"    Sequence of "1 2 7 8 9 10"
- * </pre>
- *
- * <h2>Macros</h2>
- * Macros are used to insert patterns into the code. Consider this example:
- * <pre>
- * eq.process("macro ata( a ) = (a'*a)");
- * eq.process("b = ata(c)");
- * </pre>
- * The first line defines a macro named "ata" with one parameter 'a'. When compiled the equation in the second
- * line is replaced with "b = (a'*a)". The "(" ")" in the macro isn't strictly necissary in this situation, but
- * is a good practice. Consider the following.
- * <pre>
- * eq.process("b = ata(c)*r");
- * </pre>
- * Will become "b = (a'*a)*r"  but with out () it will be "b = a'*a*r" which is not the same thing!
- *
- * <p><b>NOTE:</b>In the future macros might be replaced with functions. Macros are harder for the user to debug, but
- * functions are harder for EJML's developer to implement.</p>
- *
- * <h2>Footnotes:</h2>
- * <pre>
- * [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a List.
- * </pre>
- *
- * @author Peter Abeles
- */
+/// Equation allows the user to manipulate matrices in a more compact symbolic way, similar to Matlab and Octave.
+/// Aliases are made to Matrices and scalar values which can then be manipulated by specifying an equation in a string.
+/// These equations can either be "pre-compiled" {@code [1]} into a sequence of operations or immediately executed. While the
+/// former is more verbose, when dealing with small matrices it significantly faster and runs close to the speed of
+/// normal handwritten code.
+///
+/// Each string represents a single line and must have one and only one assignment '=' operator. Temporary variables
+/// are handled transparently to the user. Temporary variables are declared at compile time, but resized at runtime.
+/// If the inputs are not resized and the code is precompiled, then no new memory will be declared. When a matrix
+/// is assigned the results of an operation it is resized so that it can store the results.
+///
+/// The compiler currently produces simplistic code. For example, if it encounters the following equation
+/// {@code a = b\*c} it will not invoke {@code multTransB(b,c,a)}, but will explicitly transpose c and then call
+/// mult(). In the future it will recognize such shortcuts.
+///
+/// Usage example:
+/// ```java
+/// Equation eq = new Equation();
+/// eq.alias(x,"x", P,"P", Q,"Q");
+///
+/// eq.process("x = F*x");
+/// eq.process("P = F*P*F' + Q");
+/// ```
+///
+/// Which will modify the matrices 'x' and 'P'. Support for sub-matrices and inline matrix construction is also
+/// available.
+///
+/// ```java
+/// eq.process("x = [2 1 0; 0 1 3;4 5 6]*x");  // create a 3x3 matrix then multiply it by x
+/// eq.process("x(1:3,5:9) = [a ; b]*2");      // fill the sub-matrix with the result
+/// eq.process("x(:) = a(4:2:20)");            // fill all elements of x with the specified elements in 'a'
+/// eq.process("x(2:, 3) = 6;                  // Fills all elements in column 3 with row &gt;= 2 with 6.
+/// eq.process("x( 4 3 ) = a");                // fill only the specified number sequences with 'a'
+/// eq.process("x = [2:3:25 1 4]");            // create a row matrix from the number sequence
+/// eq.process("x(:, 2:3) = []");              // Removes columns 2 to 3, inclusive.
+/// ```
+///
+/// When accessing array elements it returns scalar values:
+/// ```java
+/// eq.process("x = P(1,2)"); // x is a scalar and equal to the element row=1 and col=2 in P
+/// eq.process("x = P(4)");   // x is a scalar and it will access the 5-th element in P using row-major ordering.
+///                           // Note that Matlab is column major. If P is 3x2, then P(4) is the same as P(2, 0)
+/// ```
+///
+/// To pre-compile one of the above lines, do the following instead:
+/// ```java
+/// Sequence predictX = eq.compile("x = F*x");
+/// predictX.perform();
+/// ```
+///
+/// Then you can invoke it as much as you want without the "expensive" compilation step. If you are dealing with
+/// larger matrices (e.g. 100 by 100) then it is likely that the compilation step has an insignificant runtime
+/// cost.
+/// Variables can also be lazily declared and their type inferred under certain conditions. For example:
+/// ```java
+/// eq.alias(A,"A", B,"B");
+/// eq.process("C = A*B");
+/// DMatrixRMaj C = eq.lookupMatrix("C");
+/// ```
+///
+/// In this case 'C' was lazily declared. To access the variable, or any others, you can use one of the lookup\*()
+/// functions.
+/// Sometimes you don't get the results you expect, and it can be helpful to print out the tokens and which operations
+/// the compiler selected. To do this set the second parameter to eq.compile() or eq.process() to true:
+///
+/// ```
+/// Code:
+/// eq.process("C=2.1*B'*A",true);
+///
+/// Output:
+/// Parsed tokens:
+/// ------------
+/// Word:C
+/// ASSIGN
+/// VarSCALAR
+/// TIMES
+/// VarMATRIX
+/// TRANSPOSE
+/// TIMES
+/// VarMATRIX
+///
+/// Operations:
+/// ------------
+/// transpose-m
+/// multiply-ms
+/// multiply-mm
+/// copy-mm
+/// ```
+/// ## Built in Constants
+/// ```
+/// pi = Math.PI
+/// e  = Math.E
+/// ```
+///
+/// ## Supported functions
+/// ```
+/// eye(n)       Create an identity matrix which is 'n' by 'n'. Input must be integer.
+/// eye(A)       Create an identity matrix which is A.numRows by A.numCols
+/// eye(a,b)     Create an 'a' by 'b' identity matrix. Inputs must be scalar.
+/// normF(A)     Frobenius normal of the matrix.
+/// normP(A,p)   P-norm for a matrix or vector. p=1 or p=2 is typical.
+/// sum(A)       Sum of every element in A
+/// sum(A,d)     Sum of rows for d = 0 and columns for d = 1
+/// det(A)       Determinant of the matrix
+/// inv(A)       Inverse of a matrix
+/// pinv(A)      Pseudo-inverse of a matrix
+/// rref(A)      Reduced row echelon form of A
+/// trace(A)     Trace of the matrix
+/// zeros(r,c)   Matrix full of zeros with r rows and c columns.
+/// ones(r,c)    Matrix full of ones with r rows and c columns.
+/// rand(r,c)    Matrix filled with i.i.d uniform numbers from 0 to 1
+/// randn(r,c)   Matrix filled with i.i.d normal distribution with mean of zero and stdev of 1
+/// rng(seed)    Specifies the random number generator's seed
+/// diag(A)      If a vector then returns a square matrix with diagonal elements filled with vector
+/// diag(A)      If a matrix then it returns the diagonal elements as a column vector
+/// dot(A,B)     Returns the dot product of two vectors as a double. Does not work on general matrices.
+/// solve(A,B)   Returns the solution X from A*X = B.
+/// kron(A,B)    Kronecker product
+/// abs(A)       Absolute value of A.
+/// max(A)       Element with the largest value in A.
+/// max(A,d)     Vector with the largest elements along the rows (d=0) or columns (d=1)
+/// max(a,b)     Returns the max value of a or b. Both a and b are scalars.
+/// min(A)       Element with the smallest value in A.
+/// min(A,d)     Vector containing the largest element along the rows (d=0) or columns (d=1)
+/// min(a,b)     Returns the min value of a or b. Both a and b are scalars.
+/// pow(a,b)     Computes 'a' to the power of 'b'. Can also be invoked with "a^b" scalars only.
+/// sqrt(a)      Computes the square root of 'a'.
+/// sin(a)       Math.sin(a) for scalars only
+/// size(a,b)    Returns the number of elements along rows (b=0) or columns (b=1)
+/// cos(a)       Math.cos(a) for scalars only
+/// atan(a)      Math.atan(a) for scalars only
+/// atan2(a,b)   Math.atan2(a,b) for scalars only
+/// exp(a)       Math.exp(a) for scalars is also an element-wise matrix operator
+/// log(a)       Math.log(a) for scalars is also an element-wise matrix operator
+/// scalar(a)    Converts a 1x1 matrix into a scalar.
+/// ```
+///
+/// ## Supported operations
+/// ```
+/// '*'        multiplication (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
+/// '+'        addition (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
+/// '-'        subtraction (Matrix-Matrix, Scalar-Matrix, Scalar-Scalar)
+/// '/'        divide (Matrix-Scalar, Scalar-Scalar)
+/// '/'        matrix solve "x=b/A" is equivalent to x=solve(A,b) (Matrix-Matrix)
+/// '^'        Scalar power. a^b is 'a' to the power of 'b'.
+/// '\'        left-divide. Same as divide but reversed. e.g. x=A\b is x=solve(A,b)
+/// '.*'       element-wise multiplication (Matrix-Matrix)
+/// './'       element-wise division (Matrix-Matrix)
+/// '.^'       element-wise power. (scalar-scalar) (matrix-matrix) (scalar-matrix) (matrix-scalar)
+/// '''        matrix transpose
+/// '='        assignment by value (Matrix-Matrix, Scalar-Scalar)
+/// ```
+///
+/// Order of operations:  {@code [ ' ]} precedes {@code [ ^ .^ ]} precedes {@code [ \*  /  .\*  ./ ]}
+/// precedes {@code [ +  - ]}
+///
+/// ## Specialized submatrix and matrix construction syntax
+///
+/// ```
+/// Extracts a sub-matrix from A with rows 1 to 10 (inclusive) and column 3.
+///               A(1:10,3)
+/// Extracts a sub-matrix from A with rows 2 to numRows-1 (inclusive) and all the columns.
+///               A(2:,:)
+/// Will concat A and B along their columns and then concat the result with  C along their rows.
+///                [A,B;C]
+/// Defines a 3x2 matrix.
+///            [1 2; 3 4; 4 5]
+/// You can also perform operations inside:
+///            [[2 3 4]';[4 5 6]']
+/// Will assign B to the sub-matrix in A.
+///             A(1:3,4:8) = B
+/// ```
+///
+/// ## Integer Number Sequences
+///
+/// Previous example code has made much use of integer number sequences. There are three different types of integer number
+/// sequences 'explicit', 'for', and 'for-range'.
+/// ```
+/// 1) Explicit:
+///    Example: "1 2 4 0"
+///    Example: "1 2,-7,4"     Commas needed to create negative numbers. Otherwise, it will be subtraction.
+/// 2) for:
+///    Example:  "2:10"        Sequence of "2 3 4 5 6 7 8 9 10"
+///    Example:  "2:2:10"      Sequence of "2 4 6 8 10"
+/// 3) for-range:
+///    Example:  "2:"          Sequence of "2 3 ... max"
+///    Example:  "2:2:"        Sequence of "2 4 ... max"
+/// 4) combined:
+///    Example:  "1 2 7:10"    Sequence of "1 2 7 8 9 10"
+/// ```
+/// ## Macros
+///
+/// Macros are used to insert patterns into the code. Consider this example:
+///
+/// ```java
+/// eq.process("macro ata( a ) = (a'*a)");
+/// eq.process("b = ata(c)");
+/// ```
+///
+/// The first line defines a macro named 'ata' with one parameter 'a'. When compiled the equation in the second
+/// line is replaced with {@code b = (a'\*a)}. The '(' ')' in the macro isn't strictly necessary in this situation, but
+/// is a good practice. Consider the following.
+///
+/// ```java
+/// eq.process("b = ata(c)*r");
+/// ```
+///
+/// Will become {@code b = (a'\*a)\*r}  but without () it will be {@code b = a'\*a\*r} which is not the same thing!
+///
+/// **NOTE:** In the future macros might be replaced with functions. Macros are harder for the user to debug, but
+/// functions are harder for EJML's developer to implement.
+///
+/// ## Footnotes:
+/// ```
+/// [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a List.
+/// ```
+///
+/// @author Peter Abeles
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -263,42 +267,33 @@ public class Equation {
         alias(Math.E, "e");
     }
 
-    /**
-     * Consturctor which allows you to alias variables
-     *
-     * @param args arguments for alias
-     * @see #alias(Object...)
-     */
+    /// Consturctor which allows you to alias variables
+    ///
+    /// @param args arguments for alias
+    /// @see #alias(Object...)
     public Equation( Object... args ) {
         this();
         alias(args);
     }
 
-    /**
-     * Specifies the seed used in random number generators
-     *
-     * @param seed New seed for random number generator
-     */
+    /// Specifies the seed used in random number generators
+    ///
+    /// @param seed New seed for random number generator
     public void setSeed( long seed ) {
         functions.managerTemp.getRandom().setSeed(seed);
     }
 
-    /**
-     * Sets the random seed using a seed based on the current time
-     */
+    /// Sets the random seed using a seed based on the current time
     public void setSeed() {
         functions.managerTemp.rand = new Random();
     }
 
-    /**
-     * Adds a new Matrix variable. If one already has the same name it is written over.
-     *
-     * While more verbose for multiple variables, this function doesn't require new memory be declared
-     * each time it's called.
-     *
-     * @param variable Matrix which is to be assigned to name
-     * @param name The name of the variable
-     */
+    /// Adds a new Matrix variable. If one already has the same name it is written over.
+    /// While more verbose for multiple variables, this function doesn't require new memory be declared
+    /// each time it's called.
+    ///
+    /// @param variable Matrix which is to be assigned to name
+    /// @param name The name of the variable
     public void alias( DMatrixRMaj variable, String name ) {
         if (isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character");
@@ -326,12 +321,10 @@ public class Equation {
         alias((Object)variable.getMatrix(), name);
     }
 
-    /**
-     * Adds a new floating point variable. If one already has the same name it is written over.
-     *
-     * @param value Value of the number
-     * @param name Name in code
-     */
+    /// Adds a new floating point variable. If one already has the same name it is written over.
+    ///
+    /// @param value Value of the number
+    /// @param name Name in code
     public void alias( double value, String name ) {
         if (isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character. '" + name + "'");
@@ -344,12 +337,10 @@ public class Equation {
         }
     }
 
-    /**
-     * Adds a new integer variable. If one already has the same name it is written over.
-     *
-     * @param value Value of the number
-     * @param name Name in code
-     */
+    /// Adds a new integer variable. If one already has the same name it is written over.
+    ///
+    /// @param value Value of the number
+    /// @param name Name in code
     public void alias( int value, String name ) {
         if (isReserved(name))
             throw new RuntimeException("Reserved word or contains a reserved character");
@@ -374,9 +365,7 @@ public class Equation {
         }
     }
 
-    /**
-     * Creates multiple aliases at once.
-     */
+    /// Creates multiple aliases at once.
     public void alias( Object... args ) {
         if (args.length%2 == 1)
             throw new RuntimeException("Even number of arguments expected");
@@ -386,12 +375,10 @@ public class Equation {
         }
     }
 
-    /**
-     * Aliases variables with an unknown type.
-     *
-     * @param variable The variable being aliased
-     * @param name Name of the variable
-     */
+    /// Aliases variables with an unknown type.
+    ///
+    /// @param variable The variable being aliased
+    /// @param name Name of the variable
     protected void aliasGeneric( Object variable, String name ) {
         if (variable.getClass() == Integer.class) {
             alias(((Integer)variable).intValue(), name);
@@ -423,14 +410,12 @@ public class Equation {
         return compile(equation, true, false);
     }
 
-    /**
-     * Parses the equation and compiles it into a sequence which can be executed later on
-     *
-     * @param equation String in simple equation format.
-     * @param assignment if true an assignment is expected and an exception if thrown if there is non
-     * @param debug if true it will print out debugging information
-     * @return Sequence of operations on the variables
-     */
+    /// Parses the equation and compiles it into a sequence which can be executed later on
+    ///
+    /// @param equation String in simple equation format.
+    /// @param assignment if true an assignment is expected and an exception if thrown if there is non
+    /// @param debug if true it will print out debugging information
+    /// @return Sequence of operations on the variables
     public Sequence compile( String equation, boolean assignment, boolean debug ) {
 
         functions.setManagerTemp(managerTemp);
@@ -482,9 +467,7 @@ public class Equation {
         return sequence;
     }
 
-    /**
-     * An assignment is being made to some output. looks something like: A = B
-     */
+    /// An assignment is being made to some output. looks something like: A = B
     private void compileAssignment( Sequence sequence, TokenList tokens, TokenList.Token t0 ) {
         // see if it is assign or a range
         List<Variable> range = parseAssignRange(sequence, tokens, t0);
@@ -526,11 +509,8 @@ public class Equation {
             throw new RuntimeException("BUG");
     }
 
-    /**
-     * Parse a macro defintion.
-     *
-     * "macro NAME( var0 , var1 ) = 5+var0+var1'
-     */
+    /// Parse a macro definition.
+    /// "macro NAME( var0 , var1 ) = 5+var0+var1"
     private void parseMacro( TokenList tokens, Sequence sequence ) {
         Macro macro = new Macro();
 
@@ -580,9 +560,7 @@ public class Equation {
         return t;
     }
 
-    /**
-     * Examines the list of variables for any unknown variables and throws an exception if one is found
-     */
+    /// Examines the list of variables for any unknown variables and throws an exception if one is found
     private void checkForUnknownVariables( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
         while (t != null) {
@@ -592,10 +570,8 @@ public class Equation {
         }
     }
 
-    /**
-     * Infer the type of and create a new output variable using the results from the right side of the equation.
-     * If the type is already known just return that.
-     */
+    /// Infer the type of and create a new output variable using the results from the right side of the equation.
+    /// If the type is already known just return that.
     private Variable createVariableInferred( TokenList.Token t0, Variable variableRight ) {
         Variable result;
 
@@ -628,13 +604,10 @@ public class Equation {
         return result;
     }
 
-    /**
-     * See if a range for assignment is specified. If so return the range, otherwise return null
-     *
-     * Example of assign range:
-     * a(0:3,4:5) = blah
-     * a((0+2):3,4:5) = blah
-     */
+    /// See if a range for assignment is specified. If so return the range, otherwise return null
+    /// Example of assign range:
+    /// a(0:3,4:5) = blah
+    /// a((0+2):3,4:5) = blah
     private List<Variable> parseAssignRange( Sequence sequence, TokenList tokens, TokenList.Token t0 ) {
         // find assignment symbol
         TokenList.Token tokenAssign = t0.next;
@@ -673,13 +646,11 @@ public class Equation {
         return null;
     }
 
-    /**
-     * Searches for pairs of parentheses and processes blocks inside of them. Embedded parentheses are handled
-     * with no problem. On output only a single token should be in tokens.
-     *
-     * @param tokens List of parsed tokens
-     * @param sequence Sequence of operators
-     */
+    /// Searches for pairs of parentheses and processes blocks inside of them. Embedded parentheses are handled
+    /// with no problem. On output only a single token should be in tokens.
+    ///
+    /// @param tokens List of parsed tokens
+    /// @param sequence Sequence of operators
     protected void handleParentheses( TokenList tokens, Sequence sequence ) {
         // have a list to handle embedded parentheses, e.g. (((((a)))))
         List<TokenList.Token> left = new ArrayList<>();
@@ -735,13 +706,10 @@ public class Equation {
             throw new ParseError("Dangling ( parentheses");
     }
 
-    /**
-     * Searches for commas in the set of tokens. Used for inputs to functions.
-     *
-     * Ignore comma's which are inside a [ ] block
-     *
-     * @return List of output tokens between the commas
-     */
+    /// Searches for commas in the set of tokens. Used for inputs to functions.
+    /// Ignore comma's which are inside a [ ] block
+    ///
+    /// @return List of output tokens between the commas
     protected List<TokenList.Token> parseParameterCommaBlock( TokenList tokens, Sequence sequence ) {
         // find all the comma tokens
         List<TokenList.Token> commas = new ArrayList<>();
@@ -796,11 +764,9 @@ public class Equation {
         return output;
     }
 
-    /**
-     * Converts a submatrix into an extract matrix operation.
-     *
-     * @param variableTarget The variable in which the submatrix is extracted from
-     */
+    /// Converts a submatrix into an extract matrix operation.
+    ///
+    /// @param variableTarget The variable in which the submatrix is extracted from
     protected TokenList.Token parseSubmatrixToExtract( TokenList.Token variableTarget,
                                                        TokenList tokens, Sequence sequence ) {
 
@@ -847,10 +813,8 @@ public class Equation {
         return new TokenList.Token(info.output);
     }
 
-    /**
-     * Goes through the token lists and adds all the variables which can be used to define a sub-matrix. If anything
-     * else is found an excpetion is thrown
-     */
+    /// Goes through the token lists and adds all the variables which can be used to define a sub-matrix. If anything
+    /// else is found an excpetion is thrown
     private void addSubMatrixVariables( List<TokenList.Token> inputs, List<Variable> variables ) {
         for (int i = 0; i < inputs.size(); i++) {
             TokenList.Token t = inputs.get(i);
@@ -865,10 +829,8 @@ public class Equation {
         }
     }
 
-    /**
-     * Parses a code block with no parentheses and no commas. After it is done there should be a single token left,
-     * which is returned.
-     */
+    /// Parses a code block with no parentheses and no commas. After it is done there should be a single token left,
+    /// which is returned.
     protected TokenList.Token parseBlockNoParentheses( TokenList tokens, Sequence sequence, boolean insideMatrixConstructor ) {
 
         // search for matrix bracket operations
@@ -910,9 +872,7 @@ public class Equation {
         }
     }
 
-    /**
-     * Removes all commas from the token list
-     */
+    /// Removes all commas from the token list
     private void stripCommas( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
 
@@ -925,18 +885,14 @@ public class Equation {
         }
     }
 
-    /**
-     * Searches for descriptions of integer sequences and array ranges that have a colon character in them
-     *
-     * Examples of integer sequences:
-     * 1:6
-     * 2:4:20
-     * :
-     *
-     * Examples of array range
-     * 2:
-     * 2:4:
-     */
+    /// Searches for descriptions of integer sequences and array ranges that have a colon character in them
+    /// Examples of integer sequences:
+    /// 1:6
+    /// 2:4:20
+    /// :
+    /// Examples of array range
+    /// 2:
+    /// 2:4:
     protected void parseSequencesWithColons( TokenList tokens, Sequence sequence ) {
 
         TokenList.Token t = tokens.getFirst();
@@ -1017,12 +973,9 @@ public class Equation {
         }
     }
 
-    /**
-     * Searches for a sequence of integers
-     *
-     * example:
-     * 1 2 3 4 6 7 -3
-     */
+    /// Searches for a sequence of integers
+    /// example:
+    /// 1 2 3 4 6 7 -3
     protected void parseIntegerLists( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
         if (t == null || t.next == null)
@@ -1069,9 +1022,7 @@ public class Equation {
         }
     }
 
-    /**
-     * Looks for sequences of integer lists and combine them into one big sequence
-     */
+    /// Looks for sequences of integer lists and combine them into one big sequence
     protected void parseCombineIntegerLists( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
         if (t == null || t.next == null)
@@ -1117,11 +1068,9 @@ public class Equation {
         return tmp;
     }
 
-    /**
-     * Checks to see if the token is an integer scalar
-     *
-     * @return true if integer or false if not
-     */
+    /// Checks to see if the token is an integer scalar
+    ///
+    /// @return true if integer or false if not
     private static boolean isVariableInteger( TokenList.Token t ) {
         if (t == null)
             return false;
@@ -1129,10 +1078,8 @@ public class Equation {
         return t.getScalarType() == VariableScalar.Type.INTEGER;
     }
 
-    /**
-     * Searches for brackets which are only used to construct new matrices by concatenating
-     * 1 or more matrices together
-     */
+    /// Searches for brackets which are only used to construct new matrices by concatenating
+    /// 1 or more matrices together
     protected void parseBracketCreateMatrix( TokenList tokens, Sequence sequence ) {
         List<TokenList.Token> left = new ArrayList<>();
 
@@ -1199,13 +1146,10 @@ public class Equation {
         return constructor;
     }
 
-    /**
-     * Searches for cases where a minus sign means negative operator. That happens when there is a minus
-     * sign with a variable to its right and no variable to its left
-     *
-     * Example:
-     * a = - b * c
-     */
+    /// Searches for cases where a minus sign means negative operator. That happens when there is a minus
+    /// sign with a variable to its right and no variable to its left
+    /// Example:
+    /// a = - b \* c
     protected void parseNegOp( TokenList tokens, Sequence sequence ) {
         if (tokens.size == 0)
             return;
@@ -1242,13 +1186,11 @@ public class Equation {
         }
     }
 
-    /**
-     * Parses operations where the input comes from variables to its left only. Hard coded to only look
-     * for transpose for now
-     *
-     * @param tokens List of all the tokens
-     * @param sequence List of operation sequence
-     */
+    /// Parses operations where the input comes from variables to its left only. Hard coded to only look
+    /// for transpose for now
+    ///
+    /// @param tokens List of all the tokens
+    /// @param sequence List of operation sequence
     protected void parseOperationsL( TokenList tokens, Sequence sequence ) {
 
         if (tokens.size == 0)
@@ -1272,13 +1214,11 @@ public class Equation {
         }
     }
 
-    /**
-     * Parses operations where the input comes from variables to its left and right
-     *
-     * @param ops List of operations which should be parsed
-     * @param tokens List of all the tokens
-     * @param sequence List of operation sequence
-     */
+    /// Parses operations where the input comes from variables to its left and right
+    ///
+    /// @param ops List of operations which should be parsed
+    /// @param tokens List of all the tokens
+    /// @param sequence List of operation sequence
     protected void parseOperationsLR( Symbol[] ops, TokenList tokens, Sequence sequence ) {
 
         if (tokens.size == 0)
@@ -1310,10 +1250,8 @@ public class Equation {
         }
     }
 
-    /**
-     * Adds a new operation to the list from the operation and two variables. The inputs are removed
-     * from the token list and replaced by their output.
-     */
+    /// Adds a new operation to the list from the operation and two variables. The inputs are removed
+    /// from the token list and replaced by their output.
     protected TokenList.Token insertTranspose( TokenList.Token variable,
                                                TokenList tokens, Sequence sequence ) {
         Operation.Info info = functions.create('\'', variable.getVariable());
@@ -1329,10 +1267,8 @@ public class Equation {
         return t;
     }
 
-    /**
-     * Adds a new operation to the list from the operation and two variables. The inputs are removed
-     * from the token list and replaced by their output.
-     */
+    /// Adds a new operation to the list from the operation and two variables. The inputs are removed
+    /// from the token list and replaced by their output.
     protected TokenList.Token createOp( TokenList.Token left, TokenList.Token op, TokenList.Token right,
                                         TokenList tokens, Sequence sequence ) {
         Operation.Info info = functions.create(op.symbol, left.getVariable(), right.getVariable());
@@ -1347,10 +1283,8 @@ public class Equation {
         return t;
     }
 
-    /**
-     * Adds a new operation to the list from the operation and two variables. The inputs are removed
-     * from the token list and replaced by their output.
-     */
+    /// Adds a new operation to the list from the operation and two variables. The inputs are removed
+    /// from the token list and replaced by their output.
     protected TokenList.Token createFunction( TokenList.Token name, List<TokenList.Token> inputs, TokenList tokens, Sequence sequence ) {
         Operation.Info info;
         if (inputs.size() == 1)
@@ -1371,9 +1305,7 @@ public class Equation {
         return t;
     }
 
-    /**
-     * Looks up a variable given its name. If none is found then return null.
-     */
+    /// Looks up a variable given its name. If none is found then return null.
     public <T extends Variable> T lookupVariable( String token ) {
         Variable result = variables.get(token);
         return (T)result;
@@ -1421,9 +1353,7 @@ public class Equation {
         return ((VariableScalar)variables.get(token)).getDouble();
     }
 
-    /**
-     * Parses the text string to extract tokens.
-     */
+    /// Parses the text string to extract tokens.
     protected TokenList extractTokens( String equation, ManagerTempVariables managerTemp ) {
         // add a space to make sure everything is parsed when its done
         equation += " ";
@@ -1549,10 +1479,8 @@ public class Equation {
         return tokens;
     }
 
-    /**
-     * Search for WORDS in the token list. Then see if the WORD is a function or a variable. If so replace
-     * the work with the function/variable
-     */
+    /// Search for WORDS in the token list. Then see if the WORD is a function or a variable. If so replace
+    /// the work with the function/variable
     void insertFunctionsAndVariables( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
         while (t != null) {
@@ -1570,9 +1498,7 @@ public class Equation {
         }
     }
 
-    /**
-     * Checks to see if a WORD matches the name of a macro. if it does it applies the macro at that location
-     */
+    /// Checks to see if a WORD matches the name of a macro. if it does it applies the macro at that location
     void insertMacros( TokenList tokens ) {
         TokenList.Token t = tokens.getFirst();
         while (t != null) {
@@ -1605,13 +1531,11 @@ public class Equation {
         UNKNOWN
     }
 
-    /**
-     * Checks to see if the token is in the list of allowed character operations. Used to apply order of operations
-     *
-     * @param token Token being checked
-     * @param ops List of allowed character operations
-     * @return true for it being in the list and false for it not being in the list
-     */
+    /// Checks to see if the token is in the list of allowed character operations. Used to apply order of operations
+    ///
+    /// @param token Token being checked
+    /// @param ops List of allowed character operations
+    /// @return true for it being in the list and false for it not being in the list
     protected static boolean isTargetOp( TokenList.Token token, Symbol[] ops ) {
         Symbol c = token.symbol;
         for (int i = 0; i < ops.length; i++) {
@@ -1626,9 +1550,7 @@ public class Equation {
                 c == '=' || c == '\'' || c == '.' || c == ',' || c == ':' || c == ';' || c == '\\' || c == '^';
     }
 
-    /**
-     * Operators which affect the variables to its left and right
-     */
+    /// Operators which affect the variables to its left and right
     protected static boolean isOperatorLR( Symbol s ) {
         if (s == null)
             return false;
@@ -1650,17 +1572,13 @@ public class Equation {
         }
     }
 
-    /**
-     * Returns true if the character is a valid letter for use in a variable name
-     */
+    /// Returns true if the character is a valid letter for use in a variable name
     protected static boolean isLetter( char c ) {
         return !(isSymbol(c) || Character.isWhitespace(c));
     }
 
-    /**
-     * Returns true if the specified name is NOT allowed. It isn't allowed if it matches a built in operator
-     * or if it contains a restricted character.
-     */
+    /// Returns true if the specified name is NOT allowed. It isn't allowed if it matches a built in operator
+    /// or if it contains a restricted character.
     protected boolean isReserved( String name ) {
         if (functions.isFunctionName(name))
             return true;
@@ -1672,29 +1590,23 @@ public class Equation {
         return false;
     }
 
-    /**
-     * Compiles and performs the provided equation.
-     *
-     * @param equation String in simple equation format
-     */
+    /// Compiles and performs the provided equation.
+    ///
+    /// @param equation String in simple equation format
     public Equation process( String equation ) {
         compile(equation).perform();
         return this;
     }
 
-    /**
-     * Compiles and performs the provided equation.
-     *
-     * @param equation String in simple equation format
-     */
+    /// Compiles and performs the provided equation.
+    ///
+    /// @param equation String in simple equation format
     public Equation process( String equation, boolean debug ) {
         compile(equation, true, debug).perform();
         return this;
     }
 
-    /**
-     * Prints the results of the equation to standard out. Useful for debugging
-     */
+    /// Prints the results of the equation to standard out. Useful for debugging
     public void print( String equation ) {
         // first assume it's just a variable
         Variable v = lookupVariable(equation);
@@ -1713,9 +1625,7 @@ public class Equation {
         }
     }
 
-    /**
-     * Returns the functions manager
-     */
+    /// Returns the functions manager
     public ManagerFunctions getFunctions() {
         return functions;
     }
