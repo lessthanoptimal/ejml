@@ -1372,6 +1372,25 @@ public abstract class Operation {
         return ret;
     }
 
+    public static Info eye( final Variable A, final Variable B, ManagerTempVariables manager ) {
+        if (A instanceof VariableScalar sa && B instanceof VariableScalar sb) {
+            var ret = new Info();
+            final VariableMatrix output = manager.createMatrix();
+            ret.output = output;
+
+            ret.op = new Operation("eye_a_b") {
+                @Override public void process() {
+                    output.matrix.reshape((int)sa.getDouble(), (int)sb.getDouble());
+                    CommonOps_DDRM.setIdentity(output.matrix);
+                }
+            };
+
+            return ret;
+        }
+
+        throw new RuntimeException("Both inputs must be scalars for eye(a,b)");
+    }
+
     public static Info diag( final Variable A, ManagerTempVariables manager ) {
         Info ret = new Info();
 

@@ -147,6 +147,11 @@ public class ManagerFunctions {
         input1.put("rng", Operation::rng);
         input1.put("scalar", Operation::matrixToScalar);
 
+        inputN.put("eye", ( inputs, manager ) -> {
+            if (inputs.size() != 2) throw new RuntimeException("Two inputs expected");
+            return Operation.eye(inputs.get(0), inputs.get(1), manager);
+        });
+
         inputN.put("size", ( inputs, manager ) -> {
             if (inputs.size() != 2) throw new RuntimeException("Two inputs expected");
             return Operation.size(inputs.get(0), inputs.get(1), manager);

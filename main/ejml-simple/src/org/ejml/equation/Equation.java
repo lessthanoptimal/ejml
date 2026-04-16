@@ -129,8 +129,9 @@ import static org.ejml.equation.TokenList.Type;
  *
  * <h2>Supported functions</h2>
  * <pre>
- * eye(N)       Create an identity matrix which is N by N.
+ * eye(n)       Create an identity matrix which is 'n' by 'n'. Input must be integer.
  * eye(A)       Create an identity matrix which is A.numRows by A.numCols
+ * eye(a,b)     Create an 'a' by 'b' identity matrix. Inputs must be scalar.
  * normF(A)     Frobenius normal of the matrix.
  * normP(A,p)   P-norm for a matrix or vector. p=1 or p=2 is typical.
  * sum(A)       Sum of every element in A

@@ -1333,7 +1333,7 @@ public class TestOperation extends EjmlStandardJUnit {
         assertEquals(-8, eq.lookupInteger("b"));
     }
 
-    @Test void eye() {
+    @Test void eye_int() {
         var eq = new Equation();
 
         SimpleMatrix a = SimpleMatrix.random_DDRM(3, 4, -1, 1, rand);
@@ -1342,6 +1342,33 @@ public class TestOperation extends EjmlStandardJUnit {
         eq.process("a=eye(3)");
 
         assertTrue(SimpleMatrix.identity(3).isIdentical(a, UtilEjml.TEST_F64));
+    }
+
+    @Test void eye_matrix() {
+        var eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random_DDRM(1, 1, -1, 1, rand);
+        SimpleMatrix b = SimpleMatrix.random_DDRM(3, 4, -1, 1, rand);
+
+        eq.alias(a, "a", b , "b");
+        eq.process("a=eye(b)");
+
+        assertEquals(3, a.getNumRows());
+        assertEquals(4, a.getNumCols());
+        assertTrue(MatrixFeatures_DDRM.isIdentity(a.getDDRM(), UtilEjml.TEST_F64));
+    }
+
+    @Test void eye_scalar_scalar() {
+        var eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random_DDRM(1, 1, -1, 1, rand);
+
+        eq.alias(a, "a");
+        eq.process("a=eye(3, 4)");
+
+        assertEquals(3, a.getNumRows());
+        assertEquals(4, a.getNumCols());
+        assertTrue(MatrixFeatures_DDRM.isIdentity(a.getDDRM(), UtilEjml.TEST_F64));
     }
 
     @Test void abs_matrix() {
