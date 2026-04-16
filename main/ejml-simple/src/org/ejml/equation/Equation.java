@@ -18,7 +18,9 @@
 package org.ejml.equation;
 
 import lombok.Getter;
+import org.ejml.UtilEjml;
 import org.ejml.data.*;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.ops.ConvertMatrixData;
 import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.FConvertMatrixStruct;
@@ -123,6 +125,7 @@ import static org.ejml.equation.TokenList.Type;
 /// ```
 /// pi = Math.PI
 /// e  = Math.E
+/// NaN = Double.NaN
 /// ```
 ///
 /// ## Supported functions
@@ -265,6 +268,7 @@ public class Equation {
     public Equation() {
         alias(Math.PI, "pi");
         alias(Math.E, "e");
+        alias(Double.NaN, "NaN");
     }
 
     /// Consturctor which allows you to alias variables
@@ -707,7 +711,7 @@ public class Equation {
     }
 
     /// Searches for commas in the set of tokens. Used for inputs to functions.
-    /// Ignore comma's which are inside a [ ] block
+    /// Ignore comma's which are inside a [] block
     ///
     /// @return List of output tokens between the commas
     protected List<TokenList.Token> parseParameterCommaBlock( TokenList tokens, Sequence sequence ) {
@@ -1596,6 +1600,45 @@ public class Equation {
         return this;
     }
 
+    /// Returns a list of variables which contains uncountable numbers, such as NaN or Infinity
+    ///
+    /// @param names Comma separated list of variables it should test, e.g. "A,b,C"
+    public List<String> isUncountable( String names ) {
+        String[] nameArray = names.split(",");
+        var out = new ArrayList<String>();
+        for (int i = 0; i < nameArray.length; i++) {
+            String name = nameArray[i].trim();
+            Variable v = variables.get(name);
+            boolean isNaN = switch (v.getType()) {
+                case MATRIX -> MatrixFeatures_DDRM.hasUncountable(((VariableMatrix)v).matrix);
+                case SCALAR -> UtilEjml.isUncountable(((VariableScalar)v).getDouble());
+                default ->
+                        throw new IllegalArgumentException("Unsupported variable. '" + name + "' type: " + v.getType());
+            };
+            if (isNaN)
+                out.add(name);
+        }
+        return out;
+    }
+
+    /// Applies the passed in test to see if all Matrix variables named are true. Returns a list of all which failed.
+    ///
+    /// @param names Comma separated list of variables it should test, e.g. "A,b,C"
+    public List<String> isTrueMatrix( String names, MatrixTestOp op ) {
+        String[] nameArray = names.split(",");
+        var out = new ArrayList<String>();
+        for (int i = 0; i < nameArray.length; i++) {
+            String name = nameArray[i].trim();
+            if (variables.get(name) instanceof VariableMatrix v) {
+                if (!op.check(v.matrix))
+                    out.add(name);
+            } else {
+                throw new IllegalArgumentException("Only matrix supported. '" + name + "' type: " + variables.get(name).getType());
+            }
+        }
+        return out;
+    }
+
     /// Prints the results of the equation to standard out. Useful for debugging
     public void print( String equation ) {
         // first assume it's just a variable
@@ -1613,5 +1656,10 @@ public class Equation {
         } else {
             System.out.println("Add support for " + v.getClass().getSimpleName());
         }
+    }
+
+    /// Used to test to see if something is true about a matrix
+    public @FunctionalInterface interface MatrixTestOp {
+        boolean check( DMatrixRMaj matrix );
     }
 }

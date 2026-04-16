@@ -26,6 +26,8 @@ import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.ejml.equation.TokenList.Type;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1232,5 +1234,29 @@ public class TestEquation extends EjmlStandardJUnit {
         eq.process("A=[1 2;3 4;5 6]");
         eq.print("A");
         eq.print("B=5");
+    }
+
+    @Test void isUncountable() {
+        var eq = new Equation();
+        eq.process("A=1");
+        eq.process("B=1.1");
+        eq.process("C=[1 2;3 4;5 6]");
+        eq.process("D=[1 2;NaN 4;5 6]");
+        eq.process("E=NaN");
+
+        List<String> found = eq.isUncountable("A,B,C,D,E");
+        assertEquals(2, found.size());
+        assertTrue(found.contains("D"));
+        assertTrue(found.contains("E"));
+    }
+
+    @Test void isTrueMatrix() {
+        var eq = new Equation();
+        eq.process("C=[1 2;3 4;5 6]");
+        eq.process("D=[1 2;NaN 4;5 6]");
+
+        List<String> found = eq.isTrueMatrix("C,D", m -> !MatrixFeatures_DDRM.hasUncountable(m));
+        assertEquals(1, found.size());
+        assertTrue(found.contains("D"));
     }
 }
