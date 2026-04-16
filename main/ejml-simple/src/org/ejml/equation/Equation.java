@@ -17,6 +17,7 @@
  */
 package org.ejml.equation;
 
+import lombok.Getter;
 import org.ejml.data.*;
 import org.ejml.ops.ConvertMatrixData;
 import org.ejml.ops.DConvertMatrixStruct;
@@ -246,8 +247,6 @@ import static org.ejml.equation.TokenList.Type;
 /// ```
 /// [1] It is not compiled into Java byte-code, but into a sequence of operations stored in a List.
 /// ```
-///
-/// @author Peter Abeles
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
@@ -259,7 +258,8 @@ public class Equation {
     // storage for a single word in the tokenizer
     char[] storage = new char[1024];
 
-    ManagerFunctions functions = new ManagerFunctions();
+    /// Function manager
+    @Getter ManagerFunctions functions = new ManagerFunctions();
     ManagerTempVariables managerTemp = new ManagerTempVariables();
 
     public Equation() {
@@ -1555,21 +1555,11 @@ public class Equation {
         if (s == null)
             return false;
 
-        switch (s) {
-            case ELEMENT_DIVIDE:
-            case ELEMENT_TIMES:
-            case ELEMENT_POWER:
-            case RDIVIDE:
-            case LDIVIDE:
-            case TIMES:
-            case POWER:
-            case PLUS:
-            case MINUS:
-            case ASSIGN:
-                return true;
-            default:
-                return false;
-        }
+        return switch (s) {
+            case ELEMENT_DIVIDE, ELEMENT_TIMES, ELEMENT_POWER, RDIVIDE, LDIVIDE, TIMES, POWER, PLUS, MINUS, ASSIGN ->
+                    true;
+            default -> false;
+        };
     }
 
     /// Returns true if the character is a valid letter for use in a variable name
@@ -1623,10 +1613,5 @@ public class Equation {
         } else {
             System.out.println("Add support for " + v.getClass().getSimpleName());
         }
-    }
-
-    /// Returns the functions manager
-    public ManagerFunctions getFunctions() {
-        return functions;
     }
 }
