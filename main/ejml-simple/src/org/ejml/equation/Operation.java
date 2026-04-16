@@ -1062,6 +1062,31 @@ public abstract class Operation {
         return ret;
     }
 
+    public static Info size( final Variable A, final Variable axis, ManagerTempVariables manager ) {
+        Info ret = new Info();
+        final VariableInteger output = manager.createInteger();
+        ret.output = output;
+
+        if (!(A instanceof VariableMatrix varA) || !(axis instanceof VariableScalar))
+            throw new RuntimeException("size(A,axis) 'A' is a matrix and 'axis' is a scalar");
+
+        final int valueAxis = (int)((VariableScalar)axis).getDouble();
+
+        ret.op = new Operation("size") {
+            @Override
+            public void process() {
+                output.value = switch (valueAxis) {
+                    case 0 -> varA.matrix.numRows;
+                    case 1 -> varA.matrix.numCols;
+                    default ->
+                            throw new IllegalArgumentException("Axis must be 0 or 1, for rows and columns. Not: " + valueAxis);
+                };
+            }
+        };
+
+        return ret;
+    }
+
     public static Info normP( final Variable A, final Variable P, ManagerTempVariables manager ) {
         Info ret = new Info();
         final VariableDouble output = manager.createDouble();

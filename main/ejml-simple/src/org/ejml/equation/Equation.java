@@ -160,6 +160,7 @@ import static org.ejml.equation.TokenList.Type;
  * pow(a,b)     Computes a to the power of b. Can also be invoked with "a^b" scalars only.
  * sqrt(a)      Computes the square root of a.
  * sin(a)       Math.sin(a) for scalars only
+ * size(a,b)    Returns the number of elements along rows (b=0) or columns (b=1)
  * cos(a)       Math.cos(a) for scalars only
  * atan(a)      Math.atan(a) for scalars only
  * atan2(a,b)   Math.atan2(a,b) for scalars only

@@ -1145,6 +1145,19 @@ public class TestOperation extends EjmlStandardJUnit {
         assertEquals(5.6, eq.lookupDouble("b"), UtilEjml.TEST_F64);
     }
 
+    @Test void size_axis() {
+        var eq = new Equation();
+
+        SimpleMatrix a = SimpleMatrix.random_DDRM(3, 4, -1, 1, rand);
+
+        eq.alias(a, "a");
+        eq.process("b=size(a,0)");
+        assertEquals(3, eq.lookupInteger("b"));
+
+        eq.process("b=size(a,1)");
+        assertEquals(4, eq.lookupInteger("b"));
+    }
+
     @Test void normP() {
         var eq = new Equation();
 
