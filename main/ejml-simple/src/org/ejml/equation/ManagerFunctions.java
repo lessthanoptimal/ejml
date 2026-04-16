@@ -24,12 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Centralized place to create new instances of operations and functions. Must call
- * {@link #setManagerTemp} before any other functions.
- *
- * @author Peter Abeles
- */
+/// Centralized place to create new instances of operations and functions. Must call
+/// [#setManagerTemp] before any other functions.
 @SuppressWarnings("NullAway.Init")
 public class ManagerFunctions {
 
@@ -44,22 +40,18 @@ public class ManagerFunctions {
         addBuiltIn();
     }
 
-    /**
-     * Returns true if the string matches the name of a function
-     */
+    /// Returns true if the string matches the name of a function
     public boolean isFunctionName( String s ) {
         if (input1.containsKey(s))
             return true;
         return inputN.containsKey(s);
     }
 
-    /**
-     * Create a new instance of single input functions
-     *
-     * @param name function name
-     * @param var0 Input variable
-     * @return Resulting operation
-     */
+    /// Create a new instance of single input functions
+    ///
+    /// @param name function name
+    /// @param var0 Input variable
+    /// @return Resulting operation
     public @Nullable Operation.Info create( String name, Variable var0 ) {
         Input1 func = input1.get(name);
         if (func == null)
@@ -67,13 +59,11 @@ public class ManagerFunctions {
         return func.create(var0, managerTemp);
     }
 
-    /**
-     * Create a new instance of single input functions
-     *
-     * @param name function name
-     * @param vars Input variables
-     * @return Resulting operation
-     */
+    /// Create a new instance of single input functions
+    ///
+    /// @param name function name
+    /// @param vars Input variables
+    /// @return Resulting operation
     public @Nullable Operation.Info create( String name, List<Variable> vars ) {
         InputN func = inputN.get(name);
         if (func == null)
@@ -81,92 +71,60 @@ public class ManagerFunctions {
         return func.create(vars, managerTemp);
     }
 
-    /**
-     * Create a new instance of a single input function from an operator character
-     *
-     * @param op Which operation
-     * @param input Input variable
-     * @return Resulting operation
-     */
+    /// Create a new instance of a single input function from an operator character
+    ///
+    /// @param op Which operation
+    /// @param input Input variable
+    /// @return Resulting operation
     public Operation.Info create( char op, Variable input ) {
-        switch (op) {
-            case '\'':
-                return Operation.transpose(input, managerTemp);
-
-            default:
-                throw new RuntimeException("Unknown operation " + op);
-        }
+        return switch (op) {
+            case '\'' -> Operation.transpose(input, managerTemp);
+            default -> throw new RuntimeException("Unknown operation " + op);
+        };
     }
 
-    /**
-     * Create a new instance of a two input function from an operator character
-     *
-     * @param op Which operation
-     * @param left Input variable on left
-     * @param right Input variable on right
-     * @return Resulting operation
-     */
+    /// Create a new instance of a two input function from an operator character
+    ///
+    /// @param op Which operation
+    /// @param left Input variable on left
+    /// @param right Input variable on right
+    /// @return Resulting operation
     public Operation.Info create( Symbol op, Variable left, Variable right ) {
-        switch (op) {
-            case PLUS:
-                return Operation.add(left, right, managerTemp);
-
-            case MINUS:
-                return Operation.subtract(left, right, managerTemp);
-
-            case TIMES:
-                return Operation.multiply(left, right, managerTemp);
-
-            case RDIVIDE:
-                return Operation.divide(left, right, managerTemp);
-
-            case LDIVIDE:
-                return Operation.divide(right, left, managerTemp);
-
-            case POWER:
-                return Operation.pow(left, right, managerTemp);
-
-            case ELEMENT_DIVIDE:
-                return Operation.elementDivision(left, right, managerTemp);
-
-            case ELEMENT_TIMES:
-                return Operation.elementMult(left, right, managerTemp);
-
-            case ELEMENT_POWER:
-                return Operation.elementPow(left, right, managerTemp);
-
-            default:
-                throw new RuntimeException("Unknown operation " + op);
-        }
+        return switch (op) {
+            case PLUS -> Operation.add(left, right, managerTemp);
+            case MINUS -> Operation.subtract(left, right, managerTemp);
+            case TIMES -> Operation.multiply(left, right, managerTemp);
+            case RDIVIDE -> Operation.divide(left, right, managerTemp);
+            case LDIVIDE -> Operation.divide(right, left, managerTemp);
+            case POWER -> Operation.pow(left, right, managerTemp);
+            case ELEMENT_DIVIDE -> Operation.elementDivision(left, right, managerTemp);
+            case ELEMENT_TIMES -> Operation.elementMult(left, right, managerTemp);
+            case ELEMENT_POWER -> Operation.elementPow(left, right, managerTemp);
+            default -> throw new RuntimeException("Unknown operation " + op);
+        };
     }
 
     public void setManagerTemp( ManagerTempVariables managerTemp ) {
         this.managerTemp = managerTemp;
     }
 
-    /**
-     * Adds a function, with a single input, to the list
-     *
-     * @param name Name of function
-     * @param function Function factory
-     */
+    /// Adds a function, with a single input, to the list
+    ///
+    /// @param name Name of function
+    /// @param function Function factory
     public void add1( String name, Input1 function ) {
         input1.put(name, function);
     }
 
-    /**
-     * Adds a function, with a two inputs, to the list
-     *
-     * @param name Name of function
-     * @param function Function factory
-     */
+    /// Adds a function, with two inputs, to the list
+    ///
+    /// @param name Name of function
+    /// @param function Function factory
     public void addN( String name, InputN function ) {
         inputN.put(name, function);
     }
 
-    /**
-     * Adds built in functions
-     */
+    /// Adds built-in functions
     private void addBuiltIn() {
         input1.put("inv", Operation::inv);
         input1.put("pinv", Operation::pinv);
@@ -265,16 +223,12 @@ public class ManagerFunctions {
         return managerTemp;
     }
 
-    /**
-     * Creates new instances of functions from a single variable
-     */
+    /// Creates new instances of functions from a single variable
     public interface Input1 {
         Operation.Info create( Variable A, ManagerTempVariables manager );
     }
 
-    /**
-     * Creates a new instance of functions from two variables
-     */
+    /// Creates a new instance of functions from two variables
     public interface InputN {
         Operation.Info create( List<Variable> inputs, ManagerTempVariables manager );
     }
