@@ -253,7 +253,7 @@ import static org.ejml.equation.TokenList.Type;
 // TODO Change parsing so that operations specify a pattern.
 // TODO Recycle temporary variables
 // TODO intelligently handle identity matrices
-@SuppressWarnings("NullAway") // Massive false positive rate
+@SuppressWarnings({"NullAway", "unchecked"}) // Massive false positive rate
 public class Equation {
     HashMap<String, Variable> variables = new HashMap<>();
     HashMap<String, Macro> macros = new HashMap<>();
@@ -1598,6 +1598,32 @@ public class Equation {
     public Equation process( String equation, boolean debug ) {
         compile(equation, true, debug).perform();
         return this;
+    }
+
+    /// Processes the equation and returns the result.
+    ///
+    /// @param equation String in simple equation format
+    /// @return Results on the equation
+    public <T>T result( String equation ) {
+        if (equation.contains("="))
+            throw new IllegalArgumentException("Input equation can't make an assignment");
+        String varName = "tmp123";
+        variables.remove(varName);
+
+        compile(varName+"="+equation).perform();
+        Variable var = lookupVariable(varName);
+        return switch(var.type) {
+            case MATRIX -> (T)((VariableMatrix)var).matrix;
+            case SCALAR -> {
+                var scalar = (VariableScalar)var;
+                yield switch(scalar.type) {
+                    case DOUBLE -> (T)(Double)((VariableDouble)scalar).value;
+                    case INTEGER ->  (T)(Integer)((VariableInteger)scalar).value;
+                    case COMPLEX -> throw new RuntimeException("Complex scalar isn't yet supported");
+                };
+            }
+            default -> throw new RuntimeException("Variable type not yet supported. "+var.type);
+        };
     }
 
     /// Returns a list of variables which contains uncountable numbers, such as NaN or Infinity

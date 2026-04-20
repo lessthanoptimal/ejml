@@ -34,6 +34,24 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("deprecation")
 public class TestEquation extends EjmlStandardJUnit {
 
+    @Test void result() {
+        var eq = new Equation();
+        eq.process("A = 2");
+        eq.process("B = 3");
+
+        // Test scalar types
+        assertEquals(5, (Integer)eq.result("A+B"), 0);
+        assertEquals(5.5, (Double)eq.result("A+B+0.5"), 0.0);
+
+        // Test matrix type
+        eq.process("C = [2,1]");
+        eq.process("D = [3,6]");
+        DMatrixRMaj r = eq.result("C+D");
+        assertEquals(2, r.getNumElements());
+        assertEquals(5.0, r.get(0));
+        assertEquals(7.0, r.get(1));
+    }
+
     /// Basic test which checks ability parse basic operators and order of operation
     @Test void compile_basic() {
         var eq = new Equation();
