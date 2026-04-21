@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,6 +20,7 @@ package org.ejml.data;
 
 import org.ejml.EjmlStandardJUnit;
 import org.ejml.EjmlUnitTests;
+import org.ejml.MatrixPrintFormat;
 import org.ejml.UtilEjml;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
@@ -214,5 +215,16 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertEquals(1, actual[0][1], UtilEjml.TEST_F64);
         assertEquals(2, actual[1][0], UtilEjml.TEST_F64);
         assertEquals(3, actual[1][1], UtilEjml.TEST_F64);
+    }
+
+    @Test void format() {
+        var format = new MatrixPrintFormat(0, ", ", ",\n", "{", "}", "{", "}");
+
+        var mat = new DMatrixRMaj(new double[][]{{1, 0.0000013456, 3}, {3.2, 4.45983445, 12345.678901}});
+        String found = mat.format(format);
+        assertEquals("{{1, 1e-06, 3},\n{3, 4, 1e+04}}", found);
+        format.setPrecision(4);
+        found = mat.format(format);
+        assertEquals("{{1, 1.3456e-06, 3},\n{3.2, 4.4598, 12346}}", found);
     }
 }

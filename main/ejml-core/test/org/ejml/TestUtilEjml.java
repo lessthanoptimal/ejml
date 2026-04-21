@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -89,7 +89,8 @@ public class TestUtilEjml extends EjmlStandardJUnit {
         try {
             UtilEjml.checkTooLarge(Integer.MAX_VALUE, 600);
             fail("Exception should have been thrown");
-        } catch( IllegalArgumentException ignore){}
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -101,12 +102,14 @@ public class TestUtilEjml extends EjmlStandardJUnit {
         try {
             UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE/2, 2);
             fail("Exception should have been thrown");
-        } catch (IllegalArgumentException ignore) {}
+        } catch (IllegalArgumentException ignore) {
+        }
 
         try {
             UtilEjml.checkTooLargeComplex(Integer.MAX_VALUE, 600);
             fail("Exception should have been thrown");
-        } catch (IllegalArgumentException ignore) {}
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -133,8 +136,7 @@ public class TestUtilEjml extends EjmlStandardJUnit {
         assertTrue(numOrdered < 10);
     }
 
-    @Test
-    void fancyStringF() {
+    @Test void fancyStringF() {
         DecimalFormat format = new DecimalFormat("#");
         assertEquals("-0         ", UtilEjml.fancyStringF(-0.0, format, 11, 4));
         assertEquals(" 0         ", UtilEjml.fancyStringF(0.0, format, 11, 4));
@@ -184,8 +186,36 @@ public class TestUtilEjml extends EjmlStandardJUnit {
         assertEquals(" 1.235E+102", UtilEjml.fancyStringF(1.234567E102, format, 11, 4));
     }
 
-    @Test
-    void exceedsMaxMatrixSize() {
+    @Test void fancyString2() {
+        assertEquals("-0", UtilEjml.fancyString2(-0.0, 2, '.'));
+        assertEquals("0", UtilEjml.fancyString2(0.0, 2, '.'));
+        assertEquals("-1", UtilEjml.fancyString2(-1, 2, '.'));
+        assertEquals("1", UtilEjml.fancyString2(1, 2, '.'));
+        assertEquals("-12", UtilEjml.fancyString2(-12, 2, '.'));
+        assertEquals("12", UtilEjml.fancyString2(12, 2, '.'));
+        assertEquals("3", UtilEjml.fancyString2(3.2, 0, '.'));
+        assertEquals("0", UtilEjml.fancyString2(0.23, 0, '.'));
+        assertEquals("0.2", UtilEjml.fancyString2(0.23, 1, '.'));
+        assertEquals("0.23", UtilEjml.fancyString2(0.23, 2, '.'));
+        assertEquals("3.2", UtilEjml.fancyString2(3.2, 1, '.'));
+        assertEquals("-1.1", UtilEjml.fancyString2(-1.1234, 1, '.'));
+        assertEquals("-1.123", UtilEjml.fancyString2(-1.1234, 3, '.'));
+        assertEquals("-1.1234", UtilEjml.fancyString2(-1.1234, 5, '.'));
+        assertEquals("-1.1234", UtilEjml.fancyString2(-1.1234, 10, '.'));
+        assertEquals("2", UtilEjml.fancyString2(2.00000012, 5, '.'));
+        assertEquals("2.00001e+11", UtilEjml.fancyString2(200001000000.000012, 5, '.'));
+        assertEquals("2.0001e+11", UtilEjml.fancyString2(200010000000.000012, 5, '.'));
+        assertEquals("2e+11", UtilEjml.fancyString2(200000000000.000012, 5, '.'));
+        assertEquals("-1234.12", UtilEjml.fancyString2(-1234.123456, 2, '.'));
+        assertEquals("-1234.123456", UtilEjml.fancyString2(-1234.123456, 20, '.')); // check rounding here
+        assertEquals("-1234.123", UtilEjml.fancyString2(-1234.123456, 3, '.')); // no rounding needed
+        assertEquals("1.235e-05", UtilEjml.fancyString2(0.0000123451, 3, '.'));
+        assertEquals("0.0000123451", UtilEjml.fancyString2(0.0000123451, 20, '.'));
+        assertEquals("1.23e-102", UtilEjml.fancyString2(1.234567E-102, 2, '.'));
+        assertEquals("1.23e+102", UtilEjml.fancyString2(1.234567E102, 2, '.'));
+    }
+
+    @Test void exceedsMaxMatrixSize() {
         assertFalse(UtilEjml.exceedsMaxMatrixSize(100, 200));
         assertFalse(UtilEjml.exceedsMaxMatrixSize(1, 200));
         assertFalse(UtilEjml.exceedsMaxMatrixSize(50, 0));

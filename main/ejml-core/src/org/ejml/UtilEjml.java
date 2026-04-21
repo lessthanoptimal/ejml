@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -586,6 +586,83 @@ public class UtilEjml {
             }
         }
         return formatted;
+    }
+
+    /// Prints numbers to minimize how much space they take up
+    ///
+    /// Examples with precision of 2
+    /// ```
+    /// 1.0 -> 1
+    /// 4.45983445 -> 4.5
+    /// 0.0000013456 -> 1.3e-06
+    /// 12345.678901 -> 1.2e+04
+    /// ```
+    ///
+    /// @param value The value that you wish to convert into a string
+    /// @param precision How many significant digits should it maintain
+    /// @param decimalSep How decimals are split off from integer values. Period in English.
+    public static String fancyString2( double value, int precision, char decimalSep ) {
+        // %g prefers to use exp format, but we don't. So if there's no space
+        // benefit, don't use it
+
+        double vabs = Math.abs(value);
+
+        // The number of characters to encode it in exp format is known
+        int lengthExp = 2 + precision + 4;
+
+        // Determine if we can encode "precision" most significant digits in the same amount of space
+        // as we would use if exponential format is used
+        boolean useFloat = true;
+        if (vabs > 0.0) {
+            // How many digits to encode decimal
+            double decimal = vabs - (int)vabs;
+            int countInt = digitCount(Math.round(vabs - decimal));
+
+            // Does the integer component exceed our character budget?
+            if (countInt > lengthExp) {
+                useFloat = false;
+            } else {
+                // Can
+                double decimalScaled = Math.pow(10, Math.max(1, precision))*decimal;
+                if (decimalScaled >= 1.0) {
+                    int countDecimal = digitCount(decimalScaled);
+                    if (countDecimal > lengthExp - countInt - 2)
+                        useFloat = false;
+                } else {
+                    // the non-zero numbers are outside the precision allowed
+                    useFloat = false;
+                }
+            }
+        }
+
+        String txt = useFloat ? String.format("%." + precision + "f", value) : String.format("%." + (precision + 1) + "g", value);
+
+        // Strip away pointless zeros
+        // 1.0000 -> 1, 1.20000 -> 1.2, 1.34000000e-06 -> 1.34e-06
+        int locationExp = txt.indexOf('e');
+
+        String suffix = locationExp >= 0 ? txt.substring(locationExp) : "";
+
+        int searchLength = locationExp < 0 ? txt.length() : locationExp;
+        int i = searchLength;
+        while (i > 0) {
+            i--;
+            if (txt.charAt(i) != '0')
+                break;
+        }
+        if (i + 1 == searchLength)
+            return txt;
+        // remove trailing decimal
+        if (txt.charAt(i) == decimalSep)
+            return txt.substring(0, i) + suffix;
+        return txt.substring(0, i + 1) + suffix;
+    }
+
+    private static int digitCount( double value ) {
+        double log = Math.log10(value);
+        if (Double.isInfinite(log))
+            return 0;
+        return (int)Math.abs(log) + 1;
     }
 
     /**
