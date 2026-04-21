@@ -39,7 +39,7 @@ allprojects {
     project.ext.junit_version = '5.11.4'
     project.ext.errorprone_version = '2.35.1'
     project.ext.nullaway_version = '0.12.4'
-    project.ext.auto64to32_version = '3.2.2'
+    project.ext.auto64to32_version = '3.3.0-SNAPSHOT'
     project.ext.jmh_version = '1.36'
     project.ext.jetnull_version = '23.0.0'
     project.ext.jsr250_version = '1.0'
