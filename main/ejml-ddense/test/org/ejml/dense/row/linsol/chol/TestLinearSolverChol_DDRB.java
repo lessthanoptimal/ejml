@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,13 +18,21 @@
 
 package org.ejml.dense.row.linsol.chol;
 
+import org.ejml.EjmlStandardJUnit;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.interfaces.linsol.LinearSolverDense;
+import org.junit.jupiter.api.Nested;
 
-public class TestLinearSolverChol_DDRB extends BaseCholeskySolveTests_DDRM {
+public class TestLinearSolverChol_DDRB extends EjmlStandardJUnit {
+    @Nested class Lower extends BaseCholeskySolveTests_DDRM {
+        @Override public LinearSolverDense<DMatrixRMaj> createSolver() {
+            return new LinearSolverChol_DDRB(true);
+        }
+    }
 
-    @Override
-    public LinearSolverDense<DMatrixRMaj> createSolver() {
-        return new LinearSolverChol_DDRB();
+    @Nested class Upper extends BaseCholeskySolveTests_DDRM {
+        @Override public LinearSolverDense<DMatrixRMaj> createSolver() {
+            return new LinearSolverChol_DDRB(false);
+        }
     }
 }

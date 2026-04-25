@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -80,12 +80,11 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         }
     }
 
-    @Test void testSolve() {
-
+    @Test void solve() {
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
-        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DMatrixRMaj b = new DMatrixRMaj(3, 1, true, 17, 97, 320);
+        var A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        var b = new DMatrixRMaj(3, 1, true, 17, 97, 320);
         DMatrixRMaj x = RandomMatrices_DDRM.rectangle(3, 1, rand);
         DMatrixRMaj A_orig = A.copy();
         DMatrixRMaj B_orig = b.copy();
@@ -102,12 +101,11 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(x_expected, x, UtilEjml.TEST_F64_SQ);
     }
 
-    @Test void testInvert() {
-
+    @Test void invert() {
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
-        DMatrixRMaj A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
-        DMatrixRMaj found = new DMatrixRMaj(A.numRows, A.numCols);
+        var A = new DMatrixRMaj(3, 3, true, 1, 2, 4, 2, 13, 23, 4, 23, 90);
+        var found = new DMatrixRMaj(A.numRows, A.numCols);
 
         assertTrue(solver.setA(A));
         solver.invert(found);
@@ -117,8 +115,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         EjmlUnitTests.assertEquals(A_inv, found, UtilEjml.TEST_F64_SQ);
     }
 
-    @Test void testQuality() {
-
+    @Test void quality() {
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = CommonOps_DDRM.diag(3, 2, 1);
@@ -133,8 +130,7 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
         assertTrue(qualityB < qualityA);
     }
 
-    @Test void testQuality_scale() {
-
+    @Test void quality_scale() {
         LinearSolverDense<DMatrixRMaj> solver = createSafeSolver();
 
         DMatrixRMaj A = CommonOps_DDRM.diag(3, 2, 1);
@@ -162,8 +158,8 @@ public abstract class BaseCholeskySolveTests_DDRM extends EjmlStandardJUnit {
 //                    System.out.println("-=-=-=-=-=-=-=-=      "+N+" mc "+mc);
                 DMatrixRMaj A = createA(N);
                 DMatrixRMaj A_cpy = A.copy();
-                DMatrixRMaj B = new DMatrixRMaj(A.numRows, 3);
-                DMatrixRMaj X = new DMatrixRMaj(A.numCols, 3);
+                var B = new DMatrixRMaj(A.numRows, 3);
+                var X = new DMatrixRMaj(A.numCols, 3);
                 DMatrixRMaj foundB = new DMatrixRMaj(A.numCols, 3);
 
                 DMatrixRMaj B_cpy = B.copy();

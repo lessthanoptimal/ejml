@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -140,6 +140,34 @@ public class TriangularSolver_DDRM {
                 sum -= L[k*n + i]*b[k];
             }
             b[i] = sum/L[i*n + i];
+        }
+    }
+
+    /**
+     * <p>
+     * This is a forward substitution solver for non-singular upper triangular matrices.
+     * <br>
+     * b = (U<sup>T</sup>)<sup>-1</sup>b<br>
+     * <br>
+     * where b is a vector, U is an n by n upper triangular matrix.<br>
+     * </p>
+     *
+     * <p>
+     * U is an upper triangular matrix, but it comes up with a solution as if it was
+     * a lower triangular matrix that was computed by transposing U.
+     * </p>
+     *
+     * @param U An n by n non-singular upper triangular matrix. Not modified.
+     * @param b A vector of length n. Modified.
+     * @param n The size of the matrices.
+     */
+    public static void solveTranU( double[] U, double[] b, int n ) {
+        for (int i = 0; i < n; i++) {
+            double sum = b[i];
+            for (int k = 0; k < i; k++) {
+                sum -= U[k*n + i]*b[k];
+            }
+            b[i] = sum/U[i*n + i];
         }
     }
 

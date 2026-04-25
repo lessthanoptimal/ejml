@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -42,8 +42,7 @@ public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
     /**
      * Check the inner block multiplication functions against various shapes of inputs
      */
-    @Test
-    public void testAllBlockMult()
+    @Test void allBlockMult()
     {
         checkBlockMultCase(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
         checkBlockMultCase(BLOCK_LENGTH -1, BLOCK_LENGTH, BLOCK_LENGTH);
@@ -57,7 +56,7 @@ public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
      * Searches for all inner block matrix operations and tests their correctness.
      */
     private void checkBlockMultCase(final int heightA, final int widthA, final int widthB) {
-        Method methods[] = InnerMultiplication_DDRB.class.getDeclaredMethods();
+        Method[] methods = InnerMultiplication_DDRB.class.getDeclaredMethods();
 
         int numFound = 0;
         for( Method m : methods) {

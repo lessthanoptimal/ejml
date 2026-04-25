@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,8 +44,7 @@ public class TestMatrixMult_DDRB extends EjmlStandardJUnit {
     /**
      * Checks to see if matrix multiplication variants handles submatrices correctly
      */
-    @Test
-    public void mult_submatrix() {
+    @Test void mult_submatrix() {
         Method[] methods = MatrixMult_DDRB.class.getDeclaredMethods();
 
         int numFound = 0;
@@ -70,7 +69,7 @@ public class TestMatrixMult_DDRB extends EjmlStandardJUnit {
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(7, numFound);
+        assertEquals(9, numFound);
     }
 
     private void checkMult_submatrix( Method func, int operationType, boolean transA, boolean transB ) {

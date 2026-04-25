@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -33,42 +33,77 @@ import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
- * @author Peter Abeles
- */
 public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
-    @Test
-    public void testInvertLower_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5,0,-1,1,rand);
+    @Test void invertLower_two() {
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
         CommonOps_DDRM.transpose(A);
 
         DMatrixRMaj A_inv = A.copy();
 
-        InnerTriangularSolver_DDRB.invertLower(A.data,A_inv.data,5,0,0);
+        InnerTriangularSolver_DDRB.invertLower(A.data, A_inv.data, 5, 0, 0);
 
-        DMatrixRMaj S = new DMatrixRMaj(5,5);
-        CommonOps_DDRM.mult(A,A_inv,S);
+        var S = new DMatrixRMaj(5, 5);
+        CommonOps_DDRM.mult(A, A_inv, S);
 
-        assertTrue(GenericMatrixOps_F64.isIdentity(S,UtilEjml.TEST_F64));
+        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
 
         // see if it works with the same input matrix
-        InnerTriangularSolver_DDRB.invertLower(A.data,A.data,5,0,0);
+        InnerTriangularSolver_DDRB.invertLower(A.data, A.data, 5, 0, 0);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(A,A_inv,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A, A_inv, UtilEjml.TEST_F64));
     }
 
-    @Test
-    public void testInvertLower_one() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5,0,-1,1,rand);
+    @Test void invertLower_one() {
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
         CommonOps_DDRM.transpose(A);
 
         DMatrixRMaj A_inv = A.copy();
 
-        InnerTriangularSolver_DDRB.invertLower(A_inv.data,5,0);
+        InnerTriangularSolver_DDRB.invertLower(A_inv.data, 5, 0);
 
-        DMatrixRMaj S = new DMatrixRMaj(5,5);
-        CommonOps_DDRM.mult(A,A_inv,S);
+        var S = new DMatrixRMaj(5, 5);
+        CommonOps_DDRM.mult(A, A_inv, S);
+
+        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+    }
+
+    @Test void invertUpper_two() {
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
+        DMatrixRMaj A_inv = A.copy();
+
+        InnerTriangularSolver_DDRB.invertUpper(A.data, A_inv.data, 5, 0, 0);
+
+        var S = new DMatrixRMaj(5, 5);
+        CommonOps_DDRM.mult(A, A_inv, S);
+
+        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+
+        // see if it works with the same input matrix
+        InnerTriangularSolver_DDRB.invertUpper(A.data, A.data, 5, 0, 0);
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(A, A_inv, UtilEjml.TEST_F64));
+    }
+
+    @Test void invertUpper_one() {
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
+        DMatrixRMaj A_inv = A.copy();
+
+        InnerTriangularSolver_DDRB.invertUpper(A_inv.data, 5, 0);
+
+        var S = new DMatrixRMaj(5, 5);
+        CommonOps_DDRM.mult(A, A_inv, S);
+
+        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+    }
+
+    @Test void invertUpperTran_two() {
+        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
+        DMatrixRMaj A_inv = A.createLike();
+
+        InnerTriangularSolver_DDRB.invertUpperTran(A.data, A_inv.data, 5, 0, 0);
+
+        var S = new DMatrixRMaj(5, 5);
+        CommonOps_DDRM.multTransA(A, A_inv, S);
 
         assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
     }
@@ -76,81 +111,84 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
     /**
      * Test all inner block solvers using reflections to look up the functions
      */
-    @Test
-    public void testSolveArray() {
-        Method methods[] = InnerTriangularSolver_DDRB.class.getMethods();
+    @Test void solveArray() {
+        Method[] methods = InnerTriangularSolver_DDRB.class.getMethods();
 
         int numFound = 0;
-        for( Method m : methods) {
+        for (Method m : methods) {
             String name = m.getName();
 
-            if( !name.contains("solve") || name.compareTo("solve") == 0 || name.compareTo("solveBlock") == 0 )
+            if (!name.contains("solve") || name.compareTo("solve") == 0 || name.compareTo("solveBlock") == 0)
                 continue;
 
 //            System.out.println("name = "+name);
 
-            boolean solveL = name.contains("L");
-            boolean transT;
-            boolean transB = name.contains("TransB");
+            boolean leftSolver = name.startsWith("lsolve");
+            boolean solveL = name.substring(6).startsWith("Low");
+            boolean transT = name.substring(9).startsWith("Trans");
+            boolean transB = name.endsWith("BTrans");
 
-            if( solveL )
-                transT = name.contains("TransL");
-            else
-                transT = name.contains("TransU");
-
-            check_solve_array(m,solveL,transT,transB);
+            check_solve_array(m, leftSolver, solveL, transT, transB);
 
             numFound++;
         }
 
         // make sure all the functions were in fact tested
-        assertEquals(5,numFound);
+        assertEquals(16, numFound);
     }
 
     /**
      * Checks to see if solve functions that use arrays as input work correctly.
      */
-    private void check_solve_array(Method m,
-                                   boolean solveL, boolean transT, boolean transB) {
+    private void check_solve_array( Method m, boolean leftSolver,
+                                    boolean solveL, boolean transT, boolean transB ) {
         int offsetL = 2;
         int offsetB = 3;
 
-        DMatrixRMaj L = createRandomLowerTriangular(3);
+        int triSize = 3;
+        int bLength = triSize + 1;
+        DMatrixRMaj L = createRandomLowerTriangular(triSize);
 
-        if( !solveL ) {
+        if (!solveL) {
             CommonOps_DDRM.transpose(L);
         }
 
-        if( transT ) {
+        if (transT) {
             CommonOps_DDRM.transpose(L);
         }
 
         DMatrixRMaj L_inv = L.copy();
-        UnrolledInverseFromMinor_DDRM.inv(L_inv,L_inv);
+        UnrolledInverseFromMinor_DDRM.inv(L_inv, L_inv);
 
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(3,4,rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(3,4,rand);
+        int rowB = leftSolver ? triSize : bLength;
+        int colB = leftSolver ? bLength : triSize;
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(rowB, colB, rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowB, colB, rand);
         DMatrixRMaj found = B.copy();
 
         // compute the expected solution
-        CommonOps_DDRM.mult(L_inv,B,expected);
+        if (leftSolver) {
+            CommonOps_DDRM.mult(L_inv, B, expected);
+        } else {
+            CommonOps_DDRM.mult(B, L_inv, expected);
+        }
 
-        if( transT ) {
+        if (transT) {
             CommonOps_DDRM.transpose(L);
         }
 
-        if( transB ) {
+        if (transB) {
             CommonOps_DDRM.transpose(found);
             CommonOps_DDRM.transpose(expected);
         }
 
         // create arrays that are offset from the original
         // use two different offsets to make sure it doesn't confuse them internally
-        double dataL[] = offsetArray(L.data,offsetL);
-        double dataB[] = offsetArray(found.data,offsetB);
+        double[] dataL = offsetArray(L.data, offsetL);
+        double[] dataB = offsetArray(found.data, offsetB);
 
         try {
-            m.invoke(null,dataL,dataB,3,4,3,offsetL,offsetB);
+            m.invoke(null, dataL, dataB, triSize, bLength, triSize, offsetL, offsetB);
         } catch (IllegalAccessException e) {
             fail("invoke failed");
         } catch (InvocationTargetException e) {
@@ -158,24 +196,23 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
         }
 
         // put the solution into B, minus the offset
-        System.arraycopy(dataB,offsetB,found.data,0,found.data.length);
+        System.arraycopy(dataB, offsetB, found.data, 0, found.data.length);
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(expected,found,UtilEjml.TEST_F64));
+        assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
     }
 
-    private DMatrixRMaj createRandomLowerTriangular(int N ) {
-        DMatrixRMaj U = RandomMatrices_DDRM.triangularUpper(N,0,-1,1,rand);
+    private DMatrixRMaj createRandomLowerTriangular( int N ) {
+        DMatrixRMaj U = RandomMatrices_DDRM.triangularUpper(N, 0, -1, 1, rand);
 
         CommonOps_DDRM.transpose(U);
 
         return U;
     }
 
-    private double[] offsetArray( double[] orig , int offset )
-    {
-        double[] ret = new double[ orig.length + offset ];
+    private double[] offsetArray( double[] orig, int offset ) {
+        double[] ret = new double[orig.length + offset];
 
-        System.arraycopy(orig,0,ret,offset,orig.length);
+        System.arraycopy(orig, 0, ret, offset, orig.length);
 
         return ret;
     }

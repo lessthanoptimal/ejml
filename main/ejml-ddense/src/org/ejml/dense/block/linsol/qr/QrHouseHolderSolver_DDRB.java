@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -116,7 +116,7 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
         // extract a block aligned matrix
         int M = Math.min(QR.numRows, QR.numCols);
 
-        TriangularSolver_DDRB.solve(QR.blockLength, true,
+        TriangularSolver_DDRB.lsolve(QR.blockLength, true,
                 new DSubmatrixD1(QR, 0, M, 0, M), new DSubmatrixD1(X), false);
     }
 
@@ -143,7 +143,7 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
         // Solve using upper triangular R matrix
         // R*A^-1 = y
         // A^-1 = R^-1*y
-        TriangularSolver_DDRB.solve(QR.blockLength, true,
+        TriangularSolver_DDRB.lsolve(QR.blockLength, true,
                 new DSubmatrixD1(QR, 0, M, 0, M), new DSubmatrixD1(A_inv), false);
     }
 

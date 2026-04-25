@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -55,8 +55,7 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 	 * Test solving several different triangular systems with different sizes.
 	 * All matrices begin and end along block boundaries.
 	 */
-	@Test
-	void solve() {
+	@Test void lsolve() {
 		// block size
 		int r = 3;
 
@@ -76,13 +75,13 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 					DMatrixRBlock B = MatrixOps_DDRB.createRandom(triangleSize, cols, -1, 1, rand, r);
 					DMatrixRBlock Y = new DMatrixRBlock(B.numRows, B.numCols, r);
 
-					checkSolve(T, B, Y, r, upper, false);
-					checkSolve(T, B, Y, r, upper, true);
+					checkLeftSolve(T, B, Y, r, upper, false);
+					checkLeftSolve(T, B, Y, r, upper, true);
 
 					// test cases where the submatrix is not aligned with the inner
 					// blocks
-					checkSolveUnaligned(T, B, Y, r, upper, false);
-					checkSolveUnaligned(T, B, Y, r, upper, true);
+					checkLeftSolveUnaligned(T, B, Y, r, upper, false);
+					checkLeftSolveUnaligned(T, B, Y, r, upper, true);
 				}
 			}
 		}
@@ -92,8 +91,8 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 	 * Checks to see if BlockTriangularSolver.solve produces the expected output given
 	 * these inputs. The solution is computed directly.
 	 */
-	private void checkSolve( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
-							 int r, boolean upper, boolean transT ) {
+	private void checkLeftSolve( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
+	                             int r, boolean upper, boolean transT ) {
 		if (transT) {
 			DMatrixRBlock T_tran = MatrixOps_DDRB.transpose(T, null);
 
@@ -105,7 +104,7 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 		}
 
 		// Y is overwritten with the solution
-		TriangularSolver_MT_DDRB.solve(r, upper, new DSubmatrixD1(T), new DSubmatrixD1(Y), transT);
+		TriangularSolver_MT_DDRB.lsolve(r, upper, new DSubmatrixD1(T), new DSubmatrixD1(Y), transT);
 
 		assertTrue(MatrixOps_DDRB.isEquals(B, Y, UtilEjml.TEST_F64_SQ));
 	}
@@ -114,8 +113,8 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 	 * Checks to see if BlockTriangularSolver.solve produces the expected output given
 	 * these inputs. The solution is computed directly.
 	 */
-	private void checkSolveUnaligned( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
-									  int r, boolean upper, boolean transT ) {
+	private void checkLeftSolveUnaligned( DMatrixRBlock T, DMatrixRBlock B, DMatrixRBlock Y,
+	                                      int r, boolean upper, boolean transT ) {
 		DMatrixRBlock T2;
 
 		if (upper)
@@ -138,7 +137,7 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 		int size = T.numRows;
 
 		// Y is overwritten with the solution
-		TriangularSolver_MT_DDRB.solve(r, upper, new DSubmatrixD1(T2, 0, size, 0, size), new DSubmatrixD1(Y), transT);
+		TriangularSolver_MT_DDRB.lsolve(r, upper, new DSubmatrixD1(T2, 0, size, 0, size), new DSubmatrixD1(Y), transT);
 
 		assertTrue(MatrixOps_DDRB.isEquals(B, Y, UtilEjml.TEST_F64_SQ),
 				"Failed upper = " + upper + " transT = " + transT + " T.length " + T.numRows + " B.cols " + B.numCols);
@@ -200,7 +199,7 @@ class TestTriangularSolver_MT_DDRB extends EjmlStandardJUnit {
 //        sub_L.original.print();
 //        sub_B.original.print();
 
-		TriangularSolver_MT_DDRB.solveBlock(3, !solveL, sub_L, sub_B, transT, transB);
+		TriangularSolver_MT_DDRB.lsolveBlock(3, !solveL, sub_L, sub_B, transT, transB);
 
 		assertTrue(GenericMatrixOps_F64.isEquivalent(X, b_B, UtilEjml.TEST_F64));
 	}

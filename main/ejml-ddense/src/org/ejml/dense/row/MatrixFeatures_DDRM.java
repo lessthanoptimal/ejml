@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -619,7 +619,7 @@ public class MatrixFeatures_DDRM {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isUpperTriangle( DMatrixRMaj A, int hessenberg, double tol ) {
+    public static boolean isUpperTriangle( DMatrixD1 A, int hessenberg, double tol ) {
         for (int i = hessenberg + 1; i < A.numRows; i++) {
             int maxCol = Math.min(i - hessenberg, A.numCols);
             for (int j = 0; j < maxCol; j++) {
@@ -646,7 +646,7 @@ public class MatrixFeatures_DDRM {
      * @param tol How close to zero the lower left elements need to be.
      * @return If it is an upper triangular/hessenberg matrix or not.
      */
-    public static boolean isLowerTriangle( DMatrixRMaj A, int hessenberg, double tol ) {
+    public static boolean isLowerTriangle( DMatrixD1 A, int hessenberg, double tol ) {
         for (int i = 0; i < A.numRows - hessenberg - 1; i++) {
             for (int j = i + hessenberg + 1; j < A.numCols; j++) {
                 if (!(Math.abs(A.unsafe_get(i, j)) <= tol)) {

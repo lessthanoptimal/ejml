@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -38,30 +38,23 @@ import pabeles.concurrency.GrowArray;
 //CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
 //CONCURRENT_MACRO CholeskyOuterForm_DDRB CholeskyOuterForm_MT_DDRB
 
-/**
- * <p> Linear solver that uses a block cholesky decomposition.</p>
- *
- * <p>
- * Solver works by using the standard Cholesky solving strategy:<br>
- * A=L*L<sup>T</sup> <br>
- * A*x=b<br>
- * L*L<sup>T</sup>*x = b <br>
- * L*y = b<br>
- * L<sup>T</sup>*x = y<br>
- * x = L<sup>-T</sup>y
- * </p>
- *
- * <p>
- * It is also possible to use the upper triangular cholesky decomposition.
- * </p>
- *
- * @author Peter Abeles
- */
+/// Linear solver that uses a block Cholesky decomposition. Uses the standard Cholesky solving strategy:
+///
+/// A=L\*L<sup>T</sup>
+/// A\*x=b
+/// L\*L<sup>T</sup>\*x = b
+/// L\*y = b
+/// L<sup>T</sup>\*x = y
+/// x = L<sup>-T</sup>y
+///
+/// It is also possible to use the upper triangular Cholesky decomposition.
+///
+/// @author Peter Abeles
 @SuppressWarnings("NullAway.Init")
 public class CholeskyOuterSolver_DDRB implements LinearSolverDense<DMatrixRBlock> {
 
-    // cholesky decomposition
-    private final CholeskyOuterForm_DDRB decomposer = new CholeskyOuterForm_DDRB(true);
+    // Cholesky decomposition
+    private final CholeskyOuterForm_DDRB decomposer;
 
     // size of a block take from input matrix
     private int blockLength;
@@ -69,12 +62,19 @@ public class CholeskyOuterSolver_DDRB implements LinearSolverDense<DMatrixRBlock
     // temporary data structure used in some calculation.
     private final GrowArray<DGrowArray> workspace = new GrowArray<>(DGrowArray::new);
 
-    /**
-     * Decomposes and overwrites the input matrix.
-     *
-     * @param A Semi-Positive Definite (SPD) system matrix. Modified. Reference saved.
-     * @return If the matrix can be decomposed. Will always return false of not SPD.
-     */
+    /// @param lower Will it use a lower up upper triangle decomposition internally
+    public CholeskyOuterSolver_DDRB( boolean lower ) {
+        decomposer = new CholeskyOuterForm_DDRB(lower);
+    }
+
+    public CholeskyOuterSolver_DDRB() {
+        this(true);
+    }
+
+    /// Decomposes and overwrites the input matrix.
+    ///
+    /// @param A Semi-Positive Definite (SPD) system matrix. Modified. Reference saved.
+    /// @return If the matrix can be decomposed. Will always return false of not SPD.
     @Override
     public boolean setA( DMatrixRBlock A ) {
         // Extract a lower triangular solution
@@ -91,30 +91,38 @@ public class CholeskyOuterSolver_DDRB implements LinearSolverDense<DMatrixRBlock
         return SpecializedOps_DDRM.qualityTriangular(decomposer.getT(null));
     }
 
-    /**
-     * If X == null then the solution is written into B. Otherwise the solution is copied
-     * from B into X.
-     */
+    /// If X == null then the solution is written into B. Otherwise the solution is copied
+    /// from B into X.
     @Override
     public void solve( DMatrixRBlock B, @Nullable DMatrixRBlock X ) {
         if (B.blockLength != blockLength)
-            throw new IllegalArgumentException("Unexpected blocklength in B.");
+            throw new IllegalArgumentException("Unexpected blockLength in B.");
 
-        DSubmatrixD1 L = new DSubmatrixD1(decomposer.getT(null));
+        DSubmatrixD1 T = new DSubmatrixD1(decomposer.getT(null));
 
         if (X == null) {
-            X = B.create(L.col1, B.numCols);
+            X = B.create(T.col1, B.numCols);
         } else {
-            X.reshape(L.col1, B.numCols, blockLength, false);
+            X.reshape(T.col1, B.numCols, blockLength, false);
         }
 
-        //  L * L^T*X = B
+        if (decomposer.isLower()) {
+            // L*L^T*X = B
 
-        // Solve for Y:  L*Y = B
-        TriangularSolver_DDRB.solve(blockLength, false, L, new DSubmatrixD1(B), false);
+            // Solve for Y:  L*Y = B
+            TriangularSolver_DDRB.lsolve(blockLength, false, T, new DSubmatrixD1(B), false);
 
-        // L^T * X = Y
-        TriangularSolver_DDRB.solve(blockLength, false, L, new DSubmatrixD1(B), true);
+            // L^T * X = Y
+            TriangularSolver_DDRB.lsolve(blockLength, false, T, new DSubmatrixD1(B), true);
+        } else {
+            //  R^T*R*X = B
+
+            // Solve for Y:  R^T*Y = B
+            TriangularSolver_DDRB.lsolve(blockLength, true, T, new DSubmatrixD1(B), true);
+
+            // R * X = Y
+            TriangularSolver_DDRB.lsolve(blockLength, true, T, new DSubmatrixD1(B), false);
+        }
 
         if (X != null) {
             // copy the solution from B into X
@@ -129,20 +137,28 @@ public class CholeskyOuterSolver_DDRB implements LinearSolverDense<DMatrixRBlock
             throw new IllegalArgumentException("Unexpected number or rows and/or columns");
 
         // zero the upper triangular portion of A_inv
-        MatrixOps_DDRB.zeroTriangle(true, A_inv);
+        MatrixOps_DDRB.zeroTriangle(decomposer.isLower(), A_inv);
 
-        DSubmatrixD1 L = new DSubmatrixD1(T);
-        DSubmatrixD1 B = new DSubmatrixD1(A_inv);
+        DSubmatrixD1 subT = new DSubmatrixD1(T);
+        DSubmatrixD1 subB = new DSubmatrixD1(A_inv);
 
-        // invert L from cholesky decomposition and write the solution into the lower
-        // triangular portion of A_inv
-        // B = inv(L)
-        TriangularSolver_DDRB.invert(blockLength, false, L, B, workspace);
+        if (decomposer.isLower()) {
+            // A = L*L^T, so A^-1 = L^-T * L^-1
+            // B = inv(L)
+            TriangularSolver_DDRB.invert(blockLength, false, subT, subB, workspace);
 
-        // B = L^-T * B
-        // todo could speed up by taking advantage of B being lower triangular
-        // todo take advantage of symmetry
-        TriangularSolver_DDRB.solveL(blockLength, L, B, true);
+            // B = L^-T * B
+            // todo could speed up by taking advantage of B being lower triangular
+            // todo take advantage of symmetry
+            TriangularSolver_DDRB.lsolveLow(blockLength, subT, subB, true);
+        } else {
+            // A = R^T*R, so A^-1 = R^-1 * R^-T
+            // B = inv(R)
+            TriangularSolver_DDRB.invert(blockLength, true, subT, subB, workspace);
+
+            // B = R^-1 * B = R^-1 * R^-T
+            TriangularSolver_DDRB.rsolveUpp(blockLength, subT, subB, true);
+        }
     }
 
     @Override

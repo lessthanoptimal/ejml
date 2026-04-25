@@ -2,6 +2,13 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.45.0
+2026/??/??
+
+- Cholesky solver supports upper triangle mode, row-major and block
+- New format() for converting matrices and other data structures to Strings with lots of flexibility
+- Equations supports more functions and is more capable in general
+
 ----- Version 0.44.0
 2025/Mar/21
 

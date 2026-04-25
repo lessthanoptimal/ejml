@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -21,53 +21,26 @@ package org.ejml.interfaces.decomposition;
 import org.ejml.data.Matrix;
 import org.jetbrains.annotations.Nullable;
 
-
-/**
- * <p>
- * Cholesky LDL<sup>T</sup> decomposition.
- * </p>
- * <p>
- * A Cholesky LDL decomposition decomposes positive-definite symmetric matrices into:<br>
- * <br>
- * L*D*L<sup>T</sup>=A<br>
- * <br>
- * where L is a lower triangular matrix and D is a diagonal matrix. The main advantage of LDL versus LL or RR Cholesky is that
- * it avoid a square root operation.
- * </p>
- *
- * @author Peter Abeles
- */
+/// Cholesky LDL<sup>T</sup> decomposition.
+///
+/// A Cholesky LDL decomposition decomposes positive-definite symmetric matrices into:
+///
+/// L\*D\*L<sup>T</sup>=A
+///
+/// where L is a lower triangular matrix and D is a diagonal matrix. The main advantage of LDL versus LL or RR Cholesky is that
+/// it avoid a square root operation.
 public interface CholeskyLDLDecomposition<MatrixType extends Matrix>
         extends DecompositionInterface<MatrixType> {
 
+    /// Decomposition's lower triangle matrix.
+    ///
+    /// @param L (Optional) Storage for returned matrix
+    /// @return A lower triangular matrix.
+    MatrixType getL( @Nullable MatrixType L );
 
-    /**
-     * <p>
-     * Returns the lower triangular matrix from the decomposition.
-     * </p>
-     *
-     * <p>
-     * If an input is provided that matrix is used to write the results to.
-     * Otherwise a new matrix is created and the results written to it.
-     * </p>
-     *
-     * @param L If not null then the decomposed matrix is written here.
-     * @return A lower triangular matrix.
-     */
-    MatrixType getL(@Nullable MatrixType L);
-
-    /**
-     * <p>
-     * Returns the diagonal matrixfrom the decomposition.
-     * </p>
-     *
-     * <p>
-     * If an input is provided that matrix is used to write the results to.
-     * Otherwise a new matrix is created and the results written to it.
-     * </p>
-     *
-     * @param D If not null it will be used to store the diagonal matrix
-     * @return D Square diagonal matrix
-     */
-    MatrixType getD(@Nullable MatrixType D);
+    /// Decomposition's diagonal matrix.
+    ///
+    /// @param D (Optional) Storage for returned matrix
+    /// @return D Square diagonal matrix
+    MatrixType getD( @Nullable MatrixType D );
 }
