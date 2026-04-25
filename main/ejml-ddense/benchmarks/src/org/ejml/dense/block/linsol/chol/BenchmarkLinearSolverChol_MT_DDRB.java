@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -36,9 +36,9 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
-@Measurement(iterations = 5)
+@Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@Fork(value = 2)
+@Fork(value = 1)
 public class BenchmarkLinearSolverChol_MT_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"1000", "2000"})
@@ -47,8 +47,8 @@ public class BenchmarkLinearSolverChol_MT_DDRB {
     public DMatrixRBlock A;
     public DMatrixRBlock X, B;
 
-    CholeskyOuterSolver_MT_DDRB outer = new CholeskyOuterSolver_MT_DDRB();
-
+    CholeskyOuterSolver_MT_DDRB outerLower = new CholeskyOuterSolver_MT_DDRB(true);
+    CholeskyOuterSolver_MT_DDRB outerUpper = new CholeskyOuterSolver_MT_DDRB(false);
     @Setup
     public void setup() {
         Random rand = new Random(234);
@@ -59,12 +59,21 @@ public class BenchmarkLinearSolverChol_MT_DDRB {
     }
 
     @Benchmark
-    public void outer() {
-        DMatrixRBlock A = outer.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRBlock B = outer.modifiesB() ? this.B.copy() : this.B;
-        if (!outer.setA(A))
+    public void outer_lower() {
+        DMatrixRBlock A = outerLower.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRBlock B = outerLower.modifiesB() ? this.B.copy() : this.B;
+        if (!outerLower.setA(A))
             throw new RuntimeException("Bad");
-        outer.solve(B, X);
+        outerLower.solve(B, X);
+    }
+
+    @Benchmark
+    public void outer_upper() {
+        DMatrixRBlock A = outerUpper.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRBlock B = outerUpper.modifiesB() ? this.B.copy() : this.B;
+        if (!outerUpper.setA(A))
+            throw new RuntimeException("Bad");
+        outerUpper.solve(B, X);
     }
 
     public static void main( String[] args ) throws RunnerException {
