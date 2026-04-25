@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,9 +29,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Peter Abeles
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -50,8 +47,7 @@ public class BenchmarkMatrixMult_DDRB {
     public DMatrixRBlock A, B, C;
     public DSubmatrixD1 Asub, Bsub, Csub;
 
-    @Setup
-    public void setup() {
+    @Setup public void setup() {
         Random rand = new Random(234);
 
         A = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -31,7 +31,7 @@ class TestMatrixMult_MT_DDRB extends CheckMultiThreadAgainstSingleThread {
 	int blockLength = 21;
 
 	public TestMatrixMult_MT_DDRB() {
-		super(MatrixMult_DDRB.class, MatrixMult_MT_DDRB.class, 7);
+		super(MatrixMult_DDRB.class, MatrixMult_MT_DDRB.class, 9);
 		size = 121;
 	}
 
