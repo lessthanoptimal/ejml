@@ -87,12 +87,12 @@ public class TriangularSolver_DDRB {
 
                 final int indexII = offsetT + T.original.numCols*(rowT + T.row0) + heightT*(rowT + T.col0);
 
-                int startCol = M - M % blockLength;
-                if (startCol == M && M >= blockLength)
-                    startCol -= blockLength;
-                //CONCURRENT_BELOW EjmlConcurrency.loopFor(startCol, rowT, blockLength, workspace, ( work, colT ) -> {
-                for (int colT = startCol; colT > rowT; colT -= blockLength) {
+                int startCol = ((M - 1)/blockLength)*blockLength;
+                int numBlocks = (startCol- rowT)/blockLength;
+                //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, numBlocks, 1, workspace, ( work, blockIdx ) -> {
+                for (int blockIdx = 0; blockIdx < numBlocks; blockIdx++) {
                     //CONCURRENT_INLINE double[] temp = work.reshape(blockSize).data;
+                    int colT = startCol - blockIdx*blockLength;
                     int widthX = Math.min(T.col1 - (colT + T.col0), blockLength);
 
                     Arrays.fill(temp, 0);
@@ -436,8 +436,9 @@ public class TriangularSolver_DDRB {
         int Tcols = T.col1 - T.col0;
         if (Tcols > blockLength)
             throw new IllegalArgumentException("T can be at most the size of a block");
-        // number of rows in a block. The submatrix can be smaller than a block
+        // number of rows and columns in the row-block containing T. The submatrix can be smaller than a block.
         final int blockT_rows = Math.min(blockLength, T.original.numRows - T.row0);
+        final int blockT_cols = Math.min(blockLength, T.original.numCols - T.col0);
 
         int offsetT = T.row0*T.original.numCols + blockT_rows*T.col0;
 
@@ -455,7 +456,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveUppTransBTrans(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveUppTransBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -464,7 +465,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveUppBTrans(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveUppBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -475,7 +476,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveLowTransBTrans(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveLowTransBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -484,7 +485,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveLowBTrans(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveLowBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -501,7 +502,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveUppTrans(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveUppTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -511,7 +512,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveUpp(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveUpp(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -523,7 +524,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveLowTrans(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveLowTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -533,7 +534,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveLow(dataT, dataB, Tcols, N, blockT_rows, offsetT, offsetB);
+                        InnerTriangularSolver_DDRB.rsolveLow(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }

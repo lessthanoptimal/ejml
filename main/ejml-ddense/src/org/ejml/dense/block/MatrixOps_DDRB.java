@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -670,6 +670,35 @@ public class MatrixOps_DDRB {
 
         if (!MatrixOps_DDRB.blockAligned(blockLength, C))
             throw new RuntimeException("Sub-Matrix C is not block aligned");
+    }
+
+    /// Testing Function: Embeds a row-major matrix into a larger DMatrixRBlock with random padding above
+    /// and to the left of the embedded region. Returns a submatrix view pointing at the
+    /// embedded region. Padding is random so that any inadvertent reads or writes outside
+    /// the submatrix bounds will produce incorrect results.
+    public static DSubmatrixD1 embedInBlock( DMatrixRMaj M, int r, int padTop, int padLeft, Random rand ) {
+        int totalRows = M.numRows + padTop;
+        int totalCols = M.numCols + padLeft;
+        DMatrixRBlock big = MatrixOps_DDRB.createRandom(totalRows, totalCols, -1, 1, rand, r);
+        for (int i = 0; i < M.numRows; i++) {
+            for (int j = 0; j < M.numCols; j++) {
+                big.set(padTop + i, padLeft + j, M.get(i, j));
+            }
+        }
+        return new DSubmatrixD1(big, padTop, padTop + M.numRows, padLeft, padLeft + M.numCols);
+    }
+
+    /// Copies the contents of a submatrix view into a fresh DMatrixRMaj.
+    public static DMatrixRMaj extractSubmatrix( DSubmatrixD1 sub ) {
+        int rows = sub.row1 - sub.row0;
+        int cols = sub.col1 - sub.col0;
+        DMatrixRMaj out = new DMatrixRMaj(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                out.set(i, j, ((DMatrixRBlock)sub.original).get(sub.row0 + i, sub.col0 + j));
+            }
+        }
+        return out;
     }
     //CONCURRENT_OMIT_END
 }
