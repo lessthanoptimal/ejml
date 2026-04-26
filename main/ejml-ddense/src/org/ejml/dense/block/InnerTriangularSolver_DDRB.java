@@ -54,6 +54,9 @@ import org.ejml.data.DMatrixRBlock;
 ///     x(i,i) = 1 / L(i,i)
 /// end
 /// ```
+///
+/// Solvers have their loops ordered to process sequential data inside the inner loops to encourage vectorization.
+/// Depending on the layout it might be a dot-product or rank-1 update based solver.
 public class InnerTriangularSolver_DDRB {
 
     /// Inverts a square lower triangular matrix:  L = L<sup>-1</sup>
@@ -193,13 +196,67 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveLow( double[] L, double[] b,
                                   int m, int n,
                                   int strideL, int offsetL, int offsetB ) {
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < m; i++) {
-                double sum = b[offsetB + i*n + j];
-                for (int k = 0; k < i; k++) {
-                    sum -= L[offsetL + i*strideL + k]*b[offsetB + k*n + j];
+//    for (int j = 0; j < n; j++) {
+//        for (int i = 0; i < m; i++) {
+//            double sum = b[offsetB + i*n + j];
+//            for (int k = 0; k < i; k++) {
+//                sum -= L[offsetL + i*strideL + k]*b[offsetB + k*n + j];
+//            }
+//            b[offsetB + i*n + j] = sum/L[offsetL + i*strideL + i];
+//        }
+//    }
+
+//        for (int i = 0; i < m; i++) {
+//            int rowI = offsetB + i*n;
+//
+//            for (int k = 0; k < i; k++) {
+//                double valL = L[offsetL + i*strideL + k];
+//                int rowK = offsetB + k*n;
+//
+//                for (int j = 0; j < n; j++) {
+//                    b[rowI + j] -= valL*b[rowK + j];
+//                }
+//            }
+//
+//            double diag = L[offsetL + i*strideL + i];
+//            for (int j = 0; j < n; j++) {
+//                b[rowI + j] /= diag;
+//            }
+//        }
+
+        for (int i = 0; i < m; i++) {
+            int rowI = offsetB + i*n;
+            int k = 0;
+
+            // Process k in groups of 4
+            for (; k + 4 <= i; k += 4) {
+                double v0 = L[offsetL + i*strideL + k + 0];
+                double v1 = L[offsetL + i*strideL + k + 1];
+                double v2 = L[offsetL + i*strideL + k + 2];
+                double v3 = L[offsetL + i*strideL + k + 3];
+                int row0 = offsetB + (k + 0)*n;
+                int row1 = offsetB + (k + 1)*n;
+                int row2 = offsetB + (k + 2)*n;
+                int row3 = offsetB + (k + 3)*n;
+
+                for (int j = 0; j < n; j++) {
+                    b[rowI + j] -= v0*b[row0 + j] + v1*b[row1 + j] + v2*b[row2 + j] + v3*b[row3 + j];
                 }
-                b[offsetB + i*n + j] = sum/L[offsetL + i*strideL + i];
+            }
+
+            // Tail for remaining k
+            for (; k < i; k++) {
+                double valL = L[offsetL + i*strideL + k];
+                int rowK = offsetB + k*n;
+
+                for (int j = 0; j < n; j++) {
+                    b[rowI + j] -= valL*b[rowK + j];
+                }
+            }
+
+            double diag = L[offsetL + i*strideL + i];
+            for (int j = 0; j < n; j++) {
+                b[rowI + j] /= diag;
             }
         }
     }
@@ -220,13 +277,31 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveLowTrans( double[] L, double[] b,
                                        int m, int n,
                                        int strideL, int offsetL, int offsetB ) {
-        for (int j = 0; j < n; j++) {
-            for (int i = m - 1; i >= 0; i--) {
-                double sum = b[offsetB + i*n + j];
-                for (int k = i + 1; k < m; k++) {
-                    sum -= L[offsetL + k*strideL + i]*b[offsetB + k*n + j];
+//    for (int j = 0; j < n; j++) {
+//        for (int i = m - 1; i >= 0; i--) {
+//            double sum = b[offsetB + i*n + j];
+//            for (int k = i + 1; k < m; k++) {
+//                sum -= L[offsetL + k*strideL + i]*b[offsetB + k*n + j];
+//            }
+//            b[offsetB + i*n + j] = sum/L[offsetL + i*strideL + i];
+//        }
+//    }
+
+        for (int i = m - 1; i >= 0; i--) {
+            int rowI = offsetB + i*n;
+
+            for (int k = i + 1; k < m; k++) {
+                double valL = L[offsetL + k*strideL + i];
+                int rowK = offsetB + k*n;
+
+                for (int j = 0; j < n; j++) {
+                    b[rowI + j] -= valL*b[rowK + j];
                 }
-                b[offsetB + i*n + j] = sum/L[offsetL + i*strideL + i];
+            }
+
+            double diag = L[offsetL + i*strideL + i];
+            for (int j = 0; j < n; j++) {
+                b[rowI + j] /= diag;
             }
         }
     }
@@ -255,17 +330,41 @@ public class InnerTriangularSolver_DDRB {
 //                b[offsetB + j*m+i] = sum / L[offsetL + i*m+i];
 //            }
 //        }
-        for (int j = 0; j < n; j++) {
+
+        int j;
+        for (j = 0; j + 4 <= n; j += 4) {
+            int row0 = offsetB + (j + 0)*m;
+            int row1 = offsetB + (j + 1)*m;
+            int row2 = offsetB + (j + 2)*m;
+            int row3 = offsetB + (j + 3)*m;
+
             for (int i = 0; i < m; i++) {
-                double sum = b[offsetB + j*m + i];
-                int l = offsetL + i*strideL;
-                int bb = offsetB + j*m;
-                int endL = l + i;
-                while (l != endL) {
-//                for( int k=0; k<i; k++ ) {
-                    sum -= L[l++]*b[bb++];
+                double s0 = b[row0 + i];
+                double s1 = b[row1 + i];
+                double s2 = b[row2 + i];
+                double s3 = b[row3 + i];
+                for (int k = 0; k < i; k++) {
+                    double Lik = L[offsetL + i*strideL + k];
+                    s0 -= Lik*b[row0 + k];
+                    s1 -= Lik*b[row1 + k];
+                    s2 -= Lik*b[row2 + k];
+                    s3 -= Lik*b[row3 + k];
                 }
-                b[offsetB + j*m + i] = sum/L[offsetL + i*strideL + i];
+                double inv = 1.0/L[offsetL + i*strideL + i];
+                b[row0 + i] = s0*inv;
+                b[row1 + i] = s1*inv;
+                b[row2 + i] = s2*inv;
+                b[row3 + i] = s3*inv;
+            }
+        }
+        for (; j < n; j++) {
+            int rowJ = offsetB + j*m;
+            for (int i = 0; i < m; i++) {
+                double sum = b[rowJ + i];
+                for (int k = 0; k < i; k++) {
+                    sum -= L[offsetL + i*strideL + k]*b[rowJ + k];
+                }
+                b[rowJ + i] = sum/L[offsetL + i*strideL + i];
             }
         }
     }
@@ -285,13 +384,31 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveUpp( double[] U, double[] b,
                                   int m, int n,
                                   int strideU, int offsetU, int offsetB ) {
-        for (int j = 0; j < n; j++) {
-            for (int i = m - 1; i >= 0; i--) {
-                double sum = b[offsetB + i*n + j];
-                for (int k = i + 1; k < m; k++) {
-                    sum -= U[offsetU + i*strideU + k]*b[offsetB + k*n + j];
+//        for (int j = 0; j < n; j++) {
+//            for (int i = m - 1; i >= 0; i--) {
+//                double sum = b[offsetB + i*n + j];
+//                for (int k = i + 1; k < m; k++) {
+//                    sum -= U[offsetU + i*strideU + k]*b[offsetB + k*n + j];
+//                }
+//                b[offsetB + i*n + j] = sum/U[offsetU + i*strideU + i];
+//            }
+//        }
+
+        for (int i = m - 1; i >= 0; i--) {
+            double diag = U[offsetU + i*strideU + i];
+
+            for (int j = 0; j < n; j++) {
+                b[offsetB + i*n + j] /= diag;
+            }
+
+            for (int k = 0; k < i; k++) {
+                double valU = U[offsetU + k*strideU + i];
+                int rowK = offsetB + k*n;
+                int rowI = offsetB + i*n;
+
+                for (int j = 0; j < n; j++) {
+                    b[rowK + j] -= valU*b[rowI + j];
                 }
-                b[offsetB + i*n + j] = sum/U[offsetU + i*strideU + i];
             }
         }
     }
@@ -311,13 +428,31 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveUppTrans( double[] U, double[] b,
                                        int m, int n,
                                        int strideU, int offsetU, int offsetB ) {
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < m; i++) {
-                double sum = b[offsetB + i*n + j];
-                for (int k = 0; k < i; k++) {
-                    sum -= U[offsetU + k*strideU + i]*b[offsetB + k*n + j];
+//    for (int j = 0; j < n; j++) {
+//        for (int i = 0; i < m; i++) {
+//            double sum = b[offsetB + i*n + j];
+//            for (int k = 0; k < i; k++) {
+//                sum -= U[offsetU + k*strideU + i]*b[offsetB + k*n + j];
+//            }
+//            b[offsetB + i*n + j] = sum/U[offsetU + i*strideU + i];
+//        }
+//    }
+
+        for (int i = 0; i < m; i++) {
+            int rowI = offsetB + i*n;
+
+            for (int k = 0; k < i; k++) {
+                double valU = U[offsetU + k*strideU + i];
+                int rowK = offsetB + k*n;
+
+                for (int j = 0; j < n; j++) {
+                    b[rowI + j] -= valU*b[rowK + j];
                 }
-                b[offsetB + i*n + j] = sum/U[offsetU + i*strideU + i];
+            }
+
+            double diag = U[offsetU + i*strideU + i];
+            for (int j = 0; j < n; j++) {
+                b[rowI + j] /= diag;
             }
         }
     }
@@ -339,13 +474,65 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveLowTransBTrans( double[] L, double[] b,
                                              int m, int n,
                                              int strideL, int offsetL, int offsetB ) {
-        for (int j = 0; j < n; j++) {
+//        for (int j = 0; j < n; j++) {
+//            for (int i = m - 1; i >= 0; i--) {
+//                double sum = b[offsetB + j*m + i];
+//                for (int k = i + 1; k < m; k++) {
+//                    sum -= L[offsetL + k*strideL + i]*b[offsetB + j*m + k];
+//                }
+//                b[offsetB + j*m + i] = sum/L[offsetL + i*strideL + i];
+//            }
+//        }
+
+//    for (int i = m - 1; i >= 0; i--) {
+//        double diag = L[offsetL + i*strideL + i];
+//        for (int j = 0; j < n; j++) {
+//            b[offsetB + j*m + i] /= diag;
+//        }
+//        for (int k = 0; k < i; k++) {
+//            double valL = L[offsetL + i*strideL + k];
+//            for (int j = 0; j < n; j++) {
+//                b[offsetB + j*m + k] -= b[offsetB + j*m + i]*valL;
+//            }
+//        }
+//    }
+
+        int j;
+        for (j = 0; j + 4 <= n; j += 4) {
+            int row0 = offsetB + (j + 0)*m;
+            int row1 = offsetB + (j + 1)*m;
+            int row2 = offsetB + (j + 2)*m;
+            int row3 = offsetB + (j + 3)*m;
+
             for (int i = m - 1; i >= 0; i--) {
-                double sum = b[offsetB + j*m + i];
-                for (int k = i + 1; k < m; k++) {
-                    sum -= L[offsetL + k*strideL + i]*b[offsetB + j*m + k];
+                double inv = 1.0/L[offsetL + i*strideL + i];
+                double s0 = b[row0 + i]*inv;
+                double s1 = b[row1 + i]*inv;
+                double s2 = b[row2 + i]*inv;
+                double s3 = b[row3 + i]*inv;
+                b[row0 + i] = s0;
+                b[row1 + i] = s1;
+                b[row2 + i] = s2;
+                b[row3 + i] = s3;
+
+                for (int k = 0; k < i; k++) {
+                    double valL = L[offsetL + i*strideL + k];
+                    b[row0 + k] -= s0*valL;
+                    b[row1 + k] -= s1*valL;
+                    b[row2 + k] -= s2*valL;
+                    b[row3 + k] -= s3*valL;
                 }
-                b[offsetB + j*m + i] = sum/L[offsetL + i*strideL + i];
+            }
+        }
+        for (; j < n; j++) {
+            int rowJ = offsetB + j*m;
+            for (int i = m - 1; i >= 0; i--) {
+                double diag = L[offsetL + i*strideL + i];
+                b[rowJ + i] /= diag;
+                double bji = b[rowJ + i];
+                for (int k = 0; k < i; k++) {
+                    b[rowJ + k] -= bji*L[offsetL + i*strideL + k];
+                }
             }
         }
     }
@@ -367,7 +554,63 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveUppBTrans( double[] U, double[] b,
                                         int m, int n,
                                         int strideU, int offsetU, int offsetB ) {
-        for (int j = 0; j < n; j++) {
+//        for (int j = 0; j < n; j++) {
+//            for (int i = m - 1; i >= 0; i--) {
+//                double sum = b[offsetB + j*m + i];
+//                for (int k = i + 1; k < m; k++) {
+//                    sum -= U[offsetU + i*strideU + k]*b[offsetB + j*m + k];
+//                }
+//                b[offsetB + j*m + i] = sum/U[offsetU + i*strideU + i];
+//            }
+//        }
+
+        // Almost the same speed as the unrolled code below. 60 us vs 50 us.
+//        for (int i = m - 1; i >= 0; i--) {
+//            double diag = U[offsetU + i*strideU + i];
+//
+//            for (int j = 0; j < n; j++) {
+//                b[offsetB + j*m + i] /= diag;
+//            }
+//
+//            for (int k = 0; k < i; k++) {
+//                double valU = U[offsetU + k*strideU + i];
+//                for (int j = 0; j < n; j++) {
+//                    b[offsetB + j*m + k] -= b[offsetB + j*m + i]*valU;
+//                }
+//            }
+//        }
+
+        final int JB = 4;
+        int j;
+        for (j = 0; j + JB <= n; j += JB) {
+            for (int i = m - 1; i >= 0; i--) {
+                int rowJ0 = offsetB + (j + 0)*m;
+                int rowJ1 = offsetB + (j + 1)*m;
+                int rowJ2 = offsetB + (j + 2)*m;
+                int rowJ3 = offsetB + (j + 3)*m;
+
+                double s0 = b[rowJ0 + i];
+                double s1 = b[rowJ1 + i];
+                double s2 = b[rowJ2 + i];
+                double s3 = b[rowJ3 + i];
+
+                for (int k = i + 1; k < m; k++) {
+                    double Uik = U[offsetU + i*strideU + k];
+                    s0 -= Uik*b[rowJ0 + k];
+                    s1 -= Uik*b[rowJ1 + k];
+                    s2 -= Uik*b[rowJ2 + k];
+                    s3 -= Uik*b[rowJ3 + k];
+                }
+
+                double inv = 1.0/U[offsetU + i*strideU + i];
+                b[rowJ0 + i] = s0*inv;
+                b[rowJ1 + i] = s1*inv;
+                b[rowJ2 + i] = s2*inv;
+                b[rowJ3 + i] = s3*inv;
+            }
+        }
+        // tail loop for remaining n % JB rows
+        for (; j < n; j++) {
             for (int i = m - 1; i >= 0; i--) {
                 double sum = b[offsetB + j*m + i];
                 for (int k = i + 1; k < m; k++) {
@@ -395,13 +638,50 @@ public class InnerTriangularSolver_DDRB {
     public static void lsolveUppTransBTrans( double[] U, double[] b,
                                              int m, int n,
                                              int strideU, int offsetU, int offsetB ) {
-        for (int j = 0; j < n; j++) {
+//        for (int j = 0; j < n; j++) {
+//            for (int i = 0; i < m; i++) {
+//                double sum = b[offsetB + j*m + i];
+//                for (int k = 0; k < i; k++) {
+//                    sum -= U[offsetU + k*strideU + i]*b[offsetB + j*m + k];
+//                }
+//                b[offsetB + j*m + i] = sum/U[offsetU + i*strideU + i];
+//            }
+//        }
+
+        int j;
+        for (j = 0; j + 4 <= n; j += 4) {
+            int row0 = offsetB + (j + 0)*m;
+            int row1 = offsetB + (j + 1)*m;
+            int row2 = offsetB + (j + 2)*m;
+            int row3 = offsetB + (j + 3)*m;
+
             for (int i = 0; i < m; i++) {
-                double sum = b[offsetB + j*m + i];
+                double s0 = b[row0 + i];
+                double s1 = b[row1 + i];
+                double s2 = b[row2 + i];
+                double s3 = b[row3 + i];
                 for (int k = 0; k < i; k++) {
-                    sum -= U[offsetU + k*strideU + i]*b[offsetB + j*m + k];
+                    double Uki = U[offsetU + k*strideU + i];
+                    s0 -= Uki*b[row0 + k];
+                    s1 -= Uki*b[row1 + k];
+                    s2 -= Uki*b[row2 + k];
+                    s3 -= Uki*b[row3 + k];
                 }
-                b[offsetB + j*m + i] = sum/U[offsetU + i*strideU + i];
+                double inv = 1.0/U[offsetU + i*strideU + i];
+                b[row0 + i] = s0*inv;
+                b[row1 + i] = s1*inv;
+                b[row2 + i] = s2*inv;
+                b[row3 + i] = s3*inv;
+            }
+        }
+        for (; j < n; j++) {
+            int rowJ = offsetB + j*m;
+            for (int i = 0; i < m; i++) {
+                double sum = b[rowJ + i];
+                for (int k = 0; k < i; k++) {
+                    sum -= U[offsetU + k*strideU + i]*b[rowJ + k];
+                }
+                b[rowJ + i] = sum/U[offsetU + i*strideU + i];
             }
         }
     }
@@ -422,13 +702,67 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveLow( double[] L, double[] b,
                                   int m, int n,
                                   int strideL, int offsetL, int offsetB ) {
-        for (int i = 0; i < n; i++) {
+//        for (int i = 0; i < n; i++) {
+//            for (int j = m - 1; j >= 0; j--) {
+//                double sum = b[offsetB + i*m + j];
+//                for (int k = j + 1; k < m; k++) {
+//                    sum -= b[offsetB + i*m + k]*L[offsetL + k*strideL + j];
+//                }
+//                b[offsetB + i*m + j] = sum/L[offsetL + j*strideL + j];
+//            }
+//        }
+
+//        for (int j = m - 1; j >= 0; j--) {
+//            double diag = L[offsetL + j*strideL + j];
+//
+//            for (int i = 0; i < n; i++) {
+//                b[offsetB + i*m + j] /= diag;
+//            }
+//
+//            for (int k = 0; k < j; k++) {
+//                double valL = L[offsetL + j*strideL + k];
+//                for (int i = 0; i < n; i++) {
+//                    b[offsetB + i*m + k] -= b[offsetB + i*m + j]*valL;
+//                }
+//            }
+//        }
+
+        int i;
+        for (i = 0; i + 4 <= n; i += 4) {
+            int row0 = offsetB + (i + 0)*m;
+            int row1 = offsetB + (i + 1)*m;
+            int row2 = offsetB + (i + 2)*m;
+            int row3 = offsetB + (i + 3)*m;
+
             for (int j = m - 1; j >= 0; j--) {
-                double sum = b[offsetB + i*m + j];
-                for (int k = j + 1; k < m; k++) {
-                    sum -= b[offsetB + i*m + k]*L[offsetL + k*strideL + j];
+                double inv = 1.0/L[offsetL + j*strideL + j];
+                double s0 = b[row0 + j]*inv;
+                double s1 = b[row1 + j]*inv;
+                double s2 = b[row2 + j]*inv;
+                double s3 = b[row3 + j]*inv;
+                b[row0 + j] = s0;
+                b[row1 + j] = s1;
+                b[row2 + j] = s2;
+                b[row3 + j] = s3;
+
+                for (int k = 0; k < j; k++) {
+                    double valL = L[offsetL + j*strideL + k];
+                    b[row0 + k] -= s0*valL;
+                    b[row1 + k] -= s1*valL;
+                    b[row2 + k] -= s2*valL;
+                    b[row3 + k] -= s3*valL;
                 }
-                b[offsetB + i*m + j] = sum/L[offsetL + j*strideL + j];
+            }
+        }
+        for (; i < n; i++) {
+            int rowI = offsetB + i*m;
+            for (int j = m - 1; j >= 0; j--) {
+                double inv = 1.0/L[offsetL + j*strideL + j];
+                double sj = b[rowI + j]*inv;
+                b[rowI + j] = sj;
+                for (int k = 0; k < j; k++) {
+                    b[rowI + k] -= sj*L[offsetL + j*strideL + k];
+                }
             }
         }
     }
@@ -449,13 +783,50 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveLowTrans( double[] L, double[] b,
                                        int m, int n,
                                        int strideL, int offsetL, int offsetB ) {
-        for (int i = 0; i < n; i++) {
+//        for (int i = 0; i < n; i++) {
+//            for (int j = 0; j < m; j++) {
+//                double sum = b[offsetB + i*m + j];
+//                for (int k = 0; k < j; k++) {
+//                    sum -= b[offsetB + i*m + k]*L[offsetL + j*strideL + k];
+//                }
+//                b[offsetB + i*m + j] = sum/L[offsetL + j*strideL + j];
+//            }
+//        }
+
+        int i;
+        for (i = 0; i + 4 <= n; i += 4) {
+            int row0 = offsetB + (i + 0)*m;
+            int row1 = offsetB + (i + 1)*m;
+            int row2 = offsetB + (i + 2)*m;
+            int row3 = offsetB + (i + 3)*m;
+
             for (int j = 0; j < m; j++) {
-                double sum = b[offsetB + i*m + j];
+                double s0 = b[row0 + j];
+                double s1 = b[row1 + j];
+                double s2 = b[row2 + j];
+                double s3 = b[row3 + j];
                 for (int k = 0; k < j; k++) {
-                    sum -= b[offsetB + i*m + k]*L[offsetL + j*strideL + k];
+                    double Ljk = L[offsetL + j*strideL + k];
+                    s0 -= b[row0 + k]*Ljk;
+                    s1 -= b[row1 + k]*Ljk;
+                    s2 -= b[row2 + k]*Ljk;
+                    s3 -= b[row3 + k]*Ljk;
                 }
-                b[offsetB + i*m + j] = sum/L[offsetL + j*strideL + j];
+                double inv = 1.0/L[offsetL + j*strideL + j];
+                b[row0 + j] = s0*inv;
+                b[row1 + j] = s1*inv;
+                b[row2 + j] = s2*inv;
+                b[row3 + j] = s3*inv;
+            }
+        }
+        for (; i < n; i++) {
+            int rowI = offsetB + i*m;
+            for (int j = 0; j < m; j++) {
+                double sum = b[rowI + j];
+                for (int k = 0; k < j; k++) {
+                    sum -= b[rowI + k]*L[offsetL + j*strideL + k];
+                }
+                b[rowI + j] = sum/L[offsetL + j*strideL + j];
             }
         }
     }
@@ -477,13 +848,31 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveLowBTrans( double[] L, double[] b,
                                         int m, int n,
                                         int strideL, int offsetL, int offsetB ) {
-        for (int i = 0; i < n; i++) {
-            for (int j = m - 1; j >= 0; j--) {
-                double sum = b[offsetB + j*n + i];
-                for (int k = j + 1; k < m; k++) {
-                    sum -= b[offsetB + k*n + i]*L[offsetL + k*strideL + j];
+//    for (int i = 0; i < n; i++) {
+//        for (int j = m - 1; j >= 0; j--) {
+//            double sum = b[offsetB + j*n + i];
+//            for (int k = j + 1; k < m; k++) {
+//                sum -= b[offsetB + k*n + i]*L[offsetL + k*strideL + j];
+//            }
+//            b[offsetB + j*n + i] = sum/L[offsetL + j*strideL + j];
+//        }
+//    }
+
+        for (int j = m - 1; j >= 0; j--) {
+            int rowJ = offsetB + j*n;
+
+            for (int k = j + 1; k < m; k++) {
+                double valL = L[offsetL + k*strideL + j];
+                int rowK = offsetB + k*n;
+
+                for (int i = 0; i < n; i++) {
+                    b[rowJ + i] -= valL*b[rowK + i];
                 }
-                b[offsetB + j*n + i] = sum/L[offsetL + j*strideL + j];
+            }
+
+            double diag = L[offsetL + j*strideL + j];
+            for (int i = 0; i < n; i++) {
+                b[rowJ + i] /= diag;
             }
         }
     }
@@ -505,13 +894,31 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveLowTransBTrans( double[] L, double[] b,
                                              int m, int n,
                                              int strideL, int offsetL, int offsetB ) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                double sum = b[offsetB + j*n + i];
-                for (int k = 0; k < j; k++) {
-                    sum -= b[offsetB + k*n + i]*L[offsetL + j*strideL + k];
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < m; j++) {
+//            double sum = b[offsetB + j*n + i];
+//            for (int k = 0; k < j; k++) {
+//                sum -= b[offsetB + k*n + i]*L[offsetL + j*strideL + k];
+//            }
+//            b[offsetB + j*n + i] = sum/L[offsetL + j*strideL + j];
+//        }
+//    }
+
+        for (int j = 0; j < m; j++) {
+            int rowJ = offsetB + j*n;
+
+            for (int k = 0; k < j; k++) {
+                double valL = L[offsetL + j*strideL + k];
+                int rowK = offsetB + k*n;
+
+                for (int i = 0; i < n; i++) {
+                    b[rowJ + i] -= valL*b[rowK + i];
                 }
-                b[offsetB + j*n + i] = sum/L[offsetL + j*strideL + j];
+            }
+
+            double diag = L[offsetL + j*strideL + j];
+            for (int i = 0; i < n; i++) {
+                b[rowJ + i] /= diag;
             }
         }
     }
@@ -532,13 +939,67 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveUpp( double[] U, double[] b,
                                   int m, int n,
                                   int strideU, int offsetU, int offsetB ) {
-        for (int i = 0; i < n; i++) {
+//        for (int i = 0; i < n; i++) {
+//            for (int j = 0; j < m; j++) {
+//                double sum = b[offsetB + i*m + j];
+//                for (int k = 0; k < j; k++) {
+//                    sum -= b[offsetB + i*m + k]*U[offsetU + k*strideU + j];
+//                }
+//                b[offsetB + i*m + j] = sum/U[offsetU + j*strideU + j];
+//            }
+//        }
+
+//        for (int j = 0; j < m; j++) {
+//            double diag = U[offsetU + j*strideU + j];
+//
+//            for (int i = 0; i < n; i++) {
+//                b[offsetB + i*m + j] /= diag;
+//            }
+//
+//            for (int k = j + 1; k < m; k++) {
+//                double valU = U[offsetU + j*strideU + k];
+//                for (int i = 0; i < n; i++) {
+//                    b[offsetB + i*m + k] -= b[offsetB + i*m + j]*valU;
+//                }
+//            }
+//        }
+
+        int i;
+        for (i = 0; i + 4 <= n; i += 4) {
+            int row0 = offsetB + (i + 0)*m;
+            int row1 = offsetB + (i + 1)*m;
+            int row2 = offsetB + (i + 2)*m;
+            int row3 = offsetB + (i + 3)*m;
+
             for (int j = 0; j < m; j++) {
-                double sum = b[offsetB + i*m + j];
-                for (int k = 0; k < j; k++) {
-                    sum -= b[offsetB + i*m + k]*U[offsetU + k*strideU + j];
+                double inv = 1.0/U[offsetU + j*strideU + j];
+                double s0 = b[row0 + j]*inv;
+                double s1 = b[row1 + j]*inv;
+                double s2 = b[row2 + j]*inv;
+                double s3 = b[row3 + j]*inv;
+                b[row0 + j] = s0;
+                b[row1 + j] = s1;
+                b[row2 + j] = s2;
+                b[row3 + j] = s3;
+
+                for (int k = j + 1; k < m; k++) {
+                    double valU = U[offsetU + j*strideU + k];
+                    b[row0 + k] -= s0*valU;
+                    b[row1 + k] -= s1*valU;
+                    b[row2 + k] -= s2*valU;
+                    b[row3 + k] -= s3*valU;
                 }
-                b[offsetB + i*m + j] = sum/U[offsetU + j*strideU + j];
+            }
+        }
+        for (; i < n; i++) {
+            int rowI = offsetB + i*m;
+            for (int j = 0; j < m; j++) {
+                double inv = 1.0/U[offsetU + j*strideU + j];
+                double sj = b[rowI + j]*inv;
+                b[rowI + j] = sj;
+                for (int k = j + 1; k < m; k++) {
+                    b[rowI + k] -= sj*U[offsetU + j*strideU + k];
+                }
             }
         }
     }
@@ -559,13 +1020,67 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveUppTrans( double[] U, double[] b,
                                        int m, int n,
                                        int strideU, int offsetU, int offsetB ) {
-        for (int i = 0; i < n; i++) {
+//        for (int i = 0; i < n; i++) {
+//            for (int j = m - 1; j >= 0; j--) {
+//                double sum = b[offsetB + i*m + j];
+//                for (int k = j + 1; k < m; k++) {
+//                    sum -= b[offsetB + i*m + k]*U[offsetU + j*strideU + k];
+//                }
+//                b[offsetB + i*m + j] = sum/U[offsetU + j*strideU + j];
+//            }
+//        }
+
+//        for (int j = m - 1; j >= 0; j--) {
+//            double diag = U[offsetU + j*strideU + j];
+//
+//            for (int i = 0; i < n; i++) {
+//                b[offsetB + i*m + j] /= diag;
+//            }
+//
+//            for (int k = 0; k < j; k++) {
+//                double valU = U[offsetU + k*strideU + j];
+//                for (int i = 0; i < n; i++) {
+//                    b[offsetB + i*m + k] -= b[offsetB + i*m + j]*valU;
+//                }
+//            }
+//        }
+
+        int i;
+        for (i = 0; i + 4 <= n; i += 4) {
+            int row0 = offsetB + (i + 0)*m;
+            int row1 = offsetB + (i + 1)*m;
+            int row2 = offsetB + (i + 2)*m;
+            int row3 = offsetB + (i + 3)*m;
+
             for (int j = m - 1; j >= 0; j--) {
-                double sum = b[offsetB + i*m + j];
-                for (int k = j + 1; k < m; k++) {
-                    sum -= b[offsetB + i*m + k]*U[offsetU + j*strideU + k];
+                double inv = 1.0/U[offsetU + j*strideU + j];
+                double s0 = b[row0 + j]*inv;
+                double s1 = b[row1 + j]*inv;
+                double s2 = b[row2 + j]*inv;
+                double s3 = b[row3 + j]*inv;
+                b[row0 + j] = s0;
+                b[row1 + j] = s1;
+                b[row2 + j] = s2;
+                b[row3 + j] = s3;
+
+                for (int k = 0; k < j; k++) {
+                    double valU = U[offsetU + k*strideU + j];
+                    b[row0 + k] -= s0*valU;
+                    b[row1 + k] -= s1*valU;
+                    b[row2 + k] -= s2*valU;
+                    b[row3 + k] -= s3*valU;
                 }
-                b[offsetB + i*m + j] = sum/U[offsetU + j*strideU + j];
+            }
+        }
+        for (; i < n; i++) {
+            int rowI = offsetB + i*m;
+            for (int j = m - 1; j >= 0; j--) {
+                double inv = 1.0/U[offsetU + j*strideU + j];
+                double sj = b[rowI + j]*inv;
+                b[rowI + j] = sj;
+                for (int k = 0; k < j; k++) {
+                    b[rowI + k] -= sj*U[offsetU + k*strideU + j];
+                }
             }
         }
     }
@@ -587,13 +1102,31 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveUppBTrans( double[] U, double[] b,
                                         int m, int n,
                                         int strideU, int offsetU, int offsetB ) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                double sum = b[offsetB + j*n + i];
-                for (int k = 0; k < j; k++) {
-                    sum -= b[offsetB + k*n + i]*U[offsetU + k*strideU + j];
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < m; j++) {
+//            double sum = b[offsetB + j*n + i];
+//            for (int k = 0; k < j; k++) {
+//                sum -= b[offsetB + k*n + i]*U[offsetU + k*strideU + j];
+//            }
+//            b[offsetB + j*n + i] = sum/U[offsetU + j*strideU + j];
+//        }
+//    }
+
+        for (int j = 0; j < m; j++) {
+            int rowJ = offsetB + j*n;
+
+            for (int k = 0; k < j; k++) {
+                double valU = U[offsetU + k*strideU + j];
+                int rowK = offsetB + k*n;
+
+                for (int i = 0; i < n; i++) {
+                    b[rowJ + i] -= valU*b[rowK + i];
                 }
-                b[offsetB + j*n + i] = sum/U[offsetU + j*strideU + j];
+            }
+
+            double diag = U[offsetU + j*strideU + j];
+            for (int i = 0; i < n; i++) {
+                b[rowJ + i] /= diag;
             }
         }
     }
@@ -615,13 +1148,31 @@ public class InnerTriangularSolver_DDRB {
     public static void rsolveUppTransBTrans( double[] U, double[] b,
                                              int m, int n,
                                              int strideU, int offsetU, int offsetB ) {
-        for (int i = 0; i < n; i++) {
-            for (int j = m - 1; j >= 0; j--) {
-                double sum = b[offsetB + j*n + i];
-                for (int k = j + 1; k < m; k++) {
-                    sum -= b[offsetB + k*n + i]*U[offsetU + j*strideU + k];
+//    for (int i = 0; i < n; i++) {
+//        for (int j = m - 1; j >= 0; j--) {
+//            double sum = b[offsetB + j*n + i];
+//            for (int k = j + 1; k < m; k++) {
+//                sum -= b[offsetB + k*n + i]*U[offsetU + j*strideU + k];
+//            }
+//            b[offsetB + j*n + i] = sum/U[offsetU + j*strideU + j];
+//        }
+//    }
+
+        for (int j = m - 1; j >= 0; j--) {
+            int rowJ = offsetB + j*n;
+
+            for (int k = j + 1; k < m; k++) {
+                double valU = U[offsetU + j*strideU + k];
+                int rowK = offsetB + k*n;
+
+                for (int i = 0; i < n; i++) {
+                    b[rowJ + i] -= valU*b[rowK + i];
                 }
-                b[offsetB + j*n + i] = sum/U[offsetU + j*strideU + j];
+            }
+
+            double diag = U[offsetU + j*strideU + j];
+            for (int i = 0; i < n; i++) {
+                b[rowJ + i] /= diag;
             }
         }
     }

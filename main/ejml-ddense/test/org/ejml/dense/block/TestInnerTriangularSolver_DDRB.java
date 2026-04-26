@@ -24,7 +24,6 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.dense.row.misc.UnrolledInverseFromMinor_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
 import org.junit.jupiter.api.Test;
 
@@ -128,7 +127,8 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
             boolean transT = name.substring(9).startsWith("Trans");
             boolean transB = name.endsWith("BTrans");
 
-            check_solve_array(m, leftSolver, solveL, transT, transB);
+            check_solve_array(m, 3, leftSolver, solveL, transT, transB);
+            check_solve_array(m, 8, leftSolver, solveL, transT, transB);
 
             numFound++;
         }
@@ -140,14 +140,18 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
     /**
      * Checks to see if solve functions that use arrays as input work correctly.
      */
-    private void check_solve_array( Method m, boolean leftSolver,
+    private void check_solve_array( Method m, int triSize, boolean leftSolver,
                                     boolean solveL, boolean transT, boolean transB ) {
         int offsetL = 2;
         int offsetB = 3;
 
-        int triSize = 3;
         int bLength = triSize + 1;
         DMatrixRMaj L = createRandomLowerTriangular(triSize);
+
+        int rowB = leftSolver ? triSize : bLength;
+        int colB = leftSolver ? bLength : triSize;
+        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(rowB, colB, rand);
+        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowB, colB, rand);
 
         if (!solveL) {
             CommonOps_DDRM.transpose(L);
@@ -157,21 +161,13 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
             CommonOps_DDRM.transpose(L);
         }
 
-        DMatrixRMaj L_inv = L.copy();
-        UnrolledInverseFromMinor_DDRM.inv(L_inv, L_inv);
-
-        int rowB = leftSolver ? triSize : bLength;
-        int colB = leftSolver ? bLength : triSize;
-        DMatrixRMaj B = RandomMatrices_DDRM.rectangle(rowB, colB, rand);
-        DMatrixRMaj expected = RandomMatrices_DDRM.rectangle(rowB, colB, rand);
-        DMatrixRMaj found = B.copy();
-
-        // compute the expected solution
         if (leftSolver) {
-            CommonOps_DDRM.mult(L_inv, B, expected);
+            CommonOps_DDRM.mult(L, expected, B);
         } else {
-            CommonOps_DDRM.mult(B, L_inv, expected);
+            CommonOps_DDRM.mult(expected, L, B);
         }
+
+        DMatrixRMaj found = B.copy();
 
         if (transT) {
             CommonOps_DDRM.transpose(L);
