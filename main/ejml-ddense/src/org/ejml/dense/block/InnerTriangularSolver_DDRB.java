@@ -20,9 +20,17 @@ package org.ejml.dense.block;
 
 import org.ejml.data.DMatrixRBlock;
 
-/// Contains triangular solvers and inverters for inner blocks of a [DMatrixRBlock]. All inputs are assumed to be
-/// non-singular and no checks are done for zeros. Solve functions use the following naming scheme with all 16
-/// possible permutations provided:
+/// Contains triangular solvers and inverters for inner blocks of a [DMatrixRBlock].
+///
+/// Contracts:
+/// - Reads only the input triangle indicated by `Low`/`Upp`. Opposite triangle is ignored.
+/// - Two-array invert and solve: Writes and reads only the specified triangle.
+/// - Two-array invert variants accept the same array for input and output.
+/// - One-array invert writes the solution in the opposing triangle
+/// - Solve functions overwrite B; the triangular factor is never modified.
+/// - Inputs must be non-singular; no zero-diagonal check or overflow scaling is performed.
+///
+/// Solve functions use the following naming scheme with all 16 possible permutations provided:
 ///
 /// ```
 /// (l|r)solve(Low|Upp)[Trans][BTrans]
@@ -34,12 +42,11 @@ import org.ejml.data.DMatrixRBlock;
 /// - `Trans` (after Low/Upp, optional): solve against T<sup>T</sup> instead of T
 /// - `BTrans` (optional): B is stored in transposed layout. (n by m instead of m by n)
 ///
-/// Left Solve: T*X=B and for Right Solve: X*T=B. Where T and B are known, T is triangular and X is the unknown being solved for.
-/// All inputs are assumed to be matrices. Note that in the code below X and B are the same matrix with the solution
-/// being written in place.
+/// Left Solve: T*X=B and for Right Solve: X*T=B. Where T and B are known, T is triangular and X is the unknown
+/// being solved for. All inputs are assumed to be matrices. Note that in the code below X and B are the same
+/// matrix with the solution being written in place.
 ///
-/// Values in the "opposite" triangle from what it processes are ignored. For "Low" it will only look
-/// at the lower triangle and conversely for "Upp" it will look only at the upper motion.
+/// ## Algorithmic Notes
 ///
 /// Algorithm for lower triangular inverse:
 ///
@@ -72,9 +79,54 @@ public class InnerTriangularSolver_DDRB {
                                     int m,
                                     int offsetL,
                                     int offsetL_inv ) {
+//    for (int i = 0; i < m; i++) {
+//        double L_ii = L[offsetL + i*m + i];
+//        for (int j = 0; j < i; j++) {
+//            double val = 0;
+//            for (int k = j; k < i; k++) {
+//                val += L[offsetL + i*m + k]*L_inv[offsetL_inv + k*m + j];
+//            }
+//            L_inv[offsetL_inv + i*m + j] = -val/L_ii;
+//        }
+//        L_inv[offsetL_inv + i*m + i] = 1.0/L_ii;
+//    }
+
         for (int i = 0; i < m; i++) {
             double L_ii = L[offsetL + i*m + i];
-            for (int j = 0; j < i; j++) {
+            int j = 0;
+            for (; j + 4 <= i; j += 4) {
+                double val0 = 0, val1 = 0, val2 = 0, val3 = 0;
+
+                // Ramp-up inlining to remove the read to have other triangle be non-zero
+                {
+                    double Lik = L[offsetL + i*m + (j + 0)];
+                    val0 += Lik*L_inv[offsetL_inv + (j + 0)*m + (j + 0)];
+                }
+                {
+                    double Lik = L[offsetL + i*m + (j + 1)];
+                    val0 += Lik*L_inv[offsetL_inv + (j + 1)*m + (j + 0)];
+                    val1 += Lik*L_inv[offsetL_inv + (j + 1)*m + (j + 1)];
+                }
+                {
+                    double Lik = L[offsetL + i*m + (j + 2)];
+                    val0 += Lik*L_inv[offsetL_inv + (j + 2)*m + (j + 0)];
+                    val1 += Lik*L_inv[offsetL_inv + (j + 2)*m + (j + 1)];
+                    val2 += Lik*L_inv[offsetL_inv + (j + 2)*m + (j + 2)];
+                }
+
+                for (int k = j + 3; k < i; k++) {
+                    double Lik = L[offsetL + i*m + k];
+                    val0 += Lik*L_inv[offsetL_inv + k*m + (j + 0)];
+                    val1 += Lik*L_inv[offsetL_inv + k*m + (j + 1)];
+                    val2 += Lik*L_inv[offsetL_inv + k*m + (j + 2)];
+                    val3 += Lik*L_inv[offsetL_inv + k*m + (j + 3)];
+                }
+                L_inv[offsetL_inv + i*m + (j + 0)] = -val0/L_ii;
+                L_inv[offsetL_inv + i*m + (j + 1)] = -val1/L_ii;
+                L_inv[offsetL_inv + i*m + (j + 2)] = -val2/L_ii;
+                L_inv[offsetL_inv + i*m + (j + 3)] = -val3/L_ii;
+            }
+            for (; j < i; j++) {
                 double val = 0;
                 for (int k = j; k < i; k++) {
                     val += L[offsetL + i*m + k]*L_inv[offsetL_inv + k*m + j];
@@ -93,9 +145,51 @@ public class InnerTriangularSolver_DDRB {
     public static void invertLower( double[] L,
                                     int m,
                                     int offsetL ) {
+//        for (int i = 0; i < m; i++) {
+//            double L_ii = L[offsetL + i*m + i];
+//            for (int j = 0; j < i; j++) {
+//                double val = 0;
+//                for (int k = j; k < i; k++) {
+//                    val += L[offsetL + i*m + k]*L[offsetL + k*m + j];
+//                }
+//                L[offsetL + i*m + j] = -val/L_ii;
+//            }
+//            L[offsetL + i*m + i] = 1.0/L_ii;
+//        }
+
         for (int i = 0; i < m; i++) {
             double L_ii = L[offsetL + i*m + i];
-            for (int j = 0; j < i; j++) {
+            int j = 0;
+            for (; j + 4 <= i; j += 4) {
+                double val0 = 0, val1 = 0, val2 = 0, val3 = 0;
+                {
+                    double Lik = L[offsetL + i*m + (j + 0)];
+                    val0 += Lik*L[offsetL + (j + 0)*m + (j + 0)];
+                }
+                {
+                    double Lik = L[offsetL + i*m + (j + 1)];
+                    val0 += Lik*L[offsetL + (j + 1)*m + (j + 0)];
+                    val1 += Lik*L[offsetL + (j + 1)*m + (j + 1)];
+                }
+                {
+                    double Lik = L[offsetL + i*m + (j + 2)];
+                    val0 += Lik*L[offsetL + (j + 2)*m + (j + 0)];
+                    val1 += Lik*L[offsetL + (j + 2)*m + (j + 1)];
+                    val2 += Lik*L[offsetL + (j + 2)*m + (j + 2)];
+                }
+                for (int k = j + 3; k < i; k++) {
+                    double Lik = L[offsetL + i*m + k];
+                    val0 += Lik*L[offsetL + k*m + (j + 0)];
+                    val1 += Lik*L[offsetL + k*m + (j + 1)];
+                    val2 += Lik*L[offsetL + k*m + (j + 2)];
+                    val3 += Lik*L[offsetL + k*m + (j + 3)];
+                }
+                L[offsetL + i*m + (j + 0)] = -val0/L_ii;
+                L[offsetL + i*m + (j + 1)] = -val1/L_ii;
+                L[offsetL + i*m + (j + 2)] = -val2/L_ii;
+                L[offsetL + i*m + (j + 3)] = -val3/L_ii;
+            }
+            for (; j < i; j++) {
                 double val = 0;
                 for (int k = j; k < i; k++) {
                     val += L[offsetL + i*m + k]*L[offsetL + k*m + j];
@@ -118,9 +212,61 @@ public class InnerTriangularSolver_DDRB {
                                     int m,
                                     int offsetU,
                                     int offsetU_inv ) {
+//        for (int i = m - 1; i >= 0; i--) {
+//            double U_ii = U[offsetU + i*m + i];
+//            for (int j = m - 1; j > i; j--) {
+//                double val = 0;
+//                for (int k = i + 1; k <= j; k++) {
+//                    val += U[offsetU + i*m + k]*U_inv[offsetU_inv + k*m + j];
+//                }
+//                U_inv[offsetU_inv + i*m + j] = -val/U_ii;
+//            }
+//            U_inv[offsetU_inv + i*m + i] = 1.0/U_ii;
+//        }
+
         for (int i = m - 1; i >= 0; i--) {
             double U_ii = U[offsetU + i*m + i];
-            for (int j = m - 1; j > i; j--) {
+            int j = m - 1;
+            for (; j - 3 > i; j -= 4) {
+                double valR = 0;  // col j
+                double valR1 = 0;  // col j-1
+                double valR2 = 0;  // col j-2
+                double valL = 0;  // col j-3
+                int k = i + 1;
+                // Phase A: all four columns active.
+                for (; k <= j - 3; k++) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + k*m + j];
+                    valR1 += Uik*U_inv[offsetU_inv + k*m + (j - 1)];
+                    valR2 += Uik*U_inv[offsetU_inv + k*m + (j - 2)];
+                    valL += Uik*U_inv[offsetU_inv + k*m + (j - 3)];
+                }
+                // Phase B: column j-3 finished. Three remain.
+                if (k <= j - 2) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + k*m + j];
+                    valR1 += Uik*U_inv[offsetU_inv + k*m + (j - 1)];
+                    valR2 += Uik*U_inv[offsetU_inv + k*m + (j - 2)];
+                    k++;
+                }
+                // Phase C: column j-2 finished. Two remain.
+                if (k <= j - 1) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + k*m + j];
+                    valR1 += Uik*U_inv[offsetU_inv + k*m + (j - 1)];
+                    k++;
+                }
+                // Phase D: column j-1 finished. Only column j remains.
+                if (k <= j) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + k*m + j];
+                }
+                U_inv[offsetU_inv + i*m + j] = -valR/U_ii;
+                U_inv[offsetU_inv + i*m + (j - 1)] = -valR1/U_ii;
+                U_inv[offsetU_inv + i*m + (j - 2)] = -valR2/U_ii;
+                U_inv[offsetU_inv + i*m + (j - 3)] = -valL/U_ii;
+            }
+            for (; j > i; j--) {
                 double val = 0;
                 for (int k = i + 1; k <= j; k++) {
                     val += U[offsetU + i*m + k]*U_inv[offsetU_inv + k*m + j];
@@ -139,9 +285,57 @@ public class InnerTriangularSolver_DDRB {
     public static void invertUpper( double[] U,
                                     int m,
                                     int offsetU ) {
+//        for (int i = m - 1; i >= 0; i--) {
+//            double U_ii = U[offsetU + i*m + i];
+//            for (int j = m - 1; j > i; j--) {
+//                double val = 0;
+//                for (int k = i + 1; k <= j; k++) {
+//                    val += U[offsetU + i*m + k]*U[offsetU + k*m + j];
+//                }
+//                U[offsetU + i*m + j] = -val/U_ii;
+//            }
+//            U[offsetU + i*m + i] = 1.0/U_ii;
+//        }
+
         for (int i = m - 1; i >= 0; i--) {
             double U_ii = U[offsetU + i*m + i];
-            for (int j = m - 1; j > i; j--) {
+            int j = m - 1;
+            for (; j - 3 > i; j -= 4) {
+                double valR = 0;
+                double valR1 = 0;
+                double valR2 = 0;
+                double valL = 0;
+                int k = i + 1;
+                for (; k <= j - 3; k++) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U[offsetU + k*m + j];
+                    valR1 += Uik*U[offsetU + k*m + (j - 1)];
+                    valR2 += Uik*U[offsetU + k*m + (j - 2)];
+                    valL += Uik*U[offsetU + k*m + (j - 3)];
+                }
+                if (k <= j - 2) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U[offsetU + k*m + j];
+                    valR1 += Uik*U[offsetU + k*m + (j - 1)];
+                    valR2 += Uik*U[offsetU + k*m + (j - 2)];
+                    k++;
+                }
+                if (k <= j - 1) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U[offsetU + k*m + j];
+                    valR1 += Uik*U[offsetU + k*m + (j - 1)];
+                    k++;
+                }
+                if (k <= j) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U[offsetU + k*m + j];
+                }
+                U[offsetU + i*m + j] = -valR/U_ii;
+                U[offsetU + i*m + (j - 1)] = -valR1/U_ii;
+                U[offsetU + i*m + (j - 2)] = -valR2/U_ii;
+                U[offsetU + i*m + (j - 3)] = -valL/U_ii;
+            }
+            for (; j > i; j--) {
                 double val = 0;
                 for (int k = i + 1; k <= j; k++) {
                     val += U[offsetU + i*m + k]*U[offsetU + k*m + j];
@@ -168,9 +362,61 @@ public class InnerTriangularSolver_DDRB {
                                         int m,
                                         int offsetU,
                                         int offsetU_inv ) {
+//        for (int i = m - 1; i >= 0; i--) {
+//            double U_ii = U[offsetU + i*m + i];
+//            for (int j = m - 1; j > i; j--) {
+//                double val = 0;
+//                for (int k = i + 1; k <= j; k++) {
+//                    val += U[offsetU + i*m + k]*U_inv[offsetU_inv + j*m + k];
+//                }
+//                U_inv[offsetU_inv + j*m + i] = -val/U_ii;
+//            }
+//            U_inv[offsetU_inv + i*m + i] = 1.0/U_ii;
+//        }
+
         for (int i = m - 1; i >= 0; i--) {
             double U_ii = U[offsetU + i*m + i];
-            for (int j = m - 1; j > i; j--) {
+            int j = m - 1;
+            for (; j - 3 > i; j -= 4) {
+                // Computing rows j, j-1, j-2, j-3 of U_inv at column i.
+                // Each row q reads U_inv[(j-q)*m + k] for k = i+1..(j-q).
+                //   Row j   (largest): k = i+1..j     (longest range)
+                //   Row j-3 (smallest): k = i+1..j-3  (shortest range)
+                double valR = 0;  // row j
+                double valR1 = 0;  // row j-1
+                double valR2 = 0;  // row j-2
+                double valL = 0;  // row j-3
+                int k = i + 1;
+                for (; k <= j - 3; k++) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + j*m + k];
+                    valR1 += Uik*U_inv[offsetU_inv + (j - 1)*m + k];
+                    valR2 += Uik*U_inv[offsetU_inv + (j - 2)*m + k];
+                    valL += Uik*U_inv[offsetU_inv + (j - 3)*m + k];
+                }
+                if (k <= j - 2) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + j*m + k];
+                    valR1 += Uik*U_inv[offsetU_inv + (j - 1)*m + k];
+                    valR2 += Uik*U_inv[offsetU_inv + (j - 2)*m + k];
+                    k++;
+                }
+                if (k <= j - 1) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + j*m + k];
+                    valR1 += Uik*U_inv[offsetU_inv + (j - 1)*m + k];
+                    k++;
+                }
+                if (k <= j) {
+                    double Uik = U[offsetU + i*m + k];
+                    valR += Uik*U_inv[offsetU_inv + j*m + k];
+                }
+                U_inv[offsetU_inv + j*m + i] = -valR/U_ii;
+                U_inv[offsetU_inv + (j - 1)*m + i] = -valR1/U_ii;
+                U_inv[offsetU_inv + (j - 2)*m + i] = -valR2/U_ii;
+                U_inv[offsetU_inv + (j - 3)*m + i] = -valL/U_ii;
+            }
+            for (; j > i; j--) {
                 double val = 0;
                 for (int k = i + 1; k <= j; k++) {
                     val += U[offsetU + i*m + k]*U_inv[offsetU_inv + j*m + k];

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -483,5 +483,36 @@ public class SpecializedOps_DDRM {
         }
 
         return maxAbs*total*maxAbs;
+    }
+
+    /// Fills entries in the specified triangle of a square matrix with a given value.
+    /// The hessenberg parameter controls where the fill region starts relative to the diagonal:
+    ///
+    /// hessenberg = 0 includes the diagonal (fills the full triangle),
+    /// hessenberg = 1 fills strictly above (or below) the diagonal,
+    /// hessenberg = 2 fills starting one further off-diagonal, etc.
+    ///
+    /// @param A The matrix to modify.
+    /// @param upper If true, fills the upper region; if false, fills the lower region.
+    /// @param hessenberg Offset from the diagonal at which the fill begins.
+    /// @param value The value to set.
+    public static void fillTriangle( DMatrixRMaj A, boolean upper, int hessenberg, double value ) {
+        if (hessenberg < 0)
+            throw new IllegalArgumentException("hessenberg must be >= 0");
+
+        int n = A.numRows;
+        if (upper) {
+            for (int i = 0; i < n; i++) {
+                for (int j = i + hessenberg; j < n; j++) {
+                    A.set(i, j, value);
+                }
+            }
+        } else {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j <= i - hessenberg; j++) {
+                    A.set(i, j, value);
+                }
+            }
+        }
     }
 }

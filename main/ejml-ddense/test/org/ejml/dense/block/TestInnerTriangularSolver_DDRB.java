@@ -24,7 +24,7 @@ import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.generic.GenericMatrixOps_F64;
+import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,78 +33,122 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
-    @Test void invertLower_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
-        CommonOps_DDRM.transpose(A);
+    @Test void invertArray() {
+        Method[] methods = InnerTriangularSolver_DDRB.class.getMethods();
 
-        DMatrixRMaj A_inv = A.copy();
+        int numFound = 0;
+        for (Method m : methods) {
+            String name = m.getName();
 
-        InnerTriangularSolver_DDRB.invertLower(A.data, A_inv.data, 5, 0, 0);
+            if (!name.startsWith("invert"))
+                continue;
 
-        var S = new DMatrixRMaj(5, 5);
-        CommonOps_DDRM.mult(A, A_inv, S);
+            boolean upper = name.contains("Upper");
+            boolean tran = name.endsWith("Tran");
+            boolean inPlace = m.getParameterCount() == 3;
 
-        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+//            System.out.println("name "+m.getName()+" "+upper+" "+tran+" "+inPlace);
+            check_invert_array(m, 3, upper, tran, inPlace);
+            check_invert_array(m, 8, upper, tran, inPlace);
 
-        // see if it works with the same input matrix
-        InnerTriangularSolver_DDRB.invertLower(A.data, A.data, 5, 0, 0);
+            numFound++;
+        }
 
-        assertTrue(MatrixFeatures_DDRM.isIdentical(A, A_inv, UtilEjml.TEST_F64));
+        assertEquals(5, numFound);
     }
 
-    @Test void invertLower_one() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
-        CommonOps_DDRM.transpose(A);
+    private void check_invert_array( Method m, int size, boolean upper, boolean tran, boolean inPlace ) {
+        int offset = 2;
 
-        DMatrixRMaj A_inv = A.copy();
+        // Random matrix. This fills in the triangle and outside area so that we can verify that the outside
+        // area has not been modified
+        DMatrixRMaj T = RandomMatrices_DDRM.rectangle(size, size, -1, 1, rand);
 
-        InnerTriangularSolver_DDRB.invertLower(A_inv.data, 5, 0);
+        // Ensure the triangular system is not degenerate
+        ensureNotDegenerate(T);
 
-        var S = new DMatrixRMaj(5, 5);
-        CommonOps_DDRM.mult(A, A_inv, S);
+        double[] dataT = offsetArray(T.data, offset);
+        double[] dataT_orig = dataT.clone();
 
-        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+        double[] dataTinv;
+        if (inPlace) {
+            // In-place: result overwrites input's triangle. Opposite triangle must remain untouched
+            invokeInvert(m, dataT, dataT, size, offset, offset, true);
+            dataTinv = dataT;
+            assertOppositeTriangleEquals(dataT, dataT_orig, size, offset, upper);
+        } else {
+            // Two-array: prefill output with random values to verify untouched cells are preserved.
+            DMatrixRMaj Tinv_init = RandomMatrices_DDRM.rectangle(size, size, -1, 1, rand);
+            dataTinv = offsetArray(Tinv_init.data, offset);
+            double[] dataTinv_orig = dataTinv.clone();
+
+            invokeInvert(m, dataT, dataTinv, size, offset, offset, false);
+
+            // Input must not have been modified.
+            assertArrayEquals(dataT_orig, dataT, 0.0);
+
+            // Output's opposite triangle must match its prefilled values.
+            boolean outUpper = tran != upper;
+            assertOppositeTriangleEquals(dataTinv, dataTinv_orig, size, offset, tran != upper);
+        }
+
+        // Verify correctness: T * T_inv = I (or T^T * T_inv = I for tran variants).
+        DMatrixRMaj T_inv = toMatrix(dataTinv, size, offset);
+        SpecializedOps_DDRM.fillTriangle(T_inv, tran == upper, 1, 0.0);
+
+        DMatrixRMaj T_clean = T.copy();
+        SpecializedOps_DDRM.fillTriangle(T_clean, !upper, 1, 0.0);
+
+        var S = new DMatrixRMaj(size, size);
+        if (tran) {
+            CommonOps_DDRM.multTransA(T_clean, T_inv, S);
+        } else {
+            CommonOps_DDRM.mult(T_clean, T_inv, S);
+        }
+        assertTrue(MatrixFeatures_DDRM.isIdentity(S, UtilEjml.TEST_F64));
+
+        // Two-array variants must also work when the same array is passed for input and output.
+        if (!inPlace) {
+            invokeInvert(m, dataT_orig, dataT_orig, size, offset, offset, false);
+            DMatrixRMaj aliasedResult = toMatrix(dataT_orig, size, offset);
+            assertTrue(MatrixFeatures_DDRM.isEqualsTriangle(T_inv, aliasedResult, tran != upper, UtilEjml.TEST_F64));
+        }
     }
 
-    @Test void invertUpper_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
-        DMatrixRMaj A_inv = A.copy();
-
-        InnerTriangularSolver_DDRB.invertUpper(A.data, A_inv.data, 5, 0, 0);
-
-        var S = new DMatrixRMaj(5, 5);
-        CommonOps_DDRM.mult(A, A_inv, S);
-
-        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
-
-        // see if it works with the same input matrix
-        InnerTriangularSolver_DDRB.invertUpper(A.data, A.data, 5, 0, 0);
-
-        assertTrue(MatrixFeatures_DDRM.isIdentical(A, A_inv, UtilEjml.TEST_F64));
+    private DMatrixRMaj toMatrix( double[] data, int size, int offset ) {
+        DMatrixRMaj m = new DMatrixRMaj(size, size);
+        System.arraycopy(data, offset, m.data, 0, size*size);
+        return m;
     }
 
-    @Test void invertUpper_one() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
-        DMatrixRMaj A_inv = A.copy();
-
-        InnerTriangularSolver_DDRB.invertUpper(A_inv.data, 5, 0);
-
-        var S = new DMatrixRMaj(5, 5);
-        CommonOps_DDRM.mult(A, A_inv, S);
-
-        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+    private void invokeInvert( Method m, double[] dataT, double[] dataTinv,
+                               int size, int offsetT, int offsetTinv, boolean inPlace ) {
+        try {
+            if (inPlace) {
+                m.invoke(null, dataT, size, offsetT);
+            } else {
+                m.invoke(null, dataT, dataTinv, size, offsetT, offsetTinv);
+            }
+        } catch (IllegalAccessException e) {
+            fail("invoke failed");
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 
-    @Test void invertUpperTran_two() {
-        DMatrixRMaj A = RandomMatrices_DDRM.triangularUpper(5, 0, -1, 1, rand);
-        DMatrixRMaj A_inv = A.createLike();
-
-        InnerTriangularSolver_DDRB.invertUpperTran(A.data, A_inv.data, 5, 0, 0);
-
-        var S = new DMatrixRMaj(5, 5);
-        CommonOps_DDRM.multTransA(A, A_inv, S);
-
-        assertTrue(GenericMatrixOps_F64.isIdentity(S, UtilEjml.TEST_F64));
+    /// Verifies that elements outside the result triangle of an inverter's output match the
+    /// reference array. Used to confirm the function did not write outside its declared region.
+    ///
+    /// @param resultUpper True if the result lives in the upper triangle (so the lower is checked).
+    private void assertOppositeTriangleEquals( double[] data, double[] orig, int size, int offset, boolean resultUpper ) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                boolean inOpposite = resultUpper ? (j < i) : (j > i);
+                if (inOpposite) {
+                    assertEquals(orig[offset + i*size + j], data[offset + i*size + j], 0.0);
+                }
+            }
+        }
     }
 
     /**
@@ -147,6 +191,8 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
 
         int bLength = triSize + 1;
         DMatrixRMaj L = createRandomLowerTriangular(triSize);
+
+        ensureNotDegenerate(L);
 
         int rowB = leftSolver ? triSize : bLength;
         int colB = leftSolver ? bLength : triSize;
@@ -195,6 +241,14 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
         System.arraycopy(dataB, offsetB, found.data, 0, found.data.length);
 
         assertTrue(MatrixFeatures_DDRM.isIdentical(expected, found, UtilEjml.TEST_F64));
+    }
+
+    private static void ensureNotDegenerate( DMatrixRMaj L ) {
+        // Ensure the triangular system is not degenerate
+        for (int i = 0; i < L.numRows; i++) {
+            double d = L.get(i, i);
+            L.set(i, i, d >= 0 ? d + 1.5 : d - 1.5);
+        }
     }
 
     private DMatrixRMaj createRandomLowerTriangular( int N ) {
