@@ -218,6 +218,51 @@ public class TestUtilEjml extends EjmlStandardJUnit {
         assertEquals("1.23e+102", UtilEjml.fancyString2(1.234567E102, 2, '.'));
     }
 
+    @Test void fancyStringFill2() {
+        assertEquals("-0", UtilEjml.fancyStringFill2(-0.0, 8, '.'));
+        for (int i = 5; i <= 8; i++) {
+            assertEquals("0", UtilEjml.fancyStringFill2(0.0, i, '.'));
+        }
+        assertEquals("-1", UtilEjml.fancyStringFill2(-1, 8, '.'));
+        assertEquals("1", UtilEjml.fancyStringFill2(1, 8, '.'));
+        assertEquals("-12", UtilEjml.fancyStringFill2(-12, 8, '.'));
+        assertEquals("12", UtilEjml.fancyStringFill2(12, 2, '.'));
+        assertEquals("320", UtilEjml.fancyStringFill2(320, 8, '.'));
+        assertEquals("320", UtilEjml.fancyStringFill2(320, 8, '.'));
+        assertEquals("3000", UtilEjml.fancyStringFill2(3000, 8, '.'));
+        assertEquals("3.2", UtilEjml.fancyStringFill2(3.2, 8, '.'));
+        assertEquals("3", UtilEjml.fancyStringFill2(3.2, 2, '.'));
+        assertEquals("3", UtilEjml.fancyStringFill2(3.2, 1, '.'));
+        assertEquals("0.23", UtilEjml.fancyStringFill2(0.23, 8, '.'));
+        assertEquals("0.2", UtilEjml.fancyStringFill2(0.23, 3, '.'));
+        assertEquals("0", UtilEjml.fancyStringFill2(0.23, 1, '.'));
+        assertEquals("3.2", UtilEjml.fancyStringFill2(3.2, 8, '.'));
+        assertEquals("-1.1234", UtilEjml.fancyStringFill2(-1.1234, 8, '.'));
+        assertEquals("-1.123", UtilEjml.fancyStringFill2(-1.1234, 5, '.'));
+        assertEquals("-1.12", UtilEjml.fancyStringFill2(-1.1234, 4, '.'));
+        assertEquals("-11.2", UtilEjml.fancyStringFill2(-11.234, 4, '.'));
+        assertEquals("2", UtilEjml.fancyStringFill2(2.00000012, 8, '.'));
+        assertEquals("2.00000012", UtilEjml.fancyStringFill2(2.00000012, 10, '.'));
+        assertEquals("2e+11", UtilEjml.fancyStringFill2(200001000000.000012, 8, '.'));
+        assertEquals("2.00001e+11", UtilEjml.fancyStringFill2(200001000000.000012, 11, '.'));
+        assertEquals("2.00001e+11", UtilEjml.fancyStringFill2(200001000000.000012, 11, '.'));
+        assertEquals("2e+11", UtilEjml.fancyStringFill2(200001000000.000012, 10, '.'));
+        assertEquals("-1234.123", UtilEjml.fancyStringFill2(-1234.123456, 8, '.'));
+        assertEquals("-1e+03", UtilEjml.fancyStringFill2(-1234.123456, 2, '.')); // check rounding here
+        assertEquals("-1234.123", UtilEjml.fancyStringFill2(-1234.123456, 8, '.')); // no rounding needed
+        assertEquals("0.000012", UtilEjml.fancyStringFill2(0.0000123451, 8, '.'));
+        assertEquals("1e-06", UtilEjml.fancyStringFill2(0.00000123451, 5, '.'));
+        assertEquals("1e-06", UtilEjml.fancyStringFill2(0.00000123451, 6, '.'));
+        assertEquals("1.2e-06", UtilEjml.fancyStringFill2(0.00000123451, 7, '.'));
+        assertEquals("1.23e-102", UtilEjml.fancyStringFill2(1.234567E-102, 8, '.'));
+        assertEquals("1.23e+102", UtilEjml.fancyStringFill2(1.234567E102, 8, '.'));
+
+        // cases where it has to violate character count restriction
+        assertEquals("1e-06", UtilEjml.fancyStringFill2(0.00000123451, 4, '.'));
+        assertEquals("1e-08", UtilEjml.fancyStringFill2(0.0000000123451, 4, '.'));
+        assertEquals("1e+102", UtilEjml.fancyStringFill2(1.234567E102, 1, '.'));
+    }
+
     @Test void exceedsMaxMatrixSize() {
         assertFalse(UtilEjml.exceedsMaxMatrixSize(100, 200));
         assertFalse(UtilEjml.exceedsMaxMatrixSize(1, 200));

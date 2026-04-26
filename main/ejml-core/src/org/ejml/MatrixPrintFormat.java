@@ -75,7 +75,7 @@ public class MatrixPrintFormat extends PrintFormat {
         builder.append(rowPrefix);
         for (int i = 0; i < size; i++) {
             double v = access.get(i);
-            String word = f(v);
+            String word = aligned ? f(v, numChars) : f(v);
             builder.append(word);
             for (int j = word.length(); j < numChars; j++) {
                 builder.append(' ');

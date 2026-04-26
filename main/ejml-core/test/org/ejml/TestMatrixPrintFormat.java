@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestMatrixPrintFormat extends EjmlStandardJUnit {
     @Test void row() {
-        var array = new double[]{0, 1.1345, 100, 2, 1.3049495, 9498481, -3};
+        var array = new double[]{0, 1.1345, 100, 2, 1.30494954342, 9498481, -3};
 
         var alg = new MatrixPrintFormat().fsetPrecision(2);
         var builder = new StringBuilder();
@@ -32,7 +32,7 @@ public class TestMatrixPrintFormat extends EjmlStandardJUnit {
 
         String found = builder.toString();
         assertEquals(1 + (9 + 2)*6 - 2 + 1, found.length());
-        assertEquals("{1.13     , 100      , 2        , 1.3      , 9498481  , -3       }", found);
+        assertEquals("{1.1345   , 100      , 2        , 1.3049495, 9498481  , -3       }", found);
 
         alg.aligned = false;
         builder.delete(0, builder.length());

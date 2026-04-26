@@ -23,6 +23,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.ops.DConvertMatrixStruct;
 import org.ejml.ops.FConvertMatrixStruct;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
 
@@ -590,7 +591,7 @@ public class UtilEjml {
 
     /// Returns how many characters writing the number in exp format will take up
     public static int fancy2LengthExp( int precision ) {
-        return 2 + precision + 4;
+        return 1 + precision + 4 + (precision > 0 ? 1 : 0);
     }
 
     /// Prints numbers to minimize how much space they take up
@@ -643,6 +644,10 @@ public class UtilEjml {
 
         String txt = useFloat ? String.format("%." + precision + "f", value) : String.format("%." + (precision + 1) + "g", value);
 
+        return stripPointlessZeros(decimalSep, txt);
+    }
+
+    private static @NotNull String stripPointlessZeros( char decimalSep, String txt ) {
         // Strip away pointless zeros
         // 1.0000 -> 1, 1.20000 -> 1.2, 1.34000000e-06 -> 1.34e-06
         int locationExp = txt.indexOf('e');
@@ -662,6 +667,57 @@ public class UtilEjml {
         if (txt.charAt(i) == decimalSep)
             return txt.substring(0, i) + suffix;
         return txt.substring(0, i + 1) + suffix;
+    }
+
+    /// Given a fixed amount of room, pick the string formal which will most effectively take up that space
+    public static String fancyStringFill2( double value, int charCount, char decimalSep ) {
+        // precision it have in exp format and fill in these characters
+        int expPrecision = Math.max(0, charCount - 6);
+
+        double vabs = Math.abs(value);
+
+        // Determine if we can encode "precision" most significant digits in the same amount of space
+        // as we would use if exponential format is used
+        int floatPrecision = -1;
+
+        // How many digits to encode decimal
+        double floored = Math.floor(vabs);
+        double remainder = vabs - floored;
+        int countInt = Math.max(1, digitCount(floored));
+        // there will be at least 1 character to show the integer
+
+        // Does the integer component exceed our character budget?
+        boolean useFloat;
+        if (countInt > charCount) {
+            useFloat = false;
+        } else {
+            // See if it has spare room for decimals
+            floatPrecision = Math.max(0, charCount - countInt - 1);
+            int floatChars = countInt + ((floatPrecision > 0) ? 1 + floatPrecision : 0);
+
+            int actualCharsExp = fancy2LengthExp(expPrecision);
+            // see if there's enough precision to show a non-zero value
+            if (charCount > 1 && floored == 0.0 && remainder > 0.0 && remainder*Math.pow(10, floatPrecision) < 1.0) {
+                useFloat = false;
+            } else if (remainder == 0.0 && countInt <= actualCharsExp ) {
+                // if it's just an integer, only consider integer counts
+                useFloat = true;
+            } else if (floatChars <= actualCharsExp) {
+                // use float if its more or just as compact
+                useFloat = true;
+            } else {
+                useFloat = false;
+            }
+//            } else {
+            // See if there's enough space to show decimals
+//                double decimal = vabs - floored;
+//                useFloat = decimal > 0.0 || decimal*Math.pow(10.0, floatPrecision) >= 1.0;
+//            }
+        }
+
+        String txt = useFloat ? String.format("%." + floatPrecision + "f", value) : String.format("%." + expPrecision + "e", value);
+
+        return stripPointlessZeros(decimalSep, txt);
     }
 
     private static int digitCount( double value ) {

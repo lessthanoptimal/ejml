@@ -33,6 +33,11 @@ public abstract class PrintFormat {
         return UtilEjml.fancyString2(value, precision, decimal);
     }
 
+    /// Applies formatting where there's a limit on the number of chars
+    public String f( double value, int count ) {
+        return UtilEjml.fancyStringFill2(value, count, decimal);
+    }
+
     public String f( String separator, double... values ) {
         var builder = new StringBuilder();
         f(builder, separator, values);
