@@ -22,7 +22,6 @@ import org.ejml.ops.DConvertArrays;
 
 import java.util.Arrays;
 
-import static org.ejml.UtilEjml.fancyString2;
 
 /// DMatrixRMaj is a row matrix with real elements that are 64-bit floats. A matrix
 /// is the fundamental data structure in linear algebra. Unlike a sparse matrix, there is no
@@ -74,7 +73,7 @@ public class DMatrixRMaj extends DMatrix1Row {
     /// Creates a matrix with the values and shape defined by the 2D array 'data'.
     /// It is assumed that 'data' has a row-major formatting:
     ///
-    /// data[ row ][ column ]
+    /// data[row ][column]
     ///
     /// @param data 2D array representation of the matrix. Not modified.
     public DMatrixRMaj( double[][] data ) {
@@ -295,19 +294,12 @@ public class DMatrixRMaj extends DMatrix1Row {
     /// Converts the matrix into a string using the specified formatting.
     ///
     @Override public String format( MatrixPrintFormat format ) {
-        int precision = format.getPrecision();
         var builder = new StringBuilder();
-        char decimal = format.getDecimal();
         builder.append(format.getPrefix());
         for (int row = 0; row < numRows; row++) {
-            builder.append(format.getRowPrefix());
-            for (int col = 0; col < numCols - 1; col++) {
-                builder.append(fancyString2(data[row*numCols + col], precision, decimal));
-                builder.append(format.getColSeparator());
-            }
-            if (numCols > 0)
-                builder.append(fancyString2(data[row*numCols + numCols - 1], precision, decimal));
-            builder.append(format.getRowSuffix());
+            format.rowPadding(row == 0, builder);
+            int _row = row;
+            format.row(builder, numCols, ( col ) -> data[_row*numCols + col]);
             if (row < numRows - 1)
                 builder.append(format.getRowSeparator());
         }

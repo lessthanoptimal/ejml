@@ -588,6 +588,11 @@ public class UtilEjml {
         return formatted;
     }
 
+    /// Returns how many characters writing the number in exp format will take up
+    public static int fancy2LengthExp( int precision ) {
+        return 2 + precision + 4;
+    }
+
     /// Prints numbers to minimize how much space they take up
     ///
     /// Examples with precision of 2
@@ -608,7 +613,7 @@ public class UtilEjml {
         double vabs = Math.abs(value);
 
         // The number of characters to encode it in exp format is known
-        int lengthExp = 2 + precision + 4;
+        int lengthExp = fancy2LengthExp(precision);
 
         // Determine if we can encode "precision" most significant digits in the same amount of space
         // as we would use if exponential format is used

@@ -121,6 +121,7 @@ public class MapPrintFormat extends PrintFormat {
         out.rowSuffix = itemSuffix;
         out.rowSeparator = itemSeparator;
         out.colSeparator =  pairSeparator;
+        out.aligned = false;
         return out;
     }
 

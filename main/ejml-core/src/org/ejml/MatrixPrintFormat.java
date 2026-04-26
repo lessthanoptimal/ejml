@@ -20,6 +20,8 @@ package org.ejml;
 import lombok.Getter;
 import lombok.Setter;
 
+import static org.ejml.UtilEjml.fancy2LengthExp;
+
 /// Describes how a matrix is formatted when converted into a string. By default, it will
 /// print a matrix into the standard Java format.
 public class MatrixPrintFormat extends PrintFormat {
@@ -34,6 +36,9 @@ public class MatrixPrintFormat extends PrintFormat {
     @Getter @Setter public String rowSuffix = "}";
     @Getter @Setter public String prefix = "[";
     @Getter @Setter public String suffix = "]";
+
+    /// If true it will align the columns
+    @Getter @Setter boolean aligned = true;
 
     public MatrixPrintFormat() {}
 
@@ -53,37 +58,65 @@ public class MatrixPrintFormat extends PrintFormat {
         this.suffix = suffix;
     }
 
+    // Applies padding before a row. Needed for alignment
+    public void rowPadding( boolean firstRow, StringBuilder builder ) {
+        if (firstRow || !aligned)
+            return;
+        for (int j = 0; j < prefix.length(); j++) {
+            builder.append(' ');
+        }
+    }
+
+    /// Prints a formated row in a matrix where it will respect the request to align
+    /// elements in the same column
+    public void row( StringBuilder builder, int size, RowAccess access ) {
+        // Maximum size a number can be, including negative symbol
+        int numChars = aligned ? fancy2LengthExp(precision) + 1 : 0;
+        builder.append(rowPrefix);
+        for (int i = 0; i < size; i++) {
+            double v = access.get(i);
+            String word = f(v);
+            builder.append(word);
+            for (int j = word.length(); j < numChars; j++) {
+                builder.append(' ');
+            }
+            if (i < size - 1)
+                builder.append(colSeparator);
+        }
+        builder.append(rowSuffix);
+    }
+
     public MatrixPrintFormat fsetPrecision( int precision ) {
         this.precision = precision;
         return this;
     }
 
-    public MatrixPrintFormat fsetColSeparator( String colSeparator) {
+    public MatrixPrintFormat fsetColSeparator( String colSeparator ) {
         this.colSeparator = colSeparator;
         return this;
     }
 
-    public MatrixPrintFormat fsetRowSeparator( String rowSeparator) {
+    public MatrixPrintFormat fsetRowSeparator( String rowSeparator ) {
         this.rowSeparator = rowSeparator;
         return this;
     }
 
-    public MatrixPrintFormat fsetRowPrefix( String rowPrefix) {
+    public MatrixPrintFormat fsetRowPrefix( String rowPrefix ) {
         this.rowPrefix = rowPrefix;
         return this;
     }
 
-    public MatrixPrintFormat fsetRowSuffix( String rowSuffix) {
+    public MatrixPrintFormat fsetRowSuffix( String rowSuffix ) {
         this.rowSuffix = rowSuffix;
         return this;
     }
 
-    public MatrixPrintFormat fsetPrefix( String prefix) {
+    public MatrixPrintFormat fsetPrefix( String prefix ) {
         this.prefix = prefix;
         return this;
     }
 
-    public MatrixPrintFormat fsetSuffix( String suffix) {
+    public MatrixPrintFormat fsetSuffix( String suffix ) {
         this.suffix = suffix;
         return this;
     }
@@ -98,5 +131,9 @@ public class MatrixPrintFormat extends PrintFormat {
         this.suffix = src.suffix;
         this.decimal = src.decimal;
         return this;
+    }
+
+    @FunctionalInterface public interface RowAccess {
+        double get( int i );
     }
 }

@@ -221,6 +221,11 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         var format = new MatrixPrintFormat(0, ", ", ",\n", "{", "}", "{", "}");
 
         var mat = new DMatrixRMaj(new double[][]{{1, 0.0000013456, 3}, {3.2, 4.45983445, 12345.678901}});
+
+        // By default it will align columns
+        assertEquals("{{1      , 1e-06  , 3      },\n {3      , 4      , 1e+04  }}", mat.format(format));
+
+        format.setAligned(false);
         String found = mat.format(format);
         assertEquals("{{1, 1e-06, 3},\n{3, 4, 1e+04}}", found);
         format.setPrecision(4);

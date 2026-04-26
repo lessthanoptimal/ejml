@@ -78,21 +78,14 @@ public interface DMatrix extends Matrix {
 
     /// Customizable formatting for converting a Matrix into a string
     default String format( MatrixPrintFormat format ) {
-        int precision = format.getPrecision();
         int numRows = getNumRows();
         int numCols = getNumCols();
-        char decimal = format.getDecimal();
         var builder = new StringBuilder();
         builder.append(format.getPrefix());
         for (int row = 0; row < numRows; row++) {
-            builder.append(format.getRowPrefix());
-            for (int col = 0; col < numCols - 1; col++) {
-                builder.append(format.f(get(row, col)));
-                builder.append(format.getColSeparator());
-            }
-            if (numCols > 0)
-                builder.append(format.f(get(row, numCols - 1)), precision, decimal);
-            builder.append(format.getRowSuffix());
+            format.rowPadding(row == 0, builder);
+            int _row = row;
+            format.row(builder, numCols, (i)->get(_row, i));
             if (row < numRows - 1)
                 builder.append(format.getRowSeparator());
         }
