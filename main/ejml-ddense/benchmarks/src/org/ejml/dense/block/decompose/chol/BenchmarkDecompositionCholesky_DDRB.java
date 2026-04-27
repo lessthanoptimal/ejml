@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -44,7 +44,7 @@ public class BenchmarkDecompositionCholesky_DDRB {
     public int size;
 
     //    @Param({"true","false"})
-    @Param({"true"})
+    @Param({"true", "false"})
     public boolean lower;
 
     public DMatrixRBlock A, L;

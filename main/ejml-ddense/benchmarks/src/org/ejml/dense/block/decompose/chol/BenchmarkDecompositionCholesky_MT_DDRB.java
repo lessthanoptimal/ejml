@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -39,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @Fork(value = 2)
 public class BenchmarkDecompositionCholesky_MT_DDRB {
-    @Param({"100", "500", "1000", "5000", "10000"})
-//    @Param({"2000","4000"})
+//    @Param({"100", "500", "1000", "5000", "10000"})
+    @Param({"2000"})
     public int size;
 
     //    @Param({"true","false"})

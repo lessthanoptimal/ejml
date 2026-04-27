@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1)
 public class BenchmarkLinearSolverChol_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000", "2000"})
+    @Param({"2000"})
     public int size;
 
     public DMatrixRBlock A;

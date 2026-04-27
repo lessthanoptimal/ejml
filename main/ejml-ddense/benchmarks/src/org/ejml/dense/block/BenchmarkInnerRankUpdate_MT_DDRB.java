@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.block.linsol.chol;
+package org.ejml.dense.block;
 
 import org.ejml.data.DMatrixRBlock;
-import org.ejml.dense.block.MatrixOps_DDRB;
-import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.data.DSubmatrixD1;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -30,55 +29,60 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Peter Abeles
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkLinearSolverChol_MT_DDRB {
+public class BenchmarkInnerRankUpdate_MT_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"2000"})
+    @Param({"7000"})
     public int size;
 
-    public DMatrixRBlock A;
-    public DMatrixRBlock X, B;
+    //    @Param({"5","10","20","40","80","120"})
+    @Param({"80"})
+    public int blockLength;
 
-    CholeskyOuterSolver_MT_DDRB outerLower = new CholeskyOuterSolver_MT_DDRB(true);
-    CholeskyOuterSolver_MT_DDRB outerUpper = new CholeskyOuterSolver_MT_DDRB(false);
+    public DMatrixRBlock A, A_template, B, B_tran;
+    public DSubmatrixD1 Asub, Bsub, BTranSub;
+
+    public final double alpha = 1.5;
+
     @Setup
     public void setup() {
-        Random rand = new Random(234);
+        var rand = new Random(234);
 
-        A = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetricPosDef(size, rand));
-        B = MatrixOps_DDRB.createRandom(A.numRows, 20, -1, 1, rand);
-        X = A.create(1, 1);
+        A = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
+        A_template = A.copy();
+        B = MatrixOps_DDRB.createRandom(blockLength, size, -1, 1, rand, blockLength);
+        B_tran = MatrixOps_DDRB.createRandom(size, blockLength, -1, 1, rand, blockLength);
+
+        Asub = new DSubmatrixD1(A, 0, A.numRows, 0, A.numCols);
+        Bsub = new DSubmatrixD1(B, 0, B.numRows, 0, B.numCols);
+        BTranSub= new DSubmatrixD1(B_tran, 0, B_tran.numRows, 0, B_tran.numCols);
     }
 
-    @Benchmark
-    public void outer_lower() {
-        DMatrixRBlock A = outerLower.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRBlock B = outerLower.modifiesB() ? this.B.copy() : this.B;
-        if (!outerLower.setA(A))
-            throw new RuntimeException("Bad");
-        outerLower.solve(B, X);
+    @Setup(Level.Invocation)
+    public void resetA() {
+        A.setTo(A_template);
     }
 
-    @Benchmark
-    public void outer_upper() {
-        DMatrixRBlock A = outerUpper.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRBlock B = outerUpper.modifiesB() ? this.B.copy() : this.B;
-        if (!outerUpper.setA(A))
-            throw new RuntimeException("Bad");
-        outerUpper.solve(B, X);
+    @Benchmark public void rankNUpdate() {
+        InnerRankUpdate_MT_DDRB.rankNUpdate(blockLength, alpha, Asub, Bsub);
+    }
+
+    @Benchmark public void symmRankNMinus_U() {
+        InnerRankUpdate_MT_DDRB.symmRankNMinus_U(blockLength, Asub, Bsub);
+    }
+
+    @Benchmark public void symmRankNMinus_L() {
+        InnerRankUpdate_MT_DDRB.symmRankNMinus_L(blockLength, Asub, BTranSub);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkLinearSolverChol_MT_DDRB.class.getSimpleName())
+                .include(BenchmarkInnerRankUpdate_MT_DDRB.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

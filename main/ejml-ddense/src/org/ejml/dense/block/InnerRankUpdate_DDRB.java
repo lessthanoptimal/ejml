@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -49,7 +49,7 @@ public class InnerRankUpdate_DDRB {
 
         int heightB = B.row1 - B.row0;
         if (heightB > blockLength)
-            throw new IllegalArgumentException("Height of B cannot be greater than the block length");
+            throw new IllegalArgumentException("Rows of B cannot be greater than the block length");
 
         int N = B.col1 - B.col0;
 
@@ -95,7 +95,7 @@ public class InnerRankUpdate_DDRB {
 
         int heightB = B.row1 - B.row0;
         if (heightB > blockLength)
-            throw new IllegalArgumentException("Height of B cannot be greater than the block length");
+            throw new IllegalArgumentException("Rows of B cannot be greater than the block length");
 
         int N = B.col1 - B.col0;
 
@@ -146,7 +146,7 @@ public class InnerRankUpdate_DDRB {
                                          DSubmatrixD1 A, DSubmatrixD1 B ) {
         int widthB = B.col1 - B.col0;
         if (widthB > blockLength)
-            throw new IllegalArgumentException("Width of B cannot be greater than the block length");
+            throw new IllegalArgumentException("Cols of B cannot be greater than the block length");
 
         int N = B.row1 - B.row0;
 
