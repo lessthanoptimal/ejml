@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.dense.block;
 
-import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 
 //CONCURRENT_INLINE import static org.ejml.dense.block.InnerRankUpdate_DDRB.*;
