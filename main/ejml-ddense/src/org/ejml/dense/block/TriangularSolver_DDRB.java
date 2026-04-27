@@ -15,11 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.dense.block;
 
 import org.ejml.data.DGrowArray;
-import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;

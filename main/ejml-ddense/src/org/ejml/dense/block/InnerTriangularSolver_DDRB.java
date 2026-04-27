@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.dense.block;
 
-import org.ejml.data.DMatrixRBlock;
 
 /// Contains triangular solvers and inverters for inner blocks of a [DMatrixRBlock].
 ///
