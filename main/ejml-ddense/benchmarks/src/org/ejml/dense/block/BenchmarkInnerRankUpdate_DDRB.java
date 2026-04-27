@@ -41,7 +41,7 @@ public class BenchmarkInnerRankUpdate_DDRB {
     public int size;
 
     //    @Param({"5","10","20","40","80","120"})
-    @Param({"80"})
+    @Param({"60"})
     public int blockLength;
 
     public DMatrixRBlock A, A_template, B, B_tran;

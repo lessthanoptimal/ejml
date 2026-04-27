@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,9 +22,7 @@ import org.ejml.CodeGeneratorBase;
 
 import java.io.FileNotFoundException;
 
-/**
- * @author Peter Abeles
- */
+@SuppressWarnings("NullAway.Init")
 public abstract class GenerateFixed extends CodeGeneratorBase {
     protected String classPreamble;
 

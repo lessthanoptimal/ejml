@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -131,9 +131,8 @@ public class GenerateUnrolledInverseFromMinor_DDRM extends CodeGeneratorBase {
     public static void printMinors( int[] matrix, int N, PrintStream out ) {
 
         // compute all the minors
-        int index = 0;
         for (int i = 1; i <= N; i++) {
-            for (int j = 1; j <= N; j++, index++) {
+            for (int j = 1; j <= N; j++) {
                 out.print("        double m" + i + "" + j + " = ");
                 if ((i + j)%2 == 1)
                     out.print("-( ");

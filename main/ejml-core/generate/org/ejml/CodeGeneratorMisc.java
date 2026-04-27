@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -18,6 +18,7 @@
 
 package org.ejml;
 
+import java.time.Year;
 
 /**
  * Various things related to auto generating code.
@@ -27,7 +28,7 @@ package org.ejml;
 public class CodeGeneratorMisc {
 
     public final static String COPYRIGHT = "/*\n" +
-            " * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.\n" +
+            " * Copyright (c) " + Year.now().getValue() + ", Peter Abeles. All Rights Reserved.\n" +
             " *\n" +
             " * This file is part of Efficient Java Matrix Library (EJML).\n" +
             " *\n" +

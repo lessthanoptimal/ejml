@@ -66,61 +66,61 @@ public class BenchmarkInnerMultiplication_DDRB {
         InnerMultiplication_DDRB.blockMultPlus(A, B, C, 0, 0, 0, m, m, m);
     }
 
-//    @Benchmark public void blockMultPlusTransA() {
-//        InnerMultiplication_DDRB.blockMultPlusTransA(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultPlusTransB() {
-//        InnerMultiplication_DDRB.blockMultPlusTransB(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultMinus() {
-//        InnerMultiplication_DDRB.blockMultMinus(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultMinusTransA() {
-//        InnerMultiplication_DDRB.blockMultMinusTransA(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultMinusTransB() {
-//        InnerMultiplication_DDRB.blockMultMinusTransB(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultSet() {
-//        InnerMultiplication_DDRB.blockMultSet(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultSetTransA() {
-//        InnerMultiplication_DDRB.blockMultSetTransA(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultSetTransB() {
-//        InnerMultiplication_DDRB.blockMultSetTransB(A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultPlus_alpha() {
-//        InnerMultiplication_DDRB.blockMultPlus(alpha, A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultPlusTransA_alpha() {
-//        InnerMultiplication_DDRB.blockMultPlusTransA(alpha, A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultPlusTransB_alpha() {
-//        InnerMultiplication_DDRB.blockMultPlusTransB(alpha, A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultSet_alpha() {
-//        InnerMultiplication_DDRB.blockMultSet(alpha, A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultSetTransA_alpha() {
-//        InnerMultiplication_DDRB.blockMultSetTransA(alpha, A, B, C, 0, 0, 0, m, m, m);
-//    }
-//
-//    @Benchmark public void blockMultSetTransB_alpha() {
-//        InnerMultiplication_DDRB.blockMultSetTransB(alpha, A, B, C, 0, 0, 0, m, m, m);
-//    }
+    @Benchmark public void blockMultPlusTransA() {
+        InnerMultiplication_DDRB.blockMultPlusTransA(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultPlusTransB() {
+        InnerMultiplication_DDRB.blockMultPlusTransB(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultMinus() {
+        InnerMultiplication_DDRB.blockMultMinus(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultMinusTransA() {
+        InnerMultiplication_DDRB.blockMultMinusTransA(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultMinusTransB() {
+        InnerMultiplication_DDRB.blockMultMinusTransB(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultSet() {
+        InnerMultiplication_DDRB.blockMultSet(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultSetTransA() {
+        InnerMultiplication_DDRB.blockMultSetTransA(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultSetTransB() {
+        InnerMultiplication_DDRB.blockMultSetTransB(A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultPlus_alpha() {
+        InnerMultiplication_DDRB.blockMultPlus(alpha, A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultPlusTransA_alpha() {
+        InnerMultiplication_DDRB.blockMultPlusTransA(alpha, A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultPlusTransB_alpha() {
+        InnerMultiplication_DDRB.blockMultPlusTransB(alpha, A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultSet_alpha() {
+        InnerMultiplication_DDRB.blockMultSet(alpha, A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultSetTransA_alpha() {
+        InnerMultiplication_DDRB.blockMultSetTransA(alpha, A, B, C, 0, 0, 0, m, m, m);
+    }
+
+    @Benchmark public void blockMultSetTransB_alpha() {
+        InnerMultiplication_DDRB.blockMultSetTransB(alpha, A, B, C, 0, 0, 0, m, m, m);
+    }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
