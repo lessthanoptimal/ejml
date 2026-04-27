@@ -24,27 +24,20 @@ import org.ejml.data.DSubmatrixD1;
 //CONCURRENT_INLINE import static org.ejml.dense.block.InnerRankUpdate_DDRB.*;
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
-/**
- * Performs rank-n update operations on the inner blocks of a {@link DMatrixRBlock}
- *
- * It is assumed and not checked that the submatrices are aligned along the matrix's blocks.
- *
- * @author Peter Abeles
- */
+/// Performs rank-n update operations on the inner blocks of a [DMatrixRBlock]
+/// It is assumed and not checked that the submatrices are aligned along the matrix's blocks.
+///
+/// @author Peter Abeles
 public class InnerRankUpdate_DDRB {
 
-    /**
-     * <p>
-     * Performs:<br>
-     * <br>
-     * A = A + &alpha; B <sup>T</sup>B
-     * </p>
-     *
-     * @param blockLength Size of the block in the block matrix.
-     * @param alpha scaling factor for right hand side.
-     * @param A Block aligned submatrix.
-     * @param B Block aligned submatrix.
-     */
+    /// Performs:
+    ///
+    /// A = A + α B <sup>T</sup>B
+    ///
+    /// @param blockLength Size of the block in the block matrix.
+    /// @param alpha scaling factor for right hand side.
+    /// @param A Block aligned submatrix.
+    /// @param B Block aligned submatrix.
     public static void rankNUpdate( int blockLength, double alpha, DSubmatrixD1 A, DSubmatrixD1 B ) {
 
         int heightB = B.row1 - B.row0;
@@ -82,14 +75,11 @@ public class InnerRankUpdate_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-    /**
-     * <p>
-     * Rank N update function for a symmetric inner submatrix and only operates on the upper
-     * triangular portion of the submatrix.<br>
-     * <br>
-     * A = A - B <sup>T</sup>B
-     * </p>
-     */
+    /// Rank N update function for a symmetric inner submatrix and only operates on the upper
+    /// triangular portion of the submatrix.
+    ///
+    /// A = A - B <sup>T</sup>B
+    ///
     public static void symmRankNMinus_U( int blockLength,
                                          DSubmatrixD1 A, DSubmatrixD1 B ) {
 
@@ -134,14 +124,10 @@ public class InnerRankUpdate_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-    /**
-     * <p>
-     * Rank N update function for a symmetric inner submatrix and only operates on the lower
-     * triangular portion of the submatrix.<br>
-     * <br>
-     * A = A - B*B<sup>T</sup><br>
-     * </p>
-     */
+    /// Rank N update function for a symmetric inner submatrix and only operates on the lower
+    /// triangular portion of the submatrix.
+    ///
+    /// A = A - B\*B<sup>T</sup>
     public static void symmRankNMinus_L( int blockLength,
                                          DSubmatrixD1 A, DSubmatrixD1 B ) {
         int widthB = B.col1 - B.col0;
@@ -183,13 +169,9 @@ public class InnerRankUpdate_DDRB {
     }
     //CONCURRENT_OMIT_BEGIN
 
-    /**
-     * <p>
-     * Performs the following operation on a block:<br>
-     * <br>
-     * c = c - a<sup>T</sup>a<br>
-     * </p>
-     */
+    /// Performs the following operation on a block:
+    ///
+    /// c = c - a<sup>T</sup>a
     protected static void multTransABlockMinus( double[] dataA, double[] dataC,
                                                 int indexA, int indexB, int indexC,
                                                 final int heightA, final int widthA, final int widthC ) {
@@ -203,36 +185,51 @@ public class InnerRankUpdate_DDRB {
 //            }
 //        }
 
-        int rowB = indexB;
-        int endLoopK = rowB + heightA*widthC;
-        int startA = indexA;
+        final int jBlockedEnd = widthC & ~3;
 
-        //for( int k = 0; k < heightA; k++ ) {
-        for (; rowB != endLoopK; rowB += widthC, startA += widthA) {
-            int a = startA;
-            int c = indexC;
+        for (int i = 0; i < widthA; i++) {
+            int j = 0;
 
-            int endA = a + widthA;
-            int endB = rowB + widthC;
-
-            while (a != endA) {
-                double valA = dataA[a++];
-
-                int b = rowB;
-                while (b != endB) {
-                    dataC[c++] -= valA*dataA[b++];
+            for (; j < jBlockedEnd; j += 4) {
+                double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
+                int aIdx = indexA + i;       // dataA[k*widthA + i]
+                int bIdx = indexB + j;       // dataA[k*widthC + j]
+                final int aEnd = aIdx + heightA*widthA;
+                while (aIdx != aEnd) {
+                    double valA = dataA[aIdx];
+                    s0 += valA*dataA[bIdx];
+                    s1 += valA*dataA[bIdx + 1];
+                    s2 += valA*dataA[bIdx + 2];
+                    s3 += valA*dataA[bIdx + 3];
+                    aIdx += widthA;
+                    bIdx += widthC;
                 }
+                int cIdx = indexC + i*widthC + j;
+                dataC[cIdx] -= s0;
+                dataC[cIdx + 1] -= s1;
+                dataC[cIdx + 2] -= s2;
+                dataC[cIdx + 3] -= s3;
+            }
+
+            // tail: widthC not a multiple of 4
+            for (; j < widthC; j++) {
+                double s = 0.0;
+                int aIdx = indexA + i;
+                int bIdx = indexB + j;
+                final int aEnd = aIdx + heightA*widthA;
+                while (aIdx != aEnd) {
+                    s += dataA[aIdx]*dataA[bIdx];
+                    aIdx += widthA;
+                    bIdx += widthC;
+                }
+                dataC[indexC + i*widthC + j] -= s;
             }
         }
     }
 
-    /**
-     * <p>
-     * Performs the following operation on the upper triangular portion of a block:<br>
-     * <br>
-     * c = c - a<sup>T</sup>a<br>
-     * </p>
-     */
+    /// Performs the following operation on the upper triangular portion of a block:
+    ///
+    /// c = c - a<sup>T</sup>a
     protected static void multTransABlockMinus_U( double[] dataA, double[] dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int heightA, final int widthA, final int widthC ) {
@@ -247,29 +244,68 @@ public class InnerRankUpdate_DDRB {
 //        }
 
         for (int i = 0; i < widthA; i++) {
-            for (int k = 0; k < heightA; k++) {
+            int jRampEnd = (i + 3) & ~3;
+            if (jRampEnd > widthC) jRampEnd = widthC;
+            int jBlockEnd = widthC & ~3;
+            if (jBlockEnd < jRampEnd) jBlockEnd = jRampEnd;
 
-                double valA = dataA[k*widthA + i + indexA];
-                int b = k*widthC + indexB + i;
-                int c = i*widthC + indexC + i;
+            int j = i;
 
-                int endC = (c - i) + widthC;
-
-                while (c != endC) {
-//                for( int j = i; j < widthC; j++ ) {
-                    dataC[c++] -= valA*dataA[b++];
+            // ramp: scalar from i up to next multiple of 4
+            for (; j < jRampEnd; j++) {
+                double s = 0.0;
+                int aIdx = indexA + i;
+                int bIdx = indexB + j;
+                final int aEnd = aIdx + heightA*widthA;
+                while (aIdx != aEnd) {
+                    s += dataA[aIdx]*dataA[bIdx];
+                    aIdx += widthA;
+                    bIdx += widthC;
                 }
+                dataC[indexC + i*widthC + j] -= s;
+            }
+
+            // steady-state JB=4
+            for (; j < jBlockEnd; j += 4) {
+                double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
+                int aIdx = indexA + i;
+                int bIdx = indexB + j;
+                final int aEnd = aIdx + heightA*widthA;
+                while (aIdx != aEnd) {
+                    double valA = dataA[aIdx];
+                    s0 += valA*dataA[bIdx];
+                    s1 += valA*dataA[bIdx + 1];
+                    s2 += valA*dataA[bIdx + 2];
+                    s3 += valA*dataA[bIdx + 3];
+                    aIdx += widthA;
+                    bIdx += widthC;
+                }
+                int cIdx = indexC + i*widthC + j;
+                dataC[cIdx] -= s0;
+                dataC[cIdx + 1] -= s1;
+                dataC[cIdx + 2] -= s2;
+                dataC[cIdx + 3] -= s3;
+            }
+
+            // scalar tail
+            for (; j < widthC; j++) {
+                double s = 0.0;
+                int aIdx = indexA + i;
+                int bIdx = indexB + j;
+                final int aEnd = aIdx + heightA*widthA;
+                while (aIdx != aEnd) {
+                    s += dataA[aIdx]*dataA[bIdx];
+                    aIdx += widthA;
+                    bIdx += widthC;
+                }
+                dataC[indexC + i*widthC + j] -= s;
             }
         }
     }
 
-    /**
-     * <p>
-     * Performs the following operation on a block:<br>
-     * <br>
-     * c = c - a*a<sup>T</sup><br>
-     * </p>
-     */
+    /// Performs the following operation on a block:
+    ///
+    /// c = c - a\*a<sup>T</sup>
     protected static void multTransBBlockMinus( final double[] dataA, final double[] dataC,
                                                 final int indexA, final int indexB, final int indexC,
                                                 final int widthA, final int heightA, final int widthC ) {
@@ -283,35 +319,50 @@ public class InnerRankUpdate_DDRB {
 //            }
 //        }
 
-        int rowA = indexA;
-        int c = indexC;
-        for (int i = 0; i < heightA; i++, rowA += widthA) {
-            final int endA = rowA + widthA;
-            int rowB = indexB;
-            final int endLoopJ = c + widthC;
+        final int jEnd4 = widthC & ~3;
 
-            // for( int j = 0; j < widthC; j++  ) {
-            while (c != endLoopJ) {
-                int a = rowA;
-                int b = rowB;
+        for (int i = 0; i < heightA; i++) {
+            final int aIdx = indexA + i*widthA;
+            final int aEnd = aIdx + widthA;
+            int j = 0;
 
-                double sum = 0;
-                while (a != endA) {
+            for (; j < jEnd4; j += 4) {
+                double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
+                int a = aIdx;
+                int b0 = indexB + (j + 0)*widthA;
+                int b1 = indexB + (j + 1)*widthA;
+                int b2 = indexB + (j + 2)*widthA;
+                int b3 = indexB + (j + 3)*widthA;
+                while (a != aEnd) {
+                    double valA = dataA[a++];
+                    s0 += valA*dataA[b0++];
+                    s1 += valA*dataA[b1++];
+                    s2 += valA*dataA[b2++];
+                    s3 += valA*dataA[b3++];
+                }
+                int cIdx = indexC + i*widthC + j;
+                dataC[cIdx] -= s0;
+                dataC[cIdx + 1] -= s1;
+                dataC[cIdx + 2] -= s2;
+                dataC[cIdx + 3] -= s3;
+            }
+
+            // scalar tail
+            for (; j < widthC; j++) {
+                double sum = 0.0;
+                int a = aIdx;
+                int b = indexB + j*widthA;
+                while (a != aEnd) {
                     sum += dataA[a++]*dataA[b++];
                 }
-                dataC[c++] -= sum;
-                rowB += widthA;
+                dataC[indexC + i*widthC + j] -= sum;
             }
         }
     }
 
-    /**
-     * <p>
-     * Performs the following operation on the lower triangular portion of a block:<br>
-     * <br>
-     * c = c - a*a<sup>T</sup><br>
-     * </p>
-     */
+    /// Performs the following operation on the lower triangular portion of a block:
+    ///
+    /// c = c - a\*a<sup>T</sup>
     protected static void multTransBBlockMinus_L( double[] dataA, double[] dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int widthA, final int heightA, final int widthC ) {
@@ -326,20 +377,41 @@ public class InnerRankUpdate_DDRB {
 //        }
 
         for (int i = 0; i < heightA; i++) {
-            int rowA = i*widthA + indexA;
-            int endA = rowA + widthA;
-            int rowB = indexB;
-            int rowC = i*widthC + indexC;
-            for (int j = 0; j <= i; j++, rowB += widthA) {
-                double sum = 0;
+            final int aIdx = indexA + i*widthA;
+            final int aEnd = aIdx + widthA;
+            int jBlockEnd = (i + 1) & ~3;
+            int j = 0;
 
-                int a = rowA;
-                int b = rowB;
+            for (; j < jBlockEnd; j += 4) {
+                double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
+                int a = aIdx;
+                int b0 = indexB + (j + 0)*widthA;
+                int b1 = indexB + (j + 1)*widthA;
+                int b2 = indexB + (j + 2)*widthA;
+                int b3 = indexB + (j + 3)*widthA;
+                while (a != aEnd) {
+                    double valA = dataA[a++];
+                    s0 += valA*dataA[b0++];
+                    s1 += valA*dataA[b1++];
+                    s2 += valA*dataA[b2++];
+                    s3 += valA*dataA[b3++];
+                }
+                int cIdx = indexC + i*widthC + j;
+                dataC[cIdx] -= s0;
+                dataC[cIdx + 1] -= s1;
+                dataC[cIdx + 2] -= s2;
+                dataC[cIdx + 3] -= s3;
+            }
 
-                while (a != endA) {
+            // ramp-down tail: j from jBlockEnd up to and including i
+            for (; j <= i; j++) {
+                double sum = 0.0;
+                int a = aIdx;
+                int b = indexB + j*widthA;
+                while (a != aEnd) {
                     sum += dataA[a++]*dataA[b++];
                 }
-                dataC[rowC + j] -= sum;
+                dataC[indexC + i*widthC + j] -= sum;
             }
         }
     }

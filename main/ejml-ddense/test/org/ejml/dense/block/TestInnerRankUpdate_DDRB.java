@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,17 +29,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
     int N = 4;
 
     /**
      * Tests rankNUpdate with various sized input matrices
      */
-    @Test
-    void rankNUpdate() {
+    @Test void rankNUpdate() {
         // the matrix being updated is a whole block
         checkRankNUpdate(N, N - 2);
 
@@ -70,8 +66,7 @@ public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
     /**
      * Tests symmRankNMinus_U with various sized input matrices
      */
-    @Test
-    void symmRankNMinus_U() {
+    @Test void symmRankNMinus_U() {
         // the matrix being updated is a whole block
         checkSymmRankNMinus_U(N, N - 2);
 
@@ -98,8 +93,7 @@ public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true, expected.getDDRM(), blockA, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void symmRankNMinus_L() {
+    @Test void symmRankNMinus_L() {
         // the matrix being updated is a whole block
         checkSymmRankNMinus_L(N, N - 2);
 
