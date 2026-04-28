@@ -18,13 +18,11 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -35,70 +33,75 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkMatrixMult_DDRB {
+public class BenchmarkTriangularSolver_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000"})
+    @Param({"2000"})
     public int size;
 
-    //    @Param({"5","10","20","40","80","120"})
     @Param({"60"})
     public int blockLength;
 
-    public DMatrixRBlock A, B, C;
-    public DSubmatrixD1 Asub, Bsub, Csub;
+    @Param({"true", "false"})
+    public boolean upper;
 
-    @Setup public void setup() {
-        Random rand = new Random(234);
+    public DMatrixRBlock T, T_template, B, C;
+    public DSubmatrixD1 Tsub, Bsub, Csub;
 
-        A = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
+    GrowArray<DGrowArray> workspace = new GrowArray<>(DGrowArray::new);
+
+    @Setup
+    public void setup() {
+        var rand = new Random(234);
+
+        T = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
         B = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
         C = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
 
-        Asub = new DSubmatrixD1(A, 0, A.numRows, 0, A.numCols);
+        // Ensure A is numerically stable
+        for (int i = 0; i < T.numCols; i++) {
+            double v = T.get(i, i);
+            T.set(i, i, v + Math.signum(v));
+        }
+
+        T_template = T.copy();
+
+        Tsub = new DSubmatrixD1(T, 0, T.numRows, 0, T.numCols);
         Bsub = new DSubmatrixD1(B, 0, B.numRows, 0, B.numCols);
         Csub = new DSubmatrixD1(C, 0, C.numRows, 0, C.numCols);
     }
 
-    @Benchmark
-    public void mult() {
-        MatrixMult_DDRB.mult(blockLength, Asub, Bsub, Csub);
+    @Setup(Level.Invocation)
+    public void reset() {
+        T.setTo(T_template);
     }
 
     @Benchmark
-    public void multMinus() {
-        MatrixMult_DDRB.multMinus(blockLength, Asub, Bsub, Csub);
+    public void invert_two() {
+        TriangularSolver_DDRB.invert(blockLength, upper, Tsub, Bsub, workspace);
     }
 
     @Benchmark
-    public void multPlus() {
-        MatrixMult_DDRB.multPlus(blockLength, Asub, Bsub, Csub);
+    public void invert_inplace() {
+        TriangularSolver_DDRB.invert(blockLength, upper, Tsub, workspace);
     }
 
     @Benchmark
-    public void multMinusTransA() {
-        MatrixMult_DDRB.multMinusTransA(blockLength, Asub, Bsub, Csub);
+    public void lsolve() {
+        TriangularSolver_DDRB.lsolve(blockLength, upper, Tsub, Bsub, false);
     }
 
     @Benchmark
-    public void multPlusTransA() {
-        MatrixMult_DDRB.multPlusTransA(blockLength, Asub, Bsub, Csub);
+    public void lsolve_transT() {
+        TriangularSolver_DDRB.lsolve(blockLength, upper, Tsub, Bsub, true);
     }
 
     @Benchmark
-    public void multTransA() {
-        MatrixMult_DDRB.multTransA(blockLength, Asub, Bsub, Csub);
+    public void rsolve() {
+        TriangularSolver_DDRB.rsolve(blockLength, upper, Tsub, Bsub, false);
     }
 
     @Benchmark
-    public void multTransB() {
-        MatrixMult_DDRB.multTransB(blockLength, Asub, Bsub, Csub);
-    }
-
-    public static void main( String[] args ) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(BenchmarkMatrixMult_DDRB.class.getSimpleName())
-                .build();
-
-        new Runner(opt).run();
+    public void rsolve_transT() {
+        TriangularSolver_DDRB.rsolve(blockLength, upper, Tsub, Bsub, true);
     }
 }

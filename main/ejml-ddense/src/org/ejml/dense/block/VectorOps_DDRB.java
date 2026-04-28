@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -20,39 +20,29 @@ package org.ejml.dense.block;
 
 import org.ejml.data.DSubmatrixD1;
 
-/**
- * <p>
- * Math operations for inner vectors (row and column) inside of block matrices:<br>
- * <br>
- * scale: b<sub>i</sub> = &alpha;*a<sub>i</sub><br>
- * div:  <sub>i</sub> = a<sub>i</sub>/&alpha;<br>
- * add: c<sub>i</sub> = &alpha;*a<sub>i</sub> + &beta;B<sub>i</sub><br>
- * dot: c = sum a<sub>i</sub>*b<sub>i</sub><br>
- * </p>
- *
- * <p>
- * All submatrices must be block aligned. All offsets and end indexes are relative to the beginning of each
- * submatrix.
- * </p>
- *
- * @author Peter Abeles
- */
+/// Math operations for inner vectors (row and column) inside of block matrices:
+///
+/// scale: b<sub>i</sub> = α\*a<sub>i</sub>
+/// div:  <sub>i</sub> = a<sub>i</sub>/α
+/// add: c<sub>i</sub> = α\*a<sub>i</sub> + βB<sub>i</sub>
+/// dot: c = sum a<sub>i</sub>\*b<sub>i</sub>
+///
+/// All submatrices must be block aligned. All offsets and end indexes are relative to the beginning of each
+/// submatrix.
 public class VectorOps_DDRB {
 
-    /**
-     * <p>
-     * Row vector scale:<br>
-     * scale: b<sub>i</sub> = &alpha;*a<sub>i</sub><br>
-     * where 'a' and 'b' are row vectors within the row block vector A and B.
-     * </p>
-     *
-     * @param A submatrix. Not modified.
-     * @param rowA which row in A the vector is contained in.
-     * @param alpha scale factor.
-     * @param B submatrix that the results are written to. Modified.
-     * @param offset Index at which the vectors start at.
-     * @param end Index at which the vectors end at.
-     */
+    /// Row vector scale:
+    ///
+    /// scale: b<sub>i</sub> = α\*a<sub>i</sub>
+    ///
+    /// where 'a' and 'b' are row vectors within the row block vector A and B.
+    ///
+    /// @param A submatrix. Not modified.
+    /// @param rowA which row in 'A' the vector is contained in.
+    /// @param alpha scale factor.
+    /// @param B submatrix that the results are written to. Modified.
+    /// @param offset Index at which the vectors start at.
+    /// @param end Index at which the vectors end at.
     public static void scale_row( final int blockLength,
                                   DSubmatrixD1 A, int rowA,
                                   double alpha, DSubmatrixD1 B, int rowB,
@@ -97,20 +87,18 @@ public class VectorOps_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Row vector divide:<br>
-     * div: b<sub>i</sub> = a<sub>i</sub>/&alpha;<br>
-     * where 'a' and 'b' are row vectors within the row block vector A and B.
-     * </p>
-     *
-     * @param A submatrix. Not modified.
-     * @param rowA which row in A the vector is contained in.
-     * @param alpha scale factor.
-     * @param B submatrix that the results are written to. Modified.
-     * @param offset Index at which the vectors start at.
-     * @param end Index at which the vectors end at.
-     */
+    /// Row vector divide:
+    ///
+    /// div: b<sub>i</sub> = a<sub>i</sub>/α
+    ///
+    /// where 'a' and 'b' are row vectors within the row block vector A and B.
+    ///
+    /// @param A submatrix. Not modified.
+    /// @param rowA which row in A the vector is contained in.
+    /// @param alpha scale factor.
+    /// @param B submatrix that the results are written to. Modified.
+    /// @param offset Index at which the vectors start at.
+    /// @param end Index at which the vectors end at.
     public static void div_row( final int blockLength,
                                 DSubmatrixD1 A, int rowA,
                                 double alpha, DSubmatrixD1 B, int rowB,
@@ -155,25 +143,23 @@ public class VectorOps_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Row vector add:<br>
-     * add: c<sub>i</sub> = &alpha;*a<sub>i</sub> + &beta;B<sub>i</sub><br>
-     * where 'a', 'b', and 'c' are row vectors within the row block vectors of A, B, and C respectively.
-     * </p>
-     *
-     * @param blockLength Length of each inner matrix block.
-     * @param A submatrix. Not modified.
-     * @param rowA which row in A the vector is contained in.
-     * @param alpha scale factor of A
-     * @param B submatrix. Not modified.
-     * @param rowB which row in B the vector is contained in.
-     * @param beta scale factor of B
-     * @param C submatrix where the results are written to. Modified.
-     * @param rowC which row in C is the vector contained.
-     * @param offset Index at which the vectors start at.
-     * @param end Index at which the vectors end at.
-     */
+    /// Row vector add:
+    ///
+    /// add: c<sub>i</sub> = α\*a<sub>i</sub> + βB<sub>i</sub>
+    ///
+    /// where 'a', 'b', and 'c' are row vectors within the row block vectors of A, B, and C respectively.
+    ///
+    /// @param blockLength Length of each inner matrix block.
+    /// @param A submatrix. Not modified.
+    /// @param rowA which row in A the vector is contained in.
+    /// @param alpha scale factor of A
+    /// @param B submatrix. Not modified.
+    /// @param rowB which row in B the vector is contained in.
+    /// @param beta scale factor of B
+    /// @param C submatrix where the results are written to. Modified.
+    /// @param rowC which row in C is the vector contained.
+    /// @param offset Index at which the vectors start at.
+    /// @param end Index at which the vectors end at.
     public static void add_row( final int blockLength,
                                 DSubmatrixD1 A, int rowA, double alpha,
                                 DSubmatrixD1 B, int rowB, double beta,
@@ -218,21 +204,19 @@ public class VectorOps_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Row vector dot/inner product:<br>
-     * dot: c = sum a<sub>i</sub>*b<sub>i</sub><br>
-     * where 'a' and 'b' are row vectors within the row block vector A and B, and 'c' is a scalar.
-     * </p>
-     *
-     * @param A submatrix. Not modified.
-     * @param rowA which row in A the vector is contained in.
-     * @param B submatrix. Not modified.
-     * @param rowB which row in B the vector is contained in.
-     * @param offset Index at which the vectors start at.
-     * @param end Index at which the vectors end at.
-     * @return Results of the dot product.
-     */
+    /// Row vector dot/inner product:
+    ///
+    /// dot: c = sum a<sub>i</sub>\*b<sub>i</sub>
+    ///
+    /// where 'a' and 'b' are row vectors within the row block vector A and B, and 'c' is a scalar.
+    ///
+    /// @param A submatrix. Not modified.
+    /// @param rowA which row in `A` the vector is contained in.
+    /// @param B submatrix. Not modified.
+    /// @param rowB which row in B the vector is contained in.
+    /// @param offset Index at which the vectors start at.
+    /// @param end Index at which the vectors end at.
+    /// @return Results of the dot product.
     public static double dot_row( final int blockLength,
                                   DSubmatrixD1 A, int rowA,
                                   DSubmatrixD1 B, int rowB,
@@ -286,21 +270,19 @@ public class VectorOps_DDRB {
         return total;
     }
 
-    /**
-     * <p>
-     * vector dot/inner product from one row vector and one column vector:<br>
-     * dot: c = sum a<sub>i</sub>*b<sub>i</sub><br>
-     * where 'a' is a row vector 'b' is a column vectors within the row block vector A and B, and 'c' is a scalar.
-     * </p>
-     *
-     * @param A block row vector. Not modified.
-     * @param rowA which row in A the vector is contained in.
-     * @param B block column vector. Not modified.
-     * @param colB which column in B is the vector contained in.
-     * @param offset Index at which the vectors start at.
-     * @param end Index at which the vectors end at.
-     * @return Results of the dot product.
-     */
+    /// vector dot/inner product from one row vector and one column vector:
+    ///
+    /// dot: c = sum a<sub>i</sub>\*b<sub>i</sub>
+    ///
+    /// where 'a' is a row vector 'b' is a column vectors within the row block vector A and B, and 'c' is a scalar.
+    ///
+    /// @param A block row vector. Not modified.
+    /// @param rowA which row in `A` the vector is contained in.
+    /// @param B block column vector. Not modified.
+    /// @param colB which column in B is the vector contained in.
+    /// @param offset Index at which the vectors start at.
+    /// @param end Index at which the vectors end at.
+    /// @return Results of the dot product.
     public static double dot_row_col( final int blockLength,
                                       DSubmatrixD1 A, int rowA,
                                       DSubmatrixD1 B, int colB,

@@ -30,9 +30,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Peter Abeles
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
@@ -40,38 +37,39 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @Fork(value = 1)
 public class BenchmarkLinearSolverChol_DDRB {
-    //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"2000"})
+    @Param({"1000", "2000"})
     public int size;
 
-    public DMatrixRBlock A;
+    @Param({"true", "false"})
+    public boolean lower;
+
+    public DMatrixRBlock A,A_inv;
     public DMatrixRBlock X, B;
 
-    CholeskyOuterSolver_DDRB outerLower = new CholeskyOuterSolver_DDRB(true);
-    CholeskyOuterSolver_DDRB outerUpper = new CholeskyOuterSolver_DDRB(false);
+    CholeskyOuterSolver_DDRB outer;
 
     @Setup public void setup() {
-        Random rand = new Random(234);
+        var rand = new Random(234);
 
+        outer = new CholeskyOuterSolver_DDRB(lower);
         A = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetricPosDef(size, rand));
+        A_inv = A.copy();
         B = MatrixOps_DDRB.createRandom(A.numRows, 20, -1, 1, rand);
         X = A.create(1, 1);
     }
 
-    @Benchmark public void outer_lower() {
-        DMatrixRBlock A = outerLower.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRBlock B = outerLower.modifiesB() ? this.B.copy() : this.B;
-        if (!outerLower.setA(A))
-            throw new RuntimeException("Bad");
-        outerLower.solve(B, X);
+    @Setup(Level.Invocation)
+    public void reset() {
+        A_inv.setTo(A);
     }
 
-    @Benchmark public void outer_upper() {
-        DMatrixRBlock A = outerUpper.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRBlock B = outerUpper.modifiesB() ? this.B.copy() : this.B;
-        if (!outerUpper.setA(A))
+    @Benchmark public void outer() {
+        DMatrixRBlock A = outer.modifiesA() ? this.A.copy() : this.A;
+        DMatrixRBlock B = outer.modifiesB() ? this.B.copy() : this.B;
+        if (!outer.setA(A))
             throw new RuntimeException("Bad");
-        outerUpper.solve(B, X);
+        outer.solve(B, X);
+        outer.invert(A_inv);
     }
 
     public static void main( String[] args ) throws RunnerException {

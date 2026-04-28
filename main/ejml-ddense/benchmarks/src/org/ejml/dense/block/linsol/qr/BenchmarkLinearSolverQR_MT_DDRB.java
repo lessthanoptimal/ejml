@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -29,41 +29,59 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Peter Abeles
- */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
-@Measurement(iterations = 5)
+@Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@Fork(value = 2)
+@Fork(value = 1)
 public class BenchmarkLinearSolverQR_MT_DDRB {
-    //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"1000", "2000"})
-    public int size;
+    @State(Scope.Benchmark)
+    public static class SolveState {
+        @Param({"1000", "2000"})
+        public int size;
 
-    public DMatrixRBlock A;
-    public DMatrixRBlock X, B;
+        public DMatrixRBlock A, B, X;
+
+        @Setup public void setup() {
+            var rand = new Random(234);
+            A = MatrixOps_DDRB.createRandom(size*4, size/4, -1, 1, rand);
+            B = MatrixOps_DDRB.createRandom(A.numRows, 20, -1, 1, rand);
+            X = A.create(A.numCols, B.numCols);
+        }
+    }
+
+    @State(Scope.Benchmark)
+    public static class InvertState {
+        @Param({"750", "1500"})
+        public int size;
+
+        public DMatrixRBlock A, X;
+
+        @Setup public void setup() {
+            var rand = new Random(234);
+            A = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand);
+            X = A.createLike();
+        }
+    }
 
     QrHouseHolderSolver_MT_DDRB householder = new QrHouseHolderSolver_MT_DDRB();
 
-    @Setup
-    public void setup() {
-        var rand = new Random(234);
-
-        A = MatrixOps_DDRB.createRandom(size*4, size/4, -1, 1, rand);
-        B = MatrixOps_DDRB.createRandom(A.numRows, 20, -1, 1, rand);
-        X = A.create(1, 1);
+    @Benchmark
+    public void solve_householder( BenchmarkLinearSolverQR_DDRB.SolveState s ) {
+        DMatrixRBlock A = householder.modifiesA() ? s.A.copy() : s.A;
+        DMatrixRBlock B = householder.modifiesB() ? s.B.copy() : s.B;
+        if (!householder.setA(A))
+            throw new RuntimeException("Bad");
+        householder.solve(B, s.X);
     }
 
     @Benchmark
-    public void householder() {
-        DMatrixRBlock A = householder.modifiesA() ? this.A.copy() : this.A;
-        DMatrixRBlock B = householder.modifiesB() ? this.B.copy() : this.B;
+    public void invert_householder( BenchmarkLinearSolverQR_DDRB.InvertState s ) {
+        DMatrixRBlock A = householder.modifiesA() ? s.A.copy() : s.A;
         if (!householder.setA(A))
             throw new RuntimeException("Bad");
-        householder.solve(B, X);
+        householder.invert(s.X);
     }
 
     public static void main( String[] args ) throws RunnerException {

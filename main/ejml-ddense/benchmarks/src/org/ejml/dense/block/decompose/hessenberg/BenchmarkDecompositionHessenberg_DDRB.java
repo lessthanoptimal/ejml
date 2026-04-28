@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -34,29 +34,32 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
-@Measurement(iterations = 5)
+@Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@Fork(value = 2)
+@Fork(value = 1)
 public class BenchmarkDecompositionHessenberg_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
     @Param({"2000"})
     public int size;
 
-    public DMatrixRBlock S, A;
+    public DMatrixRBlock S, S_template;
 
     TridiagonalDecompositionHouseholder_DDRB tridiagonal = new TridiagonalDecompositionHouseholder_DDRB();
 
-    @Setup
-    public void setup() {
+    @Setup public void setup() {
         Random rand = new Random(234);
 
         S = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetric(size, -1, 1, rand));
+        S_template = S.copy();
     }
 
-    @Benchmark
-    public void tridiagonal() {
-        DMatrixRBlock A = tridiagonal.inputModified() ? S.copy() : S;
-        tridiagonal.decompose(A);
+    @Setup(Level.Invocation) public void reset() {
+        S.setTo(S_template);
+    }
+
+    @Benchmark public void tridiagonal() {
+        if (!tridiagonal.decompose(S))
+            throw new RuntimeException("Decomposition failed?");
     }
 
     public static void main( String[] args ) throws RunnerException {
