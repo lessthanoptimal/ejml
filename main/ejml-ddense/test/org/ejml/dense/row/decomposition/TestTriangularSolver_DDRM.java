@@ -29,9 +29,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 public class TestTriangularSolver_DDRM extends EjmlStandardJUnit {
     @Test void invert_inplace() {
         DMatrixRMaj L = createRandomLowerTriangular(3);

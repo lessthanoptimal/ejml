@@ -26,8 +26,6 @@ import java.util.Arrays;
 
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
-//CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
-
 /// Contains triangular solvers for [DMatrixRBlock] block aligned sub-matrices.
 ///
 /// For a more detailed description of a similar algorithm see:
@@ -554,10 +552,10 @@ public class TriangularSolver_DDRB {
                                   final DSubmatrixD1 B,
                                   boolean transL ) {
 
-        DSubmatrixD1 Y = new DSubmatrixD1(B.original);
+        var Y = new DSubmatrixD1(B.original);
 
-        DSubmatrixD1 Linner = new DSubmatrixD1(L.original);
-        DSubmatrixD1 Binner = new DSubmatrixD1(B.original);
+        var Linner = new DSubmatrixD1(L.original);
+        var Binner = new DSubmatrixD1(B.original);
 
         int lengthL = B.row1 - B.row0;
 
@@ -632,24 +630,35 @@ public class TriangularSolver_DDRB {
                     Y.row1 = Math.min(Y.row0 + blockLength, B.row1);
                 }
 
+                boolean _transL = transL;
+
+                //CONCURRENT_INLINE var workspace = new GrowArray<>(WorkViews::new);
+
                 // step through each block column
+                //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, workspace, (views, k) -> {
                 for (int k = B.col0; k < B.col1; k += blockLength) {
 
-                    Binner.col0 = k;
-                    Binner.col1 = Math.min(k + blockLength, B.col1);
+                    //CONCURRENT_BELOW DSubmatrixD1 localB = views.a.setTo(Binner);
+                    DSubmatrixD1 localB = Binner;
+                    //CONCURRENT_BELOW DSubmatrixD1 localY = views.b.setTo(Y);
+                    DSubmatrixD1 localY = Y;
 
-                    Y.col0 = Binner.col0;
-                    Y.col1 = Binner.col1;
+                    localB.col0 = k;
+                    localB.col1 = Math.min(k + blockLength, B.col1);
 
-                    if (transL) {
+                    localY.col0 = localB.col0;
+                    localY.col1 = localB.col1;
+
+                    if (_transL) {
                         // Y = Y - T^T * B
-                        MatrixMult_DDRB.multMinusTransA(blockLength, Linner, Binner, Y);
+                        MatrixMult_DDRB.multMinusTransA(blockLength, Linner, localB, localY);
                     } else {
 
                         // Y = Y - T * B
-                        MatrixMult_DDRB.multMinus(blockLength, Linner, Binner, Y);
+                        MatrixMult_DDRB.multMinus(blockLength, Linner, localB, localY);
                     }
                 }
+                //CONCURRENT_ABOVE });
             }
         }
     }
@@ -752,23 +761,32 @@ public class TriangularSolver_DDRB {
                     Y.row1 = Binner.row0;
                 }
 
+                //CONCURRENT_INLINE var workspace = new GrowArray<>(WorkViews::new);
+
                 // step through each block column
+                //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, workspace, (views, k) -> {
                 for (int k = B.col0; k < B.col1; k += blockLength) {
 
-                    Binner.col0 = k;
-                    Binner.col1 = Math.min(k + blockLength, B.col1);
+                    //CONCURRENT_BELOW DSubmatrixD1 localB = views.a.setTo(Binner);
+                    DSubmatrixD1 localB = Binner;
+                    //CONCURRENT_BELOW DSubmatrixD1 localY = views.b.setTo(Y);
+                    DSubmatrixD1 localY = Y;
 
-                    Y.col0 = Binner.col0;
-                    Y.col1 = Binner.col1;
+                    localB.col0 = k;
+                    localB.col1 = Math.min(k + blockLength, B.col1);
+
+                    localY.col0 = localB.col0;
+                    localY.col1 = localB.col1;
 
                     if (transR) {
                         // Y = Y - T^T * B
-                        MatrixMult_DDRB.multMinusTransA(blockLength, Rinner, Binner, Y);
+                        MatrixMult_DDRB.multMinusTransA(blockLength, Rinner, localB, localY);
                     } else {
                         // Y = Y - T * B
-                        MatrixMult_DDRB.multMinus(blockLength, Rinner, Binner, Y);
+                        MatrixMult_DDRB.multMinus(blockLength, Rinner, localB, localY);
                     }
                 }
+                //CONCURRENT_ABOVE });
             }
         }
     }
@@ -848,42 +866,60 @@ public class TriangularSolver_DDRB {
                 Y.row0 = B.row0;
                 Y.row1 = B.row1;
 
+                final int _i = i;
+
+                //CONCURRENT_INLINE var workspace = new GrowArray<>(WorkViews::new);
+
                 if (transL) {
-                    // Walk k > i (B columns to the right of i, still pending)
-                    // Y[:, k] -= Bsolved * L[k, i]^T  (multMinusTransB: C -= A * B^T)
-                    Linner.col0 = L.col0 + i;
+                    // Walk k > i. Linner.col fixed at [L.col0+i, +widthT); Linner.row varies with k.
+                    // Y[:, k] -= Bsolved * Linner^T
+                    Linner.col0 = L.col0 + _i;
                     Linner.col1 = Linner.col0 + widthT;
 
-                    for (int k = i + blockLength; k < lengthL; k += blockLength) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(_i + blockLength, lengthL, blockLength, workspace, (views, k) -> {
+                    for (int k = _i + blockLength; k < lengthL; k += blockLength) {
                         int kw = Math.min(blockLength, lengthL - k);
 
-                        Linner.row0 = L.row0 + k;
-                        Linner.row1 = Linner.row0 + kw;
+                        //CONCURRENT_BELOW DSubmatrixD1 localL = views.a.setTo(Linner);
+                        DSubmatrixD1 localL = Linner;
+                        //CONCURRENT_BELOW DSubmatrixD1 localY = views.b.setTo(Y);
+                        DSubmatrixD1 localY = Y;
 
-                        Y.col0 = B.col0 + k;
-                        Y.col1 = Y.col0 + kw;
+                        localL.row0 = L.row0 + k;
+                        localL.row1 = localL.row0 + kw;
+
+                        localY.col0 = B.col0 + k;
+                        localY.col1 = localY.col0 + kw;
 
                         // Y = Y - Bsolved * Linner^T
-                        MatrixMult_DDRB.multMinusTransB(blockLength, Bsolved, Linner, Y);
+                        MatrixMult_DDRB.multMinusTransB(blockLength, Bsolved, localL, localY);
                     }
+                    //CONCURRENT_ABOVE });
                 } else {
-                    // Walk k < i (B columns to the left of i, still pending)
-                    // Y[:, k] -= Bsolved * L[i, k]   (multMinus: C -= A * B)
-                    Linner.row0 = L.row0 + i;
+                    // Walk k < i. Linner.row fixed at [L.row0+i, +widthT); Linner.col varies with k.
+                    // Y[:, k] -= Bsolved * Linner
+                    Linner.row0 = L.row0 + _i;
                     Linner.row1 = Linner.row0 + widthT;
 
-                    for (int k = 0; k < i; k += blockLength) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, _i, blockLength, workspace, (views, k) -> {
+                    for (int k = 0; k < _i; k += blockLength) {
                         int kw = Math.min(blockLength, lengthL - k);
 
-                        Linner.col0 = L.col0 + k;
-                        Linner.col1 = Linner.col0 + kw;
+                        //CONCURRENT_BELOW DSubmatrixD1 localL = views.a.setTo(Linner);
+                        DSubmatrixD1 localL = Linner;
+                        //CONCURRENT_BELOW DSubmatrixD1 localY = views.b.setTo(Y);
+                        DSubmatrixD1 localY = Y;
 
-                        Y.col0 = B.col0 + k;
-                        Y.col1 = Y.col0 + kw;
+                        localL.col0 = L.col0 + k;
+                        localL.col1 = localL.col0 + kw;
+
+                        localY.col0 = B.col0 + k;
+                        localY.col1 = localY.col0 + kw;
 
                         // Y = Y - Bsolved * Linner
-                        MatrixMult_DDRB.multMinus(blockLength, Bsolved, Linner, Y);
+                        MatrixMult_DDRB.multMinus(blockLength, Bsolved, localL, localY);
                     }
+                    //CONCURRENT_ABOVE });
                 }
             }
         }
@@ -966,42 +1002,68 @@ public class TriangularSolver_DDRB {
                 Y.row0 = B.row0;
                 Y.row1 = B.row1;
 
+                final int _i = i;
+
+                //CONCURRENT_INLINE var workspace = new GrowArray<>(WorkViews::new);
+
                 if (transR) {
                     // Walk k < i (B columns to the left of i, still pending)
                     // Y[:, k] -= Bsolved * R[k, i]^T
-                    Rinner.col0 = R.col0 + i;
+                    Rinner.col0 = R.col0 + _i;
                     Rinner.col1 = Rinner.col0 + widthT;
 
-                    for (int k = 0; k < i; k += blockLength) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, _i, blockLength, workspace, (views, k) -> {
+                    for (int k = 0; k < _i; k += blockLength) {
                         int kw = Math.min(blockLength, lengthR - k);
 
-                        Rinner.row0 = R.row0 + k;
-                        Rinner.row1 = Rinner.row0 + kw;
+                        //CONCURRENT_BELOW DSubmatrixD1 localR = views.a.setTo(Rinner);
+                        DSubmatrixD1 localR = Rinner;
+                        //CONCURRENT_BELOW DSubmatrixD1 localY = views.b.setTo(Y);
+                        DSubmatrixD1 localY = Y;
 
-                        Y.col0 = B.col0 + k;
-                        Y.col1 = Y.col0 + kw;
+                        localR.row0 = R.row0 + k;
+                        localR.row1 = localR.row0 + kw;
 
-                        MatrixMult_DDRB.multMinusTransB(blockLength, Bsolved, Rinner, Y);
+                        localY.col0 = B.col0 + k;
+                        localY.col1 = localY.col0 + kw;
+
+                        // Y = Y - Bsolved * Rinner^T
+                        MatrixMult_DDRB.multMinusTransB(blockLength, Bsolved, localR, localY);
                     }
+                    //CONCURRENT_ABOVE });
                 } else {
                     // Walk k > i (B columns to the right of i, still pending)
                     // Y[:, k] -= Bsolved * R[i, k]
-                    Rinner.row0 = R.row0 + i;
+                    Rinner.row0 = R.row0 + _i;
                     Rinner.row1 = Rinner.row0 + widthT;
 
-                    for (int k = i + blockLength; k < lengthR; k += blockLength) {
+                    //CONCURRENT_BELOW EjmlConcurrency.loopFor(_i + blockLength, lengthR, blockLength, workspace, (views, k) -> {
+                    for (int k = _i + blockLength; k < lengthR; k += blockLength) {
                         int kw = Math.min(blockLength, lengthR - k);
 
-                        Rinner.col0 = R.col0 + k;
-                        Rinner.col1 = Rinner.col0 + kw;
+                        //CONCURRENT_BELOW DSubmatrixD1 localR = views.a.setTo(Rinner);
+                        DSubmatrixD1 localR = Rinner;
+                        //CONCURRENT_BELOW DSubmatrixD1 localY = views.b.setTo(Y);
+                        DSubmatrixD1 localY = Y;
 
-                        Y.col0 = B.col0 + k;
-                        Y.col1 = Y.col0 + kw;
+                        localR.col0 = R.col0 + k;
+                        localR.col1 = localR.col0 + kw;
 
-                        MatrixMult_DDRB.multMinus(blockLength, Bsolved, Rinner, Y);
+                        localY.col0 = B.col0 + k;
+                        localY.col1 = localY.col0 + kw;
+
+                        // Y = Y - Bsolved * Rinner
+                        MatrixMult_DDRB.multMinus(blockLength, Bsolved, localR, localY);
                     }
+                    //CONCURRENT_ABOVE });
                 }
             }
         }
+    }
+
+    // Workspace storage for concurrent
+    private static class WorkViews {
+        DSubmatrixD1 a = new DSubmatrixD1();
+        DSubmatrixD1 b = new DSubmatrixD1();
     }
 }

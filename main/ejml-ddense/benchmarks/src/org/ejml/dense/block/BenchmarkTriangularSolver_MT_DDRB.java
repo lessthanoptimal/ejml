@@ -18,9 +18,11 @@
 
 package org.ejml.dense.block;
 
+import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.openjdk.jmh.annotations.*;
+import pabeles.concurrency.GrowArray;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -45,8 +47,9 @@ public class BenchmarkTriangularSolver_MT_DDRB {
     public DMatrixRBlock T, T_template, B, C;
     public DSubmatrixD1 Tsub, Bsub, Csub;
 
-    @Setup
-    public void setup() {
+    GrowArray<DGrowArray> workspace = new GrowArray<>(DGrowArray::new);
+    
+    @Setup public void setup() {
         var rand = new Random(234);
 
         T = MatrixOps_DDRB.createRandom(size, size, -1, 1, rand, blockLength);
@@ -71,28 +74,23 @@ public class BenchmarkTriangularSolver_MT_DDRB {
         T.setTo(T_template);
     }
 
-//    @Benchmark
-//    public void invert_two() {
-//        TriangularSolver_MT_DDRB.invert(blockLength, upper, Tsub, Bsub, workspace);
-//    }
+    @Benchmark public void invert_two() {
+        TriangularSolver_MT_DDRB.invert(blockLength, upper, Tsub, Bsub, workspace);
+    }
 
-    @Benchmark
-    public void lsolve() {
+    @Benchmark public void lsolve() {
         TriangularSolver_MT_DDRB.lsolve(blockLength, upper, Tsub, Bsub, false);
     }
 
-//    @Benchmark
-//    public void lsolve_transT() {
-//        TriangularSolver_MT_DDRB.lsolve(blockLength, upper, Tsub, Bsub, true);
-//    }
-//
-//    @Benchmark
-//    public void rsolve() {
-//        TriangularSolver_MT_DDRB.rsolve(blockLength, upper, Tsub, Bsub, false);
-//    }
-//
-//    @Benchmark
-//    public void rsolve_transT() {
-//        TriangularSolver_MT_DDRB.rsolve(blockLength, upper, Tsub, Bsub, true);
-//    }
+    @Benchmark public void lsolve_transT() {
+        TriangularSolver_MT_DDRB.lsolve(blockLength, upper, Tsub, Bsub, true);
+    }
+
+    @Benchmark public void rsolve() {
+        TriangularSolver_MT_DDRB.rsolve(blockLength, upper, Tsub, Bsub, false);
+    }
+
+    @Benchmark public void rsolve_transT() {
+        TriangularSolver_MT_DDRB.rsolve(blockLength, upper, Tsub, Bsub, true);
+    }
 }
