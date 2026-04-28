@@ -17,360 +17,118 @@
  */
 package org.ejml.dense.block;
 
-import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 
-import static org.ejml.dense.block.InnerMultiplication_DDRB.*;
+import static org.ejml.dense.block.MatrixMultInternalHarness_DDRB.pickMiddleAxis;
+import static org.ejml.dense.block.MatrixMultInternalHarness_DDRB.pickOuterAxis;
 import static org.ejml.dense.block.MatrixOps_DDRB.checkShapeMult;
 
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
-/**
- * <p>
- * Matrix multiplication for {@link DMatrixRBlock}. All sub-matrices must be block aligned.
- * </p>
- *
- * @author Peter Abeles
- */
+//CONCURRENT_MACRO MatrixMultInternalHarness_DDRB MatrixMultInternalHarness_MT_DDRB
+
+/// Matrix multiplication for [DMatrixRBlock]. All sub-matrices must be block aligned.
+///
+/// To optimize concurrent performance, internal loop order (ijk) is dynamically selected so that
+/// the longest length i or j is used. k being the longest axis is a special case that isn't handled
+/// right now. It will select either i or j axis instead.
 public class MatrixMult_DDRB {
+    /// c = a \* b
+    public static void mult( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, false, B, false, C);
 
-    /**
-     * <p>
-     * Performs a matrix multiplication on {@link DMatrixRBlock} submatrices.<br>
-     * <br>
-     * c = a * b <br>
-     * <br>
-     * </p>
-     *
-     * <p>
-     * It is assumed that all submatrices start at the beginning of a block and end at the end of a block.
-     * </p>
-     *
-     * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix. Not modified.
-     * @param B A submatrix. Not modified.
-     * @param C Result of the operation. Modified,
-     */
-    public static void mult( int blockLength,
-                             DSubmatrixD1 A, DSubmatrixD1 B,
-                             DSubmatrixD1 C ) {
-        checkShapeMult(blockLength, A, B, C);
-
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
-        for (int i = A.row0; i < A.row1; i += blockLength) {
-            int heightA = Math.min(blockLength, A.row1 - i);
-
-            for (int j = B.col0; j < B.col1; j += blockLength) {
-                int widthB = Math.min(blockLength, B.col1 - j);
-
-                int indexC = (i - A.row0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*heightA;
-
-                for (int k = A.col0; k < A.col1; k += blockLength) {
-                    int widthA = Math.min(blockLength, A.col1 - k);
-
-                    int indexA = i*A.original.numCols + k*heightA;
-                    int indexB = (k - A.col0 + B.row0)*B.original.numCols + j*widthA;
-
-                    if (k == A.col0)
-                        blockMultSet(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
-                    else
-                        blockMultPlus(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.row1 - A.row0, B.col1 - B.col0, A.col1 - A.col0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.mult(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultSet,
+                InnerMultiplication_DDRB::blockMultPlus);
     }
 
-    /**
-     * <p>
-     * Performs a matrix multiplication on {@link DMatrixRBlock} submatrices.<br>
-     * <br>
-     * c = c + a * b <br>
-     * <br>
-     * </p>
-     *
-     * <p>
-     * It is assumed that all submatrices start at the beginning of a block and end at the end of a block.
-     * </p>
-     *
-     * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix. Not modified.
-     * @param B A submatrix. Not modified.
-     * @param C Result of the operation. Modified,
-     */
-    public static void multPlus( int blockLength,
-                                 DSubmatrixD1 A, DSubmatrixD1 B,
-                                 DSubmatrixD1 C ) {
-//        checkShapeMult( blockLength,A,B,C);
+    /// c = c + a \* b
+    public static void multPlus( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, false, B, false, C);
 
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
-        for (int i = A.row0; i < A.row1; i += blockLength) {
-            int heightA = Math.min(blockLength, A.row1 - i);
-
-            for (int j = B.col0; j < B.col1; j += blockLength) {
-                int widthB = Math.min(blockLength, B.col1 - j);
-
-                int indexC = (i - A.row0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*heightA;
-
-                for (int k = A.col0; k < A.col1; k += blockLength) {
-                    int widthA = Math.min(blockLength, A.col1 - k);
-
-                    int indexA = i*A.original.numCols + k*heightA;
-                    int indexB = (k - A.col0 + B.row0)*B.original.numCols + j*widthA;
-
-                    blockMultPlus(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthB);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.row1 - A.row0, B.col1 - B.col0, A.col1 - A.col0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.mult(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultPlus,
+                InnerMultiplication_DDRB::blockMultPlus);
     }
 
-    /**
-     * <p>
-     * Performs a matrix multiplication on {@link DMatrixRBlock} submatrices.<br>
-     * <br>
-     * c = c - a * b <br>
-     * <br>
-     * </p>
-     *
-     * <p>
-     * It is assumed that all submatrices start at the beginning of a block and end at the end of a block.
-     * </p>
-     *
-     * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix. Not modified.
-     * @param B A submatrix. Not modified.
-     * @param C Result of the operation. Modified,
-     */
-    public static void multMinus( int blockLength,
-                                  DSubmatrixD1 A, DSubmatrixD1 B,
-                                  DSubmatrixD1 C ) {
-//        checkShapeMult( blockLength,A,B,C);
+    /// c = c - a \* b
+    public static void multMinus( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, false, B, false, C);
 
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
-        for (int i = A.row0; i < A.row1; i += blockLength) {
-            int heightA = Math.min(blockLength, A.row1 - i);
-
-            for (int j = B.col0; j < B.col1; j += blockLength) {
-                int widthB = Math.min(blockLength, B.col1 - j);
-
-                int indexC = (i - A.row0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*heightA;
-
-                for (int k = A.col0; k < A.col1; k += blockLength) {
-                    int widthA = Math.min(blockLength, A.col1 - k);
-
-                    int indexA = i*A.original.numCols + k*heightA;
-                    int indexB = (k - A.col0 + B.row0)*B.original.numCols + j*widthA;
-
-                    blockMultMinus(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthB);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.row1 - A.row0, B.col1 - B.col0, A.col1 - A.col0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.mult(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultMinus,
+                InnerMultiplication_DDRB::blockMultMinus);
     }
 
-    /**
-     * <p>
-     * Performs a matrix multiplication with a transpose on {@link DMatrixRBlock} submatrices.<br>
-     * <br>
-     * c = a<sup>T</sup> * b <br>
-     * <br>
-     * </p>
-     *
-     * <p>
-     * It is assumed that all submatrices start at the beginning of a block and end at the end of a block.
-     * </p>
-     *
-     * @param blockLength Size of the blocks in the submatrix.
-     * @param A A submatrix. Not modified.
-     * @param B A submatrix. Not modified.
-     * @param C Result of the operation. Modified,
-     */
-    public static void multTransA( int blockLength,
-                                   DSubmatrixD1 A, DSubmatrixD1 B,
-                                   DSubmatrixD1 C ) {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.col0,A.col1,blockLength,i->{
-        for (int i = A.col0; i < A.col1; i += blockLength) {
-            int widthA = Math.min(blockLength, A.col1 - i);
+    /// c = a<sup>T</sup> \* b
+    public static void multTransA( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, true, B, false, C);
 
-            for (int j = B.col0; j < B.col1; j += blockLength) {
-                int widthB = Math.min(blockLength, B.col1 - j);
-
-                int indexC = (i - A.col0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*widthA;
-
-                for (int k = A.row0; k < A.row1; k += blockLength) {
-                    int heightA = Math.min(blockLength, A.row1 - k);
-
-                    int indexA = k*A.original.numCols + i*heightA;
-                    int indexB = (k - A.row0 + B.row0)*B.original.numCols + j*heightA;
-
-                    if (k == A.row0)
-                        blockMultSetTransA(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
-                    else
-                        blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.col1 - A.col0, B.col1 - B.col0, A.row1 - A.row0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.multTransA(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultSetTransA,
+                InnerMultiplication_DDRB::blockMultPlusTransA);
     }
 
-    /**
-     * <p>
-     * Performs a matrix multiplication with a transpose on {@link DMatrixRBlock} submatrices.<br>
-     * <br>
-     * c = a * b <sup>T</sup> <br>
-     * <br>
-     * </p>
-     *
-     * <p>
-     * It is assumed that all submatrices start at the beginning of a block and end at the end of a block.
-     * </p>
-     *
-     * @param blockLength Length of the blocks in the submatrix.
-     * @param A A submatrix. Not modified.
-     * @param B A submatrix. Not modified.
-     * @param C Result of the operation. Modified,
-     */
-    public static void multTransB( int blockLength,
-                                   DSubmatrixD1 A, DSubmatrixD1 B,
-                                   DSubmatrixD1 C ) {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
-        for (int i = A.row0; i < A.row1; i += blockLength) {
-            int heightA = Math.min(blockLength, A.row1 - i);
+    /// c = a \* b<sup>T</sup>
+    public static void multTransB( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, false, B, true, C);
 
-            for (int j = B.row0; j < B.row1; j += blockLength) {
-                int widthC = Math.min(blockLength, B.row1 - j);
-
-                int indexC = (i - A.row0 + C.row0)*C.original.numCols + (j - B.row0 + C.col0)*heightA;
-
-                for (int k = A.col0; k < A.col1; k += blockLength) {
-                    int widthA = Math.min(blockLength, A.col1 - k);
-
-                    int indexA = i*A.original.numCols + k*heightA;
-                    int indexB = j*B.original.numCols + (k - A.col0 + B.col0)*widthC;
-
-                    if (k == A.col0)
-                        blockMultSetTransB(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthC);
-                    else
-                        blockMultPlusTransB(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthC);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.row1 - A.row0, B.row1 - B.row0, A.col1 - A.col0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.multTransB(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultSetTransB,
+                InnerMultiplication_DDRB::blockMultPlusTransB);
     }
 
-    public static void multPlusTransA( int blockLength,
-                                       DSubmatrixD1 A, DSubmatrixD1 B,
-                                       DSubmatrixD1 C ) {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.col0,A.col1,blockLength,i->{
-        for (int i = A.col0; i < A.col1; i += blockLength) {
-            int widthA = Math.min(blockLength, A.col1 - i);
+    /// c = c + a<sup>T</sup> \* b
+    public static void multPlusTransA( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B,  DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, true, B, false, C);
 
-            for (int j = B.col0; j < B.col1; j += blockLength) {
-                int widthB = Math.min(blockLength, B.col1 - j);
-
-                int indexC = (i - A.col0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*widthA;
-
-                for (int k = A.row0; k < A.row1; k += blockLength) {
-                    int heightA = Math.min(blockLength, A.row1 - k);
-
-                    int indexA = k*A.original.numCols + i*heightA;
-                    int indexB = (k - A.row0 + B.row0)*B.original.numCols + j*heightA;
-
-                    blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthB);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.col1 - A.col0, B.col1 - B.col0, A.row1 - A.row0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.multTransA(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultPlusTransA,
+                InnerMultiplication_DDRB::blockMultPlusTransA);
     }
 
-    public static void multPlusTransB( int blockLength,
-                                       DSubmatrixD1 A, DSubmatrixD1 B,
-                                       DSubmatrixD1 C ) {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
-        for (int i = A.row0; i < A.row1; i += blockLength) {
-            int heightA = Math.min(blockLength, A.row1 - i);
+    /// c = c + a \* b<sup>T</sup>
+    public static void multPlusTransB( int blockLength,  DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, false, B, true, C);
 
-            for (int j = B.row0; j < B.row1; j += blockLength) {
-                int widthC = Math.min(blockLength, B.row1 - j);
-
-                int indexC = (i - A.row0 + C.row0)*C.original.numCols + (j - B.row0 + C.col0)*heightA;
-
-                for (int k = A.col0; k < A.col1; k += blockLength) {
-                    int widthA = Math.min(blockLength, A.col1 - k);
-
-                    int indexA = i*A.original.numCols + k*heightA;
-                    int indexB = j*B.original.numCols + (k - A.col0 + B.col0)*widthC;
-
-                    blockMultPlusTransB(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthC);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.row1 - A.row0, B.row1 - B.row0, A.col1 - A.col0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.multTransB(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultPlusTransB,
+                InnerMultiplication_DDRB::blockMultPlusTransB);
     }
 
-    public static void multMinusTransA( int blockLength,
-                                        DSubmatrixD1 A, DSubmatrixD1 B,
-                                        DSubmatrixD1 C ) {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.col0,A.col1,blockLength,i->{
-        for (int i = A.col0; i < A.col1; i += blockLength) {
-            int widthA = Math.min(blockLength, A.col1 - i);
+    /// c = c - a<sup>T</sup> \* b
+    public static void multMinusTransA( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, true, B, false, C);
 
-            for (int j = B.col0; j < B.col1; j += blockLength) {
-                int widthB = Math.min(blockLength, B.col1 - j);
-
-                int indexC = (i - A.col0 + C.row0)*C.original.numCols + (j - B.col0 + C.col0)*widthA;
-
-                for (int k = A.row0; k < A.row1; k += blockLength) {
-                    int heightA = Math.min(blockLength, A.row1 - k);
-
-                    int indexA = k*A.original.numCols + i*heightA;
-                    int indexB = (k - A.row0 + B.row0)*B.original.numCols + j*heightA;
-
-                    blockMultMinusTransA(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthB);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.col1 - A.col0, B.col1 - B.col0, A.row1 - A.row0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.multTransA(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultMinusTransA,
+                InnerMultiplication_DDRB::blockMultMinusTransA);
     }
 
-    /**
-     * c = c - a * b <sup>T</sup>
-     */
-    public static void multMinusTransB( int blockLength,
-                                        DSubmatrixD1 A, DSubmatrixD1 B,
-                                        DSubmatrixD1 C ) {
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(A.row0,A.row1,blockLength,i->{
-        for (int i = A.row0; i < A.row1; i += blockLength) {
-            int heightA = Math.min(blockLength, A.row1 - i);
+    /// c = c - a \* b<sup>T</sup>
+    public static void multMinusTransB( int blockLength, DSubmatrixD1 A, DSubmatrixD1 B, DSubmatrixD1 C ) {
+        checkShapeMult(blockLength, A, false, B, true, C);
 
-            for (int j = B.row0; j < B.row1; j += blockLength) {
-                int widthC = Math.min(blockLength, B.row1 - j);
-
-                int indexC = (i - A.row0 + C.row0)*C.original.numCols + (j - B.row0 + C.col0)*heightA;
-
-                for (int k = A.col0; k < A.col1; k += blockLength) {
-                    int widthA = Math.min(blockLength, A.col1 - k);
-
-                    int indexA = i*A.original.numCols + k*heightA;
-                    int indexB = j*B.original.numCols + (k - A.col0 + B.col0)*widthC;
-
-                    blockMultMinusTransB(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthC);
-                }
-            }
-        }
-        //CONCURRENT_ABOVE });
+        int outer = pickOuterAxis(A.row1 - A.row0, B.row1 - B.row0, A.col1 - A.col0);
+        int middle = pickMiddleAxis(outer);
+        MatrixMultInternalHarness_DDRB.multTransB(blockLength, A, B, C, outer, middle,
+                InnerMultiplication_DDRB::blockMultMinusTransB,
+                InnerMultiplication_DDRB::blockMultMinusTransB);
     }
 }

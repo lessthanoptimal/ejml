@@ -646,7 +646,8 @@ public class MatrixOps_DDRB {
     }
 
     static void checkShapeMult( int blockLength,
-                                DSubmatrixD1 A, DSubmatrixD1 B,
+                                DSubmatrixD1 A, boolean transA,
+                                DSubmatrixD1 B, boolean transB,
                                 DSubmatrixD1 C ) {
         //@formatter:off
         int Arow = A.getRows(); int Acol = A.getCols();
@@ -654,12 +655,12 @@ public class MatrixOps_DDRB {
         int Crow = C.getRows(); int Ccol = C.getCols();
         //@formatter:on
 
-        if (Arow != Crow)
-            throw new RuntimeException("Mismatch A and C rows");
-        if (Bcol != Ccol)
-            throw new RuntimeException("Mismatch B and C columns");
-        if (Acol != Brow)
-            throw new RuntimeException("Mismatch A columns and B rows");
+        if ((transA ? Acol : Arow) != Crow)
+            throw new RuntimeException("Mismatch A." + (transA ? "col=" + Acol : "row=" + Arow) + " and C.row=" + Crow);
+        if ((transB ? Brow : Bcol) != Ccol)
+            throw new RuntimeException("Mismatch B." + (transB ? "row" : "col") + " and C.col");
+        if ((transA ? Arow : Acol) != (transB ? Bcol : Brow))
+            throw new RuntimeException("Mismatch A." + (transA ? "col" : "row") + " and B." + (transB ? "row" : "col"));
 
         if (!MatrixOps_DDRB.blockAligned(blockLength, A))
             throw new RuntimeException("Sub-Matrix A is not block aligned");
