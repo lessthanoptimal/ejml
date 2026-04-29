@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -102,7 +102,7 @@ public class TestEnforceCodeStandards {
 	}
 
 	/**
-	 * Makes sure all unit tests extend BoofStandardJUnit
+	 * Makes sure all unit tests extend EjmlStandardJUnit
 	 */
 	@Test void unitTestsMustExtendEjmlStandardJUnit() {
 		String pathToMain = path("main");
@@ -145,7 +145,7 @@ public class TestEnforceCodeStandards {
 					continue;
 				}
 
-				// See if it extends BoofStandardJUnit
+				// See if it extends EjmlStandardJUnit
 				boolean found = false;
 				while (c != null) {
 					c = c.getSuperclass();
@@ -155,13 +155,13 @@ public class TestEnforceCodeStandards {
 					}
 				}
 				if (!found) {
-					System.err.println("Does not extend BoofStandardJUnit");
+					System.err.println("Does not extend EjmlStandardJUnit");
 					System.err.println(classFile.getAbsolutePath()+":1"); // todo real line number
 					failed = true;
 				}
 			}
 
-			assertFalse(failed, "All tests must extend BoofStandardJUnit. See stderr.");
+			assertFalse(failed, "All tests must extend EjmlStandardJUnit. See stderr.");
 		}
 	}
 	public static String getPathToBase() {
