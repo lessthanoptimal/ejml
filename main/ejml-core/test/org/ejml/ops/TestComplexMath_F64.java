@@ -209,13 +209,13 @@ public class TestComplexMath_F64 extends EjmlStandardJUnit {
 
     @Test void format_Matrix() {
         var a = new Complex_F64(2, 0.1234);
-        String found = a.format(new MatrixPrintFormat().fsetPrecision(2));
+        String found = a.format(new MatrixPrintFormat().withPrecision(2));
         assertEquals("{2, 0.12}", found);
     }
 
-    @Test void format_Map() {
+    @Test void formatMap() {
         var a = new Complex_F64(2, 0.1234);
-        String found = a.format(new MapPrintFormat().fsetPrecision(2));
+        String found = a.format(new MapPrintFormat().withPrecision(2));
         assertEquals("{real: 2, imaginary: 0.12}", found);
     }
 }

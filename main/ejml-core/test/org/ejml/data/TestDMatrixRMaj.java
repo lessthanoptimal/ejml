@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDMatrixRMaj extends EjmlStandardJUnit {
-    @Test void testGeneric() {
+    @Test void generic() {
         GenericTestsDMatrixD1 g;
         g = new GenericTestsDMatrixD1() {
             @Override
@@ -42,12 +42,9 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         g.allTests();
     }
 
-    /**
-     * Tests the following constructor:
-     *
-     * DMatrixRMaj( double data[] , int numCols , int numRows )
-     */
-    @Test void testConstructorSingleArray() {
+    /// Tests the following constructor:
+    /// DMatrixRMaj( double data[] , int numCols , int numRows )
+    @Test void constructorSingleArray() {
         double[] d = new double[]{1, 2, 3, 4, 5, 6};
 
         DMatrixRMaj mat = new DMatrixRMaj(3, 2, true, d);
@@ -62,12 +59,9 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertEquals(6, mat.get(2, 1), UtilEjml.TEST_F64);
     }
 
-    /**
-     * Tests the following constructor:
-     *
-     * DMatrixRMaj( double data[][] )
-     */
-    @Test void testConstruactorDoubleArray() {
+    /// Tests the following constructor:
+    /// DMatrixRMaj( double data[][] )
+    @Test void construactorDoubleArray() {
         double[][] d = new double[][]{{1, 2}, {3, 4}, {5, 6}};
 
         DMatrixRMaj mat = new DMatrixRMaj(d);
@@ -80,12 +74,9 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertEquals(6, mat.get(2, 1), UtilEjml.TEST_F64);
     }
 
-    /**
-     * Tests the following constructor:
-     *
-     * DMatrixRMaj( int numCols , int numRows )
-     */
-    @Test void testConstructorShape() {
+    /// Tests the following constructor:
+    /// DMatrixRMaj( int numCols , int numRows )
+    @Test void constructorShape() {
         DMatrixRMaj mat = new DMatrixRMaj(7, 5);
 
         assertEquals(5, mat.getNumCols());
@@ -93,12 +84,9 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertEquals(7*5, mat.data.length);
     }
 
-    /**
-     * Tests the following constructor:
-     *
-     * DMatrixRMaj( DMatrixRMaj orig )
-     */
-    @Test void testConstructorCopy() {
+    /// Tests the following constructor:
+    /// DMatrixRMaj( DMatrixRMaj orig )
+    @Test void constructorCopy() {
         double[][] d = new double[][]{{1, 2}, {3, 4}, {5, 6}};
 
         DMatrixRMaj mat = new DMatrixRMaj(d);
@@ -129,7 +117,7 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertEquals(6, mat.get(2, 1), UtilEjml.TEST_F64);
     }
 
-    @Test void testInBounds() {
+    @Test void inBounds() {
         DMatrixRMaj mat = new DMatrixRMaj(2, 3);
 
         assertTrue(mat.isInBounds(0, 0));
@@ -139,18 +127,18 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertFalse(mat.isInBounds(20, 30));
     }
 
-    @Test void testSet_Matrix() {
+    @Test void setTo_Matrix() {
         double[][] d = new double[][]{{1, 2}, {3, 4}, {5, 6}};
 
         DMatrixRMaj mat = new DMatrixRMaj(d);
-        DMatrixRMaj mat2 = new DMatrixRMaj(mat.numRows, mat.numCols);
+        DMatrixRMaj mat2 = new DMatrixRMaj(5, 6);
 
         mat2.setTo(mat);
 
         EjmlUnitTests.assertEquals(mat, mat2, UtilEjml.TEST_F64);
     }
 
-    @Test void set_ColumnMajor() {
+    @Test void setTo_ColumnMajor() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 5, rand);
 
         DMatrixRMaj Atran = A.copy();
@@ -161,7 +149,7 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertTrue(MatrixFeatures_DDRM.isIdentical(Afound, A, UtilEjml.TEST_F64));
     }
 
-    @Test void set_RowMajor() {
+    @Test void setTo_RowMajor() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(3, 5, rand);
 
         DMatrixRMaj Afound = new DMatrixRMaj(3, 5);
@@ -171,21 +159,7 @@ public class TestDMatrixRMaj extends EjmlStandardJUnit {
         assertNotSame(A.data, Afound.data);
     }
 
-    @Test void testset_Matrix() {
-        double[][] d = new double[][]{{1, 2}, {3, 4}, {5, 6}};
-
-        DMatrixRMaj mat = new DMatrixRMaj(d);
-        DMatrixRMaj mat2 = new DMatrixRMaj(5, 5);
-
-        mat2.setTo(mat);
-
-        assertEquals(mat.getNumCols(), mat2.getNumCols());
-        assertEquals(mat.getNumRows(), mat2.getNumRows());
-
-        EjmlUnitTests.assertEquals(mat, mat2, UtilEjml.TEST_F64);
-    }
-
-    @Test void testReshape() {
+    @Test void reshape() {
         double[][] d = new double[][]{{1, 2}, {3, 4}, {5, 6}};
 
         DMatrixRMaj mat = new DMatrixRMaj(d);

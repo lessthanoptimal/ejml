@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ejml.data;
+package org.ejml;
 
-/// Matrix which can be reshaped
-public interface ReshapeMatrix extends Matrix {
-    /// Equivalent to invoking reshape(numRows,numCols,false);
-    ///
-    /// @param numRows The new number of rows in the matrix.
-    /// @param numCols The new number of columns in the matrix.
-    void reshape( int numRows, int numCols );
+/// Interface for objects which can be converted into a string formatted matrix
+public interface MatrixFormattable {
+    /// Customizable formatting for converting a Matrix into a string that uses {@link MatrixPrintFormat#DEFAULT}
+    default String format() {return format(MatrixPrintFormat.DEFAULT);}
+
+    /// Customizable formatting for converting a Matrix into a string
+    String format( MatrixPrintFormat format );
 }

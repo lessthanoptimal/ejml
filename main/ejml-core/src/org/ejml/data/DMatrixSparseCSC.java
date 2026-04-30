@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -448,11 +448,11 @@ public class DMatrixSparseCSC implements DMatrixSparse {
                 incrementColumn();
             }
 
-            @Override         public boolean hasNext() {
+            @Override public boolean hasNext() {
                 return nz_index < nz_length;
             }
 
-            @Override         public CoordinateRealValue next() {
+            @Override public CoordinateRealValue next() {
                 coordinate.row = nz_rows[nz_index];
                 coordinate.col = column;
                 coordinate.value = nz_values[nz_index];

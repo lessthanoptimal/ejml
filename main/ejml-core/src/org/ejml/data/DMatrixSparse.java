@@ -53,7 +53,7 @@ public interface DMatrixSparse extends DMatrix, MatrixSparse {
 
     /// Customizable way of printing the sparse matrix as a map type data structure.
     /// Only non-zero values are put into a list for row, col, value.
-    default String format( MapPrintFormat format ) {
+    @Override default String formatMap( MapPrintFormat format ) {
         var builder = new StringBuilder();
         builder.append(format.listPrefix);
         Iterator<CoordinateRealValue> iter = createCoordinateIterator();

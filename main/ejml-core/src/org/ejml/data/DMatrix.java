@@ -76,8 +76,7 @@ public interface DMatrix extends Matrix {
         return getNumRows()*getNumCols();
     }
 
-    /// Customizable formatting for converting a Matrix into a string
-    default String format( MatrixPrintFormat format ) {
+    @Override default String format( MatrixPrintFormat format ) {
         int numRows = getNumRows();
         int numCols = getNumCols();
         var builder = new StringBuilder();
@@ -85,7 +84,7 @@ public interface DMatrix extends Matrix {
         for (int row = 0; row < numRows; row++) {
             format.rowPadding(row == 0, builder);
             int _row = row;
-            format.row(builder, numCols, (i)->get(_row, i));
+            format.row(builder, numCols, ( i ) -> get(_row, i));
             if (row < numRows - 1)
                 builder.append(format.getRowSeparator());
         }

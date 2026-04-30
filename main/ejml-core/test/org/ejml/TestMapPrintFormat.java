@@ -71,4 +71,15 @@ public class TestMapPrintFormat extends EjmlStandardJUnit {
         alg.pair(builder, "foo", new float[]{1, 2, 3.1234f}, false);
         assertEquals("foo: {1, 2, 3.123}", builder.toString());
     }
+
+    @Test void tostring_MapPrintFormat() {
+        String found = MapPrintFormat.DEFAULT.toString(new WorkObj());
+        assertEquals("WorkObj foo", found);
+    }
+
+    private static class WorkObj implements MapFormattable {
+        @Override public String formatMap( MapPrintFormat format ) {
+            return "foo";
+        }
+    }
 }

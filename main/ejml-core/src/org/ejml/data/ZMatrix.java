@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2017, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ejml.data;
+
+import org.ejml.MatrixPrintFormat;
 
 /**
  * Interface for all complex 64 bit floating point rectangular matrices.
@@ -88,4 +89,7 @@ public interface ZMatrix extends Matrix {
      */
     int getDataLength();
 
+    @Override default String format( MatrixPrintFormat format ) {
+        throw new RuntimeException("Not yet supported for complex matrices");
+    }
 }

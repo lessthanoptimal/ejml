@@ -26,7 +26,7 @@ public class TestMatrixPrintFormat extends EjmlStandardJUnit {
     @Test void row() {
         var array = new double[]{0, 1.1345, 100, 2, 1.30494954342, 9498481, -3};
 
-        var alg = new MatrixPrintFormat().fsetPrecision(2);
+        var alg = new MatrixPrintFormat().withPrecision(2);
         var builder = new StringBuilder();
         alg.row(builder, array.length - 1, ( i ) -> array[i + 1]);
 
@@ -38,5 +38,16 @@ public class TestMatrixPrintFormat extends EjmlStandardJUnit {
         builder.delete(0, builder.length());
         alg.row(builder, array.length - 1, ( i ) -> array[i + 1]);
         assertEquals("{1.13, 100, 2, 1.3, 9498481, -3}", builder.toString());
+    }
+
+    @Test void tostring_MatrixPrintFormat() {
+        String found = MatrixPrintFormat.DEFAULT.toString(new WorkObj());
+        assertEquals("WorkObj foo", found);
+    }
+
+    private static class WorkObj implements MatrixFormattable {
+        @Override public String format( MatrixPrintFormat format ) {
+            return "foo";
+        }
     }
 }

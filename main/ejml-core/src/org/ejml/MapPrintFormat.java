@@ -20,11 +20,63 @@ package org.ejml;
 import lombok.Getter;
 import lombok.Setter;
 
-/// Describes a map or list of maps is formatted when converted into a string.
+/// Describes how to format an object when it's converted into a map style string.
 public class MapPrintFormat extends PrintFormat {
     /// Default valued used in toString and other location. Modifying this will modify the formatting in many locations
     /// Only the end user should be tweaking this and not any library and its subject to change.
+    ///
+    /// ```
+    /// [{row: 3, col: 1, value: 3.966},
+    /// {row: 1, col: 2, value: 1.2345},
+    /// {row: 0, col: 4, value: 2.1}]
+    /// ```
     public final static MapPrintFormat DEFAULT = new MapPrintFormat();
+
+    /// Python Dict style:
+    ///
+    /// ```
+    /// [{"row": 3, "col": 1, "value": 3.966},
+    /// {"row": 1, "col": 2, "value": 1.2345},
+    /// {"row": 0, "col": 4, "value": 2.1}]
+    /// ```
+    public final static MapPrintFormat PYTHON = new MapPrintFormat(
+            DEFAULT_PRECISION, ": ", ", ", "{", "}", ",\n", "[", "]").withKeyPrefix("\"").withKeySuffix("\"");
+
+    /// JSON style:
+    ///
+    /// ```
+    /// [{"row": 3, "col": 1, "value": 3.966},
+    /// {"row": 1, "col": 2, "value": 1.2345},
+    /// {"row": 0, "col": 4, "value": 2.1}]
+    /// ```
+    public final static MapPrintFormat JSON = PYTHON;
+
+    /// YAML style:
+    ///
+    /// ```
+    /// - row: 3
+    ///   col: 1
+    ///   value: 3.966
+    /// - row: 1
+    ///   col: 2
+    ///   value: 1.2345
+    /// - row: 0
+    ///   col: 4
+    ///   value: 2.1
+    /// ```
+    public final static MapPrintFormat YAML = new MapPrintFormat(
+            DEFAULT_PRECISION, ": ", "\n  ", "- ", "", "\n", "", "");
+
+    /// Java style:
+    ///
+    /// ```
+    /// List.of(Map.of("row", 3, "col", 1, "value", 3.966),
+    ///         Map.of("row", 1, "col", 2, "value", 1.2345),
+    ///         Map.of("row", 0, "col", 4, "value", 2.1))
+    /// ```
+    ///
+    public final static MapPrintFormat JAVA = new MapPrintFormat(DEFAULT_PRECISION, ", ", ", ", "Map.of(", ")", ",\n        ", "List.of(", ")")
+            .withKeyPrefix("\"").withKeySuffix("\"");
 
     /// Separator that splits key-value pairs
     @Getter @Setter public String valueSeparator = ": ";
@@ -40,6 +92,10 @@ public class MapPrintFormat extends PrintFormat {
     @Getter @Setter public String listPrefix = "[";
     /// Prefix applied after the list
     @Getter @Setter public String listSuffix = "]";
+    /// Prefix added before each key. Use to quote keys for languages that require it.
+    @Getter @Setter public String keyPrefix = "";
+    /// Suffix added after each key.
+    @Getter @Setter public String keySuffix = "";
 
     public MapPrintFormat() {}
 
@@ -60,7 +116,7 @@ public class MapPrintFormat extends PrintFormat {
     ///
     /// @param isMore Are there more pairs that need to be added. If true it will add a separator
     public void pair( StringBuilder builder, String name, double value, boolean isMore ) {
-        builder.append(name);
+        builder.append(keyPrefix).append(name).append(keySuffix);
         builder.append(valueSeparator);
         builder.append(f(value));
         if (isMore)
@@ -71,17 +127,17 @@ public class MapPrintFormat extends PrintFormat {
     ///
     /// @param isMore Are there more pairs that need to be added. If true it will add a separator
     public String pair( String name, double value, boolean isMore ) {
-        String txt = name + valueSeparator + f(value);
+        String txt = keyPrefix + name + keySuffix + valueSeparator + f(value);
         return txt + (isMore ? pairSeparator : "");
     }
 
     public String pair( String name, String value, boolean isMore ) {
-        String txt = name + valueSeparator + value;
+        String txt = keyPrefix + name + keySuffix + valueSeparator + value;
         return txt + (isMore ? pairSeparator : "");
     }
 
     public void pair( StringBuilder builder, String name, double[] values, boolean isMore ) {
-        builder.append(name);
+        builder.append(keyPrefix).append(name).append(keySuffix);
         builder.append(valueSeparator);
         builder.append(itemPrefix);
         f(builder, pairSeparator, values);
@@ -91,7 +147,7 @@ public class MapPrintFormat extends PrintFormat {
     }
 
     public void pair( StringBuilder builder, String name, float[] values, boolean isMore ) {
-        builder.append(name);
+        builder.append(keyPrefix).append(name).append(keySuffix);
         builder.append(valueSeparator);
         builder.append(itemPrefix);
         f(builder, pairSeparator, values);
@@ -120,14 +176,39 @@ public class MapPrintFormat extends PrintFormat {
         out.rowPrefix = itemPrefix;
         out.rowSuffix = itemSuffix;
         out.rowSeparator = itemSeparator;
-        out.colSeparator =  pairSeparator;
+        out.colSeparator = pairSeparator;
         out.aligned = false;
         return out;
     }
 
-    public MapPrintFormat fsetPrecision( int precision ) {
+    public MapPrintFormat withPrecision( int precision ) {
         this.precision = precision;
         return this;
+    }
+
+    public MapPrintFormat withItemPrefix( String txt ) {
+        this.itemPrefix = txt;
+        return this;
+    }
+
+    public MapPrintFormat withItemSuffix( String txt ) {
+        this.itemSuffix = txt;
+        return this;
+    }
+
+    public MapPrintFormat withKeyPrefix( String txt ) {
+        this.keyPrefix = txt;
+        return this;
+    }
+
+    public MapPrintFormat withKeySuffix( String txt ) {
+        this.keySuffix = txt;
+        return this;
+    }
+
+    /// Convince function to implement to String with. Places the class name before the formated String.
+    public String toString( MapFormattable o ) {
+        return o.getClass().getSimpleName() + " " + o.formatMap();
     }
 
     public MapPrintFormat setTo( MapPrintFormat src ) {
@@ -140,6 +221,8 @@ public class MapPrintFormat extends PrintFormat {
         this.listPrefix = src.listPrefix;
         this.listSuffix = src.listSuffix;
         this.decimal = src.decimal;
+        this.keyPrefix = src.keyPrefix;
+        this.keySuffix = src.keySuffix;
         return this;
     }
 }

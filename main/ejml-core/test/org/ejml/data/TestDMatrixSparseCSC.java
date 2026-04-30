@@ -147,13 +147,13 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         assertTrue(CommonOps_DSCC.checkStructure(a));
     }
 
-    @Test void format_Map() {
+    @Test void formatMap() {
         var a = new DMatrixSparseCSC(4, 5, 0);
         a.set(1, 2, 1.2345);
         a.set(0, 4, 2.1);
         a.set(3, 1, 3.966);
 
-        String found = a.format(new MapPrintFormat().fsetPrecision(2));
+        String found = a.formatMap(new MapPrintFormat().withPrecision(2));
         assertEquals("[{row: 3, col: 1, value: 3.97},\n" +
                 "{row: 1, col: 2, value: 1.23},\n" +
                 "{row: 0, col: 4, value: 2.1}]", found);

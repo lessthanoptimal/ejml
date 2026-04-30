@@ -22,11 +22,14 @@ import lombok.Setter;
 
 /// Base class for print formatting
 public abstract class PrintFormat {
+    public static final int DEFAULT_PRECISION = 6;
+    public static final char DEFAULT_DECIMAL = '.';
+
     /// Number of significant digits it will display when converting a float
-    @Getter @Setter public int precision = 6;
+    @Getter @Setter public int precision = DEFAULT_PRECISION;
 
     /// Character which indicates a decimal in floating point numbers
-    @Getter @Setter public char decimal = '.';
+    @Getter @Setter public char decimal = DEFAULT_DECIMAL;
 
     /// Applies standard formatting to the double
     public String f( double value ) {

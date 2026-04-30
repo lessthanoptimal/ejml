@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,52 +19,48 @@
 package org.ejml.dense.row.mult;
 
 import org.ejml.CodeGeneratorBase;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 
-/**
- * @author Peter Abeles
- */
 public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
-
-    @Override
-    public void generate() throws FileNotFoundException {
+    @Override public void generate() throws FileNotFoundException {
         setOutputFile("MatrixMatrixMult_ZDRM");
         String preamble =
                 "import org.ejml.MatrixDimensionException;\n" +
-                "import org.ejml.data.ZMatrixRMaj;\n" +
-                "import org.ejml.dense.row.CommonOps_ZDRM;\n" +
-                "import org.jetbrains.annotations.Nullable;\n" +
-                "\n" +
-                "//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;\n" +
-                "\n" +
-                "/**\n" +
-                " * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>\n" +
-                " * \n" +
-                standardClassDocClosing("Peter Abeles") +
-                "@SuppressWarnings(\"Duplicates\")\n" +
-                "public class "+className+" {\n";
+                        "import org.ejml.data.ZMatrixRMaj;\n" +
+                        "import org.ejml.dense.row.CommonOps_ZDRM;\n" +
+                        "import org.jetbrains.annotations.Nullable;\n" +
+                        "\n" +
+                        "//CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;\n" +
+                        "\n" +
+                        "/**\n" +
+                        " * <p>Matrix multiplication routines for complex row matrices in a row-major format.</p>\n" +
+                        " * \n" +
+                        standardClassDocClosing("Peter Abeles") +
+                        "@SuppressWarnings(\"Duplicates\")\n" +
+                        "public class " + className + " {\n";
 
         out.print(preamble);
 
-        for( int i = 0; i < 2; i++ ) {
+        for (int i = 0; i < 2; i++) {
             boolean alpha = i == 1;
-            for( int j = 0; j < 2; j++ ) {
+            for (int j = 0; j < 2; j++) {
                 boolean add = j == 1;
-                printMult_reroder(alpha,add);
+                printMult_reroder(alpha, add);
                 out.print("\n");
-                printMult_small(alpha,add);
+                printMult_small(alpha, add);
                 out.print("\n");
-                printMultTransA_reorder(alpha,add);
+                printMultTransA_reorder(alpha, add);
                 out.print("\n");
-                printMultTransA_small(alpha,add);
+                printMultTransA_small(alpha, add);
                 out.print("\n");
-                printMultTransB(alpha,add);
+                printMultTransB(alpha, add);
                 out.print("\n");
-                printMultTransAB(alpha,add);
+                printMultTransAB(alpha, add);
                 out.print("\n");
                 out.println("    //CONCURRENT_OMIT_BEGIN");
-                printMultTransAB_aux(alpha,add);
+                printMultTransAB_aux(alpha, add);
                 out.println("    //CONCURRENT_OMIT_END");
                 out.print("\n");
             }
@@ -72,27 +68,27 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         out.print("}\n");
     }
 
-    public void printMult_reroder( boolean alpha , boolean add ) {
-        String header,valLine;
+    public void printMult_reroder( boolean alpha, boolean add ) {
+        String header, valLine;
 
-        header = makeHeader("mult","reorder",add,alpha, false, false,false);
+        header = makeHeader("mult", "reorder", add, alpha, false, false, false);
 
         String tempVars = "";
 
-        if( alpha ) {
+        if (alpha) {
             tempVars = "            double realTmp,imagTmp;";
             valLine = "            realTmp = a.data[indexA++];\n" +
-                      "            imagTmp = a.data[indexA++];\n" +
-                      "            realA = realAlpha*realTmp - imagAlpha*imagTmp;\n" +
-                      "            imagA = realAlpha*imagTmp + imagAlpha*realTmp;\n";
+                    "            imagTmp = a.data[indexA++];\n" +
+                    "            realA = realAlpha*realTmp - imagAlpha*imagTmp;\n" +
+                    "            imagA = realAlpha*imagTmp + imagAlpha*realTmp;\n";
         } else {
             valLine = "                realA = a.data[indexA++];\n" +
-                      "                imagA = a.data[indexA++];\n";
+                    "                imagA = a.data[indexA++];\n";
         }
 
         String assignment = add ? "+=" : "=";
 
-        String foo = header + makeBoundsCheck(false,false, null)+handleZeros(add) +
+        String foo = header + makeBoundsCheck(false, false, null) + handleZeros(add) +
                 "\n" +
                 "        int strideA = a.getRowStride();\n" +
                 "        int strideB = b.getRowStride();\n" +
@@ -117,8 +113,8 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
                 "                double realB = b.data[indexB++];\n" +
                 "                double imagB = b.data[indexB++];\n" +
                 "\n" +
-                "                c.data[indexC++] "+assignment+" realA*realB - imagA*imagB;\n" +
-                "                c.data[indexC++] "+assignment+" realA*imagB + imagA*realB;\n" +
+                "                c.data[indexC++] " + assignment + " realA*realB - imagA*imagB;\n" +
+                "                c.data[indexC++] " + assignment + " realA*imagB + imagA*realB;\n" +
                 "            }\n" +
                 "\n" +
                 "            // now add to it\n" +
@@ -143,23 +139,23 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         out.print(foo);
     }
 
-    public void printMult_small( boolean alpha , boolean add ) {
-        String header,valLine;
+    public void printMult_small( boolean alpha, boolean add ) {
+        String header, valLine;
 
-        header = makeHeader("mult","small",add,alpha, false, false,false);
+        header = makeHeader("mult", "small", add, alpha, false, false, false);
 
         String assignment = add ? "+=" : "=";
 
-        if( alpha ) {
-            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        if (alpha) {
+            valLine = "                c.data[indexC++] " + assignment + " realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] " + assignment + " realTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " imagTotal;\n";
         }
 
         String foo =
-                header + makeBoundsCheck(false,false, null)+
+                header + makeBoundsCheck(false, false, null) +
                         "        int strideA = a.getRowStride();\n" +
                         "        int strideB = b.getRowStride();\n" +
                         "\n" +
@@ -196,35 +192,35 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         out.print(foo);
     }
 
-    public void printMultTransA_reorder( boolean alpha , boolean add ) {
-        String header,valLine1,valLine2;
+    public void printMultTransA_reorder( boolean alpha, boolean add ) {
+        String header, valLine1, valLine2;
 
-        header = makeHeader("mult","reorder",add,alpha, false, true,false);
+        header = makeHeader("mult", "reorder", add, alpha, false, true, false);
 
         String assignment = add ? "+=" : "=";
 
         String tempVars = "";
 
-        if( alpha ) {
+        if (alpha) {
             tempVars = "            double realTmp,imagTmp;\n";
             valLine1 = "            realTmp = a.data[i*2];\n" +
-                       "            imagTmp = a.data[i*2 + 1];\n" +
-                       "            realA = realAlpha*realTmp + imagAlpha*imagTmp;\n" +
-                       "            imagA = realAlpha*imagTmp - imagAlpha*realTmp;\n";
+                    "            imagTmp = a.data[i*2 + 1];\n" +
+                    "            realA = realAlpha*realTmp + imagAlpha*imagTmp;\n" +
+                    "            imagA = realAlpha*imagTmp - imagAlpha*realTmp;\n";
 
             valLine2 = "            realTmp = a.getReal(k, i);\n" +
-                       "            imagTmp = a.getImag(k, i);\n" +
-                       "            realA = realAlpha*realTmp + imagAlpha*imagTmp;\n" +
-                       "            imagA = realAlpha*imagTmp - imagAlpha*realTmp;\n";
+                    "            imagTmp = a.getImag(k, i);\n" +
+                    "            realA = realAlpha*realTmp + imagAlpha*imagTmp;\n" +
+                    "            imagA = realAlpha*imagTmp - imagAlpha*realTmp;\n";
         } else {
             valLine1 = "            realA = a.data[i*2];\n" +
-                       "            imagA = a.data[i*2 + 1];\n";
+                    "            imagA = a.data[i*2 + 1];\n";
             valLine2 = "            realA = a.getReal(k, i);\n" +
-                       "            imagA = a.getImag(k, i);\n";
+                    "            imagA = a.getImag(k, i);\n";
         }
 
         String foo =
-                header + makeBoundsCheck(true,false, null)+handleZeros(add)+
+                header + makeBoundsCheck(true, false, null) + handleZeros(add) +
                         "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {\n" +
                         "        for (int i = 0; i < a.numCols; i++) {\n" +
@@ -240,12 +236,12 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
                         "            while( indexB < end ) {\n" +
                         "                double realB = b.data[indexB++];\n" +
                         "                double imagB = b.data[indexB++];\n" +
-                        "                c.data[indexC++] "+assignment+" realA*realB + imagA*imagB;\n" +
-                        "                c.data[indexC++] "+assignment+" realA*imagB - imagA*realB;\n" +
+                        "                c.data[indexC++] " + assignment + " realA*realB + imagA*imagB;\n" +
+                        "                c.data[indexC++] " + assignment + " realA*imagB - imagA*realB;\n" +
                         "            }\n" +
                         "            // now increment it\n" +
                         "            for (int k = 1; k < a.numRows; k++) {\n" +
-                        valLine2+
+                        valLine2 +
                         "                end = indexB + b.numCols*2;\n" +
                         "                indexC = indexC_start;\n" +
                         "                // this is the loop for j\n" +
@@ -262,23 +258,23 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         out.print(foo);
     }
 
-    public void printMultTransA_small( boolean alpha , boolean add ) {
-        String header,valLine;
+    public void printMultTransA_small( boolean alpha, boolean add ) {
+        String header, valLine;
 
-        header = makeHeader("mult","small",add,alpha, false, true,false);
+        header = makeHeader("mult", "small", add, alpha, false, true, false);
 
         String assignment = add ? "+=" : "=";
 
-        if( alpha ) {
-            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        if (alpha) {
+            valLine = "                c.data[indexC++] " + assignment + " realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] " + assignment + " realTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " imagTotal;\n";
         }
 
         String foo =
-                header + makeBoundsCheck(true,false, null)+
+                header + makeBoundsCheck(true, false, null) +
                         "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {\n" +
                         "        for (int i = 0; i < a.numCols; i++) {\n" +
@@ -308,33 +304,33 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
                         "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
 
-         out.print(foo);
+        out.print(foo);
     }
 
-    public void printMultTransB( boolean alpha , boolean add ) {
-        String header,valLine;
+    public void printMultTransB( boolean alpha, boolean add ) {
+        String header, valLine;
 
-        header = makeHeader("mult",null,add,alpha, false, false,true);
+        header = makeHeader("mult", null, add, alpha, false, false, true);
 
         String assignment = add ? "+=" : "=";
 
-        if( alpha ) {
-            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        if (alpha) {
+            valLine = "                c.data[indexC++] " + assignment + " realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] " + assignment + " realTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " imagTotal;\n";
         }
 
         String foo =
-                header + makeBoundsCheck(false,true, null)+
+                header + makeBoundsCheck(false, true, null) +
                         "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numRows, xA -> {\n" +
                         "        for (int xA = 0; xA < a.numRows; xA++) {\n" +
                         "            int indexC = xA*b.numRows*2;\n" +
                         "            int aIndexStart = xA*a.numCols*2;\n" +
                         "            int end = aIndexStart + b.numCols*2;\n" +
-                        "            int indexB = 0;\n"+
+                        "            int indexB = 0;\n" +
                         "            for (int xB = 0; xB < b.numRows; xB++) {\n" +
                         "                int indexA = aIndexStart;\n" +
                         "\n" +
@@ -358,28 +354,28 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         out.print(foo);
     }
 
-    public void printMultTransAB( boolean alpha , boolean add ) {
-        String header,valLine;
+    public void printMultTransAB( boolean alpha, boolean add ) {
+        String header, valLine;
 
-        header = makeHeader("mult",null,add,alpha, false, true,true);
+        header = makeHeader("mult", null, add, alpha, false, true, true);
 
         String assignment = add ? "+=" : "=";
 
-        if( alpha ) {
-            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        if (alpha) {
+            valLine = "                c.data[indexC++] " + assignment + " realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] " + assignment + " realTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " imagTotal;\n";
         }
 
         String foo =
-                header + makeBoundsCheck(true,true, null)+
+                header + makeBoundsCheck(true, true, null) +
                         "\n" +
                         "        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, a.numCols, i -> {\n" +
                         "        for (int i = 0; i < a.numCols; i++) {\n" +
                         "            int indexC = i*b.numRows*2;\n" +
-                        "            int indexB = 0;\n"+
+                        "            int indexB = 0;\n" +
                         "            for (int j = 0; j < b.numRows; j++) {\n" +
                         "                int indexA = i*2;\n" +
                         "                int end = indexB + b.numCols*2;\n" +
@@ -397,31 +393,31 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
                         "                    indexA += a.numCols*2;\n" +
                         "                }\n" +
                         "\n" +
-                        valLine+
+                        valLine +
                         "            }\n" +
-                        "        }\n"+
+                        "        }\n" +
                         "        //CONCURRENT_ABOVE });\n" +
                         "    }\n";
         out.print(foo);
     }
 
-    public void printMultTransAB_aux( boolean alpha , boolean add ) {
-        String header,valLine;
+    public void printMultTransAB_aux( boolean alpha, boolean add ) {
+        String header, valLine;
 
-        header = makeHeader("mult","aux",add,alpha, true, true,true);
+        header = makeHeader("mult", "aux", add, alpha, true, true, true);
 
         String assignment = add ? "+=" : "=";
 
-        if( alpha ) {
-            valLine = "                c.data[indexC++] "+assignment+" realAlpha*realTotal - imagAlpha*imagTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" realAlpha*imagTotal + imagAlpha*realTotal;\n";
+        if (alpha) {
+            valLine = "                c.data[indexC++] " + assignment + " realAlpha*realTotal - imagAlpha*imagTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " realAlpha*imagTotal + imagAlpha*realTotal;\n";
         } else {
-            valLine = "                c.data[indexC++] "+assignment+" realTotal;\n" +
-                      "                c.data[indexC++] "+assignment+" imagTotal;\n";
+            valLine = "                c.data[indexC++] " + assignment + " realTotal;\n" +
+                    "                c.data[indexC++] " + assignment + " imagTotal;\n";
         }
 
         String foo =
-                header + makeBoundsCheck(true,true, "a.numRows")+handleZeros(add)+
+                header + makeBoundsCheck(true, true, "a.numRows") + handleZeros(add) +
                         "        int indexC = 0;\n" +
                         "        for (int i = 0; i < a.numCols; i++) {\n" +
                         "            int indexA = i*2;\n" +
@@ -447,13 +443,12 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
                         "                }\n" +
                         valLine +
                         "            }\n" +
-                        "        }\n"+
+                        "        }\n" +
                         "    }\n";
         out.print(foo);
     }
 
-    private String makeBoundsCheck(boolean tranA, boolean tranB, String auxLength)
-    {
+    private String makeBoundsCheck( boolean tranA, boolean tranB, @Nullable String auxLength ) {
         String a_numCols = tranA ? "a.numRows" : "a.numCols";
         String a_numRows = tranA ? "a.numCols" : "a.numRows";
         String b_numCols = tranB ? "b.numRows" : "b.numCols";
@@ -461,16 +456,16 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
 
         String ret =
                 "        if (a == c || b == c)\n" +
-                        "            throw new IllegalArgumentException(\"Neither 'a' or 'b' can be the same matrix as 'c'\");\n"+
-                        "        else if ("+a_numCols+" != "+b_numRows+") {\n" +
+                        "            throw new IllegalArgumentException(\"Neither 'a' or 'b' can be the same matrix as 'c'\");\n" +
+                        "        else if (" + a_numCols + " != " + b_numRows + ") {\n" +
                         "            throw new MatrixDimensionException(\"The 'a' and 'b' matrices do not have compatible dimensions\");\n" +
-                        "        } else if ("+a_numRows+" != c.numRows || "+b_numCols+" != c.numCols) {\n" +
+                        "        } else if (" + a_numRows + " != c.numRows || " + b_numCols + " != c.numCols) {\n" +
                         "            throw new MatrixDimensionException(\"The results matrix does not have the desired dimensions\");\n" +
                         "        }\n" +
                         "\n";
 
-        if( auxLength != null ) {
-            ret += "        if (aux == null) aux = new double[ "+auxLength+"*2 ];\n\n";
+        if (auxLength != null) {
+            ret += "        if (aux == null) aux = new double[ " + auxLength + "*2 ];\n\n";
         }
 
         return ret;
@@ -488,28 +483,28 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         return ret;
     }
 
-    private String makeHeader(String nameOp, String variant,
-                              boolean add, boolean hasAlpha, boolean hasAux,
-                              boolean tranA, boolean tranB) {
-        if( add ) nameOp += "Add";
+    private String makeHeader( String nameOp, @Nullable String variant,
+                               boolean add, boolean hasAlpha, boolean hasAux,
+                               boolean tranA, boolean tranB ) {
+        if (add) nameOp += "Add";
 
         // make the op name
-        if( tranA && tranB ) {
+        if (tranA && tranB) {
             nameOp += "TransAB";
-        } else if( tranA ) {
+        } else if (tranA) {
             nameOp += "TransA";
-        } else if( tranB ) {
+        } else if (tranB) {
             nameOp += "TransB";
         }
 
         String ret = "    public static void " + nameOp;
 
-        if( variant != null ) ret += "_"+variant+"( ";
+        if (variant != null) ret += "_" + variant + "( ";
         else ret += "( ";
 
-        if( hasAlpha ) ret += "double realAlpha, double imagAlpha, ";
+        if (hasAlpha) ret += "double realAlpha, double imagAlpha, ";
 
-        if( hasAux ) {
+        if (hasAux) {
             ret += "ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c, @Nullable double[] aux ) {\n";
         } else {
             ret += "ZMatrixRMaj a, ZMatrixRMaj b, ZMatrixRMaj c ) {\n";
@@ -518,7 +513,7 @@ public class GeneratorMatrixMatrixMult_ZDRM extends CodeGeneratorBase {
         return ret;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main( String[] args ) throws FileNotFoundException {
         new GeneratorMatrixMatrixMult_ZDRM().generate();
     }
 }
