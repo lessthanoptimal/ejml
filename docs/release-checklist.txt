@@ -17,17 +17,14 @@
   cd ejml&&rm -rf build/docs/javadoc&&./gradlew alljavadoc&&cd build/docs/&&zip -r javadoc.zip javadoc
 
 -----
-Push to central:
+Push SNAPSHOT to central:
 
-- Do a clean build and upload to Sonatype
-  ./gradlew clean&&git clean -fd main&&./gradlew autogenerate&&./gradlew assemble&&./gradlew publish -Dorg.gradle.parallel=false
+./gradlew publish
 
-- Then go to the website  https://central.sonatype.com/
-  * click close button
-  * double check the files
-  * click release button
+Push stable release to Central:
 
-Not working?  Has ~/.gradle/gradle.properties been setup?
+git clean -fd main && ./gradlew autogenerate && ./gradlew assemble
+./gradlew publishToSonatype -Dorg.gradle.parallel=false && ./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository && ./gradlew findSonatypeStagingRepository releaseSonatypeStagingRepository
 
 ---------
 Once a year:

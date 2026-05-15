@@ -30,7 +30,7 @@ allprojects {
     apply plugin: 'com.peterabeles.gversion'
 
     group = 'org.ejml'
-    version = '0.44.1-SNAPSHOT'
+    version = '0.45.0'
 
     project.ext.bytebuddy_version = '1.17.7'
     project.ext.commons_io_version = '2.16.1'

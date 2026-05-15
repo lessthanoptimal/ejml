@@ -3,11 +3,18 @@ Change log for EJML
 Date format: year/month/day
 
 ----- Version 0.45.0
-2026/??/??
+2026/May/15
 
 - Cholesky solver supports upper triangle mode, row-major and block
 - New format() for converting matrices and other data structures to Strings with lots of flexibility
+  * MatrixPrintFormat and MapPrintFormat
+  * Designed to be used by down stream libraries too
 - Equations supports more functions and is more capable in general
+- Start of changing API to allow selection of specific decompositions
+- Low level BLAS-1 style optimizations for block matrices
+- More SimpleMatrix functions
+- MatrixMultInernalHarness_DDRB
+  * Selects matrix ijk order dynamically avoiding sever performance hits
 
 ----- Version 0.44.0
 2025/Mar/21
