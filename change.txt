@@ -2,6 +2,11 @@ Change log for EJML
 
 Date format: year/month/day
 
+----- Version 0.45.1
+2026/May/25
+
+- MatrixFixed - Most set() return 'this' now
+
 ----- Version 0.45.0
 2026/May/15
 

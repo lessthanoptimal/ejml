@@ -31,7 +31,7 @@ allprojects {
     apply plugin: 'com.peterabeles.gversion'
 
     group = 'org.ejml'
-    version = '0.45.1-SNAPSHOT'
+    version = '0.45.1'
 }
 
 project.ext.bytebuddy_version = '1.17.7'

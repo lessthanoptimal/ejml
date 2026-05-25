@@ -4,7 +4,7 @@
 - Update example code on website
   git diff --name-status TAG_NAME examples
 - clean and generate code:
-  git clean -fd main;./gradlew autogenerate
+  git clean -fd main && ./gradlew autogenerate
 
 - Rebuild and run unit tests
 - Commit and tag release
