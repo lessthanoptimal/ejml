@@ -1,7 +1,0 @@
-dependencies {
-    api project(':main:ejml-core')
-    testImplementation project(':main:ejml-ddense')
-    testImplementation project(':main:ejml-core').sourceSets.test.output
-
-    generateImplementation project(':main:ejml-core').sourceSets.generate.output
-}

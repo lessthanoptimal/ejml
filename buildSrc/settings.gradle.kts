@@ -16,17 +16,6 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decompose.lu;
+// Copyright (c) 2026 NINOX 360 LLC. Licensed under the BSD 3-Clause; see LICENSE.TXT in project root
 
-import org.ejml.dense.row.decomposition.lu.GeneralLuDecompositionChecks_ZDRM;
-import org.ejml.dense.row.decomposition.lu.LUDecompositionNR_ZDRM;
-
-/**
- * @author Peter Abeles
- */
-public class TestLUDecompositionNR_ZDRM extends GeneralLuDecompositionChecks_ZDRM {
-    @Override
-    public LUDecompositionBase_ZDRM create(int numRows, int numCols) {
-        return new LUDecompositionNR_ZDRM();
-    }
-}
+rootProject.name = "buildSrc"

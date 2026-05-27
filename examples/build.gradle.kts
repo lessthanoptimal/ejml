@@ -16,17 +16,13 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decompose.lu;
+plugins {
+    id("ejml.java-conventions")
+}
 
-import org.ejml.dense.row.decomposition.lu.GeneralLuDecompositionChecks_ZDRM;
-import org.ejml.dense.row.decomposition.lu.LUDecompositionNR_ZDRM;
+dependencies {
+    api(project(":main:ejml-all"))
 
-/**
- * @author Peter Abeles
- */
-public class TestLUDecompositionNR_ZDRM extends GeneralLuDecompositionChecks_ZDRM {
-    @Override
-    public LUDecompositionBase_ZDRM create(int numRows, int numCols) {
-        return new LUDecompositionNR_ZDRM();
-    }
+    api(Libs.JMH_CORE)
+    api(Libs.JMH_ANNPROCESS)
 }

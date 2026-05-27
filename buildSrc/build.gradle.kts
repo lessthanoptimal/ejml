@@ -16,17 +16,24 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decompose.lu;
+// Copyright (c) 2026 NINOX 360 LLC. Licensed under the BSD 3-Clause; see LICENSE.TXT in project root
 
-import org.ejml.dense.row.decomposition.lu.GeneralLuDecompositionChecks_ZDRM;
-import org.ejml.dense.row.decomposition.lu.LUDecompositionNR_ZDRM;
+plugins {
+    `kotlin-dsl`
+}
 
-/**
- * @author Peter Abeles
- */
-public class TestLUDecompositionNR_ZDRM extends GeneralLuDecompositionChecks_ZDRM {
-    @Override
-    public LUDecompositionBase_ZDRM create(int numRows, int numCols) {
-        return new LUDecompositionNR_ZDRM();
-    }
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+
+// While this project is Java 25, we want to build using older versions of Java. Hence, Java 17 here.
+kotlin {jvmToolchain(17)}
+
+dependencies {
+    implementation("com.peterabeles.gversion:com.peterabeles.gversion.gradle.plugin:1.10.3")
+    implementation("net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin:4.0.1")
+    implementation("com.diffplug.spotless:com.diffplug.spotless.gradle.plugin:8.4.0")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
 }

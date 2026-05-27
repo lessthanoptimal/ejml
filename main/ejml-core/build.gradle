@@ -1,8 +1,0 @@
-dependencies {
-    testImplementation project(':main:ejml-fdense')
-    testImplementation project(':main:ejml-cdense')
-    testImplementation project(':main:ejml-ddense')
-    testImplementation project(':main:ejml-zdense')
-    testImplementation project(':main:ejml-dsparse')
-    testImplementation project(':main:ejml-experimental')
-}

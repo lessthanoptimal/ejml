@@ -42,9 +42,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class TestEnforceCodeStandards {
 	// Only run this on performance critical code
-	String[] blacklistConfig = new String[]{"autocode", "ejml-all", "ejml-kotlin"};
+	String[] blacklistConfig = new String[]{"autocode", "ejml-all", "ejml-kotlin", "ejml-test"};
 	String[] blackListLanguage = new String[]{
-			"autocode", "ejml-all", "ejml-kotlin", "ejml-experimental", "ejml-simple"};
+			"autocode", "ejml-all", "ejml-kotlin", "ejml-experimental", "ejml-simple", "ejml-test"};
 
 	/**
 	 * This code needs to run fast and minimize memory usage. Lint check for certain illegal operations.
@@ -175,7 +175,7 @@ public class TestEnforceCodeStandards {
 			if (files == null)
 				break;
 
-			if (new File(f, "settings.gradle").exists() && new File(f, "LICENSE-2.0.txt").exists())
+			if (new File(f, "settings.gradle.kts").exists() && new File(f, "LICENSE-2.0.txt").exists())
 				break;
 
 			path = f.getParent();

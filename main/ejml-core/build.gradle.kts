@@ -16,17 +16,26 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.row.decompose.lu;
+plugins {
+    id("ejml.libs-conventions")
+}
 
-import org.ejml.dense.row.decomposition.lu.GeneralLuDecompositionChecks_ZDRM;
-import org.ejml.dense.row.decomposition.lu.LUDecompositionNR_ZDRM;
+// Expose the `generate` source set output for sibling modules that share
+// generator base classes
+val generateOutput by configurations.creating {
+    isCanBeConsumed = true
+    isCanBeResolved = false
+}
 
-/**
- * @author Peter Abeles
- */
-public class TestLUDecompositionNR_ZDRM extends GeneralLuDecompositionChecks_ZDRM {
-    @Override
-    public LUDecompositionBase_ZDRM create(int numRows, int numCols) {
-        return new LUDecompositionNR_ZDRM();
-    }
+artifacts {
+    add("generateOutput", tasks.named("generateClasses"))
+}
+
+dependencies {
+    testImplementation(project(":main:ejml-test"))
+    testImplementation(project(":main:ejml-fdense"))
+    testImplementation(project(":main:ejml-cdense"))
+    testImplementation(project(":main:ejml-ddense"))
+    testImplementation(project(":main:ejml-zdense"))
+    testImplementation(project(":main:ejml-dsparse"))
 }

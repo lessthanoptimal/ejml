@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -149,6 +149,7 @@ public class GenerateJavaCode32 extends GenerateCode32 {
                 "main/ejml-core/test/org/ejml/ops",
                 "main/ejml-core/src/org/ejml/masks",
                 "main/ejml-core/test/org/ejml/masks",
+                "main/ejml-test/src/org/ejml",
                 "main/ejml-experimental/src/org/ejml/dense/row/decomposition/bidiagonal/"
         };
 
