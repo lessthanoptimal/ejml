@@ -20,17 +20,6 @@ plugins {
     id("ejml.libs-conventions")
 }
 
-// Expose the `generate` source set output for sibling modules that share
-// generator base classes
-val generateOutput by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("generateOutput", tasks.named("generateClasses"))
-}
-
 dependencies {
     testImplementation(project(":main:ejml-test"))
     testImplementation(project(":main:ejml-fdense"))
