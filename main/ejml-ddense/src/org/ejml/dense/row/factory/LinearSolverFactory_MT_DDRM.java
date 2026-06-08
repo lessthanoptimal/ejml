@@ -21,7 +21,7 @@ package org.ejml.dense.row.factory;
 import org.ejml.EjmlParameters;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_MT_DDRB;
-import org.ejml.dense.block.linsol.qr.QrHouseHolderSolver_MT_DDRB;
+import org.ejml.dense.block.linsol.qr.QrHouseholderSolver_MT_DDRB;
 import org.ejml.dense.row.linsol.chol.LinearSolverChol_DDRB;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrBlock64_DDRM;
 import org.ejml.dense.row.linsol.qr.LinearSolverQrHouseCol_MT_DDRM;
@@ -61,7 +61,7 @@ public class LinearSolverFactory_MT_DDRM {
             return new LinearSolverQrHouseCol_MT_DDRM();
         } else {
             if (EjmlParameters.MEMORY == EjmlParameters.MemoryUsage.FASTER)
-                return new LinearSolverQrBlock64_DDRM(new QrHouseHolderSolver_MT_DDRB());
+                return new LinearSolverQrBlock64_DDRM(new QrHouseholderSolver_MT_DDRB());
             else
                 return new LinearSolverQrHouseCol_MT_DDRM();
         }

@@ -138,7 +138,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
             copyZeros(subU);
 
             // compute W for Q(i) = ( I + W*Y^T)
-            TridiagonalHelper_DDRB.computeW_row(A.blockLength, subU, subW, gammas, i);
+            TridiagonalHelper_DDRB.computeW_Row(A.blockLength, subU, subW, gammas, i);
 
             subQ.col0 = i;
             subQ.row0 = i;

@@ -20,7 +20,7 @@ package org.ejml.dense.row.linsol;
 
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.block.linsol.qr.QrHouseHolderSolver_DDRB;
+import org.ejml.dense.block.linsol.qr.QrHouseholderSolver_DDRB;
 import org.ejml.interfaces.linsol.LinearSolverDense;
 
 /**
@@ -33,7 +33,7 @@ public class TestLinearSolver_DDRB_to_DDRM extends GenericLinearSolverChecks_DDR
     @Override
     protected LinearSolverDense<DMatrixRMaj> createSolver( DMatrixRMaj A ) {
 
-        LinearSolverDense<DMatrixRBlock> solver = new QrHouseHolderSolver_DDRB();
+        LinearSolverDense<DMatrixRBlock> solver = new QrHouseholderSolver_DDRB();
 
         return new LinearSolver_DDRB_to_DDRM(solver);
     }

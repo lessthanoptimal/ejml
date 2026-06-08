@@ -65,7 +65,7 @@ public class BenchmarkLinearSolverQR_MT_DDRB {
         }
     }
 
-    QrHouseHolderSolver_MT_DDRB householder = new QrHouseHolderSolver_MT_DDRB();
+    QrHouseholderSolver_MT_DDRB householder = new QrHouseholderSolver_MT_DDRB();
 
     @Benchmark
     public void solve_householder( BenchmarkLinearSolverQR_DDRB.SolveState s ) {

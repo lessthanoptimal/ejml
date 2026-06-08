@@ -33,14 +33,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Peter Abeles
  */
-class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
+class TestQrHouseholderSolver_DDRB extends EjmlStandardJUnit {
     /**
      * Test positive examples against a variety of different inputs shapes.
      */
     @Test
     void positiveSolve() {
         int r = 3;
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
 
         for (int i = 1; i <= r*3; i++) {
             for (int j = i; j <= r*3; j++) {
@@ -67,7 +67,7 @@ class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
     @Test
     void invert() {
         int r = 3;
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
 
         for (int i = 1; i <= r*3; i++) {
             DMatrixRBlock A = MatrixOps_DDRB.createRandom(i, i, -1, 1, rand, r);
@@ -92,7 +92,7 @@ class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
         DMatrixRBlock B = MatrixOps_DDRB.convert(CommonOps_DDRM.diag(4, 3, 2, 0.1), 3);
 
         // see if a matrix with smaller singular value has a worse quality
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
         assertTrue(solver.setA(A.copy()));
         double qualityA = (double)solver.quality();
 
@@ -113,7 +113,7 @@ class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
         CommonOps_DDRM.scale(2, B);
 
         // see if a matrix with smaller singular value has a worse quality
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
         assertTrue(solver.setA(A.copy()));
         double qualityA = (double)solver.quality();
 
@@ -128,7 +128,7 @@ class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(4, 4, -1, 1, rand, 3);
         DMatrixRBlock A_orig = A.copy();
 
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
 
         assertTrue(solver.setA(A));
 
@@ -141,7 +141,7 @@ class TestQrHouseHolderSolver_DDRB extends EjmlStandardJUnit {
     void modifiesB() {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(4, 4, -1, 1, rand, 3);
 
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
 
         assertTrue(solver.setA(A));
 

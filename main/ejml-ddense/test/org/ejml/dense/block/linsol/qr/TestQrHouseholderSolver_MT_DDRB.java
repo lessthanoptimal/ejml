@@ -26,13 +26,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TestQrHouseHolderSolver_MT_DDRB extends EjmlStandardJUnit {
+class TestQrHouseholderSolver_MT_DDRB extends EjmlStandardJUnit {
     int r = 3;
 
     @Test
     void compareToSingle() {
-        var single = new QrHouseHolderSolver_DDRB();
-        var concurrent = new QrHouseHolderSolver_MT_DDRB();
+        var single = new QrHouseholderSolver_DDRB();
+        var concurrent = new QrHouseholderSolver_MT_DDRB();
 
         for( int i = 1; i <= r*3; i++ ) {
             for( int j = i; j <= r*3; j++ ) {

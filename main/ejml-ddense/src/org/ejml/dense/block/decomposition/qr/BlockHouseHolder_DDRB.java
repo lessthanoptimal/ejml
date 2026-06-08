@@ -56,7 +56,7 @@ public class BlockHouseHolder_DDRB {
 
         for (int i = 0; i < min; i++) {
             // compute the householder vector
-            if (!computeHouseHolderCol(blockLength, Y, gamma, i))
+            if (!computeHouseholderCol(blockLength, Y, gamma, i))
                 return false;
 
             // apply to rest of the columns in the block
@@ -83,7 +83,7 @@ public class BlockHouseHolder_DDRB {
      *
      * @return If there was any problems or not. true = no problem.
      */
-    public static boolean computeHouseHolderCol( final int blockLength, final DSubmatrixD1 Y,
+    public static boolean computeHouseholderCol( final int blockLength, final DSubmatrixD1 Y,
                                                  final double[] gamma, final int i ) {
         double max = BlockHouseHolder_DDRB.findMaxCol(blockLength, Y, i);
 
@@ -122,7 +122,7 @@ public class BlockHouseHolder_DDRB {
      *
      * @return If there was any problems or not. true = no problem.
      */
-    public static boolean computeHouseHolderRow( final int blockLength, final DSubmatrixD1 Y,
+    public static boolean computeHouseholderRow( final int blockLength, final DSubmatrixD1 Y,
                                                  final double[] gamma, final int i ) {
         double max = BlockHouseHolder_DDRB.findMaxRow(blockLength, Y, i, i + 1);
 

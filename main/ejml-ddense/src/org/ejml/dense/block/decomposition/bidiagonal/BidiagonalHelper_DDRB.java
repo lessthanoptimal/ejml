@@ -47,7 +47,7 @@ public class BidiagonalHelper_DDRB {
             //--- Apply reflector to the column
 
             // compute the householder vector
-            if (!computeHouseHolderCol(blockLength, A, gammasU, i))
+            if (!computeHouseholderCol(blockLength, A, gammasU, i))
                 return false;
 
             // apply to rest of the columns in the column block
@@ -60,7 +60,7 @@ public class BidiagonalHelper_DDRB {
             A.original.print();
 
             //-- Apply reflector to the row
-            if (!computeHouseHolderRow(blockLength, A, gammasV, i))
+            if (!computeHouseholderRow(blockLength, A, gammasV, i))
                 return false;
 
             // apply to rest of the rows in the row block

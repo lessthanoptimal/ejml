@@ -51,7 +51,7 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
  * @author Peter Abeles
  */
 @SuppressWarnings("NullAway.Init")
-public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock> {
+public class QrHouseholderSolver_DDRB implements LinearSolverDense<DMatrixRBlock> {
 
     // QR decomposition algorithm
     protected QRDecompositionHouseholder_DDRB decomposer = new QRDecompositionHouseholder_DDRB();
@@ -59,7 +59,7 @@ public class QrHouseHolderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
     // the input matrix which has been decomposed
     protected DMatrixRBlock QR;
 
-    public QrHouseHolderSolver_DDRB() {
+    public QrHouseholderSolver_DDRB() {
         decomposer.setSaveW(false);
     }
 

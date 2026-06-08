@@ -23,7 +23,7 @@ import org.ejml.dense.block.VectorOps_DDRB;
 import org.ejml.dense.block.decomposition.qr.BlockHouseHolder_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 
-import static org.ejml.dense.block.decomposition.qr.BlockHouseHolder_DDRB.computeHouseHolderRow;
+import static org.ejml.dense.block.decomposition.qr.BlockHouseHolder_DDRB.computeHouseholderRow;
 
 /**
  * @author Peter Abeles
@@ -62,7 +62,7 @@ public class TridiagonalHelper_DDRB {
         // step through rows in the block
         for (int i = 0; i < num; i++) {
             // compute the new reflector and save it in a row in 'A'
-            computeHouseHolderRow(blockLength, A, gammas, i);
+            computeHouseholderRow(blockLength, A, gammas, i);
             double gamma = gammas[A.row0 + i];
 
             // compute y
@@ -101,7 +101,7 @@ public class TridiagonalHelper_DDRB {
      * Y and W are assumed to have the same number of rows and columns.
      * </p>
      */
-    public static void computeW_row( final int blockLength,
+    public static void computeW_Row( final int blockLength,
                                      final DSubmatrixD1 Y, final DSubmatrixD1 W,
                                      final double[] beta, int betaIndex ) {
 

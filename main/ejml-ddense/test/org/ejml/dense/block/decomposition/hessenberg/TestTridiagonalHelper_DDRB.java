@@ -84,7 +84,7 @@ public class TestTridiagonalHelper_DDRB extends EjmlStandardJUnit {
     }
 
     @Test
-    public void computeW_row() {
+    public void computeW_Row() {
 
         for( int width = r; width <= 3*r; width++ ) {
 //            System.out.println("width!!!  "+width);
@@ -122,7 +122,7 @@ public class TestTridiagonalHelper_DDRB extends EjmlStandardJUnit {
             DSubmatrixD1 Ab_sub = new DSubmatrixD1(Ab);
             DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb);
 
-            TridiagonalHelper_DDRB.computeW_row(r, Ab_sub, Wb_sub, betas, 0);
+            TridiagonalHelper_DDRB.computeW_Row(r, Ab_sub, Wb_sub, betas, 0);
 
             // see if the result is the same
             assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.getDDRM(),UtilEjml.TEST_F64));

@@ -23,7 +23,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.block.MatrixOps_DDRB;
-import org.ejml.dense.block.linsol.qr.QrHouseHolderSolver_DDRB;
+import org.ejml.dense.block.linsol.qr.QrHouseholderSolver_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -153,7 +153,7 @@ public class TestCholeskyOuterSolver_DDRB extends EjmlStandardJUnit {
         DMatrixRBlock A = createMatrixSPD(4);
         DMatrixRBlock A_orig = A.copy();
 
-        QrHouseHolderSolver_DDRB solver = new QrHouseHolderSolver_DDRB();
+        QrHouseholderSolver_DDRB solver = new QrHouseholderSolver_DDRB();
 
         assertTrue(solver.setA(A));
 
@@ -165,7 +165,7 @@ public class TestCholeskyOuterSolver_DDRB extends EjmlStandardJUnit {
     @Test public void modifiesB() {
         DMatrixRBlock A = createMatrixSPD(4);
 
-        var solver = new QrHouseHolderSolver_DDRB();
+        var solver = new QrHouseholderSolver_DDRB();
 
         assertTrue(solver.setA(A));
 
