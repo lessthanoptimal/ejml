@@ -32,24 +32,20 @@ import org.ejml.interfaces.linsol.LinearSolverDense;
 //CONCURRENT_MACRO QRDecompositionHouseholder_DDRB QRDecompositionHouseholder_MT_DDRB
 //CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
 
-/**
- * <p>
- * A solver for {@link org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB}. Systems are solved for using the standard
- * QR decomposition method, sketched below.
- * </p>
- *
- * <p>
- * A = Q*R<br>
- * A*x = b<br>
- * Q*R*x = b <br>
- * R*x = y = Q<sup>T</sup>b<br>
- * x = R<sup>-1</sup>y<br>
- * <br>
- * Where A is the m by n matrix being decomposed. Q is an orthogonal matrix. R is upper triangular matrix.
- * </p>
- *
- * @author Peter Abeles
- */
+/// A solver for [QRDecompositionHouseholder_DDRB]. Systems are solved for using the standard
+/// QR decomposition method, sketched below.
+///
+/// A = Q\*R
+///
+/// A\*x = b
+///
+/// Q\*R\*x = b
+///
+/// R\*x = y = Q<sup>T</sup>b
+///
+/// x = R<sup>-1</sup>y
+///
+/// Where A is the m by n matrix being decomposed. Q is an orthogonal matrix. R is upper triangular matrix.
 @SuppressWarnings("NullAway.Init")
 public class QrHouseholderSolver_DDRB implements LinearSolverDense<DMatrixRBlock> {
 
@@ -63,12 +59,10 @@ public class QrHouseholderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
         decomposer.setSaveW(false);
     }
 
-    /**
-     * Computes the QR decomposition of A and store the results in A.
-     *
-     * @param A The A matrix in the linear equation. Modified. Reference saved.
-     * @return true if the decomposition was successful.
-     */
+    /// Computes the QR decomposition of A and store the results in A.
+    ///
+    /// @param A A matrix in the linear equation. Modified. Reference saved.
+    /// @return true if the decomposition was successful.
     @Override
     public boolean setA( DMatrixRBlock A ) {
         if (A.numRows < A.numCols)
@@ -83,11 +77,9 @@ public class QrHouseholderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
         return true;
     }
 
-    /**
-     * Computes the quality using diagonal elements the triangular R matrix in the QR decomposition.
-     *
-     * @return Solutions quality.
-     */
+    /// Computes the quality using diagonal elements of the triangular R matrix in the QR decomposition.
+    ///
+    /// @return Solutions quality.
     @Override
     public /**/double quality() {
         return SpecializedOps_DDRM.qualityTriangular(decomposer.getQR());
@@ -119,11 +111,9 @@ public class QrHouseholderSolver_DDRB implements LinearSolverDense<DMatrixRBlock
                 new DSubmatrixD1(QR, 0, M, 0, M), new DSubmatrixD1(X), false);
     }
 
-    /**
-     * Invert by solving for against an identity matrix.
-     *
-     * @param A_inv Where the inverted matrix saved. Modified.
-     */
+    /// Invert by solving for against an identity matrix.
+    ///
+    /// @param A_inv Where the inverted matrix is saved. Modified.
     @Override
     public void invert( DMatrixRBlock A_inv ) {
         int M = Math.min(QR.numRows, QR.numCols);

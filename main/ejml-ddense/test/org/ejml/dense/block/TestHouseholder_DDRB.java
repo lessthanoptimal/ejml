@@ -40,8 +40,7 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
 
     SimpleMatrix A, Y, V, W;
 
-    @Test
-    void computeW_Column() {
+    @Test void computeWCol() {
         double[] betas = new double[]{1.2, 2, 3};
 
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r, -1.0, 1.0, rand);
@@ -71,60 +70,59 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 Ab_sub = new DSubmatrixD1(Ab);
         DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb);
 
-        Householder_DDRB.computeW_Column(r, Ab_sub, Wb_sub, null, betas, 0);
+        Householder_DDRB.computeWCol(r, Ab_sub, Wb_sub, null, betas, 0);
 
         // see if the result is the same
         assertTrue(GenericMatrixOps_F64.isEquivalent(Wb, (DMatrixRMaj)W.getMatrix(), UtilEjml.TEST_F64));
     }
 
     @Test
-    public void computeW_Row() {
+    public void computeWRow() {
 
-        for( int width = r; width <= 3*r; width++ ) {
+        for (int width = r; width <= 3*r; width++) {
 //            System.out.println("width!!!  "+width);
-            double betas[] = new double[ r ];
-            for( int i = 0; i < r; i++ )
+            double betas[] = new double[r];
+            for (int i = 0; i < r; i++)
                 betas[i] = i + 0.5;
 
-            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0 , 1.0 ,rand);
+            SimpleMatrix A = SimpleMatrix.random_DDRM(r, width, -1.0, 1.0, rand);
 
             // Compute W directly using SimpleMatrix
-            SimpleMatrix v = A.extractVector(true,0);
-            v.set(0,0);
-            v.set(1,1);
+            SimpleMatrix v = A.extractVector(true, 0);
+            v.set(0, 0);
+            v.set(1, 1);
             SimpleMatrix Y = v;
             SimpleMatrix W = v.scale(-betas[0]);
 
-            for( int i = 1; i < A.numRows(); i++ ) {
-                v = A.extractVector(true,i);
+            for (int i = 1; i < A.numRows(); i++) {
+                v = A.extractVector(true, i);
 
-                for( int j = 0; j <= i; j++ )
-                    v.set(j,0);
-                if( i+1 < A.numCols())
-                    v.set(i+1,1);
+                for (int j = 0; j <= i; j++)
+                    v.set(j, 0);
+                if (i + 1 < A.numCols())
+                    v.set(i + 1, 1);
 
                 SimpleMatrix z = v.transpose().plus(W.transpose().mult(Y.mult(v.transpose()))).scale(-betas[i]);
 
-                W = W.combine(i,0,z.transpose());
-                Y = Y.combine(i,0,v);
+                W = W.combine(i, 0, z.transpose());
+                Y = Y.combine(i, 0, v);
             }
 
             // now compute it using the block matrix stuff
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
-            DMatrixRBlock Wb = new DMatrixRBlock(Ab.numRows,Ab.numCols,r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(), r);
+            DMatrixRBlock Wb = new DMatrixRBlock(Ab.numRows, Ab.numCols, r);
 
             DSubmatrixD1 Ab_sub = new DSubmatrixD1(Ab);
             DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb);
 
-            Householder_DDRB.computeW_Row(r, Ab_sub, Wb_sub, betas, 0);
+            Householder_DDRB.computeWRow(r, Ab_sub, Wb_sub, betas, 0);
 
             // see if the result is the same
-            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.getDDRM(),UtilEjml.TEST_F64));
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb, W.getDDRM(), UtilEjml.TEST_F64));
         }
     }
 
-    @Test
-    void initializeW() {
+    @Test void initializeW() {
         initMatrices(r - 1);
 
         double beta = 1.5;
@@ -135,7 +133,7 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb, 0, W.numRows(), 0, r);
         DSubmatrixD1 Yb_sub = new DSubmatrixD1(Ab, 0, A.numRows(), 0, r);
 
-        Householder_DDRB.initializeW(r, Wb_sub, Yb_sub, r, beta);
+        Householder_DDRB.initializeW(r, Wb_sub, Yb_sub, beta);
 
         assertEquals(-beta, Wb.get(0, 0), UtilEjml.TEST_F64);
 
@@ -144,8 +142,7 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void computeZ() {
+    @Test void computeZ() {
         int M = r - 1;
         initMatrices(M);
 
@@ -171,8 +168,7 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void computeY_t_V() {
+    @Test void computeY_t_V() {
         int M = r - 2;
         initMatrices(M);
 
@@ -190,27 +186,76 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
     }
 
     @Test
-    public void multPlusTransA() {
-        for( int width = r+1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.random_DDRM(width,width, -1.0, 1.0,rand);
-            SimpleMatrix U = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
-            SimpleMatrix V = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
+    public void multPlusTransA_symm() {
+        for (int width = r + 1; width <= r*3; width++) {
+            SimpleMatrix A = SimpleMatrix.random_DDRM(width, width, -1.0, 1.0, rand);
+            SimpleMatrix U = SimpleMatrix.random_DDRM(r, width, -1.0, 1.0, rand);
+            SimpleMatrix V = SimpleMatrix.random_DDRM(r, width, -1.0, 1.0, rand);
 
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
-            DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.getDDRM(),r);
-            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.getDDRM(),r);
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(), r);
+            DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.getDDRM(), r);
+            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.getDDRM(), r);
 
             SimpleMatrix expected = A.plus(U.transpose().mult(V));
 
-            Householder_DDRB.multPlusTransA(r, new DSubmatrixD1(Ub)
+            Householder_DDRB.multPlusTransA_symm(r, new DSubmatrixD1(Ub)
                     , new DSubmatrixD1(Vb), new DSubmatrixD1(Ab));
 
 
-            for( int i = r; i < width; i++ ) {
-                for( int j = i; j < width; j++ ) {
-                    assertEquals(expected.get(i,j),Ab.get(i,j),UtilEjml.TEST_F64,i+" "+j);
+            for (int i = r; i < width; i++) {
+                for (int j = i; j < width; j++) {
+                    assertEquals(expected.get(i, j), Ab.get(i, j), UtilEjml.TEST_F64, i + " " + j);
                 }
             }
+        }
+    }
+
+    @Test void multPlus_TriLL0() {
+        for (int height = r + 1; height <= 3*r; height++) {
+            // Y is a column panel (one block wide): top r×r unit-lower-triangular, data below
+            SimpleMatrix Y = SimpleMatrix.random_DDRM(height, r, -1.0, 1.0, rand);
+            SimpleMatrix B = SimpleMatrix.random_DDRM(r, height, -1.0, 1.0, rand);
+
+            // materialize Y's implicit structure for the oracle (zeros above diagonal, ones on it)
+            SimpleMatrix Ym = Y.copy();
+            for (int i = 0; i < r; i++) {
+                for (int j = i + 1; j < r; j++)
+                    Ym.set(i, j, 0);
+                Ym.set(i, i, 1);
+            }
+            SimpleMatrix expected = Ym.mult(B);
+
+            DMatrixRBlock Yb = MatrixOps_DDRB.convert(Y.getDDRM(), r);
+            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.getDDRM(), r);
+            DMatrixRBlock Cb = new DMatrixRBlock(height, height, r);
+
+            // C starts at zero, so multPlus computes Y*B; pass the un-materialized Y
+            Householder_DDRB.multPlus_TriLL0(r, new DSubmatrixD1(Yb), new DSubmatrixD1(Bb), new DSubmatrixD1(Cb));
+
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Cb, expected.getDDRM(), UtilEjml.TEST_F64), "height " + height);
+        }
+    }
+
+    @Test void multTransA_TriLL0() {
+        for (int height = r + 1; height <= 3*r; height++) {
+            SimpleMatrix Y = SimpleMatrix.random_DDRM(height, r, -1.0, 1.0, rand);
+            SimpleMatrix B = SimpleMatrix.random_DDRM(height, height, -1.0, 1.0, rand);
+
+            SimpleMatrix Ym = Y.copy();
+            for (int i = 0; i < r; i++) {
+                for (int j = i + 1; j < r; j++)
+                    Ym.set(i, j, 0);
+                Ym.set(i, i, 1);
+            }
+            SimpleMatrix expected = Ym.transpose().mult(B);
+
+            DMatrixRBlock Yb = MatrixOps_DDRB.convert(Y.getDDRM(), r);
+            DMatrixRBlock Bb = MatrixOps_DDRB.convert(B.getDDRM(), r);
+            DMatrixRBlock Cb = new DMatrixRBlock(r, height, r);
+
+            Householder_DDRB.multTransA_TriLL0(r, new DSubmatrixD1(Yb), new DSubmatrixD1(Bb), new DSubmatrixD1(Cb));
+
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Cb, expected.getDDRM(), UtilEjml.TEST_F64), "height " + height);
         }
     }
 

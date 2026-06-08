@@ -30,10 +30,8 @@ import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Peter Abeles
- */
 @SuppressWarnings({"NullAway.Init"})
 class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
     // the block length
@@ -41,8 +39,86 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
 
     SimpleMatrix A;
 
-    @Test
-    void rank1UpdateMultR_Col() {
+    @Test void computeHouseholderCol() {
+        // generate a reflector for an interior column, then verify it zeros that column below the pivot
+        DMatrixRMaj M = RandomMatrices_DDRM.rectangle(r*2 + r - 1, r, -1, 1, rand);
+        DMatrixRBlock Mb = MatrixOps_DDRB.convert(M, r);
+        int col = 1;
+        int n = M.numRows;
+        double[] gamma = new double[r];
+
+        // original column before the reflector overwrites it
+        SimpleMatrix x = SimpleMatrix.wrap(CommonOps_DDRM.extract(M, 0, n, col, col + 1));
+
+        assertTrue(InnerHouseholder_DDRB.computeHouseholderCol(r, new DSubmatrixD1(Mb), gamma, col));
+
+        // reflector u: implicit zeros above the pivot, implicit one on the diagonal, stored tail below
+        SimpleMatrix u = new SimpleMatrix(n, 1);
+        u.set(col, 0, 1);
+        for (int k = col + 1; k < n; k++)
+            u.set(k, 0, Mb.get(k, col));
+
+        // applying (I - gamma*u*u^T) to the original column must zero everything below the pivot
+        SimpleMatrix xnew = x.minus(u.scale(gamma[col]*u.transpose().mult(x).get(0)));
+        for (int k = col + 1; k < n; k++)
+            assertEquals(0, xnew.get(k, 0), UtilEjml.TEST_F64, "row " + k);
+        assertEquals(Mb.get(col, col), xnew.get(col, 0), UtilEjml.TEST_F64);
+    }
+
+    @Test void computeHouseholderRow() {
+        // generate a reflector for an interior row, then verify it zeros that row past the super-diagonal
+        DMatrixRMaj M = RandomMatrices_DDRM.rectangle(r, r*2 + r - 1, -1, 1, rand);
+        DMatrixRBlock Mb = MatrixOps_DDRB.convert(M, r);
+        int row = 1;
+        int n = M.numCols;
+        double[] gamma = new double[r];
+
+        SimpleMatrix x = SimpleMatrix.wrap(CommonOps_DDRM.extract(M, row, row + 1, 0, n)).transpose();
+
+        assertTrue(InnerHouseholder_DDRB.computeHouseholderRow(r, new DSubmatrixD1(Mb), gamma, row));
+
+        // reflector u: implicit zeros up to the super-diagonal, implicit one at column row+1, tail after
+        SimpleMatrix u = new SimpleMatrix(n, 1);
+        u.set(row + 1, 0, 1);
+        for (int j = row + 2; j < n; j++)
+            u.set(j, 0, Mb.get(row, j));
+
+        SimpleMatrix xnew = x.minus(u.scale(gamma[row]*u.transpose().mult(x).get(0)));
+        for (int j = row + 2; j < n; j++)
+            assertEquals(0, xnew.get(j, 0), UtilEjml.TEST_F64, "col " + j);
+        assertEquals(Mb.get(row, row + 1), xnew.get(row + 1, 0), UtilEjml.TEST_F64);
+    }
+
+    @Test void innerProdRow_symm() {
+        int n = r*2 + r - 1;
+        DMatrixRMaj Araw = RandomMatrices_DDRM.rectangle(n, n, -1, 1, rand);
+        // B is NOT symmetric: its lower triangle holds garbage the op must ignore (it reads the
+        // upper triangle symmetrically). The oracle uses the symmetric matrix built from B's upper triangle.
+        DMatrixRMaj Braw = RandomMatrices_DDRM.rectangle(n, n, -1, 1, rand);
+        DMatrixRMaj Bsym = Braw.copy();
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < i; j++)
+                Bsym.set(i, j, Braw.get(j, i));
+
+        int rowA = 0, rowB = 3, zeroOffset = 1; // offset = 1 < rowB -> exercises the symmetric branch
+
+        // reflector row a: implicit zeros before the leading one at rowA+zeroOffset, stored tail after
+        DMatrixRMaj a = CommonOps_DDRM.extract(Araw, rowA, rowA + 1, 0, n);
+        for (int j = 0; j < rowA + zeroOffset; j++)
+            a.set(j, 0);
+        a.set(rowA + zeroOffset, 1);
+        DMatrixRMaj b = CommonOps_DDRM.extract(Bsym, rowB, rowB + 1, 0, n);
+        double expected = VectorVectorMult_DDRM.innerProd(a, b);
+
+        DMatrixRBlock Ab = MatrixOps_DDRB.convert(Araw, r);
+        DMatrixRBlock Bb = MatrixOps_DDRB.convert(Braw, r); // pass the un-symmetrized B
+        double found = InnerHouseholder_DDRB.innerProdRow_symm(r,
+                new DSubmatrixD1(Ab), rowA, new DSubmatrixD1(Bb), rowB, zeroOffset);
+
+        assertEquals(expected, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void rank1UpdateMultR_Col() {
         // check various sized matrices
         double gamma = 2.5;
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r*2 - 1, -1, 1, rand);
@@ -63,8 +139,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void rank1UpdateMultR_TopRow() {
+    @Test void rank1UpdateMultR_TopRow() {
         double gamma = 2.5;
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r*2 - 1, -1.0, 1.0, rand);
 
@@ -87,8 +162,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void rank1UpdateMultL_Row() {
+    @Test void rank1UpdateMultL_Row() {
         double gamma = 2.5;
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r*2 + r - 1, -1.0, 1.0, rand);
 
@@ -107,8 +181,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void rank1UpdateMultL_LeftCol() {
+    @Test void rank1UpdateMultL_LeftCol() {
         double gamma = 2.5;
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r*2 + r - 1, -1.0, 1.0, rand);
 
@@ -135,8 +208,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
     /**
      * Check inner product when column blocks have two different widths
      */
-    @Test
-    void innerProdCol() {
+    @Test void innerProdCol() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*2 + r - 1, r*3 - 1, -1, 1, rand);
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A, r);
 
@@ -165,8 +237,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void innerProdRow() {
+    @Test void innerProdRow() {
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*3 - 1, r*2 + r - 1, -1, 1, rand);
         DMatrixRBlock Ab = MatrixOps_DDRB.convert(A, r);
 
@@ -192,8 +263,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void divideElementsCol() {
+    @Test void divideElementsCol() {
 
         double div = 1.5;
         int col = 1;
@@ -207,15 +277,14 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void scale_row() {
+    @Test void scaleRow() {
 
         double div = 1.5;
         int row = 1;
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2 + 1, -1, 1, rand, r);
         DMatrixRBlock A_orig = A.copy();
 
-        InnerHouseholder_DDRB.scale_row(r, new DSubmatrixD1(A), new DSubmatrixD1(A), row, 1, div);
+        InnerHouseholder_DDRB.scaleRow(r, new DSubmatrixD1(A), new DSubmatrixD1(A), row, 1, div);
 
         // check the one
         assertEquals(div, A.get(row, row + 1), UtilEjml.TEST_F64);
@@ -225,8 +294,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void add_row() {
+    @Test void addRow() {
         int rowA = 0;
         int rowB = 1;
         int rowC = 2;
@@ -258,7 +326,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
             SimpleMatrix b = B.extractVector(true, rowB).scale(beta);
             SimpleMatrix c = a.plus(b);
 
-            InnerHouseholder_DDRB.add_row(r,
+            InnerHouseholder_DDRB.addRow(r,
                     new DSubmatrixD1(Ab), rowA, alpha,
                     new DSubmatrixD1(Bb), rowB, beta,
                     new DSubmatrixD1(Cb), rowC, 1, end);
@@ -270,8 +338,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void computeTauAndDivideCol() {
+    @Test void computeTauAndDivideCol() {
 
         double max = 1.5;
         int col = 1;
@@ -297,8 +364,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void computeTauAndDivideRow() {
+    @Test void computeTauAndDivideRow() {
         double max = 1.5;
         int row = 1;
         int colStart = row + 1;
@@ -324,8 +390,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void testFindMaxCol() {
+    @Test void testFindMaxCol() {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);
 
         // make sure it ignores the first element
@@ -337,8 +402,7 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         assertEquals(2346, max, UtilEjml.TEST_F64);
     }
 
-    @Test
-    void testFindMaxRow() {
+    @Test void testFindMaxRow() {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2 - 1, -1, 1, rand, r);
 
         // make sure it ignores the first element

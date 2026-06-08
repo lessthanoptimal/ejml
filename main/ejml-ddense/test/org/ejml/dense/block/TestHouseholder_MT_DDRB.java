@@ -29,8 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TestHouseholder_MT_DDRB extends EjmlStandardJUnit {
     int r = 3;
 
-    @Test
-    void computeW_Column() {
+    @Test void computeWCol() {
         double[] betas = new double[]{1.2, 2, 3};
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);
 
@@ -38,47 +37,44 @@ class TestHouseholder_MT_DDRB extends EjmlStandardJUnit {
         DMatrixRBlock Wc = new DMatrixRBlock(A.numRows, A.numCols, r);
 
         // Y is not modified, so the same input drives both the serial and concurrent build of W
-        Householder_DDRB.computeW_Column(r, new DSubmatrixD1(A), new DSubmatrixD1(Ws), null, betas, 0);
-        Householder_MT_DDRB.computeW_Column(r, new DSubmatrixD1(A), new DSubmatrixD1(Wc), null, betas, 0);
+        Householder_DDRB.computeWCol(r, new DSubmatrixD1(A), new DSubmatrixD1(Ws), null, betas, 0);
+        Householder_MT_DDRB.computeWCol(r, new DSubmatrixD1(A), new DSubmatrixD1(Wc), null, betas, 0);
 
         assertTrue(MatrixOps_DDRB.isEquals(Ws, Wc, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void multAdd_zeros() {
+    @Test void multPlus_TriLL0() {
         DMatrixRBlock Y = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);
         DMatrixRBlock B = MatrixOps_DDRB.createRandom(r, r*2, -1, 1, rand, r);
         DMatrixRBlock Cs = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2, -1, 1, rand, r);
         DMatrixRBlock Cc = Cs.copy();
 
-        Householder_DDRB.multAdd_zeros(r, new DSubmatrixD1(Y), new DSubmatrixD1(B), new DSubmatrixD1(Cs));
-        Householder_MT_DDRB.multAdd_zeros(r, new DSubmatrixD1(Y), new DSubmatrixD1(B), new DSubmatrixD1(Cc));
+        Householder_DDRB.multPlus_TriLL0(r, new DSubmatrixD1(Y), new DSubmatrixD1(B), new DSubmatrixD1(Cs));
+        Householder_MT_DDRB.multPlus_TriLL0(r, new DSubmatrixD1(Y), new DSubmatrixD1(B), new DSubmatrixD1(Cc));
 
         assertTrue(MatrixOps_DDRB.isEquals(Cs, Cc, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void multTransA_vecCol() {
+    @Test void multTransA_TriLL0() {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);
         DMatrixRBlock B = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2, -1, 1, rand, r);
         DMatrixRBlock Cs = MatrixOps_DDRB.createRandom(r, r*2, -1, 1, rand, r);
         DMatrixRBlock Cc = Cs.copy();
 
-        Householder_DDRB.multTransA_vecCol(r, new DSubmatrixD1(A), new DSubmatrixD1(B), new DSubmatrixD1(Cs));
-        Householder_MT_DDRB.multTransA_vecCol(r, new DSubmatrixD1(A), new DSubmatrixD1(B), new DSubmatrixD1(Cc));
+        Householder_DDRB.multTransA_TriLL0(r, new DSubmatrixD1(A), new DSubmatrixD1(B), new DSubmatrixD1(Cs));
+        Householder_MT_DDRB.multTransA_TriLL0(r, new DSubmatrixD1(A), new DSubmatrixD1(B), new DSubmatrixD1(Cc));
 
         assertTrue(MatrixOps_DDRB.isEquals(Cs, Cc, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void multPlusTransA() {
+    @Test void multPlusTransA_symm() {
         DMatrixRBlock U = MatrixOps_DDRB.createRandom(r, r*3, -1, 1, rand, r);
         DMatrixRBlock V = MatrixOps_DDRB.createRandom(r, r*3, -1, 1, rand, r);
         DMatrixRBlock Cs = MatrixOps_DDRB.createRandom(r*3, r*3, -1, 1, rand, r);
         DMatrixRBlock Cc = Cs.copy();
 
-        Householder_DDRB.multPlusTransA(r, new DSubmatrixD1(U), new DSubmatrixD1(V), new DSubmatrixD1(Cs));
-        Householder_MT_DDRB.multPlusTransA(r, new DSubmatrixD1(U), new DSubmatrixD1(V), new DSubmatrixD1(Cc));
+        Householder_DDRB.multPlusTransA_symm(r, new DSubmatrixD1(U), new DSubmatrixD1(V), new DSubmatrixD1(Cs));
+        Householder_MT_DDRB.multPlusTransA_symm(r, new DSubmatrixD1(U), new DSubmatrixD1(V), new DSubmatrixD1(Cc));
 
         assertTrue(MatrixOps_DDRB.isEquals(Cs, Cc, UtilEjml.TEST_F64));
     }

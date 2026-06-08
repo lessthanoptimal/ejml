@@ -32,9 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
     int N = 4;
 
-    /**
-     * Tests rankNUpdate with various sized input matrices
-     */
+    /// Tests rankNUpdate with various sized input matrices
     @Test void rankNUpdate() {
         // the matrix being updated is a whole block
         checkRankNUpdate(N, N - 2);
@@ -63,9 +61,7 @@ public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(expected.getDDRM(), blockA, UtilEjml.TEST_F64));
     }
 
-    /**
-     * Tests symmRankNMinus_U with various sized input matrices
-     */
+    /// Tests symmRankNMinus\_U with various sized input matrices
     @Test void symmRankNMinus_U() {
         // the matrix being updated is a whole block
         checkSymmRankNMinus_U(N, N - 2);

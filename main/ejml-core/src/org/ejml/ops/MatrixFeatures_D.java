@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -91,6 +91,22 @@ public class MatrixFeatures_D {
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
                 if (!UtilEjml.isIdentical(a.unsafe_get(row, col), b.unsafe_get(row, col), tol))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /// Checks to see if the matrix has ones along the diagonal and zeros everywhere else.
+    /// Works on rectangular matrices.
+    public static boolean isIdentity( DMatrix a ) {
+        for (int i = 0; i < a.getNumRows(); i++) {
+            for (int j = 0; j < a.getNumCols(); j++) {
+                double v = a.get(i, j);
+                if (i == j) {
+                    if (v != 1.0)
+                        return false;
+                } else if (v != 0.0)
                     return false;
             }
         }

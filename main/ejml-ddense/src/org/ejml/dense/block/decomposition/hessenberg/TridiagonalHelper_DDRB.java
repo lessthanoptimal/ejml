@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,38 +19,39 @@
 package org.ejml.dense.block.decomposition.hessenberg;
 
 import org.ejml.data.DSubmatrixD1;
-import org.ejml.dense.block.VectorOps_DDRB;
 import org.ejml.dense.block.InnerHouseholder_DDRB;
+import org.ejml.dense.block.VectorOps_DDRB;
 
 import static org.ejml.dense.block.InnerHouseholder_DDRB.computeHouseholderRow;
 
-/**
- * @author Peter Abeles
- */
+/// Row-form panel operations for the block tridiagonal decomposition. Each routine reduces or
+/// updates the upper row block of a symmetric matrix using Householder reflectors, building the
+/// auxiliary V block used by the symmetric rank-2 trailing update
+/// A = A + U\*V<sup>T</sup> + V\*U<sup>T</sup>.
+///
+/// Shared parameters, not repeated on each method:
+///
+/// - blockLength — inner block size.
+/// - A — the row block being reduced; on output also holds the computed reflectors u (each with
+///   an implicit leading 1). Modified.
+/// - V — stores the computed v / y row vectors. Modified.
+/// - gammas — per-reflector Householder scalars (γ).
+///
+/// Each reflector's first element is implicitly 1 on the super-diagonal (at (i, i+1)) and not stored;
+/// routines that need it set it temporarily (save/restore) — to be removed when the zeros/ones
+/// convention is standardized.
 public class TridiagonalHelper_DDRB {
 
-    /**
-     * <p>
-     * Performs a tridiagonal decomposition on the upper row only.
-     * </p>
-     *
-     * <p>
-     * For each row 'a' in 'A':<br>
-     * Compute 'u' the householder reflector.<br>
-     * y(:) = A*u<br>
-     * v(i) = y - (1/2)*(y^T*u)*u<br>
-     * a(i+1) = a(i) - u*&gamma;*v^T - v*u^t<br>
-     * </p>
-     *
-     * @param blockLength Size of a block
-     * @param A is the row block being decomposed. Modified.
-     * @param gammas Householder gammas.
-     * @param V Where computed 'v' are stored in a row block. Modified.
-     */
-    public static void tridiagUpperRow( final int blockLength,
-                                        final DSubmatrixD1 A,
-                                        final double[] gammas,
-                                        final DSubmatrixD1 V ) {
+    /// Tridiagonal decomposition of the upper row block. For each row of 'A':
+    ///
+    /// ```
+    /// u      = householder reflector of the row
+    /// y      = A*u
+    /// v      = y - (1/2)(y^T*u)*u
+    /// a(i+1) = a(i) - u*γ*v^T - v*u^T
+    /// ```
+    public static void tridiagUpperRow(
+            final int blockLength, final DSubmatrixD1 A, final double[] gammas, final DSubmatrixD1 V ) {
         int blockHeight = Math.min(blockLength, A.row1 - A.row0);
         if (blockHeight <= 1)
             return;
@@ -65,10 +66,10 @@ public class TridiagonalHelper_DDRB {
             double gamma = gammas[A.row0 + i];
 
             // compute y
-            computeY(blockLength, A, V, i, gamma);
+            computeYRow(blockLength, A, V, i, gamma);
 
             // compute v from y
-            computeRowOfV(blockLength, A, V, i, gamma);
+            computeVRow(blockLength, A, V, i, gamma);
 
             // Apply the reflectors to the next row in 'A' only
             if (i + 1 < applyIndex) {
@@ -77,18 +78,14 @@ public class TridiagonalHelper_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Given an already computed tridiagonal decomposition, compute the V row block vector.<br>
-     * <br>
-     * y(:) = A*u<br>
-     * v(i) = y - (1/2)*&gamma;*(y^T*u)*u
-     * </p>
-     */
-    public static void computeV_blockVector( final int blockLength,
-                                             final DSubmatrixD1 A,
-                                             final double[] gammas,
-                                             final DSubmatrixD1 V ) {
+    /// Computes the V row block vector for an already-decomposed row block:
+    ///
+    /// ```
+    /// y    = A*u
+    /// v(i) = y - (1/2)γ(y^T*u)*u
+    /// ```
+    public static void computeVBlock(
+            final int blockLength, final DSubmatrixD1 A, final double[] gammas, final DSubmatrixD1 V ) {
         int blockHeight = Math.min(blockLength, A.row1 - A.row0);
         if (blockHeight <= 1)
             return;
@@ -99,28 +96,20 @@ public class TridiagonalHelper_DDRB {
             double gamma = gammas[A.row0 + i];
 
             // compute y
-            computeY(blockLength, A, V, i, gamma);
+            computeYRow(blockLength, A, V, i, gamma);
 
             // compute v from y
-            computeRowOfV(blockLength, A, V, i, gamma);
+            computeVRow(blockLength, A, V, i, gamma);
         }
     }
 
-    /**
-     * <p>
-     * Applies the reflectors that have been computed previously to the specified row.
-     * <br>
-     * A = A + u*v^T + v*u^T only along the specified row in A.
-     * </p>
-     *
-     * @param A Contains the reflectors and the row being updated.
-     * @param V Contains previously computed 'v' vectors.
-     * @param row The row of 'A' that is to be updated.
-     */
-    public static void applyReflectorsToRow( final int blockLength,
-                                             final DSubmatrixD1 A,
-                                             final DSubmatrixD1 V,
-                                             int row ) {
+    /// Applies all previously-computed reflectors to row 'row' of A as a symmetric rank-2 update:
+    ///
+    /// ```
+    /// A = A + u*v^T + v*u^T   (only along row 'row')
+    /// ```
+    public static void applyReflectorsToRow(
+            final int blockLength, final DSubmatrixD1 A, final DSubmatrixD1 V, int row ) {
         int height = Math.min(blockLength, A.row1 - A.row0);
 
         double[] dataA = A.original.data;
@@ -150,26 +139,17 @@ public class TridiagonalHelper_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Computes the 'y' vector and stores the result in 'v'<br>
-     * <br>
-     * y = -&gamma;(A + U*V^T + V*U^T)u
-     * </p>
-     *
-     * @param A Contains the reflectors and the row being updated.
-     * @param V Contains previously computed 'v' vectors.
-     * @param row The row of 'A' that is to be updated.
-     */
-    public static void computeY( final int blockLength,
-                                 final DSubmatrixD1 A,
-                                 final DSubmatrixD1 V,
-                                 int row,
-                                 double gamma ) {
+    /// Computes row 'row' of 'y' for its reflector and stores it in V:
+    ///
+    /// ```
+    /// y = -γ(A + U*V^T + V*U^T)u
+    /// ```
+    public static void computeYRow(
+            final int blockLength, final DSubmatrixD1 A, final DSubmatrixD1 V, int row, double gamma ) {
         // Elements in 'y' before 'row' are known to be zero and the element at 'row'
         // is not used. Thus only elements after row and after are computed.
         // y = A*u
-        multA_u(blockLength, A, V, row);
+        multSymmRow(blockLength, A, V, row);
 
         for (int i = 0; i < row; i++) {
             // y = y + u_i*v_i^t*u + v_i*u_i^t*u
@@ -194,44 +174,29 @@ public class TridiagonalHelper_DDRB {
         VectorOps_DDRB.scale_row(blockLength, V, row, -gamma, V, row, row + 1, V.col1 - V.col0);
     }
 
-    /**
-     * <p>
-     * Multiples the appropriate submatrix of A by the specified reflector and stores
-     * the result ('y') in V.<br>
-     * <br>
-     * y = A*u<br>
-     * </p>
-     *
-     * @param A Contains the 'A' matrix and 'u' vector.
-     * @param V Where resulting 'y' row vectors are stored.
-     * @param row row in matrix 'A' that 'u' vector and the row in 'V' that 'y' is stored in.
-     */
-    public static void multA_u( final int blockLength,
-                                final DSubmatrixD1 A,
-                                final DSubmatrixD1 V,
-                                int row ) {
+    /// Multiplies the symmetric 'A' by reflector 'u' from row 'row', storing the result in row 'row' of V.
+    ///
+    /// ```
+    /// y = A*u
+    /// ```
+    public static void multSymmRow( final int blockLength, final DSubmatrixD1 A, final DSubmatrixD1 V, int row ) {
         int heightMatA = A.row1 - A.row0;
 
         for (int i = row + 1; i < heightMatA; i++) {
 
-            double val = InnerHouseholder_DDRB.innerProdRowSymm(blockLength, A, row, A, i, 1);
+            double val = InnerHouseholder_DDRB.innerProdRow_symm(blockLength, A, row, A, i, 1);
 
             V.set(row, i, val);
         }
     }
 
-    /**
-     * <p>
-     * Final computation for a single row of 'v':<br>
-     * <br>
-     * v = y -(1/2)&gamma;(y^T*u)*u
-     * </p>
-     */
-    public static void computeRowOfV( final int blockLength,
-                                      final DSubmatrixD1 A,
-                                      final DSubmatrixD1 V,
-                                      int row,
-                                      double gamma ) {
+    /// Finishes one row of 'v', overwriting the intermediate 'y' that [#computeYRow] left in V:
+    ///
+    /// ```
+    /// v = y - (1/2)γ(y^T*u)*u
+    /// ```
+    public static void computeVRow(
+            final int blockLength, final DSubmatrixD1 A, final DSubmatrixD1 V, int row, double gamma ) {
         // val=(y^T*u)
         double val = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, V, row, 1);
 

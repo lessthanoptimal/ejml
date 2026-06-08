@@ -29,8 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TestInnerHouseholder_MT_DDRB extends EjmlStandardJUnit {
     int r = 3;
 
-    @Test
-    void rank1UpdateMultR_Col() {
+    @Test void rank1UpdateMultR_Col() {
         double gamma = 2.5;
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2 - 1, -1, 1, rand, r);
         DMatrixRBlock AA = A.copy();

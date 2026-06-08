@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -35,23 +35,15 @@ import org.jetbrains.annotations.Nullable;
 //CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
 //CONCURRENT_MACRO Householder_DDRB Householder_MT_DDRB
 
-/**
- * <p>
- * Tridiagonal similar decomposition for block matrices. Orthogonal matrices are computed using
- * householder vectors.
- * </p>
- *
- * <p>
- * Based off algorithm in section 2 of J. J. Dongarra, D. C. Sorensen, S. J. Hammarling,
- * "Block Reduction of Matrices to Condensed Forms for Eigenvalue Computations" Journal of
- * Computations and Applied Mathematics 27 (1989) 215-227<br>
- * <br>
- * Computations of Householder reflectors has been modified from what is presented in that paper to how
- * it is performed in "Fundamentals of Matrix Computations" 2nd ed. by David S. Watkins.
- * </p>
- *
- * @author Peter Abeles
- */
+/// Tridiagonal similar decomposition for block matrices. Orthogonal matrices are computed using
+/// householder vectors.
+///
+/// Based off algorithm in section 2 of J. J. Dongarra, D. C. Sorensen, S. J. Hammarling,
+/// "Block Reduction of Matrices to Condensed Forms for Eigenvalue Computations" Journal of
+/// Computations and Applied Mathematics 27 (1989) 215-227
+///
+/// Computations of Householder reflectors has been modified from what is presented in that paper to how
+/// it is performed in "Fundamentals of Matrix Computations" 2nd ed. by David S. Watkins.
 @SuppressWarnings("NullAway.Init")
 public class TridiagonalDecompositionHouseholder_DDRB
         implements TridiagonalSimilarDecomposition_F64<DMatrixRBlock> {
@@ -131,10 +123,10 @@ public class TridiagonalDecompositionHouseholder_DDRB
             subU.row1 = subU.row0 + blockSize;
 
             // zeros and ones are saved and overwritten in U so that standard matrix multiplication can be used
-            copyZeros(subU);
+            enforceImplicit_TriUR1(subU);
 
             // compute W for Q(i) = ( I + W*Y^T)
-            Householder_DDRB.computeW_Row(A.blockLength, subU, subW, gammas, i);
+            Householder_DDRB.computeWRow(A.blockLength, subU, subW, gammas, i);
 
             subQ.col0 = i;
             subQ.row0 = i;
@@ -157,13 +149,13 @@ public class TridiagonalDecompositionHouseholder_DDRB
             else
                 MatrixMult_DDRB.multPlusTransA(A.blockLength, subW, tmp, subQ);
 
-            replaceZeros(subU);
+            restoreImplicit_TriUR1(subU);
         }
 
         return Q;
     }
 
-    private void copyZeros( DSubmatrixD1 subU ) {
+    private void enforceImplicit_TriUR1( DSubmatrixD1 subU ) {
         int N = Math.min(A.blockLength, subU.col1 - subU.col0);
         for (int i = 0; i < N; i++) {
             // save the zeros
@@ -179,7 +171,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
         }
     }
 
-    private void replaceZeros( DSubmatrixD1 subU ) {
+    private void restoreImplicit_TriUR1( DSubmatrixD1 subU ) {
         int N = Math.min(A.blockLength, subU.col1 - subU.col0);
         for (int i = 0; i < N; i++) {
             // save the zeros
@@ -237,8 +229,8 @@ public class TridiagonalDecompositionHouseholder_DDRB
                 subU.set(A.blockLength - 1, A.blockLength, 1);
 
                 // A = A + U*V^T + V*U^T
-                Householder_DDRB.multPlusTransA(A.blockLength, subU, subV, subA);
-                Householder_DDRB.multPlusTransA(A.blockLength, subV, subU, subA);
+                Householder_DDRB.multPlusTransA_symm(A.blockLength, subU, subV, subA);
+                Householder_DDRB.multPlusTransA_symm(A.blockLength, subV, subU, subA);
 
                 subU.set(A.blockLength - 1, A.blockLength, before);
             }

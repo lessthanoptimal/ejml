@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -27,6 +27,7 @@ import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.generic.GenericMatrixOps_F64;
+import org.ejml.ops.MatrixFeatures_D;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
@@ -39,8 +40,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
 
     final static int BLOCK_LENGTH = 10;
 
-    @Test
-    void convert_dense_to_block() {
+    @Test void convert_dense_to_block() {
         checkConvert_dense_to_block(10, 10);
         checkConvert_dense_to_block(5, 8);
         checkConvert_dense_to_block(12, 16);
@@ -60,13 +60,12 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(A, B, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void convertInplace_DDRM_DDRB() {
+    @Test void convertInplace_DDRM_DDRB() {
         int r = 3;
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(23, 21, rand);
         DMatrixRMaj A_orig = A.copy();
 
-        DMatrixRBlock B = MatrixOps_DDRB.convertInplace(A,new DMatrixRBlock(1,1,r),null);
+        DMatrixRBlock B = MatrixOps_DDRB.convertInplace(A, new DMatrixRBlock(1, 1, r), null);
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(A_orig, B, UtilEjml.TEST_F64));
         assertSame(A.data, B.data);
@@ -75,20 +74,18 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertEquals(EjmlParameters.BLOCK_WIDTH, B.blockLength);
     }
 
-    @Test
-    void convertInplace_DDRB_DDRM() {
+    @Test void convertInplace_DDRB_DDRM() {
         int r = 3;
         DMatrixRBlock B = MatrixOps_DDRB.createRandom(23, 21, -1, 1, rand, r);
         DMatrixRBlock B_orig = B.copy();
 
-        DMatrixRMaj A = MatrixOps_DDRB.convertInplace(B,null,null);
+        DMatrixRMaj A = MatrixOps_DDRB.convertInplace(B, null, null);
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(B_orig, A, UtilEjml.TEST_F64));
         assertSame(B.data, A.data);
     }
 
-    @Test
-    void convertInline_dense_to_block() {
+    @Test void convertInline_dense_to_block() {
         for (int i = 2; i < 30; i += 5) {
             for (int j = 2; j < 30; j += 5) {
                 checkConvertInline_dense_to_block(i, j);
@@ -106,8 +103,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(A_orig, B, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void convert_block_to_dense() {
+    @Test void convert_block_to_dense() {
         checkBlockToDense(10, 10);
         checkBlockToDense(5, 8);
         checkBlockToDense(12, 16);
@@ -127,8 +123,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(A, B, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void convertInline_block_to_dense() {
+    @Test void convertInline_block_to_dense() {
         for (int i = 2; i < 30; i += 5) {
             for (int j = 2; j < 30; j += 5) {
                 checkConvertInline_block_to_dense(i, j);
@@ -146,11 +141,8 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(A_orig, B, UtilEjml.TEST_F64));
     }
 
-    /**
-     * Makes sure the bounds check on input matrices for mult() is done correctly
-     */
-    @Test
-    void testMultInputChecks() {
+    /// Makes sure the bounds check on input matrices for mult() is done correctly
+    @Test void testMultInputChecks() {
         Method[] methods = MatrixOps_DDRB.class.getDeclaredMethods();
 
         int numFound = 0;
@@ -177,9 +169,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertEquals(3, numFound);
     }
 
-    /**
-     * Makes sure exceptions are thrown for badly shaped input matrices.
-     */
+    /// Makes sure exceptions are thrown for badly shaped input matrices.
     private void checkMultInput( Method func, boolean transA, boolean transB ) {
         // bad block size
         DMatrixRBlock A = new DMatrixRBlock(5, 4, 3);
@@ -226,11 +216,8 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    /**
-     * Tests for correctness multiplication of an entire matrix for all multiplication operations.
-     */
-    @Test
-    void multiplication() {
+    /// Tests for correctness multiplication of an entire matrix for all multiplication operations.
+    @Test void multiplication() {
         Method[] methods = MatrixOps_DDRB.class.getDeclaredMethods();
 
         int numFound = 0;
@@ -259,10 +246,8 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertEquals(3, numFound);
     }
 
-    /**
-     * Test the method against various matrices of different sizes and shapes which have partial
-     * blocks.
-     */
+    /// Test the method against various matrices of different sizes and shapes which have partial
+    /// blocks.
     private void checkMult( Method func, boolean transA, boolean transB ) {
         // trivial case
         checkMult(func, transA, transB, BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
@@ -315,8 +300,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(C_d, C_b, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void convertTranSrc_block_to_dense() {
+    @Test void convertTranSrc_block_to_dense() {
         checkTranSrcBlockToDense(10, 10);
         checkTranSrcBlockToDense(5, 8);
         checkTranSrcBlockToDense(12, 16);
@@ -338,8 +322,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(A_t, B, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void transpose() {
+    @Test void transpose() {
         checkTranspose(10, 10);
         checkTranspose(5, 8);
         checkTranspose(12, 16);
@@ -365,8 +348,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isEquivalent(A_t, B_t, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void zeroTriangle_upper() {
+    @Test void zeroTriangle_upper() {
         int r = 3;
 
         for (int numRows = 2; numRows <= 6; numRows += 2) {
@@ -386,8 +368,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void zeroTriangle_lower() {
+    @Test void zeroTriangle_lower() {
 
         int r = 3;
 
@@ -409,8 +390,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void copyTriangle() {
+    @Test void copyTriangle() {
 
         int r = 3;
 
@@ -478,8 +458,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void setIdentity() {
+    @Test void setIdentity() {
         int r = 3;
 
         for (int numRows = 2; numRows <= 6; numRows += 2) {
@@ -488,20 +467,12 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
 
                 MatrixOps_DDRB.setIdentity(A);
 
-                for (int i = 0; i < numRows; i++) {
-                    for (int j = 0; j < numCols; j++) {
-                        if (i == j)
-                            assertEquals(1.0, A.get(i, j), UtilEjml.TEST_F64);
-                        else
-                            assertEquals(0.0, A.get(i, j), UtilEjml.TEST_F64);
-                    }
-                }
+                assertTrue(MatrixFeatures_D.isIdentity(A));
             }
         }
     }
 
-    @Test
-    void convertSimple() {
+    @Test void convertSimple() {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(4, 6, -1, 1, rand, 3);
 
         SimpleMatrix S = new SimpleMatrix(A);
@@ -516,8 +487,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void identity() {
+    @Test void identity() {
         // test square
         DMatrixRBlock A = MatrixOps_DDRB.identity(4, 4, 3);
         assertTrue(GenericMatrixOps_F64.isIdentity(A, UtilEjml.TEST_F64));
@@ -531,8 +501,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         assertTrue(GenericMatrixOps_F64.isIdentity(A, UtilEjml.TEST_F64));
     }
 
-    @Test
-    void extractAligned() {
+    @Test void extractAligned() {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(10, 11, -1, 1, rand, 3);
         DMatrixRBlock B = new DMatrixRBlock(9, 11, 3);
 
@@ -545,8 +514,7 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test
-    void blockAligned() {
+    @Test void blockAligned() {
         int r = 3;
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(10, 11, -1, 1, rand, r);
 
@@ -571,5 +539,45 @@ public class TestMatrixOps_DDRB extends EjmlStandardJUnit {
         S.row1 = 10;
         S.col0 = 10;
         assertFalse(MatrixOps_DDRB.blockAligned(r, S));
+    }
+
+    @Test void lastBlockStart() {
+        assertEquals(0, MatrixOps_DDRB.lastBlockStart(1, 6));
+        assertEquals(0, MatrixOps_DDRB.lastBlockStart(5, 6));
+        assertEquals(0, MatrixOps_DDRB.lastBlockStart(6, 6));
+        assertEquals(6, MatrixOps_DDRB.lastBlockStart(7, 6));
+        assertEquals(6, MatrixOps_DDRB.lastBlockStart(12, 6));
+        assertEquals(12, MatrixOps_DDRB.lastBlockStart(13, 6));
+        assertEquals(12, MatrixOps_DDRB.lastBlockStart(18, 6));
+    }
+
+    @Test void initializeQ() {
+        int bl = 6;
+
+        // non-compact: numRows x numRows identity
+        DMatrixRBlock Q = MatrixOps_DDRB.initializeQ(null, 7, 5, bl, false);
+        assertEquals(7, Q.numRows);
+        assertEquals(7, Q.numCols);
+        assertTrue(MatrixFeatures_D.isIdentity(Q));
+
+        // compact: numRows x min(numRows,numCols) identity
+        DMatrixRBlock Qc = MatrixOps_DDRB.initializeQ(null, 7, 5, bl, true);
+        assertEquals(7, Qc.numRows);
+        assertEquals(5, Qc.numCols);
+        assertTrue(MatrixFeatures_D.isIdentity(Qc));
+
+        // an existing matrix is reshaped and reused
+        DMatrixRBlock reuse = new DMatrixRBlock(3, 3, bl);
+        DMatrixRBlock out = MatrixOps_DDRB.initializeQ(reuse, 7, 7, bl, false);
+        assertSame(reuse, out);
+        assertEquals(7, out.numRows);
+        assertEquals(7, out.numCols);
+        assertTrue(MatrixFeatures_D.isIdentity(out));
+
+        out = MatrixOps_DDRB.initializeQ(reuse, 7, 5, bl, true);
+        assertSame(reuse, out);
+        assertEquals(7, out.numRows);
+        assertEquals(5, out.numCols);
+        assertTrue(MatrixFeatures_D.isIdentity(out));
     }
 }

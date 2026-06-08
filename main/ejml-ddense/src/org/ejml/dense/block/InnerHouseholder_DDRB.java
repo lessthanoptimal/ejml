@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -22,42 +22,41 @@ import org.ejml.data.DSubmatrixD1;
 
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
-/**
- * <p>
- * Unblocked, per-reflector Householder operations (LAPACK xLARFG + xLARF analogues): generate a single
- * reflector and apply it to a column or row. These work on a {@link DSubmatrixD1} and take account of the
- * implicit leading zeros and unit diagonal of a stored reflector, so they are Householder specific rather
- * than generic vector ops.
- * </p>
- *
- * <p>
- * Assumptions:
- * <ul>
- *  <li> All submatrices are aligned along the inner blocks of the {@link DMatrixRBlock}.
- *  <li> Some times vectors are assumed to have leading zeros and a one.
- * </ul>
- *
- * @author Peter Abeles
- */
+/// Unblocked, per-reflector Householder operations (LAPACK xLARFG + xLARF analogues): generate a single
+/// reflector and apply it to a column or row. These work on a [DSubmatrixD1] and take account of the
+/// implicit leading zeros and unit diagonal of a stored reflector, so they are Householder specific rather
+/// than generic vector ops.
+///
+/// Assumptions:
+///
+///   - All submatrices are aligned along the inner blocks of the [DMatrixRBlock].
+///   - Some vectors are stored reflectors with implicit leading zeros and a one. The one sits on the
+///     main diagonal for a column-stored reflector (the `…Col` ops, at the reflector's own column) and
+///     at row + zeroOffset for a row-stored reflector (the `…Row` ops — the super-diagonal in
+///     tridiagonal use; the offset is passed in, not assumed).
+///
+/// Parameter conventions (ops document only what departs from these):
+///
+///   - blockLength: inner block size; all ops here work over block-aligned [DSubmatrixD1] views.
+///   - [DSubmatrixD1] args (A, B, Y, W, ...) are block-aligned submatrix views; a paired row/col index
+///     selects a stored vector (usually a reflector) within one.
+///   - The output is the pseudocode's left-hand side (e.g. ret, or A in A = (I - γuu<sup>T</sup>)A); ops whose
+///     output or in-place modification isn't evident from the pseudocode say so explicitly.
 public class InnerHouseholder_DDRB {
 
-    /**
-     * <p>
-     * Computes the householder vector that is used to create reflector for the column.
-     * The results are stored in the original matrix.
-     * </p>
-     *
-     * <p>
-     * The householder vector 'u' is computed as follows:<br>
-     * <br>
-     * u(1) = 1 <br>
-     * u(i) = x(i)/(&tau; + x(1))<br>
-     * </p>
-     *
-     * The first element is implicitly assumed to be one and not written.
-     *
-     * @return If there was any problems or not. true = no problem.
-     */
+    /// Computes the householder vector that is used to create a reflector for the column.
+    /// The results are stored in the original matrix.
+    ///
+    /// The householder vector 'u' is computed as follows:
+    ///
+    /// ```
+    /// u(1) = 1
+    /// u(i) = x(i)/(τ + x(1))
+    /// ```
+    ///
+    /// The first element is implicitly assumed to be one (on the column's main diagonal) and not written.
+    ///
+    /// @return If there are any problems or not. true = no problem.
     public static boolean computeHouseholderCol( final int blockLength, final DSubmatrixD1 Y,
                                                  final double[] gamma, final int i ) {
         double max = findMaxCol(blockLength, Y, i);
@@ -81,22 +80,18 @@ public class InnerHouseholder_DDRB {
         return true;
     }
 
-    /**
-     * <p>
-     * Computes the householder vector from the specified row
-     * </p>
-     *
-     * <p>
-     * The householder vector 'u' is computed as follows:<br>
-     * <br>
-     * u(1) = 1 <br>
-     * u(i) = x(i)/(&tau; + x(1))<br>
-     * </p>
-     *
-     * The first element is implicitly assumed to be one and not written.
-     *
-     * @return If there was any problems or not. true = no problem.
-     */
+    /// Computes the householder vector from the specified row
+    ///
+    /// The householder vector 'u' is computed as follows:
+    ///
+    /// ```
+    /// u(1) = 1
+    /// u(i) = x(i)/(τ + x(1))
+    /// ```
+    ///
+    /// The first element is implicitly assumed to be one (on the super-diagonal, at column i+1) and not written.
+    ///
+    /// @return If there are any problems or not. true = no problem.
     public static boolean computeHouseholderRow( final int blockLength, final DSubmatrixD1 Y,
                                                  final double[] gamma, final int i ) {
         double max = findMaxRow(blockLength, Y, i, i + 1);
@@ -119,17 +114,12 @@ public class InnerHouseholder_DDRB {
         return true;
     }
 
-    /**
-     * <p>
-     * Applies a householder reflector stored in column 'col' to the remainder of the columns
-     * in the block after it. Takes in account leading zeros and one.<br>
-     * <br>
-     * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
-     * </p>
-     *
-     * @param A submatrix that is at most one block wide and aligned along inner blocks
-     * @param col The column in A containing 'u'
-     */
+    /// Applies a householder reflector stored in column 'col' to the remainder of the columns
+    /// in the block after it. Takes into account leading zeros and one.
+    ///
+    /// A = (I - γ\*u\*u<sup>T</sup>)\*A
+    ///
+    /// @param A at most one block wide
     public static void rank1UpdateMultR_Col( final int blockLength,
                                              final DSubmatrixD1 A, final int col, final double gamma ) {
         final int width = Math.min(blockLength, A.col1 - A.col0);
@@ -174,17 +164,12 @@ public class InnerHouseholder_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-    /**
-     * <p>
-     * Applies a householder reflector stored in column 'col' to the top block row (excluding
-     * the first column) of A. Takes in account leading zeros and one.<br>
-     * <br>
-     * A = (I - &gamma;*u*u<sup>T</sup>)*A<br>
-     * </p>
-     *
-     * @param A submatrix that is at most one block wide and aligned along inner blocks
-     * @param col The column in A containing 'u'
-     */
+    /// Applies a householder reflector stored in column 'col' to the top block row (excluding
+    /// the first block-column) of A. Takes into account leading zeros and one.
+    ///
+    /// A = (I - γ\*u\*u<sup>T</sup>)\*A
+    ///
+    /// @param A at most one block wide
     public static void rank1UpdateMultR_TopRow( final int blockLength,
                                                 final DSubmatrixD1 A, final int col, final double gamma ) {
         final double[] dataA = A.original.data;
@@ -222,18 +207,12 @@ public class InnerHouseholder_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Applies a householder reflector stored in row 'row' to the remainder of the row
-     * in the block after it. Takes in account leading zeros and one.<br>
-     * <br>
-     * A = A*(I - &gamma;*u*u<sup>T</sup>)<br>
-     * </p>
-     *
-     * @param A submatrix that is block aligned
-     * @param row The row in A containing 'u'
-     * @param colStart First index in 'u' that the reflector starts at
-     */
+    /// Applies a householder reflector stored in row 'row' to the remainder of the rows
+    /// in the block after it. Takes into account leading zeros and one.
+    ///
+    /// A = A\*(I - γ\*u\*u<sup>T</sup>)
+    ///
+    /// @param colStart First index in 'u' that the reflector starts at
     public static void rank1UpdateMultL_Row( final int blockLength,
                                              final DSubmatrixD1 A,
                                              final int row, final int colStart, final double gamma ) {
@@ -274,18 +253,12 @@ public class InnerHouseholder_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Applies a householder reflector stored in row 'row' to the left column block.
-     * Takes in account leading zeros and one.<br>
-     * <br>
-     * A = A*(I - &gamma;*u*u<sup>T</sup>)<br>
-     * </p>
-     *
-     * @param A submatrix that is block aligned
-     * @param row The row in A containing 'u'
-     * @param zeroOffset How far off the diagonal is the first element in 'u'
-     */
+    /// Applies a householder reflector stored in row 'row' to the left column block (excluding the first block).
+    /// Takes into account leading zeros and one.
+    ///
+    /// A = A\*(I - γ\*u\*u<sup>T</sup>)
+    ///
+    /// @param zeroOffset How far off the diagonal is the first element in 'u'
     public static void rank1UpdateMultL_LeftCol( final int blockLength,
                                                  final DSubmatrixD1 A,
                                                  final int row, final double gamma, int zeroOffset ) {
@@ -323,24 +296,15 @@ public class InnerHouseholder_DDRB {
         }
     }
 
-    /**
-     * <p>
-     * Computes the inner product of column vector 'colA' against column vector 'colB' while taking account leading zeros and one.<br>
-     * <br>
-     * ret = a<sup>T</sup>*b
-     * </p>
-     *
-     * <p>
-     * Column A is assumed to be a householder vector. Element at 'colA' is one and previous ones are zero.
-     * </p>
-     *
-     * @param A block aligned submatrix.
-     * @param colA Column inside the block of first column vector.
-     * @param widthA how wide the column block that colA is inside of.
-     * @param colB Column inside the block of second column vector.
-     * @param widthB how wide the column block that colB is inside of.
-     * @return dot product of the two vectors.
-     */
+    /// Computes the inner product of column vector 'colA' against column vector 'colB' while taking into account leading zeros and one.
+    ///
+    /// ret = a<sup>T</sup>\*b
+    ///
+    /// Column A is assumed to be a householder vector. Element at 'colA' is one and previous elements are zero.
+    ///
+    /// @param widthA how wide the column block that colA is inside of.
+    /// @param widthB how wide the column block that colB is inside of.
+    /// @return dot product of the two vectors.
     public static double innerProdCol( int blockLength, DSubmatrixD1 A,
                                        int colA, int widthA,
                                        int colB, int widthB ) {
@@ -389,22 +353,13 @@ public class InnerHouseholder_DDRB {
         return total;
     }
 
-    /**
-     * <p>
-     * Computes the inner product of row vector 'rowA' against row vector 'rowB' while taking account leading zeros and one.<br>
-     * <br>
-     * ret = a<sup>T</sup>*b
-     * </p>
-     *
-     * <p>
-     * Row A is assumed to be a householder vector. Element at 'colStartA' is one and previous elements are zero.
-     * </p>
-     *
-     * @param A block aligned submatrix.
-     * @param rowA Row index inside the sub-matrix of first row vector has zeros and ones..
-     * @param rowB Row index inside the sub-matrix of second row vector.
-     * @return dot product of the two vectors.
-     */
+    /// Computes the inner product of row vector 'rowA' against row vector 'rowB' while taking into account leading zeros and one.
+    ///
+    /// ret = a<sup>T</sup>\*b
+    ///
+    /// Row A is assumed to be a householder vector. The element at rowA + zeroOffset is one and earlier elements are zero.
+    ///
+    /// @return dot product of the two vectors.
     public static double innerProdRow( int blockLength,
                                        DSubmatrixD1 A,
                                        int rowA,
@@ -422,11 +377,17 @@ public class InnerHouseholder_DDRB {
         return total;
     }
 
-    public static double innerProdRowSymm( int blockLength,
-                                           DSubmatrixD1 A,
-                                           int rowA,
-                                           DSubmatrixD1 B,
-                                           int rowB, int zeroOffset ) {
+    /// Inner product of two rows where B is a symmetric matrix.
+    ///
+    /// ret = a<sup>T</sup>\*b
+    ///
+    /// Like [#innerProdRow], except B's stored upper triangle is read symmetrically: B(k,rowB) is used in
+    /// place of B(rowB,k) for k below the diagonal. Row 'rowA' of A is a reflector with an implicit leading one.
+    public static double innerProdRow_symm( int blockLength,
+                                            DSubmatrixD1 A,
+                                            int rowA,
+                                            DSubmatrixD1 B,
+                                            int rowB, int zeroOffset ) {
         int offset = rowA + zeroOffset;
         if (offset + B.col0 >= B.col1)
             return 0;
@@ -449,11 +410,18 @@ public class InnerHouseholder_DDRB {
         }
     }
 
-    public static void add_row( final int blockLength,
-                                DSubmatrixD1 A, int rowA, double alpha,
-                                DSubmatrixD1 B, int rowB, double beta,
-                                DSubmatrixD1 C, int rowC,
-                                int zeroOffset, int end ) {
+    /// Adds two reflector rows: C(rowC) = α\*A(rowA) + β\*B(rowB).
+    ///
+    /// A(rowA) is a stored householder vector, so its implicit leading one (at rowA + zeroOffset) is added
+    /// explicitly and the leading zeros are skipped.
+    ///
+    /// @param zeroOffset How far off the diagonal the first element of the reflector in A is.
+    /// @param end Index at which the vectors end.
+    public static void addRow( final int blockLength,
+                               DSubmatrixD1 A, int rowA, double alpha,
+                               DSubmatrixD1 B, int rowB, double beta,
+                               DSubmatrixD1 C, int rowC,
+                               int zeroOffset, int end ) {
         int offset = rowA + zeroOffset;
 
         if (C.col0 + offset >= C.col1)
@@ -464,10 +432,7 @@ public class InnerHouseholder_DDRB {
         VectorOps_DDRB.add_row(blockLength, A, rowA, alpha, B, rowB, beta, C, rowC, offset + 1, end);
     }
 
-    /**
-     * Divides the elements at the specified column by 'val'. Takes in account
-     * leading zeros and one.
-     */
+    /// Divides a stored-reflector column by 'val' (implicit leading zeros and one skipped).
     public static void divideElementsCol( final int blockLength,
                                           final DSubmatrixD1 Y, final int col, final double val ) {
         final int width = Math.min(blockLength, Y.col1 - Y.col0);
@@ -497,20 +462,17 @@ public class InnerHouseholder_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-    /**
-     * Scales the elements in the specified row starting at element colStart by 'val'.<br>
-     * W = val*Y
-     *
-     * Takes in account zeros and leading one automatically.
-     *
-     * @param zeroOffset How far off the diagonal is the first element in the vector.
-     */
-    public static void scale_row( final int blockLength,
-                                  final DSubmatrixD1 Y,
-                                  final DSubmatrixD1 W,
-                                  final int row,
-                                  final int zeroOffset,
-                                  final double val ) {
+    /// Scales a stored-reflector row by 'val', handling the implicit leading one and zeros.
+    ///
+    /// W = val \* Y
+    ///
+    /// @param zeroOffset How far off the diagonal is the first element in the vector.
+    public static void scaleRow( final int blockLength,
+                                 final DSubmatrixD1 Y,
+                                 final DSubmatrixD1 W,
+                                 final int row,
+                                 final int zeroOffset,
+                                 final double val ) {
 
 
         int offset = row + zeroOffset;
@@ -525,22 +487,18 @@ public class InnerHouseholder_DDRB {
         VectorOps_DDRB.scale_row(blockLength, Y, row, val, W, row, offset + 1, Y.col1 - Y.col0);
     }
 
-    /**
-     * <p>
-     * From the specified column of Y tau is computed and each element is divided by 'max'.
-     * See code below:
-     * </p>
-     *
-     * <pre>
-     * for i=col:Y.numRows
-     *   Y[i][col] = u[i][col] / max
-     *   tau = tau + u[i][col]*u[i][col]
-     * end
-     * tau = sqrt(tau)
-     * if( Y[col][col] &lt; 0 )
-     *    tau = -tau;
-     * </pre>
-     */
+    /// From the specified column of Y tau is computed and each element is divided by 'max'.
+    /// See code below:
+    ///
+    /// ```
+    /// for i=col:Y.numRows
+    ///   Y[i][col] = u[i][col] / max
+    ///   tau = tau + u[i][col]*u[i][col]
+    /// end
+    /// tau = sqrt(tau)
+    /// if( Y[col][col] < 0 )
+    ///    tau = -tau;
+    /// ```
     public static double computeTauAndDivideCol( final int blockLength,
                                                  final DSubmatrixD1 Y,
                                                  final int col, final double max ) {
@@ -583,26 +541,21 @@ public class InnerHouseholder_DDRB {
         return norm2;
     }
 
-    /**
-     * <p>
-     * From the specified row of Y tau is computed and each element is divided by 'max'.
-     * See code below:
-     * </p>
-     *
-     * <pre>
-     * for j=row:Y.numCols
-     *   Y[row][j] = u[row][j] / max
-     *   tau = tau + u[row][j]*u[row][j]
-     * end
-     * tau = sqrt(tau)
-     * if( Y[row][row] &lt; 0 )
-     *    tau = -tau;
-     * </pre>
-     *
-     * @param row Which row in the block will be processed
-     * @param colStart The first column that computation of tau will start at
-     * @param max used to normalize and prevent buffer over flow
-     */
+    /// From the specified row of Y tau is computed and each element is divided by 'max'.
+    /// See code below:
+    ///
+    /// ```
+    /// for j=row:Y.numCols
+    ///   Y[row][j] = u[row][j] / max
+    ///   tau = tau + u[row][j]*u[row][j]
+    /// end
+    /// tau = sqrt(tau)
+    /// if( Y[row][row] < 0 )
+    ///    tau = -tau;
+    /// ```
+    ///
+    /// @param colStart The first column that computation of tau will start at
+    /// @param max Largest |element| in the row; scales elements so norm can't overflow.
     public static double computeTauAndDivideRow( final int blockLength,
                                                  final DSubmatrixD1 Y,
                                                  final int row, int colStart, final double max ) {
@@ -648,10 +601,8 @@ public class InnerHouseholder_DDRB {
         return norm2;
     }
 
-    /**
-     * Finds the element in the column with the largest absolute value. The offset
-     * from zero is automatically taken in account based on the column.
-     */
+    /// Finds the element in the column with the largest absolute value. The offset
+    /// from zero is automatically taken into account based on the column.
     public static double findMaxCol( final int blockLength, final DSubmatrixD1 Y, final int col ) {
         final int width = Math.min(blockLength, Y.col1 - Y.col0);
 
@@ -685,10 +636,8 @@ public class InnerHouseholder_DDRB {
         return max;
     }
 
-    /**
-     * Finds the element in the column with the largest absolute value. The offset
-     * from zero is automatically taken in account based on the column.
-     */
+    /// Finds the element in the row with the largest absolute value. The offset
+    /// from zero is automatically taken into account based on the row.
     public static double findMaxRow( final int blockLength,
                                      final DSubmatrixD1 Y,
                                      final int row, final int colStart ) {
@@ -724,5 +673,4 @@ public class InnerHouseholder_DDRB {
 
         return max;
     }
-
 }
