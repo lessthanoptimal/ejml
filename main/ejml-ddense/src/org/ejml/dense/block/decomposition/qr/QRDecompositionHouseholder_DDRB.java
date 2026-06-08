@@ -120,34 +120,10 @@ public class QRDecompositionHouseholder_DDRB
 
     @Override
     public DMatrixRBlock getQ( @Nullable DMatrixRBlock Q, boolean compact ) {
-        Q = initializeQ(Q, dataA.numRows, dataA.numCols, blockLength, compact);
+        Q = MatrixOps_DDRB.initializeQ(Q, dataA.numRows, dataA.numCols, blockLength, compact);
 
         applyQ(Q, true);
 
-        return Q;
-    }
-
-    /**
-     * Sanity checks the input or declares a new matrix. Return matrix is an identity matrix.
-     */
-    public static DMatrixRBlock initializeQ( @Nullable DMatrixRBlock Q,
-                                             int numRows, int numCols, int blockLength,
-                                             boolean compact ) {
-        int minLength = Math.min(numRows, numCols);
-        if (compact) {
-            if (Q == null) {
-                Q = new DMatrixRBlock(numRows, minLength, blockLength);
-            } else {
-                Q.reshape(numRows, minLength);
-            }
-        } else {
-            if (Q == null) {
-                Q = new DMatrixRBlock(numRows, numRows, blockLength);
-            } else {
-                Q.reshape(numRows, numRows);
-            }
-        }
-        MatrixOps_DDRB.setIdentity(Q);
         return Q;
     }
 

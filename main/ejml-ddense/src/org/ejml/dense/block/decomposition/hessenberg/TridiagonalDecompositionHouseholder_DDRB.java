@@ -22,7 +22,7 @@ import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.MatrixMult_DDRB;
-import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
+import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
@@ -92,7 +92,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
 
     @Override
     public DMatrixRBlock getQ( @Nullable DMatrixRBlock Q, boolean transposed ) {
-        Q = QRDecompositionHouseholder_DDRB.initializeQ(Q, A.numRows, A.numCols, A.blockLength, false);
+        Q = MatrixOps_DDRB.initializeQ(Q, A.numRows, A.numCols, A.blockLength, false);
 
         int height = Math.min(A.blockLength, A.numRows);
         V.reshape(height, A.numCols, false);

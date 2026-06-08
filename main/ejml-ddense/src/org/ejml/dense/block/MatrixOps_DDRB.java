@@ -534,6 +534,30 @@ public class MatrixOps_DDRB {
     }
 
     /**
+     * Sanity checks the input or declares a new matrix. Return matrix is an identity matrix.
+     */
+    public static DMatrixRBlock initializeQ( @Nullable DMatrixRBlock Q,
+                                             int numRows, int numCols, int blockLength,
+                                             boolean compact ) {
+        int minLength = Math.min(numRows, numCols);
+        if (compact) {
+            if (Q == null) {
+                Q = new DMatrixRBlock(numRows, minLength, blockLength);
+            } else {
+                Q.reshape(numRows, minLength);
+            }
+        } else {
+            if (Q == null) {
+                Q = new DMatrixRBlock(numRows, numRows, blockLength);
+            } else {
+                Q.reshape(numRows, numRows);
+            }
+        }
+        setIdentity(Q);
+        return Q;
+    }
+
+    /**
      * <p>
      * Returns a new matrix with ones along the diagonal and zeros everywhere else.
      * </p>
