@@ -422,6 +422,33 @@ public class InnerHouseholder_DDRB {
         return total;
     }
 
+    public static double innerProdRowSymm( int blockLength,
+                                           DSubmatrixD1 A,
+                                           int rowA,
+                                           DSubmatrixD1 B,
+                                           int rowB, int zeroOffset ) {
+        int offset = rowA + zeroOffset;
+        if (offset + B.col0 >= B.col1)
+            return 0;
+
+        if (offset < rowB) {
+            // take in account the one in 'A'
+            double total = B.get(offset, rowB);
+
+            total += VectorOps_DDRB.dot_row_col(blockLength, A, rowA, B, rowB, offset + 1, rowB);
+            total += VectorOps_DDRB.dot_row(blockLength, A, rowA, B, rowB, rowB, A.col1 - A.col0);
+
+            return total;
+        } else {
+            // take in account the one in 'A'
+            double total = B.get(rowB, offset);
+
+            total += VectorOps_DDRB.dot_row(blockLength, A, rowA, B, rowB, offset + 1, A.col1 - A.col0);
+
+            return total;
+        }
+    }
+
     public static void add_row( final int blockLength,
                                 DSubmatrixD1 A, int rowA, double alpha,
                                 DSubmatrixD1 B, int rowB, double beta,

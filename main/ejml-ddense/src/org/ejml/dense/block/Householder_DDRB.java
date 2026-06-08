@@ -21,6 +21,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
+import org.ejml.dense.row.CommonOps_DDRM;
 import org.jetbrains.annotations.Nullable;
 import pabeles.concurrency.GrowArray;
 
@@ -92,6 +93,57 @@ public class Householder_DDRB {
             //compute the z vector and insert it into W
             computeY_t_V(blockLength, Y, j, temp);
             computeZ(blockLength, Y, W, j, temp, beta[betaIndex + j]);
+        }
+    }
+
+    /**
+     * <p>
+     * Computes W from the householder reflectors stored in the columns of the row block
+     * submatrix Y.
+     * </p>
+     *
+     * <p>
+     * Y = v<sup>(1)</sup><br>
+     * W = -&beta;<sub>1</sub>v<sup>(1)</sup><br>
+     * for j=2:r<br>
+     * &nbsp;&nbsp;z = -&beta;(I +WY<sup>T</sup>)v<sup>(j)</sup> <br>
+     * &nbsp;&nbsp;W = [W z]<br>
+     * &nbsp;&nbsp;Y = [Y v<sup>(j)</sup>]<br>
+     * end<br>
+     * <br>
+     * where v<sup>(.)</sup> are the house holder vectors, and r is the block length. Note that
+     * Y already contains the householder vectors so it does not need to be modified.
+     * </p>
+     *
+     * <p>
+     * Y and W are assumed to have the same number of rows and columns.
+     * </p>
+     */
+    public static void computeW_Row( final int blockLength,
+                                     final DSubmatrixD1 Y, final DSubmatrixD1 W,
+                                     final double[] beta, int betaIndex ) {
+
+        final int heightY = Y.row1 - Y.row0;
+        CommonOps_DDRM.fill(W.original, 0);
+
+        // W = -beta*v(1)
+        InnerHouseholder_DDRB.scale_row(blockLength, Y, W, 0, 1, -beta[betaIndex++]);
+
+        final int min = Math.min(heightY, W.col1 - W.col0);
+
+        // set up rest of the rows
+        for (int i = 1; i < min; i++) {
+            // w=-beta*(I + W*Y^T)*u
+            double b = -beta[betaIndex++];
+
+            // w = w -beta*W*(Y^T*u)
+            for (int j = 0; j < i; j++) {
+                double yv = InnerHouseholder_DDRB.innerProdRow(blockLength, Y, i, Y, j, 1);
+                VectorOps_DDRB.add_row(blockLength, W, i, 1, W, j, b*yv, W, i, 1, Y.col1 - Y.col0);
+            }
+
+            //w=w -beta*u + stuff above
+            InnerHouseholder_DDRB.add_row(blockLength, Y, i, b, W, i, 1, W, i, 1, Y.col1 - Y.col0);
         }
     }
 

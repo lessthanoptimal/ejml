@@ -21,6 +21,7 @@ package org.ejml.dense.block.decomposition.hessenberg;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DSubmatrixD1;
+import org.ejml.dense.block.Householder_DDRB;
 import org.ejml.dense.block.MatrixMult_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -138,7 +139,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
             copyZeros(subU);
 
             // compute W for Q(i) = ( I + W*Y^T)
-            TridiagonalHelper_DDRB.computeW_Row(A.blockLength, subU, subW, gammas, i);
+            Householder_DDRB.computeW_Row(A.blockLength, subU, subW, gammas, i);
 
             subQ.col0 = i;
             subQ.row0 = i;

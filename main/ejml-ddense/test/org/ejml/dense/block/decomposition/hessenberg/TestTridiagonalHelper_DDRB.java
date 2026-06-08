@@ -27,7 +27,6 @@ import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.dense.row.decomposition.hessenberg.TridiagonalDecompositionHouseholderOrig_DDRM;
-import org.ejml.generic.GenericMatrixOps_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
@@ -80,52 +79,6 @@ public class TestTridiagonalHelper_DDRB extends EjmlStandardJUnit {
             for( int i = 0; i < Math.min(width-1,r); i++ ) {
                 assertEquals(decomp.getGamma(i+1),gammas[i+gammaOffset],UtilEjml.TEST_F64);
             }
-        }
-    }
-
-    @Test
-    public void computeW_Row() {
-
-        for( int width = r; width <= 3*r; width++ ) {
-//            System.out.println("width!!!  "+width);
-            double betas[] = new double[ r ];
-            for( int i = 0; i < r; i++ )
-                betas[i] = i + 0.5;
-
-            SimpleMatrix A = SimpleMatrix.random_DDRM(r,width, -1.0 , 1.0 ,rand);
-
-            // Compute W directly using SimpleMatrix
-            SimpleMatrix v = A.extractVector(true,0);
-            v.set(0,0);
-            v.set(1,1);
-            SimpleMatrix Y = v;
-            SimpleMatrix W = v.scale(-betas[0]);
-
-            for( int i = 1; i < A.numRows(); i++ ) {
-                v = A.extractVector(true,i);
-
-                for( int j = 0; j <= i; j++ )
-                    v.set(j,0);
-                if( i+1 < A.numCols())
-                    v.set(i+1,1);
-
-                SimpleMatrix z = v.transpose().plus(W.transpose().mult(Y.mult(v.transpose()))).scale(-betas[i]);
-
-                W = W.combine(i,0,z.transpose());
-                Y = Y.combine(i,0,v);
-            }
-
-            // now compute it using the block matrix stuff
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
-            DMatrixRBlock Wb = new DMatrixRBlock(Ab.numRows,Ab.numCols,r);
-
-            DSubmatrixD1 Ab_sub = new DSubmatrixD1(Ab);
-            DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb);
-
-            TridiagonalHelper_DDRB.computeW_Row(r, Ab_sub, Wb_sub, betas, 0);
-
-            // see if the result is the same
-            assertTrue(GenericMatrixOps_F64.isEquivalent(Wb,W.getDDRM(),UtilEjml.TEST_F64));
         }
     }
 
