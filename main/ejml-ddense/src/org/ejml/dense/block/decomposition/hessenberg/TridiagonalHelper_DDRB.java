@@ -20,10 +20,10 @@ package org.ejml.dense.block.decomposition.hessenberg;
 
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.VectorOps_DDRB;
-import org.ejml.dense.block.decomposition.qr.BlockHouseHolder_DDRB;
+import org.ejml.dense.block.InnerHouseholder_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 
-import static org.ejml.dense.block.decomposition.qr.BlockHouseHolder_DDRB.computeHouseholderRow;
+import static org.ejml.dense.block.InnerHouseholder_DDRB.computeHouseholderRow;
 
 /**
  * @author Peter Abeles
@@ -109,7 +109,7 @@ public class TridiagonalHelper_DDRB {
         CommonOps_DDRM.fill(W.original, 0);
 
         // W = -beta*v(1)
-        BlockHouseHolder_DDRB.scale_row(blockLength, Y, W, 0, 1, -beta[betaIndex++]);
+        InnerHouseholder_DDRB.scale_row(blockLength, Y, W, 0, 1, -beta[betaIndex++]);
 
         final int min = Math.min(heightY, W.col1 - W.col0);
 
@@ -120,12 +120,12 @@ public class TridiagonalHelper_DDRB {
 
             // w = w -beta*W*(Y^T*u)
             for (int j = 0; j < i; j++) {
-                double yv = BlockHouseHolder_DDRB.innerProdRow(blockLength, Y, i, Y, j, 1);
+                double yv = InnerHouseholder_DDRB.innerProdRow(blockLength, Y, i, Y, j, 1);
                 VectorOps_DDRB.add_row(blockLength, W, i, 1, W, j, b*yv, W, i, 1, Y.col1 - Y.col0);
             }
 
             //w=w -beta*u + stuff above
-            BlockHouseHolder_DDRB.add_row(blockLength, Y, i, b, W, i, 1, W, i, 1, Y.col1 - Y.col0);
+            InnerHouseholder_DDRB.add_row(blockLength, Y, i, b, W, i, 1, W, i, 1, Y.col1 - Y.col0);
         }
     }
 
@@ -227,10 +227,10 @@ public class TridiagonalHelper_DDRB {
             // y = y + u_i*v_i^t*u + v_i*u_i^t*u
 
             // v_i^t*u
-            double dot_v_u = BlockHouseHolder_DDRB.innerProdRow(blockLength, A, row, V, i, 1);
+            double dot_v_u = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, V, i, 1);
 
             // u_i^t*u
-            double dot_u_u = BlockHouseHolder_DDRB.innerProdRow(blockLength, A, row, A, i, 1);
+            double dot_u_u = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, A, i, 1);
 
             // y = y + u_i*(v_i^t*u)
             // the ones in these 'u' are skipped over since the next submatrix of A
@@ -312,7 +312,7 @@ public class TridiagonalHelper_DDRB {
                                       int row,
                                       double gamma ) {
         // val=(y^T*u)
-        double val = BlockHouseHolder_DDRB.innerProdRow(blockLength, A, row, V, row, 1);
+        double val = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, V, row, 1);
 
         // take in account the one
         double before = A.get(row, row + 1);

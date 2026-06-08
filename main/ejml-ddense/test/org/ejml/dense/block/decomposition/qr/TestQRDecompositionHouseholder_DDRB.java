@@ -19,12 +19,42 @@
 package org.ejml.dense.block.decomposition.qr;
 
 import org.ejml.EjmlStandardJUnit;
+import org.ejml.UtilEjml;
+import org.ejml.data.DMatrixRBlock;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.DSubmatrixD1;
+import org.ejml.dense.block.MatrixOps_DDRB;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderTran_DDRM;
+import org.ejml.generic.GenericMatrixOps_F64;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 public class TestQRDecompositionHouseholder_DDRB extends EjmlStandardJUnit {
+    // the block length
+    int r = 3;
+
+    @Test
+    void decomposeQR_block_col() {
+        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*2 + r - 1, r, -1, 1, rand);
+        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A, r);
+
+        QRDecompositionHouseholderTran_DDRM algTest = new QRDecompositionHouseholderTran_DDRM();
+        assertTrue(algTest.decompose(A));
+
+        double[] gammas = new double[A.numCols];
+        QRDecompositionHouseholder_DDRB.decomposeQR_block_col(r, new DSubmatrixD1(Ab), gammas);
+
+        DMatrixRMaj expected = CommonOps_DDRM.transpose(algTest.getQR(), null);
+
+        assertTrue(GenericMatrixOps_F64.isEquivalent(expected, Ab, UtilEjml.TEST_F64));
+    }
+
     @Test
     public void generic() {
         QRDecompositionHouseholder_DDRB decomp = new QRDecompositionHouseholder_DDRB();

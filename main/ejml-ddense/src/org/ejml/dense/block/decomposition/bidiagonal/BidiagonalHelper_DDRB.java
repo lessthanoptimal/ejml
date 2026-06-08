@@ -20,7 +20,7 @@ package org.ejml.dense.block.decomposition.bidiagonal;
 
 import org.ejml.data.DSubmatrixD1;
 
-import static org.ejml.dense.block.decomposition.qr.BlockHouseHolder_DDRB.*;
+import static org.ejml.dense.block.InnerHouseholder_DDRB.*;
 
 /**
  * @author Peter Abeles

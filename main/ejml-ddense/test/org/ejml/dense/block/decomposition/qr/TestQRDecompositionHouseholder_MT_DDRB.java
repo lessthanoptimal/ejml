@@ -21,13 +21,33 @@ package org.ejml.dense.block.decomposition.qr;
 import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
+import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestQRDecompositionHouseholder_MT_DDRB extends EjmlStandardJUnit {
     int r = 3;
+
+    @Test
+    void decomposeQR_block_col() {
+        DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);
+        DMatrixRBlock AA = A.copy();
+
+        double[] gammas = new double[A.numCols];
+        QRDecompositionHouseholder_DDRB.decomposeQR_block_col(r, new DSubmatrixD1(A), gammas);
+
+        double[] gammasC = new double[A.numCols];
+        QRDecompositionHouseholder_MT_DDRB.decomposeQR_block_col(r, new DSubmatrixD1(AA), gammasC);
+
+        for (int i = 0; i < gammas.length; i++) {
+            assertEquals(gammas[i], gammasC[i]);
+        }
+
+        assertTrue(MatrixOps_DDRB.isEquals(A, AA, UtilEjml.TEST_F64));
+    }
 
     @Test
     void compareToSingle() {

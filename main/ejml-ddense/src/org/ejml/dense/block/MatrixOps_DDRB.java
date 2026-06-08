@@ -558,6 +558,20 @@ public class MatrixOps_DDRB {
     }
 
     /**
+     * Returns the start index (row/col) of the inner block that contains the last reflector, i.e. the
+     * largest multiple of {@code blockLength} strictly less than {@code n} (clamped to {@code >= 0}).
+     * Used when iterating reflector blocks in reverse.
+     */
+    public static int lastBlockStart( int n, int blockLength ) {
+        int start = n - n%blockLength;
+        if (start == n)
+            start -= blockLength;
+        if (start < 0)
+            start = 0;
+        return start;
+    }
+
+    /**
      * <p>
      * Returns a new matrix with ones along the diagonal and zeros everywhere else.
      * </p>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -16,50 +16,30 @@
  * limitations under the License.
  */
 
-package org.ejml.dense.block.decomposition.qr;
+package org.ejml.dense.block;
 
 import org.ejml.EjmlStandardJUnit;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DSubmatrixD1;
-import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
-import org.ejml.dense.row.decomposition.qr.QRDecompositionHouseholderTran_DDRM;
 import org.ejml.dense.row.mult.VectorVectorMult_DDRM;
-import org.ejml.generic.GenericMatrixOps_F64;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Peter Abeles
  */
 @SuppressWarnings({"NullAway.Init"})
-class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
+class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
     // the block length
     int r = 3;
 
-    SimpleMatrix A, Y, V, W;
-
-    @Test
-    void decomposeQR_block_col() {
-        DMatrixRMaj A = RandomMatrices_DDRM.rectangle(r*2 + r - 1, r, -1, 1, rand);
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A, r);
-
-        QRDecompositionHouseholderTran_DDRM algTest = new QRDecompositionHouseholderTran_DDRM();
-        assertTrue(algTest.decompose(A));
-
-        double[] gammas = new double[A.numCols];
-        BlockHouseHolder_DDRB.decomposeQR_block_col(r, new DSubmatrixD1(Ab), gammas);
-
-        DMatrixRMaj expected = CommonOps_DDRM.transpose(algTest.getQR(), null);
-
-        assertTrue(GenericMatrixOps_F64.isEquivalent(expected, Ab, UtilEjml.TEST_F64));
-    }
+    SimpleMatrix A;
 
     @Test
     void rank1UpdateMultR_Col() {
@@ -76,7 +56,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
 
         DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
 
-        BlockHouseHolder_DDRB.rank1UpdateMultR_Col(r, new DSubmatrixD1(Ab), 1, gamma);
+        InnerHouseholder_DDRB.rank1UpdateMultR_Col(r, new DSubmatrixD1(Ab), 1, gamma);
 
         for (int i = 1; i < expected.numRows(); i++) {
             assertEquals(expected.get(i, 0), Ab.get(i, 2), UtilEjml.TEST_F64);
@@ -94,7 +74,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
 
         DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
 
-        BlockHouseHolder_DDRB.rank1UpdateMultR_TopRow(r, new DSubmatrixD1(Ab), 1, gamma);
+        InnerHouseholder_DDRB.rank1UpdateMultR_TopRow(r, new DSubmatrixD1(Ab), 1, gamma);
 
         // check all the columns now
         for (int i = 0; i < r; i++) {
@@ -120,7 +100,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
 
         DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
 
-        BlockHouseHolder_DDRB.rank1UpdateMultL_Row(r, new DSubmatrixD1(Ab), 1, 1, gamma);
+        InnerHouseholder_DDRB.rank1UpdateMultL_Row(r, new DSubmatrixD1(Ab), 1, 1, gamma);
 
         for (int j = 1; j < expected.numCols(); j++) {
             assertEquals(expected.get(2, j), Ab.get(2, j), UtilEjml.TEST_F64);
@@ -143,7 +123,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
 
         DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
 
-        BlockHouseHolder_DDRB.rank1UpdateMultL_LeftCol(r, new DSubmatrixD1(Ab), row, gamma, zeroOffset);
+        InnerHouseholder_DDRB.rank1UpdateMultL_LeftCol(r, new DSubmatrixD1(Ab), row, gamma, zeroOffset);
 
         for (int i = r; i < A.numRows(); i++) {
             for (int j = 0; j < r; j++) {
@@ -179,7 +159,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
 
             DSubmatrixD1 subAb = new DSubmatrixD1(Ab, row, A.numRows, colBlock, A.numCols);
 
-            double found = BlockHouseHolder_DDRB.innerProdCol(r, subAb, colA - colBlock, widthA, colB - colBlock, widthB);
+            double found = InnerHouseholder_DDRB.innerProdCol(r, subAb, colA - colBlock, widthA, colB - colBlock, widthB);
 
             assertEquals(expected, found, UtilEjml.TEST_F64);
         }
@@ -206,7 +186,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
 
             DSubmatrixD1 subAb = new DSubmatrixD1(Ab, rowBlock, A.numRows, 0, A.numCols);
 
-            double found = BlockHouseHolder_DDRB.innerProdRow(r, subAb, rowA, subAb, rowB, zeroOffset);
+            double found = InnerHouseholder_DDRB.innerProdRow(r, subAb, rowA, subAb, rowB, zeroOffset);
 
             assertEquals(expected, found, UtilEjml.TEST_F64);
         }
@@ -220,7 +200,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);
         DMatrixRBlock A_orig = A.copy();
 
-        BlockHouseHolder_DDRB.divideElementsCol(r, new DSubmatrixD1(A), col, div);
+        InnerHouseholder_DDRB.divideElementsCol(r, new DSubmatrixD1(A), col, div);
 
         for (int i = col + 1; i < A.numRows; i++) {
             assertEquals(A_orig.get(i, col)/div, A.get(i, col), UtilEjml.TEST_F64);
@@ -235,7 +215,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2 + 1, -1, 1, rand, r);
         DMatrixRBlock A_orig = A.copy();
 
-        BlockHouseHolder_DDRB.scale_row(r, new DSubmatrixD1(A), new DSubmatrixD1(A), row, 1, div);
+        InnerHouseholder_DDRB.scale_row(r, new DSubmatrixD1(A), new DSubmatrixD1(A), row, 1, div);
 
         // check the one
         assertEquals(div, A.get(row, row + 1), UtilEjml.TEST_F64);
@@ -278,7 +258,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
             SimpleMatrix b = B.extractVector(true, rowB).scale(beta);
             SimpleMatrix c = a.plus(b);
 
-            BlockHouseHolder_DDRB.add_row(r,
+            InnerHouseholder_DDRB.add_row(r,
                     new DSubmatrixD1(Ab), rowA, alpha,
                     new DSubmatrixD1(Bb), rowB, beta,
                     new DSubmatrixD1(Cb), rowC, 1, end);
@@ -308,7 +288,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
         if (A.get(col, col) < 0)
             expected *= -1;
 
-        double found = BlockHouseHolder_DDRB.computeTauAndDivideCol(r, new DSubmatrixD1(A), col, max);
+        double found = InnerHouseholder_DDRB.computeTauAndDivideCol(r, new DSubmatrixD1(A), col, max);
 
         assertEquals(expected, found, UtilEjml.TEST_F64);
 
@@ -335,7 +315,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
         if (A.get(row, colStart) < 0)
             expected *= -1;
 
-        double found = BlockHouseHolder_DDRB.computeTauAndDivideRow(r, new DSubmatrixD1(A), row, colStart, max);
+        double found = InnerHouseholder_DDRB.computeTauAndDivideRow(r, new DSubmatrixD1(A), row, colStart, max);
 
         assertEquals(expected, found, UtilEjml.TEST_F64);
 
@@ -352,7 +332,7 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
         A.set(0, 1, 100000);
         A.set(5, 1, -2346);
 
-        double max = BlockHouseHolder_DDRB.findMaxCol(r, new DSubmatrixD1(A), 1);
+        double max = InnerHouseholder_DDRB.findMaxCol(r, new DSubmatrixD1(A), 1);
 
         assertEquals(2346, max, UtilEjml.TEST_F64);
     }
@@ -365,137 +345,8 @@ class TestBlockHouseHolder_DDRB extends EjmlStandardJUnit {
         A.set(1, 1, 100000);
         A.set(1, 4, -2346);
 
-        double max = BlockHouseHolder_DDRB.findMaxRow(r, new DSubmatrixD1(A), 1, 2);
+        double max = InnerHouseholder_DDRB.findMaxRow(r, new DSubmatrixD1(A), 1, 2);
 
         assertEquals(2346, max, UtilEjml.TEST_F64);
-    }
-
-    @Test
-    void computeW_Column() {
-        double[] betas = new double[]{1.2, 2, 3};
-
-        A = SimpleMatrix.random_DDRM(r*2 + r - 1, r, -1.0, 1.0, rand);
-
-        // Compute W directly using SimpleMatrix
-        SimpleMatrix V = A.extractMatrix(0, A.numRows(), 0, 1);
-        V.set(0, 0, 1);
-        SimpleMatrix Y = V;
-        SimpleMatrix W = V.scale(-betas[0]);
-
-        for (int i = 1; i < A.numCols(); i++) {
-            V = A.extractMatrix(0, A.numRows(), i, i + 1);
-
-            for (int j = 0; j < i; j++)
-                V.set(j, 0, 0);
-            V.set(i, 0, 1);
-
-            SimpleMatrix z = V.plus(W.mult(Y.transpose().mult(V))).scale(-betas[i]);
-            W = W.combine(0, i, z);
-            Y = Y.combine(0, i, V);
-        }
-
-        // now compute it using the block matrix stuff
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
-        DMatrixRBlock Wb = new DMatrixRBlock(Ab.numRows, Ab.numCols, r);
-
-        DSubmatrixD1 Ab_sub = new DSubmatrixD1(Ab);
-        DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb);
-
-        BlockHouseHolder_DDRB.computeW_Column(r, Ab_sub, Wb_sub, null, betas, 0);
-
-        // see if the result is the same
-        assertTrue(GenericMatrixOps_F64.isEquivalent(Wb, (DMatrixRMaj)W.getMatrix(), UtilEjml.TEST_F64));
-    }
-
-    @Test
-    void initializeW() {
-        initMatrices(r - 1);
-
-        double beta = 1.5;
-
-        DMatrixRBlock Wb = MatrixOps_DDRB.convert((DMatrixRMaj)W.getMatrix(), r);
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
-
-        DSubmatrixD1 Wb_sub = new DSubmatrixD1(Wb, 0, W.numRows(), 0, r);
-        DSubmatrixD1 Yb_sub = new DSubmatrixD1(Ab, 0, A.numRows(), 0, r);
-
-        BlockHouseHolder_DDRB.initializeW(r, Wb_sub, Yb_sub, r, beta);
-
-        assertEquals(-beta, Wb.get(0, 0), UtilEjml.TEST_F64);
-
-        for (int i = 1; i < Wb.numRows; i++) {
-            assertEquals(-beta*Ab.get(i, 0), Wb.get(i, 0), UtilEjml.TEST_F64);
-        }
-    }
-
-    @Test
-    void computeZ() {
-        int M = r - 1;
-        initMatrices(M);
-
-        double beta = 2.5;
-
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
-        DMatrixRBlock Aw = MatrixOps_DDRB.convert((DMatrixRMaj)W.getMatrix(), r);
-
-        // need to extract only the elements in W that are currently being used when
-        // computing the expected Z
-        W = W.extractMatrix(0, W.numRows(), 0, M);
-        SimpleMatrix T = SimpleMatrix.random_DDRM(M, 1, -1, 1, rand);
-
-        // -beta * (V + W*T)
-        SimpleMatrix expected = V.plus(W.mult(T)).scale(-beta);
-
-        BlockHouseHolder_DDRB.computeZ(r, new DSubmatrixD1(Ab, 0, A.numRows(), 0, r),
-                new DSubmatrixD1(Aw, 0, A.numRows(), 0, r),
-                M, T.getDDRM().data, beta);
-
-        for (int i = 0; i < A.numRows(); i++) {
-            assertEquals(expected.get(i), Aw.get(i, M), UtilEjml.TEST_F64);
-        }
-    }
-
-    @Test
-    void computeY_t_V() {
-        int M = r - 2;
-        initMatrices(M);
-
-        // Y'*V
-        SimpleMatrix expected = Y.transpose().mult(V);
-
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(), r);
-        double[] found = new double[M];
-
-        BlockHouseHolder_DDRB.computeY_t_V(r, new DSubmatrixD1(Ab, 0, A.numRows(), 0, r), M, found);
-
-        for (int i = 0; i < M; i++) {
-            assertEquals(expected.get(i), found[i], UtilEjml.TEST_F64);
-        }
-    }
-
-    private void initMatrices( int M ) {
-        A = SimpleMatrix.random_DDRM(r*2 + r - 1, r, -1.0, 1.0, rand);
-
-        // create matrices that are used to test
-        Y = A.extractMatrix(0, A.numRows(), 0, M);
-        V = A.extractMatrix(0, A.numRows(), M, M + 1);
-
-        // add in zeros and ones
-        setZerosY();
-        for (int i = 0; i < M; i++) {
-            V.set(i, 0);
-        }
-        V.set(M, 1);
-
-        W = SimpleMatrix.random_DDRM(r*2 + r - 1, r, -1.0, 1.0, rand);
-    }
-
-    private void setZerosY() {
-        for (int j = 0; j < Y.numCols(); j++) {
-            for (int i = 0; i < j; i++) {
-                Y.set(i, j, 0);
-            }
-            Y.set(j, j, 1);
-        }
     }
 }
