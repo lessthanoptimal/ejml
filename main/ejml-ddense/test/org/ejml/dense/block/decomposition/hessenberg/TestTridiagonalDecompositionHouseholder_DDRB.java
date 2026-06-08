@@ -23,7 +23,6 @@ import org.ejml.EjmlUnitTests;
 import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
@@ -102,28 +101,4 @@ public class TestTridiagonalDecompositionHouseholder_DDRB extends EjmlStandardJU
         }
     }
 
-    @Test
-    public void multPlusTransA() {
-        for( int width = r+1; width <= r*3; width++ ) {
-            SimpleMatrix A = SimpleMatrix.random_DDRM(width,width, -1.0, 1.0,rand);
-            SimpleMatrix U = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
-            SimpleMatrix V = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
-
-            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
-            DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.getDDRM(),r);
-            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.getDDRM(),r);
-
-            SimpleMatrix expected = A.plus(U.transpose().mult(V));
-
-            TridiagonalDecompositionHouseholder_DDRB.multPlusTransA(r, new DSubmatrixD1(Ub)
-                    , new DSubmatrixD1(Vb), new DSubmatrixD1(Ab));
-
-
-            for( int i = r; i < width; i++ ) {
-                for( int j = i; j < width; j++ ) {
-                    assertEquals(expected.get(i,j),Ab.get(i,j),UtilEjml.TEST_F64,i+" "+j);
-                }
-            }
-        }
-    }
 }

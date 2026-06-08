@@ -411,4 +411,34 @@ public class Householder_DDRB {
             }
         }
     }
+
+    /**
+     * C = C + A^T*B
+     *
+     * @param A row block vector
+     * @param B row block vector
+     */
+    public static void multPlusTransA( int blockLength,
+                                       DSubmatrixD1 A, DSubmatrixD1 B,
+                                       DSubmatrixD1 C ) {
+        int heightA = Math.min(blockLength, A.row1 - A.row0);
+
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(C.row0 + blockLength, C.row1, blockLength, i -> {
+        for (int i = C.row0 + blockLength; i < C.row1; i += blockLength) {
+            int heightC = Math.min(blockLength, C.row1 - i);
+
+            int indexA = A.row0*A.original.numCols + (i - C.row0 + A.col0)*heightA;
+
+            for (int j = i; j < C.col1; j += blockLength) {
+                int widthC = Math.min(blockLength, C.col1 - j);
+
+                int indexC = i*C.original.numCols + j*heightC;
+                int indexB = B.row0*B.original.numCols + (j - C.col0 + B.col0)*heightA;
+
+                InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
+                        indexA, indexB, indexC, heightA, heightC, widthC);
+            }
+        }
+        //CONCURRENT_ABOVE });
+    }
 }

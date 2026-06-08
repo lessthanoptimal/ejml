@@ -189,6 +189,31 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
+    @Test
+    public void multPlusTransA() {
+        for( int width = r+1; width <= r*3; width++ ) {
+            SimpleMatrix A = SimpleMatrix.random_DDRM(width,width, -1.0, 1.0,rand);
+            SimpleMatrix U = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
+            SimpleMatrix V = SimpleMatrix.random_DDRM(r,width, -1.0, 1.0 ,rand);
+
+            DMatrixRBlock Ab = MatrixOps_DDRB.convert(A.getDDRM(),r);
+            DMatrixRBlock Ub = MatrixOps_DDRB.convert(U.getDDRM(),r);
+            DMatrixRBlock Vb = MatrixOps_DDRB.convert(V.getDDRM(),r);
+
+            SimpleMatrix expected = A.plus(U.transpose().mult(V));
+
+            Householder_DDRB.multPlusTransA(r, new DSubmatrixD1(Ub)
+                    , new DSubmatrixD1(Vb), new DSubmatrixD1(Ab));
+
+
+            for( int i = r; i < width; i++ ) {
+                for( int j = i; j < width; j++ ) {
+                    assertEquals(expected.get(i,j),Ab.get(i,j),UtilEjml.TEST_F64,i+" "+j);
+                }
+            }
+        }
+    }
+
     private void initMatrices( int M ) {
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r, -1.0, 1.0, rand);
 

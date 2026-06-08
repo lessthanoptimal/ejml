@@ -69,4 +69,17 @@ class TestHouseholder_MT_DDRB extends EjmlStandardJUnit {
 
         assertTrue(MatrixOps_DDRB.isEquals(Cs, Cc, UtilEjml.TEST_F64));
     }
+
+    @Test
+    void multPlusTransA() {
+        DMatrixRBlock U = MatrixOps_DDRB.createRandom(r, r*3, -1, 1, rand, r);
+        DMatrixRBlock V = MatrixOps_DDRB.createRandom(r, r*3, -1, 1, rand, r);
+        DMatrixRBlock Cs = MatrixOps_DDRB.createRandom(r*3, r*3, -1, 1, rand, r);
+        DMatrixRBlock Cc = Cs.copy();
+
+        Householder_DDRB.multPlusTransA(r, new DSubmatrixD1(U), new DSubmatrixD1(V), new DSubmatrixD1(Cs));
+        Householder_MT_DDRB.multPlusTransA(r, new DSubmatrixD1(U), new DSubmatrixD1(V), new DSubmatrixD1(Cc));
+
+        assertTrue(MatrixOps_DDRB.isEquals(Cs, Cc, UtilEjml.TEST_F64));
+    }
 }

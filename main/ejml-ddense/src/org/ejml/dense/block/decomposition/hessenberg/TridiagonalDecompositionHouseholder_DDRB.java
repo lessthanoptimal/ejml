@@ -28,13 +28,12 @@ import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
 
-import static org.ejml.dense.block.InnerMultiplication_DDRB.blockMultPlusTransA;
-
 //CONCURRENT_INLINE import org.ejml.dense.block.*;
 //CONCURRENT_INLINE import org.ejml.concurrency.EjmlConcurrency;
 
 //CONCURRENT_MACRO MatrixMult_DDRB MatrixMult_MT_DDRB
 //CONCURRENT_MACRO TriangularSolver_DDRB TriangularSolver_MT_DDRB
+//CONCURRENT_MACRO Householder_DDRB Householder_MT_DDRB
 
 /**
  * <p>
@@ -106,11 +105,7 @@ public class TridiagonalDecompositionHouseholder_DDRB
 
         int N = A.numRows;
 
-        int start = N - N%A.blockLength;
-        if (start == N)
-            start -= A.blockLength;
-        if (start < 0)
-            start = 0;
+        int start = MatrixOps_DDRB.lastBlockStart(N, A.blockLength);
 
         // (Q1^T * (Q2^T * (Q3^t * A)))
         for (int i = start; i >= 0; i -= A.blockLength) {
@@ -221,7 +216,6 @@ public class TridiagonalDecompositionHouseholder_DDRB
         int N = orig.numCols;
 
         for (int i = 0; i < N; i += A.blockLength) {
-//            System.out.println("-------- triag i "+i);
             int height = Math.min(A.blockLength, A.numRows - i);
 
             subA.col0 = subU.col0 = i;
@@ -243,44 +237,14 @@ public class TridiagonalDecompositionHouseholder_DDRB
                 subU.set(A.blockLength - 1, A.blockLength, 1);
 
                 // A = A + U*V^T + V*U^T
-                multPlusTransA(A.blockLength, subU, subV, subA);
-                multPlusTransA(A.blockLength, subV, subU, subA);
+                Householder_DDRB.multPlusTransA(A.blockLength, subU, subV, subA);
+                Householder_DDRB.multPlusTransA(A.blockLength, subV, subU, subA);
 
                 subU.set(A.blockLength - 1, A.blockLength, before);
             }
         }
 
         return true;
-    }
-
-    /**
-     * C = C + A^T*B
-     *
-     * @param A row block vector
-     * @param B row block vector
-     */
-    public static void multPlusTransA( int blockLength,
-                                       DSubmatrixD1 A, DSubmatrixD1 B,
-                                       DSubmatrixD1 C ) {
-        int heightA = Math.min(blockLength, A.row1 - A.row0);
-
-        //CONCURRENT_BELOW EjmlConcurrency.loopFor(C.row0 + blockLength, C.row1, blockLength, i -> {
-        for (int i = C.row0 + blockLength; i < C.row1; i += blockLength) {
-            int heightC = Math.min(blockLength, C.row1 - i);
-
-            int indexA = A.row0*A.original.numCols + (i - C.row0 + A.col0)*heightA;
-
-            for (int j = i; j < C.col1; j += blockLength) {
-                int widthC = Math.min(blockLength, C.col1 - j);
-
-                int indexC = i*C.original.numCols + j*heightC;
-                int indexB = B.row0*B.original.numCols + (j - C.col0 + B.col0)*heightA;
-
-                blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
-                        indexA, indexB, indexC, heightA, heightC, widthC);
-            }
-        }
-        //CONCURRENT_ABOVE });
     }
 
     private void init( DMatrixRBlock orig ) {
