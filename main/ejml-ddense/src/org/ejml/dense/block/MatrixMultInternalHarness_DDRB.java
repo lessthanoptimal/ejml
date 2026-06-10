@@ -49,8 +49,8 @@ public class MatrixMultInternalHarness_DDRB {
     @FunctionalInterface
     public interface BlockKernel {
         void apply( double[] dataA, double[] dataB, double[] dataC,
-                    int indexA, int indexB, int indexC,
-                    int heightA, int widthA, int widthB );
+                    int heightA, int widthA, int widthB,
+                    int indexA, int indexB, int indexC );
     }
 
     /// Picks the outermost loop axis. Always returns I or J — the larger of the two
@@ -134,10 +134,10 @@ public class MatrixMultInternalHarness_DDRB {
 
                     if (k == 0) {
                         firstTouch.apply(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
+                                heightA, widthA, widthB, indexA, indexB, indexC);
                     } else {
                         accumulate.apply(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
+                                heightA, widthA, widthB, indexA, indexB, indexC);
                     }
                 }
             }
@@ -181,10 +181,10 @@ public class MatrixMultInternalHarness_DDRB {
 
                     if (k == 0) {
                         firstTouch.apply(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
+                                heightA, widthA, widthB, indexA, indexB, indexC);
                     } else {
                         accumulate.apply(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthB);
+                                heightA, widthA, widthB, indexA, indexB, indexC);
                     }
                 }
             }
@@ -228,10 +228,10 @@ public class MatrixMultInternalHarness_DDRB {
 
                     if (k == 0) {
                         firstTouch.apply(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthC);
+                                heightA, widthA, widthC, indexA, indexB, indexC);
                     } else {
                         accumulate.apply(A.original.data, B.original.data, C.original.data,
-                                indexA, indexB, indexC, heightA, widthA, widthC);
+                                heightA, widthA, widthC, indexA, indexB, indexC);
                     }
                 }
             }

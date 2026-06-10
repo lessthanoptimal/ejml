@@ -67,7 +67,7 @@ public class BenchmarkMultPlusExperiments_DDRB {
     }
 
     @Benchmark public void production() {
-        InnerMultiplication_DDRB.blockMultPlus(A, B, C, 0, 0, 0, m, m, m);
+        InnerMultiplication_DDRB.blockMultPlus(A, B, C, m, m, m, 0, 0, 0);
     }
 
     @Benchmark public void historical() {

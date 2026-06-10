@@ -291,7 +291,7 @@ public class Householder_DDRB {
                                 indexY, indexB, indexC, heightY, widthY, widthB);
                     } else {
                         InnerMultiplication_DDRB.blockMultPlus(Y.original.data, B.original.data, C.original.data,
-                                indexY, indexB, indexC, heightY, widthY, widthB);
+                                heightY, widthY, widthB, indexY, indexB, indexC);
                     }
                 }
             }
@@ -354,7 +354,7 @@ public class Householder_DDRB {
                             indexA, indexB, indexC, heightA, widthA, widthB);
                 else
                     InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthB);
+                            heightA, widthA, widthB, indexA, indexB, indexC);
             }
         }
         //CONCURRENT_ABOVE });
@@ -403,7 +403,7 @@ public class Householder_DDRB {
                 int indexB = B.row0*B.original.numCols + (j - C.col0 + B.col0)*heightA;
 
                 InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
-                        indexA, indexB, indexC, heightA, heightC, widthC);
+                        heightA, heightC, widthC, indexA, indexB, indexC);
             }
         }
         //CONCURRENT_ABOVE });

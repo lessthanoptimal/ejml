@@ -67,7 +67,7 @@ public class InnerRankUpdate_DDRB {
 
                 InnerMultiplication_DDRB.blockMultPlusTransA(alpha,
                         B.original.data, B.original.data, A.original.data,
-                        indexB_i, indexB_j, indexA, heightB, widthB_i, widthB_j);
+                        heightB, widthB_i, widthB_j, indexB_i, indexB_j, indexA);
             }
         }
         //CONCURRENT_ABOVE });

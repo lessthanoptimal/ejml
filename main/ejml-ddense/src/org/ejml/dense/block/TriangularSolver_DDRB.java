@@ -99,7 +99,7 @@ public class TriangularSolver_DDRB {
                         int indexU = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(colT + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, indexU, indexX, 0, heightT, widthT, widthX);
+                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, heightT, widthT, widthX, indexU, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(colT + T.col0);
@@ -130,7 +130,7 @@ public class TriangularSolver_DDRB {
                         int indexL = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(colT + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, indexL, indexX, 0, heightT, widthT, widthX);
+                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, heightT, widthT, widthX, indexL, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(colT + T.col0);
@@ -200,7 +200,7 @@ public class TriangularSolver_DDRB {
                         int indexU = offsetT + T.original.numCols*(i + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(j + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, indexU, indexX, 0, heightT, widthT, widthX);
+                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, heightT, widthT, widthX, indexU, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(i + T.row0) + heightT*(j + T.col0);
@@ -227,7 +227,7 @@ public class TriangularSolver_DDRB {
                         int indexL = offsetT + T.original.numCols*(i + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(j + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, indexL, indexX, 0, heightT, widthT, widthX);
+                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, heightT, widthT, widthX, indexL, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(i + T.row0) + heightT*(j + T.col0);

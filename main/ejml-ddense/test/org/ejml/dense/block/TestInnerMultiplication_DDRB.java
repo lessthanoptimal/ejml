@@ -26,16 +26,18 @@ import org.ejml.dense.row.MatrixFeatures_DDRM;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
     private static final int BLOCK_LENGTH = 4;
 
-    /// Check the inner block multiplication functions against various shapes of inputs
+    /// Check the inner block multiplication functions against various shapes of inputs.
     @Test void allBlockMult() {
         checkBlockMultCase(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH);
         checkBlockMultCase(BLOCK_LENGTH - 1, BLOCK_LENGTH, BLOCK_LENGTH);
@@ -45,106 +47,94 @@ public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
         checkBlockMultCase(BLOCK_LENGTH, BLOCK_LENGTH, BLOCK_LENGTH - 1);
     }
 
-    /// Searches for all inner block matrix operations and tests their correctness.
-    private void checkBlockMultCase( final int heightA, final int widthA, final int widthB ) {
-        Method[] methods = InnerMultiplication_DDRB.class.getDeclaredMethods();
-
+    private void checkBlockMultCase( int heightA, int widthA, int widthB ) {
         int numFound = 0;
-        for (Method m : methods) {
+        for (Method m : InnerMultiplication_DDRB.class.getDeclaredMethods()) {
+            if (!Modifier.isStatic(m.getModifiers()))
+                continue;
             String name = m.getName();
-
-//            System.out.println("name = "+name);
-
-            boolean transA = false;
-            boolean transB = false;
-
-            if (name.contains("TransA"))
-                transA = true;
-
-            if (name.contains("TransB"))
-                transB = true;
-
-            // See if the results are added, subtracted, or set to the output matrix
-            int operationType = 0;
-            if (name.contains("Plus")) operationType = 1;
-            else if (name.contains("Minus")) operationType = -1;
-            else if (name.contains("Set")) operationType = 0;
-
-            checkBlockMult(operationType, transA, transB, m, heightA, widthA, widthB);
+            int operationType = name.contains("Plus") ? 1 : name.contains("Minus") ? -1 : 0;
+            checkBlockMult(operationType, name.contains("TransA"), name.contains("TransB"), m, heightA, widthA, widthB);
             numFound++;
         }
-
-        // make sure all the functions were in fact tested
-        assertEquals(16, numFound);
+        assertEquals(30, numFound);
     }
 
-    /// The inner block multiplication is in a row major format. Test it against
-    /// operations for DMatrixRMaj
     private void checkBlockMult( int operationType, boolean transA, boolean transB, Method method,
-                                 final int heightA, final int widthA, final int widthB ) {
-        boolean hasAlpha = method.getParameterTypes().length == 10;
-
-        if (hasAlpha && operationType == -1)
-            fail("No point to minus and alpha");
+                                 int heightA, int widthA, int widthB ) {
+        Class<?>[] params = method.getParameterTypes();
+        boolean hasAlpha = params[0] == double.class;
+        // Strided overloads take an explicit stride per matrix; the convenience overloads do not.
+        boolean hasStride = params.length - (hasAlpha ? 1 : 0) == 12;
+        double alpha = 2.0;
 
         DMatrixRMaj A = RandomMatrices_DDRM.rectangle(heightA, widthA, rand);
         DMatrixRMaj B = RandomMatrices_DDRM.rectangle(widthA, widthB, rand);
         DMatrixRMaj C = new DMatrixRMaj(heightA, widthB);
-
-        if (operationType == -1)
-            CommonOps_DDRM.mult(-1, A, B, C);
-        else
-            CommonOps_DDRM.mult(A, B, C);
+        CommonOps_DDRM.mult(operationType == -1 ? -1 : 1, A, B, C);
 
         DMatrixRMaj C_found = new DMatrixRMaj(heightA, widthB);
-        // if it is set then it should overwrite everything just fine
         if (operationType == 0)
             RandomMatrices_DDRM.fillUniform(C_found, rand);
 
-        if (transA)
-            CommonOps_DDRM.transpose(A);
-        if (transB)
-            CommonOps_DDRM.transpose(B);
+        if (transA) CommonOps_DDRM.transpose(A);
+        if (transB) CommonOps_DDRM.transpose(B);
+        if (hasAlpha) CommonOps_DDRM.scale(alpha, C);
 
-        double alpha = 2.0;
+        // Strided methods are exercised with a row stride strictly larger than the matrix width.
+        int pad = hasStride ? 3 : 0;
+        Embedded a = embed(A, pad, 1);
+        Embedded b = embed(B, pad, 2);
+        Embedded c = embed(C_found, pad, 3);
 
-        if (hasAlpha) {
-            CommonOps_DDRM.scale(alpha, C);
-        }
+        invoke(method, hasAlpha, hasStride, alpha, a, b, c, A.numRows, A.numCols, C_found.numCols);
 
-        invoke(method, alpha, A.data, B.data, C_found.data, 0, 0, 0, A.numRows, A.numCols, C_found.numCols);
+        extract(c, C_found);
+        assertTrue(MatrixFeatures_DDRM.isIdentical(C, C_found, UtilEjml.TEST_F64), method.getName());
+    }
 
-        if (!MatrixFeatures_DDRM.isIdentical(C, C_found, UtilEjml.TEST_F64)) {
-            C.print();
-            C_found.print();
-            System.out.println("Method " + method.getName());
-            System.out.println("transA " + transA);
-            System.out.println("transB " + transB);
-            System.out.println("type   " + operationType);
-            System.out.println("alpha  " + hasAlpha);
-            fail("Not identical");
+    private void invoke( Method m, boolean hasAlpha, boolean hasStride, double alpha,
+                         Embedded a, Embedded b, Embedded c, int heightA, int widthA, int widthC ) {
+        List<Object> args = new ArrayList<>();
+        if (hasAlpha) args.add(alpha);
+        args.add(a.data); args.add(b.data); args.add(c.data);
+        args.add(heightA); args.add(widthA); args.add(widthC);
+        if (hasStride) { args.add(a.stride); args.add(b.stride); args.add(c.stride); }
+        args.add(a.offset); args.add(b.offset); args.add(c.offset);
+        try {
+            m.invoke(null, args.toArray());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static void invoke( Method func,
-                               double alpha,
-                               double[] dataA, double[] dataB, double[] dataC,
-                               int indexA, int indexB, int indexC,
-                               final int heightA, final int widthA, final int widthB ) {
-        try {
-            if (func.getParameterTypes().length == 9) {
-                func.invoke(null, dataA, dataB, dataC,
-                        indexA, indexB, indexC,
-                        heightA, widthA, widthB);
-            } else {
-                func.invoke(null, alpha, dataA, dataB, dataC,
-                        indexA, indexB, indexC,
-                        heightA, widthA, widthB);
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+    /// Lay a row major matrix into a backing array with row stride = cols + pad, starting at offset.
+    /// Everything outside the matrix (offset region and padding) is junk the op must not read or write.
+    private Embedded embed( DMatrixRMaj M, int pad, int offset ) {
+        int stride = M.numCols + pad;
+        double[] data = new double[offset + M.numRows*stride];
+        for (int i = 0; i < data.length; i++) data[i] = rand.nextDouble();
+        for (int i = 0; i < M.numRows; i++)
+            for (int j = 0; j < M.numCols; j++)
+                data[offset + i*stride + j] = M.get(i, j);
+        return new Embedded(data, stride, offset);
+    }
+
+    private void extract( Embedded e, DMatrixRMaj M ) {
+        for (int i = 0; i < M.numRows; i++)
+            for (int j = 0; j < M.numCols; j++)
+                M.set(i, j, e.data[e.offset + i*e.stride + j]);
+    }
+
+    private static final class Embedded {
+        final double[] data;
+        final int stride;
+        final int offset;
+
+        Embedded( double[] data, int stride, int offset ) {
+            this.data = data;
+            this.stride = stride;
+            this.offset = offset;
         }
     }
 }
