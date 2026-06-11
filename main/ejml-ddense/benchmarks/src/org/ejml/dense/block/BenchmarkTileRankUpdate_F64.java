@@ -57,16 +57,8 @@ public class BenchmarkTileRankUpdate_F64 {
         System.arraycopy(C_template, 0, C, 0, C.length);
     }
 
-    @Benchmark public void tileMultMinusTransA() {
-        TileRankUpdate_F64.tileMultMinusTransA(A,  C, m, m, m, 0, m*m*2, 0);
-    }
-
     @Benchmark public void tileMultMinusTransA_U() {
         TileRankUpdate_F64.tileMultMinusTransA_U(A,  C, m, m, m, 0, m*m*2, 0);
-    }
-
-    @Benchmark public void tileMultMinusTransB() {
-        TileRankUpdate_F64.tileMultMinusTransB(A,  C, m, m, m, 0, m*m*2, 0);
     }
 
     @Benchmark public void tileMultMinusTransB_L() {

@@ -108,7 +108,7 @@ public class RankUpdate_DDRB {
                     TileRankUpdate_F64.tileMultMinusTransA_U(B.original.data, A.original.data,
                             heightB, widthB_i, widthB_j, indexB_i, indexB_j, indexA);
                 } else {
-                    TileRankUpdate_F64.tileMultMinusTransA(B.original.data, A.original.data,
+                    TileMultiplication_F64.tileMultMinusTransA(B.original.data, B.original.data, A.original.data,
                             heightB, widthB_i, widthB_j, indexB_i, indexB_j, indexA);
                 }
             }
@@ -152,7 +152,7 @@ public class RankUpdate_DDRB {
                     TileRankUpdate_F64.tileMultMinusTransB_L(B.original.data, A.original.data,
                             widthB, heightB_i, widthB_j, indexB_i, indexB_j, indexA);
                 } else {
-                    TileRankUpdate_F64.tileMultMinusTransB(B.original.data, A.original.data,
+                    TileMultiplication_F64.tileMultMinusTransB(B.original.data, B.original.data, A.original.data,
                             widthB, heightB_i, widthB_j, indexB_i, indexB_j, indexA);
                 }
             }
