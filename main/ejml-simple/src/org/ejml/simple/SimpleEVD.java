@@ -43,14 +43,21 @@ public class SimpleEVD<T extends SimpleBase> {
     public SimpleEVD( Matrix mat ) {
         this.mat = mat;
 
-        switch (mat.getType()) {
-            case DDRM: eig = DecompositionFactory_DDRM.eig(mat.getNumCols(), true); break;
-            case FDRM: eig = DecompositionFactory_FDRM.eig(mat.getNumCols(), true); break;
-            default: throw new IllegalArgumentException("Matrix type not yet supported. " + mat.getType());
-        }
+        eig = createEigen(mat.getType());
+
+        if (eig.inputModified())
+            mat = mat.copy();
 
         if (!eig.decompose(mat))
             throw new RuntimeException("Eigenvalue Decomposition failed");
+    }
+
+    protected EigenDecomposition createEigen( MatrixType type ) {
+        return switch (type) {
+            case DDRM -> DecompositionFactory_DDRM.eig(mat.getNumCols(), true);
+            case FDRM -> DecompositionFactory_FDRM.eig(mat.getNumCols(), true);
+            default -> throw new IllegalArgumentException("Matrix type not yet supported. " + mat.getType());
+        };
     }
 
     /**
@@ -60,12 +67,12 @@ public class SimpleEVD<T extends SimpleBase> {
         List<Complex_F64> ret = new ArrayList<>();
 
         if (mat.getType().getBits() == 64) {
-            EigenDecomposition_F64 d = (EigenDecomposition_F64)eig;
+            var d = (EigenDecomposition_F64)eig;
             for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
                 ret.add(d.getEigenvalue(i));
             }
         } else {
-            EigenDecomposition_F32 d = (EigenDecomposition_F32)eig;
+            var d = (EigenDecomposition_F32)eig;
             for (int i = 0; i < eig.getNumberOfEigenvalues(); i++) {
                 Complex_F32 c = d.getEigenvalue(i);
                 ret.add(new Complex_F64(c.real, c.imaginary));

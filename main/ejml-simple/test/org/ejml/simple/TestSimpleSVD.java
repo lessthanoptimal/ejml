@@ -19,11 +19,50 @@
 package org.ejml.simple;
 
 import org.ejml.EjmlStandardJUnit;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.data.Matrix;
+import org.ejml.data.MatrixType;
+import org.ejml.dense.row.MatrixFeatures_DDRM;
+import org.ejml.dense.row.RandomMatrices_DDRM;
+import org.ejml.interfaces.decomposition.SingularValueDecomposition;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestSimpleSVD extends EjmlStandardJUnit {
+    // Verifies that the input is not modified
+    @Test void inputModified() {
+        DMatrixRMaj mat = RandomMatrices_DDRM.rectangle(5, 5, rand);
+        DMatrixRMaj original = mat.copy();
+
+        // It will decompose. If not properly shielded it could modify the input
+        new SimpleSVD<>(mat, true) {
+            @Override
+            protected SingularValueDecomposition<DMatrixRMaj> createSvd( int numRows, int numCols, MatrixType type, boolean compact ) {
+                return new SingularValueDecomposition<>() {
+                    @Override public int numberOfSingularValues() {return 0;}
+                    @Override public boolean isCompact() { return false;}
+                    @Override public DMatrixRMaj getU( @Nullable DMatrixRMaj U, boolean transposed ) {return new DMatrixRMaj();}
+                    @Override public DMatrixRMaj getV( @Nullable DMatrixRMaj V, boolean transposed ) {return new DMatrixRMaj(); }
+                    @Override public DMatrixRMaj getW( @Nullable DMatrixRMaj W ) {return new DMatrixRMaj();}
+                    @Override public int numRows() {return 0;}
+                    @Override public int numCols() {return 0;}
+                    @Override public boolean inputModified() {return true;}
+                    @Override public boolean decompose( DMatrixRMaj orig ) {
+                        orig.set(0,0, 100);
+                        return true;
+                    }
+                };
+            }
+
+            @Override protected void extractDecomposition() {}
+        };
+
+        assertTrue(MatrixFeatures_DDRM.isIdentical(mat, original, 0.0));
+    }
+
     @Test void rank_case0() {
         for (int dimen = 1; dimen < 10; dimen++) {
             assertEquals(dimen, SimpleMatrix.identity(dimen).svd().rank());

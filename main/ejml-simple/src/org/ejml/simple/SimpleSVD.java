@@ -21,6 +21,7 @@ import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.FMatrixRMaj;
 import org.ejml.data.Matrix;
+import org.ejml.data.MatrixType;
 import org.ejml.dense.row.SingularOps_DDRM;
 import org.ejml.dense.row.SingularOps_FDRM;
 import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
@@ -45,7 +46,7 @@ import org.ejml.interfaces.decomposition.SingularValueDecomposition_F64;
  *
  * @author Peter Abeles
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "NullAway.Init"})
 public class SimpleSVD<T extends SimpleBase> {
 
     private SingularValueDecomposition svd;
@@ -53,6 +54,7 @@ public class SimpleSVD<T extends SimpleBase> {
     private T W;
     private T V;
 
+    // Input matrix (unmodified)
     private Matrix mat;
     final boolean is64;
 
@@ -60,18 +62,26 @@ public class SimpleSVD<T extends SimpleBase> {
     double tol;
 
     public SimpleSVD( Matrix mat, boolean compact ) {
-        this.mat = mat;
         this.is64 = mat instanceof DMatrixRMaj;
-        if (is64) {
-            DMatrixRMaj m = (DMatrixRMaj)mat;
-            svd = DecompositionFactory_DDRM.svd(m.numRows, m.numCols, true, true, compact);
-        } else {
-            FMatrixRMaj m = (FMatrixRMaj)mat;
-            svd = DecompositionFactory_FDRM.svd(m.numRows, m.numCols, true, true, compact);
-        }
+        svd = createSvd(mat.getNumRows(), mat.getNumCols(), mat.getType(), compact);
 
-        if (!svd.decompose(mat))
+        this.mat = mat;
+
+        if (!svd.decompose(svd.inputModified() ? mat.copy() : mat))
             throw new RuntimeException("Decomposition failed");
+
+        extractDecomposition();
+    }
+
+    protected SingularValueDecomposition createSvd( int numRows, int numCols, MatrixType type, boolean compact ) {
+        return switch (type) {
+            case DDRM -> DecompositionFactory_DDRM.svd(numRows, numCols, true, true, compact);
+            case FDRM -> DecompositionFactory_FDRM.svd(numRows, numCols, true, true, compact);
+            default -> throw new IllegalArgumentException("Matrix type not yet supported. " + mat.getType());
+        };
+    }
+
+    protected void extractDecomposition() {
         U = (T)SimpleMatrix.wrap(svd.getU(null, false));
         W = (T)SimpleMatrix.wrap(svd.getW(null));
         V = (T)SimpleMatrix.wrap(svd.getV(null, false));
