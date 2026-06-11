@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkInnerTriangularMult_DDRB {
+public class BenchmarkTileTriangularMult_F64 {
     @Param({"60"})
     public int m;
 
@@ -62,22 +62,22 @@ public class BenchmarkInnerTriangularMult_DDRB {
     }
 
     //@formatter:off
-    @Benchmark public void lmultUnitLow() {InnerTriangularMult_DDRB.lmultUnitLow(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultAddUnitLow() {InnerTriangularMult_DDRB.lmultAddUnitLow(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultUnitLowTransT() {InnerTriangularMult_DDRB.lmultUnitLowTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultAddUnitLowTransT() {InnerTriangularMult_DDRB.lmultAddUnitLowTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultUnitUpp() {InnerTriangularMult_DDRB.lmultUnitUpp(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultAddUnitUpp() {InnerTriangularMult_DDRB.lmultAddUnitUpp(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultUnitUppTransT() {InnerTriangularMult_DDRB.lmultUnitUppTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void lmultAddUnitUppTransT() {InnerTriangularMult_DDRB.lmultAddUnitUppTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void rmultAddUnitLow() {InnerTriangularMult_DDRB.rmultAddUnitLow(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void rmultAddUnitUpp() {InnerTriangularMult_DDRB.rmultAddUnitUpp(T, B, C, m, m, m, m, m, 0, 0, 0);}
-    @Benchmark public void rmultUnitUppTransT() {InnerTriangularMult_DDRB.rmultUnitUppTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultUnitLow() {TileTriangularMult_F64.lmultUnitLow(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultAddUnitLow() {TileTriangularMult_F64.lmultAddUnitLow(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultUnitLowTransT() {TileTriangularMult_F64.lmultUnitLowTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultAddUnitLowTransT() {TileTriangularMult_F64.lmultAddUnitLowTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultUnitUpp() {TileTriangularMult_F64.lmultUnitUpp(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultAddUnitUpp() {TileTriangularMult_F64.lmultAddUnitUpp(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultUnitUppTransT() {TileTriangularMult_F64.lmultUnitUppTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void lmultAddUnitUppTransT() {TileTriangularMult_F64.lmultAddUnitUppTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void rmultAddUnitLow() {TileTriangularMult_F64.rmultAddUnitLow(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void rmultAddUnitUpp() {TileTriangularMult_F64.rmultAddUnitUpp(T, B, C, m, m, m, m, m, 0, 0, 0);}
+    @Benchmark public void rmultUnitUppTransT() {TileTriangularMult_F64.rmultUnitUppTransT(T, B, C, m, m, m, m, m, 0, 0, 0);}
     //@formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkInnerTriangularMult_DDRB.class.getSimpleName())
+                .include(BenchmarkTileTriangularMult_F64.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

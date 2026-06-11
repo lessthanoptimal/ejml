@@ -32,9 +32,9 @@ import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
+public class TestTileTriangularSolver extends EjmlStandardJUnit {
     @Test void invertArray() {
-        Method[] methods = InnerTriangularSolver_DDRB.class.getMethods();
+        Method[] methods = TileTriangularSolver_F64.class.getMethods();
 
         int numFound = 0;
         for (Method m : methods) {
@@ -155,7 +155,7 @@ public class TestInnerTriangularSolver_DDRB extends EjmlStandardJUnit {
      * Test all inner block solvers using reflections to look up the functions
      */
     @Test void solveArray() {
-        Method[] methods = InnerTriangularSolver_DDRB.class.getMethods();
+        Method[] methods = TileTriangularSolver_F64.class.getMethods();
 
         int numFound = 0;
         for (Method m : methods) {

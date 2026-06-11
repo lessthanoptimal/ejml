@@ -40,8 +40,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.row1 - A.row0, B.col1 - B.col0, A.col1 - A.col0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.mult(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultSet,
-                InnerMultiplication_DDRB::blockMultPlus);
+                TileMultiplication_F64::tileMultSet,
+                TileMultiplication_F64::tileMultPlus);
     }
 
     /// c = c + a \* b
@@ -51,8 +51,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.row1 - A.row0, B.col1 - B.col0, A.col1 - A.col0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.mult(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultPlus,
-                InnerMultiplication_DDRB::blockMultPlus);
+                TileMultiplication_F64::tileMultPlus,
+                TileMultiplication_F64::tileMultPlus);
     }
 
     /// c = c - a \* b
@@ -62,8 +62,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.row1 - A.row0, B.col1 - B.col0, A.col1 - A.col0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.mult(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultMinus,
-                InnerMultiplication_DDRB::blockMultMinus);
+                TileMultiplication_F64::tileMultMinus,
+                TileMultiplication_F64::tileMultMinus);
     }
 
     /// c = a<sup>T</sup> \* b
@@ -73,8 +73,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.col1 - A.col0, B.col1 - B.col0, A.row1 - A.row0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.multTransA(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultSetTransA,
-                InnerMultiplication_DDRB::blockMultPlusTransA);
+                TileMultiplication_F64::tileMultSetTransA,
+                TileMultiplication_F64::tileMultPlusTransA);
     }
 
     /// c = a \* b<sup>T</sup>
@@ -84,8 +84,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.row1 - A.row0, B.row1 - B.row0, A.col1 - A.col0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.multTransB(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultSetTransB,
-                InnerMultiplication_DDRB::blockMultPlusTransB);
+                TileMultiplication_F64::tileMultSetTransB,
+                TileMultiplication_F64::tileMultPlusTransB);
     }
 
     /// c = c + a<sup>T</sup> \* b
@@ -95,8 +95,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.col1 - A.col0, B.col1 - B.col0, A.row1 - A.row0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.multTransA(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultPlusTransA,
-                InnerMultiplication_DDRB::blockMultPlusTransA);
+                TileMultiplication_F64::tileMultPlusTransA,
+                TileMultiplication_F64::tileMultPlusTransA);
     }
 
     /// c = c + a \* b<sup>T</sup>
@@ -106,8 +106,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.row1 - A.row0, B.row1 - B.row0, A.col1 - A.col0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.multTransB(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultPlusTransB,
-                InnerMultiplication_DDRB::blockMultPlusTransB);
+                TileMultiplication_F64::tileMultPlusTransB,
+                TileMultiplication_F64::tileMultPlusTransB);
     }
 
     /// c = c - a<sup>T</sup> \* b
@@ -117,8 +117,8 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.col1 - A.col0, B.col1 - B.col0, A.row1 - A.row0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.multTransA(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultMinusTransA,
-                InnerMultiplication_DDRB::blockMultMinusTransA);
+                TileMultiplication_F64::tileMultMinusTransA,
+                TileMultiplication_F64::tileMultMinusTransA);
     }
 
     /// c = c - a \* b<sup>T</sup>
@@ -128,7 +128,7 @@ public class MatrixMult_DDRB {
         int outer = pickOuterAxis(A.row1 - A.row0, B.row1 - B.row0, A.col1 - A.col0);
         int middle = pickMiddleAxis(outer);
         MatrixMultInternalHarness_DDRB.multTransB(blockLength, A, B, C, outer, middle,
-                InnerMultiplication_DDRB::blockMultMinusTransB,
-                InnerMultiplication_DDRB::blockMultMinusTransB);
+                TileMultiplication_F64::tileMultMinusTransB,
+                TileMultiplication_F64::tileMultMinusTransB);
     }
 }

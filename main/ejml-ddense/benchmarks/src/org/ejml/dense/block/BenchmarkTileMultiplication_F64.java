@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkInnerMultiplication_DDRB {
+public class BenchmarkTileMultiplication_F64 {
 
     @Param({"60"})
     public int m;
@@ -62,69 +62,69 @@ public class BenchmarkInnerMultiplication_DDRB {
         System.arraycopy(C_template, 0, C, 0, C.length);
     }
 
-    @Benchmark public void blockMultPlus() {
-        InnerMultiplication_DDRB.blockMultPlus(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultPlus() {
+        TileMultiplication_F64.tileMultPlus(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultPlusTransA() {
-        InnerMultiplication_DDRB.blockMultPlusTransA(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultPlusTransA() {
+        TileMultiplication_F64.tileMultPlusTransA(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultPlusTransB() {
-        InnerMultiplication_DDRB.blockMultPlusTransB(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultPlusTransB() {
+        TileMultiplication_F64.tileMultPlusTransB(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultMinus() {
-        InnerMultiplication_DDRB.blockMultMinus(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultMinus() {
+        TileMultiplication_F64.tileMultMinus(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultMinusTransA() {
-        InnerMultiplication_DDRB.blockMultMinusTransA(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultMinusTransA() {
+        TileMultiplication_F64.tileMultMinusTransA(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultMinusTransB() {
-        InnerMultiplication_DDRB.blockMultMinusTransB(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultMinusTransB() {
+        TileMultiplication_F64.tileMultMinusTransB(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultSet() {
-        InnerMultiplication_DDRB.blockMultSet(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultSet() {
+        TileMultiplication_F64.tileMultSet(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultSetTransA() {
-        InnerMultiplication_DDRB.blockMultSetTransA(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultSetTransA() {
+        TileMultiplication_F64.tileMultSetTransA(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultSetTransB() {
-        InnerMultiplication_DDRB.blockMultSetTransB(A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultSetTransB() {
+        TileMultiplication_F64.tileMultSetTransB(A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultPlus_alpha() {
-        InnerMultiplication_DDRB.blockMultPlus(alpha, A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultPlus_alpha() {
+        TileMultiplication_F64.tileMultPlus(alpha, A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultPlusTransA_alpha() {
-        InnerMultiplication_DDRB.blockMultPlusTransA(alpha, A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultPlusTransA_alpha() {
+        TileMultiplication_F64.tileMultPlusTransA(alpha, A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultPlusTransB_alpha() {
-        InnerMultiplication_DDRB.blockMultPlusTransB(alpha, A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultPlusTransB_alpha() {
+        TileMultiplication_F64.tileMultPlusTransB(alpha, A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultSet_alpha() {
-        InnerMultiplication_DDRB.blockMultSet(alpha, A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultSet_alpha() {
+        TileMultiplication_F64.tileMultSet(alpha, A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultSetTransA_alpha() {
-        InnerMultiplication_DDRB.blockMultSetTransA(alpha, A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultSetTransA_alpha() {
+        TileMultiplication_F64.tileMultSetTransA(alpha, A, B, C, m, m, m, 0, 0, 0);
     }
 
-    @Benchmark public void blockMultSetTransB_alpha() {
-        InnerMultiplication_DDRB.blockMultSetTransB(alpha, A, B, C, m, m, m, 0, 0, 0);
+    @Benchmark public void tileMultSetTransB_alpha() {
+        TileMultiplication_F64.tileMultSetTransB(alpha, A, B, C, m, m, m, 0, 0, 0);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkInnerMultiplication_DDRB.class.getSimpleName())
+                .include(BenchmarkTileMultiplication_F64.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

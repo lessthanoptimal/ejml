@@ -21,7 +21,6 @@ import org.ejml.data.DGrowArray;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.Householder_DDRB;
-import org.ejml.dense.block.InnerHouseholder_DDRB;
 import org.ejml.dense.block.MatrixMult_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.interfaces.decomposition.QRDecomposition;
@@ -248,11 +247,11 @@ public class QRDecompositionHouseholder_DDRB implements QRDecomposition<DMatrixR
 
         for (int i = 0; i < min; i++) {
             // compute the householder vector
-            if (!InnerHouseholder_DDRB.computeHouseholderCol(blockLength, Y, gamma, i))
+            if (!Householder_DDRB.computeHouseholderCol(blockLength, Y, gamma, i))
                 return false;
 
             // apply to rest of the columns in the block
-            InnerHouseholder_DDRB.rank1UpdateMultR_Col(blockLength, Y, i, gamma[Y.col0 + i]);
+            Householder_DDRB.rank1UpdateMultR_Col(blockLength, Y, i, gamma[Y.col0 + i]);
         }
 
         return true;

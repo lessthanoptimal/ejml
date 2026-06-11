@@ -99,16 +99,16 @@ public class TriangularSolver_DDRB {
                         int indexU = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(colT + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, heightT, widthT, widthX, indexU, indexX, 0);
+                        TileMultiplication_F64.tileMultMinus(dataT, dataX, temp, heightT, widthT, widthX, indexU, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(colT + T.col0);
 
-                    InnerTriangularSolver_DDRB.lsolveUpp(dataT, temp, heightT, widthX, heightT, indexII, 0);
+                    TileTriangularSolver_F64.lsolveUpp(dataT, temp, heightT, widthX, heightT, indexII, 0);
                     System.arraycopy(temp, 0, dataX, indexX, widthX*heightT);
                 }
                 //CONCURRENT_ABOVE });
-                InnerTriangularSolver_DDRB.invertUpper(dataT, dataX, heightT, indexII, indexII);
+                TileTriangularSolver_F64.invertUpper(dataT, dataX, heightT, indexII, indexII);
             }
         } else {
             for (int rowT = 0; rowT < M; rowT += blockLength) {
@@ -130,16 +130,16 @@ public class TriangularSolver_DDRB {
                         int indexL = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(colT + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataX, temp, heightT, widthT, widthX, indexL, indexX, 0);
+                        TileMultiplication_F64.tileMultMinus(dataT, dataX, temp, heightT, widthT, widthX, indexL, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(_rowT + T.row0) + heightT*(colT + T.col0);
 
-                    InnerTriangularSolver_DDRB.lsolveLow(dataT, temp, heightT, widthX, heightT, indexII, 0);
+                    TileTriangularSolver_F64.lsolveLow(dataT, temp, heightT, widthX, heightT, indexII, 0);
                     System.arraycopy(temp, 0, dataX, indexX, widthX*heightT);
                 }
                 //CONCURRENT_ABOVE });
-                InnerTriangularSolver_DDRB.invertLower(dataT, dataX, heightT, indexII, indexII);
+                TileTriangularSolver_F64.invertLower(dataT, dataX, heightT, indexII, indexII);
             }
         }
     }
@@ -200,15 +200,15 @@ public class TriangularSolver_DDRB {
                         int indexU = offsetT + T.original.numCols*(i + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(j + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, heightT, widthT, widthX, indexU, indexX, 0);
+                        TileMultiplication_F64.tileMultMinus(dataT, dataT, temp, heightT, widthT, widthX, indexU, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(i + T.row0) + heightT*(j + T.col0);
 
-                    InnerTriangularSolver_DDRB.lsolveUpp(dataT, temp, heightT, widthX, heightT, indexII, 0);
+                    TileTriangularSolver_F64.lsolveUpp(dataT, temp, heightT, widthX, heightT, indexII, 0);
                     System.arraycopy(temp, 0, dataT, indexX, widthX*heightT);
                 }
-                InnerTriangularSolver_DDRB.invertUpper(dataT, heightT, indexII);
+                TileTriangularSolver_F64.invertUpper(dataT, heightT, indexII);
             }
         } else {
             for (int i = 0; i < M; i += blockLength) {
@@ -227,15 +227,15 @@ public class TriangularSolver_DDRB {
                         int indexL = offsetT + T.original.numCols*(i + T.row0) + heightT*(k + T.col0);
                         int indexX = offsetT + T.original.numCols*(k + T.row0) + widthT*(j + T.col0);
 
-                        InnerMultiplication_DDRB.blockMultMinus(dataT, dataT, temp, heightT, widthT, widthX, indexL, indexX, 0);
+                        TileMultiplication_F64.tileMultMinus(dataT, dataT, temp, heightT, widthT, widthX, indexL, indexX, 0);
                     }
 
                     int indexX = offsetT + T.original.numCols*(i + T.row0) + heightT*(j + T.col0);
 
-                    InnerTriangularSolver_DDRB.lsolveLow(dataT, temp, heightT, widthX, heightT, indexII, 0);
+                    TileTriangularSolver_F64.lsolveLow(dataT, temp, heightT, widthX, heightT, indexII, 0);
                     System.arraycopy(temp, 0, dataT, indexX, widthX*heightT);
                 }
-                InnerTriangularSolver_DDRB.invertLower(dataT, heightT, indexII);
+                TileTriangularSolver_F64.invertLower(dataT, heightT, indexII);
             }
         }
     }
@@ -327,7 +327,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.lsolveUppTransBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveUppTransBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -337,7 +337,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.lsolveUppBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveUppBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -349,7 +349,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.lsolveLowTransBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveLowTransBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -359,7 +359,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.lsolveLowBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveLowBTrans(dataT, dataB, blockT_rows, N, blockT_rows, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -375,7 +375,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.lsolveUppTrans(dataT, dataB, Trows, N, Trows, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveUppTrans(dataT, dataB, Trows, N, Trows, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -384,7 +384,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.lsolveUpp(dataT, dataB, Trows, N, Trows, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveUpp(dataT, dataB, Trows, N, Trows, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -395,7 +395,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.lsolveLowTrans(dataT, dataB, Trows, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveLowTrans(dataT, dataB, Trows, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -404,7 +404,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Trows*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.lsolveLow(dataT, dataB, Trows, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.lsolveLow(dataT, dataB, Trows, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -452,7 +452,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveUppTransBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveUppTransBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -461,7 +461,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveUppBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveUppBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -472,7 +472,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveLowTransBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveLowTransBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -481,7 +481,7 @@ public class TriangularSolver_DDRB {
                         int offsetB = B.row0*B.original.numCols + Tcols*i;
 
                         int N = Math.min(B.col1, i + blockLength) - i;
-                        InnerTriangularSolver_DDRB.rsolveLowBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveLowBTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -498,7 +498,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveUppTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveUppTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -508,7 +508,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveUpp(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveUpp(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }
@@ -520,7 +520,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveLowTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveLowTrans(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 } else {
@@ -530,7 +530,7 @@ public class TriangularSolver_DDRB {
 
                         int offsetB = i*B.original.numCols + N*B.col0;
 
-                        InnerTriangularSolver_DDRB.rsolveLow(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
+                        TileTriangularSolver_F64.rsolveLow(dataT, dataB, Tcols, N, blockT_cols, offsetT, offsetB);
                     }
                     //CONCURRENT_ABOVE });
                 }

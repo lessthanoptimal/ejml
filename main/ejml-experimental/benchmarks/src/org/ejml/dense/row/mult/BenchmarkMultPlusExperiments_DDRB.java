@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-import org.ejml.dense.block.InnerMultiplication_DDRB;
+import org.ejml.dense.block.TileMultiplication_F64;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -67,79 +67,79 @@ public class BenchmarkMultPlusExperiments_DDRB {
     }
 
     @Benchmark public void production() {
-        InnerMultiplication_DDRB.blockMultPlus(A, B, C, m, m, m, 0, 0, 0);
+        TileMultiplication_F64.tileMultPlus(A, B, C, m, m, m, 0, 0, 0);
     }
 
     @Benchmark public void historical() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_ikj_historical(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_ikj_historical(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void ikj_for() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_ikj_for(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_ikj_for(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void ijk() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_ijk(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_ijk(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void ikj_K4() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_ikj_K4(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_ikj_K4(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void ikj_K4_pinc() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_ikj_K4_pinc(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_ikj_K4_pinc(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void ikj() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_ikj(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_ikj(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void jik() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_jik(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_jik(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void jik_I4_pinc() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_jik_I4_pinc(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_jik_I4_pinc(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void jik_I4() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_jik_I4(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_jik_I4(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void jki() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_jki(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_jki(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void kij() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_kij(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_kij(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void kij_I4() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_kij_I4(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_kij_I4(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void kji() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_kji(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_kji(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void tile4x4() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_tile4x4(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_tile4x4(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void packed() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_packed(A, B, C, 0, 0, 0, m, m, m);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_packed(A, B, C, 0, 0, 0, m, m, m);
     }
 
     @Benchmark public void packed_scratch() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_packed_scratch(A, B, C, 0, 0, 0, m, m, m, scratch);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_packed_scratch(A, B, C, 0, 0, 0, m, m, m, scratch);
     }
 
     @Benchmark public void packed_tile4x4_scratch() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_packed_tile4x4_scratch(A, B, C, 0, 0, 0, m, m, m, scratch);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_packed_tile4x4_scratch(A, B, C, 0, 0, 0, m, m, m, scratch);
     }
 
     @Benchmark public void packed_jik_I4_scratch() {
-        BlockMultPlusExperiments_DDRB.blockMultPlus_packed_jik_I4_scratch(A, B, C, 0, 0, 0, m, m, m, scratch);
+        BlockMultPlusExperiments_DDRB.tileMultPlus_packed_jik_I4_scratch(A, B, C, 0, 0, 0, m, m, m, scratch);
     }
 
     public static void main( String[] args ) throws RunnerException {

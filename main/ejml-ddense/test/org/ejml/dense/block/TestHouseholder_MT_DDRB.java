@@ -78,4 +78,15 @@ class TestHouseholder_MT_DDRB extends EjmlStandardJUnit {
 
         assertTrue(MatrixOps_DDRB.isEquals(Cs, Cc, UtilEjml.TEST_F64));
     }
+
+    @Test void rank1UpdateMultR_Col() {
+        double gamma = 2.5;
+        DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2 - 1, -1, 1, rand, r);
+        DMatrixRBlock AA = A.copy();
+
+        Householder_DDRB.rank1UpdateMultR_Col(r, new DSubmatrixD1(A), 1, gamma);
+        Householder_MT_DDRB.rank1UpdateMultR_Col(r, new DSubmatrixD1(AA), 1, gamma);
+
+        assertTrue(MatrixOps_DDRB.isEquals(A, AA, UtilEjml.TEST_F64));
+    }
 }

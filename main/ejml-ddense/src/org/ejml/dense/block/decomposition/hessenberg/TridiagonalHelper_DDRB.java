@@ -19,10 +19,10 @@
 package org.ejml.dense.block.decomposition.hessenberg;
 
 import org.ejml.data.DSubmatrixD1;
-import org.ejml.dense.block.InnerHouseholder_DDRB;
+import org.ejml.dense.block.Householder_DDRB;
 import org.ejml.dense.block.VectorOps_DDRB;
 
-import static org.ejml.dense.block.InnerHouseholder_DDRB.computeHouseholderRow;
+import static org.ejml.dense.block.Householder_DDRB.computeHouseholderRow;
 
 /// Row-form panel operations for the block tridiagonal decomposition. Each routine reduces or
 /// updates the upper row block of a symmetric matrix using Householder reflectors, building the
@@ -155,10 +155,10 @@ public class TridiagonalHelper_DDRB {
             // y = y + u_i*v_i^t*u + v_i*u_i^t*u
 
             // v_i^t*u
-            double dot_v_u = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, V, i, 1);
+            double dot_v_u = Householder_DDRB.innerProdRow(blockLength, A, row, V, i, 1);
 
             // u_i^t*u
-            double dot_u_u = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, A, i, 1);
+            double dot_u_u = Householder_DDRB.innerProdRow(blockLength, A, row, A, i, 1);
 
             // y = y + u_i*(v_i^t*u)
             // the ones in these 'u' are skipped over since the next submatrix of A
@@ -184,7 +184,7 @@ public class TridiagonalHelper_DDRB {
 
         for (int i = row + 1; i < heightMatA; i++) {
 
-            double val = InnerHouseholder_DDRB.innerProdRow_symm(blockLength, A, row, A, i, 1);
+            double val = Householder_DDRB.innerProdRow_symm(blockLength, A, row, A, i, 1);
 
             V.set(row, i, val);
         }
@@ -198,7 +198,7 @@ public class TridiagonalHelper_DDRB {
     public static void computeVRow(
             final int blockLength, final DSubmatrixD1 A, final DSubmatrixD1 V, int row, double gamma ) {
         // val=(y^T*u)
-        double val = InnerHouseholder_DDRB.innerProdRow(blockLength, A, row, V, row, 1);
+        double val = Householder_DDRB.innerProdRow(blockLength, A, row, V, row, 1);
 
         // take in account the one
         double before = A.get(row, row + 1);

@@ -18,7 +18,7 @@
 
 package org.ejml.dense.row.mult;
 
-/// Experimental loop-ordering variants of [InnerMultiplication_DDRB.blockMultPlus].
+/// Experimental loop-ordering variants of [InnerMultiplication_DDRB.tileMultPlus].
 ///
 /// All compute the same operation:
 ///
@@ -71,7 +71,7 @@ public class BlockMultPlusExperiments_DDRB {
 
     /// Plain for loop with no inlining. This similar to what the original code was, but without
     /// hand tuning of inner for loop.
-    public static void blockMultPlus_ikj_historical( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_ikj_historical( final double[] dataA, final double[] dataB, final double[] dataC,
                                                      int indexA, int indexB, int indexC,
                                                      final int heightA, final int widthA, final int widthC ) {
         int a = indexA;
@@ -95,7 +95,7 @@ public class BlockMultPlusExperiments_DDRB {
 
     /// Plain for loop with no inlining. Similar to IKJ historical, but lets us see how well
     /// the JVM optimizes regular for loops
-    public static void blockMultPlus_ikj_for( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_ikj_for( final double[] dataA, final double[] dataB, final double[] dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
         for (int i = 0; i < heightA; i++) {
@@ -113,7 +113,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Order: i (outer), j (middle), k (inner).
     /// Form: dot-product. Inner k accumulates s across full k-sweep, KB=4 unroll.
     /// Hoist: per (i,j), pointer aIdx walks contiguously through k; bIdx walks strided.
-    public static void blockMultPlus_ijk( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_ijk( final double[] dataA, final double[] dataB, final double[] dataC,
                                           int indexA, int indexB, int indexC,
                                           final int heightA, final int widthA, final int widthC ) {
         final int kEnd4 = widthA & ~3;
@@ -148,7 +148,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Order: i (outer), k (middle), j (inner).
     /// Form: rank-1. Inner j is JB=4 unroll, walking dataB and dataC contiguously.
     /// Hoist: valA = dataA[i*widthA+k] is loop-invariant in j; computed once per (i,k).
-    public static void blockMultPlus_ikj( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_ikj( final double[] dataA, final double[] dataB, final double[] dataC,
                                           int indexA, int indexB, int indexC,
                                           final int heightA, final int widthA, final int widthC ) {
         final int jEnd4 = widthC & ~3;
@@ -179,7 +179,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Form: dot-product. Inner k with KB=4 unroll, single accumulator.
     /// Hoist: per (j,i), bIdx walks down a column of dataB strided by widthC.
     /// Outer-j means dataB column is held in cache across all i for the same j.
-    public static void blockMultPlus_jik( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_jik( final double[] dataA, final double[] dataB, final double[] dataC,
                                           int indexA, int indexB, int indexC,
                                           final int heightA, final int widthA, final int widthC ) {
         final int kEnd4 = widthA & ~3;
@@ -213,7 +213,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Hoist: bVal = dataB[k*widthC+j] is loop-invariant in i (computed once per (j,k)).
     /// Note: dataA and dataC are both strided in i (by widthA and widthC), so this is
     /// the "all-strided inner" pattern. The single-scalar bVal hoist is the only natural win.
-    public static void blockMultPlus_jki( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_jki( final double[] dataA, final double[] dataB, final double[] dataC,
                                           int indexA, int indexB, int indexC,
                                           final int heightA, final int widthA, final int widthC ) {
         final int iEnd4 = heightA & ~3;
@@ -239,7 +239,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Form: rank-1. Inner j is JB=4 unroll.
     /// Hoist: valA = dataA[i*widthA+k] loop-invariant in j.
     /// Outer-k means a "row of B" (dataB[k*widthC+..]) is held in L1 across all i.
-    public static void blockMultPlus_kij( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_kij( final double[] dataA, final double[] dataB, final double[] dataC,
                                           int indexA, int indexB, int indexC,
                                           final int heightA, final int widthA, final int widthC ) {
         final int jEnd4 = widthC & ~3;
@@ -267,7 +267,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Form: rank-1 with i innermost. IB=4 unroll on i.
     /// Hoist: bVal = dataB[k*widthC+j] is loop-invariant in i.
     /// Same all-strided inner pattern as jki; differs in outer cache behavior.
-    public static void blockMultPlus_kji( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_kji( final double[] dataA, final double[] dataB, final double[] dataC,
                                           int indexA, int indexB, int indexC,
                                           final int heightA, final int widthA, final int widthC ) {
         final int iEnd4 = heightA & ~3;
@@ -292,7 +292,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Order: i, k, j with k blocked by 4 at the middle (KB=4).
     /// 4 valA's hoisted from a-row; 4 b-row starts cached. Inner j does ONE c-RMW
     /// fusing 4 multiplies, reducing dataC store traffic by 4x vs baseline ikj.
-    public static void blockMultPlus_ikj_K4( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_ikj_K4( final double[] dataA, final double[] dataB, final double[] dataC,
                                              int indexA, int indexB, int indexC,
                                              final int heightA, final int widthA, final int widthC ) {
         final int kEnd4 = widthA & ~3;
@@ -328,7 +328,7 @@ public class BlockMultPlusExperiments_DDRB {
         }
     }
 
-    public static void blockMultPlus_ikj_K4_pinc( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_ikj_K4_pinc( final double[] dataA, final double[] dataB, final double[] dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int heightA, final int widthA, final int widthC ) {
         final int kEnd4 = widthA & ~3;
@@ -366,7 +366,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Order: k, i, j with i blocked by 4 at the middle (IB=4).
     /// 4 valA's hoisted; inner j shares a single dataB[bRow+j] load across 4 FMAs,
     /// cutting redundant b-loads by 4x. Writes to 4 different c-rows per j.
-    public static void blockMultPlus_kij_I4( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_kij_I4( final double[] dataA, final double[] dataB, final double[] dataC,
                                              int indexA, int indexB, int indexC,
                                              final int heightA, final int widthA, final int widthC ) {
         final int iEnd4 = heightA & ~3;
@@ -405,7 +405,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Order: j, i, k with i blocked by 4 at the middle (IB=4).
     /// 4 a-row-walks share one strided b-column-walk in inner k.
     /// 4 dot-product accumulators in registers; 4 stores at end of k-sweep.
-    public static void blockMultPlus_jik_I4( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_jik_I4( final double[] dataA, final double[] dataB, final double[] dataC,
                                              int indexA, int indexB, int indexC,
                                              final int heightA, final int widthA, final int widthC ) {
         final int iEnd4 = heightA & ~3;
@@ -446,7 +446,7 @@ public class BlockMultPlusExperiments_DDRB {
         }
     }
 
-    public static void blockMultPlus_jik_I4_pinc( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_jik_I4_pinc( final double[] dataA, final double[] dataB, final double[] dataC,
                                                   int indexA, int indexB, int indexC,
                                                   final int heightA, final int widthA, final int widthC ) {
         final int iEnd4 = heightA & ~3;
@@ -491,7 +491,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// 4x4 register tile (i,j outer-blocked, k inner). 16 scalar accumulators
     /// hold a 4x4 c-tile across the full k-sweep. Classic GEMM register-tile shape.
     /// Risk: 16 accumulators may spill in HotSpot.
-    public static void blockMultPlus_tile4x4( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_tile4x4( final double[] dataA, final double[] dataB, final double[] dataC,
                                               int indexA, int indexB, int indexC,
                                               final int heightA, final int widthA, final int widthC ) {
         final int iEnd = heightA & ~3;
@@ -578,7 +578,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Includes per-call allocation of the pack buffer -- not realistic for production
     /// (would use caller-provided/ThreadLocal scratch), but indicates whether the
     /// algorithmic win exists at all.
-    public static void blockMultPlus_packed( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_packed( final double[] dataA, final double[] dataB, final double[] dataC,
                                              int indexA, int indexB, int indexC,
                                              final int heightA, final int widthA, final int widthC ) {
         // Pack B: B_pack[j*widthA + k] = dataB[indexB + k*widthC + j]
@@ -628,10 +628,10 @@ public class BlockMultPlusExperiments_DDRB {
         }
     }
 
-    /// Like blockMultPlus_packed but takes a caller-provided scratch buffer.
+    /// Like tileMultPlus_packed but takes a caller-provided scratch buffer.
     /// scratch must have length >= widthA*widthC. Pack region [0, widthA*widthC) is used.
-    /// Removes per-call allocation cost; otherwise identical to blockMultPlus_packed.
-    public static void blockMultPlus_packed_scratch( final double[] dataA, final double[] dataB, final double[] dataC,
+    /// Removes per-call allocation cost; otherwise identical to tileMultPlus_packed.
+    public static void tileMultPlus_packed_scratch( final double[] dataA, final double[] dataB, final double[] dataC,
                                                      int indexA, int indexB, int indexC,
                                                      final int heightA, final int widthA, final int widthC,
                                                      final double[] scratch ) {
@@ -684,7 +684,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Pack B once into scratch (transposed), then run a 4x4 register tile against
     /// the packed buffer. After packing, both A and packed-B are accessed contiguously
     /// in k from the inner loop. scratch must have length >= widthA*widthC.
-    public static void blockMultPlus_packed_tile4x4_scratch( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_packed_tile4x4_scratch( final double[] dataA, final double[] dataB, final double[] dataC,
                                                              int indexA, int indexB, int indexC,
                                                              final int heightA, final int widthA, final int widthC,
                                                              final double[] scratch ) {
@@ -795,7 +795,7 @@ public class BlockMultPlusExperiments_DDRB {
     /// Pack B transposed into scratch, then run jik_I4 against the packed buffer.
     /// The strided-in-k B reads of jik_I4 become contiguous-in-k reads from scratch.
     /// scratch must have length >= widthA*widthC.
-    public static void blockMultPlus_packed_jik_I4_scratch( final double[] dataA, final double[] dataB, final double[] dataC,
+    public static void tileMultPlus_packed_jik_I4_scratch( final double[] dataA, final double[] dataB, final double[] dataC,
                                                             int indexA, int indexB, int indexC,
                                                             final int heightA, final int widthA, final int widthC,
                                                             final double[] scratch ) {

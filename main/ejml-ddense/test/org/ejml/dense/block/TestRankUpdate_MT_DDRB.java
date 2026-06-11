@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TestInnerRankUpdate_MT_DDRB extends EjmlStandardJUnit {
+class TestRankUpdate_MT_DDRB extends EjmlStandardJUnit {
     int N = 10;
 
     @Test void rankNUpdate() {
@@ -58,8 +58,8 @@ class TestInnerRankUpdate_MT_DDRB extends EjmlStandardJUnit {
 
         DSubmatrixD1 subB = new DSubmatrixD1(blockB, 0, origB.numRows, 0, origB.numCols);
 
-        InnerRankUpdate_DDRB.rankNUpdate(N, alpha, subFound, subB);
-        InnerRankUpdate_MT_DDRB.rankNUpdate(N, alpha, subExpected, subB);
+        RankUpdate_DDRB.rankNUpdate(N, alpha, subFound, subB);
+        RankUpdate_MT_DDRB.rankNUpdate(N, alpha, subExpected, subB);
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(expectedA, foundA, UtilEjml.TEST_F64));
     }
@@ -84,8 +84,8 @@ class TestInnerRankUpdate_MT_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 subFound = new DSubmatrixD1(foundA, 0, expectA.numRows, 0, expectA.numCols);
         DSubmatrixD1 subB = new DSubmatrixD1(B, 0, B.numRows, 0, B.numCols);
 
-        InnerRankUpdate_DDRB.symmRankNMinus_U(N, subExpect, subB);
-        InnerRankUpdate_MT_DDRB.symmRankNMinus_U(N, subFound, subB);
+        RankUpdate_DDRB.symmRankNMinus_U(N, subExpect, subB);
+        RankUpdate_MT_DDRB.symmRankNMinus_U(N, subFound, subB);
 
         assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true, expectA, foundA, UtilEjml.TEST_F64));
     }
@@ -110,8 +110,8 @@ class TestInnerRankUpdate_MT_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 subFound = new DSubmatrixD1(foundA, 0, expectA.numRows, 0, expectA.numCols);
         DSubmatrixD1 subB = new DSubmatrixD1(B, 0, B.numRows, 0, B.numCols);
 
-        InnerRankUpdate_DDRB.symmRankNMinus_L(N, subExpect, subB);
-        InnerRankUpdate_MT_DDRB.symmRankNMinus_L(N, subFound, subB);
+        RankUpdate_DDRB.symmRankNMinus_L(N, subExpect, subB);
+        RankUpdate_MT_DDRB.symmRankNMinus_L(N, subFound, subB);
 
         assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false, expectA, foundA, UtilEjml.TEST_F64));
     }

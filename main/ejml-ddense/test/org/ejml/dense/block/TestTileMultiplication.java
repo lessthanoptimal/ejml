@@ -34,7 +34,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
+public class TestTileMultiplication extends EjmlStandardJUnit {
     private static final int BLOCK_LENGTH = 4;
 
     /// Check the inner block multiplication functions against various shapes of inputs.
@@ -49,7 +49,7 @@ public class TestInnerMultiplication_DDRB extends EjmlStandardJUnit {
 
     private void checkBlockMultCase( int heightA, int widthA, int widthB ) {
         int numFound = 0;
-        for (Method m : InnerMultiplication_DDRB.class.getDeclaredMethods()) {
+        for (Method m : TileMultiplication_F64.class.getDeclaredMethods()) {
             if (!Modifier.isStatic(m.getModifiers()))
                 continue;
             String name = m.getName();

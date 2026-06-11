@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkInnerTriangularSolver_DDRB {
+public class BenchmarkTileTriangularSolver_F64 {
     @Param({"60"})
     public int m;
 
@@ -84,92 +84,92 @@ public class BenchmarkInnerTriangularSolver_DDRB {
     }
 
     @Benchmark public void invertLower_two() {
-        InnerTriangularSolver_DDRB.invertLower(L, L_inv, m, 0, 0);
+        TileTriangularSolver_F64.invertLower(L, L_inv, m, 0, 0);
     }
 
     @Benchmark public void invertLower_inplace() {
-        InnerTriangularSolver_DDRB.invertLower(L, m, 0);
+        TileTriangularSolver_F64.invertLower(L, m, 0);
     }
 
     @Benchmark public void invertUpper_two() {
-        InnerTriangularSolver_DDRB.invertUpper(U, U_inv, m, 0, 0);
+        TileTriangularSolver_F64.invertUpper(U, U_inv, m, 0, 0);
     }
 
     @Benchmark public void invertUpper_inplace() {
-        InnerTriangularSolver_DDRB.invertUpper(U, m, 0);
+        TileTriangularSolver_F64.invertUpper(U, m, 0);
     }
 
     @Benchmark public void invertUpperTran() {
-        InnerTriangularSolver_DDRB.invertUpperTran(U, U_inv, m, 0, 0);
+        TileTriangularSolver_F64.invertUpperTran(U, U_inv, m, 0, 0);
     }
 
     @Benchmark public void lsolveLow() {
-        InnerTriangularSolver_DDRB.lsolveLow(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveLow(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveLowTrans() {
-        InnerTriangularSolver_DDRB.lsolveLowTrans(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveLowTrans(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveLowBTrans() {
-        InnerTriangularSolver_DDRB.lsolveLowBTrans(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveLowBTrans(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveLowTransBTrans() {
-        InnerTriangularSolver_DDRB.lsolveLowTransBTrans(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveLowTransBTrans(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveUpp() {
-        InnerTriangularSolver_DDRB.lsolveUpp(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveUpp(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveUppTrans() {
-        InnerTriangularSolver_DDRB.lsolveUppTrans(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveUppTrans(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveUppBTrans() {
-        InnerTriangularSolver_DDRB.lsolveUppBTrans(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveUppBTrans(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void lsolveUppTransBTrans() {
-        InnerTriangularSolver_DDRB.lsolveUppTransBTrans(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.lsolveUppTransBTrans(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveLow() {
-        InnerTriangularSolver_DDRB.rsolveLow(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveLow(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveLowTrans() {
-        InnerTriangularSolver_DDRB.rsolveLowTrans(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveLowTrans(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveLowBTrans() {
-        InnerTriangularSolver_DDRB.rsolveLowBTrans(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveLowBTrans(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveLowTransBTrans() {
-        InnerTriangularSolver_DDRB.rsolveLowTransBTrans(L, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveLowTransBTrans(L, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveUpp() {
-        InnerTriangularSolver_DDRB.rsolveUpp(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveUpp(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveUppTrans() {
-        InnerTriangularSolver_DDRB.rsolveUppTrans(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveUppTrans(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveUppBTrans() {
-        InnerTriangularSolver_DDRB.rsolveUppBTrans(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveUppBTrans(U, B, m, n, m, 0, 0);
     }
 
     @Benchmark public void rsolveUppTransBTrans() {
-        InnerTriangularSolver_DDRB.rsolveUppTransBTrans(U, B, m, n, m, 0, 0);
+        TileTriangularSolver_F64.rsolveUppTransBTrans(U, B, m, n, m, 0, 0);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkInnerTriangularSolver_DDRB.class.getSimpleName())
+                .include(BenchmarkTileTriangularSolver_F64.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

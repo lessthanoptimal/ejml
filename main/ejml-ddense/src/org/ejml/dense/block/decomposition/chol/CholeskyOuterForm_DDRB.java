@@ -20,8 +20,8 @@ package org.ejml.dense.block.decomposition.chol;
 import org.ejml.data.Complex_F64;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.data.DSubmatrixD1;
-import org.ejml.dense.block.InnerRankUpdate_DDRB;
 import org.ejml.dense.block.MatrixOps_DDRB;
+import org.ejml.dense.block.RankUpdate_DDRB;
 import org.ejml.dense.block.TriangularSolver_DDRB;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.jetbrains.annotations.Nullable;
@@ -119,7 +119,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
                 TriangularSolver_DDRB.lsolveBlock(blockLength, false, subA, subB, false, true);
 
                 // C = C - B * B^T
-                InnerRankUpdate_DDRB.symmRankNMinus_L(blockLength, subC, subB);
+                RankUpdate_DDRB.symmRankNMinus_L(blockLength, subC, subB);
             }
         }
 
@@ -159,7 +159,7 @@ public class CholeskyOuterForm_DDRB implements CholeskyDecomposition_F64<DMatrix
                 TriangularSolver_DDRB.lsolveBlock(blockLength, true, subA, subB, true, false);
 
                 // C = C - B^T * B
-                InnerRankUpdate_DDRB.symmRankNMinus_U(blockLength, subC, subB);
+                RankUpdate_DDRB.symmRankNMinus_U(blockLength, subC, subB);
             }
         }
 

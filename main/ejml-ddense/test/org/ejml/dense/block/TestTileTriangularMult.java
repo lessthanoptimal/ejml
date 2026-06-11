@@ -32,10 +32,10 @@ import java.lang.reflect.Modifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TestInnerTriangularMult_DDRB extends EjmlStandardJUnit {
+class TestTileTriangularMult extends EjmlStandardJUnit {
     // Automatic unit test which reads in all methods and parses their operation
     @Test void all() {
-        Method[] methods = InnerTriangularMult_DDRB.class.getMethods();
+        Method[] methods = TileTriangularMult_F64.class.getMethods();
 
         int count = 0;
         for (Method m : methods) {

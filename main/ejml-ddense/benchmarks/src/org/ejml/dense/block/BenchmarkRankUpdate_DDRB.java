@@ -35,13 +35,13 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkInnerRankUpdate_MT_DDRB {
+public class BenchmarkRankUpdate_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"7000"})
+    @Param({"3000"})
     public int size;
 
     //    @Param({"5","10","20","40","80","120"})
-    @Param({"80"})
+    @Param({"60"})
     public int blockLength;
 
     public DMatrixRBlock A, A_template, B, B_tran;
@@ -69,20 +69,20 @@ public class BenchmarkInnerRankUpdate_MT_DDRB {
     }
 
     @Benchmark public void rankNUpdate() {
-        InnerRankUpdate_MT_DDRB.rankNUpdate(blockLength, alpha, Asub, Bsub);
+        RankUpdate_DDRB.rankNUpdate(blockLength, alpha, Asub, Bsub);
     }
 
     @Benchmark public void symmRankNMinus_U() {
-        InnerRankUpdate_MT_DDRB.symmRankNMinus_U(blockLength, Asub, Bsub);
+        RankUpdate_DDRB.symmRankNMinus_U(blockLength, Asub, Bsub);
     }
 
     @Benchmark public void symmRankNMinus_L() {
-        InnerRankUpdate_MT_DDRB.symmRankNMinus_L(blockLength, Asub, BTranSub);
+        RankUpdate_DDRB.symmRankNMinus_L(blockLength, Asub, BTranSub);
     }
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkInnerRankUpdate_MT_DDRB.class.getSimpleName())
+                .include(BenchmarkRankUpdate_DDRB.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();

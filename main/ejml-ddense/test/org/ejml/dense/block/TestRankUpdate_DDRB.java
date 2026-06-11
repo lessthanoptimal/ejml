@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
+public class TestRankUpdate_DDRB extends EjmlStandardJUnit {
     int N = 4;
 
     /// Tests rankNUpdate with various sized input matrices
@@ -56,7 +56,7 @@ public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 subB = new DSubmatrixD1(blockB, 0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(alpha));
-        InnerRankUpdate_DDRB.rankNUpdate(N, alpha, subA, subB);
+        RankUpdate_DDRB.rankNUpdate(N, alpha, subA, subB);
 
         assertTrue(GenericMatrixOps_F64.isEquivalent(expected.getDDRM(), blockA, UtilEjml.TEST_F64));
     }
@@ -84,7 +84,7 @@ public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 subB = new DSubmatrixD1(blockB, 0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.transpose().mult(origB).scale(-1));
-        InnerRankUpdate_DDRB.symmRankNMinus_U(N, subA, subB);
+        RankUpdate_DDRB.symmRankNMinus_U(N, subA, subB);
 
         assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(true, expected.getDDRM(), blockA, UtilEjml.TEST_F64));
     }
@@ -111,7 +111,7 @@ public class TestInnerRankUpdate_DDRB extends EjmlStandardJUnit {
         DSubmatrixD1 subB = new DSubmatrixD1(blockB, 0, origB.numRows(), 0, origB.numCols());
 
         SimpleMatrix expected = origA.plus(origB.mult(origB.transpose()).scale(-1));
-        InnerRankUpdate_DDRB.symmRankNMinus_L(N, subA, subB);
+        RankUpdate_DDRB.symmRankNMinus_L(N, subA, subB);
 
         assertTrue(GenericMatrixOps_F64.isEquivalentTriangle(false, expected.getDDRM(), blockA, UtilEjml.TEST_F64));
     }

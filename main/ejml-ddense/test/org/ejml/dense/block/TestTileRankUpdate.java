@@ -19,24 +19,12 @@
 package org.ejml.dense.block;
 
 import org.ejml.EjmlStandardJUnit;
-import org.ejml.UtilEjml;
-import org.ejml.data.DMatrixRBlock;
-import org.ejml.data.DSubmatrixD1;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-class TestInnerHouseholder_MT_DDRB extends EjmlStandardJUnit {
-    int r = 3;
-
-    @Test void rank1UpdateMultR_Col() {
-        double gamma = 2.5;
-        DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r*2 - 1, -1, 1, rand, r);
-        DMatrixRBlock AA = A.copy();
-
-        InnerHouseholder_DDRB.rank1UpdateMultR_Col(r, new DSubmatrixD1(A), 1, gamma);
-        InnerHouseholder_MT_DDRB.rank1UpdateMultR_Col(r, new DSubmatrixD1(AA), 1, gamma);
-
-        assertTrue(MatrixOps_DDRB.isEquals(A, AA, UtilEjml.TEST_F64));
+public class TestTileRankUpdate extends EjmlStandardJUnit {
+    @Test void foo() {
+        fail("implement");
     }
 }

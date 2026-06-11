@@ -42,7 +42,7 @@ package org.ejml.dense.block;
 ///
 /// `t(row,col) = t[offsetT + row*strideT + col]`; `b` and `c` are addressed the same way. Loops use the standard
 /// convention: `i` = output row, `j` = output column, `k` = contraction.
-public class InnerTriangularMult_DDRB {
+public class TileTriangularMult_F64 {
     /// `c = t*b`, with unit lower-triangular `t`.
     public static void lmultUnitLow( double[] t, double[] b, double[] c,
                                      int m, int n,

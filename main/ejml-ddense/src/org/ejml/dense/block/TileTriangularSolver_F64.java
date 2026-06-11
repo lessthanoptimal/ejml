@@ -17,7 +17,6 @@
  */
 package org.ejml.dense.block;
 
-
 /// Contains triangular solvers and inverters for inner blocks of a [DMatrixRBlock].
 ///
 /// Contracts:
@@ -63,7 +62,7 @@ package org.ejml.dense.block;
 ///
 /// Solvers have their loops ordered to process sequential data inside the inner loops to encourage vectorization.
 /// Depending on the layout it might be a dot-product or rank-1 update based solver.
-public class InnerTriangularSolver_DDRB {
+public class TileTriangularSolver_F64 {
 
     /// Inverts a square lower triangular matrix:  L = L<sup>-1</sup>
     ///

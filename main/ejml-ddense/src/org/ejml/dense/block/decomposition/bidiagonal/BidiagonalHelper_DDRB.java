@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2020, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -19,8 +19,7 @@
 package org.ejml.dense.block.decomposition.bidiagonal;
 
 import org.ejml.data.DSubmatrixD1;
-
-import static org.ejml.dense.block.InnerHouseholder_DDRB.*;
+import org.ejml.dense.block.Householder_DDRB;
 
 /**
  * @author Peter Abeles
@@ -47,24 +46,24 @@ public class BidiagonalHelper_DDRB {
             //--- Apply reflector to the column
 
             // compute the householder vector
-            if (!computeHouseholderCol(blockLength, A, gammasU, i))
+            if (!Householder_DDRB.computeHouseholderCol(blockLength, A, gammasU, i))
                 return false;
 
             // apply to rest of the columns in the column block
-            rank1UpdateMultR_Col(blockLength, A, i, gammasU[A.col0 + i]);
+            Householder_DDRB.rank1UpdateMultR_Col(blockLength, A, i, gammasU[A.col0 + i]);
 
             // apply to the top row block
-            rank1UpdateMultR_TopRow(blockLength, A, i, gammasU[A.col0 + i]);
+            Householder_DDRB.rank1UpdateMultR_TopRow(blockLength, A, i, gammasU[A.col0 + i]);
 
             System.out.println("After column stuff");
             A.original.print();
 
             //-- Apply reflector to the row
-            if (!computeHouseholderRow(blockLength, A, gammasV, i))
+            if (!Householder_DDRB.computeHouseholderRow(blockLength, A, gammasV, i))
                 return false;
 
             // apply to rest of the rows in the row block
-            rank1UpdateMultL_Row(blockLength, A, i, i + 1, gammasV[A.row0 + i]);
+            Householder_DDRB.rank1UpdateMultL_Row(blockLength, A, i, i + 1, gammasV[A.row0 + i]);
 
             System.out.println("After update row");
             A.original.print();

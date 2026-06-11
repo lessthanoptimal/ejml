@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
-public class BenchmarkInnerHouseholder_DDRB {
+public class BenchmarkHouseholder_DDRB {
     @Param({"3000"})
     public int m;
 
@@ -64,20 +64,20 @@ public class BenchmarkInnerHouseholder_DDRB {
     }
 
     //@formatter:off
-    @Benchmark public boolean computeHouseholderCol() { return InnerHouseholder_DDRB.computeHouseholderCol(blockLength, Asub, gamma, 0); }
-    @Benchmark public boolean computeHouseholderRow() { return InnerHouseholder_DDRB.computeHouseholderRow(blockLength, Asub, gamma, 0); }
-    @Benchmark public void rank1UpdateMultR_Col() { InnerHouseholder_DDRB.rank1UpdateMultR_Col(blockLength, Asub, 0, gamma0); }
-    @Benchmark public void rank1UpdateMultR_TopRow() { InnerHouseholder_DDRB.rank1UpdateMultR_TopRow(blockLength, Asub, 0, gamma0); }
-    @Benchmark public void rank1UpdateMultL_Row() { InnerHouseholder_DDRB.rank1UpdateMultL_Row(blockLength, Asub, 0, 1, gamma0); }
-    @Benchmark public double innerProdCol() { return InnerHouseholder_DDRB.innerProdCol(blockLength, Asub, 0, blockLength, 1, blockLength); }
-    @Benchmark public double innerProdRow() { return InnerHouseholder_DDRB.innerProdRow(blockLength, Asub, 0, Asub, 1, 1); }
-    @Benchmark public double findMaxCol() { return InnerHouseholder_DDRB.findMaxCol(blockLength, Asub, 0); }
-    @Benchmark public double findMaxRow() { return InnerHouseholder_DDRB.findMaxRow(blockLength, Asub, 0, 1); }
+    @Benchmark public boolean computeHouseholderCol() { return Householder_DDRB.computeHouseholderCol(blockLength, Asub, gamma, 0); }
+    @Benchmark public boolean computeHouseholderRow() { return Householder_DDRB.computeHouseholderRow(blockLength, Asub, gamma, 0); }
+    @Benchmark public void rank1UpdateMultR_Col() { Householder_DDRB.rank1UpdateMultR_Col(blockLength, Asub, 0, gamma0); }
+    @Benchmark public void rank1UpdateMultR_TopRow() { Householder_DDRB.rank1UpdateMultR_TopRow(blockLength, Asub, 0, gamma0); }
+    @Benchmark public void rank1UpdateMultL_Row() { Householder_DDRB.rank1UpdateMultL_Row(blockLength, Asub, 0, 1, gamma0); }
+    @Benchmark public double innerProdCol() { return Householder_DDRB.innerProdCol(blockLength, Asub, 0, blockLength, 1, blockLength); }
+    @Benchmark public double innerProdRow() { return Householder_DDRB.innerProdRow(blockLength, Asub, 0, Asub, 1, 1); }
+    @Benchmark public double findMaxCol() { return Householder_DDRB.findMaxCol(blockLength, Asub, 0); }
+    @Benchmark public double findMaxRow() { return Householder_DDRB.findMaxRow(blockLength, Asub, 0, 1); }
     //@formatter:on
 
     public static void main( String[] args ) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkInnerHouseholder_DDRB.class.getSimpleName())
+                .include(BenchmarkHouseholder_DDRB.class.getSimpleName())
                 .build();
 
         new Runner(opt).run();
