@@ -21,6 +21,7 @@ package org.ejml.dense.block.decompose.chol;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_DDRB;
+import org.ejml.dense.block.decomposition.chol.CholeskyOuterForm_MT_DDRB;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.ejml.interfaces.decomposition.CholeskyDecomposition_F64;
 import org.openjdk.jmh.annotations.*;
@@ -48,12 +49,14 @@ public class BenchmarkDecompositionCholesky_DDRB {
     public DMatrixRBlock A, A_template, L;
 
     CholeskyDecomposition_F64<DMatrixRBlock> cholesky;
+    CholeskyDecomposition_F64<DMatrixRBlock> choleskyMT;
 
     @Setup
     public void setup() {
         Random rand = new Random(234);
 
         cholesky = new CholeskyOuterForm_DDRB(lower);
+        choleskyMT = new CholeskyOuterForm_MT_DDRB(lower);
         A = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetricPosDef(size, rand));
         A_template = A.copy();
         L = new DMatrixRBlock(1, 1);
@@ -64,11 +67,16 @@ public class BenchmarkDecompositionCholesky_DDRB {
         A.setTo(A_template);
     }
 
-    @Benchmark
-    public void decompose() {
+    @Benchmark public void outer() {
         if (!cholesky.decompose(A))
             throw new RuntimeException("FAILED?!");
         cholesky.getT(L);
+    }
+
+    @Benchmark public void outer_MT() {
+        if (!choleskyMT.decompose(A))
+            throw new RuntimeException("FAILED?!");
+        choleskyMT.getT(L);
     }
 
     public static void main( String[] args ) throws RunnerException {

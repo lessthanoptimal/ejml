@@ -21,6 +21,7 @@ package org.ejml.dense.block.decompose.hessenberg;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.decomposition.hessenberg.TridiagonalDecompositionHouseholder_DDRB;
+import org.ejml.dense.block.decomposition.hessenberg.TridiagonalDecompositionHouseholder_MT_DDRB;
 import org.ejml.dense.row.RandomMatrices_DDRM;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -39,18 +40,21 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1)
 public class BenchmarkDecompositionHessenberg_DDRB {
     //    @Param({"100", "500", "1000", "5000", "10000"})
-    @Param({"2000"})
+    @Param({"500", "2000"})
     public int size;
 
-    public DMatrixRBlock S, S_template;
+    public DMatrixRBlock S, S_template,Q, R;
 
-    TridiagonalDecompositionHouseholder_DDRB tridiagonal = new TridiagonalDecompositionHouseholder_DDRB();
+    TridiagonalDecompositionHouseholder_DDRB house = new TridiagonalDecompositionHouseholder_DDRB();
+    TridiagonalDecompositionHouseholder_MT_DDRB houseMT = new TridiagonalDecompositionHouseholder_MT_DDRB();
 
     @Setup public void setup() {
         Random rand = new Random(234);
 
         S = MatrixOps_DDRB.convert(RandomMatrices_DDRM.symmetric(size, -1, 1, rand));
         S_template = S.copy();
+        Q = new DMatrixRBlock(1, 1);
+        R = new DMatrixRBlock(1, 1);
     }
 
     @Setup(Level.Invocation) public void reset() {
@@ -58,8 +62,20 @@ public class BenchmarkDecompositionHessenberg_DDRB {
     }
 
     @Benchmark public void tridiagonal() {
-        if (!tridiagonal.decompose(S))
+        if (!house.decompose(S))
             throw new RuntimeException("Decomposition failed?");
+        // transposed and not exercise different paths
+        house.getQ(Q, false);
+        house.getQ(Q, true);
+        house.getT(R);
+    }
+
+    @Benchmark public void tridiagonal_MT() {
+        if (!houseMT.decompose(S))
+            throw new RuntimeException("Decomposition failed?");
+        houseMT.getQ(Q, false);
+        houseMT.getQ(Q, true);
+        houseMT.getT(R);
     }
 
     public static void main( String[] args ) throws RunnerException {

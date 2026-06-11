@@ -218,12 +218,12 @@ public class QRDecompositionHouseholder_DDRB
                 R = new DMatrixRBlock(dataA.numRows, dataA.numCols, blockLength);
             }
         } else {
+            if (R.blockLength != dataA.blockLength)
+                throw new RuntimeException("Block lengths don't match");
             if (compact) {
-                if (R.numCols != dataA.numCols || R.numRows != min) {
-                    throw new IllegalArgumentException("Unexpected dimension.");
-                }
-            } else if (R.numCols != dataA.numCols || R.numRows != dataA.numRows) {
-                throw new IllegalArgumentException("Unexpected dimension.");
+                R.reshape(min, dataA.numCols);
+            } else {
+                R.reshape(dataA.numRows, dataA.numCols);
             }
         }
 

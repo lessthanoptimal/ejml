@@ -21,6 +21,7 @@ package org.ejml.dense.block.decompose.qr;
 import org.ejml.data.DMatrixRBlock;
 import org.ejml.dense.block.MatrixOps_DDRB;
 import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_DDRB;
+import org.ejml.dense.block.decomposition.qr.QRDecompositionHouseholder_MT_DDRB;
 import org.ejml.interfaces.decomposition.QRDecomposition;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -42,25 +43,41 @@ public class BenchmarkDecompositionQR_DDRB {
     @Param({"1000", "2000"})
     public int size;
 
-    public DMatrixRBlock A, A_template;
+    public DMatrixRBlock A, A_template, Q, R;
 
-    QRDecomposition<DMatrixRBlock> qr = new QRDecompositionHouseholder_DDRB();
+    QRDecomposition<DMatrixRBlock> house = new QRDecompositionHouseholder_DDRB();
+    QRDecomposition<DMatrixRBlock> houseMT = new QRDecompositionHouseholder_MT_DDRB();
 
-    @Setup
-    public void setup() {
+    @Setup public void setup() {
         Random rand = new Random(234);
 
         A = MatrixOps_DDRB.createRandom(size*4, size/4, -1, 1, rand);
         A_template = A.copy();
+
+        Q = new DMatrixRBlock(1, 1);
+        R = new DMatrixRBlock(1, 1);
     }
 
     @Setup(Level.Invocation) public void reset() {
         A.setTo(A_template);
     }
 
-    @Benchmark public void decompose() {
-        if (!qr.decompose(A))
+    @Benchmark public void householder() {
+        if (!house.decompose(A))
             throw new RuntimeException("FAILED?!");
+
+        // get Q and R to fully exercise the code. Compact format to avoid having Q dominate
+        house.getQ(Q, true);
+        house.getR(R, true);
+    }
+
+    @Benchmark public void householder_MT() {
+        if (!houseMT.decompose(A))
+            throw new RuntimeException("FAILED?!");
+
+        // get Q and R to fully exercise the code. Compact format to avoid having Q dominate
+        houseMT.getQ(Q, true);
+        houseMT.getR(R, true);
     }
 
     public static void main( String[] args ) throws RunnerException {

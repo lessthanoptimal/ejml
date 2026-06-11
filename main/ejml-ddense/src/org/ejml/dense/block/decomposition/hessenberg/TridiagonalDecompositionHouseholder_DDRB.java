@@ -65,9 +65,9 @@ public class TridiagonalDecompositionHouseholder_DDRB
         if (T == null) {
             T = new DMatrixRBlock(A.numRows, A.numCols, A.blockLength);
         } else {
-            if (T.numRows != A.numRows || T.numCols != A.numCols)
-                throw new IllegalArgumentException("T must have the same dimensions as the input matrix");
-
+            if (T.blockLength != A.blockLength)
+                throw new RuntimeException("Block lengths don't match");
+            T.reshape(A.numRows, A.numCols);
             CommonOps_DDRM.fill(T, 0);
         }
 
