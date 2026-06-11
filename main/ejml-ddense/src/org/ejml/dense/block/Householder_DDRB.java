@@ -38,8 +38,7 @@ import pabeles.concurrency.GrowArray;
 ///
 /// Parameter conventions (ops document only what departs from these):
 ///
-///   - blockLength: inner block size. Ops taking it work over block-aligned [DSubmatrixD1] views; the raw
-///     inner-block kernels take heightA/widthA/widthC directly instead.
+///   - blockLength: inner block size.
 ///   - [DSubmatrixD1] args (A, B, C, Y, W, V, ...) are block-aligned submatrix views; a paired row/col index
 ///     selects a stored vector (usually a reflector) within one.
 ///   - Raw kernels follow the [InnerMultiplication_DDRB] convention: dataA/dataB/dataC backing arrays,
@@ -147,8 +146,9 @@ public class Householder_DDRB {
     public static void initializeW( final int blockLength,
                                     final DSubmatrixD1 W, final DSubmatrixD1 Y,
                                     final double beta ) {
-        final int width = W.col1 - W.col0;
-        if (width <= 0)
+        final int widthW = W.col1 - W.col0;
+        final int widthY = Y.col1 - Y.col0;
+        if (widthW <= 0)
             return;
 
         final double[] dataW = W.original.data;
@@ -164,13 +164,13 @@ public class Householder_DDRB {
             // take in account the first element in V being 1
             if (i == W.row0) {
                 dataW[indexW] = -beta;
-                indexW += width;
-                indexY += width;
-                for (int k = 1; k < heightW; k++, indexW += width, indexY += width) {
+                indexW += widthW;
+                indexY += widthY;
+                for (int k = 1; k < heightW; k++, indexW += widthW, indexY += widthY) {
                     dataW[indexW] = -beta*dataY[indexY];
                 }
             } else {
-                for (int k = 0; k < heightW; k++, indexW += width, indexY += width) {
+                for (int k = 0; k < heightW; k++, indexW += widthW, indexY += widthY) {
                     dataW[indexW] = -beta*dataY[indexY];
                 }
             }
@@ -182,14 +182,14 @@ public class Householder_DDRB {
     ///
     /// z = - β<sub>j</sub>\*(V<sup>j</sup> + W\*h)
     ///
-    /// where h is a vector of length 'col' and was computed using [#computeY_t_V].
-    /// V is a column in the Y matrix. Z is a column in the W matrix. Both Z and V are
-    /// column 'col'.
+    /// where h is a vector of length 'col' and was computed using [#computeY_t_V]. V is a column in the Y matrix.
+    /// Z is a column in the W matrix. Both Z and V are column 'col'.
     ///
     /// @param temp Temporary storage of at least length 'col'.
     public static void computeZ( final int blockLength, final DSubmatrixD1 Y, final DSubmatrixD1 W,
                                  final int col, final double[] temp, final double beta ) {
-        final int width = Y.col1 - Y.col0;
+        final int widthW = W.col1 - W.col0;
+        final int widthY = Y.col1 - Y.col0;
 
         final double[] dataW = W.original.data;
         final double[] dataY = Y.original.data;
@@ -208,7 +208,7 @@ public class Householder_DDRB {
 
             if (i == Y.row0) {
                 // handle the triangular portion with the leading zeros and the one
-                for (int k = 0; k < heightW; k++, indexZ += width, indexW += width, indexV += width) {
+                for (int k = 0; k < heightW; k++, indexZ += widthW, indexW += widthW, indexV += widthY) {
                     // compute the rows of W * h
                     double total = 0;
 
@@ -226,7 +226,7 @@ public class Householder_DDRB {
                     }
                 }
             } else {
-                final int endZ = indexZ + width*heightW;
+                final int endZ = indexZ + widthW*heightW;
 //                for( int k = 0; k < heightW; k++ ,
                 while (indexZ != endZ) {
                     // compute the rows of W * h
@@ -239,9 +239,9 @@ public class Householder_DDRB {
                     // add the two vectors together and multiply by -beta
                     dataW[indexZ] = beta_neg*(dataY[indexV] + total);
 
-                    indexZ += width;
-                    indexW += width;
-                    indexV += width;
+                    indexZ += widthW;
+                    indexW += widthW;
+                    indexV += widthY;
                 }
             }
         }
@@ -265,13 +265,16 @@ public class Householder_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-    /// Block multiply-add using Y's implicit zeros and unit diagonal (Y holds the reflectors).
+    /// Block multiply-add using Y's implicit zeros and unit diagonal (Y holds the reflectors). `DLARFB`
+    /// analog.
     ///
     /// C = C + Y \* B
     public static void multPlus_TriLL0( final int blockLength,
                                         final DSubmatrixD1 Y, final DSubmatrixD1 B,
                                         final DSubmatrixD1 C ) {
         final int widthY = Y.col1 - Y.col0;
+        // Cap block size based on reflector length. Otherwise, you need to fill extra space with zeros.
+        final int r = Math.min(Y.row1 - Y.row0, widthY);
 
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(Y.row0, Y.row1, blockLength, i -> {
         for (int i = Y.row0; i < Y.row1; i += blockLength) {
@@ -284,14 +287,18 @@ public class Householder_DDRB {
 
                 for (int k = Y.col0; k < Y.col1; k += blockLength) {
                     int indexY = i*Y.original.numCols + k*heightY;
-                    int indexB = (k - Y.col0 + B.row0)*B.original.numCols + j*widthY;
+                    int indexB = (k - Y.col0 + B.row0)*B.original.numCols + j*r;
 
                     if (i == Y.row0) {
-                        blockMultPlus_TriLL0(Y.original.data, B.original.data, C.original.data,
-                                indexY, indexB, indexC, heightY, widthY, widthB);
+                        InnerTriangularMult_DDRB.lmultAddUnitLow(Y.original.data, B.original.data, C.original.data,
+                                r, widthB, widthY, widthB, widthB, indexY, indexB, indexC);
+                        if (heightY > r)
+                            InnerMultiplication_DDRB.blockMultPlus(Y.original.data, B.original.data, C.original.data,
+                                    heightY - r, r, widthB, widthY, widthB, widthB,
+                                    indexY + r*widthY, indexB, indexC + r*widthB);
                     } else {
                         InnerMultiplication_DDRB.blockMultPlus(Y.original.data, B.original.data, C.original.data,
-                                heightY, widthY, widthB, indexY, indexB, indexC);
+                                heightY, r, widthB, widthY, widthB, widthB, indexY, indexB, indexC);
                     }
                 }
             }
@@ -299,35 +306,7 @@ public class Householder_DDRB {
         //CONCURRENT_ABOVE });
     }
 
-    /// Inner-block mult-add over the top block of Y, whose implicit zeros and unit diagonal are baked in.
-    ///
-    /// C = C + A \* B
-    private static void blockMultPlus_TriLL0( double[] dataA, double[] dataB, double[] dataC,
-                                              int indexA, int indexB, int indexC,
-                                              final int heightA, final int widthA, final int widthC ) {
-
-
-        for (int i = 0; i < heightA; i++) {
-            for (int j = 0; j < widthC; j++) {
-                double val = i < widthA ? dataB[i*widthC + j + indexB] : 0;
-
-                int end = Math.min(i, widthA);
-                int innerIndexA = i*widthA + indexA;
-                int innerOffsetB = j + indexB;
-                final int endA = innerIndexA + end;
-
-//                for (int k = 0; k < end; k++) {
-                while (innerIndexA != endA) {
-                    val += dataA[innerIndexA++]*dataB[innerOffsetB];
-                    innerOffsetB += widthC;
-                }
-
-                dataC[i*widthC + j + indexC] += val;
-            }
-        }
-    }
-
-    /// multTransAB where A is a one-block-wide column of reflectors (lower-triangular, unit diagonal).
+    /// Multiplies the transpose of a one-block-wide column of reflectors `A`
     ///
     /// C = A<sup>T</sup> \* B
     public static void multTransA_TriLL0( final int blockLength,
@@ -337,11 +316,14 @@ public class Householder_DDRB {
         if (widthA > blockLength)
             throw new IllegalArgumentException("A is expected to be at most one block wide.");
 
+        // Cap block size based on reflector length. Otherwise, you need to fill extra space with zeros.
+        int r = Math.min(A.row1 - A.row0, widthA);
+
         //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, j -> {
         for (int j = B.col0; j < B.col1; j += blockLength) {
             int widthB = Math.min(blockLength, B.col1 - j);
 
-            int indexC = C.row0*C.original.numCols + (j - B.col0 + C.col0)*widthA;
+            int indexC = C.row0*C.original.numCols + (j - B.col0 + C.col0)*r;
 
             for (int k = A.row0; k < A.row1; k += blockLength) {
                 int heightA = Math.min(blockLength, A.row1 - k);
@@ -349,33 +331,112 @@ public class Householder_DDRB {
                 int indexA = k*A.original.numCols + A.col0*heightA;
                 int indexB = (k - A.row0 + B.row0)*B.original.numCols + j*heightA;
 
-                if (k == A.row0)
-                    blockMultTransA_TriLL0(A.original.data, B.original.data, C.original.data,
-                            indexA, indexB, indexC, heightA, widthA, widthB);
-                else
+                if (k == A.row0) {
+                    InnerTriangularMult_DDRB.lmultUnitLowTransT(A.original.data, B.original.data, C.original.data,
+                            r, widthB, widthA, widthB, widthB, indexA, indexB, indexC);
+                    if (heightA > r)
+                        InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
+                                heightA - r, r, widthB, widthA, widthB, widthB,
+                                indexA + r*widthA, indexB + r*widthB, indexC);
+                } else {
                     InnerMultiplication_DDRB.blockMultPlusTransA(A.original.data, B.original.data, C.original.data,
-                            heightA, widthA, widthB, indexA, indexB, indexC);
+                            heightA, r, widthB, widthA, widthB, widthB, indexA, indexB, indexC);
+                }
             }
         }
         //CONCURRENT_ABOVE });
     }
 
-    /// Lower-triangular multTransAB with implicit unit diagonal.
+    /// Multiplies a one-block-tall row-panel of reflectors `U` (unit upper-triangular with the implicit
+    /// unit on the super-diagonal — the Tridiagonal `TriUR1` layout) by `B`. Row-form `DLARFB` analog:
+    /// the first reflector block is a unit-upper TRMM on the triangle (read one column to the right so the
+    /// super-diagonal becomes the main diagonal) plus GEMM on the body; the trailing block's super-diagonal
+    /// unit straddles into the next block-column and is restored by a read-only correction on the last row.
     ///
-    /// C = A<sup>T</sup> \* B
-    private static void blockMultTransA_TriLL0( double[] dataA, double[] dataB, double[] dataC,
-                                                int indexA, int indexB, int indexC,
-                                                final int heightA, final int widthA, final int widthC ) {
-        for (int i = 0; i < widthA; i++) {
-            for (int j = 0; j < widthC; j++) {
-                double val = i < heightA ? dataB[i*widthC + j + indexB] : 0;
+    /// C = U \* B
+    public static void mult_TriUR1( final int blockLength,
+                                    DSubmatrixD1 U, DSubmatrixD1 B,
+                                    DSubmatrixD1 C ) {
+        int bs = U.row1 - U.row0;
 
-                for (int k = i + 1; k < heightA; k++) {
-                    val += dataA[k*widthA + i + indexA]*dataB[k*widthC + j + indexB];
+        // The square triangle writes only the first bs-1 output rows; the last reflector's row is
+        // accumulated by the tail GEMM and finished by the seam correction, so zero it first.
+        VectorOps_DDRB.scale_row(blockLength, C, bs - 1, 0.0, C, bs - 1, 0, C.col1 - C.col0);
+
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(B.col0, B.col1, blockLength, j -> {
+        for (int j = B.col0; j < B.col1; j += blockLength) {
+            int widthB = Math.min(blockLength, B.col1 - j);
+
+            int indexC = C.row0*C.original.numCols + (j - B.col0 + C.col0)*bs;
+
+            for (int k = U.col0; k < U.col1; k += blockLength) {
+                int widthK = Math.min(blockLength, U.col1 - k);
+
+                int indexU = U.row0*U.original.numCols + k*bs;
+                int indexB = (k - U.col0 + B.row0)*B.original.numCols + j*widthK;
+
+                if (k == U.col0) {
+                    InnerTriangularMult_DDRB.lmultUnitUpp(U.original.data, B.original.data, C.original.data,
+                            bs - 1, widthB, widthK, widthB, widthB, indexU + 1, indexB + widthB, indexC);
+                } else {
+                    InnerMultiplication_DDRB.blockMultPlus(U.original.data, B.original.data, C.original.data,
+                            bs, widthK, widthB, widthK, widthB, widthB, indexU, indexB, indexC);
                 }
-
-                dataC[i*widthC + j + indexC] = val;
             }
+        }
+        //CONCURRENT_ABOVE });
+
+        // The last reflector's super-diagonal unit lives in the next block-column, so the GEMM above read a
+        // stored value there instead of 1. Correct that row without writing into U: C[bs-1] += (1-g)*B[bs].
+        if (U.col0 + bs < U.original.numCols) {
+            double g = U.get(bs - 1, bs);
+            VectorOps_DDRB.add_row(blockLength, C, bs - 1, 1.0, B, bs, 1.0 - g, C, bs - 1, 0, C.col1 - C.col0);
+        }
+    }
+
+    /// Transposed twin of [#mult_TriUR1]: multiplies `B` by the transpose of a one-block-tall row-panel of
+    /// reflectors `U` (`TriUR1` layout). Row-form `DLARFB` analog for the `Q*Q` direction.
+    ///
+    /// C = B \* U<sup>T</sup>
+    public static void multTransB_TriUR1( final int blockLength,
+                                          DSubmatrixD1 B, DSubmatrixD1 U,
+                                          DSubmatrixD1 C ) {
+        int bs = U.row1 - U.row0;
+        int sizeI = B.row1 - B.row0;
+        int sizeK = B.col1 - B.col0;
+
+        // The square triangle writes only the first bs-1 output columns; the last reflector's column is
+        // accumulated by the tail GEMM and finished by the seam correction, so zero it first.
+        VectorOps_DDRB.scale_col(blockLength, C, bs - 1, 0.0, C, bs - 1, 0, sizeI);
+
+        //CONCURRENT_BELOW EjmlConcurrency.loopFor(0, sizeI, blockLength, i -> {
+        for (int i = 0; i < sizeI; i += blockLength) {
+            int heightA = Math.min(blockLength, sizeI - i);
+
+            int indexC = (C.row0 + i)*C.original.numCols + C.col0*heightA;
+
+            for (int k = 0; k < sizeK; k += blockLength) {
+                int widthK = Math.min(blockLength, sizeK - k);
+
+                int indexA = (B.row0 + i)*B.original.numCols + (B.col0 + k)*heightA;
+                int indexU = U.row0*U.original.numCols + (U.col0 + k)*bs;
+
+                if (k == 0) {
+                    InnerTriangularMult_DDRB.rmultUnitUppTransT(U.original.data, B.original.data, C.original.data,
+                            bs - 1, heightA, bs, bs, bs, indexU + 1, indexA + 1, indexC);
+                } else {
+                    InnerMultiplication_DDRB.blockMultPlusTransB(B.original.data, U.original.data, C.original.data,
+                            heightA, widthK, bs, widthK, widthK, bs, indexA, indexU, indexC);
+                }
+            }
+        }
+        //CONCURRENT_ABOVE });
+
+        // The last reflector's super-diagonal unit straddles into the next block-column; fix that output
+        // column without writing into U: C[:,bs-1] += (1-g)*B[:,bs].
+        if (U.col0 + bs < U.original.numCols) {
+            double g = U.get(bs - 1, bs);
+            VectorOps_DDRB.add_col(blockLength, C, bs - 1, 1.0, B, bs, 1.0 - g, C, bs - 1, 0, sizeI);
         }
     }
 

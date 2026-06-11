@@ -259,6 +259,58 @@ class TestHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
+    @Test void mult_TriUR1() {
+        for (int N = 2; N <= 3*r; N++) {
+            int bs = Math.min(r, N);
+            // U is a one-block-tall row panel; reflector data lives strictly past the super-diagonal
+            SimpleMatrix Araw = SimpleMatrix.random_DDRM(bs, N, -1.0, 1.0, rand);
+            SimpleMatrix Q = SimpleMatrix.random_DDRM(N, N, -1.0, 1.0, rand);
+
+            // materialize the implicit structure for the oracle: zeros up to the diagonal, unit super-diagonal
+            SimpleMatrix Um = Araw.copy();
+            for (int i = 0; i < bs; i++) {
+                for (int c = 0; c <= i && c < N; c++)
+                    Um.set(i, c, 0);
+                if (i + 1 < N)
+                    Um.set(i, i + 1, 1);
+            }
+            SimpleMatrix expected = Um.mult(Q);
+
+            DMatrixRBlock Ub = MatrixOps_DDRB.convert(Araw.getDDRM(), r);
+            DMatrixRBlock Qb = MatrixOps_DDRB.convert(Q.getDDRM(), r);
+            DMatrixRBlock Cb = new DMatrixRBlock(bs, N, r);
+
+            Householder_DDRB.mult_TriUR1(r, new DSubmatrixD1(Ub), new DSubmatrixD1(Qb), new DSubmatrixD1(Cb));
+
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Cb, expected.getDDRM(), UtilEjml.TEST_F64), "N " + N);
+        }
+    }
+
+    @Test void multTransB_TriUR1() {
+        for (int N = 2; N <= 3*r; N++) {
+            int bs = Math.min(r, N);
+            SimpleMatrix Araw = SimpleMatrix.random_DDRM(bs, N, -1.0, 1.0, rand);
+            SimpleMatrix Q = SimpleMatrix.random_DDRM(N, N, -1.0, 1.0, rand);
+
+            SimpleMatrix Um = Araw.copy();
+            for (int i = 0; i < bs; i++) {
+                for (int c = 0; c <= i && c < N; c++)
+                    Um.set(i, c, 0);
+                if (i + 1 < N)
+                    Um.set(i, i + 1, 1);
+            }
+            SimpleMatrix expected = Q.mult(Um.transpose());
+
+            DMatrixRBlock Ub = MatrixOps_DDRB.convert(Araw.getDDRM(), r);
+            DMatrixRBlock Qb = MatrixOps_DDRB.convert(Q.getDDRM(), r);
+            DMatrixRBlock Cb = new DMatrixRBlock(N, bs, r);
+
+            Householder_DDRB.multTransB_TriUR1(r, new DSubmatrixD1(Qb), new DSubmatrixD1(Ub), new DSubmatrixD1(Cb));
+
+            assertTrue(GenericMatrixOps_F64.isEquivalent(Cb, expected.getDDRM(), UtilEjml.TEST_F64), "N " + N);
+        }
+    }
+
     private void initMatrices( int M ) {
         A = SimpleMatrix.random_DDRM(r*2 + r - 1, r, -1.0, 1.0, rand);
 
