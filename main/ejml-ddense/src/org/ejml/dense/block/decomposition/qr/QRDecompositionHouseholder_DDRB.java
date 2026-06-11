@@ -59,8 +59,7 @@ import pabeles.concurrency.GrowArray;
 /// Based upon "Block Householder QR Factorization" pg 255 in "Matrix Computations"
 /// 3rd Ed. 1996 by Gene H. Golub and Charles F. Van Loan.
 @SuppressWarnings("NullAway.Init")
-public class QRDecompositionHouseholder_DDRB
-        implements QRDecomposition<DMatrixRBlock> {
+public class QRDecompositionHouseholder_DDRB implements QRDecomposition<DMatrixRBlock> {
 
     // the input matrix which is overwritten with the decomposition.
     // Reflectors are stored in the lower triangular portion. The R matrix is stored
@@ -150,7 +149,11 @@ public class QRDecompositionHouseholder_DDRB
             subB.row0 = i;
 
             setW();
-            WTA.row1 = Y.col1 - Y.col0;
+            // Width of the WY representation is the reflector count, not the panel width: a wide panel
+            // carries fewer reflectors, so W/WTA are r wide and no phantom rows are produced.
+            int r = Math.min(Y.row1 - Y.row0, Y.col1 - Y.col0);
+            W.col1 = W.col0 + r;
+            WTA.row1 = r;
             WTA.col1 = subB.col1 - subB.col0;
             WTA.original.reshape(WTA.row1, WTA.col1, false);
 
@@ -191,6 +194,8 @@ public class QRDecompositionHouseholder_DDRB
             subB.row0 = i;
 
             setW();
+            // W/WTA are r wide (the reflector count), so a wide panel produces no phantom rows.
+            W.col1 = W.col0 + Math.min(Y.row1 - Y.row0, Y.col1 - Y.col0);
             WTA.row0 = 0;
             WTA.col0 = 0;
             WTA.row1 = W.col1 - W.col0;
@@ -309,6 +314,8 @@ public class QRDecompositionHouseholder_DDRB
     ///
     protected void updateA( DSubmatrixD1 A ) {
         setW();
+        // W/WTA are r wide (the reflector count), so a wide panel produces no phantom rows.
+        W.col1 = W.col0 + Math.min(Y.row1 - Y.row0, Y.col1 - Y.col0);
 
         A.row0 = Y.row0;
         A.row1 = Y.row1;

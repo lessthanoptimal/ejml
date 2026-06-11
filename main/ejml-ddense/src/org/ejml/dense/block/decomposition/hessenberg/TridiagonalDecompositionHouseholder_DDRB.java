@@ -19,7 +19,6 @@
 package org.ejml.dense.block.decomposition.hessenberg;
 
 import org.ejml.data.DMatrixRBlock;
-import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DSubmatrixD1;
 import org.ejml.dense.block.Householder_DDRB;
 import org.ejml.dense.block.MatrixMult_DDRB;
@@ -56,9 +55,6 @@ public class TridiagonalDecompositionHouseholder_DDRB
     // stores intermediate results in matrix multiplication
     protected DMatrixRBlock tmp = new DMatrixRBlock(1, 1);
     protected double[] gammas = new double[1];
-
-    // temporary storage for zeros and ones in U
-    protected DMatrixRMaj zerosM = new DMatrixRMaj(1, 1);
 
     @Override
     public DMatrixRBlock getT( @Nullable DMatrixRBlock T ) {
@@ -122,67 +118,26 @@ public class TridiagonalDecompositionHouseholder_DDRB
             subU.row0 = i;
             subU.row1 = subU.row0 + blockSize;
 
-            // zeros and ones are saved and overwritten in U so that standard matrix multiplication can be used
-            enforceImplicit_TriUR1(subU);
-
-            // compute W for Q(i) = ( I + W*Y^T)
+            // Compute W for Q(i) = ( I + W*U^T)
             Householder_DDRB.computeWRow(A.blockLength, subU, subW, gammas, i);
 
             subQ.col0 = i;
             subQ.row0 = i;
 
-            // Apply the Qi to Q
-            // Qi = I + W*U^T
-
-            // Note that U and V are really row vectors. but standard notation assumed they are column vectors.
-            // which is why the functions called don't match the math above
-
-            // (I + W*U^T)*Q
-            // F=U^T*Q(i)
+            // Apply Qi = I + W*U^T to Q. U holds reflectors in its rows with an implicit unit super-diagonal
+            // F = U^T*Q(i)  /  Q(i)*U^T
             if (transposed)
-                MatrixMult_DDRB.multTransB(A.blockLength, subQ, subU, tmp);
+                Householder_DDRB.multTransB_TriUR1(A.blockLength, subQ, subU, tmp);
             else
-                MatrixMult_DDRB.mult(A.blockLength, subU, subQ, tmp);
+                Householder_DDRB.mult_TriUR1(A.blockLength, subU, subQ, tmp);
             // Q(i+1) = Q(i) + W*F
             if (transposed)
                 MatrixMult_DDRB.multPlus(A.blockLength, tmp, subW, subQ);
             else
                 MatrixMult_DDRB.multPlusTransA(A.blockLength, subW, tmp, subQ);
-
-            restoreImplicit_TriUR1(subU);
         }
 
         return Q;
-    }
-
-    private void enforceImplicit_TriUR1( DSubmatrixD1 subU ) {
-        int N = Math.min(A.blockLength, subU.col1 - subU.col0);
-        for (int i = 0; i < N; i++) {
-            // save the zeros
-            for (int j = 0; j <= i; j++) {
-                zerosM.unsafe_set(i, j, subU.get(i, j));
-                subU.set(i, j, 0);
-            }
-            // save the one
-            if (subU.col0 + i + 1 < subU.original.numCols) {
-                zerosM.unsafe_set(i, i + 1, subU.get(i, i + 1));
-                subU.set(i, i + 1, 1);
-            }
-        }
-    }
-
-    private void restoreImplicit_TriUR1( DSubmatrixD1 subU ) {
-        int N = Math.min(A.blockLength, subU.col1 - subU.col0);
-        for (int i = 0; i < N; i++) {
-            // save the zeros
-            for (int j = 0; j <= i; j++) {
-                subU.set(i, j, zerosM.get(i, j));
-            }
-            // save the one
-            if (subU.col0 + i + 1 < subU.original.numCols) {
-                subU.set(i, i + 1, zerosM.get(i, i + 1));
-            }
-        }
     }
 
     @Override
@@ -248,8 +203,6 @@ public class TridiagonalDecompositionHouseholder_DDRB
 
         if (gammas.length < A.numCols)
             gammas = new double[A.numCols];
-
-        zerosM.reshape(A.blockLength, A.blockLength + 1, false);
     }
 
     @Override
