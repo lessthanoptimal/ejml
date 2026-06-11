@@ -21,9 +21,12 @@ import org.ejml.data.DSubmatrixD1;
 
 /// Math operations for inner vectors (row and column) inside of block matrices:
 ///
-/// scale: b<sub>i</sub> = α\*a<sub>i</sub>
-/// div:  <sub>i</sub> = a<sub>i</sub>/α
-/// add: c<sub>i</sub> = α\*a<sub>i</sub> + βB<sub>i</sub>
+/// scale: b<sub>i</sub> = alpha\*a<sub>i</sub>
+/// 
+/// div:  <sub>i</sub> = a<sub>i</sub>/alpha
+/// 
+/// add: c<sub>i</sub> = alpha\*a<sub>i</sub> + betaB<sub>i</sub>
+/// 
 /// dot: c = sum a<sub>i</sub>\*b<sub>i</sub>
 ///
 /// All submatrices must be block aligned. All offsets and end indexes are relative to the beginning of each
@@ -32,7 +35,7 @@ public class VectorOps_DDRB {
 
     /// Row vector scale:
     ///
-    /// scale: b<sub>i</sub> = α\*a<sub>i</sub>
+    /// scale: b<sub>i</sub> = alpha\*a<sub>i</sub>
     ///
     /// where 'a' and 'b' are row vectors within the row block vector A and B.
     ///
@@ -88,7 +91,7 @@ public class VectorOps_DDRB {
 
     /// Row vector divide:
     ///
-    /// div: b<sub>i</sub> = a<sub>i</sub>/α
+    /// div: b<sub>i</sub> = a<sub>i</sub>/alpha
     ///
     /// where 'a' and 'b' are row vectors within the row block vector A and B.
     ///
@@ -144,7 +147,7 @@ public class VectorOps_DDRB {
 
     /// Row vector add:
     ///
-    /// add: c<sub>i</sub> = α\*a<sub>i</sub> + βB<sub>i</sub>
+    /// add: c<sub>i</sub> = alpha\*a<sub>i</sub> + betaB<sub>i</sub>
     ///
     /// where 'a', 'b', and 'c' are row vectors within the row block vectors of A, B, and C respectively.
     ///
@@ -164,9 +167,17 @@ public class VectorOps_DDRB {
                                 DSubmatrixD1 B, int rowB, double beta,
                                 DSubmatrixD1 C, int rowC,
                                 int offset, int end ) {
-        final int heightA = Math.min(blockLength, A.row1 - A.row0);
-        final int heightB = Math.min(blockLength, B.row1 - B.row0);
-        final int heightC = Math.min(blockLength, C.row1 - C.row0);
+        // handle rows in any block
+        int rowBlockA = A.row0 + rowA - rowA%blockLength;
+        rowA = rowA%blockLength;
+        int rowBlockB = B.row0 + rowB - rowB%blockLength;
+        rowB = rowB%blockLength;
+        int rowBlockC = C.row0 + rowC - rowC%blockLength;
+        rowC = rowC%blockLength;
+
+        final int heightA = Math.min(blockLength, A.row1 - rowBlockA);
+        final int heightB = Math.min(blockLength, B.row1 - rowBlockB);
+        final int heightC = Math.min(blockLength, C.row1 - rowBlockC);
 
         // handle the case where offset is more than a block
         int startI = offset - offset%blockLength;
@@ -183,9 +194,9 @@ public class VectorOps_DDRB {
             int widthB = Math.min(blockLength, B.col1 - B.col0 - i);
             int widthC = Math.min(blockLength, C.col1 - C.col0 - i);
 
-            int indexA = A.row0*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
-            int indexB = B.row0*B.original.numCols + (B.col0 + i)*heightB + rowB*widthB;
-            int indexC = C.row0*C.original.numCols + (C.col0 + i)*heightC + rowC*widthC;
+            int indexA = rowBlockA*A.original.numCols + (A.col0 + i)*heightA + rowA*widthA;
+            int indexB = rowBlockB*B.original.numCols + (B.col0 + i)*heightB + rowB*widthB;
+            int indexC = rowBlockC*C.original.numCols + (C.col0 + i)*heightC + rowC*widthC;
 
             if (i == startI) {
                 indexA += offset;
@@ -333,5 +344,103 @@ public class VectorOps_DDRB {
         }
 
         return total;
+    }
+
+    /// Column vector scale: `b = alpha*a`, where `a` and `b` are column vectors within the block column
+    /// vectors A and B.
+    ///
+    /// @param offset Row index at which the vectors start.
+    /// @param end Row index at which the vectors end.
+    public static void scale_col( final int blockLength,
+                                  DSubmatrixD1 A, int colA,
+                                  double alpha, DSubmatrixD1 B, int colB,
+                                  int offset, int end ) {
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
+
+        // handle columns in any block
+        int colBlockA = A.col0 + colA - colA%blockLength;
+        colA = colA%blockLength;
+        int colBlockB = B.col0 + colB - colB%blockLength;
+        colB = colB%blockLength;
+
+        final int widthA = Math.min(blockLength, A.col1 - colBlockA);
+        final int widthB = Math.min(blockLength, B.col1 - colBlockB);
+
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
+
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
+
+            int heightA = Math.min(blockLength, A.row1 - A.row0 - i);
+            int heightB = Math.min(blockLength, B.row1 - B.row0 - i);
+
+            int indexA = (A.row0 + i)*A.original.numCols + colBlockA*heightA + colA;
+            int indexB = (B.row0 + i)*B.original.numCols + colBlockB*heightB + colB;
+
+            int rowStart = 0;
+            if (i == startI) {
+                indexA += offset*widthA;
+                indexB += offset*widthB;
+                rowStart = offset;
+            }
+            for (int j = rowStart; j < segment; j++, indexA += widthA, indexB += widthB) {
+                dataB[indexB] = alpha*dataA[indexA];
+            }
+        }
+    }
+
+    /// Column vector add: `c = alpha*a + beta*b`, where `a`, `b`, and `c` are column vectors within the block
+    /// column vectors A, B, and C.
+    ///
+    /// @param offset Row index at which the vectors start.
+    /// @param end Row index at which the vectors end.
+    public static void add_col( final int blockLength,
+                                DSubmatrixD1 A, int colA, double alpha,
+                                DSubmatrixD1 B, int colB, double beta,
+                                DSubmatrixD1 C, int colC,
+                                int offset, int end ) {
+        final double[] dataA = A.original.data;
+        final double[] dataB = B.original.data;
+        final double[] dataC = C.original.data;
+
+        // handle columns in any block
+        int colBlockA = A.col0 + colA - colA%blockLength;
+        colA = colA%blockLength;
+        int colBlockB = B.col0 + colB - colB%blockLength;
+        colB = colB%blockLength;
+        int colBlockC = C.col0 + colC - colC%blockLength;
+        colC = colC%blockLength;
+
+        final int widthA = Math.min(blockLength, A.col1 - colBlockA);
+        final int widthB = Math.min(blockLength, B.col1 - colBlockB);
+        final int widthC = Math.min(blockLength, C.col1 - colBlockC);
+
+        int startI = offset - offset%blockLength;
+        offset = offset%blockLength;
+
+        for (int i = startI; i < end; i += blockLength) {
+            int segment = Math.min(blockLength, end - i);
+
+            int heightA = Math.min(blockLength, A.row1 - A.row0 - i);
+            int heightB = Math.min(blockLength, B.row1 - B.row0 - i);
+            int heightC = Math.min(blockLength, C.row1 - C.row0 - i);
+
+            int indexA = (A.row0 + i)*A.original.numCols + colBlockA*heightA + colA;
+            int indexB = (B.row0 + i)*B.original.numCols + colBlockB*heightB + colB;
+            int indexC = (C.row0 + i)*C.original.numCols + colBlockC*heightC + colC;
+
+            int rowStart = 0;
+            if (i == startI) {
+                indexA += offset*widthA;
+                indexB += offset*widthB;
+                indexC += offset*widthC;
+                rowStart = offset;
+            }
+            for (int j = rowStart; j < segment; j++, indexA += widthA, indexB += widthB, indexC += widthC) {
+                dataC[indexC] = alpha*dataA[indexA] + beta*dataB[indexB];
+            }
+        }
     }
 }
