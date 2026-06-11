@@ -181,30 +181,6 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
         }
     }
 
-    @Test void rank1UpdateMultL_LeftCol() {
-        double gamma = 2.5;
-        A = SimpleMatrix.random_DDRM(r*2 + r - 1, r*2 + r - 1, -1.0, 1.0, rand);
-
-        int row = 0;
-        int zeroOffset = 1;
-        SimpleMatrix U = A.extractMatrix(row, row + 1, 0, A.numCols()).transpose();
-        for (int i = 0; i < row + zeroOffset; i++)
-            U.set(i, 0);
-        U.set(row + zeroOffset, 1);
-
-        SimpleMatrix expected = A.minus(A.mult(U).mult(U.transpose()).scale(gamma));
-
-        DMatrixRBlock Ab = MatrixOps_DDRB.convert((DMatrixRMaj)A.getMatrix(), r);
-
-        InnerHouseholder_DDRB.rank1UpdateMultL_LeftCol(r, new DSubmatrixD1(Ab), row, gamma, zeroOffset);
-
-        for (int i = r; i < A.numRows(); i++) {
-            for (int j = 0; j < r; j++) {
-                assertEquals(expected.get(i, j), Ab.get(i, j), UtilEjml.TEST_F64);
-            }
-        }
-    }
-
     /**
      * Check inner product when column blocks have two different widths
      */
@@ -264,7 +240,6 @@ class TestInnerHouseholder_DDRB extends EjmlStandardJUnit {
     }
 
     @Test void divideElementsCol() {
-
         double div = 1.5;
         int col = 1;
         DMatrixRBlock A = MatrixOps_DDRB.createRandom(r*2 + r - 1, r, -1, 1, rand, r);

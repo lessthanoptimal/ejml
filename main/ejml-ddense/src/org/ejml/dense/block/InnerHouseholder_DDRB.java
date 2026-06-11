@@ -253,49 +253,6 @@ public class InnerHouseholder_DDRB {
         }
     }
 
-    /// Applies a householder reflector stored in row 'row' to the left column block (excluding the first block).
-    /// Takes into account leading zeros and one.
-    ///
-    /// A = A\*(I - γ\*u\*u<sup>T</sup>)
-    ///
-    /// @param zeroOffset How far off the diagonal is the first element in 'u'
-    public static void rank1UpdateMultL_LeftCol( final int blockLength,
-                                                 final DSubmatrixD1 A,
-                                                 final int row, final double gamma, int zeroOffset ) {
-        final int heightU = Math.min(blockLength, A.row1 - A.row0);
-        final int width = Math.min(blockLength, A.col1 - A.col0);
-
-        final double[] data = A.original.data;
-
-        for (int blockStart = A.row0 + blockLength; blockStart < A.row1; blockStart += blockLength) {
-            final int heightA = Math.min(blockLength, A.row1 - blockStart);
-
-            for (int i = 0; i < heightA; i++) {
-
-                // total = U^T * A(i,:)
-                double total = innerProdRow(blockLength, A, row, A, i + (blockStart - A.row0), zeroOffset);
-
-                total *= gamma;
-
-                // A(i,:) - gamma*U*total
-//                plusScale_row(blockLength,);
-
-                int indexU = A.row0*A.original.numCols + heightU*A.col0 + row*width;
-                int indexA = blockStart*A.original.numCols + heightA*A.col0 + i*width;
-
-                // skip over zeros and assume first element in U is 1
-                indexU += zeroOffset + 1;
-                indexA += zeroOffset;
-
-                data[indexA++] -= total;
-
-                for (int k = zeroOffset + 1; k < width; k++) {
-                    data[indexA++] -= total*data[indexU++];
-                }
-            }
-        }
-    }
-
     /// Computes the inner product of column vector 'colA' against column vector 'colB' while taking into account leading zeros and one.
     ///
     /// ret = a<sup>T</sup>\*b
