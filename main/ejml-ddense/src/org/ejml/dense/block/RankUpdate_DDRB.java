@@ -150,10 +150,10 @@ public class RankUpdate_DDRB {
 
                 if (i == j) {
                     TileRankUpdate_F64.tileMultMinusTransB_L(B.original.data, A.original.data,
-                            widthB, heightB_i, widthB_j, indexB_i, indexB_j, indexA);
+                            heightB_i, widthB, widthB_j, indexB_i, indexB_j, indexA);
                 } else {
                     TileMultiplication_F64.tileMultMinusTransB(B.original.data, B.original.data, A.original.data,
-                            widthB, heightB_i, widthB_j, indexB_i, indexB_j, indexA);
+                            heightB_i, widthB, widthB_j, indexB_i, indexB_j, indexA);
                 }
             }
         }

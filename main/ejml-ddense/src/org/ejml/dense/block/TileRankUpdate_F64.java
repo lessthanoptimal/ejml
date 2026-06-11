@@ -17,8 +17,7 @@
  */
 package org.ejml.dense.block;
 
-/// Performs rank-n update operations on the inner blocks of a [DMatrixRBlock]
-/// It is assumed and not checked that the submatrices are aligned along the matrix's blocks.
+/// Specialized tile operations useful for [RankUpdate_DDRB].
 public class TileRankUpdate_F64 {
     /// Upper triangle only write: c = c - a<sup>T</sup>b, where `a` and `b` are tiles inside of `dataAB`
     protected static void tileMultMinusTransA_U( double[] dataAB, double[] dataC,
@@ -98,7 +97,7 @@ public class TileRankUpdate_F64 {
     ///
     /// Lower triangle only write: c = c - a\*b<sup>T</sup>, where `a` and `b` are tiles inside of `dataAB`
     protected static void tileMultMinusTransB_L( double[] dataAB, double[] dataC,
-                                                 final int widthA, final int heightA, final int widthC,
+                                                 final int heightA, final int widthA, final int widthC,
                                                  int offsetA, int offsetB, int offsetC ) {
 //        for (int i = 0; i < heightA; i++) {
 //            for (int j = 0; j <= i; j++) {

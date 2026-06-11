@@ -34,7 +34,7 @@ public class TileMultiplication_F64 {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int k = 0; k < widthA; k++ ) {
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] += dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] += dataA[i*widthA + k + offsetA] * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -86,9 +86,9 @@ public class TileMultiplication_F64 {
                                            int offsetA, int offsetB, int offsetC ) {
 //        for( int i = 0; i < widthA; i++ ) {
 //            for( int k = 0; k < heightA; k++ ) {
-//                double valA = dataA[k*widthA + i + indexA];
+//                double valA = dataA[k*widthA + i + offsetA];
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] += valA * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] += valA * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -148,9 +148,9 @@ public class TileMultiplication_F64 {
 //            for (int j = 0; j < widthC; j++) {
 //                double val = 0;
 //                for (int k = 0; k < widthA; k++) {
-//                    val += dataA[i*widthA + k + indexA]*dataB[j*widthA + k + indexB];
+//                    val += dataA[i*widthA + k + offsetA]*dataB[j*widthA + k + offsetB];
 //                }
-//                dataC[i*widthC + j + indexC] += val;
+//                dataC[i*widthC + j + offsetC] += val;
 //            }
 //        }
 
@@ -207,7 +207,7 @@ public class TileMultiplication_F64 {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int k = 0; k < widthA; k++ ) {
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] -= dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] -= dataA[i*widthA + k + offsetA] * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -259,9 +259,9 @@ public class TileMultiplication_F64 {
                                             int offsetA, int offsetB, int offsetC ) {
 //        for( int i = 0; i < widthA; i++ ) {
 //            for( int k = 0; k < heightA; k++ ) {
-//                double valA = dataA[k*widthA + i + indexA];
+//                double valA = dataA[k*widthA + i + offsetA];
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] -= valA * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] -= valA * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -321,9 +321,9 @@ public class TileMultiplication_F64 {
 //            for (int j = 0; j < widthC; j++) {
 //                double val = 0;
 //                for (int k = 0; k < widthA; k++) {
-//                    val += dataA[i*widthA + k + indexA]*dataB[j*widthA + k + indexB];
+//                    val += dataA[i*widthA + k + offsetA]*dataB[j*widthA + k + offsetB];
 //                }
-//                dataC[i*widthC + j + indexC] -= val;
+//                dataC[i*widthC + j + offsetC] -= val;
 //            }
 //        }
 
@@ -380,7 +380,7 @@ public class TileMultiplication_F64 {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int k = 0; k < widthA; k++ ) {
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] = dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] = dataA[i*widthA + k + offsetA] * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -436,9 +436,9 @@ public class TileMultiplication_F64 {
                                           int offsetA, int offsetB, int offsetC ) {
 //        for( int i = 0; i < widthA; i++ ) {
 //            for( int k = 0; k < heightA; k++ ) {
-//                double valA = dataA[k*widthA + i + indexA];
+//                double valA = dataA[k*widthA + i + offsetA];
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] = valA * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] = valA * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -498,9 +498,9 @@ public class TileMultiplication_F64 {
 //            for (int j = 0; j < widthC; j++) {
 //                double val = 0;
 //                for (int k = 0; k < widthA; k++) {
-//                    val += dataA[i*widthA + k + indexA]*dataB[j*widthA + k + indexB];
+//                    val += dataA[i*widthA + k + offsetA]*dataB[j*widthA + k + offsetB];
 //                }
-//                dataC[i*widthC + j + indexC] = val;
+//                dataC[i*widthC + j + offsetC] = val;
 //            }
 //        }
 
@@ -557,7 +557,7 @@ public class TileMultiplication_F64 {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int k = 0; k < widthA; k++ ) {
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] += alpha * dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] += alpha * dataA[i*widthA + k + offsetA] * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -609,9 +609,9 @@ public class TileMultiplication_F64 {
                                            int offsetA, int offsetB, int offsetC ) {
 //        for( int i = 0; i < widthA; i++ ) {
 //            for( int k = 0; k < heightA; k++ ) {
-//                double valA = alpha*dataA[k*widthA + i + indexA];
+//                double valA = alpha*dataA[k*widthA + i + offsetA];
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] += valA * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] += valA * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -671,9 +671,9 @@ public class TileMultiplication_F64 {
 //            for (int j = 0; j < widthC; j++) {
 //                double val = 0;
 //                for (int k = 0; k < widthA; k++) {
-//                    val += dataA[i*widthA + k + indexA]*dataB[j*widthA + k + indexB];
+//                    val += dataA[i*widthA + k + offsetA]*dataB[j*widthA + k + offsetB];
 //                }
-//                dataC[i*widthC + j + indexC] += alpha*val;
+//                dataC[i*widthC + j + offsetC] += alpha*val;
 //            }
 //        }
 
@@ -730,7 +730,7 @@ public class TileMultiplication_F64 {
 //        for( int i = 0; i < heightA; i++ ) {
 //            for( int k = 0; k < widthA; k++ ) {
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] = alpha * dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] = alpha * dataA[i*widthA + k + offsetA] * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -786,9 +786,9 @@ public class TileMultiplication_F64 {
                                           int offsetA, int offsetB, int offsetC ) {
 //        for( int i = 0; i < widthA; i++ ) {
 //            for( int k = 0; k < heightA; k++ ) {
-//                double valA = alpha*dataA[k*widthA + i + indexA];
+//                double valA = alpha*dataA[k*widthA + i + offsetA];
 //                for( int j = 0; j < widthC; j++ ) {
-//                    dataC[ i*widthC + j + indexC ] = valA * dataB[k*widthC + j + indexB];
+//                    dataC[ i*widthC + j + offsetC ] = valA * dataB[k*widthC + j + offsetB];
 //                }
 //            }
 //        }
@@ -848,9 +848,9 @@ public class TileMultiplication_F64 {
 //            for (int j = 0; j < widthC; j++) {
 //                double val = 0;
 //                for (int k = 0; k < widthA; k++) {
-//                    val += dataA[i*widthA + k + indexA]*dataB[j*widthA + k + indexB];
+//                    val += dataA[i*widthA + k + offsetA]*dataB[j*widthA + k + offsetB];
 //                }
-//                dataC[i*widthC + j + indexC] = alpha*val;
+//                dataC[i*widthC + j + offsetC] = alpha*val;
 //            }
 //        }
 
