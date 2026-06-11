@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Peter Abeles. All Rights Reserved.
+ * Copyright (c) 2026, Peter Abeles. All Rights Reserved.
  *
  * This file is part of Efficient Java Matrix Library (EJML).
  *
@@ -299,5 +299,31 @@ public class TestSpecializedOps_DDRM extends EjmlStandardJUnit {
         A.zero();
         found = SpecializedOps_DDRM.elementSumSq(A);
         assertEquals(0.0, found, UtilEjml.TEST_F64);
+    }
+
+    @Test void fillTriangle() {
+        int cols = 3;
+        double value = 10.0;
+        for (int rows = cols - 1; rows <= cols + 1; rows++) {
+            for (int hessenberg = 0; hessenberg <= 2; hessenberg++) {
+                for (var upper : new boolean[]{false, true}) {
+                    DMatrixRMaj A = RandomMatrices_DDRM.rectangle(rows, cols, rand);
+                    DMatrixRMaj orig = A.copy();
+
+                    SpecializedOps_DDRM.fillTriangle(A, upper, hessenberg, value);
+
+                    for (int i = 0; i < rows; i++) {
+                        for (int j = 0; j < cols; j++) {
+                            boolean inRegion = upper ? (j >= i + hessenberg) : (j <= i - hessenberg);
+                            if (inRegion) {
+                                assertEquals(value, A.get(i, j), UtilEjml.TEST_F64);
+                            } else {
+                                assertEquals(orig.get(i, j), A.get(i, j), UtilEjml.TEST_F64);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

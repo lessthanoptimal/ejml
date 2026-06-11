@@ -485,7 +485,7 @@ public class SpecializedOps_DDRM {
         return maxAbs*total*maxAbs;
     }
 
-    /// Fills entries in the specified triangle of a square matrix with a given value.
+    /// Fills entries in the specified triangle of a matrix with a given value.
     /// The hessenberg parameter controls where the fill region starts relative to the diagonal:
     ///
     /// hessenberg = 0 includes the diagonal (fills the full triangle),
@@ -500,16 +500,16 @@ public class SpecializedOps_DDRM {
         if (hessenberg < 0)
             throw new IllegalArgumentException("hessenberg must be >= 0");
 
-        int n = A.numRows;
         if (upper) {
-            for (int i = 0; i < n; i++) {
-                for (int j = i + hessenberg; j < n; j++) {
+            for (int i = 0; i < A.numRows; i++) {
+                for (int j = i + hessenberg; j < A.numCols; j++) {
                     A.set(i, j, value);
                 }
             }
         } else {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j <= i - hessenberg; j++) {
+            for (int i = 0; i < A.numRows; i++) {
+                int end = Math.min(i - hessenberg, A.numCols - 1);
+                for (int j = 0; j <= end; j++) {
                     A.set(i, j, value);
                 }
             }
