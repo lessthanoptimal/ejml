@@ -23,12 +23,12 @@ import org.ejml.CodeGeneratorMisc;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-public class GeneratorTileMultiplication {
+public class GeneratorTileMultiplication_F64 {
 
     String className;
     PrintStream stream;
 
-    public GeneratorTileMultiplication( String className ) throws FileNotFoundException {
+    public GeneratorTileMultiplication_F64( String className ) throws FileNotFoundException {
         this.className = className;
         stream = new PrintStream(className + ".java");
     }
@@ -81,8 +81,8 @@ public class GeneratorTileMultiplication {
                 "//        for( int i = 0; i < heightA; i++ ) {\n" +
                         "//            for( int k = 0; k < widthA; k++ ) {\n" +
                         "//                for( int j = 0; j < widthC; j++ ) {\n" +
-                        "//                    dataC[ i*widthC + j + indexC ] " + opString(opType) + " " + (hasAlpha ? "alpha * " : "") +
-                        "dataA[i*widthA + k + indexA] * dataB[k*widthC + j + indexB];\n" +
+                        "//                    dataC[ i*widthC + j + offsetC ] " + opString(opType) + " " + (hasAlpha ? "alpha * " : "") +
+                        "dataA[i*widthA + k + offsetA] * dataB[k*widthC + j + offsetB];\n" +
                         "//                }\n" +
                         "//            }\n" +
                         "//        }\n");
@@ -112,11 +112,11 @@ public class GeneratorTileMultiplication {
         stream.print(
                 "            int k = 0;\n" +
                         "            for (; k < kEnd4; k += 4) {\n" +
-                        "                double a0 = " + alphaPrefix + "dataA[aRow + k    ];\n" +
+                        "                double a0 = " + alphaPrefix + "dataA[aRow + k];\n" +
                         "                double a1 = " + alphaPrefix + "dataA[aRow + k + 1];\n" +
                         "                double a2 = " + alphaPrefix + "dataA[aRow + k + 2];\n" +
                         "                double a3 = " + alphaPrefix + "dataA[aRow + k + 3];\n" +
-                        "                final int b0 = offsetB + (k    )*strideB;\n" +
+                        "                final int b0 = offsetB + (k)*strideB;\n" +
                         "                final int b1 = offsetB + (k + 1)*strideB;\n" +
                         "                final int b2 = offsetB + (k + 2)*strideB;\n" +
                         "                final int b3 = offsetB + (k + 3)*strideB;\n" +
@@ -151,9 +151,9 @@ public class GeneratorTileMultiplication {
         stream.print(
                 "//        for( int i = 0; i < widthA; i++ ) {\n" +
                         "//            for( int k = 0; k < heightA; k++ ) {\n" +
-                        "//                double valA = " + (hasAlpha ? "alpha*" : "") + "dataA[k*widthA + i + indexA];\n" +
+                        "//                double valA = " + (hasAlpha ? "alpha*" : "") + "dataA[k*widthA + i + offsetA];\n" +
                         "//                for( int j = 0; j < widthC; j++ ) {\n" +
-                        "//                    dataC[ i*widthC + j + indexC ] " + opString(opType) + " valA * dataB[k*widthC + j + indexB];\n" +
+                        "//                    dataC[ i*widthC + j + offsetC ] " + opString(opType) + " valA * dataB[k*widthC + j + offsetB];\n" +
                         "//                }\n" +
                         "//            }\n" +
                         "//        }\n");
@@ -182,7 +182,7 @@ public class GeneratorTileMultiplication {
                         "                    bIdx += strideB;\n" +
                         "                }\n" +
                         "                int cIdx = offsetC + i*strideC + j;\n" +
-                        "                dataC[cIdx    ] " + op + " s0;\n" +
+                        "                dataC[cIdx] " + op + " s0;\n" +
                         "                dataC[cIdx + 1] " + op + " s1;\n" +
                         "                dataC[cIdx + 2] " + op + " s2;\n" +
                         "                dataC[cIdx + 3] " + op + " s3;\n" +
@@ -217,9 +217,9 @@ public class GeneratorTileMultiplication {
                         "//            for (int j = 0; j < widthC; j++) {\n" +
                         "//                double val = 0;\n" +
                         "//                for (int k = 0; k < widthA; k++) {\n" +
-                        "//                    val += dataA[i*widthA + k + indexA]*dataB[j*widthA + k + indexB];\n" +
+                        "//                    val += dataA[i*widthA + k + offsetA]*dataB[j*widthA + k + offsetB];\n" +
                         "//                }\n" +
-                        "//                dataC[i*widthC + j + indexC] " + opString(opType) + " " + (hasAlpha ? "alpha*" : "") + "val;\n" +
+                        "//                dataC[i*widthC + j + offsetC] " + opString(opType) + " " + (hasAlpha ? "alpha*" : "") + "val;\n" +
                         "//            }\n" +
                         "//        }\n");
         stream.println();
@@ -238,7 +238,7 @@ public class GeneratorTileMultiplication {
                         "            for (; j < jEnd4; j += 4) {\n" +
                         "                double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;\n" +
                         "                int a = aRow;\n" +
-                        "                int b0 = offsetB + (j    )*strideB;\n" +
+                        "                int b0 = offsetB + (j)*strideB;\n" +
                         "                int b1 = offsetB + (j + 1)*strideB;\n" +
                         "                int b2 = offsetB + (j + 2)*strideB;\n" +
                         "                int b3 = offsetB + (j + 3)*strideB;\n" +
@@ -250,7 +250,7 @@ public class GeneratorTileMultiplication {
                         "                    s3 += valA*dataB[b3++];\n" +
                         "                }\n" +
                         "                int cIdx = offsetC + i*strideC + j;\n" +
-                        "                dataC[cIdx    ] " + op + " " + alphaStore + "s0;\n" +
+                        "                dataC[cIdx] " + op + " " + alphaStore + "s0;\n" +
                         "                dataC[cIdx + 1] " + op + " " + alphaStore + "s1;\n" +
                         "                dataC[cIdx + 2] " + op + " " + alphaStore + "s2;\n" +
                         "                dataC[cIdx + 3] " + op + " " + alphaStore + "s3;\n" +
@@ -296,12 +296,15 @@ public class GeneratorTileMultiplication {
 
     private void createHeader( boolean hasAlpha, Operation opType, boolean transA, boolean transB ) {
         printDoc(hasAlpha, opType, transA, transB);
+        String name = funcName(opType, transA, transB);
+        // continuation lines align under the first parameter, i.e. just past "    public static void <name>( "
+        String pad = " ".repeat(25 + name.length());
         String alphaParam = hasAlpha ? " double alpha," : "";
         stream.print(
-                "    public static void " + funcName(opType, transA, transB) + "(" + alphaParam + " final double[] dataA, final double[] dataB, final double[] dataC,\n" +
-                        "                                     final int heightA, final int widthA, final int widthC,\n" +
-                        "                                     int strideA, int strideB, int strideC,\n" +
-                        "                                     int offsetA, int offsetB, int offsetC) {\n");
+                "    public static void " + name + "(" + alphaParam + " final double[] dataA, final double[] dataB, final double[] dataC,\n" +
+                        pad + "final int heightA, final int widthA, final int widthC,\n" +
+                        pad + "int strideA, int strideB, int strideC,\n" +
+                        pad + "int offsetA, int offsetB, int offsetC ) {\n");
     }
 
     private void printDelegate( boolean hasAlpha, Operation opType, boolean transA, boolean transB ) {
@@ -310,10 +313,12 @@ public class GeneratorTileMultiplication {
         String alphaParam = hasAlpha ? " double alpha," : "";
         String alphaArg = hasAlpha ? "alpha, " : "";
         String strideB = transB ? "widthA" : "widthC";
+        // continuation lines align under the first parameter, i.e. just past "    public static void <name>( "
+        String pad = " ".repeat(25 + name.length());
         stream.print(
                 "    public static void " + name + "(" + alphaParam + " final double[] dataA, final double[] dataB, final double[] dataC,\n" +
-                        "                                     final int heightA, final int widthA, final int widthC,\n" +
-                        "                                     int offsetA, int offsetB, int offsetC) {\n" +
+                        pad + "final int heightA, final int widthA, final int widthC,\n" +
+                        pad + "int offsetA, int offsetB, int offsetC ) {\n" +
                         "        " + name + "(" + alphaArg + "dataA, dataB, dataC, heightA, widthA, widthC, widthA, " + strideB + ", widthC, offsetA, offsetB, offsetC);\n" +
                         "    }\n");
     }
@@ -346,7 +351,7 @@ public class GeneratorTileMultiplication {
     }
 
     public static void main( String[] args ) throws FileNotFoundException {
-        var app = new GeneratorTileMultiplication("InnerMultiplication_DDRB");
+        var app = new GeneratorTileMultiplication_F64("TileMultiplication_F64");
         app.createClass();
         System.out.println("Done generating class");
     }
