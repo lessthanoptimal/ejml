@@ -225,12 +225,6 @@ tasks.withType<JavaCompile>().configureEach {
     options.errorprone.option("NullAway:AnnotatedPackages", "org.ejml")
 }
 
-// Skip jar publishing for these codeless container modules
-val codelessModules = setOf("main", "examples", "autocode", "regression")
-if (name in codelessModules) {
-    tasks.named<Jar>("jar") { enabled = false }
-}
-
 spotless {
     ratchetFrom("origin/SNAPSHOT")
 
