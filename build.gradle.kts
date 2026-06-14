@@ -107,3 +107,26 @@ tasks.register<Jar>("oneJarBin") {
         exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     }
 }
+
+// Classpath for running any single code generator that lives in each module's `generate` directory.
+//
+//   ./gradlew runGenerator -Pgenerator=org.ejml.dense.block.GeneratorTileMultiplication_F64
+//
+tasks.register<JavaExec>("runGenerator") {
+    group = "ejml"
+    description = "Runs a code generator by fully qualified class name. Use -Pgenerator=<fqcn>."
+    workingDir = rootDir
+    mainClass.set(providers.gradleProperty("generator"))
+
+    val parts = project.subprojects
+        .filter { it.plugins.hasPlugin("ejml.java-conventions") }
+        .map { dependencies.project(mapOf("path" to it.path, "configuration" to "generateOutput")) }
+        .plus(dependencies.project(mapOf("path" to ":main:autocode", "configuration" to "runtimeElements")))
+    classpath = configurations.detachedConfiguration(*parts.toTypedArray())
+
+    doFirst {
+        if (!mainClass.isPresent)
+            throw GradleException("Specify the generator's fully qualified class name, e.g.\n" +
+                "  ./gradlew runGenerator -Pgenerator=org.ejml.dense.block.GeneratorTileMultiplication_F64")
+    }
+}

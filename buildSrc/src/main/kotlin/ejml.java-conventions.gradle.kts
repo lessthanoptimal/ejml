@@ -61,25 +61,17 @@ sourceSets {
     }
 }
 
-// Expose benchmarks source set output for sibling modules (mainly :regression)
-val benchmarksOutput by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-sourceSets["benchmarks"].output.classesDirs.forEach { dir ->
-    artifacts.add("benchmarksOutput", dir) {
-        builtBy(tasks.named("benchmarksClasses"))
+// Expose these sourceSets so that sibling modules have access to them. Without this
+// regression, and testing both fail. IntelliJ can't run generators
+listOf("generate", "benchmarks", "test").forEach { sourceSet ->
+    val output = configurations.create("${sourceSet}Output") {
+        isCanBeConsumed = true
+        isCanBeResolved = false
     }
-}
-
-// Expose test source set output for sibling modules that need test fixtures
-val testOutput by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-sourceSets["test"].output.classesDirs.forEach { dir ->
-    artifacts.add("testOutput", dir) {
-        builtBy(tasks.named("testClasses"))
+    sourceSets[sourceSet].output.classesDirs.forEach { dir ->
+        artifacts.add(output.name, dir) {
+            builtBy(tasks.named("${sourceSet}Classes"))
+        }
     }
 }
 
