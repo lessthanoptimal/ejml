@@ -154,8 +154,8 @@ public class TestDMatrixSparseCSC extends GenericTestsDMatrixSparse {
         a.set(3, 1, 3.966);
 
         String found = a.formatMap(new MapPrintFormat().withPrecision(2));
-        assertEquals("[{row: 3, col: 1, value: 3.97},\n" +
-                "{row: 1, col: 2, value: 1.23},\n" +
+        assertEquals("[{row: 3, col: 1, value: 3.97}, " +
+                "{row: 1, col: 2, value: 1.23}, " +
                 "{row: 0, col: 4, value: 2.1}]", found);
     }
 }
