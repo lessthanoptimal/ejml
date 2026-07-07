@@ -22,22 +22,5 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestMapPrintReflection {
-    @Test void basic() {
-        var a = new Foo();
-        String found = a.formatMap(new MapPrintFormat().withPrecision(2));
-        assertEquals("{moo: 1.12, too: 2.36, zoo: -23, poo: a, stuff: {-9, 4, 2}}", found);
-    }
-
-    public static class Foo implements MapFormattable {
-        double moo = 1.123456;
-        float too = 2.3567f;
-        int zoo = -23;
-        char poo = 'a';
-        int[] stuff = new int[]{-9, 4, 2};
-
-        @Override public String formatMap( MapPrintFormat format ) {
-            return MapPrintReflect.formatMap(this, format);
-        }
-    }
-}
+// intentionally empty. This is tested rigorously in TestMapPrintFormat
+public class TestMapPrintReflection extends EjmlStandardJUnit {}

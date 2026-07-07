@@ -51,9 +51,13 @@ public final class MapPrintReflect {
         // ("is there a following pair?") logic stays correct even if a field is skipped.
         List<String> names = new ArrayList<>(fields.length);
         List<Object> values = new ArrayList<>(fields.length);
-        for (Field field : fields) {
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
             try {
-                values.add(field.get(object));
+                Object value = field.get(object);
+                if (value == null)
+                    continue;
+                values.add(value);
                 names.add(field.getName());
             } catch (IllegalAccessException ignore) { /* skip */ }
         }
@@ -61,8 +65,7 @@ public final class MapPrintReflect {
         var builder = new StringBuilder();
         builder.append(format.itemPrefix);
         for (int i = 0; i < names.size(); i++) {
-            boolean isMore = i + 1 < names.size();
-            appendValue(builder, format, names.get(i), values.get(i), isMore);
+            appendValue(builder, format, names.get(i), values.get(i), i != names.size() - 1);
         }
         builder.append(format.itemSuffix);
         return builder.toString();
@@ -75,6 +78,7 @@ public final class MapPrintReflect {
 
         List<Field> list = new ArrayList<>();
         for (Class<?> c = type; c != null && c != Object.class; c = c.getSuperclass()) {
+            // lint:forbidden ignore_below
             for (Field f : c.getDeclaredFields()) {
                 if (Modifier.isStatic(f.getModifiers()) || f.isSynthetic())
                     continue;
@@ -94,7 +98,8 @@ public final class MapPrintReflect {
     private static void appendValue( StringBuilder b, MapPrintFormat format,
                                      String name, Object value, boolean isMore ) {
         if (value == null) {
-            b.append(format.pair(name, "null", isMore));
+            // just skip null value. No good generic way to handle it
+//            b.append(format.pair(name, "null", isMore));
         } else if (value instanceof MapFormattable mf) {
             appendKey(b, format, name);
             b.append(mf.formatMap(format));   // recurse
@@ -108,7 +113,7 @@ public final class MapPrintReflect {
         } else if (value.getClass().isArray()) {
             appendArray(b, format, name, value, isMore);
         } else if (value instanceof String s) {
-            b.append(format.pair(name, s, isMore));
+            b.append(format.pair(name, format.encodeStr.apply(s), isMore));
         } else {
             // Boolean, Character, enum, or any other object
             b.append(format.pair(name, value.toString(), isMore));
@@ -130,25 +135,22 @@ public final class MapPrintReflect {
         }
 
         // boolean[], char[], String[], Object[], MapFormattable[], ...
-        appendKey(b, format, name);
-        b.append(format.itemPrefix);
+        String[] copy = new String[len];
         for (int i = 0; i < len; i++) {
-            if (i > 0) b.append(format.pairSeparator);
-            b.append(formatElement(format, Array.get(array, i)));
+            Object o = Array.get(array, i);
+            if (o instanceof MapFormattable m) {
+                copy[i] = m.formatMap(format);
+            } else if (o instanceof String s) {
+                copy[i] = format.encodeStr.apply(s);
+            } else {
+                copy[i] = o.toString();
+            }
         }
-        b.append(format.itemSuffix);
-        appendTrailing(b, format, isMore);
-    }
-
-    private static String formatElement( MapPrintFormat format, Object el ) {
-        if (el == null) return "null";
-        if (el instanceof MapFormattable mf) return mf.formatMap(format);
-        return el.toString();
+        format.pair(b, name, copy, isMore);
     }
 
     private static void appendKey( StringBuilder b, MapPrintFormat format, String name ) {
-        b.append(format.keyPrefix).append(name).append(format.keySuffix)
-                .append(format.valueSeparator);
+        b.append(format.formatKey.apply(name)).append(format.valueSeparator);
     }
 
     private static void appendTrailing( StringBuilder b, MapPrintFormat format, boolean isMore ) {
