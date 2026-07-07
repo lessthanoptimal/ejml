@@ -23,5 +23,9 @@ public interface MapFormattable {
     default String formatMap() {return formatMap(MapPrintFormat.DEFAULT);}
 
     /// Customizable formatting for converting this class into a string Map representation
+    ///
+    /// Note: Using [MapPrintReflect] was considered as a possible default implement but was not to encourage
+    /// direct implementation due to potential edge case issues involving reflection on different architectures and
+    /// potential performance issues. This will be reconsidered in the future.
     String formatMap( MapPrintFormat format );
 }
