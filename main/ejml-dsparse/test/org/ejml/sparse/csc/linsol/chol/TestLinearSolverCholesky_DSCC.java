@@ -40,7 +40,9 @@ public class TestLinearSolverCholesky_DSCC extends GenericLinearSolverSparseTest
         canHandleTall = false;
         canDecomposeZeros = false;
 
-        permutationTests = new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY}; // todo add a cholesky specific
+        // Cholesky uses the symmetric mode, which only sees the ordering's row permutation.
+        // RANDOM applies a nontrivial P*A*P' which keeps the matrix SPD.
+        permutationTests = new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY, FillReducing.RANDOM};
     }
 
     @Override

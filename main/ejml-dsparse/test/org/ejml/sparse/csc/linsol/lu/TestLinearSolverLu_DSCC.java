@@ -57,6 +57,48 @@ public class TestLinearSolverLu_DSCC extends GenericLinearSolverSparseTests_DSCC
         return RandomMatrices_DSCC.symmetricPosDef(size, 0.25, rand);
     }
 
+    /**
+     * Solve with a nontrivial fill reduction permutation. Regression test for
+     * <a href="https://github.com/lessthanoptimal/ejml/issues/207">issue 207</a>. The permutations contain
+     * 3-cycles (are not involutions), which catches a missing permutation of the right hand side as well as an
+     * un-permutation of the solution applied in the wrong direction. Identity permutations catch neither.
+     */
+    @Test
+    public void nontrivialFillReducePermutation() {
+        int[] p = {1, 2, 0, 4, 5, 3};
+        int[] q = {2, 0, 1, 5, 3, 4};
+
+        ComputePermutation<DMatrixSparseCSC> perm = new ComputePermutation<>(true, true) {
+            @Override public void process( DMatrixSparseCSC m ) {
+                prow.reshape(p.length);
+                System.arraycopy(p, 0, prow.data, 0, p.length);
+                pcol.reshape(q.length);
+                System.arraycopy(q, 0, pcol.data, 0, q.length);
+            }
+        };
+
+        DMatrixSparseCSC A = RandomMatrices_DSCC.symmetricPosDef(p.length, 0.4, rand);
+
+        LinearSolverSparse<DMatrixSparseCSC, DMatrixRMaj> solver =
+                new LinearSolverLu_DSCC(new LuUpLooking_DSCC(perm));
+
+        DMatrixRMaj X = create(A.numCols, 3);
+        DMatrixRMaj B = new DMatrixRMaj(A.numRows, 3);
+        CommonOps_DSCC.mult(A, X, B);
+
+        assertTrue(solver.setA(A));
+        DMatrixRMaj foundX = create(A.numCols, 3);
+        solver.solve(B, foundX);
+        EjmlUnitTests.assertRelativeEquals(X, foundX, equalityTolerance);
+
+        DMatrixSparseCSC Xs = createSparse(A.numCols, 3);
+        DMatrixSparseCSC Bs = new DMatrixSparseCSC(1, 1, 1);
+        CommonOps_DSCC.mult(A, Xs, Bs);
+        DMatrixSparseCSC foundXs = new DMatrixSparseCSC(1, 1, 1);
+        solver.solveSparse(Bs, foundXs);
+        EjmlUnitTests.assertEquals(Xs, foundXs, equalityTolerance);
+    }
+
     @Test
     public void testCase0() {
         DMatrixSparseCSC A = DConvertMatrixStruct.convert(A0_dense, (DMatrixSparseCSC)null, 0);

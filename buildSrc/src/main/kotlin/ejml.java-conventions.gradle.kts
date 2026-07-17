@@ -77,8 +77,12 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
-// Produces Java 11 bytecode but accepts Java 25 syntax (via Jabel)
+// Produces Java 11 bytecode but accepts Java 25 syntax (via Jabel). Skip the `generate`/`benchmarks`
+// source sets: they're never shipped, only ever run on the JDK driving the build, and (unlike main/test)
+// have no Jabel annotation processor attached to let them use modern syntax under -release 11.
 tasks.withType<JavaCompile>().configureEach {
+    if (name == "compileGenerateJava" || name == "compileBenchmarksJava")
+        return@configureEach
     sourceCompatibility = "25"
     options.release.set(11)
 }

@@ -27,6 +27,7 @@ import org.ejml.interfaces.decomposition.DecompositionInterface;
 import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.lu.LuUpLooking_DSCC;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 import static org.ejml.UtilEjml.adjust;
@@ -42,6 +43,7 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
     private final DGrowArray gx = new DGrowArray();
     private final DGrowArray gb = new DGrowArray();
+    private final IGrowArray gwork = new IGrowArray();
 
     DMatrixSparseCSC Bp = new DMatrixSparseCSC(1, 1, 1);
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
@@ -71,11 +73,12 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
 
         DMatrixSparseCSC L = decomposition.getL();
         DMatrixSparseCSC U = decomposition.getU();
+        ApplyFillReductionPermutation_DSCC reduce = decomposition.getApplyFillReduction();
 
-        // these are row pivots
+        // apply the fill reduction row permutation composed with the numeric row pivots to B
+        int[] rowPinv = reduce.rowPermInv(decomposition.getPinv(), gwork);
         Bp.reshape(B.numRows, B.numCols, B.nz_length);
-        int[] Pinv = decomposition.getPinv();
-        CommonOps_DSCC.permute(Pinv, B, null, Bp);
+        CommonOps_DSCC.permute(rowPinv, B, null, Bp);
 
         IGrowArray gw = decomposition.getGw();
         IGrowArray gw1 = decomposition.getGxi();
@@ -83,7 +86,13 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
         tmp.reshape(L.numRows, B.numCols, 1);
 
         TriangularSolver_DSCC.solve(L, true, Bp, tmp, null, gx, gw, gw1);
-        TriangularSolver_DSCC.solve(U, false, tmp, X, null, gx, gw, gw1);
+        if (reduce.isApplied()) {
+            // solve into scratch storage, then undo the fill reduction column permutation
+            TriangularSolver_DSCC.solve(U, false, tmp, Bp, null, gx, gw, gw1);
+            reduce.undoColumnPermutation(Bp, X);
+        } else {
+            TriangularSolver_DSCC.solve(U, false, tmp, X, null, gx, gw, gw1);
+        }
     }
 
     @Override
@@ -97,31 +106,31 @@ public class LinearSolverLu_DSCC implements LinearSolverSparse<DMatrixSparseCSC,
     }
 
     @Override
-    @SuppressWarnings("NullAway") // Compiler isn't smart enough to realize null condition is impossible
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
         UtilEjml.checkReshapeSolve(AnumRows, AnumCols, B, X);
 
-        int[] pinv = decomposition.getPinv();
         double[] x = adjust(gx, X.numRows);
         double[] b = adjust(gb, B.numRows);
 
         DMatrixSparseCSC L = decomposition.getL();
         DMatrixSparseCSC U = decomposition.getU();
+        ApplyFillReductionPermutation_DSCC reduce = decomposition.getApplyFillReduction();
 
-        final boolean reduceFill = decomposition.isReduceFill();
-        final int[] q = reduceFill ? decomposition.getReducePermutation() : null;
+        // inverse row permutation to apply to b = (fill reduction rows) composed with (numeric pivots)
+        int[] rowPinv = reduce.rowPermInv(decomposition.getPinv(), gwork);
 
         // process each column in X and B individually
         for (int colX = 0; colX < X.numCols; colX++) {
             int index = colX;
             for (int i = 0; i < B.numRows; i++, index += X.numCols) b[i] = B.data[index];
 
-            CommonOps_DSCC.permuteInv(pinv, b, x, X.numRows);
+            CommonOps_DSCC.permuteInv(rowPinv, b, x, X.numRows);
             TriangularSolver_DSCC.solveL(L, x);
             TriangularSolver_DSCC.solveU(U, x);
             double[] d;
-            if (reduceFill) {
-                CommonOps_DSCC.permute(q, x, b, X.numRows);
+            if (reduce.isApplied()) {
+                // undo the fill reduction column permutation
+                reduce.undoColumnPermutation(x, b, X.numRows);
                 d = b;
             } else {
                 d = x;

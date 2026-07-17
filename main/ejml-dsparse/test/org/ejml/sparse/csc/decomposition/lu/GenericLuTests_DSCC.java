@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC {
 
     private FillReducing permTests[] =
-            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
+            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY, FillReducing.RANDOM};
 
     public abstract LUSparseDecomposition_F64<DMatrixSparseCSC> create( FillReducing permutation );
 
@@ -109,7 +109,25 @@ public abstract class GenericLuTests_DSCC extends GenericDecompositionTests_DSCC
         DMatrixSparseCSC found = new DMatrixSparseCSC(PL.numCols, U.numCols, 0);
         CommonOps_DSCC.mult(PL, U, found);
 
-        EjmlUnitTests.assertEquals(Acpy, found, UtilEjml.TEST_F64);
+        // P'*L*U reconstructs the fill reduced matrix Pfr*A*Qfr, not A itself
+        EjmlUnitTests.assertEquals(applyFillReduction(lu, Acpy), found, UtilEjml.TEST_F64);
+    }
+
+    /** Applies the decomposition's fill reduction permutation to A. Returns A if there is none. */
+    private DMatrixSparseCSC applyFillReduction( LUSparseDecomposition_F64<DMatrixSparseCSC> lu,
+                                                 DMatrixSparseCSC A ) {
+        if (!(lu instanceof LuUpLooking_DSCC))
+            return A;
+        LuUpLooking_DSCC alg = (LuUpLooking_DSCC)lu;
+        if (!alg.isReduceFill())
+            return A;
+
+        int[] pinv = alg.getApplyFillReduction().getArrayPinv();
+        int[] q = alg.getApplyFillReduction().getArrayQ();
+        DMatrixSparseCSC Aperm = new DMatrixSparseCSC(A.numRows, A.numCols, A.nz_length);
+        CommonOps_DSCC.permute(pinv, A, q, Aperm);
+        Aperm.sortIndices(null);
+        return Aperm;
     }
 
     @Test
