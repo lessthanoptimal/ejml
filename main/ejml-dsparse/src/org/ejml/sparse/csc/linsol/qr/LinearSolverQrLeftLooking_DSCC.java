@@ -28,6 +28,7 @@ import org.ejml.interfaces.linsol.LinearSolverSparse;
 import org.ejml.sparse.csc.CommonOps_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrHelperFunctions_DSCC;
 import org.ejml.sparse.csc.decomposition.qr.QrLeftLookingDecomposition_DSCC;
+import org.ejml.sparse.csc.misc.ApplyFillReductionPermutation_DSCC;
 import org.ejml.sparse.csc.misc.TriangularSolver_DSCC;
 
 import static org.ejml.UtilEjml.adjust;
@@ -46,6 +47,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
     private final DGrowArray gbp = new DGrowArray();
     private final DGrowArray gx = new DGrowArray();
     private final IGrowArray gw = new IGrowArray();
+    private final IGrowArray gwork = new IGrowArray();
 
     private final DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
 
@@ -72,6 +74,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         X.reshape(AnumCols, B.numCols, X.numRows);
 
         IGrowArray gw1 = qr.getGwork();
+        ApplyFillReductionPermutation_DSCC reduce = qr.getApplyFillReduction();
 
         // Don't modify the input
         tmp.setTo(B);
@@ -79,8 +82,8 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         DMatrixSparseCSC B_tmp = B.createLike();
         DMatrixSparseCSC swap;
 
-        // Apply permutation to B
-        int[] pinv = qr.getStructure().getPinv();
+        // Apply the fill reduction row permutation composed with the structural row permutation to B
+        int[] pinv = reduce.rowPermInv(qr.getStructure().getPinv(), gwork);
         CommonOps_DSCC.permuteRowInv(pinv, B, B_tmp);
         swap = B_tmp;
         B_tmp = B;
@@ -97,7 +100,14 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
 
         // Solve for X
         DMatrixSparseCSC R = qr.getR();
-        TriangularSolver_DSCC.solve(R, false, B, X, null, gx, gw, gw1);
+        if (reduce.isApplied()) {
+            // solve into scratch storage, then undo the fill reduction column permutation
+            B_tmp.reshape(AnumCols, B.numCols, 1);
+            TriangularSolver_DSCC.solve(R, false, B, B_tmp, null, gx, gw, gw1);
+            reduce.undoColumnPermutation(B_tmp, X);
+        } else {
+            TriangularSolver_DSCC.solve(R, false, B, X, null, gx, gw, gw1);
+        }
     }
 
     @Override
@@ -118,7 +128,10 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
         double[] bp = adjust(gbp, B.numRows);
         double[] x = adjust(gx, AnumCols);
 
-        int[] pinv = qr.getStructure().getPinv();
+        ApplyFillReductionPermutation_DSCC reduce = qr.getApplyFillReduction();
+
+        // inverse row permutation to apply to b = (fill reduction rows) composed with (structural row pivots)
+        int[] rowPinv = reduce.rowPermInv(qr.getStructure().getPinv(), gwork);
 
         // process each column in X and B individually
         for (int colX = 0; colX < B.numCols; colX++) {
@@ -126,7 +139,7 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
             for (int i = 0; i < B.numRows; i++, index += X.numCols) b[i] = B.data[index];
 
             // apply row pivots
-            CommonOps_DSCC.permuteInv(pinv, b, bp, AnumRows);
+            CommonOps_DSCC.permuteInv(rowPinv, b, bp, AnumRows);
 
             // apply Householder reflectors
             for (int j = 0; j < AnumCols; j++) {
@@ -135,10 +148,10 @@ public class LinearSolverQrLeftLooking_DSCC implements LinearSolverSparse<DMatri
             // Solve for R*x = b
             TriangularSolver_DSCC.solveU(qr.getR(), bp);
 
-            // undo the permutation
+            // undo the fill reduction column permutation
             double[] out;
-            if (qr.isFillPermutated()) {
-                CommonOps_DSCC.permute(qr.getFillPermutation(), bp, x, X.numRows);
+            if (reduce.isApplied()) {
+                reduce.undoColumnPermutation(bp, x, X.numRows);
                 out = x;
             } else {
                 out = bp;

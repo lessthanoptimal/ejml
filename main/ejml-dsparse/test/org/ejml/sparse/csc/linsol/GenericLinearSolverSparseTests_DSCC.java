@@ -39,7 +39,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 // TODO Add a test that makes sure identify permutation produces identical results to no permutation
 public abstract class GenericLinearSolverSparseTests_DSCC extends EjmlStandardJUnit {
-    protected FillReducing[] permutationTests = new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
+    protected FillReducing[] permutationTests = new FillReducing[]{
+            FillReducing.NONE, FillReducing.IDENTITY, FillReducing.RANDOM};
 
     // used to adjust tolerance threshold
     protected double equalityTolerance = UtilEjml.TEST_F64;

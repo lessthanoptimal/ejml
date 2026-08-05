@@ -98,7 +98,6 @@ public class QrLeftLookingDecomposition_DSCC implements
 
     private void performDecomposition( DMatrixSparseCSC A ) {
         int[] w = gwork.data;
-        int[] permCol = applyReduce.getArrayQ();
         int[] parent = structure.getParent();
         int[] leftmost = structure.getLeftMost();
         // permutation that was done to ensure all rows have non-zero elements
@@ -120,10 +119,10 @@ public class QrLeftLookingDecomposition_DSCC implements
             w[k] = k;
             V.nz_rows[V.nz_length++] = k;                       // Add V(k,k) to V's pattern
             int top = n;
-            int col = permCol != null ? permCol[k] : k;
-
-            int idx0 = A.col_idx[col];
-            int idx1 = A.col_idx[col + 1];
+            // any fill reduction permutation has already been applied to A, so column k is processed directly.
+            // this must match the column ordering seen by the structure computation.
+            int idx0 = A.col_idx[k];
+            int idx1 = A.col_idx[k + 1];
 
             for (int p = idx0; p < idx1; p++) {
                 int i = leftmost[A.nz_rows[p]];
@@ -277,6 +276,11 @@ public class QrLeftLookingDecomposition_DSCC implements
         if (ret == null)
             throw new RuntimeException("No permutation. Should have called isFillPermuted()");
         return ret;
+    }
+
+    /** Handles applying the fill reduction permutation to the matrix and to solve vectors. */
+    public ApplyFillReductionPermutation_DSCC getApplyFillReduction() {
+        return applyReduce;
     }
 
     public boolean isFillPermutated() {

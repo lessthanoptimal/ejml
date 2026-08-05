@@ -34,6 +34,10 @@ import static org.ejml.UtilEjml.permutationSign;
 /**
  * LU Decomposition using a left looking algorithm for {@link DMatrixSparseCSC}.
  *
+ * <p>If a fill reduction permutation is provided, the matrix which is factored is P*A*Q, where P and Q are the
+ * ordering's row and column permutations, i.e. L*U = P<sub>pivot</sub>*P*A*Q where P<sub>pivot</sub> is the
+ * row pivoting selected numerically ({@link #getRowPivot}).</p>
+ *
  * <p>NOTE: Based mostly on the algorithm described on page 86 in csparse. cs_lu</p>
  * <p>NOTE: See in code comment for a modification from csparse.</p>
  *
@@ -93,7 +97,6 @@ public class LuUpLooking_DSCC
     private boolean performLU( DMatrixSparseCSC A ) {
         int m = A.numRows;
         int n = A.numCols;
-        int[] q = applyReduce.getArrayP();
 
         int[] w = UtilEjml.adjust(gw, m*2, m);
 
@@ -109,8 +112,8 @@ public class LuUpLooking_DSCC
             if (U.nz_length + n > U.nz_values.length)
                 U.growMaxLength(2*U.nz_values.length + n, true);
 
-            int col = q != null ? q[k] : k;
-            int top = TriangularSolver_DSCC.solveColB(L, true, A, col, x, pinv, gxi, w);
+            // any fill reduction permutation has already been applied to A, so column k is processed directly
+            int top = TriangularSolver_DSCC.solveColB(L, true, A, k, x, pinv, gxi, w);
             int[] xi = gxi.data;
 
             //--------- Find the Next Pivot. That will be the row with the largest value
@@ -135,11 +138,11 @@ public class LuUpLooking_DSCC
                 return false;
             }
 
-            // NOTE: The line is commented out below. It can cause a poor pivot to be selected. Instead of the largest
-            //       row it will pick whatever is in this column. it does try to make sure it's not zero, but I'm not
-            //       sure what it's purpose is.
-//            if( pinv[col] < 0 && Math.abs(x[col]) >= a*tol ) {
-//                ipiv = col;
+            // NOTE: csparse prefers the diagonal entry when it's within 'tol' of the largest pivot candidate. This
+            //       preserves more of a symmetric fill reducing ordering's structure under pivoting. Since A is
+            //       already permuted here, the diagonal candidate is x[k].
+//            if( pinv[k] < 0 && Math.abs(x[k]) >= a*tol ) {
+//                ipiv = k;
 //            }
 
             //---------- Divide by the pivot
@@ -177,10 +180,16 @@ public class LuUpLooking_DSCC
     }
 
     @Override
+    @SuppressWarnings("NullAway") // arrays are not null when a fill reduction has been applied
     public Complex_F64 computeDeterminant() {
         // see dense algorithm. There is probably a faster way to compute the sign while decomposing
         // the matrix.
         double value = permutationSign(pinv, U.numCols, gw.data);
+        if (applyReduce.isApplied()) {
+            // the fill reduction row and column permutations also affect the determinant's sign
+            value *= permutationSign(applyReduce.getArrayP(), U.numCols, gw.data);
+            value *= permutationSign(applyReduce.getArrayQ(), U.numCols, gw.data);
+        }
         for (int i = 0; i < U.numCols; i++) {
             value *= U.nz_values[U.col_idx[i + 1] - 1];
         }
@@ -263,6 +272,11 @@ public class LuUpLooking_DSCC
         if (ret == null)
             throw new RuntimeException("Check to see if there is any fill reduce ordering to apply first");
         return ret;
+    }
+
+    /** Handles applying the fill reduction permutation to the matrix and to solve vectors. */
+    public ApplyFillReductionPermutation_DSCC getApplyFillReduction() {
+        return applyReduce;
     }
 
     @Override

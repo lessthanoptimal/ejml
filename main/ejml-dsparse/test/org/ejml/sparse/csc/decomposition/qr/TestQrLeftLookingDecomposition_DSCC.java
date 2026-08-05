@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestQrLeftLookingDecomposition_DSCC extends GenericDecompositionTests_DSCC {
 
     protected FillReducing[] permutationTests =
-            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY};
+            new FillReducing[]{FillReducing.NONE, FillReducing.IDENTITY, FillReducing.RANDOM};
 
     @Override
     public DMatrixSparseCSC createMatrix(int N) {
@@ -106,9 +106,14 @@ public class TestQrLeftLookingDecomposition_DSCC extends GenericDecompositionTes
         ComputePermutation<DMatrixSparseCSC> reducePerm = FillReductionFactory_DSCC.create(reduce);
         QrLeftLookingDecomposition_DSCC alg = new QrLeftLookingDecomposition_DSCC(reducePerm);
 
-        if (alwaysHasSolution)
-            assertTrue(alg.decompose(A));
-        else if (!alg.decompose(A))
+        if (alwaysHasSolution) {
+            if (!alg.decompose(A)) {
+                // For wide matrices a fill reduction permutation can produce a structure which requires
+                // column pivoting, in which case the decomposition legitimately reports that it can't proceed
+                assertTrue(numRows < numCols && reduce == FillReducing.RANDOM);
+                return;
+            }
+        } else if (!alg.decompose(A))
             return;
 
         if (!alg.inputModified()) {
@@ -122,7 +127,16 @@ public class TestQrLeftLookingDecomposition_DSCC extends GenericDecompositionTes
         DMatrixSparseCSC found = new DMatrixSparseCSC(Q.numRows, R.numCols, 0);
         CommonOps_DSCC.mult(Q, R, found, null, null);
 
-        EjmlUnitTests.assertEquals(A_cpy, found, UtilEjml.TEST_F64);
+        // Q*R reconstructs the fill reduced matrix Pfr*A*Qfr, not A itself
+        DMatrixSparseCSC expected = A_cpy;
+        if (alg.isFillPermutated()) {
+            expected = new DMatrixSparseCSC(A_cpy.numRows, A_cpy.numCols, A_cpy.nz_length);
+            CommonOps_DSCC.permute(alg.getApplyFillReduction().getArrayPinv(), A_cpy,
+                    alg.getApplyFillReduction().getArrayQ(), expected);
+            expected.sortIndices(null);
+        }
+
+        EjmlUnitTests.assertEquals(expected, found, UtilEjml.TEST_F64);
     }
 
     /**

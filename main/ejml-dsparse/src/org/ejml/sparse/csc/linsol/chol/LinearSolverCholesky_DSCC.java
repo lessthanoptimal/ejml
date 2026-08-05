@@ -50,6 +50,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     IGrowArray gw = new IGrowArray();
 
     DMatrixSparseCSC tmp = new DMatrixSparseCSC(1, 1, 1);
+    DMatrixSparseCSC tmp2 = new DMatrixSparseCSC(1, 1, 1);
 
     // Number of rows in A
     int AnumRows, AnumCols;
@@ -73,6 +74,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     }
 
     @Override
+    @SuppressWarnings("NullAway") // rowPinv is not null when the fill reduction has been applied
     public void solveSparse( DMatrixSparseCSC B, DMatrixSparseCSC X ) {
         X.reshape(AnumCols, B.numCols, X.numRows);
 
@@ -80,11 +82,27 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
 
         DMatrixSparseCSC L = cholesky.getL();
 
-        tmp.reshape(L.numRows, B.numCols, 1);
-        int[] Pinv = reduce.getArrayPinv();
+        // Cholesky has no numeric pivots, so the row permutation is just the fill reduction (null if none)
+        int[] rowPinv = reduce.fillRowPermInv();
 
-        TriangularSolver_DSCC.solve(L, true, B, tmp, Pinv, gx, gw, gw1);
-        TriangularSolver_DSCC.solveTran(L, true, tmp, X, null, gx, gw, gw1);
+        // apply the fill reduction permutation to B
+        DMatrixSparseCSC Bp = B;
+        if (reduce.isApplied()) {
+            tmp2.reshape(B.numRows, B.numCols, B.nz_length);
+            CommonOps_DSCC.permute(rowPinv, B, null, tmp2);
+            Bp = tmp2;
+        }
+
+        tmp.reshape(L.numRows, B.numCols, 1);
+        TriangularSolver_DSCC.solve(L, true, Bp, tmp, null, gx, gw, gw1);
+        if (reduce.isApplied()) {
+            // solve into scratch storage, then undo the fill reduction permutation
+            tmp2.reshape(L.numRows, B.numCols, 1);
+            TriangularSolver_DSCC.solveTran(L, true, tmp, tmp2, null, gx, gw, gw1);
+            reduce.undoColumnPermutation(tmp2, X);
+        } else {
+            TriangularSolver_DSCC.solveTran(L, true, tmp, X, null, gx, gw, gw1);
+        }
     }
 
     @Override
@@ -98,6 +116,7 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
     }
 
     @Override
+    @SuppressWarnings("NullAway") // rowPinv is not null when the fill reduction has been applied
     public void solve( DMatrixRMaj B, DMatrixRMaj X ) {
         UtilEjml.checkReshapeSolve(AnumRows, AnumCols, B, X);
 
@@ -108,17 +127,18 @@ public class LinearSolverCholesky_DSCC implements LinearSolverSparse<DMatrixSpar
         double[] b = adjust(gb, N);
         double[] x = adjust(gx, N);
 
-        int[] Pinv = reduce.getArrayPinv();
+        // Cholesky has no numeric pivots, so the row permutation is just the fill reduction (null if none)
+        int[] rowPinv = reduce.fillRowPermInv();
 
         for (int col = 0; col < B.numCols; col++) {
             int index = col;
             for (int i = 0; i < N; i++, index += B.numCols) b[i] = B.data[index];
 
-            if (Pinv != null) {
-                CommonOps_DSCC.permuteInv(Pinv, b, x, N);
+            if (reduce.isApplied()) {
+                CommonOps_DSCC.permuteInv(rowPinv, b, x, N);
                 TriangularSolver_DSCC.solveL(L, x);
                 TriangularSolver_DSCC.solveTranL(L, x);
-                CommonOps_DSCC.permute(Pinv, x, b, N);
+                reduce.undoColumnPermutation(x, b, N);
             } else {
                 TriangularSolver_DSCC.solveL(L, b);
                 TriangularSolver_DSCC.solveTranL(L, b);
